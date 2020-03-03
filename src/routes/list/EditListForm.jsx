@@ -30,7 +30,7 @@ function EditListForm(props) {
       setCompleted(list.completed);
       setType(list.type);
     });
-  }, []);
+  }, [props.history, props.match]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

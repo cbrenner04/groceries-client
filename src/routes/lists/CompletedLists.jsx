@@ -27,7 +27,7 @@ function CompletedLists(props) {
       console.error(JSON.parse(responseText).errors);
       props.history.push('/users/sign_in');
     });
-  }, []);
+  }, [props.history]);
 
   const dismissAlert = () => {
     setSuccess('');

@@ -46,7 +46,7 @@ function ShareListForm(props) {
         }
       });
     }
-  }, []);
+  }, [props.history, props.match]);
 
   const handleAlertDismiss = () => {
     setSuccess('');

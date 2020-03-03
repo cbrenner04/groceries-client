@@ -10,7 +10,7 @@ const CompletedListButtons = props => (
       style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
       data-test-id="complete-list-refresh"
     >
-      <i className="fa fa-refresh fa-2x text-primary" />
+      <i className="fa fa-redo fa-2x text-primary" />
     </button>
     <button
       onClick={() => props.onListDeletion(props.list)}

@@ -18,7 +18,7 @@ function IncompleteListButtons(props) {
       setUserInfo(request);
       setCurrentUserPermissions(permissions);
     });
-  }, []);
+  }, [props.list.id, props.list.users_list_id]);
 
   return (
     <div className="btn-group float-right" role="group">
@@ -29,7 +29,7 @@ function IncompleteListButtons(props) {
         style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
         data-test-id="incomplete-list-complete"
       >
-        <i className="fa fa-check-square-o fa-2x text-success" />
+        <i className="fa fa-check fa-2x text-success" />
       </button>
       <Link
         to={`lists/${props.list.id}/users_lists`}
@@ -53,7 +53,7 @@ function IncompleteListButtons(props) {
         }}
         data-test-id="incomplete-list-edit"
       >
-        <i className="fa fa-pencil-square-o fa-2x text-warning" />
+        <i className="fa fa-edit fa-2x text-warning" />
       </Link>
       <button
         onClick={() => props.onListDeletion(props.list)}

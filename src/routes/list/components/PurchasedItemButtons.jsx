@@ -9,13 +9,13 @@ function PurchasedItemButtons(props) {
       {
         (props.listType === 'GroceryList' || props.listType === 'ToDoList') &&
           <button onClick={() => props.handleItemUnPurchase(props.item)} className="btn btn-link p-0 mr-3">
-            <i className="fa fa-refresh fa-2x text-primary" />
+            <i className="fa fa-redo fa-2x text-primary" />
           </button>
       }
       {
         props.listType === 'BookList' &&
           <button onClick={props.item.read ? handleUnRead : handleRead} className="btn btn-link p-0 mr-3">
-            <i className={`fa fa-bookmark${props.item.read ? '' : '-o'} fa-2x text-info`} />
+            <i className={`${props.item.read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
           </button>
       }
       <button onClick={() => props.handleItemDelete(props.item)} className="btn btn-link p-0">

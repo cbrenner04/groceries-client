@@ -8,7 +8,7 @@ const PendingListButtons = props => (
       className="btn btn-link p-0 mr-3"
       data-test-id="pending-list-accept"
     >
-      <i className="fa fa-check-square-o fa-2x text-success" />
+      <i className="fa fa-check fa-2x text-success" />
     </button>
     <button
       onClick={() => props.onListRejection(props.list)}

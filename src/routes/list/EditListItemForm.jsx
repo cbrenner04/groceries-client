@@ -94,7 +94,7 @@ function EditListItemForm(props) {
         });
       });
     }
-  }, []);
+  }, [props.history, props.match]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

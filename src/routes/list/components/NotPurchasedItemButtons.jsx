@@ -18,14 +18,14 @@ function NotPurchasedItemButtons(props) {
       {
         props.listType === 'BookList' &&
           <button onClick={props.item.read ? handleUnRead : handleRead} className="btn btn-link p-0 mr-3">
-            <i className={`fa fa-bookmark${props.item.read ? '' : '-o'} fa-2x text-info`} />
+            <i className={`${props.item.read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
           </button>
       }
       <button onClick={() => props.handlePurchaseOfItem(props.item)} className="btn btn-link p-0 mr-3">
-        <i className="fa fa-check-square-o fa-2x text-success" />
+        <i className="fa fa-check fa-2x text-success" />
       </button>
       <Link to={`${listItemPath()}/${props.item.id}/edit`} className="btn btn-link p-0 mr-3">
-        <i className="fa fa-pencil-square-o fa-2x text-warning" />
+        <i className="fa fa-edit fa-2x text-warning" />
       </Link>
       <button onClick={() => props.handleItemDelete(props.item)} className="btn btn-link p-0">
         <i className="fa fa-trash fa-2x text-danger" />

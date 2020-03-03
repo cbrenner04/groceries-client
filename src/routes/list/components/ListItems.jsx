@@ -1,52 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { capitalize } from '../../../utils/format';
 import ListItem from './ListItem';
 
 function ListItems(props) {
-  const [sortedItems, setSortedItems] = useState(props.items);
-
-  const performSort = (items, sortAttrs) => {
-    if (sortAttrs.length === 0) return items;
-    const sortAttr = sortAttrs.pop();
-    const sorted = items.sort((a, b) => {
-      // the sort from the server comes back with items with number_in_series: `null` at the end of the list
-      // without the next two lines this would put those items at the front of the list
-      if (a[sortAttr] === null) return 1;
-      if (b[sortAttr] === null) return -1;
-      const positiveBranch = (a[sortAttr] > b[sortAttr]) ? 1 : 0;
-      return (a[sortAttr] < b[sortAttr]) ? -1 : positiveBranch;
-    });
-    return performSort(sorted, sortAttrs);
-  };
-
-  const sortItems = (items) => {
-    let sortAttrs = [];
-    if (props.listType === 'BookList') {
-      sortAttrs = ['author', 'number_in_series', 'title'];
-    } else if (props.listType === 'GroceryList') {
-      sortAttrs = ['product'];
-    } else if (props.listType === 'MusicList') {
-      sortAttrs = ['artist', 'album', 'title'];
-    } else if (props.listType === 'ToDoList') {
-      sortAttrs = ['due_by', 'assignee_id', 'task'];
-    }
-    const sorted = performSort(items, sortAttrs);
-    return sorted;
-  };
-
-  useEffect(() => {
-    const sorted = sortItems(props.items);
-    setSortedItems(sorted);
-  }, [props.items]);
-
   return (
     <div className="list-group">
       {props.category &&
         <h5 data-test-class="category-header">{capitalize(props.category)}</h5>}
       {
-        sortedItems.map(item => (
+        props.items.map(item => (
           <ListItem
             item={item}
             key={item.id}

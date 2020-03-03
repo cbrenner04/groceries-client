@@ -40,7 +40,7 @@ export default function ListsContainer(props) {
       console.error(JSON.parse(responseText).errors);
       props.history.push('/users/sign_in');
     });
-  }, []);
+  }, [props.history]);
 
   const handleAlertDismiss = () => {
     setErrors('');

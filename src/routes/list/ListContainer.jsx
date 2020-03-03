@@ -39,6 +39,21 @@ const categorizeNotPurchasedItems = (items, categories) => {
   return obj;
 };
 
+
+const performSort = (items, sortAttrs) => {
+  if (sortAttrs.length === 0) return items;
+  const sortAttr = sortAttrs.pop();
+  const sorted = items.sort((a, b) => {
+    // the sort from the server comes back with items with number_in_series: `null` at the end of the list
+    // without the next two lines this would put those items at the front of the list
+    if (a[sortAttr] === null) return 1;
+    if (b[sortAttr] === null) return -1;
+    const positiveBranch = (a[sortAttr] > b[sortAttr]) ? 1 : 0;
+    return (a[sortAttr] < b[sortAttr]) ? -1 : positiveBranch;
+  });
+  return performSort(sorted, sortAttrs);
+};
+
 function ListContainer(props) {
   const [userId, setUserId] = useState(0);
   const [list, setList] = useState({
@@ -85,11 +100,11 @@ function ListContainer(props) {
             );
             setUserId(data.current_user_id);
             setList(data.list);
-            setPurchasedItems(data.purchased_items);
+            setPurchasedItems(data.purchased_items); // TODO: need to sort?
             setCategories(data.categories);
             setListUsers(responseListUsers);
             setIncludedCategories(responseIncludedCategories);
-            setNotPurchasedItems(responseNotPurchasedItems);
+            setNotPurchasedItems(responseNotPurchasedItems); // TODO: need to sort?
             setPermission(userInAccepted.users_list.permissions);
           } else {
             props.history.push('/lists');
@@ -102,7 +117,22 @@ function ListContainer(props) {
     } else {
       props.history.push('/lists');
     }
-  }, []);
+  }, [props.history, props.match]);
+
+  const sortItems = (items) => {
+    let sortAttrs = [];
+    if (list.type === 'BookList') {
+      sortAttrs = ['author', 'number_in_series', 'title'];
+    } else if (list.type === 'GroceryList') {
+      sortAttrs = ['product'];
+    } else if (list.type === 'MusicList') {
+      sortAttrs = ['artist', 'album', 'title'];
+    } else if (list.type === 'ToDoList') {
+      sortAttrs = ['due_by', 'assignee_id', 'task'];
+    }
+    const sorted = performSort(items, sortAttrs);
+    return sorted;
+  };
 
   // TODO: refactor? there has got to be a better way
   const handleAddItem = (item) => {
@@ -111,7 +141,7 @@ function ListContainer(props) {
     setNotPurchasedItems({});
     if (!updatedNotPurchasedItems[category]) updatedNotPurchasedItems[category] = [];
     updatedNotPurchasedItems[category] = update(updatedNotPurchasedItems[category], { $push: [item] });
-    setNotPurchasedItems(updatedNotPurchasedItems);
+    setNotPurchasedItems(sortItems(updatedNotPurchasedItems));
     if (!categories.includes(category)) {
       const cats = update(categories, { $push: [category] });
       setCategories(cats);
@@ -132,7 +162,7 @@ function ListContainer(props) {
     const updatedNotPurchasedItems = notPurchasedItems[category].filter(notItem => notItem.id !== item.id);
     notPurchasedItems[category] = updatedNotPurchasedItems;
     const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
-    setPurchasedItems(updatedPurchasedItems);
+    setPurchasedItems(sortItems(updatedPurchasedItems));
     if (!notPurchasedItems[category].length) {
       setIncludedCategories(includedCategories.filter(cat => cat !== category));
       setFilter('');
@@ -241,7 +271,7 @@ function ListContainer(props) {
           .done((_data, _status, request2) => {
             setUserInfo(request2);
             const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
-            setPurchasedItems(updatedPurchasedItems);
+            setPurchasedItems(sortItems(updatedPurchasedItems));
             setSuccess('Item successfully refreshed.');
           })
           .fail((response) => {
@@ -282,8 +312,8 @@ function ListContainer(props) {
         );
         setSuccess('Item successfully deleted.');
         setIncludedCategories(responseIncludedCategories);
-        setNotPurchasedItems(responseNotPurchasedItems);
-        setPurchasedItems(data.purchased_items);
+        setNotPurchasedItems(responseNotPurchasedItems); // TODO: need to sort?
+        setPurchasedItems(data.purchased_items); // TODO: need to sort?
       }).fail((response) => {
         failure(response.responseText);
       });
