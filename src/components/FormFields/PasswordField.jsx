@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const PasswordField = ({
   name,
@@ -8,18 +9,10 @@ const PasswordField = ({
   handleChange,
   placeholder,
 }) => (
-  <div className="form-group">
-    <label htmlFor={name}>{label}</label>
-    <input
-      type="password"
-      className="form-control"
-      id={name}
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      autoComplete="off"
-    />
-  </div>
+  <Form.Group controlId={name}>
+    <Form.Label>{label}</Form.Label>
+    <Form.Control type="password" value={value} onChange={handleChange} placeholder={placeholder} autoComplete="off"/>
+  </Form.Group>
 );
 
 PasswordField.propTypes = {

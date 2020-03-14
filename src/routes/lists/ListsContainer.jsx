@@ -18,6 +18,8 @@ export default function ListsContainer(props) {
   const [success, setSuccess] = useState('');
   const [listToDelete, setListToDelete] = useState('');
   const [listToReject, setListToReject] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
   const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
@@ -69,15 +71,13 @@ export default function ListsContainer(props) {
       });
   };
 
-  const deleteConfirmModalId = 'confirm-delete-completed-list-modal';
-
   const handleDelete = (list) => {
     setListToDelete(list);
-    $(`#${deleteConfirmModalId}`).modal('show');
+    setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = () => {
-    $(`#${deleteConfirmModalId}`).modal('hide');
+    setShowDeleteConfirm(false);
     handleAlertDismiss();
     const { id, completed } = listToDelete;
     $.ajax({
@@ -155,15 +155,13 @@ export default function ListsContainer(props) {
     acceptList(list);
   };
 
-  const rejectConfirmModalId = 'confirm-reject-completed-list-modal';
-
   const handleReject = (list) => {
     setListToReject(list);
-    $(`#${rejectConfirmModalId}`).modal('show');
+    setShowRejectConfirm(true);
   };
 
   const handleRejectConfirm = () => {
-    $(`#${rejectConfirmModalId}`).modal('hide');
+    setShowRejectConfirm(false);
     handleAlertDismiss();
     $.ajax({
       url: `${config.apiBase}/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`,
@@ -201,7 +199,7 @@ export default function ListsContainer(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} success={success} handleDismiss={handleAlertDismiss} />
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} />
@@ -218,19 +216,19 @@ export default function ListsContainer(props) {
         onReject={handleReject}
       />
       <ConfirmModal
-        name={deleteConfirmModalId}
         action="delete"
         body="Are you sure you want to delete this list?"
+        show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => $(`#${deleteConfirmModalId}`).modal('hide')}
+        handleClear={() => setShowDeleteConfirm(false)}
       />
       <ConfirmModal
-        name={rejectConfirmModalId}
         action="reject"
         body="Are you sure you want to reject this list?"
+        show={showRejectConfirm}
         handleConfirm={() => handleRejectConfirm()}
-        handleClear={() => $(`#${rejectConfirmModalId}`).modal('hide')}
+        handleClear={() => setShowRejectConfirm(false)}
       />
-    </div>
+    </>
   );
 }

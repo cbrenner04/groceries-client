@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Col, ListGroup, Row } from 'react-bootstrap';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
@@ -41,21 +42,21 @@ function List(props) {
   );
 
   return (
-    <div
-      className={`list-group-item ${props.accepted ? 'accepted-list' : 'pending-list'}`}
+    <ListGroup.Item
+      className={props.accepted ? 'accepted-list' : 'pending-list'}
       style={{ display: 'block' }}
       data-test-class={props.accepted ? acceptedListTestClass() : 'pending-list'}
     >
-      <div className="row">
-        <div className="col-md-6 pt-1">
+      <Row>
+        <Col md="6" className="pt-1">
           {props.accepted ? acceptedListLink() : listTitle()}
-        </div>
-        <div className="col-md-4 pt-1">
+        </Col>
+        <Col md="4" className="pt-1">
           <small className="text-muted">
             {formatDate(list.created_at)}
           </small>
-        </div>
-        <div className="col-md-2">
+        </Col>
+        <Col md="2">
           {
             props.accepted
               ? acceptedListButtons()
@@ -65,9 +66,9 @@ function List(props) {
                 onListRejection={props.onListRejection}
               />
           }
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </ListGroup.Item>
   );
 }
 

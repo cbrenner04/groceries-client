@@ -8,7 +8,7 @@ import {
 } from '../../../components/FormFields';
 
 const GroceryListItemFormFields = props => (
-  <div>
+  <>
     <TextField
       name="product"
       label="Product"
@@ -35,7 +35,7 @@ const GroceryListItemFormFields = props => (
         />
       )
     }
-  </div>
+  </>
 );
 
 GroceryListItemFormFields.propTypes = {

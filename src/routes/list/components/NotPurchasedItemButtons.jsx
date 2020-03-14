@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { ButtonGroup } from 'react-bootstrap';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
+import { Bookmark, Complete, Edit, Trash } from '../../../components/ActionButtons';
 
 function NotPurchasedItemButtons(props) {
   const listItemPath = () => {
@@ -14,23 +15,15 @@ function NotPurchasedItemButtons(props) {
   const handleUnRead = () => props.handleUnReadOfItem(props.item);
 
   return (
-    <div className="btn-group float-right" role="group">
+    <ButtonGroup className="float-right">
       {
         props.listType === 'BookList' &&
-          <button onClick={props.item.read ? handleUnRead : handleRead} className="btn btn-link p-0 mr-3">
-            <i className={`${props.item.read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
-          </button>
+          <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
       }
-      <button onClick={() => props.handlePurchaseOfItem(props.item)} className="btn btn-link p-0 mr-3">
-        <i className="fa fa-check fa-2x text-success" />
-      </button>
-      <Link to={`${listItemPath()}/${props.item.id}/edit`} className="btn btn-link p-0 mr-3">
-        <i className="fa fa-edit fa-2x text-warning" />
-      </Link>
-      <button onClick={() => props.handleItemDelete(props.item)} className="btn btn-link p-0">
-        <i className="fa fa-trash fa-2x text-danger" />
-      </button>
-    </div>
+      <Complete handleClick={() => props.handlePurchaseOfItem(props.item)} />
+      <Edit to={`${listItemPath()}/${props.item.id}/edit`} />
+      <Trash handleClick={() => props.handleItemDelete(props.item)} />
+    </ButtonGroup>
   );
 }
 

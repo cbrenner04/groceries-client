@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as $ from 'jquery';
+import { Button, Form } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import { defaultDueBy, formatDueBy, listTypeToSnakeCase } from '../../utils/format';
@@ -234,16 +234,16 @@ function EditListItemForm(props) {
     <div>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Edit { itemName() }</h1>
-      <Link to={`/lists/${listId}`} className="pull-right">
+      <Button href={`/lists/${listId}`} className="float-right">
         Back to list
-      </Link>
+      </Button>
       <br />
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off">
         { formFields() }
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Update Item
-        </button>
-      </form>
+        </Button>
+      </Form>
     </div>
   );
 }

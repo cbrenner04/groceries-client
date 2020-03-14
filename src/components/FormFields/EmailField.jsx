@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const EmailField = ({
   name,
@@ -7,18 +8,10 @@ const EmailField = ({
   value,
   handleChange,
 }) => (
-  <div className="form-group">
-    <label htmlFor={name}>{label}</label>
-    <input
-      id={name}
-      type="email"
-      name={name}
-      className="form-control"
-      value={value}
-      onChange={handleChange}
-      placeholder="jane.smith@example.com"
-    />
-  </div>
+  <Form.Group controlId={name}>
+    <Form.Label>{label}</Form.Label>
+    <Form.Control type="email" value={value} onChange={handleChange} placeholder="jane.smith@example.com"/>
+  </Form.Group>
 );
 
 EmailField.propTypes = {

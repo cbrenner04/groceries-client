@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as $ from 'jquery';
+import { Button, Form } from 'react-bootstrap';
 
 import * as config from '../../../config/default';
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
@@ -148,13 +149,13 @@ function ListItemForm(props) {
   return (
     <div>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off">
         { formFields() }
         <br />
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Add New Item
-        </button>
-      </form>
+        </Button>
+      </Form>
     </div>
   );
 }

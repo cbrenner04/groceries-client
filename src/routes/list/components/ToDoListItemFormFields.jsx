@@ -10,7 +10,7 @@ import {
 } from '../../../components/FormFields';
 
 const EditToDoListItemFormFields = props => (
-  <div>
+  <>
     <TextField
       name="task"
       label="Task"
@@ -45,7 +45,7 @@ const EditToDoListItemFormFields = props => (
         />
       )
     }
-  </div>
+  </>
 );
 
 EditToDoListItemFormFields.propTypes = {

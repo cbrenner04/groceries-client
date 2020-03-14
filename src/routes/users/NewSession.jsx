@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as $ from 'jquery';
-import * as config from '../../config/default';
+import { Button, Form } from 'react-bootstrap';
 
+import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 
@@ -39,10 +40,10 @@ export default function NewSession(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Log in</h2>
-      <form className="form" onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
         <PasswordField
           name="password"
@@ -58,11 +59,11 @@ export default function NewSession(props) {
           value={rememberMe}
           handleChange={() => setRememberMe(!rememberMe)}
         />
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Log in
-        </button>
-      </form>
+        </Button>
+      </Form>
       <Link to="/users/password/new">Forgot your password?</Link>
-    </div>
+    </>
   );
 }

@@ -1,27 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ButtonGroup } from 'react-bootstrap';
+
+import { Refresh, Trash } from '../../../components/ActionButtons';
 
 const CompletedListButtons = props => (
-  <div className="btn-group float-right" role="group">
-    <button
-      onClick={() => props.onListRefresh(props.list)}
-      className="btn btn-link p-0 mr-3"
+  <ButtonGroup className="float-right">
+    <Refresh
+      handleClick={() => props.onListRefresh(props.list)}
       disabled={props.userId !== props.list.owner_id}
       style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
       data-test-id="complete-list-refresh"
-    >
-      <i className="fa fa-redo fa-2x text-primary" />
-    </button>
-    <button
-      onClick={() => props.onListDeletion(props.list)}
-      className="btn btn-link p-0"
+    />
+    <Trash
+      handleClick={() => props.onListDeletion(props.list)}
       disabled={props.userId !== props.list.owner_id}
       style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
       data-test-id="complete-list-trash"
-    >
-      <i className="fa fa-trash fa-2x text-danger" />
-    </button>
-  </div>
+    />
+  </ButtonGroup>
 );
 
 CompletedListButtons.propTypes = {

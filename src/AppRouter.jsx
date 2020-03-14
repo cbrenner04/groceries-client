@@ -9,7 +9,7 @@ import InviteForm from './routes/users/InviteForm';
 import ListContainer from './routes/list/ListContainer';
 import EditListForm from './routes/list//EditListForm';
 import ListsContainer from './routes/lists/ListsContainer';
-import Navbar from './components/Navbar';
+import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareListForm from './routes/share_list/ShareListForm';
@@ -18,7 +18,7 @@ import PageNotFound from './routes/error_pages/PageNotFound';
 export default function AppRouter() {
   return (
     <Router>
-      <Navbar />
+      <AppNav />
       <Switch>
         {/* routes/lists */}
         <Route exact path="/" component={ListsContainer} />

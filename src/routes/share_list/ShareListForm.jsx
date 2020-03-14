@@ -64,7 +64,7 @@ function ShareListForm(props) {
     event.preventDefault();
     handleAlertDismiss();
     $.ajax({
-      url: `${config.apiBase}/users/invitation`,
+      url: `${config.apiBase}/auth/invitation`,
       type: 'POST',
       data: {
         user: {
@@ -142,7 +142,7 @@ function ShareListForm(props) {
   return (
     <div>
       <h1>Share {name}</h1>
-      <Link to="/lists" className="pull-right">Back to lists</Link>
+      <Link to="/lists" className="float-right">Back to lists</Link>
       <br />
       <Alert errors={errors} success={success} handleDismiss={handleAlertDismiss} />
       <form onSubmit={handleSubmit}>

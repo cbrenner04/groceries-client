@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { ListGroup } from 'react-bootstrap';
 
 import List from './List';
 
 const Lists = props => (
-  <div>
+  <>
     { props.pendingLists.length > 0 &&
       (
-        <div>
+        <>
           <p>These lists have been shared with you but you have not accepted the invitation.</p>
-          <div className="list-group">
+          <ListGroup>
             {
               props.pendingLists.map(list => (
                 <List
@@ -22,9 +23,9 @@ const Lists = props => (
                 />
               ))
             }
-          </div>
+          </ListGroup>
           <hr />
-        </div>
+        </>
       )
     }
     <h1>Your Lists</h1>
@@ -32,7 +33,7 @@ const Lists = props => (
       These are lists you&apos;ve created or you&apos;ve accepted an
       invitation from someone else.
     </p>
-    <div className="list-group">
+    <ListGroup>
       {
         props.nonCompletedLists.map(list => (
           <List
@@ -46,7 +47,7 @@ const Lists = props => (
           />
         ))
       }
-    </div>
+    </ListGroup>
     <br />
     <h2>Completed Lists</h2>
     <p>
@@ -54,7 +55,7 @@ const Lists = props => (
       <Link to="/completed_lists">See all completed lists here.</Link>&nbsp;
       Previously refreshed lists are marked with an asterisk (*).
     </p>
-    <div className="list-group">
+    <ListGroup>
       {
         props.completedLists.map(list => (
           <List
@@ -68,8 +69,8 @@ const Lists = props => (
           />
         ))
       }
-    </div>
-  </div>
+    </ListGroup>
+  </>
 );
 
 Lists.propTypes = {

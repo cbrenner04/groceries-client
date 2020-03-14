@@ -21,7 +21,7 @@ function EditInvite(props) {
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
     $.ajax({
-      url: `${config.apiBase}/users/invitation`,
+      url: `${config.apiBase}/auth/invitation`,
       data: { user },
       method: 'PUT',
     }).done((_data, _status, request) => {
@@ -34,7 +34,7 @@ function EditInvite(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Set your password</h2>
       <PasswordForm
@@ -44,7 +44,7 @@ function EditInvite(props) {
         passwordConfirmationChangeHandler={({ target: { value } }) => setPasswordConfirmation(value)}
         submissionHandler={handleSubmit}
       />
-    </div>
+    </>
   );
 }
 

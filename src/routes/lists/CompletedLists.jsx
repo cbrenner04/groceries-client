@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import * as $ from 'jquery';
+import { ListGroup } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -13,6 +14,7 @@ function CompletedLists(props) {
   const [errors, setErrors] = useState('');
   const [success, setSuccess] = useState('');
   const [listToDelete, setListToDelete] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     $.ajax({
@@ -54,16 +56,14 @@ function CompletedLists(props) {
       });
   };
 
-  const confirmModalId = 'confirm-delete-completed-list-modal';
-
   const handleDelete = (list) => {
     setListToDelete(list);
-    $(`#${confirmModalId}`).modal('show');
+    setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = () => {
     dismissAlert();
-    $(`#${confirmModalId}`).modal('hide');
+    setShowDeleteConfirm(false);
     $.ajax({
       url: `${config.apiBase}/lists/${listToDelete.id}`,
       type: 'DELETE',
@@ -83,14 +83,14 @@ function CompletedLists(props) {
   };
 
   return (
-    <div>
+    <>
       <h1>Completed Lists</h1>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <div className="clearfix">
         <Link to="/lists" className="float-right">Back to lists</Link>
-        <div className="float-left">Previously refreshed lists are marked with an asterisk (*).</div>
+        <p className="float-left">Previously refreshed lists are marked with an asterisk (*).</p>
       </div>
-      <div className="list-group">
+      <ListGroup>
         {
           completedLists.map(list => (
             <List
@@ -104,15 +104,15 @@ function CompletedLists(props) {
             />
           ))
         }
-      </div>
+      </ListGroup>
       <ConfirmModal
-        name={confirmModalId}
         action="delete"
         body="Are you sure you want to delete this list?"
+        show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => $(`#${confirmModalId}`).modal('hide')}
+        handleClear={() => setShowDeleteConfirm(false)}
       />
-    </div>
+    </>
   );
 }
 

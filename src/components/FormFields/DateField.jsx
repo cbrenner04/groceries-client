@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const DateField = ({
   name,
@@ -8,17 +9,10 @@ const DateField = ({
   handleChange,
   placeholder,
 }) => (
-  <div className="form-group">
-    <label htmlFor={name}>{label}</label>
-    <input
-      type="date"
-      className="form-control"
-      id={name}
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-    />
-  </div>
+  <Form.Group controlId={name}>
+    <Form.Label>{label}</Form.Label>
+    <Form.Control type="date" value={value} onChange={handleChange} placeholder={placeholder}/>
+  </Form.Group>
 );
 
 DateField.propTypes = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as $ from 'jquery';
+import { Button, Form } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -55,14 +55,14 @@ function EditListForm(props) {
   };
 
   return (
-    <div>
+    <>
       <h1>Edit { name }</h1>
-      <Link to="/lists" className="pull-right">
+      <Button href="/lists" className="float-right">
         Back to lists
-      </Link>
+      </Button>
       <br />
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
-      <form className="form" onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off">
         <TextField
           name="name"
           label="Name"
@@ -90,11 +90,11 @@ function EditListForm(props) {
           blankOption={false}
           classes="mb-3"
         />
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Update List
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </>
   );
 }
 

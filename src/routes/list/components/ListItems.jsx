@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListGroup } from 'react-bootstrap';
 
 import { capitalize } from '../../../utils/format';
 import ListItem from './ListItem';
 
 function ListItems(props) {
   return (
-    <div className="list-group">
+    <ListGroup>
       {props.category &&
         <h5 data-test-class="category-header">{capitalize(props.category)}</h5>}
       {
@@ -26,7 +27,7 @@ function ListItems(props) {
           />
         ))
       }
-    </div>
+    </ListGroup>
   );
 }
 

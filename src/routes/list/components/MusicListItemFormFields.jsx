@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TextField, CategoryField, CheckboxField } from '../../../components/FormFields';
 
 const EditMusicListItemFormFields = props => (
-  <div>
+  <>
     <TextField
       name="title"
       label="Title"
@@ -38,7 +38,7 @@ const EditMusicListItemFormFields = props => (
         />
       )
     }
-  </div>
+  </>
 );
 
 EditMusicListItemFormFields.propTypes = {

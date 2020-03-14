@@ -1,22 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const CategoryField = props => (
-  <div className="form-group">
-    <label htmlFor="category">Category</label>
-    <input
-      name="category"
-      type="text"
-      className="form-control"
-      id="category"
-      value={props.category}
-      onChange={props.handleInput}
-      list="categories"
-    />
+  <Form.Group controlId="category">
+    <Form.Label>Category</Form.Label>
+    <Form.Control type="text" value={props.category} onChange={props.handleInput} list="categories" />
     <datalist id="categories">
       {props.categories.map(category => <option key={category} value={category} />)}
     </datalist>
-  </div>
+  </Form.Group>
 );
 
 CategoryField.propTypes = {

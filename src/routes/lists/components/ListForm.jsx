@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button, Form } from 'react-bootstrap';
 
 import { SelectField, TextField } from '../../../components/FormFields';
 
@@ -19,7 +20,7 @@ function ListForm(props) {
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit} autoComplete="off">
+    <Form onSubmit={handleSubmit} autoComplete="off">
       <TextField
         name="name"
         label="Name"
@@ -40,8 +41,8 @@ function ListForm(props) {
         ]}
         blankOption={false}
       />
-      <button type="submit" className="btn btn-success btn-block">Create List</button>
-    </form>
+      <Button type="submit" variant="success" block>Create List</Button>
+    </Form>
   );
 }
 

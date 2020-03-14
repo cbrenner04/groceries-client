@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const SelectField = ({
   name,
@@ -9,19 +10,11 @@ const SelectField = ({
   options,
   blankOption,
 }) => (
-  <div className="form-group">
-    <label htmlFor={name}>{label}</label>
-    <select
-      className="form-control"
-      id={name}
-      value={value || ''}
-      onChange={handleChange}
-    >
+  <Form.Group controlId={name}>
+    <Form.Label>{label}</Form.Label>
+    <Form.Control as="select" value={value || ''} onChange={handleChange}>
       {blankOption &&
-        <option
-          value=""
-          disabled={!value}
-        >
+        <option value="" disabled={!value}>
           {value ? `Clear ${label}` : `Select ${label}` }
         </option>
       }
@@ -30,8 +23,8 @@ const SelectField = ({
           <option key={option.value} value={option.value}>{option.label}</option>
         ))
       }
-    </select>
-  </div>
+    </Form.Control>
+  </Form.Group>
 );
 
 SelectField.propTypes = {

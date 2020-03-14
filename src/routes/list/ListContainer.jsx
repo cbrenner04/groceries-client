@@ -70,6 +70,7 @@ function ListContainer(props) {
   const [errors, setErrors] = useState('');
   const [itemToDelete, setItemToDelete] = useState(false);
   const [success, setSuccess] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (props.match) {
@@ -140,15 +141,15 @@ function ListContainer(props) {
     const updatedNotPurchasedItems = notPurchasedItems;
     setNotPurchasedItems({});
     if (!updatedNotPurchasedItems[category]) updatedNotPurchasedItems[category] = [];
-    updatedNotPurchasedItems[category] = update(updatedNotPurchasedItems[category], { $push: [item] });
-    setNotPurchasedItems(sortItems(updatedNotPurchasedItems));
+    updatedNotPurchasedItems[category] = sortItems(update(updatedNotPurchasedItems[category], { $push: [item] }));
+    setNotPurchasedItems(updatedNotPurchasedItems);
     if (!categories.includes(category)) {
       const cats = update(categories, { $push: [category] });
       setCategories(cats);
     }
     if (!includedCategories.includes(category)) {
-      const iCats = update(includedCategories, { $push: [category] });
-      setIncludedCategories(iCats);
+      const includedCats = update(includedCategories, { $push: [category] });
+      setIncludedCategories(includedCats);
     }
   };
 
@@ -282,11 +283,9 @@ function ListContainer(props) {
       });
   };
 
-  const confirmModalId = 'confirm-delete-item-modal';
-
   const handleDelete = (item) => {
     setItemToDelete(item);
-    $(`#${confirmModalId}`).modal('show');
+    setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = () => {
@@ -299,12 +298,12 @@ function ListContainer(props) {
       setUserInfo(request1);
       $.ajax({
         type: 'GET',
-        url: `/lists/${props.match.params.id}`,
+        url: `${config.apiBase}/lists/${props.match.params.id}`,
         dataType: 'JSON',
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).done((data, _status, request2) => {
         setUserInfo(request2);
-        $(`#${confirmModalId}`).modal('hide');
+        setShowDeleteConfirm(false);
         const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
         const responseNotPurchasedItems = categorizeNotPurchasedItems(
           data.not_purchased_items,
@@ -323,9 +322,9 @@ function ListContainer(props) {
   };
 
   return (
-    <div>
+    <>
       <h1>{ list.name }</h1>
-      <Link to="/lists" className="pull-right">Back to lists</Link>
+      <Link to="/lists" className="float-right">Back to lists</Link>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <br />
       {
@@ -356,13 +355,13 @@ function ListContainer(props) {
         categories={includedCategories}
       />
       <ConfirmModal
-        name={confirmModalId}
         action="delete"
         body="Are you sure you want to delete this item?"
+        show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => $(`#${confirmModalId}`).modal('hide')}
+        handleClear={() => setShowDeleteConfirm(false)}
       />
-    </div>
+    </>
   );
 }
 

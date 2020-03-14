@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListGroup } from 'react-bootstrap';
 
 import { prettyDueBy } from '../../../utils/format';
 import PurchasedItemButtons from './PurchasedItemButtons';
@@ -34,8 +35,7 @@ function ListItem(props) {
       />);
 
   return (
-    <div
-      className="list-group-item"
+    <ListGroup.Item
       key={props.item.id}
       style={{ display: 'block' }}
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
@@ -45,19 +45,19 @@ function ListItem(props) {
         {
           props.listType === 'ToDoList' &&
             <small className="text-muted">
-              <div>
+              <>
                 {
                   props.item.assignee_id
                     ? `Assigned To: ${props.listUsers.find(user => user.id === props.item.assignee_id).email}`
                     : ''
                 }
-              </div>
-              <div>{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
+              </>
+              <>{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</>
             </small>
         }
       </div>
       { props.permission === 'write' && itemButtons }
-    </div>
+    </ListGroup.Item>
   );
 }
 

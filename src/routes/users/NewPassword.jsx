@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as $ from 'jquery';
-import * as config from '../../config/default';
+import { Button, Form } from 'react-bootstrap';
 
+import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 
@@ -16,7 +17,7 @@ function NewPassword(props) {
     setErrors('');
     const user = { email };
     $.ajax({
-      url: `${config.apiBase}/users/password`,
+      url: `${config.apiBase}/auth/password`,
       type: 'POST',
       data: { user },
     }).done(() => {
@@ -26,17 +27,17 @@ function NewPassword(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Forgot your password?</h2>
-      <form className="form" onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off">
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Send me reset password instructions
-        </button>
-      </form>
+        </Button>
+      </Form>
       <Link to="/users/sign_in">Log in</Link>
-    </div>
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const CheckboxField = ({
   name,
@@ -8,18 +9,9 @@ const CheckboxField = ({
   handleChange,
   classes,
 }) => (
-  <div className={`form-check ${classes}`}>
-    <input
-      className="form-check-input"
-      id={name}
-      type="checkbox"
-      checked={value}
-      onChange={handleChange}
-    />
-    <label className="form-check-label" htmlFor={name}>
-      {label}
-    </label>
-  </div>
+  <Form.Group controlId={name} className={classes}>
+    <Form.Check type="checkbox" checked={value} onChange={handleChange} label={label} />
+  </Form.Group>
 );
 
 CheckboxField.propTypes = {

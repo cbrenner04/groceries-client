@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Form } from 'react-bootstrap';
 
 const NumberField = ({
   name,
@@ -7,16 +8,10 @@ const NumberField = ({
   value,
   handleChange,
 }) => (
-  <div className="form-group">
-    <label htmlFor={name}>{label}</label>
-    <input
-      type="number"
-      className="form-control"
-      id={name}
-      value={value || ''}
-      onChange={handleChange}
-    />
-  </div>
+  <Form.Group controlId={name}>
+    <Form.Label>{label}</Form.Label>
+    <Form.Control type="number" value={value || ''} onChange={handleChange} />
+  </Form.Group>
 );
 
 NumberField.propTypes = {

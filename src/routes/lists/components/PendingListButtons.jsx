@@ -1,23 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ButtonGroup } from 'react-bootstrap';
+
+import { Complete, Trash } from '../../../components/ActionButtons';
 
 const PendingListButtons = props => (
-  <div className="btn-group float-right" role="group">
-    <button
-      onClick={() => props.onListAcceptance(props.list)}
-      className="btn btn-link p-0 mr-3"
-      data-test-id="pending-list-accept"
-    >
-      <i className="fa fa-check fa-2x text-success" />
-    </button>
-    <button
-      onClick={() => props.onListRejection(props.list)}
-      className="btn btn-link p-0 mr-3"
-      data-test-id="pending-list-trash"
-    >
-      <i className="fa fa-trash fa-2x text-danger" />
-    </button>
-  </div>
+  <ButtonGroup className="float-right">
+    <Complete handleClick={() => props.onListAcceptance(props.list)} data-test-id="pending-list-accept"/>
+    <Trash handleClick={() => props.onListRejection(props.list)} data-test-id="pending-list-trash"/>
+  </ButtonGroup>
 );
 
 PendingListButtons.propTypes = {

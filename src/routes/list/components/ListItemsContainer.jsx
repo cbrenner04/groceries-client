@@ -2,66 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ListItems from './ListItems';
+import CategoryFilter from './CategoryFilter';
 
 const ListItemsContainer = props => (
   <div>
     <div className="clearfix">
       <h2 className="float-left">Items</h2>
-      {!props.categories.length &&
-        <button
-          className="btn btn-light dropdown-toggle float-right"
-          type="button"
-          id="filter-by-category-button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          disabled
-          style={{ cursor: 'not-allowed' }}
-        >
-          Filter by category
-        </button>}
-      {!!props.categories.length && !props.filter &&
-        <div className="dropdown float-right">
-          <button
-            className="btn btn-light dropdown-toggle"
-            type="button"
-            id="filter-by-category-button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Filter by category
-          </button>
-          <div className="dropdown-menu" aria-labelledby="filter-by-category-button">
-            {props.categories.sort().map((category) => {
-              if (!category) return '';
-              return (
-                <button
-                  key={category}
-                  name={category}
-                  onClick={props.handleCategoryFilter}
-                  className="dropdown-item"
-                  style={{ cursor: 'pointer' }}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-        </div>}
-      {props.filter &&
-        <div className="float-right">
-          <span style={{ lineHeight: '2.5rem', marginRight: '1rem' }}>Filtering by:</span>
-          <button
-            id="clear-filter-button"
-            type="button"
-            className="btn btn-outline-primary"
-            style={{ marginRight: '1rem' }}
-            onClick={props.handleClearFilter}
-          >
-            {props.filter} <i className="fa fa-trash" />
-          </button>
-        </div>}
+      <CategoryFilter
+        categories={props.categories}
+        filter={props.filter}
+        handleCategoryFilter={props.handleCategoryFilter}
+        handleClearFilter={props.handleClearFilter}
+      />
     </div>
     {(props.filter || !props.categories.length) &&
       <div>

@@ -22,7 +22,7 @@ function EditPassword(props) {
       reset_password_token: queryString.parse(props.location.search).reset_password_token,
     };
     $.ajax({
-      url: `${config.apiBase}/users/password`,
+      url: `${config.apiBase}/auth/password`,
       data: { user },
       method: 'PUT',
     }).done(() => {
@@ -36,7 +36,7 @@ function EditPassword(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Change your password</h2>
       <PasswordForm
@@ -47,7 +47,7 @@ function EditPassword(props) {
         submissionHandler={handleSubmit}
       />
       <Link to="/users/sign_in">Log in</Link>
-    </div>
+    </>
   );
 }
 

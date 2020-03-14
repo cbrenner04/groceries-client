@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button, Form } from 'react-bootstrap';
 
 import { PasswordField } from '../../../components/FormFields';
 
 const PasswordForm = props => (
-  <form className="form" onSubmit={props.submissionHandler} autoComplete="off">
+  <Form onSubmit={props.submissionHandler} autoComplete="off">
     <PasswordField
       name="password"
       label="Password"
@@ -19,10 +20,10 @@ const PasswordForm = props => (
       handleChange={props.passwordConfirmationChangeHandler}
       placeholder="Confirm new password"
     />
-    <button type="submit" className="btn btn-success btn-block">
+    <Button type="submit" variant="success" block>
       Set my password
-    </button>
-  </form>
+    </Button>
+  </Form>
 );
 
 PasswordForm.propTypes = {

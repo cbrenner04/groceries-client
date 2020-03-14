@@ -1,30 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Alert } from 'react-bootstrap';
 
-function Alert(props) {
+function GenericAlert(props) {
   if (props.errors === '' && props.success === '') return '';
   return (
-    <div
-      className={`alert alert-${props.errors === '' ? 'success' : 'danger'} alert-dismissible fade show`}
-      role="alert"
-    >
-      <button className="close" onClick={props.handleDismiss} aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <Alert variant={props.errors === '' ? 'success' : 'danger'} onClose={props.handleDismiss} dismissible>
       { props.errors || props.success }
-    </div>
+    </Alert>
   );
 }
 
-Alert.propTypes = {
+GenericAlert.propTypes = {
   errors: PropTypes.string,
   success: PropTypes.string,
   handleDismiss: PropTypes.func.isRequired,
 };
 
-Alert.defaultProps = {
+GenericAlert.defaultProps = {
   errors: '',
   success: '',
 };
 
-export default Alert;
+export default GenericAlert;

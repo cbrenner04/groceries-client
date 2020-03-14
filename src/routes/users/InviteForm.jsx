@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as $ from 'jquery';
+import { Button, Form } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -15,7 +16,7 @@ export default function InviteForm() {
     event.preventDefault();
     setErrors('');
     $.ajax({
-      url: `${config.apiBase}/users/invitation`,
+      url: `${config.apiBase}/auth/invitation`,
       type: 'POST',
       data: { user: { email } },
       headers: JSON.parse(sessionStorage.getItem('user')),
@@ -32,17 +33,17 @@ export default function InviteForm() {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Send Invitation</h1>
-      <Link to="/lists" className="pull-right">Back to lists</Link>
+      <Link to="/lists" className="float-right">Back to lists</Link>
       <br />
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
-        <button type="submit" className="btn btn-success btn-block">
+        <Button type="submit" variant="success" block>
           Invite User
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </>
   );
 }

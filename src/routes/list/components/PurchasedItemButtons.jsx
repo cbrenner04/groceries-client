@@ -1,27 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ButtonGroup } from 'react-bootstrap';
+
+import { Bookmark, Refresh, Trash } from '../../../components/ActionButtons';
 
 function PurchasedItemButtons(props) {
   const handleRead = () => props.handleReadOfItem(props.item);
   const handleUnRead = () => props.handleUnReadOfItem(props.item);
   return (
-    <div className="btn-group float-right" role="group">
+    <ButtonGroup className="float-right">
       {
         (props.listType === 'GroceryList' || props.listType === 'ToDoList') &&
-          <button onClick={() => props.handleItemUnPurchase(props.item)} className="btn btn-link p-0 mr-3">
-            <i className="fa fa-redo fa-2x text-primary" />
-          </button>
+          <Refresh handleClick={() => props.handleItemUnPurchase(props.item)} />
       }
       {
         props.listType === 'BookList' &&
-          <button onClick={props.item.read ? handleUnRead : handleRead} className="btn btn-link p-0 mr-3">
-            <i className={`${props.item.read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
-          </button>
+          <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
       }
-      <button onClick={() => props.handleItemDelete(props.item)} className="btn btn-link p-0">
-        <i className="fa fa-trash fa-2x text-danger" />
-      </button>
-    </div>
+      <Trash variant="link" onClick={() => props.handleItemDelete(props.item)} />
+    </ButtonGroup>
   );
 }
 
