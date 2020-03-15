@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-const Edit = ({ to, ...rest }) => (
-  <Button variant="link" href={to} className="p-0 mr-3" {...rest}>
+const Edit = (props) => (
+  <Link className="p-0 mr-3" {...props}>
     <i className="fa fa-edit fa-2x text-warning" />
-  </Button>
+  </Link>
 );
 
 Edit.propTypes = {

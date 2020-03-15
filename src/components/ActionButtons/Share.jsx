@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-const Share = ({ to, ...rest }) => (
-  <Button href={to} variant="link" className="p-0 mr-3" {...rest}>
+const Share = (props) => (
+  <Link className="p-0 mr-3" {...props}>
     <i className="fa fa-users fa-2x text-primary" />
-  </Button>
+  </Link>
 );
 
 Share.propTypes = {
