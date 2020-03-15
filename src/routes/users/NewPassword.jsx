@@ -15,13 +15,13 @@ function NewPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    const user = { email };
     $.ajax({
       url: `${config.apiBase}/auth/password`,
       type: 'POST',
-      data: { user },
+      data: { email, redirect_url: `${config.rootUrl}/users/password/edit` },
     }).done(() => {
-      // devise returns 200 no matter what is entered. On bad emails we need to redirect to /users/sign_in
+      props.history.push('/users/sign_in');
+    }).fail(() => {
       props.history.push('/users/sign_in');
     });
   };

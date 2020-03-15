@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import * as $ from 'jquery';
-import * as config from '../../config/default';
 
+import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
 
@@ -16,17 +16,16 @@ function EditPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    const user = {
-      password,
-      password_confirmation: passwordConfirmation,
-      reset_password_token: queryString.parse(props.location.search).reset_password_token,
-    };
     $.ajax({
       url: `${config.apiBase}/auth/password`,
-      data: { user },
+      data: {
+        password,
+        password_confirmation: passwordConfirmation,
+      },
       method: 'PUT',
-    }).done(() => {
-      // noop
+      headers: queryString.parse(props.location.search),
+    }).done((_data, _status, request) => {
+      props.history.push('/');
     }).fail((response) => {
       const responseJSON = JSON.parse(response.responseText);
       const responseTextKeys = Object.keys(responseJSON);

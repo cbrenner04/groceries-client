@@ -211,8 +211,11 @@ function ShareListForm(props) {
       <br />
       <ListGroup>
         {
-          refused.map(({ user }) =>
-            <ListGroup.Item key={user.id} id={`refused-user-${user.id}`}>{user.email}</ListGroup.Item>)
+          refused.map(({ user }) => (
+            <div key={user.id} id={`refused-user-${user.id}`}>
+              <ListGroup.Item>{user.email}</ListGroup.Item>
+            </div>
+          ))
         }
       </ListGroup>
     </div>
