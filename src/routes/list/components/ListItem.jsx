@@ -45,13 +45,13 @@ function ListItem(props) {
         {
           props.listType === 'ToDoList' &&
             <small className="text-muted">
-              <>
+              <div>
                 {
                   props.item.assignee_id
                     ? `Assigned To: ${props.listUsers.find(user => user.id === props.item.assignee_id).email}`
                     : ''
                 }
-              </>
+              </div>
               <>{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</>
             </small>
         }

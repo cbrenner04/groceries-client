@@ -12,21 +12,25 @@ const PermissionButtons = props => (
           if (user.id === props.userId) return '';
           if (props.userIsOwner) {
             return (
-              <ListGroup.Item
-                action
-                key={id}
-                id={`${props.status}-user-${user.id}`}
-                className={'d-flex justify-content-between align-items-center'}
-                onClick={() => props.togglePermission(id, permissions, props.status)}
-              >
-                <span>{user.email}</span>
-                <Badge id={`perm-${permissions}`} variant={permissions === 'write' ? 'success' : 'primary'}>
-                  {permissions}
-                </Badge>
-              </ListGroup.Item>
+              <div key={id} id={`${props.status}-user-${user.id}`}>
+                <ListGroup.Item
+                  action
+                  className={'d-flex justify-content-between align-items-center'}
+                  onClick={() => props.togglePermission(id, permissions, props.status)}
+                >
+                  <span>{user.email}</span>
+                  <Badge id={`perm-${permissions}`} variant={permissions === 'write' ? 'success' : 'primary'}>
+                    {permissions}
+                  </Badge>
+                </ListGroup.Item>
+              </div>
             );
           }
-          return <ListGroup.Item key={id} id={`${props.status}-user-${user.id}`}>{user.email}</ListGroup.Item>;
+          return (
+            <div key={id} id={`${props.status}-user-${user.id}`}>
+              <ListGroup.Item>{user.email}</ListGroup.Item>
+            </div>
+          );
         })
       }
     </ListGroup>

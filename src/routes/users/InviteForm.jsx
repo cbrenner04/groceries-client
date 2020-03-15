@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
@@ -8,7 +9,7 @@ import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import { setUserInfo } from '../../utils/auth';
 
-export default function InviteForm() {
+function InviteForm(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
@@ -18,11 +19,12 @@ export default function InviteForm() {
     $.ajax({
       url: `${config.apiBase}/auth/invitation`,
       type: 'POST',
-      data: { user: { email } },
+      data: { email },
       headers: JSON.parse(sessionStorage.getItem('user')),
     })
     .done((_data, _status, request) => {
       setUserInfo(request);
+      props.history.push('/');
     })
     .fail((response) => {
       const responseJSON = JSON.parse(response.responseText);
@@ -47,3 +49,11 @@ export default function InviteForm() {
     </>
   );
 }
+
+InviteForm.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
+};
+
+export default InviteForm;

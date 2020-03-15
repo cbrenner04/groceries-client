@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import * as $ from 'jquery';
+import { Button, Form, ListGroup } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -67,14 +68,29 @@ function ShareListForm(props) {
       url: `${config.apiBase}/auth/invitation`,
       type: 'POST',
       data: {
-        user: {
-          email: newEmail,
-        },
+        email: newEmail,
         list_id: listId,
       },
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
+    }).done(({ user, users_list: usersList }, _status, request) => {
       setUserInfo(request);
+      const newPending = update(pending, {
+        $push: [
+          {
+            user: {
+              id: user.id,
+              email: user.email,
+            },
+            users_list: {
+              id: usersList.id,
+              permissions: usersList.permissions,
+            },
+          },
+        ],
+      });
+      // TODO: these need to be sorted
+      setPending(newPending);
+      setNewEmail('');
       setSuccess(`"${name}" has been successfully shared with ${newEmail}.`);
     }).fail(response => failure(response));
   };
@@ -110,6 +126,7 @@ function ShareListForm(props) {
         });
         setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
         setInvitableUsers(newUsers);
+        // TODO: these need to be sorted
         setPending(newPending);
       })
       .fail(response => failure(response));
@@ -145,29 +162,33 @@ function ShareListForm(props) {
       <Link to="/lists" className="float-right">Back to lists</Link>
       <br />
       <Alert errors={errors} success={success} handleDismiss={handleAlertDismiss} />
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <EmailField
           name="new-email"
           label="Enter an email to invite someone to share this list:"
           value={newEmail}
           handleChange={({ target: { value } }) => setNewEmail(value)}
         />
-        <button type="submit" className="btn btn-success btn-block">Share List</button>
-      </form>
+        <Button type="submit" variant="success" block>Share List</Button>
+      </Form>
       <br />
       <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>
-      {
-        invitableUsers.map(user => (
-          <button
-            key={user.id}
-            id={`invite-user-${user.id}`}
-            className="list-group-item list-group-item-action btn btn-link"
-            onClick={() => handleSelectUser(user)}
-          >
-            {user.email}
-          </button>
-        ))
-      }
+      <ListGroup>
+        {
+          invitableUsers.map(user => (
+            <div id={`invite-user-${user.id}`}>
+              <ListGroup.Item
+                action
+                key={user.id}
+                className="btn btn-link"
+                onClick={() => handleSelectUser(user)}
+              >
+                {user.email}
+              </ListGroup.Item>
+            </div>
+          ))
+        }
+      </ListGroup>
       <br />
       <h2>Already shared</h2>
       <p className="text-lead">Click to toggle permissions between read and write</p>
@@ -188,8 +209,12 @@ function ShareListForm(props) {
       />
       <h3>Refused</h3>
       <br />
-      { refused.map(({ user }) =>
-        <div key={user.id} id={`refused-user-${user.id}`} className="list-group-item">{user.email}</div>) }
+      <ListGroup>
+        {
+          refused.map(({ user }) =>
+            <ListGroup.Item key={user.id} id={`refused-user-${user.id}`}>{user.email}</ListGroup.Item>)
+        }
+      </ListGroup>
     </div>
   );
 }
