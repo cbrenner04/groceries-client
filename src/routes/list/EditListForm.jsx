@@ -57,7 +57,7 @@ function EditListForm(props) {
   return (
     <>
       <h1>Edit { name }</h1>
-      <Button href="/lists" className="float-right">
+      <Button href="/lists" className="float-right" variant="link">
         Back to lists
       </Button>
       <br />
