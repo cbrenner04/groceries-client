@@ -2,13 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const CheckboxField = ({
-  name,
-  label,
-  value,
-  handleChange,
-  classes,
-}) => (
+const CheckboxField = ({ name, label, value, handleChange, classes }) => (
   <Form.Group controlId={name} className={classes}>
     <Form.Check type="checkbox" checked={value} onChange={handleChange} label={label} />
   </Form.Group>

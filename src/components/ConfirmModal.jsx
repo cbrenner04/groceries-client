@@ -10,7 +10,9 @@ function ConfirmModal(props) {
       </Modal.Header>
       <Modal.Body>{props.body}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={props.handleClear}>Close</Button>
+        <Button variant="secondary" onClick={props.handleClear}>
+          Close
+        </Button>
         <Button variant="primary" onClick={props.handleConfirm} data-test-id={`confirm-${props.action}`}>
           Yes, I&apos;m sure.
         </Button>

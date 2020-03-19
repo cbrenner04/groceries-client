@@ -16,82 +16,87 @@ function EditListForm(props) {
 
   useEffect(() => {
     if (!props.match) props.history.push('/lists');
-    axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}/edit`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ data: { list, current_user_id: currentUserId }, headers }) => {
-      setUserInfo(headers);
-      if (list.owner_id !== currentUserId) props.history.push('/lists');
-      setId(list.id);
-      setName(list.name);
-      setCompleted(list.completed);
-      setType(list.type);
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        setUserInfo(response.headers);
-        if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
+    axios
+      .get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}/edit`, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      })
+      .then(({ data: { list, current_user_id: currentUserId }, headers }) => {
+        setUserInfo(headers);
+        if (list.owner_id !== currentUserId) props.history.push('/lists');
+        setId(list.id);
+        setName(list.name);
+        setCompleted(list.completed);
+        setType(list.type);
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push('/lists');
+          }
+        } else if (request) {
+          // TODO: what do here?
         } else {
-          // TODO: how do we pass error messages along?
-          props.history.push('/lists');
+          setErrors(message);
         }
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+      });
   }, [props.history, props.match]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     const list = {
       name,
       completed,
       type,
     };
-    axios.put(`${process.env.REACT_APP_API_BASE}/lists/${id}`, { list }, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ headers }) => {
-      setUserInfo(headers);
-      props.history.push('/lists');
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        setUserInfo(response.headers);
-        if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/lists');
+    axios
+      .put(
+        `${process.env.REACT_APP_API_BASE}/lists/${id}`,
+        { list },
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      )
+      .then(({ headers }) => {
+        setUserInfo(headers);
+        props.history.push('/lists');
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else if (response.status === 403) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/lists');
+          } else {
+            const keys = Object.keys(response.data);
+            const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+            setErrors(responseErrors.join(' and '));
+          }
+        } else if (request) {
+          // TODO: what do here?
         } else {
-          const keys = Object.keys(response.data);
-          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
+          setErrors(message);
         }
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+      });
   };
 
   return (
     <>
-      <h1>Edit { name }</h1>
+      <h1>Edit {name}</h1>
       <Button href="/lists" className="float-right" variant="link">
         Back to lists
       </Button>
       <br />
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        <TextField
-          name="name"
-          label="Name"
-          value={name}
-          handleChange={({ target: { value } }) => setName(value)}
-        />
+        <TextField name="name" label="Name" value={name} handleChange={({ target: { value } }) => setName(value)} />
         <SelectField
           name="type"
           label="Type"

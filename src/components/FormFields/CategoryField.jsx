@@ -7,7 +7,9 @@ const CategoryField = props => (
     <Form.Label>Category</Form.Label>
     <Form.Control type="text" value={props.category} onChange={props.handleInput} list="categories" />
     <datalist id="categories">
-      {props.categories.map(category => <option key={category} value={category} />)}
+      {props.categories.map(category => (
+        <option key={category} value={category} />
+      ))}
     </datalist>
   </Form.Group>
 );

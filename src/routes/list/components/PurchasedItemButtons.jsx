@@ -9,14 +9,12 @@ function PurchasedItemButtons(props) {
   const handleUnRead = () => props.handleUnReadOfItem(props.item);
   return (
     <ButtonGroup className="float-right">
-      {
-        (props.listType === 'GroceryList' || props.listType === 'ToDoList') &&
-          <Refresh handleClick={() => props.handleItemUnPurchase(props.item)} />
-      }
-      {
-        props.listType === 'BookList' &&
-          <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
-      }
+      {(props.listType === 'GroceryList' || props.listType === 'ToDoList') && (
+        <Refresh handleClick={() => props.handleItemUnPurchase(props.item)} />
+      )}
+      {props.listType === 'BookList' && (
+        <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
+      )}
       <Trash handleClick={() => props.handleItemDelete(props.item)} />
     </ButtonGroup>
   );

@@ -11,19 +11,23 @@ function NewPassword(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
-    axios.post(
-      `${process.env.REACT_APP_API_BASE}/auth/password`,
-      { email, redirect_url: `${process.env.REACT_APP_ROOT_URL}/users/password/edit` },
-    ).then(() => {
-      // noop
-    }).catch(() => {
-      // noop
-    }).finally(() => {
-      props.history.push('/users/sign_in');
-    });
+    axios
+      .post(`${process.env.REACT_APP_API_BASE}/auth/password`, {
+        email,
+        redirect_url: `${process.env.REACT_APP_ROOT_URL}/users/password/edit`,
+      })
+      .then(() => {
+        // noop
+      })
+      .catch(() => {
+        // noop
+      })
+      .finally(() => {
+        props.history.push('/users/sign_in');
+      });
   };
 
   return (

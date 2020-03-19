@@ -16,10 +16,9 @@ function NotPurchasedItemButtons(props) {
 
   return (
     <ButtonGroup className="float-right">
-      {
-        props.listType === 'BookList' &&
-          <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
-      }
+      {props.listType === 'BookList' && (
+        <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
+      )}
       <Complete handleClick={() => props.handlePurchaseOfItem(props.item)} />
       <Edit to={`${listItemPath()}/${props.item.id}/edit`} />
       <Trash handleClick={() => props.handleItemDelete(props.item)} />

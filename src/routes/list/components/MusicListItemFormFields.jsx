@@ -27,17 +27,15 @@ const EditMusicListItemFormFields = props => (
       placeholder="Mack Daddy"
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.categoryChangeHandler} />
-    {
-      props.editForm && (
-        <CheckboxField
-          name="purchased"
-          label="Purchased"
-          value={props.purchased}
-          handleChange={props.purchasedChangeHandler}
-          classes="mb-3"
-        />
-      )
-    }
+    {props.editForm && (
+      <CheckboxField
+        name="purchased"
+        label="Purchased"
+        value={props.purchased}
+        handleChange={props.purchasedChangeHandler}
+        classes="mb-3"
+      />
+    )}
   </>
 );
 

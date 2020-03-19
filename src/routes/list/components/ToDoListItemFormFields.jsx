@@ -1,13 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  TextField,
-  CategoryField,
-  DateField,
-  CheckboxField,
-  SelectField,
-} from '../../../components/FormFields';
+import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../components/FormFields';
 
 const EditToDoListItemFormFields = props => (
   <>
@@ -34,17 +28,15 @@ const EditToDoListItemFormFields = props => (
       placeholder="mm/dd/yyyy"
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.categoryChangeHandler} />
-    {
-      props.editForm && (
-        <CheckboxField
-          name="completed"
-          label="Completed"
-          value={props.completed}
-          handleChange={props.completedChangeHandler}
-          classes="mb-3"
-        />
-      )
-    }
+    {props.editForm && (
+      <CheckboxField
+        name="completed"
+        label="Completed"
+        value={props.completed}
+        handleChange={props.completedChangeHandler}
+        classes="mb-3"
+      />
+    )}
   </>
 );
 
@@ -57,10 +49,12 @@ EditToDoListItemFormFields.propTypes = {
   dueByChangeHandler: PropTypes.func.isRequired,
   completed: PropTypes.bool,
   completedChangeHandler: PropTypes.func,
-  listUsers: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    email: PropTypes.string,
-  })).isRequired,
+  listUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      email: PropTypes.string,
+    }),
+  ).isRequired,
   editForm: PropTypes.bool,
   category: PropTypes.string,
   categoryChangeHandler: PropTypes.func.isRequired,

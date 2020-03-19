@@ -4,36 +4,29 @@ import { Button, Dropdown } from 'react-bootstrap';
 
 const CategoryFilter = props => (
   <div className="float-right">
-    {!props.categories.filter((cat) => !!cat).length &&
-      <Button
-        variant="light"
-        disabled
-        style={{ cursor: 'not-allowed' }}
-      >
+    {!props.categories.filter(cat => !!cat).length && (
+      <Button variant="light" disabled style={{ cursor: 'not-allowed' }}>
         Filter by category
-      </Button>}
-    {!!props.categories.filter((cat) => !!cat).length && !props.filter &&
+      </Button>
+    )}
+    {!!props.categories.filter(cat => !!cat).length && !props.filter && (
       <Dropdown>
         <Dropdown.Toggle variant="light" id="filter-by-category-button">
           Filter by category
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {props.categories.sort().map((category) => {
+          {props.categories.sort().map(category => {
             if (!category) return '';
             return (
-              <Dropdown.Item
-                as="button"
-                key={category}
-                name={category}
-                onClick={props.handleCategoryFilter}
-              >
+              <Dropdown.Item as="button" key={category} name={category} onClick={props.handleCategoryFilter}>
                 {category}
               </Dropdown.Item>
             );
           })}
         </Dropdown.Menu>
-      </Dropdown>}
-    {props.filter &&
+      </Dropdown>
+    )}
+    {props.filter && (
       <>
         <span style={{ lineHeight: '2.5rem', marginRight: '1rem' }}>Filtering by:</span>
         <Button
@@ -44,7 +37,8 @@ const CategoryFilter = props => (
         >
           {props.filter} <i className="fa fa-trash" />
         </Button>
-      </>}
+      </>
+    )}
   </div>
 );
 

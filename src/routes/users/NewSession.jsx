@@ -14,7 +14,7 @@ export default function NewSession(props) {
 
   // TODO: handle redirect if already signed in
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
     const user = {
@@ -22,13 +22,17 @@ export default function NewSession(props) {
       password,
       remember_me: rememberMe,
     };
-    axios.post(`${process.env.REACT_APP_API_BASE}/auth/sign_in`, user)
+    axios
+      .post(`${process.env.REACT_APP_API_BASE}/auth/sign_in`, user)
       .then(({ data: { data }, headers }) => {
-        sessionStorage.setItem('user', JSON.stringify({
-          'access-token': headers['access-token'],
-          client: headers['client'],
-          uid: data.uid,
-        }));
+        sessionStorage.setItem(
+          'user',
+          JSON.stringify({
+            'access-token': headers['access-token'],
+            client: headers['client'],
+            uid: data.uid,
+          }),
+        );
         props.history.push('/');
       })
       .catch(({ response, request, message }) => {

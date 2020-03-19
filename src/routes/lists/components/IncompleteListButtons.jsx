@@ -10,14 +10,17 @@ function IncompleteListButtons(props) {
   const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ data: { permissions }, headers }) => {
-      setUserInfo(headers);
-      setCurrentUserPermissions(permissions);
-    }).catch(() => {
-      // noop
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_BASE}/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      })
+      .then(({ data: { permissions }, headers }) => {
+        setUserInfo(headers);
+        setCurrentUserPermissions(permissions);
+      })
+      .catch(() => {
+        // noop
+      });
   }, [props.list.id, props.list.users_list_id]);
 
   return (

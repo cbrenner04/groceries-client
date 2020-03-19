@@ -2,16 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const PasswordField = ({
-  name,
-  label,
-  value,
-  handleChange,
-  placeholder,
-}) => (
+const PasswordField = ({ name, label, value, handleChange, placeholder }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control type="password" value={value} onChange={handleChange} placeholder={placeholder} autoComplete="off"/>
+    <Form.Control type="password" value={value} onChange={handleChange} placeholder={placeholder} autoComplete="off" />
   </Form.Group>
 );
 

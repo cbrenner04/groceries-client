@@ -6,7 +6,7 @@ function GenericAlert(props) {
   if (props.errors === '' && props.success === '') return '';
   return (
     <Alert variant={props.errors === '' ? 'success' : 'danger'} onClose={props.handleDismiss} dismissible>
-      { props.errors || props.success }
+      {props.errors || props.success}
     </Alert>
   );
 }

@@ -12,27 +12,34 @@ function EditPassword(props) {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
-    axios.put(`${process.env.REACT_APP_API_BASE}/auth/password`, {
-      password,
-      password_confirmation: passwordConfirmation,
-    }, {
-      headers: queryString.parse(props.location.search),
-    }).then(() => {
-      props.history.push('/');
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+    axios
+      .put(
+        `${process.env.REACT_APP_API_BASE}/auth/password`,
+        {
+          password,
+          password_confirmation: passwordConfirmation,
+        },
+        {
+          headers: queryString.parse(props.location.search),
+        },
+      )
+      .then(() => {
+        props.history.push('/');
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
+      });
   };
 
   return (

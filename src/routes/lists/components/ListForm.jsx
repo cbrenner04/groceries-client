@@ -9,7 +9,7 @@ function ListForm(props) {
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     props.onFormSubmit({
       name,
@@ -41,7 +41,9 @@ function ListForm(props) {
         ]}
         blankOption={false}
       />
-      <Button type="submit" variant="success" block>Create List</Button>
+      <Button type="submit" variant="success" block>
+        Create List
+      </Button>
     </Form>
   );
 }

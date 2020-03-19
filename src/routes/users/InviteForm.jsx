@@ -12,41 +12,50 @@ function InviteForm(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
-    axios.post(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { email }, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ headers }) => {
-      setUserInfo(headers);
-      props.history.push('/');
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        setUserInfo(response.headers);
-        if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along
-          props.history.push('/lists');
+    axios
+      .post(
+        `${process.env.REACT_APP_API_BASE}/auth/invitation`,
+        { email },
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      )
+      .then(({ headers }) => {
+        setUserInfo(headers);
+        props.history.push('/');
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else if (response.status === 403) {
+            // TODO: how do we pass error messages along
+            props.history.push('/lists');
+          } else {
+            const responseTextKeys = Object.keys(response.data);
+            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+            setErrors(responseErrors.join(' and '));
+          }
+        } else if (request) {
+          // TODO: what do here?
         } else {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
+          setErrors(message);
         }
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+      });
   };
 
   return (
     <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Send Invitation</h1>
-      <Link to="/lists" className="float-right">Back to lists</Link>
+      <Link to="/lists" className="float-right">
+        Back to lists
+      </Link>
       <br />
       <Form onSubmit={handleSubmit}>
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />

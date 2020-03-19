@@ -38,101 +38,110 @@ function EditListItemForm(props) {
     if (props.match) {
       const { id, list_id } = props.match.params;
       // TODO: these three should be a in a promise all, set the user info once, handle errors once
-      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      }).then(({ data, headers}) => {
-        setUserInfo(headers);
-        const { item, list } = data;
-        const dueByDate = formatDueBy(item.due_by);
-        setUserId(item.user_id);
-        setListId(list.id);
-        setListType(list.type);
-        setItemId(item.id);
-        setProduct(item.product);
-        setTask(item.task);
-        setPurchased(item.purchased);
-        setQuantity(item.quantity);
-        setCompleted(item.completed);
-        setAuthor(item.author);
-        setTitle(item.title);
-        setRead(item.read);
-        setArtist(item.artist);
-        setDueBy(dueByDate);
-        setAssigneeId(item.assignee_id ? String(item.assignee_id) : '');
-        setAlbum(item.album);
-        setNumberInSeries(Number(item.number_in_series));
-        setCategory(item.category || '');
-      }).catch(({ response, request, message}) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
+      axios
+        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        })
+        .then(({ data, headers }) => {
+          setUserInfo(headers);
+          const { item, list } = data;
+          const dueByDate = formatDueBy(item.due_by);
+          setUserId(item.user_id);
+          setListId(list.id);
+          setListType(list.type);
+          setItemId(item.id);
+          setProduct(item.product);
+          setTask(item.task);
+          setPurchased(item.purchased);
+          setQuantity(item.quantity);
+          setCompleted(item.completed);
+          setAuthor(item.author);
+          setTitle(item.title);
+          setRead(item.read);
+          setArtist(item.artist);
+          setDueBy(dueByDate);
+          setAssigneeId(item.assignee_id ? String(item.assignee_id) : '');
+          setAlbum(item.album);
+          setNumberInSeries(Number(item.number_in_series));
+          setCategory(item.category || '');
+        })
+        .catch(({ response, request, message }) => {
+          if (response) {
+            setUserInfo(response.headers);
+            if (response.status === 401) {
+              // TODO: how do we pass error messages along?
+              props.history.push('/users/sign_in');
+            } else {
+              // TODO: how do we pass error messages along?
+              props.history.push(`/lists/${list_id}`);
+            }
+          } else if (request) {
+            // TODO: what do here?
           } else {
-            // TODO: how do we pass error messages along?
-            props.history.push(`/lists/${list_id}`);
+            setErrors(message);
           }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      });
-      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/users_lists`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      }).then(({ data: { accepted, pending, current_user_id: currentUserId }, headers }) => {
-        setUserInfo(headers);
-        const acceptedUsers = accepted.map(({ user }) => user);
-        const pendingUsers = pending.map(({ user }) => user);
-        const currentListUsers = acceptedUsers.concat(pendingUsers);
-        const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
-        if (userInAccepted && userInAccepted.users_list.permissions === 'write') {
-          setListUsers(currentListUsers);
-        } else {
-          // TODO: how do we pass errors around?
-          props.history.push('/lists');
-        }
-      }).catch(({ response, request, message}) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
+        });
+      axios
+        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/users_lists`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        })
+        .then(({ data: { accepted, pending, current_user_id: currentUserId }, headers }) => {
+          setUserInfo(headers);
+          const acceptedUsers = accepted.map(({ user }) => user);
+          const pendingUsers = pending.map(({ user }) => user);
+          const currentListUsers = acceptedUsers.concat(pendingUsers);
+          const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
+          if (userInAccepted && userInAccepted.users_list.permissions === 'write') {
+            setListUsers(currentListUsers);
           } else {
-            // TODO: how do we pass error messages along?
-            props.history.push(`/lists/${list_id}`);
+            // TODO: how do we pass errors around?
+            props.history.push('/lists');
           }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      });
-      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      }).then(({ data, headers }) => {
-        setUserInfo(headers);
-        setCategories(data.categories);
-      }).catch(({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
+        })
+        .catch(({ response, request, message }) => {
+          if (response) {
+            setUserInfo(response.headers);
+            if (response.status === 401) {
+              // TODO: how do we pass error messages along?
+              props.history.push('/users/sign_in');
+            } else {
+              // TODO: how do we pass error messages along?
+              props.history.push(`/lists/${list_id}`);
+            }
+          } else if (request) {
+            // TODO: what do here?
           } else {
-            // TODO: how do we pass error messages along?
-            props.history.push(`/lists/${list_id}`);
+            setErrors(message);
           }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      })
+        });
+      axios
+        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        })
+        .then(({ data, headers }) => {
+          setUserInfo(headers);
+          setCategories(data.categories);
+        })
+        .catch(({ response, request, message }) => {
+          if (response) {
+            setUserInfo(response.headers);
+            if (response.status === 401) {
+              // TODO: how do we pass error messages along?
+              props.history.push('/users/sign_in');
+            } else {
+              // TODO: how do we pass error messages along?
+              props.history.push(`/lists/${list_id}`);
+            }
+          } else if (request) {
+            // TODO: what do here?
+          } else {
+            setErrors(message);
+          }
+        });
     }
   }, [props.history, props.match]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
     const listItem = {
@@ -155,58 +164,54 @@ function EditListItemForm(props) {
     listItem[`${listTypeToSnakeCase(listType)}_id`] = listId;
     const putData = {};
     putData[`${listTypeToSnakeCase(listType)}_item`] = listItem;
-    axios.put(
-      `${process.env.REACT_APP_API_BASE}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`,
-      putData,
-      {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      }
-    ).then(({ headers }) => {
-      setUserInfo(headers);
-      // TODO: pass success message
-      props.history.push(`/lists/${listId}`);
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        setUserInfo(response.headers);
-        if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along?
-          props.history.push(`/lists/${listId}`);
-        } else {
-          const keys = Object.keys(response.data);
-          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
-          let joinString;
-          if (listType === 'BookList' || listType === 'MusicList') {
-            joinString = ' or ';
+    axios
+      .put(
+        `${process.env.REACT_APP_API_BASE}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`,
+        putData,
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      )
+      .then(({ headers }) => {
+        setUserInfo(headers);
+        // TODO: pass success message
+        props.history.push(`/lists/${listId}`);
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else if (response.status === 403) {
+            // TODO: how do we pass error messages along?
+            props.history.push(`/lists/${listId}`);
           } else {
-            joinString = ' and ';
+            const keys = Object.keys(response.data);
+            const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+            let joinString;
+            if (listType === 'BookList' || listType === 'MusicList') {
+              joinString = ' or ';
+            } else {
+              joinString = ' and ';
+            }
+            setErrors(responseErrors.join(joinString));
           }
-          setErrors(responseErrors.join(joinString));
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
         }
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+      });
   };
 
-  const itemName = () => (
-    {
+  const itemName = () =>
+    ({
       BookList: `${title ? `"${title}"` : ''} ${author}`,
       GroceryList: product,
-      MusicList: `${
-        title ? `"${title}"` : ''
-      } ${
-        artist
-      } ${
-        artist && album ? `- ${album || ''}` : ''
-      }`,
+      MusicList: `${title ? `"${title}"` : ''} ${artist} ${artist && album ? `- ${album || ''}` : ''}`,
       ToDoList: task,
-    }[listType]
-  );
+    }[listType]);
 
   const formFields = () => {
     if (listType === 'BookList') {
@@ -285,13 +290,13 @@ function EditListItemForm(props) {
   return (
     <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
-      <h1>Edit { itemName() }</h1>
+      <h1>Edit {itemName()}</h1>
       <Button href={`/lists/${listId}`} className="float-right" variant="link">
         Back to list
       </Button>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        { formFields() }
+        {formFields()}
         <Button type="submit" variant="success" block>
           Update Item
         </Button>

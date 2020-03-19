@@ -2,12 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-import {
-  CategoryField,
-  TextField,
-  NumberField,
-  CheckboxField,
-} from '../../../components/FormFields';
+import { CategoryField, TextField, NumberField, CheckboxField } from '../../../components/FormFields';
 
 const BookListItemFormFields = props => (
   <>
@@ -32,26 +27,24 @@ const BookListItemFormFields = props => (
       handleChange={props.numberInSeriesChangeHandler}
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.categoryChangeHandler} />
-    {
-      props.editForm && (
-        <Form.Row className="mb-3">
-          <CheckboxField
-            name="purchased"
-            label="Purchased"
-            value={props.purchased}
-            handleChange={props.purchasedChangeHandler}
-            classes="form-check-inline ml-1"
-          />
-          <CheckboxField
-            name="read"
-            label="Read"
-            value={props.read}
-            handleChange={props.readChangeHandler}
-            classes="form-check-inline"
-          />
-        </Form.Row>
-      )
-    }
+    {props.editForm && (
+      <Form.Row className="mb-3">
+        <CheckboxField
+          name="purchased"
+          label="Purchased"
+          value={props.purchased}
+          handleChange={props.purchasedChangeHandler}
+          classes="form-check-inline ml-1"
+        />
+        <CheckboxField
+          name="read"
+          label="Read"
+          value={props.read}
+          handleChange={props.readChangeHandler}
+          classes="form-check-inline"
+        />
+      </Form.Row>
+    )}
   </>
 );
 

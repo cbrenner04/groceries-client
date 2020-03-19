@@ -6,8 +6,8 @@ import { Complete, Trash } from '../../../components/ActionButtons';
 
 const PendingListButtons = props => (
   <ButtonGroup className="float-right">
-    <Complete handleClick={() => props.onListAcceptance(props.list)} data-test-id="pending-list-accept"/>
-    <Trash handleClick={() => props.onListRejection(props.list)} data-test-id="pending-list-trash"/>
+    <Complete handleClick={() => props.onListAcceptance(props.list)} data-test-id="pending-list-accept" />
+    <Trash handleClick={() => props.onListRejection(props.list)} data-test-id="pending-list-trash" />
   </ButtonGroup>
 );
 

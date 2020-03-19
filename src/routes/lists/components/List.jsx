@@ -12,26 +12,30 @@ import PendingListButtons from './PendingListButtons';
 function List(props) {
   const { list } = props;
 
-  const acceptedListButtons = () => (list.completed
-    ? (<CompletedListButtons
-      userId={props.userId}
-      list={props.list}
-      onListRefresh={props.onListRefresh}
-      onListDeletion={props.onListDeletion}
-    />)
-    : (<IncompleteListButtons
-      userId={props.userId}
-      list={props.list}
-      onListCompletion={props.onListCompletion}
-      onListDeletion={props.onListDeletion}
-    />));
+  const acceptedListButtons = () =>
+    list.completed ? (
+      <CompletedListButtons
+        userId={props.userId}
+        list={props.list}
+        onListRefresh={props.onListRefresh}
+        onListDeletion={props.onListDeletion}
+      />
+    ) : (
+      <IncompleteListButtons
+        userId={props.userId}
+        list={props.list}
+        onListCompletion={props.onListCompletion}
+        onListDeletion={props.onListDeletion}
+      />
+    );
 
   const acceptedListTestClass = () => (list.completed ? 'completed-list' : 'non-completed-list');
 
   const listTitle = () => (
     <h5 className="mb-1">
       <i className={`fa ${listIconClass(list.type)} text-info mr-3`} />
-      {list.name}{list.refreshed && '*'}
+      {list.name}
+      {list.refreshed && '*'}
     </h5>
   );
 
@@ -52,20 +56,18 @@ function List(props) {
           {props.accepted ? acceptedListLink() : listTitle()}
         </Col>
         <Col md="4" className="pt-1">
-          <small className="text-muted">
-            {formatDate(list.created_at)}
-          </small>
+          <small className="text-muted">{formatDate(list.created_at)}</small>
         </Col>
         <Col md="2">
-          {
-            props.accepted
-              ? acceptedListButtons()
-              : <PendingListButtons
-                list={list}
-                onListAcceptance={props.onListAcceptance}
-                onListRejection={props.onListRejection}
-              />
-          }
+          {props.accepted ? (
+            acceptedListButtons()
+          ) : (
+            <PendingListButtons
+              list={list}
+              onListAcceptance={props.onListAcceptance}
+              onListRejection={props.onListRejection}
+            />
+          )}
         </Col>
       </Row>
     </ListGroup.Item>

@@ -31,7 +31,7 @@ function ListItemForm(props) {
     setSuccess('');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     dismissAlert();
     const listItem = {
@@ -51,53 +51,56 @@ function ListItemForm(props) {
     listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
-    axios.post(
-      `${process.env.REACT_APP_API_BASE}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
-      postData,
-      {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      },
-    ).then(({ data, headers }) => {
-      setUserInfo(headers);
-      props.handleItemAddition(data);
-      setProduct('');
-      setTask('');
-      setQuantity('');
-      setAuthor('');
-      setTitle('');
-      setArtist('');
-      setAlbum('');
-      setAssigneeId('');
-      setDueBy(defaultDueBy());
-      setNumberInSeries(0);
-      setCategory('');
-      setSuccess('Item successfully added.');
-    }).catch(({ response, request, message }) => {
-      if (response) {
-        setUserInfo(response.headers);
-        if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/lists');
-        } else {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-          let joinString;
-          if (props.listType === 'BookList' || props.listType === 'MusicList') {
-            joinString = ' or ';
+    axios
+      .post(
+        `${process.env.REACT_APP_API_BASE}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
+        postData,
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      )
+      .then(({ data, headers }) => {
+        setUserInfo(headers);
+        props.handleItemAddition(data);
+        setProduct('');
+        setTask('');
+        setQuantity('');
+        setAuthor('');
+        setTitle('');
+        setArtist('');
+        setAlbum('');
+        setAssigneeId('');
+        setDueBy(defaultDueBy());
+        setNumberInSeries(0);
+        setCategory('');
+        setSuccess('Item successfully added.');
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else if (response.status === 403) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/lists');
           } else {
-            joinString = ' and ';
+            const responseTextKeys = Object.keys(response.data);
+            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+            let joinString;
+            if (props.listType === 'BookList' || props.listType === 'MusicList') {
+              joinString = ' or ';
+            } else {
+              joinString = ' and ';
+            }
+            setErrors(responseErrors.join(joinString));
           }
-          setErrors(responseErrors.join(joinString));
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
         }
-      } else if (request) {
-        // TODO: what do here?
-      } else {
-        setErrors(message);
-      }
-    });
+      });
   };
 
   const formFields = () => {
@@ -164,7 +167,7 @@ function ListItemForm(props) {
     <div>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        { formFields() }
+        {formFields()}
         <br />
         <Button type="submit" variant="success" block>
           Add New Item
@@ -178,10 +181,12 @@ ListItemForm.propTypes = {
   userId: PropTypes.number.isRequired,
   listId: PropTypes.number.isRequired,
   listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired,
-  })),
+  listUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+  ),
   handleItemAddition: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.string),
 };

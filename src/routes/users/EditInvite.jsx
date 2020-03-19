@@ -11,7 +11,7 @@ function EditInvite(props) {
   const [passwordConfirmation, , setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setErrors('');
     const user = {
@@ -19,11 +19,12 @@ function EditInvite(props) {
       password_confirmation: passwordConfirmation,
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
-    axios.put(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { user })
+    axios
+      .put(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { user })
       .then(() => {
         // noop
       })
-      .catch(({ response, request, message}) => {
+      .catch(({ response, request, message }) => {
         if (response) {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);

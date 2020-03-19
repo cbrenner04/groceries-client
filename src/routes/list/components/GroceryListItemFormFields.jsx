@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  CategoryField,
-  TextField,
-  CheckboxField,
-} from '../../../components/FormFields';
+import { CategoryField, TextField, CheckboxField } from '../../../components/FormFields';
 
 const GroceryListItemFormFields = props => (
   <>
@@ -24,17 +20,15 @@ const GroceryListItemFormFields = props => (
       placeholder="3 bags"
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.categoryChangeHandler} />
-    {
-      props.editForm && (
-        <CheckboxField
-          name="purchased"
-          label="Purchased"
-          value={props.purchased}
-          handleChange={props.purchasedChangeHandler}
-          classes="mb-3"
-        />
-      )
-    }
+    {props.editForm && (
+      <CheckboxField
+        name="purchased"
+        label="Purchased"
+        value={props.purchased}
+        handleChange={props.purchasedChangeHandler}
+        classes="mb-3"
+      />
+    )}
   </>
 );
 
