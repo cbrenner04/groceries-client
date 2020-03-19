@@ -13,14 +13,18 @@ export default function NewSession(props) {
   const [errors, setErrors] = useState('');
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_BASE}/auth/validate_token`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(() => {
-      props.history.push('/lists');
-    }).catch(() => {
-      // noop
-    });
-  }, [props.history])
+    axios
+      .get(`${process.env.REACT_APP_API_BASE}/auth/validate_token`, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      })
+      .then(() => {
+        // TODO: pass message to next component (already signed in or whatever)
+        props.history.push('/lists');
+      })
+      .catch(() => {
+        // noop
+      });
+  }, [props.history]);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -41,7 +45,7 @@ export default function NewSession(props) {
             uid: data.uid,
           }),
         );
-        props.history.push('/');
+        props.history.push('/lists');
       })
       .catch(({ response, request, message }) => {
         if (response) {
