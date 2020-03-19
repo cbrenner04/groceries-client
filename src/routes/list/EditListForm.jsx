@@ -15,20 +15,20 @@ function EditListForm(props) {
   const [type, setType] = useState('GroceryList');
 
   useEffect(() => {
-    if (!props.match) props.history.push('/lists');
-    axios
-      .get(`/lists/${props.match.params.id}/edit`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ data: { list, current_user_id: currentUserId }, headers }) => {
+    async function fetchData() {
+      if (!props.match) props.history.push('/lists');
+      try {
+        const { data: { list, current_user_id: currentUserId }, headers } = await axios
+          .get(`/lists/${props.match.params.id}/edit`, {
+            headers: JSON.parse(sessionStorage.getItem('user')),
+          });
         setUserInfo(headers);
         if (list.owner_id !== currentUserId) props.history.push('/lists');
         setId(list.id);
         setName(list.name);
         setCompleted(list.completed);
         setType(list.type);
-      })
-      .catch(({ response, request, message }) => {
+      } catch ({ response, request, message }) {
         if (response) {
           setUserInfo(response.headers);
           if (response.status === 401) {
@@ -43,48 +43,49 @@ function EditListForm(props) {
         } else {
           setErrors(message);
         }
-      });
+      }
+    }
+    fetchData();
   }, [props.history, props.match]);
 
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const list = {
       name,
       completed,
       type,
     };
-    axios
-      .put(
-        `/lists/${id}`,
-        { list },
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      )
-      .then(({ headers }) => {
-        setUserInfo(headers);
-        props.history.push('/lists');
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else if (response.status === 403) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/lists');
-          } else {
-            const keys = Object.keys(response.data);
-            const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
-            setErrors(responseErrors.join(' and '));
-          }
-        } else if (request) {
-          // TODO: what do here?
+    try {
+      const { headers } = await axios
+        .put(
+          `/lists/${id}`,
+          { list },
+          {
+            headers: JSON.parse(sessionStorage.getItem('user')),
+          },
+        )
+      setUserInfo(headers);
+      props.history.push('/lists');
+    } catch ({ response, request, message }) {
+      if (response) {
+        setUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
         } else {
-          setErrors(message);
+          const keys = Object.keys(response.data);
+          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
         }
-      });
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   return (

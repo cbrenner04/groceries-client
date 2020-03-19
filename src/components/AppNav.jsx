@@ -9,21 +9,16 @@ export default function AppNav() {
   const location = useLocation();
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
-  const handleLogout = () => {
-    axios
-      .delete('/auth/sign_out', {
+  const handleLogout = async () => {
+    try {
+      await axios.delete('/auth/sign_out', {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(() => {
-        // noop
-      })
-      .catch(() => {
-        // noop
-      })
-      .finally(() => {
-        sessionStorage.removeItem('user');
-        history.push('/users/sign_in');
       });
+    } catch {
+      // noop
+    }
+    sessionStorage.removeItem('user');
+    history.push('/users/sign_in');
   };
 
   useEffect(() => {
