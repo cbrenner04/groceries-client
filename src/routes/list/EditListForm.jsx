@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 
 import Alert from '../../components/Alert';
 import { SelectField, TextField, CheckboxField } from '../../components/FormFields';
 import { setUserInfo } from '../../utils/auth';
+import axios from '../../utils/api';
 
 function EditListForm(props) {
   const [id, setId] = useState(0);
@@ -17,7 +17,7 @@ function EditListForm(props) {
   useEffect(() => {
     if (!props.match) props.history.push('/lists');
     axios
-      .get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}/edit`, {
+      .get(`/lists/${props.match.params.id}/edit`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       })
       .then(({ data: { list, current_user_id: currentUserId }, headers }) => {
@@ -55,7 +55,7 @@ function EditListForm(props) {
     };
     axios
       .put(
-        `${process.env.REACT_APP_API_BASE}/lists/${id}`,
+        `/lists/${id}`,
         { list },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),

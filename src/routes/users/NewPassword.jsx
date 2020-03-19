@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
+import axios from '../../utils/api';
 
 function NewPassword(props) {
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ function NewPassword(props) {
     event.preventDefault();
     setErrors('');
     axios
-      .post(`${process.env.REACT_APP_API_BASE}/auth/password`, {
+      .post(`/auth/password`, {
         email,
         redirect_url: `${process.env.REACT_APP_ROOT_URL}/users/password/edit`,
       })

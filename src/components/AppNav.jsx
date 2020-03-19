@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
-import axios from 'axios';
+
+import axios from '../utils/api';
 
 export default function AppNav() {
   const history = useHistory();
@@ -10,7 +11,7 @@ export default function AppNav() {
 
   const handleLogout = () => {
     axios
-      .delete(`${process.env.REACT_APP_API_BASE}/auth/sign_out`, {
+      .delete('/auth/sign_out', {
         headers: JSON.parse(sessionStorage.getItem('user')),
       })
       .then(() => {

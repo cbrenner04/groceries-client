@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
+import axios from '../../utils/api';
 
 function EditInvite(props) {
   const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ function EditInvite(props) {
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
     axios
-      .put(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { user })
+      .put(`/auth/invitation`, { user })
       .then(() => {
         // noop
       })

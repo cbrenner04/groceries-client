@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import { defaultDueBy, formatDueBy, listTypeToSnakeCase } from '../../utils/format';
 import { setUserInfo } from '../../utils/auth';
@@ -10,6 +9,7 @@ import BookListItemFormFields from './components/BookListItemFormFields';
 import GroceryListItemFormFields from './components/GroceryListItemFormFields';
 import MusicListItemFormFields from './components/MusicListItemFormFields';
 import ToDoListItemFormFields from './components/ToDoListItemFormFields';
+import axios from '../../utils/api';
 
 function EditListItemForm(props) {
   const [userId, setUserId] = useState(0);
@@ -39,7 +39,7 @@ function EditListItemForm(props) {
       const { id, list_id } = props.match.params;
       // TODO: these three should be a in a promise all, set the user info once, handle errors once
       axios
-        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
+        .get(`/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
         })
         .then(({ data, headers }) => {
@@ -82,7 +82,7 @@ function EditListItemForm(props) {
           }
         });
       axios
-        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}/users_lists`, {
+        .get(`/lists/${list_id}/users_lists`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
         })
         .then(({ data: { accepted, pending, current_user_id: currentUserId }, headers }) => {
@@ -115,7 +115,7 @@ function EditListItemForm(props) {
           }
         });
       axios
-        .get(`${process.env.REACT_APP_API_BASE}/lists/${list_id}`, {
+        .get(`/lists/${list_id}`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
         })
         .then(({ data, headers }) => {
@@ -165,13 +165,9 @@ function EditListItemForm(props) {
     const putData = {};
     putData[`${listTypeToSnakeCase(listType)}_item`] = listItem;
     axios
-      .put(
-        `${process.env.REACT_APP_API_BASE}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`,
-        putData,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      )
+      .put(`/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`, putData, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      })
       .then(({ headers }) => {
         setUserInfo(headers);
         // TODO: pass success message

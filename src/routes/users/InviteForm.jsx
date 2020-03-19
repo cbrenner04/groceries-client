@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import { setUserInfo } from '../../utils/auth';
+import axios from '../../utils/api';
 
 function InviteForm(props) {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ function InviteForm(props) {
     setErrors('');
     axios
       .post(
-        `${process.env.REACT_APP_API_BASE}/auth/invitation`,
+        `/auth/invitation`,
         { email },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),

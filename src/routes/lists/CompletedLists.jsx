@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import List from './components/List';
 import ConfirmModal from '../../components/ConfirmModal';
 import { setUserInfo } from '../../utils/auth';
+import axios from '../../utils/api';
 
 function CompletedLists(props) {
   const [completedLists, setCompletedLists] = useState([]);
@@ -17,7 +17,7 @@ function CompletedLists(props) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_BASE}/completed_lists/`, {
+      .get(`/completed_lists/`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       })
       .then(({ data, headers }) => {
@@ -72,7 +72,7 @@ function CompletedLists(props) {
     dismissAlert();
     axios
       .post(
-        `${process.env.REACT_APP_API_BASE}/lists/${list.id}/refresh_list`,
+        `/lists/${list.id}/refresh_list`,
         {},
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
@@ -98,7 +98,7 @@ function CompletedLists(props) {
     dismissAlert();
     setShowDeleteConfirm(false);
     axios
-      .delete(`${process.env.REACT_APP_API_BASE}/lists/${listToDelete.id}`, {
+      .delete(`/lists/${listToDelete.id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       })
       .then(({ headers }) => {

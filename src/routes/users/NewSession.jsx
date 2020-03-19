@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
+import axios from '../../utils/api';
 
 export default function NewSession(props) {
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ export default function NewSession(props) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_BASE}/auth/validate_token`, {
+      .get(`/auth/validate_token`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       })
       .then(() => {
@@ -35,7 +35,7 @@ export default function NewSession(props) {
       remember_me: rememberMe,
     };
     axios
-      .post(`${process.env.REACT_APP_API_BASE}/auth/sign_in`, user)
+      .post(`/auth/sign_in`, user)
       .then(({ data: { data }, headers }) => {
         sessionStorage.setItem(
           'user',

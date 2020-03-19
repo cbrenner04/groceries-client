@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
+import axios from '../../utils/api';
 
 function EditPassword(props) {
   const [password, setPassword] = useState('');
@@ -17,7 +17,7 @@ function EditPassword(props) {
     setErrors('');
     axios
       .put(
-        `${process.env.REACT_APP_API_BASE}/auth/password`,
+        `/auth/password`,
         {
           password,
           password_confirmation: passwordConfirmation,

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
 import { setUserInfo } from '../../../utils/auth';
@@ -10,6 +9,7 @@ import BookListItemFormFields from './BookListItemFormFields';
 import GroceryListItemFormFields from './GroceryListItemFormFields';
 import MusicListItemFormFields from './MusicListItemFormFields';
 import ToDoListItemFormFields from './ToDoListItemFormFields';
+import axios from '../../../utils/api';
 
 function ListItemForm(props) {
   const [product, setProduct] = useState('');
@@ -52,13 +52,9 @@ function ListItemForm(props) {
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
     axios
-      .post(
-        `${process.env.REACT_APP_API_BASE}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
-        postData,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      )
+      .post(`/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`, postData, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      })
       .then(({ data, headers }) => {
         setUserInfo(headers);
         props.handleItemAddition(data);
