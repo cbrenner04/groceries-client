@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
 import { ButtonGroup } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../../config/default';
-import { setUserInfo } from '../../../utils/auth';
+import { newSetUserInfo } from '../../../utils/auth';
 import { Complete, Edit, Share, Trash } from '../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
   const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
 
   useEffect(() => {
-    $.ajax({
-      type: 'GET',
-      url: `${config.apiBase}/lists/${props.list.id}/users_lists/${props.list.users_list_id}`,
-      dataType: 'JSON',
+    axios.get(`${config.apiBase}/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done(({ permissions }, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data: { permissions }, headers }) => {
+      newSetUserInfo(headers);
       setCurrentUserPermissions(permissions);
+    }).catch(() => {
+      // noop
     });
   }, [props.list.id, props.list.users_list_id]);
 

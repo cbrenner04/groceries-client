@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 function InviteForm(props) {
   const [email, setEmail] = useState('');
@@ -16,21 +16,30 @@ function InviteForm(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    $.ajax({
-      url: `${config.apiBase}/auth/invitation`,
-      type: 'POST',
-      data: { email },
+    axios.post(`${config.apiBase}/auth/invitation`, { email }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-    .done((_data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
       props.history.push('/');
-    })
-    .fail((response) => {
-      const responseJSON = JSON.parse(response.responseText);
-      const responseTextKeys = Object.keys(responseJSON);
-      const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key].join(' and ')}`);
-      setErrors(responseErrors.join(' and '));
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along
+          props.history.push('/lists');
+        } else {
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
+        }
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   };
 

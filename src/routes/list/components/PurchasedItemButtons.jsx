@@ -17,7 +17,7 @@ function PurchasedItemButtons(props) {
         props.listType === 'BookList' &&
           <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
       }
-      <Trash variant="link" onClick={() => props.handleItemDelete(props.item)} />
+      <Trash handleClick={() => props.handleItemDelete(props.item)} />
     </ButtonGroup>
   );
 }

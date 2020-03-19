@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
+import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { SelectField, TextField, CheckboxField } from '../../components/FormFields';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 function EditListForm(props) {
   const [id, setId] = useState(0);
@@ -17,18 +17,30 @@ function EditListForm(props) {
 
   useEffect(() => {
     if (!props.match) props.history.push('/lists');
-    $.ajax({
-      type: 'GET',
-      url: `${config.apiBase}/lists/${props.match.params.id}/edit`,
-      dataType: 'JSON',
+    axios.get(`${config.apiBase}/lists/${props.match.params.id}/edit`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done(({ list, current_user_id: currentUserId }, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data: { list, current_user_id: currentUserId }, headers }) => {
+      newSetUserInfo(headers);
       if (list.owner_id !== currentUserId) props.history.push('/lists');
       setId(list.id);
       setName(list.name);
       setCompleted(list.completed);
       setType(list.type);
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
+        }
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   }, [props.history, props.match]);
 
@@ -39,18 +51,30 @@ function EditListForm(props) {
       completed,
       type,
     };
-    $.ajax({
-      url: `${config.apiBase}/lists/${id}`,
-      data: { list },
-      method: 'PUT',
+    axios.put(`${config.apiBase}/lists/${id}`, { list }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
       props.history.push('/lists');
-    }).fail((response) => {
-      const responseJSON = JSON.parse(response.responseText);
-      const returnedErrors = Object.keys(responseJSON).map(key => `${key} ${responseJSON[key]}`);
-      setErrors(returnedErrors.join(' and '));
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
+        } else {
+          const keys = Object.keys(response.data);
+          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
+        }
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   };
 

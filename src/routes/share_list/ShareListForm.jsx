@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import * as $ from 'jquery';
 import { Button, Form, ListGroup } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import PermissionButtons from './components/PermissionButtons';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 function ShareListForm(props) {
   const [listId, setListId] = useState(0);
@@ -26,13 +26,10 @@ function ShareListForm(props) {
 
   useEffect(() => {
     if (props.match) {
-      $.ajax({
-        type: 'GET',
-        url: `${config.apiBase}/lists/${props.match.params.list_id}/users_lists`,
-        dataType: 'JSON',
+      axios.get(`${config.apiBase}/lists/${props.match.params.list_id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      }).done((data, _status, request) => {
-        setUserInfo(request);
+      }).then(({ data, headers }) => {
+        newSetUserInfo(headers);
         setName(data.list.name);
         setInvitableUsers(data.invitable_users);
         setListId(data.list.id);
@@ -45,6 +42,25 @@ function ShareListForm(props) {
         if (!(userInAccepted && userInAccepted.users_list.permissions === 'write')) {
           props.history.push('/lists');
         }
+      }).catch(({ response, request, message }) => {
+        if (response) {
+          newSetUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else if (response.status === 403) {
+            // TODO: how do we pass error messages along
+            props.history.push('/lists');
+          } else {
+            const responseTextKeys = Object.keys(response.data);
+            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+            setErrors(responseErrors.join(' and '));
+          }
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
       });
     }
   }, [props.history, props.match]);
@@ -54,26 +70,37 @@ function ShareListForm(props) {
     setErrors('');
   };
 
-  const failure = (response) => {
-    const responseJSON = JSON.parse(response.responseText);
-    const responseTextKeys = Object.keys(responseJSON);
-    const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key].join(' and ')}`);
-    setErrors(responseErrors.join(' and '));
+  const failure = ({ response, request, message }) => {
+    if (response) {
+      newSetUserInfo(response.headers);
+      if (response.status === 401) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/users/sign_in');
+      } else if (response.status === 403) {
+        // TODO: how do we pass error messages along
+        props.history.push('/lists');
+      } else {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      }
+    } else if (request) {
+      // TODO: what do here?
+    } else {
+      setErrors(message);
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     handleAlertDismiss();
-    $.ajax({
-      url: `${config.apiBase}/auth/invitation`,
-      type: 'POST',
-      data: {
-        email: newEmail,
-        list_id: listId,
-      },
+    axios.post(`${config.apiBase}/auth/invitation`, {
+      email: newEmail,
+      list_id: listId,
+    }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done(({ user, users_list: usersList }, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data: { user, users_list: usersList }, headers  }) => {
+      newSetUserInfo(Headers);
       const newPending = update(pending, {
         $push: [
           {
@@ -92,7 +119,7 @@ function ShareListForm(props) {
       setPending(newPending);
       setNewEmail('');
       setSuccess(`"${name}" has been successfully shared with ${newEmail}.`);
-    }).fail(response => failure(response));
+    }).catch(failure);
   };
 
   const handleSelectUser = (user) => {
@@ -101,59 +128,48 @@ function ShareListForm(props) {
       user_id: user.id,
       list_id: listId,
     };
-    $.ajax({
-      url: `${config.apiBase}/lists/${listId}/users_lists`,
-      type: 'POST',
-      data: { users_list: usersList },
+    axios.post(`${config.apiBase}/lists/${listId}/users_lists`, { users_list: usersList }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((data, _status, request) => {
-        setUserInfo(request);
-        const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
-        const newPending = update(pending, {
-          $push: [
-            {
-              user: {
-                id: data.user_id,
-                email: user.email,
-              },
-              users_list: {
-                id: data.id,
-                permissions: data.permissions,
-              },
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
+      const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
+      const newPending = update(pending, {
+        $push: [
+          {
+            user: {
+              id: data.user_id,
+              email: user.email,
             },
-          ],
-        });
-        setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
-        setInvitableUsers(newUsers);
-        // TODO: these need to be sorted
-        setPending(newPending);
-      })
-      .fail(response => failure(response));
+            users_list: {
+              id: data.id,
+              permissions: data.permissions,
+            },
+          },
+        ],
+      });
+      setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
+      setInvitableUsers(newUsers);
+      // TODO: these need to be sorted
+      setPending(newPending);
+    }).catch(failure);
   };
 
   const togglePermission = (id, currentPermission, status) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
-    $.ajax({
-      type: 'PATCH',
-      url: `${config.apiBase}/lists/${listId}/users_lists/${id}`,
-      dataType: 'JSON',
-      data: `users_list%5Bpermissions%5D=${permissions}`,
+    axios.patch(`${config.apiBase}/lists/${listId}/users_lists/${id}`, `users_list%5Bpermissions%5D=${permissions}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((_data, _status, request) => {
-        setUserInfo(request);
-        const users = status === 'pending' ? pending : accepted;
-        const updatedUsers = users.map((usersList) => {
-          const newList = usersList;
-          const tmpUsersList = newList.users_list;
-          if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
-          return newList;
-        });
-        const stateFunc = status === 'pending' ? setPending : setAccepted;
-        stateFunc(updatedUsers);
-      })
-      .fail(response => failure(response));
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      const users = status === 'pending' ? pending : accepted;
+      const updatedUsers = users.map((usersList) => {
+        const newList = usersList;
+        const tmpUsersList = newList.users_list;
+        if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
+        return newList;
+      });
+      const stateFunc = status === 'pending' ? setPending : setAccepted;
+      stateFunc(updatedUsers);
+    }).catch(failure);
   };
 
   return (

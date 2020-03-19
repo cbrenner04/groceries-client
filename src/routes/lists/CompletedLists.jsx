@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import * as $ from 'jquery';
 import { ListGroup } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import List from './components/List';
 import ConfirmModal from '../../components/ConfirmModal';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 function CompletedLists(props) {
   const [completedLists, setCompletedLists] = useState([]);
@@ -17,17 +17,26 @@ function CompletedLists(props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    $.ajax({
-      type: 'GET',
-      url: `${config.apiBase}/completed_lists/`,
-      dataType: 'JSON',
+    axios.get(`${config.apiBase}/completed_lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
       setCompletedLists(data.completed_lists);
-    }).fail(({ responseText }) => {
-      console.error(JSON.parse(responseText).errors);
-      props.history.push('/users/sign_in');
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
+        }
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   }, [props.history]);
 
@@ -36,24 +45,39 @@ function CompletedLists(props) {
     setErrors('');
   };
 
+  const failure = (response, request, message) => {
+    if (response) {
+      newSetUserInfo(response.headers);
+      if (response.status === 401) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/users/sign_in');
+      } else if (response.status === 403) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/lists');
+      } else {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      }
+    } else if (request) {
+      // TODO: what do here?
+    } else {
+      setErrors(message);
+    }
+  }
+
   const handleRefresh = (list) => {
     dismissAlert();
-    $.ajax({
-      url: `${config.apiBase}/lists/${list.id}/refresh_list`,
-      type: 'POST',
+    axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((_data, _status, request) => {
-        setUserInfo(request);
-        const refreshedList = completedLists.find(completedList => completedList.id === list.id);
-        refreshedList.refreshed = true;
-        setSuccess('Your list was successfully refreshed.');
-      })
-      .fail((response) => {
-        const responseJSON = JSON.parse(response.responseText);
-        const returnedErrors = Object.keys(responseJSON).map(key => `${key} ${responseJSON[key]}`);
-        setErrors(returnedErrors.join(' and '));
-      });
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      const refreshedList = completedLists.find(completedList => completedList.id === list.id);
+      refreshedList.refreshed = true;
+      setSuccess('Your list was successfully refreshed.');
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
+    });
   };
 
   const handleDelete = (list) => {
@@ -64,22 +88,16 @@ function CompletedLists(props) {
   const handleDeleteConfirm = () => {
     dismissAlert();
     setShowDeleteConfirm(false);
-    $.ajax({
-      url: `${config.apiBase}/lists/${listToDelete.id}`,
-      type: 'DELETE',
+    axios.delete(`${config.apiBase}/lists/${listToDelete.id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((_data, _status, request) => {
-        setUserInfo(request);
-        const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
-        setCompletedLists(lists);
-        setSuccess('Your list was successfully deleted.');
-      })
-      .fail((response) => {
-        const responseJSON = JSON.parse(response.responseText);
-        const returnedErrors = Object.keys(responseJSON).map(key => `${key} ${responseJSON[key]}`);
-        setErrors(returnedErrors.join(' and '));
-      });
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
+      setCompletedLists(lists);
+      setSuccess('Your list was successfully deleted.');
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
+    });
   };
 
   return (

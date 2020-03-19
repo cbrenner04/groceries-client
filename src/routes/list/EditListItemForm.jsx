@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import { defaultDueBy, formatDueBy, listTypeToSnakeCase } from '../../utils/format';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 import Alert from '../../components/Alert';
 import BookListItemFormFields from './components/BookListItemFormFields';
 import GroceryListItemFormFields from './components/GroceryListItemFormFields';
@@ -37,15 +37,12 @@ function EditListItemForm(props) {
 
   useEffect(() => {
     if (props.match) {
-      $.ajax({
-        type: 'GET',
-        url: `${config.apiBase}/lists/${props.match.params.list_id}` +
-             `/${props.match.params[0]}` +
-             `/${props.match.params.id}/edit`,
-        dataType: 'JSON',
+      const { id, list_id } = props.match.params;
+      // TODO: these three should be a in a promise all, set the user info once, handle errors once
+      axios.get(`${config.apiBase}/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      }).done((data, _status, request1) => {
-        setUserInfo(request1);
+      }).then(({ data, headers}) => {
+        newSetUserInfo(headers);
         const { item, list } = data;
         const dueByDate = formatDueBy(item.due_by);
         setUserId(item.user_id);
@@ -66,33 +63,73 @@ function EditListItemForm(props) {
         setAlbum(item.album);
         setNumberInSeries(Number(item.number_in_series));
         setCategory(item.category || '');
-        $.ajax({
-          type: 'GET',
-          url: `${config.apiBase}/lists/${props.match.params.list_id}/users_lists`,
-          dataType: 'JSON',
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        }).done(({ accepted, pending, current_user_id: currentUserId }, _status, request2) => {
-          setUserInfo(request2);
-          const acceptedUsers = accepted.map(({ user }) => user);
-          const pendingUsers = pending.map(({ user }) => user);
-          const currentListUsers = acceptedUsers.concat(pendingUsers);
-          const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
-          if (userInAccepted && userInAccepted.users_list.permissions === 'write') {
-            setListUsers(currentListUsers);
+      }).catch(({ response, request, message}) => {
+        if (response) {
+          newSetUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
           } else {
-            props.history.push('/lists');
+            // TODO: how do we pass error messages along?
+            props.history.push(`/lists/${list_id}`);
           }
-          $.ajax({
-            type: 'GET',
-            url: `${config.apiBase}/lists/${props.match.params.list_id}`,
-            dataType: 'JSON',
-            headers: JSON.parse(sessionStorage.getItem('user')),
-          }).done((listData, _status, request3) => {
-            setUserInfo(request3);
-            setCategories(listData.categories);
-          });
-        });
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
       });
+      axios.get(`${config.apiBase}/lists/${list_id}/users_lists`, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      }).then(({ data: { accepted, pending, current_user_id: currentUserId }, headers }) => {
+        newSetUserInfo(headers);
+        const acceptedUsers = accepted.map(({ user }) => user);
+        const pendingUsers = pending.map(({ user }) => user);
+        const currentListUsers = acceptedUsers.concat(pendingUsers);
+        const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
+        if (userInAccepted && userInAccepted.users_list.permissions === 'write') {
+          setListUsers(currentListUsers);
+        } else {
+          // TODO: how do we pass errors around?
+          props.history.push('/lists');
+        }
+      }).catch(({ response, request, message}) => {
+        if (response) {
+          newSetUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push(`/lists/${list_id}`);
+          }
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
+      });
+      axios.get(`${config.apiBase}/lists/${list_id}`, {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      }).then(({ data, headers }) => {
+        newSetUserInfo(headers);
+        setCategories(data.categories);
+      }).catch(({ response, request, message }) => {
+        if (response) {
+          newSetUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push(`/lists/${list_id}`);
+          }
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
+      })
     }
   }, [props.history, props.match]);
 
@@ -119,25 +156,37 @@ function EditListItemForm(props) {
     listItem[`${listTypeToSnakeCase(listType)}_id`] = listId;
     const putData = {};
     putData[`${listTypeToSnakeCase(listType)}_item`] = listItem;
-    $.ajax({
-      url: `${config.apiBase}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`,
-      data: putData,
-      method: 'PUT',
+    axios.put(`${config.apiBase}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`, putData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      // TODO: pass success message
       props.history.push(`/lists/${listId}`);
-    }).fail((response) => {
-      const responseJSON = JSON.parse(response.responseText);
-      const responseTextKeys = Object.keys(responseJSON);
-      const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key]}`);
-      let joinString;
-      if (listType === 'BookList' || listType === 'MusicList') {
-        joinString = ' or ';
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along?
+          props.history.push(`/lists/${listId}`);
+        } else {
+          const keys = Object.keys(response.data);
+          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+          let joinString;
+          if (listType === 'BookList' || listType === 'MusicList') {
+            joinString = ' or ';
+          } else {
+            joinString = ' and ';
+          }
+          setErrors(responseErrors.join(joinString));
+        }
+      } else if (request) {
+        // TODO: what do here?
       } else {
-        joinString = ' and ';
+        setErrors(message);
       }
-      setErrors(responseErrors.join(joinString));
     });
   };
 
@@ -231,10 +280,10 @@ function EditListItemForm(props) {
   };
 
   return (
-    <div>
+    <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Edit { itemName() }</h1>
-      <Button href={`/lists/${listId}`} className="float-right">
+      <Button href={`/lists/${listId}`} className="float-right" variant="link">
         Back to list
       </Button>
       <br />
@@ -244,7 +293,7 @@ function EditListItemForm(props) {
           Update Item
         </Button>
       </Form>
-    </div>
+    </>
   );
 }
 

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import update from 'immutability-helper';
-import * as $ from 'jquery';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import ListForm from './components/ListForm';
 import Lists from './components/Lists';
 import ConfirmModal from '../../components/ConfirmModal';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 export default function ListsContainer(props) {
   const [userId, setUserId] = useState(0);
@@ -24,13 +24,10 @@ export default function ListsContainer(props) {
   const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   useEffect(() => {
-    $.ajax({
-      type: 'GET',
-      url: `${config.apiBase}/lists/`,
-      dataType: 'JSON',
+    axios.get(`${config.apiBase}/lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
       const newAcceptedLists = sortLists(data.accepted_lists);
       const newCompletedLists = newAcceptedLists.filter(list => list.completed);
       const newNonCompletedLists = newAcceptedLists.filter(list => !list.completed);
@@ -38,9 +35,22 @@ export default function ListsContainer(props) {
       setPendingLists(sortLists(data.pending_lists)); // this should be sorted the opposite
       setCompletedLists(newCompletedLists);
       setNonCompletedLists(newNonCompletedLists);
-    }).fail(({ responseText }) => {
-      console.error(JSON.parse(responseText).errors);
-      props.history.push('/users/sign_in');
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else {
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
+        }
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   }, [props.history]);
 
@@ -49,26 +59,34 @@ export default function ListsContainer(props) {
     setSuccess('');
   };
 
+  const failure = ({ request, response, message }) => {
+    if (response) {
+      newSetUserInfo(response.headers);
+      if (response.status === 401) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/users/sign_in');
+      } else {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      }
+    } else if (request) {
+      // TODO: what do here?
+    } else {
+      setErrors(message);
+    }
+  }
+
   const handleFormSubmit = (list) => {
     handleAlertDismiss();
-    $.ajax({
-      url: `${config.apiBase}/lists`,
-      type: 'POST',
-      data: { list },
+    axios.post(`${config.apiBase}/lists`, { list }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((data, _status, request) => {
-        setUserInfo(request);
-        const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
-        setNonCompletedLists(sortLists(updatedNonCompletedLists));
-        setSuccess('List successfully added.');
-      })
-      .fail((response) => {
-        const responseJSON = JSON.parse(response.responseText);
-        const responseTextKeys = Object.keys(responseJSON);
-        const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key].join(' and ')}`);
-        setErrors(responseErrors.join(' and '));
-      });
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
+      const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      setSuccess('List successfully added.');
+    }).catch(failure);
   };
 
   const handleDelete = (list) => {
@@ -80,47 +98,35 @@ export default function ListsContainer(props) {
     setShowDeleteConfirm(false);
     handleAlertDismiss();
     const { id, completed } = listToDelete;
-    $.ajax({
-      url: `${config.apiBase}/lists/${id}`,
-      type: 'DELETE',
+    axios.delete(`${config.apiBase}/lists/${id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((_data, _status, request) => {
-        setUserInfo(request);
-        if (completed) {
-          const updatedCompletedLists = completedLists.filter(ll => ll.id !== id);
-          setCompletedLists(sortLists(updatedCompletedLists));
-        } else {
-          const updatedNonCompletedLists = nonCompletedLists.filter(ll => ll.id !== id);
-          setNonCompletedLists(sortLists(updatedNonCompletedLists));
-        }
-        setSuccess('List successfully deleted.');
-      })
-      .fail((response) => {
-        const responseJSON = JSON.parse(response.responseText);
-        const returnedErrors = Object.keys(responseJSON).map(key => `${key} ${responseJSON[key]}`);
-        setErrors(returnedErrors.join(' and '));
-      });
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      if (completed) {
+        const updatedCompletedLists = completedLists.filter(ll => ll.id !== id);
+        setCompletedLists(sortLists(updatedCompletedLists));
+      } else {
+        const updatedNonCompletedLists = nonCompletedLists.filter(ll => ll.id !== id);
+        setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      }
+      setSuccess('List successfully deleted.');
+    }).catch(failure);
   };
 
   const handleCompletion = (list) => {
     handleAlertDismiss();
     const theList = list;
     theList.completed = true;
-    $.ajax({
-      url: `${config.apiBase}/lists/${theList.id}`,
-      type: 'PUT',
-      data: 'list%5Bcompleted%5D=true',
+    axios.put(`${config.apiBase}/lists/${theList.id}`, 'list%5Bcompleted%5D=true', {
       headers: JSON.parse(sessionStorage.getItem('user')),
-      success: (_data, _status, request) => {
-        setUserInfo(request);
-        const updatedNonCompletedLists = nonCompletedLists.filter(nonList => nonList.id !== theList.id);
-        setNonCompletedLists(sortLists(updatedNonCompletedLists));
-        const updatedCompletedLists = update(completedLists, { $push: [theList] });
-        setCompletedLists(sortLists(updatedCompletedLists));
-        setSuccess('List successfully completed.');
-      },
-    });
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      const updatedNonCompletedLists = nonCompletedLists.filter(nonList => nonList.id !== theList.id);
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      const updatedCompletedLists = update(completedLists, { $push: [theList] });
+      setCompletedLists(sortLists(updatedCompletedLists));
+      setSuccess('List successfully completed.');
+    }).catch(failure);
   };
 
   const removeListFromUnaccepted = (listId) => {
@@ -130,24 +136,24 @@ export default function ListsContainer(props) {
 
   const acceptList = (list) => {
     handleAlertDismiss();
-    $.ajax({
-      url: `${config.apiBase}/lists/${list.id}/users_lists/${list.users_list_id}`,
-      type: 'PATCH',
-      data: 'users_list%5Bhas_accepted%5D=true',
-      headers: JSON.parse(sessionStorage.getItem('user')),
-      success: (_data, _status, request) => {
-        setUserInfo(request);
-        const { completed } = list;
-        if (completed) {
-          const updatedCompletedLists = update(completedLists, { $push: [list] });
-          setCompletedLists(sortLists(updatedCompletedLists));
-        } else {
-          const updatedNonCompletedLists = update(nonCompletedLists, { $push: [list] });
-          setNonCompletedLists(sortLists(updatedNonCompletedLists));
-        }
-        setSuccess('List successfully accepted.');
-      },
-    });
+    axios.patch(
+      `${config.apiBase}/lists/${list.id}/users_lists/${list.users_list_id}`,
+      'users_list%5Bhas_accepted%5D=true',
+      {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      }
+    ).then(({ headers}) => {
+      newSetUserInfo(headers);
+      const { completed } = list;
+      if (completed) {
+        const updatedCompletedLists = update(completedLists, { $push: [list] });
+        setCompletedLists(sortLists(updatedCompletedLists));
+      } else {
+        const updatedNonCompletedLists = update(nonCompletedLists, { $push: [list] });
+        setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      }
+      setSuccess('List successfully accepted.');
+    }).catch(failure);
   };
 
   const handleAccept = (list) => {
@@ -163,39 +169,31 @@ export default function ListsContainer(props) {
   const handleRejectConfirm = () => {
     setShowRejectConfirm(false);
     handleAlertDismiss();
-    $.ajax({
-      url: `${config.apiBase}/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`,
-      type: 'PATCH',
-      data: 'users_list%5Bhas_accepted%5D=false',
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    axios.patch(
+      `${config.apiBase}/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`,
+      'users_list%5Bhas_accepted%5D=false',
+      {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      },
+    ).then(({ headers }) => {
+      newSetUserInfo(headers);
       removeListFromUnaccepted(listToReject.id);
       setSuccess('List successfully rejected.');
-    });
+    }).catch(failure);
   };
 
   const handleRefresh = (list) => {
     handleAlertDismiss();
     const localList = list;
     localList.refreshed = true;
-    $.ajax({
-      url: `${config.apiBase}/lists/${list.id}/refresh_list`,
-      type: 'POST',
+    axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((data, _status, request) => {
-        setUserInfo(request);
-        const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
-        setNonCompletedLists(sortLists(updatedNonCompletedLists));
-        setSuccess('List successfully refreshed.');
-      })
-      .fail((response) => {
-        const responseJSON = JSON.parse(response.responseText);
-        const responseTextKeys = Object.keys(responseJSON);
-        const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key].join(' and ')}`);
-        setErrors(responseErrors.join(' and '));
-      });
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
+      const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      setSuccess('List successfully refreshed.');
+    }).catch(failure);
   };
 
   return (

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../../config/default';
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
-import { setUserInfo } from '../../../utils/auth';
+import { newSetUserInfo } from '../../../utils/auth';
 import Alert from '../../../components/Alert';
 import BookListItemFormFields from './BookListItemFormFields';
 import GroceryListItemFormFields from './GroceryListItemFormFields';
@@ -52,13 +52,10 @@ function ListItemForm(props) {
     listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
-    $.ajax({
-      url: `${config.apiBase}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
-      type: 'POST',
-      data: postData,
+    axios.post(`${config.apiBase}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`, postData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
       props.handleItemAddition(data);
       setProduct('');
       setTask('');
@@ -72,17 +69,31 @@ function ListItemForm(props) {
       setNumberInSeries(0);
       setCategory('');
       setSuccess('Item successfully added.');
-    }).fail((response) => {
-      const responseJSON = JSON.parse(response.responseText);
-      const responseTextKeys = Object.keys(responseJSON);
-      const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key]}`);
-      let joinString;
-      if (props.listType === 'BookList' || props.listType === 'MusicList') {
-        joinString = ' or ';
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        newSetUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
+        } else {
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          let joinString;
+          if (props.listType === 'BookList' || props.listType === 'MusicList') {
+            joinString = ' or ';
+          } else {
+            joinString = ' and ';
+          }
+          setErrors(responseErrors.join(joinString));
+        }
+      } else if (request) {
+        // TODO: what do here?
       } else {
-        joinString = ' and ';
+        setErrors(message);
       }
-      setErrors(responseErrors.join(joinString));
     });
   };
 

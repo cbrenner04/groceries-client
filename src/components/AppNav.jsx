@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
-import $ from 'jquery';
+import axios from 'axios';
 
 import * as config from '../config/default';
 
@@ -11,11 +11,9 @@ export default function AppNav() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
   const handleLogout = () => {
-    $.ajax({
-      type: 'DELETE',
-      url: `${config.apiBase}/auth/sign_out`,
+    axios.delete(`${config.apiBase}/auth/sign_out`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done(() => {
+    }).finally(() => {
       sessionStorage.removeItem('user');
       history.push('/users/sign_in');
     });

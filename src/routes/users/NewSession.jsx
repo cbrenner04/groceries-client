@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -23,20 +23,24 @@ export default function NewSession(props) {
       password,
       remember_me: rememberMe,
     };
-    $.ajax({
-      url: `${config.apiBase}/auth/sign_in`,
-      type: 'POST',
-      data: user,
-    }).done(({ data }, _status, request) => {
-      sessionStorage.setItem('user', JSON.stringify({
-        'access-token': request.getResponseHeader('access-token'),
-        client: request.getResponseHeader('client'),
-        uid: data.uid,
-      }));
-      props.history.push('/');
-    }).fail((response) => {
-      setErrors(response.responseText);
-    });
+    axios.post(`${config.apiBase}/auth/sign_in`, user)
+      .then(({ data: { data }, headers }) => {
+        sessionStorage.setItem('user', JSON.stringify({
+          'access-token': headers['access-token'],
+          client: headers['client'],
+          uid: data.uid,
+        }));
+        props.history.push('/');
+      })
+      .catch(({ response, request, message }) => {
+        if (response) {
+          setErrors(response.data.errors);
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
+      });
   };
 
   return (

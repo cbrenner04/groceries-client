@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
 import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -15,15 +15,13 @@ function NewPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    $.ajax({
-      url: `${config.apiBase}/auth/password`,
-      type: 'POST',
-      data: { email, redirect_url: `${config.rootUrl}/users/password/edit` },
-    }).done(() => {
-      props.history.push('/users/sign_in');
-    }).fail(() => {
-      props.history.push('/users/sign_in');
-    });
+    axios.post(`${config.apiBase}/auth/password`, { email, redirect_url: `${config.rootUrl}/users/password/edit` })
+      .then(() => {
+        props.history.push('/users/sign_in');
+      })
+      .catch(() => {
+        props.history.push('/users/sign_in');
+      });
   };
 
   return (

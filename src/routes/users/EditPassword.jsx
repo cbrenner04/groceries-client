@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import * as $ from 'jquery';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
@@ -16,21 +16,23 @@ function EditPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    $.ajax({
-      url: `${config.apiBase}/auth/password`,
-      data: {
-        password,
-        password_confirmation: passwordConfirmation,
-      },
-      method: 'PUT',
+    axios.put(`${config.apiBase}/auth/password`, {
+      password,
+      password_confirmation: passwordConfirmation,
+    }, {
       headers: queryString.parse(props.location.search),
-    }).done((_data, _status, request) => {
+    }).then(() => {
       props.history.push('/');
-    }).fail((response) => {
-      const responseJSON = JSON.parse(response.responseText);
-      const responseTextKeys = Object.keys(responseJSON);
-      const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key]}`);
-      setErrors(responseErrors.join(' and '));
+    }).catch(({ response, request, message }) => {
+      if (response) {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
     });
   };
 

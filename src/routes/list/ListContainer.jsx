@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
-import * as $ from 'jquery';
+import axios from 'axios';
 
 import * as config from '../../config/default';
 import { listTypeToSnakeCase } from '../../utils/format';
@@ -10,7 +10,7 @@ import Alert from '../../components/Alert';
 import ListItemForm from './components/ListItemForm';
 import ListItemsContainer from './components/ListItemsContainer';
 import ConfirmModal from '../../components/ConfirmModal';
-import { setUserInfo } from '../../utils/auth';
+import { newSetUserInfo } from '../../utils/auth';
 
 const mapIncludedCategories = (items) => {
   const cats = [''];
@@ -74,21 +74,15 @@ function ListContainer(props) {
 
   useEffect(() => {
     if (props.match) {
-      $.ajax({
-        type: 'GET',
-        url: `${config.apiBase}/lists/${props.match.params.id}`,
-        dataType: 'JSON',
+      axios.get(`${config.apiBase}/lists/${props.match.params.id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      }).done((data, _status, request1) => {
-        setUserInfo(request1);
-        setUserId(data.current_user_id);
-        $.ajax({
-          type: 'GET',
-          url: `${config.apiBase}/lists/${props.match.params.id}/users_lists`,
-          dataType: 'JSON',
+      }).then(({ data:{ accepted, pending }, headers }) => {
+        newSetUserInfo(headers);
+        axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
-        }).done(({ accepted, pending }, _status, request2) => {
-          setUserInfo(request2)
+        }).then(({ data, headers: headers2 }) => {
+          newSetUserInfo(headers2);
+          setUserId(data.current_user_id);
           const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
           const allAcceptedUsers = accepted.map(({ user }) => user);
           const allPendingUsers = pending.map(({ user }) => user);
@@ -111,9 +105,21 @@ function ListContainer(props) {
             props.history.push('/lists');
           }
         });
-      }).fail(({ responseText }) => {
-        console.error(JSON.parse(responseText).errors);
-        props.history.push('/users/sign_in')
+      }).catch(({ response, request, message }) => {
+        if (response) {
+          newSetUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push('/lists');
+          }
+        } else if (request) {
+          // TODO: what do here?
+        } else {
+          setErrors(message);
+        }
       });
     } else {
       props.history.push('/lists');
@@ -175,32 +181,42 @@ function ListContainer(props) {
     setErrors('');
   };
 
-  const failure = (responseText) => {
-    const responseJSON = JSON.parse(responseText);
-    const responseTextKeys = Object.keys(responseJSON);
-    const responseErrors = responseTextKeys.map(key => `${key} ${responseJSON[key]}`);
-    setErrors(responseErrors.join(' and '));
+  const failure = (response, request, message) => {
+    if (response) {
+      newSetUserInfo(response.headers);
+      if (response.status === 401) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/users/sign_in');
+      } else if (response.status === 403) {
+        // TODO: how do we pass error messages along?
+        props.history.push('/lists');
+      } else {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      }
+    } else if (request) {
+      // TODO: what do here?
+    } else {
+      setErrors(message);
+    }
   };
 
   const handleItemPurchase = (item) => {
     dismissAlert();
-    let completionType;
-    if (list.type === 'ToDoList') {
-      completionType = 'completed';
-    } else {
-      completionType = 'purchased';
-    }
-    $.ajax({
-      url: `${listItemPath(item)}/${item.id}`,
-      type: 'PUT',
-      data: `${listTypeToSnakeCase(list.type)}_item%5B${completionType}%5D=true`,
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    const completionType = list.type === 'ToDoList' ? 'completed' : 'purchased';
+    axios.put(
+      `${listItemPath(item)}/${item.id}`,
+      `${listTypeToSnakeCase(list.type)}_item%5B${completionType}%5D=true`,
+      {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      },
+    ).then(({ headers }) => {
+      newSetUserInfo(headers);
       moveItemToPurchased(item);
       setSuccess('Item successfully purchased.');
-    }).fail((response) => {
-      failure(response.responseText);
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
     });
   };
 
@@ -208,16 +224,13 @@ function ListContainer(props) {
     const localItem = item;
     localItem.read = true;
     dismissAlert();
-    $.ajax({
-      url: `${listItemPath(item)}/${item.id}`,
-      type: 'PUT',
-      data: `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=true`,
+    axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=true`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
       setSuccess('Item successfully read.');
-    }).fail((response) => {
-      failure(response.responseText);
+    }).fail(({ response, request, message }) => {
+      failure(response, request, message);
     });
   };
 
@@ -225,16 +238,13 @@ function ListContainer(props) {
     const localItem = item;
     localItem.read = false;
     dismissAlert();
-    $.ajax({
-      url: `${listItemPath(item)}/${item.id}`,
-      type: 'PUT',
-      data: `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=false`,
+    axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=false`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request) => {
-      setUserInfo(request);
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
       setSuccess('Item successfully unread.');
-    }).fail((response) => {
-      failure(response.responseText);
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
     });
   };
 
@@ -254,33 +264,25 @@ function ListContainer(props) {
     newItem[`${listTypeToSnakeCase(list.type)}_id`] = listId(item);
     const postData = {};
     postData[`${listTypeToSnakeCase(list.type)}_item`] = newItem;
-    $.ajax({
-      url: `${listItemPath(newItem)}`,
-      type: 'POST',
-      data: postData,
+    // TODO: these should be in a Promise.all, centralize failures
+    axios.post(`${listItemPath(newItem)}`, postData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    })
-      .done((data, _status, request1) => {
-        setUserInfo(request1);
-        handleAddItem(data);
-        $.ajax({
-          url: `${listItemPath(item)}/${item.id}`,
-          type: 'PUT',
-          data: `${listTypeToSnakeCase(list.type)}_item%5Brefreshed%5D=true`,
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        })
-          .done((_data, _status, request2) => {
-            setUserInfo(request2);
-            const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
-            setPurchasedItems(sortItems(updatedPurchasedItems));
-            setSuccess('Item successfully refreshed.');
-          })
-          .fail((response) => {
-            failure(response.responseText);
-          });
-      }).fail((response) => {
-        failure(response.responseText);
-      });
+    }).then(({ data, headers }) => {
+      newSetUserInfo(headers);
+      handleAddItem(data);
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
+    });
+    axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Brefreshed%5D=true`, {
+      headers: JSON.parse(sessionStorage.getItem('user')),
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
+      setPurchasedItems(sortItems(updatedPurchasedItems));
+      setSuccess('Item successfully refreshed.');
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
+    });
   };
 
   const handleDelete = (item) => {
@@ -290,34 +292,32 @@ function ListContainer(props) {
 
   const handleDeleteConfirm = () => {
     dismissAlert();
-    $.ajax({
-      url: `${listItemPath(itemToDelete)}/${itemToDelete.id}`,
-      type: 'DELETE',
+    axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
-    }).done((_data, _status, request1) => {
-      setUserInfo(request1);
-      $.ajax({
-        type: 'GET',
-        url: `${config.apiBase}/lists/${props.match.params.id}`,
-        dataType: 'JSON',
+    }).then(({ headers }) => {
+      newSetUserInfo(headers);
+      setShowDeleteConfirm(false);
+      setSuccess('Item successfully deleted.');
+      // TODO: can this be handled by manipulating the state?
+      // should just be able to remove the item from purchased or not purchased
+      // if it was the last item of a category that category should be removed? (check server for what its returning)
+      axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      }).done((data, _status, request2) => {
-        setUserInfo(request2);
-        setShowDeleteConfirm(false);
+      }).then(({ data, headers }) => {
+        newSetUserInfo(headers);
         const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
         const responseNotPurchasedItems = categorizeNotPurchasedItems(
           data.not_purchased_items,
           responseIncludedCategories,
         );
-        setSuccess('Item successfully deleted.');
         setIncludedCategories(responseIncludedCategories);
         setNotPurchasedItems(responseNotPurchasedItems); // TODO: need to sort?
         setPurchasedItems(data.purchased_items); // TODO: need to sort?
-      }).fail((response) => {
-        failure(response.responseText);
+      }).catch(({ response, request, message }) => {
+        failure(response, request, message);
       });
-    }).fail((response) => {
-      failure(response.responseText);
+    }).catch(({ response, request, message }) => {
+      failure(response, request, message);
     });
   };
 
