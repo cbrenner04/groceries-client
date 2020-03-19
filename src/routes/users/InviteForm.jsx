@@ -7,7 +7,7 @@ import axios from 'axios';
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 function InviteForm(props) {
   const [email, setEmail] = useState('');
@@ -19,11 +19,11 @@ function InviteForm(props) {
     axios.post(`${config.apiBase}/auth/invitation`, { email }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       props.history.push('/');
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

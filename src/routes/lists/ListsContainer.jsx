@@ -7,7 +7,7 @@ import Alert from '../../components/Alert';
 import ListForm from './components/ListForm';
 import Lists from './components/Lists';
 import ConfirmModal from '../../components/ConfirmModal';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 export default function ListsContainer(props) {
   const [userId, setUserId] = useState(0);
@@ -27,7 +27,7 @@ export default function ListsContainer(props) {
     axios.get(`${config.apiBase}/lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const newAcceptedLists = sortLists(data.accepted_lists);
       const newCompletedLists = newAcceptedLists.filter(list => list.completed);
       const newNonCompletedLists = newAcceptedLists.filter(list => !list.completed);
@@ -37,7 +37,7 @@ export default function ListsContainer(props) {
       setNonCompletedLists(newNonCompletedLists);
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');
@@ -61,7 +61,7 @@ export default function ListsContainer(props) {
 
   const failure = ({ request, response, message }) => {
     if (response) {
-      newSetUserInfo(response.headers);
+      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -82,7 +82,7 @@ export default function ListsContainer(props) {
     axios.post(`${config.apiBase}/lists`, { list }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       setSuccess('List successfully added.');
@@ -101,7 +101,7 @@ export default function ListsContainer(props) {
     axios.delete(`${config.apiBase}/lists/${id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       if (completed) {
         const updatedCompletedLists = completedLists.filter(ll => ll.id !== id);
         setCompletedLists(sortLists(updatedCompletedLists));
@@ -120,7 +120,7 @@ export default function ListsContainer(props) {
     axios.put(`${config.apiBase}/lists/${theList.id}`, 'list%5Bcompleted%5D=true', {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const updatedNonCompletedLists = nonCompletedLists.filter(nonList => nonList.id !== theList.id);
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       const updatedCompletedLists = update(completedLists, { $push: [theList] });
@@ -143,7 +143,7 @@ export default function ListsContainer(props) {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }
     ).then(({ headers}) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const { completed } = list;
       if (completed) {
         const updatedCompletedLists = update(completedLists, { $push: [list] });
@@ -176,7 +176,7 @@ export default function ListsContainer(props) {
         headers: JSON.parse(sessionStorage.getItem('user')),
       },
     ).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       removeListFromUnaccepted(listToReject.id);
       setSuccess('List successfully rejected.');
     }).catch(failure);
@@ -189,7 +189,7 @@ export default function ListsContainer(props) {
     axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       setSuccess('List successfully refreshed.');

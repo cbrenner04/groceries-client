@@ -4,7 +4,7 @@ import { ButtonGroup } from 'react-bootstrap';
 import axios from 'axios';
 
 import * as config from '../../../config/default';
-import { newSetUserInfo } from '../../../utils/auth';
+import { setUserInfo } from '../../../utils/auth';
 import { Complete, Edit, Share, Trash } from '../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
@@ -14,7 +14,7 @@ function IncompleteListButtons(props) {
     axios.get(`${config.apiBase}/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data: { permissions }, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       setCurrentUserPermissions(permissions);
     }).catch(() => {
       // noop

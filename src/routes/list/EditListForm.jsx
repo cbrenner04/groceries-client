@@ -6,7 +6,7 @@ import { Button, Form } from 'react-bootstrap';
 import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { SelectField, TextField, CheckboxField } from '../../components/FormFields';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 function EditListForm(props) {
   const [id, setId] = useState(0);
@@ -20,7 +20,7 @@ function EditListForm(props) {
     axios.get(`${config.apiBase}/lists/${props.match.params.id}/edit`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data: { list, current_user_id: currentUserId }, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       if (list.owner_id !== currentUserId) props.history.push('/lists');
       setId(list.id);
       setName(list.name);
@@ -28,7 +28,7 @@ function EditListForm(props) {
       setType(list.type);
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');
@@ -54,11 +54,11 @@ function EditListForm(props) {
     axios.put(`${config.apiBase}/lists/${id}`, { list }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       props.history.push('/lists');
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

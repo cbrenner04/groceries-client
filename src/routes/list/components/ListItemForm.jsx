@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import * as config from '../../../config/default';
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
-import { newSetUserInfo } from '../../../utils/auth';
+import { setUserInfo } from '../../../utils/auth';
 import Alert from '../../../components/Alert';
 import BookListItemFormFields from './BookListItemFormFields';
 import GroceryListItemFormFields from './GroceryListItemFormFields';
@@ -55,7 +55,7 @@ function ListItemForm(props) {
     axios.post(`${config.apiBase}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`, postData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       props.handleItemAddition(data);
       setProduct('');
       setTask('');
@@ -71,7 +71,7 @@ function ListItemForm(props) {
       setSuccess('Item successfully added.');
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

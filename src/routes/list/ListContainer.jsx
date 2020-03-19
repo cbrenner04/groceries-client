@@ -10,7 +10,7 @@ import Alert from '../../components/Alert';
 import ListItemForm from './components/ListItemForm';
 import ListItemsContainer from './components/ListItemsContainer';
 import ConfirmModal from '../../components/ConfirmModal';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 const mapIncludedCategories = (items) => {
   const cats = [''];
@@ -77,11 +77,11 @@ function ListContainer(props) {
       axios.get(`${config.apiBase}/lists/${props.match.params.id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data:{ accepted, pending }, headers }) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
         }).then(({ data, headers: headers2 }) => {
-          newSetUserInfo(headers2);
+          setUserInfo(headers2);
           setUserId(data.current_user_id);
           const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
           const allAcceptedUsers = accepted.map(({ user }) => user);
@@ -107,7 +107,7 @@ function ListContainer(props) {
         });
       }).catch(({ response, request, message }) => {
         if (response) {
-          newSetUserInfo(response.headers);
+          setUserInfo(response.headers);
           if (response.status === 401) {
             // TODO: how do we pass error messages along?
             props.history.push('/users/sign_in');
@@ -183,7 +183,7 @@ function ListContainer(props) {
 
   const failure = (response, request, message) => {
     if (response) {
-      newSetUserInfo(response.headers);
+      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -212,7 +212,7 @@ function ListContainer(props) {
         headers: JSON.parse(sessionStorage.getItem('user')),
       },
     ).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       moveItemToPurchased(item);
       setSuccess('Item successfully purchased.');
     }).catch(({ response, request, message }) => {
@@ -227,7 +227,7 @@ function ListContainer(props) {
     axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=true`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       setSuccess('Item successfully read.');
     }).fail(({ response, request, message }) => {
       failure(response, request, message);
@@ -241,7 +241,7 @@ function ListContainer(props) {
     axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=false`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       setSuccess('Item successfully unread.');
     }).catch(({ response, request, message }) => {
       failure(response, request, message);
@@ -268,7 +268,7 @@ function ListContainer(props) {
     axios.post(`${listItemPath(newItem)}`, postData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       handleAddItem(data);
     }).catch(({ response, request, message }) => {
       failure(response, request, message);
@@ -276,7 +276,7 @@ function ListContainer(props) {
     axios.put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Brefreshed%5D=true`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
       setPurchasedItems(sortItems(updatedPurchasedItems));
       setSuccess('Item successfully refreshed.');
@@ -295,7 +295,7 @@ function ListContainer(props) {
     axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       setShowDeleteConfirm(false);
       setSuccess('Item successfully deleted.');
       // TODO: can this be handled by manipulating the state?
@@ -304,7 +304,7 @@ function ListContainer(props) {
       axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers }) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
         const responseNotPurchasedItems = categorizeNotPurchasedItems(
           data.not_purchased_items,

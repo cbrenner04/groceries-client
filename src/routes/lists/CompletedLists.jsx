@@ -7,7 +7,7 @@ import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import List from './components/List';
 import ConfirmModal from '../../components/ConfirmModal';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 function CompletedLists(props) {
   const [completedLists, setCompletedLists] = useState([]);
@@ -20,11 +20,11 @@ function CompletedLists(props) {
     axios.get(`${config.apiBase}/completed_lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       setCompletedLists(data.completed_lists);
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');
@@ -47,7 +47,7 @@ function CompletedLists(props) {
 
   const failure = (response, request, message) => {
     if (response) {
-      newSetUserInfo(response.headers);
+      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -71,7 +71,7 @@ function CompletedLists(props) {
     axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const refreshedList = completedLists.find(completedList => completedList.id === list.id);
       refreshedList.refreshed = true;
       setSuccess('Your list was successfully refreshed.');
@@ -91,7 +91,7 @@ function CompletedLists(props) {
     axios.delete(`${config.apiBase}/lists/${listToDelete.id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
       setCompletedLists(lists);
       setSuccess('Your list was successfully deleted.');

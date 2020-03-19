@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import * as config from '../../config/default';
 import { defaultDueBy, formatDueBy, listTypeToSnakeCase } from '../../utils/format';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 import Alert from '../../components/Alert';
 import BookListItemFormFields from './components/BookListItemFormFields';
 import GroceryListItemFormFields from './components/GroceryListItemFormFields';
@@ -42,7 +42,7 @@ function EditListItemForm(props) {
       axios.get(`${config.apiBase}/lists/${list_id}/${props.match.params[0]}/${id}/edit`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers}) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         const { item, list } = data;
         const dueByDate = formatDueBy(item.due_by);
         setUserId(item.user_id);
@@ -65,7 +65,7 @@ function EditListItemForm(props) {
         setCategory(item.category || '');
       }).catch(({ response, request, message}) => {
         if (response) {
-          newSetUserInfo(response.headers);
+          setUserInfo(response.headers);
           if (response.status === 401) {
             // TODO: how do we pass error messages along?
             props.history.push('/users/sign_in');
@@ -82,7 +82,7 @@ function EditListItemForm(props) {
       axios.get(`${config.apiBase}/lists/${list_id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data: { accepted, pending, current_user_id: currentUserId }, headers }) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         const acceptedUsers = accepted.map(({ user }) => user);
         const pendingUsers = pending.map(({ user }) => user);
         const currentListUsers = acceptedUsers.concat(pendingUsers);
@@ -95,7 +95,7 @@ function EditListItemForm(props) {
         }
       }).catch(({ response, request, message}) => {
         if (response) {
-          newSetUserInfo(response.headers);
+          setUserInfo(response.headers);
           if (response.status === 401) {
             // TODO: how do we pass error messages along?
             props.history.push('/users/sign_in');
@@ -112,11 +112,11 @@ function EditListItemForm(props) {
       axios.get(`${config.apiBase}/lists/${list_id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers }) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         setCategories(data.categories);
       }).catch(({ response, request, message }) => {
         if (response) {
-          newSetUserInfo(response.headers);
+          setUserInfo(response.headers);
           if (response.status === 401) {
             // TODO: how do we pass error messages along?
             props.history.push('/users/sign_in');
@@ -159,12 +159,12 @@ function EditListItemForm(props) {
     axios.put(`${config.apiBase}/lists/${listId}/${listTypeToSnakeCase(listType)}_items/${itemId}`, putData, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       // TODO: pass success message
       props.history.push(`/lists/${listId}`);
     }).catch(({ response, request, message }) => {
       if (response) {
-        newSetUserInfo(response.headers);
+        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

@@ -9,7 +9,7 @@ import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import PermissionButtons from './components/PermissionButtons';
-import { newSetUserInfo } from '../../utils/auth';
+import { setUserInfo } from '../../utils/auth';
 
 function ShareListForm(props) {
   const [listId, setListId] = useState(0);
@@ -29,7 +29,7 @@ function ShareListForm(props) {
       axios.get(`${config.apiBase}/lists/${props.match.params.list_id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers }) => {
-        newSetUserInfo(headers);
+        setUserInfo(headers);
         setName(data.list.name);
         setInvitableUsers(data.invitable_users);
         setListId(data.list.id);
@@ -44,7 +44,7 @@ function ShareListForm(props) {
         }
       }).catch(({ response, request, message }) => {
         if (response) {
-          newSetUserInfo(response.headers);
+          setUserInfo(response.headers);
           if (response.status === 401) {
             // TODO: how do we pass error messages along?
             props.history.push('/users/sign_in');
@@ -72,7 +72,7 @@ function ShareListForm(props) {
 
   const failure = ({ response, request, message }) => {
     if (response) {
-      newSetUserInfo(response.headers);
+      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -100,7 +100,7 @@ function ShareListForm(props) {
     }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data: { user, users_list: usersList }, headers  }) => {
-      newSetUserInfo(Headers);
+      setUserInfo(Headers);
       const newPending = update(pending, {
         $push: [
           {
@@ -131,7 +131,7 @@ function ShareListForm(props) {
     axios.post(`${config.apiBase}/lists/${listId}/users_lists`, { users_list: usersList }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
       const newPending = update(pending, {
         $push: [
@@ -159,7 +159,7 @@ function ShareListForm(props) {
     axios.patch(`${config.apiBase}/lists/${listId}/users_lists/${id}`, `users_list%5Bpermissions%5D=${permissions}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
-      newSetUserInfo(headers);
+      setUserInfo(headers);
       const users = status === 'pending' ? pending : accepted;
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
