@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import ListForm from './components/ListForm';
 import Lists from './components/Lists';
@@ -24,7 +23,7 @@ export default function ListsContainer(props) {
   const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   useEffect(() => {
-    axios.get(`${config.apiBase}/lists/`, {
+    axios.get(`${process.env.REACT_APP_API_BASE}/lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
       setUserInfo(headers);
@@ -79,7 +78,7 @@ export default function ListsContainer(props) {
 
   const handleFormSubmit = (list) => {
     handleAlertDismiss();
-    axios.post(`${config.apiBase}/lists`, { list }, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/lists`, { list }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
       setUserInfo(headers);
@@ -98,7 +97,7 @@ export default function ListsContainer(props) {
     setShowDeleteConfirm(false);
     handleAlertDismiss();
     const { id, completed } = listToDelete;
-    axios.delete(`${config.apiBase}/lists/${id}`, {
+    axios.delete(`${process.env.REACT_APP_API_BASE}/lists/${id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
       setUserInfo(headers);
@@ -117,7 +116,7 @@ export default function ListsContainer(props) {
     handleAlertDismiss();
     const theList = list;
     theList.completed = true;
-    axios.put(`${config.apiBase}/lists/${theList.id}`, 'list%5Bcompleted%5D=true', {
+    axios.put(`${process.env.REACT_APP_API_BASE}/lists/${theList.id}`, 'list%5Bcompleted%5D=true', {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
       setUserInfo(headers);
@@ -137,7 +136,7 @@ export default function ListsContainer(props) {
   const acceptList = (list) => {
     handleAlertDismiss();
     axios.patch(
-      `${config.apiBase}/lists/${list.id}/users_lists/${list.users_list_id}`,
+      `${process.env.REACT_APP_API_BASE}/lists/${list.id}/users_lists/${list.users_list_id}`,
       'users_list%5Bhas_accepted%5D=true',
       {
         headers: JSON.parse(sessionStorage.getItem('user')),
@@ -170,7 +169,7 @@ export default function ListsContainer(props) {
     setShowRejectConfirm(false);
     handleAlertDismiss();
     axios.patch(
-      `${config.apiBase}/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`,
+      `${process.env.REACT_APP_API_BASE}/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`,
       'users_list%5Bhas_accepted%5D=false',
       {
         headers: JSON.parse(sessionStorage.getItem('user')),
@@ -186,7 +185,7 @@ export default function ListsContainer(props) {
     handleAlertDismiss();
     const localList = list;
     localList.refreshed = true;
-    axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
       setUserInfo(headers);

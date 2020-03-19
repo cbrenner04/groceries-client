@@ -3,15 +3,13 @@ import { Navbar, Nav } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-import * as config from '../config/default';
-
 export default function AppNav() {
   const history = useHistory();
   const location = useLocation();
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
   const handleLogout = () => {
-    axios.delete(`${config.apiBase}/auth/sign_out`, {
+    axios.delete(`${process.env.REACT_APP_API_BASE}/auth/sign_out`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).finally(() => {
       sessionStorage.removeItem('user');

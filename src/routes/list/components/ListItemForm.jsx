@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../../config/default';
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
 import { setUserInfo } from '../../../utils/auth';
 import Alert from '../../../components/Alert';
@@ -52,9 +51,13 @@ function ListItemForm(props) {
     listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
-    axios.post(`${config.apiBase}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`, postData, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ data, headers }) => {
+    axios.post(
+      `${process.env.REACT_APP_API_BASE}/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
+      postData,
+      {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      },
+    ).then(({ data, headers }) => {
       setUserInfo(headers);
       props.handleItemAddition(data);
       setProduct('');

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
 
@@ -16,7 +15,7 @@ function EditPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    axios.put(`${config.apiBase}/auth/password`, {
+    axios.put(`${process.env.REACT_APP_API_BASE}/auth/password`, {
       password,
       password_confirmation: passwordConfirmation,
     }, {

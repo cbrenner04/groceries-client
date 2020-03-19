@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import { setUserInfo } from '../../utils/auth';
@@ -16,7 +15,7 @@ function InviteForm(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    axios.post(`${config.apiBase}/auth/invitation`, { email }, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { email }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
       setUserInfo(headers);

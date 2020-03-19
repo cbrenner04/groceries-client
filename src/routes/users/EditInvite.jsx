@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
 
@@ -20,7 +19,7 @@ function EditInvite(props) {
       password_confirmation: passwordConfirmation,
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
-    axios.put(`${config.apiBase}/auth/invitation`, { user })
+    axios.put(`${process.env.REACT_APP_API_BASE}/auth/invitation`, { user })
       .then(() => {
         // noop
       })

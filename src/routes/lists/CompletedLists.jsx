@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import List from './components/List';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -17,7 +16,7 @@ function CompletedLists(props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    axios.get(`${config.apiBase}/completed_lists/`, {
+    axios.get(`${process.env.REACT_APP_API_BASE}/completed_lists/`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
       setUserInfo(headers);
@@ -68,7 +67,7 @@ function CompletedLists(props) {
 
   const handleRefresh = (list) => {
     dismissAlert();
-    axios.post(`${config.apiBase}/lists/${list.id}/refresh_list`, {}, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/lists/${list.id}/refresh_list`, {}, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
       setUserInfo(headers);
@@ -88,7 +87,7 @@ function CompletedLists(props) {
   const handleDeleteConfirm = () => {
     dismissAlert();
     setShowDeleteConfirm(false);
-    axios.delete(`${config.apiBase}/lists/${listToDelete.id}`, {
+    axios.delete(`${process.env.REACT_APP_API_BASE}/lists/${listToDelete.id}`, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ headers }) => {
       setUserInfo(headers);

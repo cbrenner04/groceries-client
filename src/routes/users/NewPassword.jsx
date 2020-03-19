@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 
@@ -15,13 +14,16 @@ function NewPassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors('');
-    axios.post(`${config.apiBase}/auth/password`, { email, redirect_url: `${config.rootUrl}/users/password/edit` })
-      .then(() => {
-        props.history.push('/users/sign_in');
-      })
-      .catch(() => {
-        props.history.push('/users/sign_in');
-      });
+    axios.post(
+      `${process.env.REACT_APP_API_BASE}/auth/password`,
+      { email, redirect_url: `${process.env.REACT_APP_ROOT_URL}/users/password/edit` },
+    ).then(() => {
+      // noop
+    }).catch(() => {
+      // noop
+    }).finally(() => {
+      props.history.push('/users/sign_in');
+    });
   };
 
   return (

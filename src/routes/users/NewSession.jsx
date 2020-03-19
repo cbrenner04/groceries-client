@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 
@@ -23,7 +22,7 @@ export default function NewSession(props) {
       password,
       remember_me: rememberMe,
     };
-    axios.post(`${config.apiBase}/auth/sign_in`, user)
+    axios.post(`${process.env.REACT_APP_API_BASE}/auth/sign_in`, user)
       .then(({ data: { data }, headers }) => {
         sessionStorage.setItem('user', JSON.stringify({
           'access-token': headers['access-token'],

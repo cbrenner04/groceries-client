@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
-    "config": "^3.3.0",
     "immutability-helper": "^3.0.1",
     "moment": "^2.24.0",
     "popper.js": "^1.16.1",
@@ -26,7 +25,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "max-len": ["error", {"code": 120, "tabWidth": 2}]
+    }
   },
   "browserslist": {
     "production": [

@@ -4,7 +4,6 @@ import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import { listTypeToSnakeCase } from '../../utils/format';
 import Alert from '../../components/Alert';
 import ListItemForm from './components/ListItemForm';
@@ -74,11 +73,11 @@ function ListContainer(props) {
 
   useEffect(() => {
     if (props.match) {
-      axios.get(`${config.apiBase}/lists/${props.match.params.id}/users_lists`, {
+      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data:{ accepted, pending }, headers }) => {
         setUserInfo(headers);
-        axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
+        axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}`, {
           headers: JSON.parse(sessionStorage.getItem('user')),
         }).then(({ data, headers: headers2 }) => {
           setUserInfo(headers2);
@@ -160,7 +159,8 @@ function ListContainer(props) {
   };
 
   const listId = item => item[`${listTypeToSnakeCase(list.type)}_id`];
-  const listItemPath = item => `${config.apiBase}/lists/${listId(item)}/${listTypeToSnakeCase(list.type)}_items`;
+  const listItemPath = item =>
+    `${process.env.REACT_APP_API_BASE}/lists/${listId(item)}/${listTypeToSnakeCase(list.type)}_items`;
 
   // TODO: refactor?
   const moveItemToPurchased = (item) => {
@@ -301,7 +301,7 @@ function ListContainer(props) {
       // TODO: can this be handled by manipulating the state?
       // should just be able to remove the item from purchased or not purchased
       // if it was the last item of a category that category should be removed? (check server for what its returning)
-      axios.get(`${config.apiBase}/lists/${props.match.params.id}`, {
+      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers }) => {
         setUserInfo(headers);

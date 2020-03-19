@@ -5,7 +5,6 @@ import update from 'immutability-helper';
 import { Button, Form, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 
-import * as config from '../../config/default';
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import PermissionButtons from './components/PermissionButtons';
@@ -26,7 +25,7 @@ function ShareListForm(props) {
 
   useEffect(() => {
     if (props.match) {
-      axios.get(`${config.apiBase}/lists/${props.match.params.list_id}/users_lists`, {
+      axios.get(`${process.env.REACT_APP_API_BASE}/lists/${props.match.params.list_id}/users_lists`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
       }).then(({ data, headers }) => {
         setUserInfo(headers);
@@ -94,7 +93,7 @@ function ShareListForm(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     handleAlertDismiss();
-    axios.post(`${config.apiBase}/auth/invitation`, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/auth/invitation`, {
       email: newEmail,
       list_id: listId,
     }, {
@@ -128,7 +127,7 @@ function ShareListForm(props) {
       user_id: user.id,
       list_id: listId,
     };
-    axios.post(`${config.apiBase}/lists/${listId}/users_lists`, { users_list: usersList }, {
+    axios.post(`${process.env.REACT_APP_API_BASE}/lists/${listId}/users_lists`, { users_list: usersList }, {
       headers: JSON.parse(sessionStorage.getItem('user')),
     }).then(({ data, headers }) => {
       setUserInfo(headers);
@@ -156,9 +155,13 @@ function ShareListForm(props) {
 
   const togglePermission = (id, currentPermission, status) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
-    axios.patch(`${config.apiBase}/lists/${listId}/users_lists/${id}`, `users_list%5Bpermissions%5D=${permissions}`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    }).then(({ headers }) => {
+    axios.patch(
+      `${process.env.REACT_APP_API_BASE}/lists/${listId}/users_lists/${id}`,
+      `users_list%5Bpermissions%5D=${permissions}`,
+      {
+        headers: JSON.parse(sessionStorage.getItem('user')),
+      }
+    ).then(({ headers }) => {
       setUserInfo(headers);
       const users = status === 'pending' ? pending : accepted;
       const updatedUsers = users.map((usersList) => {
