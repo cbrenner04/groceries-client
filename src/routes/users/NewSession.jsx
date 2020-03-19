@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -12,7 +12,15 @@ export default function NewSession(props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState('');
 
-  // TODO: handle redirect if already signed in
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_BASE}/auth/validate_token`, {
+      headers: JSON.parse(sessionStorage.getItem('user')),
+    }).then(() => {
+      props.history.push('/lists');
+    }).catch(() => {
+      // noop
+    });
+  }, [props.history])
 
   const handleSubmit = event => {
     event.preventDefault();
