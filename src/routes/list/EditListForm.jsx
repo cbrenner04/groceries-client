@@ -18,10 +18,12 @@ function EditListForm(props) {
     async function fetchData() {
       if (!props.match) props.history.push('/lists');
       try {
-        const { data: { list, current_user_id: currentUserId }, headers } = await axios
-          .get(`/lists/${props.match.params.id}/edit`, {
-            headers: JSON.parse(sessionStorage.getItem('user')),
-          });
+        const {
+          data: { list, current_user_id: currentUserId },
+          headers,
+        } = await axios.get(`/lists/${props.match.params.id}/edit`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        });
         setUserInfo(headers);
         if (list.owner_id !== currentUserId) props.history.push('/lists');
         setId(list.id);
@@ -48,7 +50,7 @@ function EditListForm(props) {
     fetchData();
   }, [props.history, props.match]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
     const list = {
       name,
@@ -56,14 +58,13 @@ function EditListForm(props) {
       type,
     };
     try {
-      const { headers } = await axios
-        .put(
-          `/lists/${id}`,
-          { list },
-          {
-            headers: JSON.parse(sessionStorage.getItem('user')),
-          },
-        )
+      const { headers } = await axios.put(
+        `/lists/${id}`,
+        { list },
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      );
       setUserInfo(headers);
       props.history.push('/lists');
     } catch ({ response, request, message }) {
