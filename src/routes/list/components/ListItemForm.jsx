@@ -31,7 +31,7 @@ function ListItemForm(props) {
     setSuccess('');
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     dismissAlert();
     const listItem = {
@@ -51,52 +51,54 @@ function ListItemForm(props) {
     listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
-    axios
-      .post(`/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`, postData, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ data, headers }) => {
-        setUserInfo(headers);
-        props.handleItemAddition(data);
-        setProduct('');
-        setTask('');
-        setQuantity('');
-        setAuthor('');
-        setTitle('');
-        setArtist('');
-        setAlbum('');
-        setAssigneeId('');
-        setDueBy(defaultDueBy());
-        setNumberInSeries(0);
-        setCategory('');
-        setSuccess('Item successfully added.');
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else if (response.status === 403) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/lists');
-          } else {
-            const responseTextKeys = Object.keys(response.data);
-            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-            let joinString;
-            if (props.listType === 'BookList' || props.listType === 'MusicList') {
-              joinString = ' or ';
-            } else {
-              joinString = ' and ';
-            }
-            setErrors(responseErrors.join(joinString));
-          }
-        } else if (request) {
-          // TODO: what do here?
+    try {
+      const { data, headers } = await axios.post(
+        `/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
+        postData,
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      );
+      setUserInfo(headers);
+      props.handleItemAddition(data);
+      setProduct('');
+      setTask('');
+      setQuantity('');
+      setAuthor('');
+      setTitle('');
+      setArtist('');
+      setAlbum('');
+      setAssigneeId('');
+      setDueBy(defaultDueBy());
+      setNumberInSeries(0);
+      setCategory('');
+      setSuccess('Item successfully added.');
+    } catch ({ response, request, message }) {
+      if (response) {
+        setUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
         } else {
-          setErrors(message);
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          let joinString;
+          if (props.listType === 'BookList' || props.listType === 'MusicList') {
+            joinString = ' or ';
+          } else {
+            joinString = ' and ';
+          }
+          setErrors(responseErrors.join(joinString));
         }
-      });
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   const formFields = () => {

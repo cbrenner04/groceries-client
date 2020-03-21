@@ -15,8 +15,8 @@ function EditListForm(props) {
   const [type, setType] = useState('GroceryList');
 
   useEffect(() => {
+    if (!props.match) props.history.push('/lists');
     async function fetchData() {
-      if (!props.match) props.history.push('/lists');
       try {
         const {
           data: { list, current_user_id: currentUserId },

@@ -16,15 +16,14 @@ function CompletedLists(props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`/completed_lists/`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ data, headers }) => {
+    async function fetchData() {
+      try {
+        const { data, headers } = await axios.get(`/completed_lists/`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        });
         setUserInfo(headers);
         setCompletedLists(data.completed_lists);
-      })
-      .catch(({ response, request, message }) => {
+      } catch ({ response, request, message }) {
         if (response) {
           setUserInfo(response.headers);
           if (response.status === 401) {
@@ -39,7 +38,10 @@ function CompletedLists(props) {
         } else {
           setErrors(message);
         }
-      });
+      }
+    }
+
+    fetchData();
   }, [props.history]);
 
   const dismissAlert = () => {
@@ -47,7 +49,7 @@ function CompletedLists(props) {
     setErrors('');
   };
 
-  const failure = (response, request, message) => {
+  const failure = ({ response, request, message }) => {
     if (response) {
       setUserInfo(response.headers);
       if (response.status === 401) {
@@ -68,25 +70,23 @@ function CompletedLists(props) {
     }
   };
 
-  const handleRefresh = list => {
-    dismissAlert();
-    axios
-      .post(
+  const handleRefresh = async list => {
+    try {
+      const { headers } = await axios.post(
         `/lists/${list.id}/refresh_list`,
         {},
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
-      )
-      .then(({ headers }) => {
-        setUserInfo(headers);
-        const refreshedList = completedLists.find(completedList => completedList.id === list.id);
-        refreshedList.refreshed = true;
-        setSuccess('Your list was successfully refreshed.');
-      })
-      .catch(({ response, request, message }) => {
-        failure(response, request, message);
-      });
+      );
+      setUserInfo(headers);
+      const refreshedList = completedLists.find(completedList => completedList.id === list.id);
+      refreshedList.refreshed = true;
+      setSuccess('Your list was successfully refreshed.');
+    } catch (error) {
+      failure(error);
+    }
+    dismissAlert();
   };
 
   const handleDelete = list => {
@@ -94,22 +94,20 @@ function CompletedLists(props) {
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     dismissAlert();
     setShowDeleteConfirm(false);
-    axios
-      .delete(`/lists/${listToDelete.id}`, {
+    try {
+      const { headers } = await axios.delete(`/lists/${listToDelete.id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ headers }) => {
-        setUserInfo(headers);
-        const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
-        setCompletedLists(lists);
-        setSuccess('Your list was successfully deleted.');
-      })
-      .catch(({ response, request, message }) => {
-        failure(response, request, message);
       });
+      setUserInfo(headers);
+      const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
+      setCompletedLists(lists);
+      setSuccess('Your list was successfully deleted.');
+    } catch (error) {
+      failure(error);
+    }
   };
 
   return (
