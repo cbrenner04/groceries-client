@@ -12,41 +12,39 @@ function InviteForm(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     setErrors('');
-    axios
-      .post(
+    try {
+      const { headers } = await axios.post(
         `/auth/invitation`,
         { email },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
-      )
-      .then(({ headers }) => {
-        setUserInfo(headers);
-        props.history.push('/');
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else if (response.status === 403) {
-            // TODO: how do we pass error messages along
-            props.history.push('/lists');
-          } else {
-            const responseTextKeys = Object.keys(response.data);
-            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-            setErrors(responseErrors.join(' and '));
-          }
-        } else if (request) {
-          // TODO: what do here?
+      );
+      setUserInfo(headers);
+      props.history.push('/');
+    } catch ({ response, request, message }) {
+      if (response) {
+        setUserInfo(response.headers);
+        if (response.status === 401) {
+          // TODO: how do we pass error messages along?
+          props.history.push('/users/sign_in');
+        } else if (response.status === 403) {
+          // TODO: how do we pass error messages along
+          props.history.push('/lists');
         } else {
-          setErrors(message);
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
         }
-      });
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   return (

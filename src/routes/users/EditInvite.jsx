@@ -11,7 +11,7 @@ function EditInvite(props) {
   const [passwordConfirmation, , setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     setErrors('');
     const user = {
@@ -19,22 +19,19 @@ function EditInvite(props) {
       password_confirmation: passwordConfirmation,
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
-    axios
-      .put(`/auth/invitation`, { user })
-      .then(() => {
-        // noop
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      });
+    try {
+      await axios.put(`/auth/invitation`, { user });
+    } catch ({ response, request, message }) {
+      if (response) {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   return (

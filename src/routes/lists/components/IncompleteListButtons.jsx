@@ -10,6 +10,7 @@ function IncompleteListButtons(props) {
   const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
 
   useEffect(() => {
+    // TODO: this should be passed down
     axios
       .get(`/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
         headers: JSON.parse(sessionStorage.getItem('user')),

@@ -12,11 +12,11 @@ function EditPassword(props) {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     setErrors('');
-    axios
-      .put(
+    try {
+      await axios.put(
         `/auth/password`,
         {
           password,
@@ -25,21 +25,19 @@ function EditPassword(props) {
         {
           headers: queryString.parse(props.location.search),
         },
-      )
-      .then(() => {
-        props.history.push('/');
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      });
+      );
+      props.history.push('/');
+    } catch ({ response, request, message }) {
+      if (response) {
+        const responseTextKeys = Object.keys(response.data);
+        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        setErrors(responseErrors.join(' and '));
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   return (
