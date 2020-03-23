@@ -13,20 +13,19 @@ export default function NewSession(props) {
   const [errors, setErrors] = useState('');
 
   useEffect(() => {
-    axios
-      .get(`/auth/validate_token`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(() => {
-        // TODO: pass message to next component (already signed in or whatever)
+    async function fetchData() {
+      try {
+        await axios.get(`/auth/validate_token`, { headers: JSON.parse(sessionStorage.getItem('user')) });
         props.history.push('/lists');
-      })
-      .catch(() => {
+      } catch {
         // noop
-      });
+      }
+    }
+
+    fetchData();
   }, [props.history]);
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     setErrors('');
     const user = {
@@ -34,28 +33,29 @@ export default function NewSession(props) {
       password,
       remember_me: rememberMe,
     };
-    axios
-      .post(`/auth/sign_in`, user)
-      .then(({ data: { data }, headers }) => {
-        sessionStorage.setItem(
-          'user',
-          JSON.stringify({
-            'access-token': headers['access-token'],
-            client: headers['client'],
-            uid: data.uid,
-          }),
-        );
-        props.history.push('/lists');
-      })
-      .catch(({ response, request, message }) => {
-        if (response) {
-          setErrors(response.data.errors);
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      });
+    try {
+      const {
+        data: { data },
+        headers,
+      } = await axios.post(`/auth/sign_in`, user);
+      sessionStorage.setItem(
+        'user',
+        JSON.stringify({
+          'access-token': headers['access-token'],
+          client: headers['client'],
+          uid: data.uid,
+        }),
+      );
+      props.history.push('/lists');
+    } catch ({ response, request, message }) {
+      if (response) {
+        setErrors(response.data.errors);
+      } else if (request) {
+        // TODO: what do here?
+      } else {
+        setErrors(message);
+      }
+    }
   };
 
   return (

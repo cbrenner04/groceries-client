@@ -11,17 +11,21 @@ function IncompleteListButtons(props) {
 
   useEffect(() => {
     // TODO: this should be passed down
-    axios
-      .get(`/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ data: { permissions }, headers }) => {
+    async function fetchData() {
+      try {
+        const {
+          data: { permissions },
+          headers,
+        } = await axios.get(`/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        });
         setUserInfo(headers);
         setCurrentUserPermissions(permissions);
-      })
-      .catch(() => {
+      } catch {
         // noop
-      });
+      }
+    }
+    fetchData();
   }, [props.list.id, props.list.users_list_id]);
 
   return (

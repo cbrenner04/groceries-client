@@ -25,12 +25,16 @@ function ShareListForm(props) {
 
   useEffect(() => {
     if (props.match) {
-      axios
-        .get(`/lists/${props.match.params.list_id}/users_lists`, {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        })
-        .then(({ data, headers }) => {
+      async function fetchData() {
+        try {
+          const { data, headers } = await axios.get(`/lists/${props.match.params.list_id}/users_lists`, {
+            headers: JSON.parse(sessionStorage.getItem('user')),
+          });
           setUserInfo(headers);
+          const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
+          if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
+            props.history.push('/lists');
+          }
           setName(data.list.name);
           setInvitableUsers(data.invitable_users);
           setListId(data.list.id);
@@ -39,12 +43,7 @@ function ShareListForm(props) {
           setAccepted(data.accepted);
           setRefused(data.refused);
           setUserId(data.current_user_id);
-          const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
-          if (!(userInAccepted && userInAccepted.users_list.permissions === 'write')) {
-            props.history.push('/lists');
-          }
-        })
-        .catch(({ response, request, message }) => {
+        } catch ({ response, request, message }) {
           if (response) {
             setUserInfo(response.headers);
             if (response.status === 401) {
@@ -63,7 +62,10 @@ function ShareListForm(props) {
           } else {
             setErrors(message);
           }
-        });
+        }
+      }
+
+      fetchData();
     }
   }, [props.history, props.match]);
 
@@ -93,11 +95,14 @@ function ShareListForm(props) {
     }
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     handleAlertDismiss();
-    axios
-      .post(
+    try {
+      const {
+        data: { user, users_list: usersList },
+        headers,
+      } = await axios.post(
         `/auth/invitation`,
         {
           email: newEmail,
@@ -106,89 +111,93 @@ function ShareListForm(props) {
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
-      )
-      .then(({ data: { user, users_list: usersList }, headers }) => {
-        setUserInfo(Headers);
-        const newPending = update(pending, {
-          $push: [
-            {
-              user: {
-                id: user.id,
-                email: user.email,
-              },
-              users_list: {
-                id: usersList.id,
-                permissions: usersList.permissions,
-              },
+      );
+      setUserInfo(headers);
+      const newPending = update(pending, {
+        $push: [
+          {
+            user: {
+              id: user.id,
+              email: user.email,
             },
-          ],
-        });
-        // TODO: these need to be sorted
-        setPending(newPending);
-        setNewEmail('');
-        setSuccess(`"${name}" has been successfully shared with ${newEmail}.`);
-      })
-      .catch(failure);
+            users_list: {
+              id: usersList.id,
+              permissions: usersList.permissions,
+            },
+          },
+        ],
+      });
+      // TODO: these need to be sorted
+      setPending(newPending);
+      setNewEmail('');
+      setSuccess(`"${name}" has been successfully shared with ${newEmail}.`);
+    } catch (error) {
+      failure(error);
+    }
   };
 
-  const handleSelectUser = user => {
+  const handleSelectUser = async user => {
     handleAlertDismiss();
     const usersList = {
       user_id: user.id,
       list_id: listId,
     };
-    axios
-      .post(
+    try {
+      const { data, headers } = await axios.post(
         `/lists/${listId}/users_lists`,
         { users_list: usersList },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
-      )
-      .then(({ data, headers }) => {
-        setUserInfo(headers);
-        const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
-        const newPending = update(pending, {
-          $push: [
-            {
-              user: {
-                id: data.user_id,
-                email: user.email,
-              },
-              users_list: {
-                id: data.id,
-                permissions: data.permissions,
-              },
+      );
+      setUserInfo(headers);
+      const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
+      const newPending = update(pending, {
+        $push: [
+          {
+            user: {
+              id: data.user_id,
+              email: user.email,
             },
-          ],
-        });
-        setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
-        setInvitableUsers(newUsers);
-        // TODO: these need to be sorted
-        setPending(newPending);
-      })
-      .catch(failure);
+            users_list: {
+              id: data.id,
+              permissions: data.permissions,
+            },
+          },
+        ],
+      });
+      setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
+      setInvitableUsers(newUsers);
+      // TODO: these need to be sorted
+      setPending(newPending);
+    } catch (error) {
+      failure(error);
+    }
   };
 
-  const togglePermission = (id, currentPermission, status) => {
+  const togglePermission = async (id, currentPermission, status) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
-    axios
-      .patch(`/lists/${listId}/users_lists/${id}`, `users_list%5Bpermissions%5D=${permissions}`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      })
-      .then(({ headers }) => {
-        setUserInfo(headers);
-        const users = status === 'pending' ? pending : accepted;
-        const updatedUsers = users.map(usersList => {
-          const newList = usersList;
-          const tmpUsersList = newList.users_list;
-          if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
-          return newList;
-        });
-        const stateFunc = status === 'pending' ? setPending : setAccepted;
-        stateFunc(updatedUsers);
-      })
-      .catch(failure);
+    try {
+      const { headers } = await axios.patch(
+        `/lists/${listId}/users_lists/${id}`,
+        `users_list%5Bpermissions%5D=${permissions}`,
+        {
+          headers: JSON.parse(sessionStorage.getItem('user')),
+        },
+      );
+      setUserInfo(headers);
+      const users = status === 'pending' ? pending : accepted;
+      const updatedUsers = users.map(usersList => {
+        const newList = usersList;
+        const tmpUsersList = newList.users_list;
+        if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
+        return newList;
+      });
+      const stateFunc = status === 'pending' ? setPending : setAccepted;
+      stateFunc(updatedUsers);
+    } catch (error) {
+      failure(error);
+    }
   };
 
   return (
