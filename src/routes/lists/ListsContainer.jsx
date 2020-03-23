@@ -39,17 +39,19 @@ export default function ListsContainer(props) {
         setNonCompletedLists(newNonCompletedLists);
         const lists = sortedAcceptedLists.concat(sortedPendingLists);
         const permissions = {};
-        Promise.all(lists.map(list => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`, { headers })))
-          .then(lists => {
-            lists.forEach(listData => {
-              const {
-                data: { list_id: listId, permissions: listPerms },
-              } = listData;
-              permissions[listId] = listPerms;
-            });
-            setCurrentUserPermissions(permissions);
-          })
-          .catch(() => undefined); // noop
+        Promise.all(
+          lists.map(list =>
+            axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`, { headers }).catch(() => undefined),
+          ),
+        ).then(lists => {
+          lists.forEach(listData => {
+            const {
+              data: { list_id: listId, permissions: listPerms },
+            } = listData;
+            permissions[listId] = listPerms;
+          });
+          setCurrentUserPermissions(permissions);
+        }); // noop
       } catch ({ response, request, message }) {
         if (response) {
           setUserInfo(response.headers);
