@@ -1,63 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { setUserInfo } from '../../../utils/auth';
 import { Complete, Edit, Share, Trash } from '../../../components/ActionButtons';
-import axios from '../../../utils/api';
 
 function IncompleteListButtons(props) {
-  const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
-
-  useEffect(() => {
-    // TODO: this should be passed down
-    async function fetchData() {
-      try {
-        const {
-          data: { permissions },
-          headers,
-        } = await axios.get(`/lists/${props.list.id}/users_lists/${props.list.users_list_id}`, {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        });
-        setUserInfo(headers);
-        setCurrentUserPermissions(permissions);
-      } catch {
-        // noop
-      }
-    }
-    fetchData();
-  }, [props.list.id, props.list.users_list_id]);
-
+  const userIsOwner = props.userId === props.list.owner_id;
+  const userHasWritePermission = props.currentUserPermissions === 'write';
   return (
     <ButtonGroup className="float-right">
       <Complete
         handleClick={() => props.onListCompletion(props.list)}
-        disabled={props.userId !== props.list.owner_id}
-        style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
+        disabled={!userIsOwner}
+        style={{ opacity: userIsOwner ? 1 : 0.3 }}
         data-test-id="incomplete-list-complete"
       />
       <Share
         to={`lists/${props.list.id}/users_lists`}
-        disabled={currentUserPermissions !== 'write'}
+        disabled={!userHasWritePermission}
         style={{
-          pointerEvents: currentUserPermissions !== 'write' ? 'none' : 'auto',
-          opacity: currentUserPermissions !== 'write' ? 0.3 : 1,
+          pointerEvents: userHasWritePermission ? 'auto' : 'none',
+          opacity: userHasWritePermission ? 1 : 0.3,
         }}
         data-test-id="incomplete-list-share"
       />
       <Edit
         to={`/lists/${props.list.id}/edit`}
-        disabled={props.userId !== props.list.owner_id}
+        disabled={!userIsOwner}
         style={{
-          pointerEvents: props.userId !== props.list.owner_id ? 'none' : 'auto',
-          opacity: props.userId !== props.list.owner_id ? 0.3 : 1,
+          pointerEvents: userIsOwner ? 'auto' : 'none',
+          opacity: userIsOwner ? 1 : 0.3,
         }}
         data-test-id="incomplete-list-edit"
       />
       <Trash
         handleClick={() => props.onListDeletion(props.list)}
-        disabled={props.userId !== props.list.owner_id}
-        style={{ opacity: props.userId !== props.list.owner_id ? 0.3 : 1 }}
+        disabled={!userIsOwner}
+        style={{ opacity: userIsOwner ? 1 : 0.3 }}
         data-test-id="incomplete-list-trash"
       />
     </ButtonGroup>

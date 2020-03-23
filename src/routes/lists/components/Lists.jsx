@@ -18,6 +18,7 @@ const Lists = props => (
               key={list.id}
               onListAcceptance={props.onAccept}
               onListRejection={props.onReject}
+              currentUserPermissions={props.currentUserPermissions[list.id]}
             />
           ))}
         </ListGroup>
@@ -35,6 +36,7 @@ const Lists = props => (
           onListDeletion={props.onListDelete}
           onListCompletion={props.onListCompletion}
           completed={list.completed}
+          currentUserPermissions={props.currentUserPermissions[list.id]}
           accepted
         />
       ))}
@@ -55,6 +57,7 @@ const Lists = props => (
           onListDeletion={props.onListDelete}
           completed={list.completed}
           onListRefresh={props.onListRefresh}
+          currentUserPermissions={props.currentUserPermissions[list.id]}
           accepted
         />
       ))}

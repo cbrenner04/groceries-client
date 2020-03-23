@@ -19,21 +19,37 @@ export default function ListsContainer(props) {
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
 
   const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data, headers } = await axios.get(`/lists/`, { headers: JSON.parse(sessionStorage.getItem('user')) });
-        setUserInfo(headers);
-        const newAcceptedLists = sortLists(data.accepted_lists);
-        const newCompletedLists = newAcceptedLists.filter(list => list.completed);
-        const newNonCompletedLists = newAcceptedLists.filter(list => !list.completed);
+        const headers = JSON.parse(sessionStorage.getItem('user'));
+        const { data, headers: responseHeaders } = await axios.get(`/lists/`, { headers });
+        setUserInfo(responseHeaders);
+        const sortedAcceptedLists = sortLists(data.accepted_lists);
+        const sortedPendingLists = sortLists(data.pending_lists);
+        const newCompletedLists = sortedAcceptedLists.filter(list => list.completed);
+        const newNonCompletedLists = sortedAcceptedLists.filter(list => !list.completed);
         setUserId(data.current_user_id);
-        setPendingLists(sortLists(data.pending_lists)); // this should be sorted the opposite
+        setPendingLists(sortedPendingLists); // this should be sorted the opposite
         setCompletedLists(newCompletedLists);
         setNonCompletedLists(newNonCompletedLists);
+        const lists = sortedAcceptedLists.concat(sortedPendingLists);
+        const permissions = {};
+        Promise.all(lists.map(list => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`, { headers })))
+          .then(lists => {
+            lists.forEach(listData => {
+              const {
+                data: { list_id: listId, permissions: listPerms },
+              } = listData;
+              permissions[listId] = listPerms;
+            });
+            setCurrentUserPermissions(permissions);
+          })
+          .catch(() => undefined); // noop
       } catch ({ response, request, message }) {
         if (response) {
           setUserInfo(response.headers);
@@ -240,6 +256,7 @@ export default function ListsContainer(props) {
         onListRefresh={handleRefresh}
         onAccept={handleAccept}
         onReject={handleReject}
+        currentUserPermissions={currentUserPermissions}
       />
       <ConfirmModal
         action="delete"

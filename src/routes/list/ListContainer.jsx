@@ -89,55 +89,51 @@ function ListContainer(props) {
         }
       }
 
-      async function fetchData() {
-        const headers = JSON.parse(sessionStorage.getItem('user'));
-        Promise.all([
-          axios.get(`/lists/${props.match.params.id}/users_lists`, { headers }).catch(failure),
-          axios.get(`/lists/${props.match.params.id}`, { headers }).catch(failure),
-        ]).then(
-          ([
-            {
-              data: { accepted, pending },
-            },
-            {
-              data: {
-                current_user_id: responseCurrentUserId,
-                not_purchased_items: responseNotPurchasedItems,
-                purchased_items: responsePurchasedItems,
-                list: responseList,
-                categories: responseCategories,
-              },
-              headers: responseHeaders,
-            },
-          ]) => {
-            setUserInfo(responseHeaders);
-            const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === responseCurrentUserId);
-            if (!userInAccepted) {
-              props.history.push('/lists');
-              return;
-            }
-            const allAcceptedUsers = accepted.map(({ user }) => user);
-            const allPendingUsers = pending.map(({ user }) => user);
-            const responseListUsers = allAcceptedUsers.concat(allPendingUsers);
-            const responseIncludedCategories = mapIncludedCategories(responseNotPurchasedItems);
-            const categorizedNotPurchasedItems = categorizeNotPurchasedItems(
-              responseNotPurchasedItems,
-              responseIncludedCategories,
-            );
-
-            setUserId(responseCurrentUserId);
-            setList(responseList);
-            setPurchasedItems(responsePurchasedItems); // TODO: need to sort?
-            setCategories(responseCategories);
-            setListUsers(responseListUsers);
-            setIncludedCategories(responseIncludedCategories);
-            setNotPurchasedItems(categorizedNotPurchasedItems); // TODO: need to sort?
-            setPermission(userInAccepted.users_list.permissions);
+      const headers = JSON.parse(sessionStorage.getItem('user'));
+      Promise.all([
+        axios.get(`/lists/${props.match.params.id}/users_lists`, { headers }).catch(failure),
+        axios.get(`/lists/${props.match.params.id}`, { headers }).catch(failure),
+      ]).then(
+        ([
+          {
+            data: { accepted, pending },
           },
-        );
-      }
+          {
+            data: {
+              current_user_id: responseCurrentUserId,
+              not_purchased_items: responseNotPurchasedItems,
+              purchased_items: responsePurchasedItems,
+              list: responseList,
+              categories: responseCategories,
+            },
+            headers: responseHeaders,
+          },
+        ]) => {
+          setUserInfo(responseHeaders);
+          const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === responseCurrentUserId);
+          if (!userInAccepted) {
+            props.history.push('/lists');
+            return;
+          }
+          const allAcceptedUsers = accepted.map(({ user }) => user);
+          const allPendingUsers = pending.map(({ user }) => user);
+          const responseListUsers = allAcceptedUsers.concat(allPendingUsers);
+          const responseIncludedCategories = mapIncludedCategories(responseNotPurchasedItems);
+          const categorizedNotPurchasedItems = categorizeNotPurchasedItems(
+            responseNotPurchasedItems,
+            responseIncludedCategories,
+          );
 
-      fetchData();
+          setUserId(responseCurrentUserId);
+          setList(responseList);
+          setPurchasedItems(responsePurchasedItems); // TODO: need to sort?
+          setCategories(responseCategories);
+          setListUsers(responseListUsers);
+          setIncludedCategories(responseIncludedCategories);
+          setNotPurchasedItems(categorizedNotPurchasedItems); // TODO: need to sort?
+          setPermission(userInAccepted.users_list.permissions);
+        },
+      );
     } else {
       props.history.push('/lists');
     }

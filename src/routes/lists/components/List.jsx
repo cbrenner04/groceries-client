@@ -26,6 +26,7 @@ function List(props) {
         list={props.list}
         onListCompletion={props.onListCompletion}
         onListDeletion={props.onListDeletion}
+        currentUserPermissions={props.currentUserPermissions}
       />
     );
 

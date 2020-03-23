@@ -4,17 +4,14 @@ import { Button, Form } from 'react-bootstrap';
 
 import { SelectField, TextField } from '../../../components/FormFields';
 
-function ListForm(props) {
+function ListForm({ onFormSubmit }) {
   const defaultListType = 'GroceryList';
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
 
   const handleSubmit = event => {
     event.preventDefault();
-    props.onFormSubmit({
-      name,
-      type,
-    });
+    onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
   };

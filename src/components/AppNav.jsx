@@ -23,7 +23,7 @@ export default function AppNav() {
 
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem('user'));
-    setIsUserSignedIn(user);
+    setIsUserSignedIn(!!user);
   }, [location]);
 
   return (
