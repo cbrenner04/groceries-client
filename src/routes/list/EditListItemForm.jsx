@@ -37,27 +37,12 @@ function EditListItemForm(props) {
   useEffect(() => {
     if (props.match) {
       const { id, list_id } = props.match.params;
-      const failure = ({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else {
-            // TODO: how do we pass error messages along?
-            props.history.push(`/lists/${list_id}`);
-          }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      };
       const headers = JSON.parse(sessionStorage.getItem('user'));
+      // TODO: do i need all of this?
       Promise.all([
-        axios.get(`/lists/${list_id}/${props.match.params[0]}/${id}/edit`, { headers }).catch(failure),
-        axios.get(`/lists/${list_id}/users_lists`, { headers }).catch(failure),
-        axios.get(`/lists/${list_id}`, { headers }).catch(failure),
+        axios.get(`/lists/${list_id}/${props.match.params[0]}/${id}/edit`, { headers }),
+        axios.get(`/lists/${list_id}/users_lists`, { headers }),
+        axios.get(`/lists/${list_id}`, { headers }),
       ]).then(([editListResponse, usersListsResponse, listResponse]) => {
         setUserInfo(editListResponse.headers);
         const {
@@ -99,6 +84,20 @@ function EditListItemForm(props) {
         setNumberInSeries(Number(item.number_in_series));
         setCategory(item.category || '');
         setCategories(categories);
+      }).catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push(`/lists/${list_id}`);
+          }
+        } else {
+          // TODO: how do we pass error messages along?
+          props.history.push(`/lists/${list_id}`);
+        }
       });
     }
   }, [props.history, props.match]);

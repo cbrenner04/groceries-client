@@ -72,27 +72,10 @@ function ListContainer(props) {
 
   useEffect(() => {
     if (props.match) {
-      function failure({ response, request, message }) {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else {
-            // TODO: how do we pass error messages along?
-            props.history.push('/lists');
-          }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      }
-
       const headers = JSON.parse(sessionStorage.getItem('user'));
       Promise.all([
-        axios.get(`/lists/${props.match.params.id}/users_lists`, { headers }).catch(failure),
-        axios.get(`/lists/${props.match.params.id}`, { headers }).catch(failure),
+        axios.get(`/lists/${props.match.params.id}/users_lists`, { headers }),
+        axios.get(`/lists/${props.match.params.id}`, { headers }),
       ]).then(
         ([
           {
@@ -133,7 +116,21 @@ function ListContainer(props) {
           setNotPurchasedItems(categorizedNotPurchasedItems); // TODO: need to sort?
           setPermission(userInAccepted.users_list.permissions);
         },
-      );
+      ).catch(({ response, request, message }) => {
+        if (response) {
+          setUserInfo(response.headers);
+          if (response.status === 401) {
+            // TODO: how do we pass error messages along?
+            props.history.push('/users/sign_in');
+          } else {
+            // TODO: how do we pass error messages along?
+            props.history.push('/lists');
+          }
+        } else {
+          // TODO: how do we pass error messages along?
+          props.history.push('/lists');
+        }
+      });
     } else {
       props.history.push('/lists');
     }
@@ -275,19 +272,18 @@ function ListContainer(props) {
     postData[`${listTypeToSnakeCase(list.type)}_item`] = newItem;
     const headers = JSON.parse(sessionStorage.getItem('user'));
     Promise.all([
-      axios.post(`${listItemPath(newItem)}`, postData, { headers }).catch(failure),
+      axios.post(`${listItemPath(newItem)}`, postData, { headers }),
       axios
         .put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Brefreshed%5D=true`, {
           headers,
-        })
-        .catch(failure),
+        }),
     ]).then(([{ data, headers: responseHeaders }]) => {
       setUserInfo(responseHeaders);
       handleAddItem(data);
       const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
       setPurchasedItems(sortItems(updatedPurchasedItems));
       setSuccess('Item successfully refreshed.');
-    });
+    }).catch(failure);
   };
 
   const handleDelete = item => {
