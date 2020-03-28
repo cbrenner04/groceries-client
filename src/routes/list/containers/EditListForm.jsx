@@ -1,54 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 
-import Alert from '../../components/Alert';
-import { SelectField, TextField, CheckboxField } from '../../components/FormFields';
-import { setUserInfo } from '../../utils/auth';
-import axios from '../../utils/api';
+import Alert from '../../../components/Alert';
+import { SelectField, TextField, CheckboxField } from '../../../components/FormFields';
+import { setUserInfo } from '../../../utils/auth';
+import axios from '../../../utils/api';
 
 function EditListForm(props) {
-  const [id, setId] = useState(0);
   const [errors, setErrors] = useState('');
-  const [name, setName] = useState('');
-  const [completed, setCompleted] = useState(false);
-  const [type, setType] = useState('GroceryList');
-
-  useEffect(() => {
-    if (!props.match) props.history.push('/lists');
-    async function fetchData() {
-      try {
-        const {
-          data: { list, current_user_id: currentUserId },
-          headers,
-        } = await axios.get(`/lists/${props.match.params.id}/edit`, {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        });
-        setUserInfo(headers);
-        if (list.owner_id !== currentUserId) props.history.push('/lists');
-        setId(list.id);
-        setName(list.name);
-        setCompleted(list.completed);
-        setType(list.type);
-      } catch ({ response, request, message }) {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else {
-            // TODO: how do we pass error messages along?
-            props.history.push('/lists');
-          }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      }
-    }
-    fetchData();
-  }, [props.history, props.match]);
+  const [name, setName] = useState(props.name);
+  const [completed, setCompleted] = useState(props.completed);
+  const [type, setType] = useState(props.type);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -59,7 +22,7 @@ function EditListForm(props) {
     };
     try {
       const { headers } = await axios.put(
-        `/lists/${id}`,
+        `/lists/${props.listId}`,
         { list },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
@@ -129,15 +92,13 @@ function EditListForm(props) {
 }
 
 EditListForm.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      list_id: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
+  }),
+  listId: PropTypes.number,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  completed: PropTypes.bool,
 };
 
 export default EditListForm;

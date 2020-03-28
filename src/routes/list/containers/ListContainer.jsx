@@ -1,150 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 
-import { listTypeToSnakeCase } from '../../utils/format';
-import Alert from '../../components/Alert';
-import ListItemForm from './components/ListItemForm';
-import ListItemsContainer from './components/ListItemsContainer';
-import ConfirmModal from '../../components/ConfirmModal';
-import { setUserInfo } from '../../utils/auth';
-import axios from '../../utils/api';
-
-const mapIncludedCategories = items => {
-  const cats = [''];
-  items.forEach(item => {
-    if (!item.category) return;
-    const cat = item.category.toLowerCase();
-    if (!cats.includes(cat)) cats.push(cat);
-  });
-  return cats;
-};
-
-const categorizeNotPurchasedItems = (items, categories) => {
-  const obj = {};
-  categories.forEach(cat => {
-    obj[cat] = [];
-  });
-  items.forEach(item => {
-    if (!item.category) {
-      obj[''].push(item);
-      return;
-    }
-    const cat = item.category.toLowerCase();
-    if (!obj[cat]) obj[cat] = [];
-    obj[cat].push(item);
-  });
-  return obj;
-};
-
-const performSort = (items, sortAttrs) => {
-  if (sortAttrs.length === 0) return items;
-  const sortAttr = sortAttrs.pop();
-  const sorted = items.sort((a, b) => {
-    // the sort from the server comes back with items with number_in_series: `null` at the end of the list
-    // without the next two lines this would put those items at the front of the list
-    if (a[sortAttr] === null) return 1;
-    if (b[sortAttr] === null) return -1;
-    const positiveBranch = a[sortAttr] > b[sortAttr] ? 1 : 0;
-    return a[sortAttr] < b[sortAttr] ? -1 : positiveBranch;
-  });
-  return performSort(sorted, sortAttrs);
-};
+import { listTypeToSnakeCase } from '../../../utils/format';
+import Alert from '../../../components/Alert';
+import ListItemForm from '../components/ListItemForm';
+import ListItemsContainer from '../components/ListItemsContainer';
+import ConfirmModal from '../../../components/ConfirmModal';
+import { setUserInfo } from '../../../utils/auth';
+import axios from '../../../utils/api';
+import { mapIncludedCategories, categorizeNotPurchasedItems, performSort } from '../utils';
 
 function ListContainer(props) {
-  const [userId, setUserId] = useState(0);
-  const [list, setList] = useState({
-    id: 0,
-    type: 'GroceryList',
-  });
-  const [notPurchasedItems, setNotPurchasedItems] = useState({});
-  const [purchasedItems, setPurchasedItems] = useState([]);
-  const [listUsers, setListUsers] = useState([]);
-  const [permission, setPermission] = useState('write');
-  const [categories, setCategories] = useState([]);
+  const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
+  const [purchasedItems, setPurchasedItems] = useState(props.purchasedItems);
+  const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
-  const [includedCategories, setIncludedCategories] = useState(['']);
+  const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
   const [errors, setErrors] = useState('');
   const [itemToDelete, setItemToDelete] = useState(false);
   const [success, setSuccess] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  useEffect(() => {
-    if (props.match) {
-      const headers = JSON.parse(sessionStorage.getItem('user'));
-      Promise.all([
-        axios.get(`/lists/${props.match.params.id}/users_lists`, { headers }),
-        axios.get(`/lists/${props.match.params.id}`, { headers }),
-      ]).then(
-        ([
-          {
-            data: { accepted, pending },
-          },
-          {
-            data: {
-              current_user_id: responseCurrentUserId,
-              not_purchased_items: responseNotPurchasedItems,
-              purchased_items: responsePurchasedItems,
-              list: responseList,
-              categories: responseCategories,
-            },
-            headers: responseHeaders,
-          },
-        ]) => {
-          setUserInfo(responseHeaders);
-          const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === responseCurrentUserId);
-          if (!userInAccepted) {
-            props.history.push('/lists');
-            return;
-          }
-          const allAcceptedUsers = accepted.map(({ user }) => user);
-          const allPendingUsers = pending.map(({ user }) => user);
-          const responseListUsers = allAcceptedUsers.concat(allPendingUsers);
-          const responseIncludedCategories = mapIncludedCategories(responseNotPurchasedItems);
-          const categorizedNotPurchasedItems = categorizeNotPurchasedItems(
-            responseNotPurchasedItems,
-            responseIncludedCategories,
-          );
-
-          setUserId(responseCurrentUserId);
-          setList(responseList);
-          setPurchasedItems(responsePurchasedItems); // TODO: need to sort?
-          setCategories(responseCategories);
-          setListUsers(responseListUsers);
-          setIncludedCategories(responseIncludedCategories);
-          setNotPurchasedItems(categorizedNotPurchasedItems); // TODO: need to sort?
-          setPermission(userInAccepted.users_list.permissions);
-        },
-      ).catch(({ response, request, message }) => {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else {
-            // TODO: how do we pass error messages along?
-            props.history.push('/lists');
-          }
-        } else {
-          // TODO: how do we pass error messages along?
-          props.history.push('/lists');
-        }
-      });
-    } else {
-      props.history.push('/lists');
-    }
-  }, [props.history, props.match]);
-
   const sortItems = items => {
     let sortAttrs = [];
-    if (list.type === 'BookList') {
+    if (props.list.type === 'BookList') {
       sortAttrs = ['author', 'number_in_series', 'title'];
-    } else if (list.type === 'GroceryList') {
+    } else if (props.list.type === 'GroceryList') {
       sortAttrs = ['product'];
-    } else if (list.type === 'MusicList') {
+    } else if (props.list.type === 'MusicList') {
       sortAttrs = ['artist', 'album', 'title'];
-    } else if (list.type === 'ToDoList') {
+    } else if (props.list.type === 'ToDoList') {
       sortAttrs = ['due_by', 'assignee_id', 'task'];
     }
     const sorted = performSort(items, sortAttrs);
@@ -169,8 +56,8 @@ function ListContainer(props) {
     }
   };
 
-  const listId = item => item[`${listTypeToSnakeCase(list.type)}_id`];
-  const listItemPath = item => `/lists/${listId(item)}/${listTypeToSnakeCase(list.type)}_items`;
+  const listId = item => item[`${listTypeToSnakeCase(props.list.type)}_id`];
+  const listItemPath = item => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
 
   // TODO: refactor?
   const moveItemToPurchased = item => {
@@ -214,11 +101,11 @@ function ListContainer(props) {
 
   const handleItemPurchase = async item => {
     dismissAlert();
-    const completionType = list.type === 'ToDoList' ? 'completed' : 'purchased';
+    const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
     try {
       const { headers } = await axios.put(
         `${listItemPath(item)}/${item.id}`,
-        `${listTypeToSnakeCase(list.type)}_item%5B${completionType}%5D=true`,
+        `${listTypeToSnakeCase(props.list.type)}_item%5B${completionType}%5D=true`,
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
@@ -238,7 +125,7 @@ function ListContainer(props) {
     try {
       const { headers } = await axios.put(
         `${listItemPath(item)}/${item.id}`,
-        `${listTypeToSnakeCase(list.type)}_item%5Bread%5D=${on}`,
+        `${listTypeToSnakeCase(props.list.type)}_item%5Bread%5D=${on}`,
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
         },
@@ -267,23 +154,28 @@ function ListContainer(props) {
       due_by: item.due_by,
       category: item.category || '',
     };
-    newItem[`${listTypeToSnakeCase(list.type)}_id`] = listId(item);
+    newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
     const postData = {};
-    postData[`${listTypeToSnakeCase(list.type)}_item`] = newItem;
+    postData[`${listTypeToSnakeCase(props.list.type)}_item`] = newItem;
     const headers = JSON.parse(sessionStorage.getItem('user'));
     Promise.all([
       axios.post(`${listItemPath(newItem)}`, postData, { headers }),
-      axios
-        .put(`${listItemPath(item)}/${item.id}`, `${listTypeToSnakeCase(list.type)}_item%5Brefreshed%5D=true`, {
+      axios.put(
+        `${listItemPath(item)}/${item.id}`,
+        `${listTypeToSnakeCase(props.list.type)}_item%5Brefreshed%5D=true`,
+        {
           headers,
-        }),
-    ]).then(([{ data, headers: responseHeaders }]) => {
-      setUserInfo(responseHeaders);
-      handleAddItem(data);
-      const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
-      setPurchasedItems(sortItems(updatedPurchasedItems));
-      setSuccess('Item successfully refreshed.');
-    }).catch(failure);
+        },
+      ),
+    ])
+      .then(([{ data, headers: responseHeaders }]) => {
+        setUserInfo(responseHeaders);
+        handleAddItem(data);
+        const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
+        setPurchasedItems(sortItems(updatedPurchasedItems));
+        setSuccess('Item successfully refreshed.');
+      })
+      .catch(failure);
   };
 
   const handleDelete = item => {
@@ -298,7 +190,7 @@ function ListContainer(props) {
       await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`, { headers });
       setShowDeleteConfirm(false);
       setSuccess('Item successfully deleted.');
-      const { data, headers: responseHeaders } = await axios.get(`/lists/${props.match.params.id}`, { headers });
+      const { data, headers: responseHeaders } = await axios.get(`/lists/${props.id}`, { headers });
       setUserInfo(responseHeaders);
       const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
       const responseNotPurchasedItems = categorizeNotPurchasedItems(
@@ -315,18 +207,18 @@ function ListContainer(props) {
 
   return (
     <>
-      <h1>{list.name}</h1>
+      <h1>{props.list.name}</h1>
       <Link to="/lists" className="float-right">
         Back to lists
       </Link>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <br />
-      {permission === 'write' ? (
+      {props.permissions === 'write' ? (
         <ListItemForm
-          listId={list.id}
-          listType={list.type}
-          listUsers={listUsers}
-          userId={userId}
+          listId={props.list.id}
+          listType={props.list.type}
+          listUsers={props.listUsers}
+          userId={props.userId}
           handleItemAddition={handleAddItem}
           categories={categories}
         />
@@ -342,9 +234,9 @@ function ListContainer(props) {
         handleUnReadOfItem={handleItemUnRead}
         handleItemDelete={handleDelete}
         handleItemUnPurchase={handleUnPurchase}
-        listType={list.type}
-        listUsers={listUsers}
-        permission={permission}
+        listType={props.list.type}
+        listUsers={props.listUsers}
+        permission={props.permissions}
         handleCategoryFilter={({ target: { name } }) => setFilter(name)}
         handleClearFilter={() => setFilter('')}
         filter={filter}
@@ -362,15 +254,65 @@ function ListContainer(props) {
 }
 
 ListContainer.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      list_id: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
+  }),
+  id: PropTypes.string,
+  userId: PropTypes.number,
+  list: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+    users_list_id: PropTypes.number,
+    owner_id: PropTypes.number,
+  }),
+  purchasedItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      product: PropTypes.string,
+      task: PropTypes.string,
+      quantity: PropTypes.string,
+      author: PropTypes.string,
+      title: PropTypes.string,
+      artist: PropTypes.string,
+      album: PropTypes.string,
+      assignee_id: PropTypes.number,
+      due_by: PropTypes.string,
+      read: PropTypes.bool,
+      number_in_series: PropTypes.number,
+      category: PropTypes.string,
+    }),
+  ),
+  categories: PropTypes.arrayOf(PropTypes.string),
+  listUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+  ),
+  includedCategories: PropTypes.arrayOf(PropTypes.string),
+  notPurchasedItems: PropTypes.objectOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        product: PropTypes.string,
+        task: PropTypes.string,
+        quantity: PropTypes.string,
+        author: PropTypes.string,
+        title: PropTypes.string,
+        artist: PropTypes.string,
+        album: PropTypes.string,
+        assignee_id: PropTypes.number,
+        due_by: PropTypes.string,
+        read: PropTypes.bool,
+        number_in_series: PropTypes.number,
+        category: PropTypes.string,
+      }),
+    ),
+  ),
+  permissions: PropTypes.string,
 };
 
 export default ListContainer;

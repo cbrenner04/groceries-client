@@ -105,6 +105,7 @@ Lists.propTypes = {
   onListCompletion: PropTypes.func.isRequired,
   onListDelete: PropTypes.func.isRequired,
   onListRefresh: PropTypes.func.isRequired,
+  currentUserPermissions: PropTypes.objectOf(PropTypes.string),
 };
 
 export default Lists;

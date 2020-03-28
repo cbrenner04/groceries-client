@@ -1,73 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Button, Form, ListGroup } from 'react-bootstrap';
 
-import Alert from '../../components/Alert';
-import { EmailField } from '../../components/FormFields';
-import PermissionButtons from './components/PermissionButtons';
-import { setUserInfo } from '../../utils/auth';
-import axios from '../../utils/api';
+import Alert from '../../../components/Alert';
+import { EmailField } from '../../../components/FormFields';
+import PermissionButtons from '../components/PermissionButtons';
+import { setUserInfo } from '../../../utils/auth';
+import axios from '../../../utils/api';
 
 function ShareListForm(props) {
-  const [listId, setListId] = useState(0);
-  const [invitableUsers, setInvitableUsers] = useState([]);
+  const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
   const [newEmail, setNewEmail] = useState('');
   const [errors, setErrors] = useState('');
-  const [pending, setPending] = useState([]);
-  const [accepted, setAccepted] = useState([]);
-  const [refused, setRefused] = useState([]);
-  const [userId, setUserId] = useState(0);
-  const [userIsOwner, setUserIsOwner] = useState(false);
-  const [name, setName] = useState('');
+  const [pending, setPending] = useState(props.pending);
+  const [accepted, setAccepted] = useState(props.accepted);
   const [success, setSuccess] = useState('');
-
-  useEffect(() => {
-    if (props.match) {
-      async function fetchData() {
-        try {
-          const { data, headers } = await axios.get(`/lists/${props.match.params.list_id}/users_lists`, {
-            headers: JSON.parse(sessionStorage.getItem('user')),
-          });
-          setUserInfo(headers);
-          const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
-          if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
-            props.history.push('/lists');
-          }
-          setName(data.list.name);
-          setInvitableUsers(data.invitable_users);
-          setListId(data.list.id);
-          setUserIsOwner(data.user_is_owner);
-          setPending(data.pending);
-          setAccepted(data.accepted);
-          setRefused(data.refused);
-          setUserId(data.current_user_id);
-        } catch ({ response, request, message }) {
-          if (response) {
-            setUserInfo(response.headers);
-            if (response.status === 401) {
-              // TODO: how do we pass error messages along?
-              props.history.push('/users/sign_in');
-            } else if (response.status === 403) {
-              // TODO: how do we pass error messages along
-              props.history.push('/lists');
-            } else {
-              const responseTextKeys = Object.keys(response.data);
-              const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-              setErrors(responseErrors.join(' and '));
-            }
-          } else if (request) {
-            // TODO: what do here?
-          } else {
-            setErrors(message);
-          }
-        }
-      }
-
-      fetchData();
-    }
-  }, [props.history, props.match]);
 
   const handleAlertDismiss = () => {
     setSuccess('');
@@ -84,9 +33,13 @@ function ShareListForm(props) {
         // TODO: how do we pass error messages along
         props.history.push('/lists');
       } else {
-        const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        if (response.data.responseText) {
+          setErrors(response.data.responseText);
+        } else {
+          const responseTextKeys = Object.keys(response.data);
+          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          setErrors(responseErrors.join(' and '));
+        }
       }
     } else if (request) {
       // TODO: what do here?
@@ -106,7 +59,7 @@ function ShareListForm(props) {
         `/auth/invitation`,
         {
           email: newEmail,
-          list_id: listId,
+          list_id: props.listId,
         },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
@@ -130,7 +83,7 @@ function ShareListForm(props) {
       // TODO: these need to be sorted
       setPending(newPending);
       setNewEmail('');
-      setSuccess(`"${name}" has been successfully shared with ${newEmail}.`);
+      setSuccess(`"${props.name}" has been successfully shared with ${newEmail}.`);
     } catch (error) {
       failure(error);
     }
@@ -140,11 +93,11 @@ function ShareListForm(props) {
     handleAlertDismiss();
     const usersList = {
       user_id: user.id,
-      list_id: listId,
+      list_id: props.listId,
     };
     try {
       const { data, headers } = await axios.post(
-        `/lists/${listId}/users_lists`,
+        `/lists/${props.listId}/users_lists`,
         { users_list: usersList },
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
@@ -166,7 +119,7 @@ function ShareListForm(props) {
           },
         ],
       });
-      setSuccess(`"${name}" has been successfully shared with ${user.email}.`);
+      setSuccess(`"${props.name}" has been successfully shared with ${user.email}.`);
       setInvitableUsers(newUsers);
       // TODO: these need to be sorted
       setPending(newPending);
@@ -179,7 +132,7 @@ function ShareListForm(props) {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
       const { headers } = await axios.patch(
-        `/lists/${listId}/users_lists/${id}`,
+        `/lists/${props.listId}/users_lists/${id}`,
         `users_list%5Bpermissions%5D=${permissions}`,
         {
           headers: JSON.parse(sessionStorage.getItem('user')),
@@ -202,7 +155,7 @@ function ShareListForm(props) {
 
   return (
     <div>
-      <h1>Share {name}</h1>
+      <h1>Share {props.name}</h1>
       <Link to="/lists" className="float-right">
         Back to lists
       </Link>
@@ -223,7 +176,7 @@ function ShareListForm(props) {
       <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>
       <ListGroup>
         {invitableUsers.map(user => (
-          <div id={`invite-user-${user.id}`}>
+          <div id={`invite-user-${user.id}`} key={user.id}>
             <ListGroup.Item action key={user.id} className="btn btn-link" onClick={() => handleSelectUser(user)}>
               {user.email}
             </ListGroup.Item>
@@ -236,22 +189,22 @@ function ShareListForm(props) {
       <br />
       <PermissionButtons
         togglePermission={togglePermission}
-        userIsOwner={userIsOwner}
-        userId={userId}
+        userIsOwner={props.userIsOwner}
+        userId={props.userId}
         status="pending"
         users={pending}
       />
       <PermissionButtons
         togglePermission={togglePermission}
-        userIsOwner={userIsOwner}
-        userId={userId}
+        userIsOwner={props.userIsOwner}
+        userId={props.userId}
         status="accepted"
         users={accepted}
       />
       <h3>Refused</h3>
       <br />
       <ListGroup>
-        {refused.map(({ user }) => (
+        {props.refused.map(({ user }) => (
           <div key={user.id} id={`refused-user-${user.id}`}>
             <ListGroup.Item>{user.email}</ListGroup.Item>
           </div>
@@ -262,14 +215,37 @@ function ShareListForm(props) {
 }
 
 ShareListForm.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      list_id: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
+  }),
+  name: PropTypes.string,
+  invitableUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      email: PropTypes.string,
+    }),
+  ),
+  listId: PropTypes.number,
+  userIsOwner: PropTypes.bool,
+  pending: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      email: PropTypes.string,
+    }),
+  ),
+  accepted: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      email: PropTypes.string,
+    }),
+  ),
+  refused: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      email: PropTypes.string,
+    }),
+  ),
+  userId: PropTypes.number,
 };
 
 export default ShareListForm;

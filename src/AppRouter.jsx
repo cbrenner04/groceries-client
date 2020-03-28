@@ -3,16 +3,16 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
-import EditListItemForm from './routes/list/EditListItemForm';
+import EditListItem from './routes/list/EditListItem';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
-import ListContainer from './routes/list/ListContainer';
-import EditListForm from './routes/list//EditListForm';
-import ListsContainer from './routes/lists/ListsContainer';
+import List from './routes/list/List';
+import EditList from './routes/list//EditList';
+import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
-import ShareListForm from './routes/share_list/ShareListForm';
+import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
 
 export default function AppRouter() {
@@ -22,14 +22,14 @@ export default function AppRouter() {
       <Switch>
         {/* routes/lists */}
         <Redirect exact path="/" to="/lists" />
-        <Route exact path="/lists" component={ListsContainer} />
+        <Route exact path="/lists" component={Lists} />
         <Route exact path="/completed_lists" component={CompletedLists} />
         {/* routes/list */}
-        <Route exact path="/lists/:id" component={ListContainer} />
-        <Route exact path="/lists/:id/edit" component={EditListForm} />
-        <Route path="/lists/:list_id/*/:id/edit" component={EditListItemForm} />
+        <Route exact path="/lists/:id" component={List} />
+        <Route exact path="/lists/:id/edit" component={EditList} />
+        <Route path="/lists/:list_id/*/:id/edit" component={EditListItem} />
         {/* routes/share_list */}
-        <Route exact path="/lists/:list_id/users_lists" component={ShareListForm} />
+        <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
         {/* routes/users */}
         <Route exact path="/users/sign_in" component={NewSession} />
         <Route exact path="/users/password/new" component={NewPassword} />

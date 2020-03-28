@@ -1,78 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import update from 'immutability-helper';
+import PropTypes from 'prop-types';
 
-import Alert from '../../components/Alert';
-import ListForm from './components/ListForm';
-import Lists from './components/Lists';
-import ConfirmModal from '../../components/ConfirmModal';
-import { setUserInfo } from '../../utils/auth';
-import axios from '../../utils/api';
+import Alert from '../../../components/Alert';
+import ListForm from '../components/ListForm';
+import Lists from '../components/Lists';
+import ConfirmModal from '../../../components/ConfirmModal';
+import { setUserInfo } from '../../../utils/auth';
+import axios from '../../../utils/api';
+import { sortLists } from '../utils';
 
-export default function ListsContainer(props) {
-  const [userId, setUserId] = useState(0);
-  const [pendingLists, setPendingLists] = useState([]);
-  const [completedLists, setCompletedLists] = useState([]);
-  const [nonCompletedLists, setNonCompletedLists] = useState([]);
+function ListsContainer(props) {
+  const [pendingLists, setPendingLists] = useState(props.pendingLists);
+  const [completedLists, setCompletedLists] = useState(props.completedLists);
+  const [nonCompletedLists, setNonCompletedLists] = useState(props.nonCompletedLists);
   const [errors, setErrors] = useState('');
   const [success, setSuccess] = useState('');
   const [listToDelete, setListToDelete] = useState('');
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
-  const [currentUserPermissions, setCurrentUserPermissions] = useState('read');
-
-  const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const headers = JSON.parse(sessionStorage.getItem('user'));
-        const { data, headers: responseHeaders } = await axios.get(`/lists/`, { headers });
-        setUserInfo(responseHeaders);
-        const sortedAcceptedLists = sortLists(data.accepted_lists);
-        const sortedPendingLists = sortLists(data.pending_lists);
-        const newCompletedLists = sortedAcceptedLists.filter(list => list.completed);
-        const newNonCompletedLists = sortedAcceptedLists.filter(list => !list.completed);
-        setUserId(data.current_user_id);
-        setPendingLists(sortedPendingLists); // this should be sorted the opposite
-        setCompletedLists(newCompletedLists);
-        setNonCompletedLists(newNonCompletedLists);
-        const lists = sortedAcceptedLists.concat(sortedPendingLists);
-        const permissions = {};
-        Promise.all(
-          lists.map(list =>
-            axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`, { headers }).catch(() => undefined),
-          ),
-        ).then(lists => {
-          lists.forEach(listData => {
-            const {
-              data: { list_id: listId, permissions: listPerms },
-            } = listData;
-            permissions[listId] = listPerms;
-          });
-          setCurrentUserPermissions(permissions);
-        }); // noop
-      } catch ({ response, request, message }) {
-        if (response) {
-          setUserInfo(response.headers);
-          if (response.status === 401) {
-            // TODO: how do we pass error messages along?
-            props.history.push('/users/sign_in');
-          } else {
-            const responseTextKeys = Object.keys(response.data);
-            const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-            setErrors(responseErrors.join(' and '));
-          }
-        } else if (request) {
-          // TODO: what do here?
-        } else {
-          setErrors(message);
-        }
-      }
-    }
-
-    fetchData();
-  }, [props.history]);
 
   const handleAlertDismiss = () => {
     setErrors('');
@@ -249,7 +196,7 @@ export default function ListsContainer(props) {
       <ListForm onFormSubmit={handleFormSubmit} />
       <hr />
       <Lists
-        userId={userId}
+        userId={props.userId}
         onListDelete={handleDelete}
         onListCompletion={handleCompletion}
         pendingLists={pendingLists}
@@ -258,7 +205,7 @@ export default function ListsContainer(props) {
         onListRefresh={handleRefresh}
         onAccept={handleAccept}
         onReject={handleReject}
-        currentUserPermissions={currentUserPermissions}
+        currentUserPermissions={props.currentUserPermissions}
       />
       <ConfirmModal
         action="delete"
@@ -277,3 +224,46 @@ export default function ListsContainer(props) {
     </>
   );
 }
+
+ListsContainer.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+  userId: PropTypes.number,
+  pendingLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number,
+    }),
+  ),
+  completedLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number,
+    }),
+  ),
+  nonCompletedLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number,
+    }),
+  ),
+  currentUserPermissions: PropTypes.objectOf(PropTypes.string),
+};
+
+export default ListsContainer;

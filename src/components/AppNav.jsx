@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import axios from '../utils/api';
 
 export default function AppNav() {
   const history = useHistory();
-  const location = useLocation();
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
   const handleLogout = async () => {
     try {
-      await axios.delete('/auth/sign_out', {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      });
+      await axios.delete('/auth/sign_out', { headers: user });
     } catch {
       // noop
     }
@@ -21,15 +18,10 @@ export default function AppNav() {
     history.push('/users/sign_in');
   };
 
-  useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    setIsUserSignedIn(!!user);
-  }, [location]);
-
   return (
     <Navbar expand="lg" variant="light" bg="light" fixed="top">
-      <Navbar.Brand href={isUserSignedIn ? '/' : '/users/sign_in'}>Groceries</Navbar.Brand>
-      {isUserSignedIn && (
+      <Navbar.Brand href={user ? '/' : '/users/sign_in'}>Groceries</Navbar.Brand>
+      {user && (
         <>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
