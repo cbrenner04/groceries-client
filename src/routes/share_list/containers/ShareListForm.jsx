@@ -7,7 +7,6 @@ import { Button, Form, ListGroup } from 'react-bootstrap';
 import Alert from '../../../components/Alert';
 import { EmailField } from '../../../components/FormFields';
 import PermissionButtons from '../components/PermissionButtons';
-import { setUserInfo } from '../../../utils/auth';
 import axios from '../../../utils/api';
 
 function ShareListForm(props) {
@@ -25,7 +24,6 @@ function ShareListForm(props) {
 
   const failure = ({ response, request, message }) => {
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -54,18 +52,10 @@ function ShareListForm(props) {
     try {
       const {
         data: { user, users_list: usersList },
-        headers,
-      } = await axios.post(
-        `/auth/invitation`,
-        {
-          email: newEmail,
-          list_id: props.listId,
-        },
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      );
-      setUserInfo(headers);
+      } = await axios.post(`/auth/invitation`, {
+        email: newEmail,
+        list_id: props.listId,
+      });
       const newPending = update(pending, {
         $push: [
           {
@@ -96,14 +86,7 @@ function ShareListForm(props) {
       list_id: props.listId,
     };
     try {
-      const { data, headers } = await axios.post(
-        `/lists/${props.listId}/users_lists`,
-        { users_list: usersList },
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      );
-      setUserInfo(headers);
+      const { data } = await axios.post(`/lists/${props.listId}/users_lists`, { users_list: usersList });
       const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
       const newPending = update(pending, {
         $push: [
@@ -131,14 +114,11 @@ function ShareListForm(props) {
   const togglePermission = async (id, currentPermission, status) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
-      const { headers } = await axios.patch(
-        `/lists/${props.listId}/users_lists/${id}`,
-        `users_list%5Bpermissions%5D=${permissions}`,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
+      await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
+        users_list: {
+          permissions,
         },
-      );
-      setUserInfo(headers);
+      });
       const users = status === 'pending' ? pending : accepted;
       const updatedUsers = users.map(usersList => {
         const newList = usersList;

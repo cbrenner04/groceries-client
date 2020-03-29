@@ -8,7 +8,6 @@ import Alert from '../../../components/Alert';
 import ListItemForm from '../components/ListItemForm';
 import ListItemsContainer from '../components/ListItemsContainer';
 import ConfirmModal from '../../../components/ConfirmModal';
-import { setUserInfo } from '../../../utils/auth';
 import axios from '../../../utils/api';
 import { mapIncludedCategories, categorizeNotPurchasedItems, performSort } from '../utils';
 
@@ -80,7 +79,6 @@ function ListContainer(props) {
 
   const failure = ({ response, request, message }) => {
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -103,14 +101,11 @@ function ListContainer(props) {
     dismissAlert();
     const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
     try {
-      const { headers } = await axios.put(
-        `${listItemPath(item)}/${item.id}`,
-        `${listTypeToSnakeCase(props.list.type)}_item%5B${completionType}%5D=true`,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
+      await axios.put(`${listItemPath(item)}/${item.id}`, {
+        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+          [completionType]: true,
         },
-      );
-      setUserInfo(headers);
+      });
       moveItemToPurchased(item);
       setSuccess('Item successfully purchased.');
     } catch (error) {
@@ -123,14 +118,11 @@ function ListContainer(props) {
     localItem.read = on;
     dismissAlert();
     try {
-      const { headers } = await axios.put(
-        `${listItemPath(item)}/${item.id}`,
-        `${listTypeToSnakeCase(props.list.type)}_item%5Bread%5D=${on}`,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
+      await axios.put(`${listItemPath(item)}/${item.id}`, {
+        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+          read: on,
         },
-      );
-      setUserInfo(headers);
+      });
       setSuccess(`Item successfully ${on ? 'read' : 'unread'}.`);
     } catch (error) {
       failure(error);
@@ -157,19 +149,15 @@ function ListContainer(props) {
     newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
     const postData = {};
     postData[`${listTypeToSnakeCase(props.list.type)}_item`] = newItem;
-    const headers = JSON.parse(sessionStorage.getItem('user'));
     Promise.all([
-      axios.post(`${listItemPath(newItem)}`, postData, { headers }),
-      axios.put(
-        `${listItemPath(item)}/${item.id}`,
-        `${listTypeToSnakeCase(props.list.type)}_item%5Brefreshed%5D=true`,
-        {
-          headers,
+      axios.post(`${listItemPath(newItem)}`, postData),
+      axios.put(`${listItemPath(item)}/${item.id}`, {
+        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+          refreshed: true,
         },
-      ),
+      }),
     ])
-      .then(([{ data, headers: responseHeaders }]) => {
-        setUserInfo(responseHeaders);
+      .then(([{ data }]) => {
         handleAddItem(data);
         const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
         setPurchasedItems(sortItems(updatedPurchasedItems));
@@ -185,13 +173,11 @@ function ListContainer(props) {
 
   const handleDeleteConfirm = async () => {
     dismissAlert();
-    const headers = JSON.parse(sessionStorage.getItem('user'));
     try {
-      await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`, { headers });
+      await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
       setShowDeleteConfirm(false);
       setSuccess('Item successfully deleted.');
-      const { data, headers: responseHeaders } = await axios.get(`/lists/${props.id}`, { headers });
-      setUserInfo(responseHeaders);
+      const { data } = await axios.get(`/lists/${props.id}`);
       const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
       const responseNotPurchasedItems = categorizeNotPurchasedItems(
         data.not_purchased_items,

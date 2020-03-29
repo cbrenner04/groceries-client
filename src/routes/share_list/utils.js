@@ -1,12 +1,8 @@
 import axios from '../../utils/api';
-import { setUserInfo } from '../../utils/auth';
 
 export async function fetchData({ listId, history }) {
   try {
-    const { data, headers } = await axios.get(`/lists/${listId}/users_lists`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    });
-    setUserInfo(headers);
+    const { data } = await axios.get(`/lists/${listId}/users_lists`);
     const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
     if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
       history.push('/lists');
@@ -25,7 +21,6 @@ export async function fetchData({ listId, history }) {
   } catch ({ response, request, message }) {
     const newError = new Error();
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         history.push('/users/sign_in');

@@ -8,7 +8,7 @@ import Loading from '../../components/Loading';
 
 async function fetchData({ history }) {
   try {
-    await axios.get(`/auth/validate_token`, { headers: JSON.parse(sessionStorage.getItem('user')) });
+    await axios.get(`/auth/validate_token`);
     history.push('/lists');
   } catch {
     // noop

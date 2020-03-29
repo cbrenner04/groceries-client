@@ -6,11 +6,11 @@ import axios from '../utils/api';
 
 export default function AppNav() {
   const history = useHistory();
-  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userIsSignedIn = !!JSON.parse(sessionStorage.getItem('user'));
 
   const handleLogout = async () => {
     try {
-      await axios.delete('/auth/sign_out', { headers: user });
+      await axios.delete('/auth/sign_out');
     } catch {
       // noop
     }
@@ -20,8 +20,8 @@ export default function AppNav() {
 
   return (
     <Navbar expand="lg" variant="light" bg="light" fixed="top">
-      <Navbar.Brand href={user ? '/' : '/users/sign_in'}>Groceries</Navbar.Brand>
-      {user && (
+      <Navbar.Brand href={userIsSignedIn ? '/' : '/users/sign_in'}>Groceries</Navbar.Brand>
+      {userIsSignedIn && (
         <>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">

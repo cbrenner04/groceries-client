@@ -4,7 +4,6 @@ import { Button, Form } from 'react-bootstrap';
 
 import Alert from '../../../components/Alert';
 import { SelectField, TextField, CheckboxField } from '../../../components/FormFields';
-import { setUserInfo } from '../../../utils/auth';
 import axios from '../../../utils/api';
 
 function EditListForm(props) {
@@ -21,18 +20,10 @@ function EditListForm(props) {
       type,
     };
     try {
-      const { headers } = await axios.put(
-        `/lists/${props.listId}`,
-        { list },
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      );
-      setUserInfo(headers);
+      await axios.put(`/lists/${props.listId}`, { list });
       props.history.push('/lists');
     } catch ({ response, request, message }) {
       if (response) {
-        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

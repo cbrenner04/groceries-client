@@ -1,5 +1,4 @@
 import axios from '../../utils/api';
-import { setUserInfo } from '../../utils/auth';
 import { formatDueBy } from '../../utils/format';
 
 export function mapIncludedCategories(items) {
@@ -45,11 +44,7 @@ export function performSort(items, sortAttrs) {
 
 export async function fetchList({ id, history }) {
   try {
-    const headers = JSON.parse(sessionStorage.getItem('user'));
-    const responses = await Promise.all([
-      axios.get(`/lists/${id}/users_lists`, { headers }),
-      axios.get(`/lists/${id}`, { headers }),
-    ]);
+    const responses = await Promise.all([axios.get(`/lists/${id}/users_lists`), axios.get(`/lists/${id}`)]);
     const [
       {
         data: { accepted, pending },
@@ -62,10 +57,8 @@ export async function fetchList({ id, history }) {
           list,
           categories,
         },
-        headers: responseHeaders,
       },
     ] = responses;
-    setUserInfo(responseHeaders);
     const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
     if (!userInAccepted) {
       history.push('/lists');
@@ -90,7 +83,6 @@ export async function fetchList({ id, history }) {
     };
   } catch ({ response }) {
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         history.push('/users/sign_in');
@@ -112,11 +104,7 @@ export async function fetchListToEdit({ id, history }) {
         list: { owner_id, id: listId, name, completed, type },
         current_user_id: currentUserId,
       },
-      headers,
-    } = await axios.get(`/lists/${id}/edit`, {
-      headers: JSON.parse(sessionStorage.getItem('user')),
-    });
-    setUserInfo(headers);
+    } = await axios.get(`/lists/${id}/edit`);
     if (owner_id !== currentUserId) {
       history.push('/lists');
       return;
@@ -130,7 +118,6 @@ export async function fetchListToEdit({ id, history }) {
   } catch ({ response, request, message }) {
     const newError = new Error();
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         history.push('/users/sign_in');
@@ -149,14 +136,12 @@ export async function fetchListToEdit({ id, history }) {
 
 export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   try {
-    const headers = JSON.parse(sessionStorage.getItem('user'));
     // TODO: do i need all of this?
     const [editListResponse, usersListsResponse, listResponse] = await Promise.all([
-      axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`, { headers }),
-      axios.get(`/lists/${listId}/users_lists`, { headers }),
-      axios.get(`/lists/${listId}`, { headers }),
+      axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`),
+      axios.get(`/lists/${listId}/users_lists`),
+      axios.get(`/lists/${listId}`),
     ]);
-    setUserInfo(editListResponse.headers);
     const {
       data: {
         item: {
@@ -227,7 +212,6 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     };
   } catch ({ response }) {
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         history.push('/users/sign_in');

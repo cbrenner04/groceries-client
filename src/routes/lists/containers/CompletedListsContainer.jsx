@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import Alert from '../../../components/Alert';
 import List from '../components/List';
 import ConfirmModal from '../../../components/ConfirmModal';
-import { setUserInfo } from '../../../utils/auth';
 import axios from '../../../utils/api';
 
 function CompletedListsContainer(props) {
@@ -23,7 +22,6 @@ function CompletedListsContainer(props) {
 
   const failure = ({ response, request, message }) => {
     if (response) {
-      setUserInfo(response.headers);
       if (response.status === 401) {
         // TODO: how do we pass error messages along?
         props.history.push('/users/sign_in');
@@ -44,14 +42,7 @@ function CompletedListsContainer(props) {
 
   const handleRefresh = async list => {
     try {
-      const { headers } = await axios.post(
-        `/lists/${list.id}/refresh_list`,
-        {},
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      );
-      setUserInfo(headers);
+      await axios.post(`/lists/${list.id}/refresh_list`, {});
       const refreshedList = completedLists.find(completedList => completedList.id === list.id);
       refreshedList.refreshed = true;
       setSuccess('Your list was successfully refreshed.');
@@ -70,10 +61,7 @@ function CompletedListsContainer(props) {
     dismissAlert();
     setShowDeleteConfirm(false);
     try {
-      const { headers } = await axios.delete(`/lists/${listToDelete.id}`, {
-        headers: JSON.parse(sessionStorage.getItem('user')),
-      });
-      setUserInfo(headers);
+      await axios.delete(`/lists/${listToDelete.id}`);
       const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
       setCompletedLists(lists);
       setSuccess('Your list was successfully deleted.');

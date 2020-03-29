@@ -4,7 +4,6 @@ import { Button, Form } from 'react-bootstrap';
 import update from 'immutability-helper';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
-import { setUserInfo } from '../../../utils/auth';
 import Alert from '../../../components/Alert';
 import BookListItemFormFields from '../components/BookListItemFormFields';
 import GroceryListItemFormFields from '../components/GroceryListItemFormFields';
@@ -40,19 +39,14 @@ function EditListItemForm(props) {
     const putData = {};
     putData[`${listTypeToSnakeCase(props.list.type)}_item`] = listItem;
     try {
-      const { headers } = await axios.put(
+      await axios.put(
         `/lists/${props.list.id}/${listTypeToSnakeCase(props.list.type)}_items/${props.item.id}`,
         putData,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
       );
-      setUserInfo(headers);
       // TODO: pass success message
       props.history.push(`/lists/${props.list.id}`);
     } catch ({ response, request, message }) {
       if (response) {
-        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

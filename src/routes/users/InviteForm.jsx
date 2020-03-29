@@ -5,7 +5,6 @@ import { Button, Form } from 'react-bootstrap';
 
 import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
-import { setUserInfo } from '../../utils/auth';
 import axios from '../../utils/api';
 
 function InviteForm(props) {
@@ -16,18 +15,10 @@ function InviteForm(props) {
     event.preventDefault();
     setErrors('');
     try {
-      const { headers } = await axios.post(
-        `/auth/invitation`,
-        { email },
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
-      );
-      setUserInfo(headers);
+      await axios.post(`/auth/invitation`, { email });
       props.history.push('/');
     } catch ({ response, request, message }) {
       if (response) {
-        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');

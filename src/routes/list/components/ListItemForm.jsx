@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
-import { setUserInfo } from '../../../utils/auth';
 import Alert from '../../../components/Alert';
 import BookListItemFormFields from './BookListItemFormFields';
 import GroceryListItemFormFields from './GroceryListItemFormFields';
@@ -52,14 +51,10 @@ function ListItemForm(props) {
     const postData = {};
     postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
     try {
-      const { data, headers } = await axios.post(
+      const { data } = await axios.post(
         `/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
         postData,
-        {
-          headers: JSON.parse(sessionStorage.getItem('user')),
-        },
       );
-      setUserInfo(headers);
       props.handleItemAddition(data);
       setProduct('');
       setTask('');
@@ -75,7 +70,6 @@ function ListItemForm(props) {
       setSuccess('Item successfully added.');
     } catch ({ response, request, message }) {
       if (response) {
-        setUserInfo(response.headers);
         if (response.status === 401) {
           // TODO: how do we pass error messages along?
           props.history.push('/users/sign_in');
