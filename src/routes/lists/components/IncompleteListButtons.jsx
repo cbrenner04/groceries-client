@@ -52,6 +52,7 @@ IncompleteListButtons.propTypes = {
   }).isRequired,
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
+  currentUserPermissions: PropTypes.string,
 };
 
 export default IncompleteListButtons;

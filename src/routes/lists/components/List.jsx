@@ -93,6 +93,7 @@ List.propTypes = {
   onListRefresh: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
   onListAcceptance: PropTypes.func,
   onListRejection: PropTypes.func,
+  currentUserPermissions: PropTypes.string,
 };
 
 List.defaultProps = {

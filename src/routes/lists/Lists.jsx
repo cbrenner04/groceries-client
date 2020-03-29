@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import Alert from '../../components/Alert';
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
+import Loading from '../../components/Loading';
 
 function Lists(props) {
   return (
     <Async promiseFn={fetchLists} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => (
           <ListsContainer

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { fetchItemToEdit } from './utils';
 import EditListItemForm from './containers/EditListItemForm';
+import Loading from '../../components/Loading';
 
 function EditListItem(props) {
   return (
@@ -14,7 +15,9 @@ function EditListItem(props) {
       itemType={props.match.params[0]}
       history={props.history}
     >
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => (
           <EditListItemForm

@@ -60,6 +60,9 @@ EditPassword.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 };
 
 export default EditPassword;

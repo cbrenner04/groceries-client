@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
+import Loading from '../../components/Loading';
 
 function List(props) {
   if (!props.match) {
@@ -15,7 +16,9 @@ function List(props) {
 
   return (
     <Async promiseFn={fetchList} id={listId} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => (
           <ListContainer

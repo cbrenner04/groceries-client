@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import Alert from '../../components/Alert';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
+import Loading from '../../components/Loading';
 
 function CompletedLists(props) {
   return (
     <Async promiseFn={fetchCompletedLists} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => <CompletedListsContainer completedLists={data} history={props.history} />}
       </Async.Fulfilled>

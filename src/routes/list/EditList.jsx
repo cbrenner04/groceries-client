@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import { fetchListToEdit } from './utils';
 import EditListForm from './containers/EditListForm';
 import Alert from '../../components/Alert';
+import Loading from '../../components/Loading';
 
 function EditList(props) {
   return (
     <Async promiseFn={fetchListToEdit} history={props.history} id={props.match.params.id}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => (
           <EditListForm

@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
 import Alert from '../../components/Alert';
+import Loading from '../../components/Loading';
 
 function ShareList(props) {
   return (
     <Async promiseFn={fetchData} listId={props.match.params.list_id} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         {data => (
           <ShareListForm
