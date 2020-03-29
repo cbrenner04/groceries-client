@@ -84,8 +84,10 @@ export async function fetchList({ id, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        // TODO: how do we pass error messages along?
-        history.push('/users/sign_in');
+        history.push({
+          pathname: '/users/sign_in',
+          state: { errors: 'You must sign in' },
+        });
       } else {
         // TODO: how do we pass error messages along?
         history.push('/lists');
@@ -119,8 +121,10 @@ export async function fetchListToEdit({ id, history }) {
     const newError = new Error();
     if (response) {
       if (response.status === 401) {
-        // TODO: how do we pass error messages along?
-        history.push('/users/sign_in');
+        history.push({
+          pathname: '/users/sign_in',
+          state: { errors: 'You must sign in' },
+        });
       } else {
         // TODO: how do we pass error messages along?
         history.push('/lists');
@@ -213,8 +217,10 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        // TODO: how do we pass error messages along?
-        history.push('/users/sign_in');
+        history.push({
+          pathname: '/users/sign_in',
+          state: { errors: 'You must sign in' },
+        });
       } else {
         // TODO: how do we pass error messages along?
         history.push(`/lists/${listId}`);

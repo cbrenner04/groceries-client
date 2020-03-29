@@ -19,10 +19,13 @@ async function fetchData({ history }) {
 }
 
 function NewSession(props) {
+  let initialErrors = '';
+  if (props.location && props.location.state && props.location.state.errors)
+    initialErrors = props.location.state.errors;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState('');
+  const [errors, setErrors] = useState(initialErrors);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -96,6 +99,11 @@ function NewSession(props) {
 NewSession.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
+  }),
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      errors: PropTypes.string,
+    }),
   }),
 };
 

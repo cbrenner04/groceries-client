@@ -28,8 +28,10 @@ function ListsContainer(props) {
   const failure = ({ request, response, message }) => {
     if (response) {
       if (response.status === 401) {
-        // TODO: how do we pass error messages along?
-        props.history.push('/users/sign_in');
+        props.history.push({
+          pathname: '/users/sign_in',
+          state: { errors: 'You must sign in' },
+        });
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);

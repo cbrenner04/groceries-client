@@ -20,8 +20,10 @@ function InviteForm(props) {
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/users/sign_in');
+          props.history.push({
+            pathname: '/users/sign_in',
+            state: { errors: 'You must sign in' },
+          });
         } else if (response.status === 403) {
           // TODO: how do we pass error messages along
           props.history.push('/lists');

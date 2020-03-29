@@ -6,7 +6,10 @@ function handleFailure({ response, request, message }, history) {
   const newError = new Error();
   if (response) {
     if (response.status === 401) {
-      history.push('/users/sign_in');
+      history.push({
+        pathname: '/users/sign_in',
+        state: { errors: 'You must sign in' },
+      });
       return;
     }
     newError.message = `${response.status} ${response.data}`;
