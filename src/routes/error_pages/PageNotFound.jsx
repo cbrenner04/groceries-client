@@ -4,6 +4,7 @@ import Async from 'react-async';
 import PropTypes from 'prop-types';
 
 import axios from '../../utils/api';
+import Loading from '../../components/Loading';
 
 async function fetchData({ history }) {
   try {
@@ -17,7 +18,9 @@ async function fetchData({ history }) {
 function PageNotFound(props) {
   return (
     <Async promiseFn={fetchData} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         <h1>Page not found!</h1>
         <h2>Sorry but the page you are looking for was not found.</h2>

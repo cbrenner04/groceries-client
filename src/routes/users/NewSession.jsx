@@ -7,6 +7,7 @@ import Async from 'react-async';
 import Alert from '../../components/Alert';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 import axios from '../../utils/api';
+import Loading from '../../components/Loading';
 
 async function fetchData({ history }) {
   try {
@@ -58,7 +59,9 @@ function NewSession(props) {
 
   return (
     <Async promiseFn={fetchData} history={props.history}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
       <Async.Fulfilled>
         <Alert errors={errors} handleDismiss={() => setErrors('')} />
         <h2>Log in</h2>
