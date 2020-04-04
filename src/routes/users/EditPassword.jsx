@@ -26,14 +26,17 @@ function EditPassword(props) {
           headers: queryString.parse(props.location.search),
         },
       );
-      props.history.push('/');
+      props.history.push({
+        pathname: '/users/sign_in',
+        state: { success: 'Password successfully updated' },
+      });
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }

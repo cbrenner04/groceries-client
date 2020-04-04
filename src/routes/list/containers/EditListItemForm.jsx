@@ -43,8 +43,10 @@ function EditListItemForm(props) {
         `/lists/${props.list.id}/${listTypeToSnakeCase(props.list.type)}_items/${props.item.id}`,
         putData,
       );
-      // TODO: pass success message
-      props.history.push(`/lists/${props.list.id}`);
+      props.history.push({
+        pathname: `/lists/${props.list.id}`,
+        state: { success: 'Item successfully updated' },
+      });
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
@@ -52,9 +54,11 @@ function EditListItemForm(props) {
             pathname: '/users/sign_in',
             state: { errors: 'You must sign in' },
           });
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along?
-          props.history.push(`/lists/${props.list.id}`);
+        } else if ([403, 404].includes(response.status)) {
+          props.history.push({
+            pathname: `/lists/${props.list.id}`,
+            state: { errors: 'Item not found' },
+          });
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
@@ -67,7 +71,7 @@ function EditListItemForm(props) {
           setErrors(responseErrors.join(joinString));
         }
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }

@@ -19,10 +19,13 @@ function NewPassword(props) {
         email,
         redirect_url: `${process.env.REACT_APP_ROOT_URL}/users/password/edit`,
       });
-    } catch (error) {
-      // TODO: what do here?
+    } catch {
+      // TODO: send exception somewhere for logging
     } finally {
-      props.history.push('/users/sign_in');
+      props.history.push({
+        pathname: '/users/sign_in',
+        state: { success: `If ${email} is in our system, you will receive an email shortly with reset instructions.` },
+      });
     }
   };
 

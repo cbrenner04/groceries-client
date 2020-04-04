@@ -9,9 +9,25 @@ import Loading from '../../components/Loading';
 async function fetchData({ history }) {
   try {
     await axios.get(`/auth/validate_token`);
-    history.push('/lists');
-  } catch {
-    // noop
+  } catch ({ response }) {
+    if (response) {
+      if (response.status === 401) {
+        history.push({
+          pathname: '/users/sign_in',
+          state: { errors: 'You must sign in' },
+        });
+      } else {
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'Something went wrong' },
+        });
+      }
+    } else {
+      history.push({
+        pathname: '/lists',
+        state: { errors: 'Something went wrong' },
+      });
+    }
   }
 }
 
@@ -24,7 +40,7 @@ function PageNotFound(props) {
       <Async.Fulfilled>
         <h1>Page not found!</h1>
         <h2>Sorry but the page you are looking for was not found.</h2>
-        <Link to="/">Return to the home page</Link>
+        <Link to="/lists">Return to the home page</Link>
       </Async.Fulfilled>
       {/* This should never render, all errors result in redirect back to /lists */}
       <Async.Rejected>Something went wrong!</Async.Rejected>

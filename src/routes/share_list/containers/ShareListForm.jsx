@@ -29,9 +29,6 @@ function ShareListForm(props) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
-      } else if (response.status === 403) {
-        // TODO: how do we pass error messages along
-        props.history.push('/lists');
       } else {
         if (response.data.responseText) {
           setErrors(response.data.responseText);
@@ -42,7 +39,7 @@ function ShareListForm(props) {
         }
       }
     } else if (request) {
-      // TODO: what do here?
+      setErrors('Something went wrong');
     } else {
       setErrors(message);
     }
@@ -72,7 +69,7 @@ function ShareListForm(props) {
           },
         ],
       });
-      // TODO: these need to be sorted
+      // TODO: these need to be sorted?
       setPending(newPending);
       setNewEmail('');
       setSuccess(`"${props.name}" has been successfully shared with ${newEmail}.`);
@@ -106,7 +103,7 @@ function ShareListForm(props) {
       });
       setSuccess(`"${props.name}" has been successfully shared with ${user.email}.`);
       setInvitableUsers(newUsers);
-      // TODO: these need to be sorted
+      // TODO: these need to be sorted?
       setPending(newPending);
     } catch (error) {
       failure(error);

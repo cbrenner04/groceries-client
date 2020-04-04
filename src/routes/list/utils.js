@@ -61,7 +61,10 @@ export async function fetchList({ id, history }) {
     ] = responses;
     const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
     if (!userInAccepted) {
-      history.push('/lists');
+      history.push({
+        pathname: '/lists',
+        state: { error: 'List not found' },
+      });
       return;
     }
     const allAcceptedUsers = accepted.map(({ user }) => user);
@@ -88,13 +91,22 @@ export async function fetchList({ id, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+      } else if ([403, 404].includes(response.status)) {
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'List not found' },
+        });
       } else {
-        // TODO: how do we pass error messages along?
-        history.push('/lists');
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'Something went wrong' },
+        });
       }
     } else {
-      // TODO: how do we pass error messages along?
-      history.push('/lists');
+      history.push({
+        pathname: '/lists',
+        state: { errors: 'Something went wrong' },
+      });
     }
   }
 }
@@ -108,7 +120,10 @@ export async function fetchListToEdit({ id, history }) {
       },
     } = await axios.get(`/lists/${id}/edit`);
     if (owner_id !== currentUserId) {
-      history.push('/lists');
+      history.push({
+        pathname: '/lists',
+        state: { errors: 'List not found' },
+      });
       return;
     }
     return {
@@ -125,9 +140,16 @@ export async function fetchListToEdit({ id, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+      } else if ([403, 404].includes(response.status)) {
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'List not found' },
+        });
       } else {
-        // TODO: how do we pass error messages along?
-        history.push('/lists');
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'Something went wrong' },
+        });
       }
     } else if (request) {
       newError.message = 'Something went wrong!';
@@ -184,8 +206,10 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const numberInSeries = Number(number_in_series);
     const category = itemCategory || '';
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
-      // TODO: how do we pass errors around?
-      history.push('/lists');
+      history.push({
+        pathname: `/lists/${listId}`,
+        state: { errors: 'List not found' },
+      });
       return;
     }
     return {
@@ -221,13 +245,22 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+      } else if ([403, 404].includes(response.status)) {
+        history.push({
+          pathname: `/lists/${listId}`,
+          state: { errors: 'Item not found' },
+        });
       } else {
-        // TODO: how do we pass error messages along?
-        history.push(`/lists/${listId}`);
+        history.push({
+          pathname: `/lists/${listId}`,
+          state: { errors: 'Something went wrong' },
+        });
       }
     } else {
-      // TODO: how do we pass error messages along?
-      history.push(`/lists/${listId}`);
+      history.push({
+        pathname: `/lists/${listId}`,
+        state: { errors: 'Something went wrong' },
+      });
     }
   }
 }

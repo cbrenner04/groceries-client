@@ -12,10 +12,13 @@ export default function AppNav() {
     try {
       await axios.delete('/auth/sign_out');
     } catch {
-      // noop
+      // TODO: send exception somewhere for logging
     }
     sessionStorage.removeItem('user');
-    history.push('/users/sign_in');
+    history.push({
+      pathname: '/users/sign_in',
+      state: { success: 'Log out successful' },
+    });
   };
 
   return (

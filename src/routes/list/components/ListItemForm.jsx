@@ -75,9 +75,11 @@ function ListItemForm(props) {
             pathname: '/users/sign_in',
             state: { errors: 'You must sign in' },
           });
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along?
-          props.history.push('/lists');
+        } else if ([403, 404].includes(response.status)) {
+          props.history.push({
+            pathname: '/lists',
+            state: { errors: 'List not found' },
+          });
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
@@ -90,7 +92,7 @@ function ListItemForm(props) {
           setErrors(responseErrors.join(joinString));
         }
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }

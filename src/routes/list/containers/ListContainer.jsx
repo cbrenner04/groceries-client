@@ -17,9 +17,9 @@ function ListContainer(props) {
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
-  const [errors, setErrors] = useState('');
+  const [errors, setErrors] = useState(props.initialErrors);
   const [itemToDelete, setItemToDelete] = useState(false);
-  const [success, setSuccess] = useState('');
+  const [success, setSuccess] = useState(props.initialSuccess);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const sortItems = items => {
@@ -84,16 +84,15 @@ function ListContainer(props) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
-      } else if (response.status === 403) {
-        // TODO: how do we pass error messages along?
-        props.history.push('/lists');
+      } else if ([403, 404].includes(response.status)) {
+        setErrors('Item not found');
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       }
     } else if (request) {
-      // TODO: what do here?
+      setErrors('Something went wrong');
     } else {
       setErrors(message);
     }
@@ -245,6 +244,8 @@ ListContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  initialErrors: PropTypes.string,
+  initialSuccess: PropTypes.string,
   id: PropTypes.string,
   userId: PropTypes.number,
   list: PropTypes.shape({

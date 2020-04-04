@@ -13,8 +13,8 @@ function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [nonCompletedLists, setNonCompletedLists] = useState(props.nonCompletedLists);
-  const [errors, setErrors] = useState('');
-  const [success, setSuccess] = useState('');
+  const [errors, setErrors] = useState(props.initialErrors);
+  const [success, setSuccess] = useState(props.initialSuccess);
   const [listToDelete, setListToDelete] = useState('');
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -38,7 +38,7 @@ function ListsContainer(props) {
         setErrors(responseErrors.join(' and '));
       }
     } else if (request) {
-      // TODO: what do here?
+      setErrors('Something went wrong');
     } else {
       setErrors(message);
     }
@@ -197,6 +197,8 @@ ListsContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  initialErrors: PropTypes.string,
+  initialSuccess: PropTypes.string,
   userId: PropTypes.number,
   pendingLists: PropTypes.arrayOf(
     PropTypes.shape({

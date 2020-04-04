@@ -14,18 +14,25 @@ async function fetchData({ history }) {
     await axios.get(`/auth/validate_token`);
     history.push('/lists');
   } catch {
-    // noop
+    // TODO: send exception somewhere for logging
   }
 }
 
 function NewSession(props) {
   let initialErrors = '';
-  if (props.location && props.location.state && props.location.state.errors)
-    initialErrors = props.location.state.errors;
+  let initialSuccess = '';
+  if (props.location && props.location.state) {
+    if (props.location.state.errors) {
+      initialErrors = props.location.state.errors;
+    } else if (props.location.state.success) {
+      initialSuccess = props.location.state.success;
+    }
+  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState(initialErrors);
+  const [success, setSuccess] = useState(initialSuccess);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -48,16 +55,24 @@ function NewSession(props) {
           uid: data.uid,
         }),
       );
-      props.history.push('/lists');
+      props.history.push({
+        pathname: '/lists',
+        state: { success: `Welcome ${email}!` },
+      });
     } catch ({ response, request, message }) {
       if (response) {
         setErrors(response.data.errors[0]);
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }
     }
+  };
+
+  const alertDismiss = () => {
+    setErrors('');
+    setSuccess('');
   };
 
   return (
@@ -66,7 +81,7 @@ function NewSession(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        <Alert errors={errors} handleDismiss={() => setErrors('')} />
+        <Alert errors={errors} success={success} handleDismiss={alertDismiss} />
         <h2>Log in</h2>
         <Form onSubmit={handleSubmit}>
           <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
@@ -103,6 +118,7 @@ NewSession.propTypes = {
   location: PropTypes.shape({
     state: PropTypes.shape({
       errors: PropTypes.string,
+      success: PropTypes.string,
     }),
   }),
 };

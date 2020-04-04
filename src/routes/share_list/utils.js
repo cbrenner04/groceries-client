@@ -5,7 +5,10 @@ export async function fetchData({ listId, history }) {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
     const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
     if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
-      history.push('/lists');
+      history.push({
+        pathname: '/lists',
+        state: { errors: 'List not found' },
+      });
       return;
     }
     return {
@@ -26,9 +29,11 @@ export async function fetchData({ listId, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
-      } else if (response.status === 403) {
-        // TODO: how do we pass error messages along
-        history.push('/lists');
+      } else if ([403, 404].includes(response.status)) {
+        history.push({
+          pathname: '/lists',
+          state: { errors: 'List not found' },
+        });
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);

@@ -16,7 +16,10 @@ function InviteForm(props) {
     setErrors('');
     try {
       await axios.post(`/auth/invitation`, { email });
-      props.history.push('/');
+      props.history.push({
+        pathname: '/lists',
+        state: { success: `${email} successfully invited` },
+      });
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
@@ -24,16 +27,13 @@ function InviteForm(props) {
             pathname: '/users/sign_in',
             state: { errors: 'You must sign in' },
           });
-        } else if (response.status === 403) {
-          // TODO: how do we pass error messages along
-          props.history.push('/lists');
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
           setErrors(responseErrors.join(' and '));
         }
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }

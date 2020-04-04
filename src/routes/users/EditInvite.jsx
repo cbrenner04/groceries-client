@@ -8,7 +8,7 @@ import axios from '../../utils/api';
 
 function EditInvite(props) {
   const [password, setPassword] = useState('');
-  const [passwordConfirmation, , setPasswordConfirmation] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
   const handleSubmit = async event => {
@@ -20,14 +20,18 @@ function EditInvite(props) {
       invitation_token: queryString.parse(props.location.search).invitation_token,
     };
     try {
-      await axios.put(`/auth/invitation`, { user });
+      await axios.put(`/auth/invitation`, user);
+      props.history.push({
+        pathname: '/users/sign_in',
+        state: { success: 'Password successfully updated' },
+      });
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       } else if (request) {
-        // TODO: what do here?
+        setErrors('Something went wrong');
       } else {
         setErrors(message);
       }
@@ -53,6 +57,9 @@ EditInvite.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 };
 
 export default EditInvite;
