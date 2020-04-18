@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -33,6 +33,11 @@ function NewSession(props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState(initialErrors);
   const [success, setSuccess] = useState(initialSuccess);
+
+  useEffect(() => {
+    // remove the location state
+    props.history.replace(props.history.location.pathname, null);
+  }, [props.history, props.history.location.pathname]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -114,6 +119,10 @@ function NewSession(props) {
 NewSession.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
+    replace: PropTypes.func,
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
   }),
   location: PropTypes.shape({
     state: PropTypes.shape({

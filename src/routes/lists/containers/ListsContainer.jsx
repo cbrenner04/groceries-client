@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 
@@ -19,6 +19,11 @@ function ListsContainer(props) {
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+
+  useEffect(() => {
+    // remove the location state
+    props.history.replace(props.history.location.pathname, null);
+  }, [props.history, props.history.location.pathname]);
 
   const handleAlertDismiss = () => {
     setErrors('');
@@ -196,6 +201,10 @@ function ListsContainer(props) {
 ListsContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
+    replace: PropTypes.func,
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
   }),
   initialErrors: PropTypes.string,
   initialSuccess: PropTypes.string,

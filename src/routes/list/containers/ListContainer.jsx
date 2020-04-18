@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
@@ -21,6 +21,11 @@ function ListContainer(props) {
   const [itemToDelete, setItemToDelete] = useState(false);
   const [success, setSuccess] = useState(props.initialSuccess);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  useEffect(() => {
+    // remove the location state
+    props.history.replace(props.history.location.pathname, null);
+  }, [props.history, props.history.location.pathname]);
 
   const sortItems = items => {
     let sortAttrs = [];
@@ -243,6 +248,10 @@ function ListContainer(props) {
 ListContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
+    replace: PropTypes.func,
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
   }),
   initialErrors: PropTypes.string,
   initialSuccess: PropTypes.string,

@@ -46,6 +46,7 @@ function List(props) {
             permissions={data.permissions}
             initialErrors={initialErrors}
             initialSuccess={initialSuccess}
+            history={props.history}
           />
         )}
       </Async.Fulfilled>
