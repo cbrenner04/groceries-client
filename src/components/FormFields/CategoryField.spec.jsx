@@ -10,9 +10,14 @@ const defaultProps = {
 };
 
 describe('CategoryField', () => {
-  it('renders input with datalist', () => {
+  let formInput;
+
+  beforeEach(() => {
     const { getByLabelText } = render(<CategoryField {...defaultProps} />);
-    const formInput = getByLabelText('Category');
+    formInput = getByLabelText('Category');
+  });
+
+  it('renders input with datalist', () => {
     const formGroup = formInput.parentElement;
 
     expect(formGroup).toMatchSnapshot();
@@ -22,8 +27,6 @@ describe('CategoryField', () => {
 
   describe('when value changes', () => {
     it('calls handleInput', () => {
-      const { getByLabelText } = render(<CategoryField {...defaultProps} />);
-      const formInput = getByLabelText('Category');
       fireEvent.change(formInput, { target: { value: 'a' } });
 
       expect(defaultProps.handleInput).toHaveBeenCalled();

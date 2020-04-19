@@ -8,16 +8,20 @@ const defaultProps = {
 };
 
 describe('Trash', () => {
-  it('renders a button', () => {
-    const { getByRole } = render(<Trash {...defaultProps} />);
+  let trashButton;
 
-    expect(getByRole('button')).toMatchSnapshot();
+  beforeEach(() => {
+    const { getByRole } = render(<Trash {...defaultProps} />);
+    trashButton = getByRole('button');
+  });
+
+  it('renders a button', () => {
+    expect(trashButton).toMatchSnapshot();
   });
 
   describe('when button is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = render(<Trash {...defaultProps} />);
-      fireEvent.click(getByRole('button'));
+      fireEvent.click(trashButton);
 
       expect(defaultProps.handleClick).toHaveBeenCalled();
     });

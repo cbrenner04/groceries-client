@@ -8,16 +8,20 @@ const defaultProps = {
 };
 
 describe('Refresh', () => {
-  it('renders a button', () => {
-    const { getByRole } = render(<Refresh {...defaultProps} />);
+  let refreshButton;
 
-    expect(getByRole('button')).toMatchSnapshot();
+  beforeEach(() => {
+    const { getByRole } = render(<Refresh {...defaultProps} />);
+    refreshButton = getByRole('button');
+  });
+
+  it('renders a button', () => {
+    expect(refreshButton).toMatchSnapshot();
   });
 
   describe('when button is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = render(<Refresh {...defaultProps} />);
-      fireEvent.click(getByRole('button'));
+      fireEvent.click(refreshButton);
 
       expect(defaultProps.handleClick).toHaveBeenCalled();
     });

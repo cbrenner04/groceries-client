@@ -10,10 +10,11 @@ describe('Alert', () => {
     it('renders alert with error class and error message', () => {
       const errorMessage = 'test error message';
       const { getByRole, getByText } = render(<Alert errors={errorMessage} handleDismiss={handleDismiss} />);
+      const alert = getByRole('alert');
 
-      expect(getByRole('alert')).toMatchSnapshot();
-      expect(getByRole('alert')).toHaveClass('alert-danger');
-      expect(getByText(errorMessage));
+      expect(alert).toMatchSnapshot();
+      expect(alert).toHaveClass('alert-danger');
+      expect(getByText(errorMessage)).toBeVisible();
     });
   });
 
@@ -21,10 +22,11 @@ describe('Alert', () => {
     it('renders alert with success class and success message', () => {
       const successMessage = 'test success message';
       const { getByRole, getByText } = render(<Alert success={successMessage} handleDismiss={handleDismiss} />);
+      const alert = getByRole('alert');
 
-      expect(getByRole('alert')).toMatchSnapshot();
-      expect(getByRole('alert')).toHaveClass('alert-success');
-      expect(getByText(successMessage));
+      expect(alert).toMatchSnapshot();
+      expect(alert).toHaveClass('alert-success');
+      expect(getByText(successMessage)).toBeVisible();
     });
   });
 

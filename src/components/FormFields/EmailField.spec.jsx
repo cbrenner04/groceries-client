@@ -9,9 +9,14 @@ const defaultProps = {
 };
 
 describe('EmailField', () => {
-  it('renders input', () => {
+  let formInput;
+
+  beforeEach(() => {
     const { getByLabelText } = render(<EmailField {...defaultProps} />);
-    const formInput = getByLabelText('Email');
+    formInput = getByLabelText('Email');
+  });
+
+  it('renders input', () => {
     const formGroup = formInput.parentElement;
 
     expect(formGroup).toMatchSnapshot();
@@ -20,8 +25,6 @@ describe('EmailField', () => {
 
   describe('when value changes', () => {
     it('calls handleChange', () => {
-      const { getByLabelText } = render(<EmailField {...defaultProps} />);
-      const formInput = getByLabelText('Email');
       fireEvent.change(formInput, { target: { value: 'a' } });
 
       expect(defaultProps.handleChange).toHaveBeenCalled();

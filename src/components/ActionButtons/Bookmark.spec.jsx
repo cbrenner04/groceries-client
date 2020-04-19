@@ -12,9 +12,10 @@ describe('Bookmark', () => {
     it('renders the filled in bookmark', () => {
       defaultProps.read = true;
       const { getByRole } = render(<Bookmark {...defaultProps} />);
+      const bookmark = getByRole('button');
 
-      expect(getByRole('button')).toMatchSnapshot();
-      expect(getByRole('button').firstChild).toHaveAttribute('class', expect.stringContaining('fas'));
+      expect(bookmark).toMatchSnapshot();
+      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('fas'));
     });
   });
 
@@ -22,9 +23,10 @@ describe('Bookmark', () => {
     it('renders the bookmark outline', () => {
       defaultProps.read = false;
       const { getByRole } = render(<Bookmark {...defaultProps} />);
+      const bookmark = getByRole('button');
 
-      expect(getByRole('button')).toMatchSnapshot();
-      expect(getByRole('button').firstChild).toHaveAttribute('class', expect.stringContaining('far'));
+      expect(bookmark).toMatchSnapshot();
+      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('far'));
     });
   });
 

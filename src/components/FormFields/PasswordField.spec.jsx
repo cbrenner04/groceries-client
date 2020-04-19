@@ -11,9 +11,14 @@ const defaultProps = {
 };
 
 describe('PasswordField', () => {
-  it('renders input', () => {
+  let formInput;
+
+  beforeEach(() => {
     const { getByLabelText } = render(<PasswordField {...defaultProps} />);
-    const formInput = getByLabelText(defaultProps.label);
+    formInput = getByLabelText(defaultProps.label);
+  });
+
+  it('renders input', () => {
     const formGroup = formInput.parentElement;
 
     expect(formGroup).toMatchSnapshot();
@@ -22,8 +27,6 @@ describe('PasswordField', () => {
 
   describe('when value changes', () => {
     it('calls handleChange', () => {
-      const { getByLabelText } = render(<PasswordField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
       fireEvent.change(formInput, { target: { value: 'a' } });
 
       expect(defaultProps.handleChange).toHaveBeenCalled();

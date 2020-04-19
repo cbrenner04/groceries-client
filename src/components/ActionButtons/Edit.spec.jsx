@@ -11,25 +11,25 @@ const defaultProps = {
 const history = createMemoryHistory();
 
 describe('Edit', () => {
-  it('renders a link', () => {
+  let editLink;
+
+  beforeEach(() => {
     const { getByRole } = render(
       <Router history={history}>
         <Edit {...defaultProps} />
       </Router>
     );
+    editLink = getByRole('link');
+  });
 
-    expect(getByRole('link')).toMatchSnapshot();
-    expect(getByRole('link')).toHaveAttribute('href', defaultProps.to);
+  it('renders a link', () => {
+    expect(editLink).toMatchSnapshot();
+    expect(editLink).toHaveAttribute('href', defaultProps.to);
   });
 
   describe('when link is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = render(
-        <Router history={history}>
-          <Edit {...defaultProps} />
-        </Router>
-      );
-      fireEvent.click(getByRole('link'));
+      fireEvent.click(editLink);
 
       expect(history.location.pathname).toBe(defaultProps.to);
     });

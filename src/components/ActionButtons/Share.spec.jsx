@@ -11,25 +11,25 @@ const defaultProps = {
 const history = createMemoryHistory();
 
 describe('Share', () => {
-  it('renders a link', () => {
+  let shareLink;
+
+  beforeEach(() => {
     const { getByRole } = render(
       <Router history={history}>
         <Share {...defaultProps} />
       </Router>
     );
+    shareLink = getByRole('link');
+  });
 
-    expect(getByRole('link')).toMatchSnapshot();
-    expect(getByRole('link')).toHaveAttribute('href', defaultProps.to);
+  it('renders a link', () => {
+    expect(shareLink).toMatchSnapshot();
+    expect(shareLink).toHaveAttribute('href', defaultProps.to);
   });
 
   describe('when link is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = render(
-        <Router history={history}>
-          <Share {...defaultProps} />
-        </Router>
-      );
-      fireEvent.click(getByRole('link'));
+      fireEvent.click(shareLink);
 
       expect(history.location.pathname).toBe(defaultProps.to);
     });

@@ -8,16 +8,20 @@ const defaultProps = {
 };
 
 describe('Complete', () => {
-  it('renders a button', () => {
-    const { getByRole } = render(<Complete {...defaultProps} />);
+  let completeButton;
 
-    expect(getByRole('button')).toMatchSnapshot();
+  beforeEach(() => {
+    const { getByRole } = render(<Complete {...defaultProps} />);
+    completeButton = getByRole('button');
+  });
+
+  it('renders a button', () => {
+    expect(completeButton).toMatchSnapshot();
   });
 
   describe('when button is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = render(<Complete {...defaultProps} />);
-      fireEvent.click(getByRole('button'));
+      fireEvent.click(completeButton);
 
       expect(defaultProps.handleClick).toHaveBeenCalled();
     });
