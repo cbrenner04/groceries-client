@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateField renders input 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="testName"
+  >
+    testLabel
+  </label>
+  <input
+    class="form-control"
+    id="testName"
+    placeholder=""
+    type="date"
+    value="03/03/2020"
+  />
+</div>
+`;

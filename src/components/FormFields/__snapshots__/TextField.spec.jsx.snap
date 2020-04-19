@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextField renders input 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="testName"
+  >
+    testLabel
+  </label>
+  <input
+    class="form-control"
+    id="testName"
+    placeholder=""
+    type="text"
+    value="testValue"
+  />
+</div>
+`;

@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectField when blankOption is false renders input with first option as first option provided 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="testName"
+  >
+    testLabel
+  </label>
+  <select
+    class="form-control"
+    id="testName"
+  >
+    <option
+      value="testOption1Value"
+    >
+      testOption1Label
+    </option>
+    <option
+      value="testOption2Value"
+    >
+      testOption2Label
+    </option>
+  </select>
+</div>
+`;
+
+exports[`SelectField when blankOption is true when value is not blank renders input with first option of empty string and clear input text 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="testName"
+  >
+    testLabel
+  </label>
+  <select
+    class="form-control"
+    id="testName"
+  >
+    <option
+      value=""
+    >
+      Clear testLabel
+    </option>
+    <option
+      value="testOption1Value"
+    >
+      testOption1Label
+    </option>
+    <option
+      value="testOption2Value"
+    >
+      testOption2Label
+    </option>
+  </select>
+</div>
+`;
+
+exports[`SelectField when blankOption is true when value is not blank renders input with first option of empty string and select input text 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="testName"
+  >
+    testLabel
+  </label>
+  <select
+    class="form-control"
+    id="testName"
+  >
+    <option
+      disabled=""
+      value=""
+    >
+      Select testLabel
+    </option>
+    <option
+      value="testOption1Value"
+    >
+      testOption1Label
+    </option>
+    <option
+      value="testOption2Value"
+    >
+      testOption2Label
+    </option>
+  </select>
+</div>
+`;
