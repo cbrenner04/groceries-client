@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading renders the spinner 1`] = `
+<div
+  class="spinner-border"
+  role="status"
+  style="width: 100px; height: 100px; position: absolute; top: 50%;"
+>
+  <span
+    class="sr-only"
+  >
+    Loading...
+  </span>
+</div>
+`;
