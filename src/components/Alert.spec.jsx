@@ -1,6 +1,7 @@
 import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+
 import Alert from './Alert';
-import { render, fireEvent  } from '@testing-library/react'
 
 const handleDismiss = jest.fn();
 

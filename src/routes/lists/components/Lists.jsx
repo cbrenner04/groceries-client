@@ -5,13 +5,13 @@ import { ListGroup } from 'react-bootstrap';
 
 import List from './List';
 
-const Lists = props => (
+const Lists = (props) => (
   <>
     {props.pendingLists.length > 0 && (
       <>
         <p>These lists have been shared with you but you have not accepted the invitation.</p>
         <ListGroup>
-          {props.pendingLists.map(list => (
+          {props.pendingLists.map((list) => (
             <List
               userId={props.userId}
               list={list}
@@ -28,7 +28,7 @@ const Lists = props => (
     <h1>Your Lists</h1>
     <p>These are lists you&apos;ve created or you&apos;ve accepted an invitation from someone else.</p>
     <ListGroup>
-      {props.nonCompletedLists.map(list => (
+      {props.nonCompletedLists.map((list) => (
         <List
           userId={props.userId}
           list={list}
@@ -49,7 +49,7 @@ const Lists = props => (
       an asterisk (*).
     </p>
     <ListGroup>
-      {props.completedLists.map(list => (
+      {props.completedLists.map((list) => (
         <List
           userId={props.userId}
           list={list}

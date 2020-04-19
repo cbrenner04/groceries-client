@@ -22,7 +22,7 @@ export default function AppNav() {
   };
 
   return (
-    <Navbar expand="lg" variant="light" bg="light" fixed="top">
+    <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav">
       <Navbar.Brand href={userIsSignedIn ? '/' : '/users/sign_in'}>Groceries</Navbar.Brand>
       {userIsSignedIn && (
         <>

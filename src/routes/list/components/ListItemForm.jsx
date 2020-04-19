@@ -30,7 +30,7 @@ function ListItemForm(props) {
     setSuccess('');
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     dismissAlert();
     const listItem = {
@@ -82,7 +82,7 @@ function ListItemForm(props) {
           });
         } else {
           const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
           let joinString;
           if (props.listType === 'BookList' || props.listType === 'MusicList') {
             joinString = ' or ';

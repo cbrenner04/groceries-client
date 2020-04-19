@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { CategoryField, TextField, CheckboxField } from '../../../components/FormFields';
 
-const GroceryListItemFormFields = props => (
+const GroceryListItemFormFields = (props) => (
   <>
     <TextField
       name="product"

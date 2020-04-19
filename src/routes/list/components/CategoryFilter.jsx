@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dropdown } from 'react-bootstrap';
 
-const CategoryFilter = props => {
+const CategoryFilter = (props) => {
   let component;
-  if (props.categories.filter(cat => !!cat).length) {
+  if (props.categories.filter((cat) => !!cat).length) {
     if (props.filter) {
       component = (
         <>
@@ -26,7 +26,7 @@ const CategoryFilter = props => {
             Filter by category
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {props.categories.sort().map(category => {
+            {props.categories.sort().map((category) => {
               if (!category) return '';
               return (
                 <Dropdown.Item as="button" key={category} name={category} onClick={props.handleCategoryFilter}>

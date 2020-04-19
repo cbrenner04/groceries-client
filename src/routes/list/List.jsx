@@ -34,7 +34,7 @@ function List(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {data => (
+        {(data) => (
           <ListContainer
             id={listId}
             userId={data.currentUserId}

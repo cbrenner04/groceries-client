@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../components/FormFields';
 
-const EditToDoListItemFormFields = props => (
+const EditToDoListItemFormFields = (props) => (
   <>
     <TextField
       name="task"
@@ -17,7 +17,7 @@ const EditToDoListItemFormFields = props => (
       label="Assignee"
       value={props.assigneeId}
       handleChange={props.assigneeIdChangeHandler}
-      options={props.listUsers.map(user => ({ value: String(user.id), label: user.email }))}
+      options={props.listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
     />
     <DateField

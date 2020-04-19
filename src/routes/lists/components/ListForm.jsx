@@ -9,7 +9,7 @@ function ListForm({ onFormSubmit }) {
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     onFormSubmit({ name, type });
     setName('');

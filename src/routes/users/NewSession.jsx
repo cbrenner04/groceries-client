@@ -39,7 +39,7 @@ function NewSession(props) {
     props.history.replace(props.history.location.pathname, null);
   }, [props.history, props.history.location.pathname]);
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors('');
     const user = {

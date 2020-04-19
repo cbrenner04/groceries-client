@@ -12,7 +12,7 @@ function EditPassword(props) {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors('');
     try {
@@ -33,7 +33,7 @@ function EditPassword(props) {
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       } else if (request) {
         setErrors('Something went wrong');

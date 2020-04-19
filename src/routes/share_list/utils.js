@@ -3,7 +3,7 @@ import axios from '../../utils/api';
 export async function fetchData({ listId, history }) {
   try {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
-    const userInAccepted = data.accepted.find(acceptedList => acceptedList.user.id === data.current_user_id);
+    const userInAccepted = data.accepted.find((acceptedList) => acceptedList.user.id === data.current_user_id);
     if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
       history.push({
         pathname: '/lists',

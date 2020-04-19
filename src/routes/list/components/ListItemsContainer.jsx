@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ListItems from './ListItems';
 import CategoryFilter from './CategoryFilter';
 
-const ListItemsContainer = props => (
+const ListItemsContainer = (props) => (
   <div>
     <div className="clearfix">
       <h2 className="float-left">Items</h2>
@@ -32,7 +32,7 @@ const ListItemsContainer = props => (
       </div>
     )}
     {!props.filter &&
-      props.categories.sort().map(category => (
+      props.categories.sort().map((category) => (
         <div key={category}>
           <ListItems
             category={category}

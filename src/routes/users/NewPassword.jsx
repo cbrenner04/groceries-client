@@ -11,7 +11,7 @@ function NewPassword(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors('');
     try {

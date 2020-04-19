@@ -34,7 +34,7 @@ function ShareListForm(props) {
           setErrors(response.data.responseText);
         } else {
           const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
           setErrors(responseErrors.join(' and '));
         }
       }
@@ -45,7 +45,7 @@ function ShareListForm(props) {
     }
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     handleAlertDismiss();
     try {
@@ -78,7 +78,7 @@ function ShareListForm(props) {
     }
   };
 
-  const handleSelectUser = async user => {
+  const handleSelectUser = async (user) => {
     handleAlertDismiss();
     const usersList = {
       user_id: user.id,
@@ -86,7 +86,7 @@ function ShareListForm(props) {
     };
     try {
       const { data } = await axios.post(`/lists/${props.listId}/users_lists`, { users_list: usersList });
-      const newUsers = invitableUsers.filter(tmpUser => tmpUser.id !== user.id);
+      const newUsers = invitableUsers.filter((tmpUser) => tmpUser.id !== user.id);
       const newPending = update(pending, {
         $push: [
           {
@@ -119,7 +119,7 @@ function ShareListForm(props) {
         },
       });
       const users = status === 'pending' ? pending : accepted;
-      const updatedUsers = users.map(usersList => {
+      const updatedUsers = users.map((usersList) => {
         const newList = usersList;
         const tmpUsersList = newList.users_list;
         if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
@@ -154,7 +154,7 @@ function ShareListForm(props) {
       <br />
       <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>
       <ListGroup>
-        {invitableUsers.map(user => (
+        {invitableUsers.map((user) => (
           <div id={`invite-user-${user.id}`} key={user.id}>
             <ListGroup.Item action key={user.id} className="btn btn-link" onClick={() => handleSelectUser(user)}>
               {user.email}

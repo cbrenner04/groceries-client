@@ -11,7 +11,7 @@ function InviteForm(props) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors('');
     try {
@@ -29,7 +29,7 @@ function InviteForm(props) {
           });
         } else {
           const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
           setErrors(responseErrors.join(' and '));
         }
       } else if (request) {

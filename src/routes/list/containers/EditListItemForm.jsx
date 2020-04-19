@@ -15,7 +15,7 @@ function EditListItemForm(props) {
   const [errors, setErrors] = useState('');
   const [item, setItem] = useState(props.item);
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors('');
     const listItem = {
@@ -61,7 +61,7 @@ function EditListItemForm(props) {
           });
         } else {
           const keys = Object.keys(response.data);
-          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+          const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
           let joinString;
           if (props.list.type === 'BookList' || props.list.type === 'MusicList') {
             joinString = ' or ';

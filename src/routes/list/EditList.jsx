@@ -14,7 +14,7 @@ function EditList(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {data => (
+        {(data) => (
           <EditListForm
             history={props.history}
             listId={data.listId}

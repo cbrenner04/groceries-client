@@ -11,7 +11,7 @@ const SelectField = ({ name, label, value, handleChange, options, blankOption })
           {value ? `Clear ${label}` : `Select ${label}`}
         </option>
       )}
-      {options.map(option => (
+      {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>

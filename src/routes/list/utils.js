@@ -3,7 +3,7 @@ import { formatDueBy } from '../../utils/format';
 
 export function mapIncludedCategories(items) {
   const cats = [''];
-  items.forEach(item => {
+  items.forEach((item) => {
     if (!item.category) return;
     const cat = item.category.toLowerCase();
     if (!cats.includes(cat)) cats.push(cat);
@@ -13,10 +13,10 @@ export function mapIncludedCategories(items) {
 
 export function categorizeNotPurchasedItems(items, categories) {
   const obj = {};
-  categories.forEach(cat => {
+  categories.forEach((cat) => {
     obj[cat] = [];
   });
-  items.forEach(item => {
+  items.forEach((item) => {
     if (!item.category) {
       obj[''].push(item);
       return;
@@ -59,7 +59,7 @@ export async function fetchList({ id, history }) {
         },
       },
     ] = responses;
-    const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
+    const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
     if (!userInAccepted) {
       history.push({
         pathname: '/lists',
@@ -188,7 +188,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const acceptedUsers = accepted.map(({ user }) => user);
     const pendingUsers = pending.map(({ user }) => user);
     const listUsers = acceptedUsers.concat(pendingUsers);
-    const userInAccepted = accepted.find(acceptedList => acceptedList.user.id === currentUserId);
+    const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
     const assigneeId = assignee_id ? String(assignee_id) : '';
     const numberInSeries = Number(number_in_series);
     const category = itemCategory || '';

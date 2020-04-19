@@ -14,7 +14,7 @@ function ShareList(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {data => (
+        {(data) => (
           <ShareListForm
             history={props.history}
             name={data.name}

@@ -4,7 +4,7 @@ import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash } from '../../../components/ActionButtons';
 
-const CompletedListButtons = props => (
+const CompletedListButtons = (props) => (
   <ButtonGroup className="float-right">
     <Refresh
       handleClick={() => props.onListRefresh(props.list)}

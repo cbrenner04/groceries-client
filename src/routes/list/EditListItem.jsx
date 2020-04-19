@@ -20,7 +20,7 @@ function EditListItem(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {data => (
+        {(data) => (
           <EditListItemForm
             history={props.history}
             listUsers={data.listUsers}

@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 import { CategoryField, TextField, NumberField, CheckboxField } from '../../../components/FormFields';
 
-const BookListItemFormFields = props => (
+const BookListItemFormFields = (props) => (
   <>
     <TextField
       name="author"

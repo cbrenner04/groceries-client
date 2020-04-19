@@ -39,7 +39,7 @@ function ListsContainer(props) {
         });
       } else {
         const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       }
     } else if (request) {
@@ -49,7 +49,7 @@ function ListsContainer(props) {
     }
   };
 
-  const handleFormSubmit = async list => {
+  const handleFormSubmit = async (list) => {
     handleAlertDismiss();
     try {
       const { data } = await axios.post(`/lists`, { list });
@@ -61,7 +61,7 @@ function ListsContainer(props) {
     }
   };
 
-  const handleDelete = list => {
+  const handleDelete = (list) => {
     setListToDelete(list);
     setShowDeleteConfirm(true);
   };
@@ -73,10 +73,10 @@ function ListsContainer(props) {
     try {
       await axios.delete(`/lists/${id}`);
       if (completed) {
-        const updatedCompletedLists = completedLists.filter(ll => ll.id !== id);
+        const updatedCompletedLists = completedLists.filter((ll) => ll.id !== id);
         setCompletedLists(sortLists(updatedCompletedLists));
       } else {
-        const updatedNonCompletedLists = nonCompletedLists.filter(ll => ll.id !== id);
+        const updatedNonCompletedLists = nonCompletedLists.filter((ll) => ll.id !== id);
         setNonCompletedLists(sortLists(updatedNonCompletedLists));
       }
       setSuccess('List successfully deleted.');
@@ -85,13 +85,13 @@ function ListsContainer(props) {
     }
   };
 
-  const handleCompletion = async list => {
+  const handleCompletion = async (list) => {
     handleAlertDismiss();
     const theList = list;
     theList.completed = true;
     try {
       await axios.put(`/lists/${theList.id}`, { list: { completed: true } });
-      const updatedNonCompletedLists = nonCompletedLists.filter(nonList => nonList.id !== theList.id);
+      const updatedNonCompletedLists = nonCompletedLists.filter((nonList) => nonList.id !== theList.id);
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       const updatedCompletedLists = update(completedLists, { $push: [theList] });
       setCompletedLists(sortLists(updatedCompletedLists));
@@ -101,12 +101,12 @@ function ListsContainer(props) {
     }
   };
 
-  const removeListFromUnaccepted = listId => {
-    const updatedPendingLists = pendingLists.filter(list => list.id !== listId);
+  const removeListFromUnaccepted = (listId) => {
+    const updatedPendingLists = pendingLists.filter((list) => list.id !== listId);
     setPendingLists(updatedPendingLists);
   };
 
-  const acceptList = async list => {
+  const acceptList = async (list) => {
     handleAlertDismiss();
     try {
       await axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, { users_list: { has_accepted: true } });
@@ -124,12 +124,12 @@ function ListsContainer(props) {
     }
   };
 
-  const handleAccept = list => {
+  const handleAccept = (list) => {
     removeListFromUnaccepted(list.id);
     acceptList(list);
   };
 
-  const handleReject = list => {
+  const handleReject = (list) => {
     setListToReject(list);
     setShowRejectConfirm(true);
   };
@@ -148,7 +148,7 @@ function ListsContainer(props) {
     }
   };
 
-  const handleRefresh = async list => {
+  const handleRefresh = async (list) => {
     handleAlertDismiss();
     const localList = list;
     localList.refreshed = true;

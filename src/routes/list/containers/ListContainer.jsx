@@ -27,7 +27,7 @@ function ListContainer(props) {
     props.history.replace(props.history.location.pathname, null);
   }, [props.history, props.history.location.pathname]);
 
-  const sortItems = items => {
+  const sortItems = (items) => {
     let sortAttrs = [];
     if (props.list.type === 'BookList') {
       sortAttrs = ['author', 'number_in_series', 'title'];
@@ -43,7 +43,7 @@ function ListContainer(props) {
   };
 
   // TODO: refactor? there has got to be a better way
-  const handleAddItem = item => {
+  const handleAddItem = (item) => {
     const category = item.category || '';
     const updatedNotPurchasedItems = notPurchasedItems;
     setNotPurchasedItems({});
@@ -60,19 +60,19 @@ function ListContainer(props) {
     }
   };
 
-  const listId = item => item[`${listTypeToSnakeCase(props.list.type)}_id`];
-  const listItemPath = item => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
+  const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
+  const listItemPath = (item) => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
 
   // TODO: refactor?
-  const moveItemToPurchased = item => {
+  const moveItemToPurchased = (item) => {
     let { category } = item;
     if (!category) category = '';
-    const updatedNotPurchasedItems = notPurchasedItems[category].filter(notItem => notItem.id !== item.id);
+    const updatedNotPurchasedItems = notPurchasedItems[category].filter((notItem) => notItem.id !== item.id);
     notPurchasedItems[category] = updatedNotPurchasedItems;
     const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
     setPurchasedItems(sortItems(updatedPurchasedItems));
     if (!notPurchasedItems[category].length) {
-      setIncludedCategories(includedCategories.filter(cat => cat !== category));
+      setIncludedCategories(includedCategories.filter((cat) => cat !== category));
       setFilter('');
     }
   };
@@ -93,7 +93,7 @@ function ListContainer(props) {
         setErrors('Item not found');
       } else {
         const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       }
     } else if (request) {
@@ -103,7 +103,7 @@ function ListContainer(props) {
     }
   };
 
-  const handleItemPurchase = async item => {
+  const handleItemPurchase = async (item) => {
     dismissAlert();
     const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
     try {
@@ -135,11 +135,11 @@ function ListContainer(props) {
     }
   };
 
-  const handleItemRead = async item => toggleRead(item, true);
+  const handleItemRead = async (item) => toggleRead(item, true);
 
-  const handleItemUnRead = async item => toggleRead(item, false);
+  const handleItemUnRead = async (item) => toggleRead(item, false);
 
-  const handleUnPurchase = item => {
+  const handleUnPurchase = (item) => {
     dismissAlert();
     const newItem = {
       user_id: item.user_id,
@@ -165,14 +165,14 @@ function ListContainer(props) {
     ])
       .then(([{ data }]) => {
         handleAddItem(data);
-        const updatedPurchasedItems = purchasedItems.filter(notItem => notItem.id !== item.id);
+        const updatedPurchasedItems = purchasedItems.filter((notItem) => notItem.id !== item.id);
         setPurchasedItems(sortItems(updatedPurchasedItems));
         setSuccess('Item successfully refreshed.');
       })
       .catch(failure);
   };
 
-  const handleDelete = item => {
+  const handleDelete = (item) => {
     setItemToDelete(item);
     setShowDeleteConfirm(true);
   };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge, ListGroup } from 'react-bootstrap';
 
-const PermissionButtons = props => (
+const PermissionButtons = (props) => (
   <>
     <h3 className="text-capitalize">{props.status}</h3>
     <br />

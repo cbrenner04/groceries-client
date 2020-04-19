@@ -9,7 +9,7 @@ function ListItems(props) {
   return (
     <ListGroup>
       {props.category && <h5 data-test-class="category-header">{capitalize(props.category)}</h5>}
-      {props.items.map(item => (
+      {props.items.map((item) => (
         <ListItem
           item={item}
           key={item.id}

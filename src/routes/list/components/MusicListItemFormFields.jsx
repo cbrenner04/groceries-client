@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TextField, CategoryField, CheckboxField } from '../../../components/FormFields';
 
-const EditMusicListItemFormFields = props => (
+const EditMusicListItemFormFields = (props) => (
   <>
     <TextField
       name="title"

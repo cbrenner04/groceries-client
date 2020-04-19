@@ -31,7 +31,7 @@ function CompletedListsContainer(props) {
         setErrors('List not found');
       } else {
         const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
+        const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         setErrors(responseErrors.join(' and '));
       }
     } else if (request) {
@@ -41,11 +41,11 @@ function CompletedListsContainer(props) {
     }
   };
 
-  const handleRefresh = async list => {
+  const handleRefresh = async (list) => {
     dismissAlert();
     try {
       await axios.post(`/lists/${list.id}/refresh_list`, {});
-      const refreshedList = completedLists.find(completedList => completedList.id === list.id);
+      const refreshedList = completedLists.find((completedList) => completedList.id === list.id);
       refreshedList.refreshed = true;
       setSuccess('Your list was successfully refreshed.');
     } catch (error) {
@@ -53,7 +53,7 @@ function CompletedListsContainer(props) {
     }
   };
 
-  const handleDelete = list => {
+  const handleDelete = (list) => {
     setListToDelete(list);
     setShowDeleteConfirm(true);
   };
@@ -63,7 +63,7 @@ function CompletedListsContainer(props) {
     setShowDeleteConfirm(false);
     try {
       await axios.delete(`/lists/${listToDelete.id}`);
-      const lists = completedLists.filter(cl => cl.id !== listToDelete.id);
+      const lists = completedLists.filter((cl) => cl.id !== listToDelete.id);
       setCompletedLists(lists);
       setSuccess('Your list was successfully deleted.');
     } catch (error) {
@@ -82,7 +82,7 @@ function CompletedListsContainer(props) {
         <p className="float-left">Previously refreshed lists are marked with an asterisk (*).</p>
       </div>
       <ListGroup>
-        {completedLists.map(list => (
+        {completedLists.map((list) => (
           <List
             userId={list.user_id}
             list={list}

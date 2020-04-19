@@ -24,7 +24,7 @@ function Lists(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {data => (
+        {(data) => (
           <ListsContainer
             history={props.history}
             userId={data.userId}

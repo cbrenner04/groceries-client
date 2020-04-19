@@ -12,7 +12,7 @@ function EditListForm(props) {
   const [completed, setCompleted] = useState(props.completed);
   const [type, setType] = useState(props.type);
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const list = {
       name,
@@ -39,7 +39,7 @@ function EditListForm(props) {
           });
         } else {
           const keys = Object.keys(response.data);
-          const responseErrors = keys.map(key => `${key} ${response.data[key]}`);
+          const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
           setErrors(responseErrors.join(' and '));
         }
       } else if (request) {
