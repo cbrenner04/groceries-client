@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Edit renders a link 1`] = `
+<a
+  class="p-0 mr-3"
+  href="/fake/route"
+>
+  <i
+    class="fa fa-edit fa-2x text-warning"
+  />
+</a>
+`;

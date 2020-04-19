@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bookmark when read is false renders the bookmark outline 1`] = `
+<button
+  class="p-0 mr-3 btn btn-link"
+  type="button"
+>
+  <i
+    class="far fa-bookmark fa-2x text-info"
+  />
+</button>
+`;
+
+exports[`Bookmark when read is true renders the filled in bookmark 1`] = `
+<button
+  class="p-0 mr-3 btn btn-link"
+  type="button"
+>
+  <i
+    class="fas fa-bookmark fa-2x text-info"
+  />
+</button>
+`;

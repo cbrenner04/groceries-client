@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Complete renders a button 1`] = `
+<button
+  class="p-0 mr-3 btn btn-link"
+  type="button"
+>
+  <i
+    class="fa fa-check fa-2x text-success"
+  />
+</button>
+`;
