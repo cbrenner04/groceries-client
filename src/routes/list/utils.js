@@ -91,23 +91,17 @@ export async function fetchList({ id, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+        return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: '/lists',
           state: { errors: 'List not found' },
         });
-      } else {
-        history.push({
-          pathname: '/lists',
-          state: { errors: 'Something went wrong' },
-        });
+        return;
       }
-    } else {
-      history.push({
-        pathname: '/lists',
-        state: { errors: 'Something went wrong' },
-      });
     }
+    // any other errors we will catch and render generic UnknownError
+    throw new Error();
   }
 }
 
@@ -133,30 +127,23 @@ export async function fetchListToEdit({ id, history }) {
       type,
     };
   } catch ({ response, request, message }) {
-    const newError = new Error();
     if (response) {
       if (response.status === 401) {
         history.push({
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+        return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: '/lists',
           state: { errors: 'List not found' },
         });
-      } else {
-        history.push({
-          pathname: '/lists',
-          state: { errors: 'Something went wrong' },
-        });
+        return;
       }
-    } else if (request) {
-      newError.message = 'Something went wrong!';
-    } else {
-      newError.message = message;
     }
-    throw newError;
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
   }
 }
 
@@ -245,22 +232,16 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+        return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: `/lists/${listId}`,
           state: { errors: 'Item not found' },
         });
-      } else {
-        history.push({
-          pathname: `/lists/${listId}`,
-          state: { errors: 'Something went wrong' },
-        });
+        return;
       }
-    } else {
-      history.push({
-        pathname: `/lists/${listId}`,
-        state: { errors: 'Something went wrong' },
-      });
     }
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
   }
 }

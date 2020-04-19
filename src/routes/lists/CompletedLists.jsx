@@ -2,7 +2,7 @@ import React from 'react';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
 
-import Alert from '../../components/Alert';
+import UnknownError from '../error_pages/UnknownError';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
 import Loading from '../../components/Loading';
@@ -16,7 +16,9 @@ function CompletedLists(props) {
       <Async.Fulfilled>
         {data => <CompletedListsContainer completedLists={data} history={props.history} />}
       </Async.Fulfilled>
-      <Async.Rejected>{error => <Alert errors={error.message} />}</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

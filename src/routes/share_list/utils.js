@@ -22,28 +22,22 @@ export async function fetchData({ listId, history }) {
       userId: data.current_user_id,
     };
   } catch ({ response, request, message }) {
-    const newError = new Error();
     if (response) {
       if (response.status === 401) {
         history.push({
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
+        return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: '/lists',
           state: { errors: 'List not found' },
         });
-      } else {
-        const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map(key => `${key} ${response.data[key]}`);
-        newError.message = responseErrors.join(' and ');
+        return;
       }
-    } else if (request) {
-      newError.message = 'Something went wrong!';
-    } else {
-      newError.message = message;
     }
-    throw newError;
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
   }
 }

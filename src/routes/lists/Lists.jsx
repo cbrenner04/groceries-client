@@ -2,10 +2,10 @@ import React from 'react';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
 
-import Alert from '../../components/Alert';
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import Loading from '../../components/Loading';
+import UnknownError from '../error_pages/UnknownError';
 
 function Lists(props) {
   let initialErrors = '';
@@ -37,7 +37,9 @@ function Lists(props) {
           />
         )}
       </Async.Fulfilled>
-      <Async.Rejected>{error => <Alert errors={error.message} />}</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

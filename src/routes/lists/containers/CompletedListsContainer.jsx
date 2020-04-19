@@ -42,6 +42,7 @@ function CompletedListsContainer(props) {
   };
 
   const handleRefresh = async list => {
+    dismissAlert();
     try {
       await axios.post(`/lists/${list.id}/refresh_list`, {});
       const refreshedList = completedLists.find(completedList => completedList.id === list.id);
@@ -50,7 +51,6 @@ function CompletedListsContainer(props) {
     } catch (error) {
       failure(error);
     }
-    dismissAlert();
   };
 
   const handleDelete = list => {

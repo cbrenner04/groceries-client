@@ -2,23 +2,16 @@ import axios from '../../utils/api';
 
 export const sortLists = lists => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-function handleFailure({ response, request, message }, history) {
-  const newError = new Error();
-  if (response) {
-    if (response.status === 401) {
-      history.push({
-        pathname: '/users/sign_in',
-        state: { errors: 'You must sign in' },
-      });
-      return;
-    }
-    newError.message = `${response.status} ${response.data}`;
-  } else if (request) {
-    newError.message = 'Something went wrong!';
-  } else {
-    newError.message = message;
+function handleFailure({ response }, history) {
+  // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
+  if (response && response.status === 401) {
+    history.push({
+      pathname: '/users/sign_in',
+      state: { errors: 'You must sign in' },
+    });
+    return;
   }
-  throw newError;
+  throw new Error();
 }
 
 export async function fetchLists({ history }) {

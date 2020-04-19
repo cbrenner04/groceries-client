@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { fetchItemToEdit } from './utils';
 import EditListItemForm from './containers/EditListItemForm';
 import Loading from '../../components/Loading';
+import UnknownError from '../error_pages/UnknownError';
 
 function EditListItem(props) {
   return (
@@ -29,8 +30,9 @@ function EditListItem(props) {
           />
         )}
       </Async.Fulfilled>
-      {/* This should never render, all errors result in redirect back to /lists */}
-      <Async.Rejected>Something went wrong!</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

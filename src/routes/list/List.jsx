@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
+import UnknownError from '../error_pages/UnknownError';
 
 function List(props) {
   if (!props.match) {
@@ -50,8 +51,9 @@ function List(props) {
           />
         )}
       </Async.Fulfilled>
-      {/* This should never render, all errors result in redirect back to /lists */}
-      <Async.Rejected>Something went wrong!</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

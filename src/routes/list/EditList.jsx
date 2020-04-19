@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import { fetchListToEdit } from './utils';
 import EditListForm from './containers/EditListForm';
-import Alert from '../../components/Alert';
 import Loading from '../../components/Loading';
+import UnknownError from '../error_pages/UnknownError';
 
 function EditList(props) {
   return (
@@ -24,7 +24,9 @@ function EditList(props) {
           />
         )}
       </Async.Fulfilled>
-      <Async.Rejected>{error => <Alert errors={error.message} />}</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

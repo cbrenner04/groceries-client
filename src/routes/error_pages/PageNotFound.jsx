@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
+import UnknownError from './UnknownError';
 
 async function fetchData({ history }) {
   try {
@@ -16,18 +17,11 @@ async function fetchData({ history }) {
           pathname: '/users/sign_in',
           state: { errors: 'You must sign in' },
         });
-      } else {
-        history.push({
-          pathname: '/lists',
-          state: { errors: 'Something went wrong' },
-        });
+        return;
       }
-    } else {
-      history.push({
-        pathname: '/lists',
-        state: { errors: 'Something went wrong' },
-      });
     }
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
   }
 }
 
@@ -42,8 +36,9 @@ function PageNotFound(props) {
         <h2>Sorry but the page you are looking for was not found.</h2>
         <Link to="/lists">Return to the home page</Link>
       </Async.Fulfilled>
-      {/* This should never render, all errors result in redirect back to /lists */}
-      <Async.Rejected>Something went wrong!</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }

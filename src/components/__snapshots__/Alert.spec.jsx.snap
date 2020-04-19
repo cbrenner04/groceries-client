@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert when error is provided renders alert with error class and error message 1`] = `
+<div
+  class="fade alert alert-danger alert-dismissible show"
+  role="alert"
+>
+  <button
+    class="close"
+    type="button"
+  >
+    <span
+      aria-hidden="true"
+    >
+      ×
+    </span>
+    <span
+      class="sr-only"
+    >
+      Close alert
+    </span>
+  </button>
+  test error message
+</div>
+`;
+
+exports[`Alert when success is provided renders alert with success class and success message 1`] = `
+<div
+  class="fade alert alert-success alert-dismissible show"
+  role="alert"
+>
+  <button
+    class="close"
+    type="button"
+  >
+    <span
+      aria-hidden="true"
+    >
+      ×
+    </span>
+    <span
+      class="sr-only"
+    >
+      Close alert
+    </span>
+  </button>
+  test success message
+</div>
+`;

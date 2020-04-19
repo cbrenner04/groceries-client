@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
-import Alert from '../../components/Alert';
 import Loading from '../../components/Loading';
+import UnknownError from '../error_pages/UnknownError';
 
 function ShareList(props) {
   return (
@@ -28,7 +28,9 @@ function ShareList(props) {
           />
         )}
       </Async.Fulfilled>
-      <Async.Rejected>{error => <Alert errors={error.message} />}</Async.Rejected>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
     </Async>
   );
 }
