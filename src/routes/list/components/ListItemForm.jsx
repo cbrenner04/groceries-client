@@ -99,71 +99,65 @@ function ListItemForm(props) {
     }
   };
 
-  const formFields = () => {
-    if (props.listType === 'BookList') {
-      return (
-        <BookListItemFormFields
-          author={author}
-          authorChangeHandler={({ target: { value } }) => setAuthor(value)}
-          title={title}
-          titleChangeHandler={({ target: { value } }) => setTitle(value)}
-          numberInSeries={numberInSeries}
-          numberInSeriesChangeHandler={({ target: { value } }) => setNumberInSeries(Number(value))}
-          category={category}
-          categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-          categories={props.categories}
-        />
-      );
-    } else if (props.listType === 'GroceryList') {
-      return (
-        <GroceryListItemFormFields
-          quantity={quantity}
-          quantityChangeHandler={({ target: { value } }) => setQuantity(value)}
-          product={product}
-          productChangeHandler={({ target: { value } }) => setProduct(value)}
-          category={category}
-          categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-          categories={props.categories}
-        />
-      );
-    } else if (props.listType === 'MusicList') {
-      return (
-        <MusicListItemFormFields
-          title={title}
-          titleChangeHandler={({ target: { value } }) => setTitle(value)}
-          artist={artist}
-          artistChangeHandler={({ target: { value } }) => setArtist(value)}
-          album={album}
-          albumChangeHandler={({ target: { value } }) => setAlbum(value)}
-          category={category}
-          categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-          categories={props.categories}
-        />
-      );
-    } else if (props.listType === 'ToDoList') {
-      return (
-        <ToDoListItemFormFields
-          task={task}
-          taskChangeHandler={({ target: { value } }) => setTask(value)}
-          assigneeId={assigneeId}
-          assigneeIdChangeHandler={({ target: { value } }) => setAssigneeId(value)}
-          listUsers={props.listUsers}
-          dueBy={dueBy}
-          dueByChangeHandler={({ target: { value } }) => setDueBy(value)}
-          category={category}
-          categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-          categories={props.categories}
-        />
-      );
-    }
-    return '';
-  };
+  const formFields = {
+    BookList: (
+      <BookListItemFormFields
+        author={author}
+        authorChangeHandler={({ target: { value } }) => setAuthor(value)}
+        title={title}
+        titleChangeHandler={({ target: { value } }) => setTitle(value)}
+        numberInSeries={numberInSeries}
+        numberInSeriesChangeHandler={({ target: { value } }) => setNumberInSeries(Number(value))}
+        category={category}
+        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
+        categories={props.categories}
+      />
+    ),
+    GroceryList: (
+      <GroceryListItemFormFields
+        quantity={quantity}
+        quantityChangeHandler={({ target: { value } }) => setQuantity(value)}
+        product={product}
+        productChangeHandler={({ target: { value } }) => setProduct(value)}
+        category={category}
+        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
+        categories={props.categories}
+      />
+    ),
+    MusicList: (
+      <MusicListItemFormFields
+        title={title}
+        titleChangeHandler={({ target: { value } }) => setTitle(value)}
+        artist={artist}
+        artistChangeHandler={({ target: { value } }) => setArtist(value)}
+        album={album}
+        albumChangeHandler={({ target: { value } }) => setAlbum(value)}
+        category={category}
+        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
+        categories={props.categories}
+      />
+    ),
+    ToDoList: (
+      <ToDoListItemFormFields
+        task={task}
+        taskChangeHandler={({ target: { value } }) => setTask(value)}
+        assigneeId={assigneeId}
+        assigneeIdChangeHandler={({ target: { value } }) => setAssigneeId(value)}
+        listUsers={props.listUsers}
+        dueBy={dueBy}
+        dueByChangeHandler={({ target: { value } }) => setDueBy(value)}
+        category={category}
+        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
+        categories={props.categories}
+      />
+    ),
+  }[props.listType];
 
   return (
     <div>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        {formFields()}
+        {formFields}
         <br />
         <Button type="submit" variant="success" block>
           Add New Item

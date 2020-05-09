@@ -5,7 +5,7 @@ import UnknownError from './UnknownError';
 
 describe('UnknownError', () => {
   it('renders default styles', () => {
-    const { container, getByRole } = render(<UnknownError />)
+    const { container, getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
     expect(container).toMatchSnapshot();
@@ -14,7 +14,7 @@ describe('UnknownError', () => {
   });
 
   it('updates styles on mouse hover', () => {
-    const { container, getByRole } = render(<UnknownError />)
+    const { container, getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
     fireEvent.mouseEnter(button);
@@ -38,7 +38,7 @@ describe('UnknownError', () => {
     // define location with reload as mock
     window.location = { reload: jest.fn() };
 
-    const { getByRole } = render(<UnknownError />)
+    const { getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
     fireEvent.click(button);

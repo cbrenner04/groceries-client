@@ -7,14 +7,16 @@ const defaultProps = {
   handleChange: jest.fn(),
   name: 'testName',
   label: 'testLabel',
-  options: [{
-    value: 'testOption1Value',
-    label: 'testOption1Label',
-  },
-  {
-    value: 'testOption2Value',
-    label: 'testOption2Label',
-  }],
+  options: [
+    {
+      value: 'testOption1Value',
+      label: 'testOption1Label',
+    },
+    {
+      value: 'testOption2Value',
+      label: 'testOption2Label',
+    },
+  ],
 };
 
 describe('SelectField', () => {

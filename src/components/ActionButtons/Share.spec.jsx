@@ -17,7 +17,7 @@ describe('Share', () => {
     const { getByRole } = render(
       <Router history={history}>
         <Share {...defaultProps} />
-      </Router>
+      </Router>,
     );
     shareLink = getByRole('link');
   });

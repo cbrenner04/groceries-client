@@ -41,7 +41,7 @@ describe('ConfirmModal', () => {
     });
 
     it('calls handleConfirm when the close button is selected', () => {
-      fireEvent.click(getByText('Yes, I\'m sure.'));
+      fireEvent.click(getByText("Yes, I'm sure."));
 
       expect(defaultProps.handleConfirm).toHaveBeenCalled();
     });

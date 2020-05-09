@@ -17,7 +17,7 @@ describe('Edit', () => {
     const { getByRole } = render(
       <Router history={history}>
         <Edit {...defaultProps} />
-      </Router>
+      </Router>,
     );
     editLink = getByRole('link');
   });
