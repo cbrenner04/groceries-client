@@ -9,7 +9,7 @@ import UnknownError from './UnknownError';
 
 async function fetchData({ history }) {
   try {
-    await axios.get(`/auth/validate_token`);
+    await axios.get('/auth/validate_token');
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
