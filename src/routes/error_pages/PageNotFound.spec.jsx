@@ -1,12 +1,10 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-// import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
 import axios from '../../utils/api';
 import PageNotFound from './PageNotFound';
 
-// const history = createMemoryHistory();
 const history = {
   push: jest.fn(),
   listen: jest.fn(),
