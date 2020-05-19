@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
-import update from 'immutability-helper';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
 import Alert from '../../../components/Alert';
-import BookListItemFormFields from '../components/BookListItemFormFields';
-import GroceryListItemFormFields from '../components/GroceryListItemFormFields';
-import MusicListItemFormFields from '../components/MusicListItemFormFields';
-import ToDoListItemFormFields from '../components/ToDoListItemFormFields';
 import axios from '../../../utils/api';
+import ListItemFormFields from '../components/ListItemFormFields';
+import { itemName } from '../utils';
 
 function EditListItemForm(props) {
   const [errors, setErrors] = useState('');
@@ -78,107 +75,23 @@ function EditListItemForm(props) {
     }
   };
 
-  const itemName = () =>
-    ({
-      BookList: `${item.title ? `"${item.title}"` : ''} ${item.author}`,
-      GroceryList: item.product,
-      MusicList: `${item.title ? `"${item.title}"` : ''} ${item.artist} ${
-        item.artist && item.album ? `- ${item.album || ''}` : ''
-      }`,
-      ToDoList: item.task,
-    }[props.list.type]);
-
-  const setItemProperty = (property, value) => {
-    const newItem = update(item, { [property]: { $set: value } });
-    setItem(newItem);
-  };
-
-  const categoryChangeHandler = ({ target: { value } }) => setItemProperty('category', value);
-
-  const formFields = () => {
-    if (props.list.type === 'BookList') {
-      return (
-        <BookListItemFormFields
-          author={item.author}
-          authorChangeHandler={({ target: { value } }) => setItemProperty('author', value)}
-          title={item.title}
-          titleChangeHandler={({ target: { value } }) => setItemProperty('title', value)}
-          purchased={item.purchased}
-          purchasedChangeHandler={() => setItemProperty('purchased', !item.purchased)}
-          read={item.read}
-          readChangeHandler={() => setItemProperty('read', !item.read)}
-          numberInSeries={item.numberInSeries}
-          numberInSeriesChangeHandler={({ target: { value } }) => setItemProperty('numberInSeries', Number(value))}
-          category={item.category}
-          categoryChangeHandler={categoryChangeHandler}
-          categories={props.list.categories}
-          editForm
-        />
-      );
-    } else if (props.list.type === 'GroceryList') {
-      return (
-        <GroceryListItemFormFields
-          product={item.product}
-          productChangeHandler={({ target: { value } }) => setItemProperty('product', value)}
-          quantity={item.quantity}
-          quantityChangeHandler={({ target: { value } }) => setItemProperty('quantity', value)}
-          purchased={item.purchased}
-          purchasedChangeHandler={() => setItemProperty('purchased', !item.purchased)}
-          category={item.category}
-          categoryChangeHandler={categoryChangeHandler}
-          categories={props.list.categories}
-          editForm
-        />
-      );
-    } else if (props.list.type === 'MusicList') {
-      return (
-        <MusicListItemFormFields
-          title={item.title}
-          titleChangeHandler={({ target: { value } }) => setItemProperty('title', value)}
-          artist={item.artist}
-          artistChangeHandler={({ target: { value } }) => setItemProperty('artist', value)}
-          album={item.album}
-          albumChangeHandler={({ target: { value } }) => setItemProperty('album', value)}
-          purchased={item.purchased}
-          purchasedChangeHandler={() => setItemProperty('purchased', !item.purchased)}
-          category={item.category}
-          categoryChangeHandler={categoryChangeHandler}
-          categories={props.list.categories}
-          editForm
-        />
-      );
-    } else if (props.list.type === 'ToDoList') {
-      return (
-        <ToDoListItemFormFields
-          task={item.task}
-          taskChangeHandler={({ target: { value } }) => setItemProperty('task', value)}
-          assigneeId={item.assigneeId}
-          assigneeIdChangeHandler={({ target: { value } }) => setItemProperty('assigneeId', value)}
-          dueBy={item.dueBy}
-          dueByChangeHandler={({ target: { value } }) => setItemProperty('dueBy', value)}
-          completed={item.completed}
-          completedChangeHandler={() => setItemProperty('completed', !item.completed)}
-          listUsers={props.listUsers}
-          category={item.category}
-          categoryChangeHandler={categoryChangeHandler}
-          categories={props.list.categories}
-          editForm
-        />
-      );
-    }
-    return '';
-  };
-
   return (
     <>
       <Alert errors={errors} handleDismiss={() => setErrors('')} />
-      <h1>Edit {itemName()}</h1>
+      <h1>Edit {itemName(item, props.list.type)}</h1>
       <Button href={`/lists/${props.list.id}`} className="float-right" variant="link">
         Back to list
       </Button>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        {formFields()}
+        <ListItemFormFields
+          formData={item}
+          setFormData={setItem}
+          categories={props.list.categories}
+          listType={props.list.type}
+          listUsers={props.listUsers}
+          editForm
+        />
         <Button type="submit" variant="success" block>
           Update Item
         </Button>

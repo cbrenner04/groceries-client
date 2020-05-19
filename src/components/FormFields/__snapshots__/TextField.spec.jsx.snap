@@ -13,6 +13,7 @@ exports[`TextField renders input 1`] = `
   <input
     class="form-control"
     id="testName"
+    name="testName"
     placeholder=""
     type="text"
     value="testValue"

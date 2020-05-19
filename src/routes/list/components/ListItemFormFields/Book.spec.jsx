@@ -1,24 +1,21 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import BookListItemFormFields from './BookListItemFormFields';
+import Book from './Book';
 
-describe('BookListItemFormFields', () => {
+describe('Book', () => {
   const props = {
     author: 'asdf',
-    authorChangeHandler: jest.fn(),
+    inputChangeHandler: jest.fn(),
     title: 'asdf',
-    titleChangeHandler: jest.fn(),
     numberInSeries: 1,
-    numberInSeriesChangeHandler: jest.fn(),
     category: 'asdf',
-    categoryChangeHandler: jest.fn(),
     categories: ['asdf'],
   };
 
   it('renders base form when props.editForm is false', () => {
     props.editForm = false;
-    const { container, queryByLabelText } = render(<BookListItemFormFields {...props} />);
+    const { container, queryByLabelText } = render(<Book {...props} />);
 
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Purchased')).toBeFalsy();
@@ -27,7 +24,7 @@ describe('BookListItemFormFields', () => {
 
   it('renders edit form when props.editForm is true', () => {
     props.editForm = true;
-    const { container, queryByLabelText } = render(<BookListItemFormFields {...props} />);
+    const { container, queryByLabelText } = render(<Book {...props} />);
 
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Purchased')).toBeTruthy();
@@ -38,30 +35,30 @@ describe('BookListItemFormFields', () => {
     props.editForm = true;
     props.purchasedChangeHandler = jest.fn();
     props.readChangeHandler = jest.fn();
-    const { queryByLabelText } = render(<BookListItemFormFields {...props} />);
+    const { queryByLabelText } = render(<Book {...props} />);
 
     fireEvent.change(queryByLabelText('Author'), { target: { value: 'a' } });
 
-    expect(props.authorChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.change(queryByLabelText('Title'), { target: { value: 'a' } });
 
-    expect(props.titleChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.change(queryByLabelText('Number in series'), { target: { value: 'a' } });
 
-    expect(props.numberInSeriesChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.change(queryByLabelText('Category'), { target: { value: 'a' } });
 
-    expect(props.categoryChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.click(queryByLabelText('Purchased'));
 
-    expect(props.purchasedChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.click(queryByLabelText('Read'));
 
-    expect(props.readChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalled();
   });
 });

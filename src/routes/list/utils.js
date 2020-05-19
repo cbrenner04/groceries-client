@@ -1,6 +1,18 @@
 import axios from '../../utils/api';
 import { formatDueBy } from '../../utils/format';
 
+export function itemName(item, listType) {
+  return {
+    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author}`,
+    GroceryList: `${item.quantity} ${item.product}`,
+    MusicList:
+      `${item.title ? `"${item.title}"` : ''} ${item.artist} ` +
+      `${item.artist && item.album ? '- ' : ''}` +
+      `${item.album ? item.album : ''}`,
+    ToDoList: `${item.task}`,
+  }[listType];
+}
+
 export function mapIncludedCategories(items) {
   const cats = [''];
   items.forEach((item) => {
@@ -63,7 +75,9 @@ export async function fetchList({ id, history }) {
     if (!userInAccepted) {
       history.push({
         pathname: '/lists',
-        state: { error: 'List not found' },
+        state: {
+          error: 'List not found',
+        },
       });
       return;
     }
@@ -89,13 +103,17 @@ export async function fetchList({ id, history }) {
       if (response.status === 401) {
         history.push({
           pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
+          state: {
+            errors: 'You must sign in',
+          },
         });
         return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: '/lists',
-          state: { errors: 'List not found' },
+          state: {
+            errors: 'List not found',
+          },
         });
         return;
       }
@@ -116,7 +134,9 @@ export async function fetchListToEdit({ id, history }) {
     if (owner_id !== currentUserId) {
       history.push({
         pathname: '/lists',
-        state: { errors: 'List not found' },
+        state: {
+          errors: 'List not found',
+        },
       });
       return;
     }
@@ -131,13 +151,17 @@ export async function fetchListToEdit({ id, history }) {
       if (response.status === 401) {
         history.push({
           pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
+          state: {
+            errors: 'You must sign in',
+          },
         });
         return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: '/lists',
-          state: { errors: 'List not found' },
+          state: {
+            errors: 'List not found',
+          },
         });
         return;
       }
@@ -157,24 +181,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     ]);
     const {
       data: {
-        item: {
-          user_id: userId,
-          id: returnedItemId,
-          product,
-          task,
-          purchased,
-          quantity,
-          completed,
-          author,
-          title,
-          read,
-          artist,
-          due_by,
-          album,
-          category: itemCategory,
-          assignee_id,
-          number_in_series,
-        },
+        item,
         list: { id: returnedListId, type },
       },
     } = editListResponse;
@@ -184,18 +191,32 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const {
       data: { categories },
     } = listResponse;
-    const dueBy = formatDueBy(due_by);
+    const userId = item.user_id;
+    const returnedItemId = item.id;
+    const product = item.product || '';
+    const task = item.task || '';
+    const purchased = item.purchased || false;
+    const quantity = item.quantity || '';
+    const completed = item.completed || false;
+    const author = item.author || '';
+    const title = item.title || '';
+    const read = item.read || false;
+    const artist = item.artist || '';
+    const album = item.album || '';
+    const dueBy = formatDueBy(item.due_by);
     const acceptedUsers = accepted.map(({ user }) => user);
     const pendingUsers = pending.map(({ user }) => user);
     const listUsers = acceptedUsers.concat(pendingUsers);
     const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
-    const assigneeId = assignee_id ? String(assignee_id) : '';
-    const numberInSeries = Number(number_in_series);
-    const category = itemCategory || '';
+    const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
+    const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
+    const category = item.category || '';
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       history.push({
         pathname: `/lists/${listId}`,
-        state: { errors: 'List not found' },
+        state: {
+          errors: 'List not found',
+        },
       });
       return;
     }
@@ -230,13 +251,17 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
       if (response.status === 401) {
         history.push({
           pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
+          state: {
+            errors: 'You must sign in',
+          },
         });
         return;
       } else if ([403, 404].includes(response.status)) {
         history.push({
           pathname: `/lists/${listId}`,
-          state: { errors: 'Item not found' },
+          state: {
+            errors: 'Item not found',
+          },
         });
         return;
       }

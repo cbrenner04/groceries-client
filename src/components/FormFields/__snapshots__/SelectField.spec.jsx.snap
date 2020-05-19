@@ -13,6 +13,7 @@ exports[`SelectField when blankOption is false renders input with first option a
   <select
     class="form-control"
     id="testName"
+    name="testName"
   >
     <option
       value="testOption1Value"
@@ -41,6 +42,7 @@ exports[`SelectField when blankOption is true when value is not blank renders in
   <select
     class="form-control"
     id="testName"
+    name="testName"
   >
     <option
       value=""
@@ -74,6 +76,7 @@ exports[`SelectField when blankOption is true when value is not blank renders in
   <select
     class="form-control"
     id="testName"
+    name="testName"
   >
     <option
       disabled=""

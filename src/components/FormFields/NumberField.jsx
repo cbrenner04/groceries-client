@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 const NumberField = ({ name, label, value, handleChange }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control type="number" value={value || ''} onChange={handleChange} />
+    <Form.Control type="number" value={value || ''} onChange={handleChange} name={name} />
   </Form.Group>
 );
 

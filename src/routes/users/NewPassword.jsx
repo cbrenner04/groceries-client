@@ -17,7 +17,7 @@ function NewPassword(props) {
     try {
       await axios.post(`/auth/password`, {
         email,
-        redirect_url: `${process.env.PUBLIC_URL}/users/password/edit`,
+        redirect_url: `${process.env.REACT_APP_PUBLIC_URL}/users/password/edit`,
       });
     } catch {
       // TODO: send exception somewhere for logging

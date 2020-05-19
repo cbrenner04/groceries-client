@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { TextField, CategoryField, CheckboxField } from '../../../components/FormFields';
+import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
 
 const EditMusicListItemFormFields = (props) => (
   <>
@@ -9,30 +9,30 @@ const EditMusicListItemFormFields = (props) => (
       name="title"
       label="Title"
       value={props.title}
-      handleChange={props.titleChangeHandler}
+      handleChange={props.inputChangeHandler}
       placeholder="Baby Got Back"
     />
     <TextField
       name="artist"
       label="Artist"
       value={props.artist}
-      handleChange={props.artistChangeHandler}
+      handleChange={props.inputChangeHandler}
       placeholder="Sir Mix-a-Lot"
     />
     <TextField
       name="album"
       label="Album"
       value={props.album}
-      handleChange={props.albumChangeHandler}
+      handleChange={props.inputChangeHandler}
       placeholder="Mack Daddy"
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.categoryChangeHandler} />
+    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
     {props.editForm && (
       <CheckboxField
         name="purchased"
         label="Purchased"
         value={props.purchased}
-        handleChange={props.purchasedChangeHandler}
+        handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
     )}
@@ -41,17 +41,13 @@ const EditMusicListItemFormFields = (props) => (
 
 EditMusicListItemFormFields.propTypes = {
   title: PropTypes.string.isRequired,
-  titleChangeHandler: PropTypes.func.isRequired,
   artist: PropTypes.string.isRequired,
-  artistChangeHandler: PropTypes.func.isRequired,
   album: PropTypes.string.isRequired,
-  albumChangeHandler: PropTypes.func.isRequired,
   purchased: PropTypes.bool,
-  purchasedChangeHandler: PropTypes.func,
   editForm: PropTypes.bool,
   category: PropTypes.string,
-  categoryChangeHandler: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.string),
+  inputChangeHandler: PropTypes.func.isRequired,
 };
 
 EditMusicListItemFormFields.defaultProps = {
@@ -59,7 +55,6 @@ EditMusicListItemFormFields.defaultProps = {
   editForm: false,
   category: '',
   categories: [],
-  purchasedChangeHandler: () => {},
 };
 
 export default EditMusicListItemFormFields;

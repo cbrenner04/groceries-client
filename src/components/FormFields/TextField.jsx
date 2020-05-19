@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 const TextField = ({ name, label, value, handleChange, placeholder }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control type="text" value={value} onChange={handleChange} placeholder={placeholder} />
+    <Form.Control type="text" value={value} onChange={handleChange} placeholder={placeholder} name={name} />
   </Form.Group>
 );
 

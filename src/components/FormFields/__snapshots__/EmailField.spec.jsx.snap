@@ -13,6 +13,7 @@ exports[`EmailField renders input 1`] = `
   <input
     class="form-control"
     id="email"
+    name="email"
     placeholder="jane.smith@example.com"
     type="email"
     value="test@test"

@@ -8,6 +8,7 @@ exports[`CheckboxField renders input 1`] = `
     checked=""
     class="form-check-input"
     id="testName"
+    name="testName"
     type="checkbox"
   />
   <label

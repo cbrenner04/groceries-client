@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { listTypeToSnakeCase } from '../../../utils/format';
-import { Bookmark, Complete, Edit, Trash } from '../../../components/ActionButtons';
+import { listTypeToSnakeCase } from '../../../../utils/format';
+import { Bookmark, Complete, Edit, Trash } from '../../../../components/ActionButtons';
 
 function NotPurchasedItemButtons(props) {
   const listItemPath = () => {

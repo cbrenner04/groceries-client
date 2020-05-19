@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 const SelectField = ({ name, label, value, handleChange, options, blankOption }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control as="select" value={value} onChange={handleChange}>
+    <Form.Control as="select" value={value} onChange={handleChange} name={name}>
       {blankOption && (
         <option value="" disabled={!value}>
           {value ? `Clear ${label}` : `Select ${label}`}

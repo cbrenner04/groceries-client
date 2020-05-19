@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BookListItemFormFields renders base form when props.editForm is false 1`] = `
+exports[`Book renders base form when props.editForm is false 1`] = `
 <div>
   <div
     class="form-group"
@@ -14,6 +14,7 @@ exports[`BookListItemFormFields renders base form when props.editForm is false 1
     <input
       class="form-control"
       id="author"
+      name="author"
       placeholder="Kurt Vonnagut"
       type="text"
       value="asdf"
@@ -31,6 +32,7 @@ exports[`BookListItemFormFields renders base form when props.editForm is false 1
     <input
       class="form-control"
       id="title"
+      name="title"
       placeholder="Slaughterhouse-Five"
       type="text"
       value="asdf"
@@ -41,13 +43,14 @@ exports[`BookListItemFormFields renders base form when props.editForm is false 1
   >
     <label
       class="form-label"
-      for="number-in-series"
+      for="numberInSeries"
     >
       Number in series
     </label>
     <input
       class="form-control"
-      id="number-in-series"
+      id="numberInSeries"
+      name="numberInSeries"
       type="number"
       value="1"
     />
@@ -65,6 +68,7 @@ exports[`BookListItemFormFields renders base form when props.editForm is false 1
       class="form-control"
       id="category"
       list="categories"
+      name="category"
       type="text"
       value="asdf"
     />
@@ -79,7 +83,7 @@ exports[`BookListItemFormFields renders base form when props.editForm is false 1
 </div>
 `;
 
-exports[`BookListItemFormFields renders edit form when props.editForm is true 1`] = `
+exports[`Book renders edit form when props.editForm is true 1`] = `
 <div>
   <div
     class="form-group"
@@ -93,6 +97,7 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
     <input
       class="form-control"
       id="author"
+      name="author"
       placeholder="Kurt Vonnagut"
       type="text"
       value="asdf"
@@ -110,6 +115,7 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
     <input
       class="form-control"
       id="title"
+      name="title"
       placeholder="Slaughterhouse-Five"
       type="text"
       value="asdf"
@@ -120,13 +126,14 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
   >
     <label
       class="form-label"
-      for="number-in-series"
+      for="numberInSeries"
     >
       Number in series
     </label>
     <input
       class="form-control"
-      id="number-in-series"
+      id="numberInSeries"
+      name="numberInSeries"
       type="number"
       value="1"
     />
@@ -144,6 +151,7 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
       class="form-control"
       id="category"
       list="categories"
+      name="category"
       type="text"
       value="asdf"
     />
@@ -167,6 +175,7 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
         <input
           class="form-check-input"
           id="purchased"
+          name="purchased"
           type="checkbox"
         />
         <label
@@ -187,6 +196,7 @@ exports[`BookListItemFormFields renders edit form when props.editForm is true 1`
         <input
           class="form-check-input"
           id="read"
+          name="read"
           type="checkbox"
         />
         <label

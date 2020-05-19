@@ -13,6 +13,7 @@ exports[`DateField renders input 1`] = `
   <input
     class="form-control"
     id="testName"
+    name="testName"
     placeholder=""
     type="date"
     value="03/03/2020"

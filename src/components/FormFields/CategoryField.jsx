@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const CategoryField = (props) => (
+const CategoryField = ({ category, categories, handleInput, name }) => (
   <Form.Group controlId="category">
     <Form.Label>Category</Form.Label>
-    <Form.Control type="text" value={props.category} onChange={props.handleInput} list="categories" />
+    <Form.Control type="text" value={category} onChange={handleInput} list="categories" name={name} />
     <datalist id="categories">
-      {props.categories.map((category) => (
+      {categories.map((category) => (
         <option key={category} value={category} />
       ))}
     </datalist>
@@ -18,11 +18,13 @@ CategoryField.propTypes = {
   handleInput: PropTypes.func.isRequired,
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
+  name: PropTypes.string,
 };
 
 CategoryField.defaultProps = {
   category: '',
   categories: [],
+  name: 'category',
 };
 
 export default CategoryField;

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Bookmark, Refresh, Trash } from '../../../components/ActionButtons';
+import { Bookmark, Refresh, Trash } from '../../../../components/ActionButtons';
 
 function PurchasedItemButtons(props) {
   const handleRead = () => props.handleReadOfItem(props.item);

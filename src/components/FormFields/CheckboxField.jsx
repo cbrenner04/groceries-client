@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 const CheckboxField = ({ name, label, value, handleChange, classes }) => (
   <Form.Group controlId={name} className={classes}>
-    <Form.Check type="checkbox" checked={value} onChange={handleChange} label={label} />
+    <Form.Check type="checkbox" checked={value} onChange={handleChange} label={label} name={name} />
   </Form.Group>
 );
 

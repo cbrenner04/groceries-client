@@ -4,24 +4,25 @@ import { Button, Form } from 'react-bootstrap';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
 import Alert from '../../../components/Alert';
-import BookListItemFormFields from './BookListItemFormFields';
-import GroceryListItemFormFields from './GroceryListItemFormFields';
-import MusicListItemFormFields from './MusicListItemFormFields';
-import ToDoListItemFormFields from './ToDoListItemFormFields';
+import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 
+const defaultFormState = {
+  product: '',
+  task: '',
+  quantity: '',
+  author: '',
+  title: '',
+  artist: '',
+  album: '',
+  assigneeId: '',
+  dueBy: defaultDueBy(),
+  numberInSeries: 0,
+  category: '',
+};
+
 function ListItemForm(props) {
-  const [product, setProduct] = useState('');
-  const [task, setTask] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [author, setAuthor] = useState('');
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [album, setAlbum] = useState('');
-  const [assigneeId, setAssigneeId] = useState('');
-  const [dueBy, setDueBy] = useState(defaultDueBy());
-  const [numberInSeries, setNumberInSeries] = useState(0);
-  const [category, setCategory] = useState('');
+  const [formData, setFormData] = useState(defaultFormState);
   const [errors, setErrors] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -35,17 +36,17 @@ function ListItemForm(props) {
     dismissAlert();
     const listItem = {
       user_id: props.userId,
-      product,
-      task,
-      quantity,
-      author,
-      title,
-      artist,
-      album,
-      assignee_id: assigneeId,
-      due_by: dueBy,
-      number_in_series: numberInSeries || null,
-      category: category.trim().toLowerCase(),
+      product: formData.product,
+      task: formData.task,
+      quantity: formData.quantity,
+      author: formData.author,
+      title: formData.title,
+      artist: formData.artist,
+      album: formData.album,
+      assignee_id: formData.assigneeId,
+      due_by: formData.dueBy,
+      number_in_series: formData.numberInSeries || null,
+      category: formData.category.trim().toLowerCase(),
     };
     listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
     const postData = {};
@@ -56,17 +57,7 @@ function ListItemForm(props) {
         postData,
       );
       props.handleItemAddition(data);
-      setProduct('');
-      setTask('');
-      setQuantity('');
-      setAuthor('');
-      setTitle('');
-      setArtist('');
-      setAlbum('');
-      setAssigneeId('');
-      setDueBy(defaultDueBy());
-      setNumberInSeries(0);
-      setCategory('');
+      setFormData(defaultFormState);
       setSuccess('Item successfully added.');
     } catch ({ response, request, message }) {
       if (response) {
@@ -99,65 +90,17 @@ function ListItemForm(props) {
     }
   };
 
-  const formFields = {
-    BookList: (
-      <BookListItemFormFields
-        author={author}
-        authorChangeHandler={({ target: { value } }) => setAuthor(value)}
-        title={title}
-        titleChangeHandler={({ target: { value } }) => setTitle(value)}
-        numberInSeries={numberInSeries}
-        numberInSeriesChangeHandler={({ target: { value } }) => setNumberInSeries(Number(value))}
-        category={category}
-        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-        categories={props.categories}
-      />
-    ),
-    GroceryList: (
-      <GroceryListItemFormFields
-        quantity={quantity}
-        quantityChangeHandler={({ target: { value } }) => setQuantity(value)}
-        product={product}
-        productChangeHandler={({ target: { value } }) => setProduct(value)}
-        category={category}
-        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-        categories={props.categories}
-      />
-    ),
-    MusicList: (
-      <MusicListItemFormFields
-        title={title}
-        titleChangeHandler={({ target: { value } }) => setTitle(value)}
-        artist={artist}
-        artistChangeHandler={({ target: { value } }) => setArtist(value)}
-        album={album}
-        albumChangeHandler={({ target: { value } }) => setAlbum(value)}
-        category={category}
-        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-        categories={props.categories}
-      />
-    ),
-    ToDoList: (
-      <ToDoListItemFormFields
-        task={task}
-        taskChangeHandler={({ target: { value } }) => setTask(value)}
-        assigneeId={assigneeId}
-        assigneeIdChangeHandler={({ target: { value } }) => setAssigneeId(value)}
-        listUsers={props.listUsers}
-        dueBy={dueBy}
-        dueByChangeHandler={({ target: { value } }) => setDueBy(value)}
-        category={category}
-        categoryChangeHandler={({ target: { value } }) => setCategory(value)}
-        categories={props.categories}
-      />
-    ),
-  }[props.listType];
-
   return (
     <div>
       <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        {formFields}
+        <ListItemFormFields
+          formData={formData}
+          setFormData={setFormData}
+          categories={props.categories}
+          listType={props.listType}
+          listUsers={props.listUsers}
+        />
         <br />
         <Button type="submit" variant="success" block>
           Add New Item

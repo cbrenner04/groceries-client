@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
+import axios from 'axios';
 
 import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
-import axios from '../../utils/api';
 
 function EditPassword(props) {
   const [password, setPassword] = useState('');
@@ -16,8 +16,9 @@ function EditPassword(props) {
     event.preventDefault();
     setErrors('');
     try {
+      // TODO: this doesn't use global instance b/c need to skip the interceptors b/c the headers aren't coming through
       await axios.put(
-        `/auth/password`,
+        `${process.env.REACT_APP_API_BASE}/auth/password`,
         {
           password,
           password_confirmation: passwordConfirmation,
