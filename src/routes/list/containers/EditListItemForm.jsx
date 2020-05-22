@@ -1,61 +1,54 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
-import Alert from '../../../components/Alert';
 import axios from '../../../utils/api';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
 
 function EditListItemForm(props) {
-  const [errors, setErrors] = useState('');
   const [item, setItem] = useState(props.item);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors('');
-    const listItem = {
-      user_id: props.userId,
-      product: item.product,
-      task: item.task,
-      quantity: item.quantity,
-      purchased: item.purchased,
-      completed: item.completed,
-      author: item.author,
-      title: item.title,
-      read: item.read,
-      artist: item.artist,
-      album: item.album,
-      due_by: item.dueBy,
-      assignee_id: item.assigneeId,
-      number_in_series: item.numberInSeries,
-      category: item.category.trim().toLowerCase(),
+    const putData = {
+      [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+        user_id: props.userId,
+        product: item.product,
+        task: item.task,
+        quantity: item.quantity,
+        purchased: item.purchased,
+        completed: item.completed,
+        author: item.author,
+        title: item.title,
+        read: item.read,
+        artist: item.artist,
+        album: item.album,
+        due_by: item.dueBy,
+        assignee_id: item.assigneeId,
+        number_in_series: item.numberInSeries,
+        category: item.category.trim().toLowerCase(),
+        [`${listTypeToSnakeCase(props.list.type)}_id`]: props.list.id,
+      },
     };
-    listItem[`${listTypeToSnakeCase(props.list.type)}_id`] = props.list.id;
-    const putData = {};
-    putData[`${listTypeToSnakeCase(props.list.type)}_item`] = listItem;
     try {
       await axios.put(
         `/lists/${props.list.id}/${listTypeToSnakeCase(props.list.type)}_items/${props.item.id}`,
         putData,
       );
-      props.history.push({
-        pathname: `/lists/${props.list.id}`,
-        state: { success: 'Item successfully updated' },
-      });
+      toast('Item successfully updated', { type: 'info' });
+      props.history.push(`/lists/${props.list.id}`);
+      toast('Item successfully updated.', { type: 'info' });
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
-          props.history.push({
-            pathname: '/users/sign_in',
-            state: { errors: 'You must sign in' },
-          });
+          toast('You must sign in', { type: 'error' });
+          props.history.push('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
-          props.history.push({
-            pathname: `/lists/${props.list.id}`,
-            state: { errors: 'Item not found' },
-          });
+          toast('Item not found', { type: 'error' });
+          props.history.push(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
@@ -65,19 +58,18 @@ function EditListItemForm(props) {
           } else {
             joinString = ' and ';
           }
-          setErrors(responseErrors.join(joinString));
+          toast(responseErrors.join(joinString), { type: 'error' });
         }
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
 
   return (
     <>
-      <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Edit {itemName(item, props.list.type)}</h1>
       <Button href={`/lists/${props.list.id}`} className="float-right" variant="link">
         Back to list

@@ -1,49 +1,44 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import Book from './Book';
+import Grocery from './Grocery';
 
-describe('Book', () => {
+describe('Grocery', () => {
   const props = {
-    author: 'asdf',
+    product: 'foo',
+    quantity: '2 bar',
+    purchased: false,
+    editForm: false,
+    category: 'foo',
+    categories: ['foo', 'bar'],
     inputChangeHandler: jest.fn(),
-    title: 'asdf',
-    numberInSeries: 1,
-    category: 'asdf',
-    categories: ['asdf'],
   };
 
   it('renders base form when props.editForm is false', () => {
     props.editForm = false;
-    const { container, queryByLabelText } = render(<Book {...props} />);
+    const { container, queryByLabelText } = render(<Grocery {...props} />);
 
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Purchased')).toBeFalsy();
-    expect(queryByLabelText('Read')).toBeFalsy();
   });
 
   it('renders edit form when props.editForm is true', () => {
     props.editForm = true;
-    const { container, getByLabelText } = render(<Book {...props} />);
+    const { container, getByLabelText } = render(<Grocery {...props} />);
 
     expect(container).toMatchSnapshot();
     expect(getByLabelText('Purchased')).toBeTruthy();
-    expect(getByLabelText('Read')).toBeTruthy();
   });
 
   it('calls appropriate change handlers when changes occur', () => {
     props.editForm = true;
-    const { getByLabelText } = render(<Book {...props} />);
+    const { getByLabelText } = render(<Grocery {...props} />);
 
-    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
-
-    expect(props.inputChangeHandler).toHaveBeenCalled();
-
-    fireEvent.change(getByLabelText('Title'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Product'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('Number in series'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
@@ -52,10 +47,6 @@ describe('Book', () => {
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
     fireEvent.click(getByLabelText('Purchased'));
-
-    expect(props.inputChangeHandler).toHaveBeenCalled();
-
-    fireEvent.click(getByLabelText('Read'));
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
   });

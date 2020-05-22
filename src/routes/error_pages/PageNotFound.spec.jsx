@@ -15,12 +15,16 @@ const history = {
 };
 
 describe('PageNotFound', () => {
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = render(
+  const renderPageNotFound = () => {
+    return render(
       <Router history={history}>
         <PageNotFound history={history} />
       </Router>,
     );
+  };
+
+  it('renders the Loading component when fetch request is pending', () => {
+    const { container, getByText } = renderPageNotFound();
     const status = getByText('Loading...');
 
     expect(container).toMatchSnapshot();
@@ -29,11 +33,7 @@ describe('PageNotFound', () => {
 
   it('redirects to /users/sign_in when the user is not authenticated', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    render(
-      <Router history={history}>
-        <PageNotFound history={history} />
-      </Router>,
-    );
+    renderPageNotFound();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
@@ -48,11 +48,7 @@ describe('PageNotFound', () => {
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
-    const { container, getByRole } = render(
-      <Router history={history}>
-        <PageNotFound history={history} />
-      </Router>,
-    );
+    const { container, getByRole } = renderPageNotFound();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
@@ -64,11 +60,7 @@ describe('PageNotFound', () => {
 
   it('displays PageNotFound when the user is authenticated', async () => {
     axios.get = jest.fn().mockResolvedValue({});
-    const { container, getByText } = render(
-      <Router history={history}>
-        <PageNotFound history={history} />
-      </Router>,
-    );
+    const { container, getByText } = renderPageNotFound();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');

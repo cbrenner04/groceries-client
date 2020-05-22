@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItems renders a mapping of ListItem 1`] = `
+<div>
+  <div
+    class="list-group"
+  >
+    <h5
+      data-test-class="category-header"
+    >
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+      <div
+        class="float-right btn-group"
+        role="group"
+      >
+        <button
+          class="p-0 mr-3 btn btn-link"
+          type="button"
+        >
+          <i
+            class="fa fa-check fa-2x text-success"
+          />
+        </button>
+        <a
+          class="p-0 mr-3"
+          href="/lists/undefined/grocery_list_items/1/edit"
+        >
+          <i
+            class="fa fa-edit fa-2x text-warning"
+          />
+        </a>
+        <button
+          class="p-0 btn btn-link"
+          type="button"
+        >
+          <i
+            class="fa fa-trash fa-2x text-danger"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

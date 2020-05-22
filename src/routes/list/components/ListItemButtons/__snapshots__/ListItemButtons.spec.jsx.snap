@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <a
+      class="p-0 mr-3"
+      href="/lists/1/grocery_list_items/1/edit"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </a>
+    <button
+      class="p-0 btn btn-link"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;

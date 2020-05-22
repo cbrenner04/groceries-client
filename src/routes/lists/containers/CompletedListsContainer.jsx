@@ -2,52 +2,42 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
-import Alert from '../../../components/Alert';
 import List from '../components/List';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
-  const [errors, setErrors] = useState('');
-  const [success, setSuccess] = useState('');
   const [listToDelete, setListToDelete] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const dismissAlert = () => {
-    setSuccess('');
-    setErrors('');
-  };
 
   const failure = ({ response, request, message }) => {
     if (response) {
       if (response.status === 401) {
-        props.history.push({
-          pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
-        });
+        toast('You must sign in', { type: 'error' });
+        props.history.push('/users/sign_in');
       } else if ([403, 404].includes(response.status)) {
-        setErrors('List not found');
+        toast('List not found', { type: 'error' });
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        toast(responseErrors.join(' and '), { type: 'error' });
       }
     } else if (request) {
-      setErrors('Something went wrong');
+      toast('Something went wrong', { type: 'error' });
     } else {
-      setErrors(message);
+      toast(message, { type: 'error' });
     }
   };
 
   const handleRefresh = async (list) => {
-    dismissAlert();
     try {
       await axios.post(`/lists/${list.id}/refresh_list`, {});
       const refreshedList = completedLists.find((completedList) => completedList.id === list.id);
       refreshedList.refreshed = true;
-      setSuccess('Your list was successfully refreshed.');
+      toast('Your list was successfully refreshed.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -59,13 +49,12 @@ function CompletedListsContainer(props) {
   };
 
   const handleDeleteConfirm = async () => {
-    dismissAlert();
     setShowDeleteConfirm(false);
     try {
       await axios.delete(`/lists/${listToDelete.id}`);
       const lists = completedLists.filter((cl) => cl.id !== listToDelete.id);
       setCompletedLists(lists);
-      setSuccess('Your list was successfully deleted.');
+      toast('Your list was successfully deleted.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -74,7 +63,6 @@ function CompletedListsContainer(props) {
   return (
     <>
       <h1>Completed Lists</h1>
-      <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <div className="clearfix">
         <Link to="/lists" className="float-right">
           Back to lists

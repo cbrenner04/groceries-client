@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
-import Alert from '../../../components/Alert';
 import ListItemForm from '../components/ListItemForm';
-import ListItemsContainer from '../components/ListItemsContainer';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { mapIncludedCategories, categorizeNotPurchasedItems, performSort } from '../utils';
+import ListItems from '../components/ListItems';
+import CategoryFilter from '../components/CategoryFilter';
 
 function ListContainer(props) {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
@@ -17,15 +18,8 @@ function ListContainer(props) {
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
-  const [errors, setErrors] = useState(props.initialErrors);
   const [itemToDelete, setItemToDelete] = useState(false);
-  const [success, setSuccess] = useState(props.initialSuccess);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  useEffect(() => {
-    // remove the location state
-    props.history.replace(props.history.location.pathname, null);
-  }, [props.history, props.history.location.pathname]);
 
   const sortItems = (items) => {
     let sortAttrs = [];
@@ -77,34 +71,26 @@ function ListContainer(props) {
     }
   };
 
-  const dismissAlert = () => {
-    setSuccess('');
-    setErrors('');
-  };
-
   const failure = ({ response, request, message }) => {
     if (response) {
       if (response.status === 401) {
-        props.history.push({
-          pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
-        });
+        toast('You must sign in', { type: 'error' });
+        props.history.push('/users/sign_in');
       } else if ([403, 404].includes(response.status)) {
-        setErrors('Item not found');
+        toast('Item not found', { type: 'error' });
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        toast(responseErrors.join(' and '), { type: 'error' });
       }
     } else if (request) {
-      setErrors('Something went wrong');
+      toast('Something went wrong', { type: 'error' });
     } else {
-      setErrors(message);
+      toast(message, { type: 'error' });
     }
   };
 
   const handleItemPurchase = async (item) => {
-    dismissAlert();
     const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
     try {
       await axios.put(`${listItemPath(item)}/${item.id}`, {
@@ -113,23 +99,37 @@ function ListContainer(props) {
         },
       });
       moveItemToPurchased(item);
-      setSuccess('Item successfully purchased.');
+      toast('Item successfully purchased.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
-  const toggleRead = async (item, on) => {
+  const toggleRead = async (item, isRead) => {
     const localItem = item;
-    localItem.read = on;
-    dismissAlert();
+    localItem.read = isRead;
     try {
       await axios.put(`${listItemPath(item)}/${item.id}`, {
         [`${listTypeToSnakeCase(props.list.type)}_item`]: {
-          read: on,
+          read: isRead,
         },
       });
-      setSuccess(`Item successfully ${on ? 'read' : 'unread'}.`);
+      if (item.purchased) {
+        const itemIndex = purchasedItems.findIndex((purchasedItem) => item.id === purchasedItem.id);
+        const newItems = [...purchasedItems];
+        newItems[itemIndex] = localItem;
+        const newPurchasedItems = update(purchasedItems, { $set: newItems });
+        setPurchasedItems(newPurchasedItems);
+      } else {
+        const itemsInCat = notPurchasedItems[item.category];
+        const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
+        const newItemsInCat = [...itemsInCat];
+        newItemsInCat[itemIndex] = localItem;
+        const newNotPurchasedItems = update(notPurchasedItems, { [item.category]: { $set: newItemsInCat } });
+        setNotPurchasedItems(newNotPurchasedItems);
+      }
+
+      toast(`Item successfully ${isRead ? 'read' : 'unread'}.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -140,7 +140,6 @@ function ListContainer(props) {
   const handleItemUnRead = async (item) => toggleRead(item, false);
 
   const handleUnPurchase = (item) => {
-    dismissAlert();
     const newItem = {
       user_id: item.user_id,
       product: item.product,
@@ -167,7 +166,7 @@ function ListContainer(props) {
         handleAddItem(data);
         const updatedPurchasedItems = purchasedItems.filter((notItem) => notItem.id !== item.id);
         setPurchasedItems(sortItems(updatedPurchasedItems));
-        setSuccess('Item successfully refreshed.');
+        toast('Item successfully refreshed.', { type: 'info' });
       })
       .catch(failure);
   };
@@ -178,11 +177,9 @@ function ListContainer(props) {
   };
 
   const handleDeleteConfirm = async () => {
-    dismissAlert();
     try {
       await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
       setShowDeleteConfirm(false);
-      setSuccess('Item successfully deleted.');
       const { data } = await axios.get(`/lists/${props.id}`);
       const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
       const responseNotPurchasedItems = categorizeNotPurchasedItems(
@@ -192,6 +189,7 @@ function ListContainer(props) {
       setIncludedCategories(responseIncludedCategories);
       setNotPurchasedItems(responseNotPurchasedItems); // TODO: need to sort?
       setPurchasedItems(data.purchased_items); // TODO: need to sort?
+      toast('Item successfully deleted.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -203,7 +201,6 @@ function ListContainer(props) {
       <Link to="/lists" className="float-right">
         Back to lists
       </Link>
-      <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
       <br />
       {props.permissions === 'write' ? (
         <ListItemForm
@@ -218,21 +215,62 @@ function ListContainer(props) {
         <p>You only have permission to read this list</p>
       )}
       <br />
-      <ListItemsContainer
-        notPurchasedItems={notPurchasedItems}
-        purchasedItems={purchasedItems}
+      <div className="clearfix">
+        <h2 className="float-left">Items</h2>
+        <CategoryFilter
+          categories={includedCategories}
+          filter={filter}
+          handleCategoryFilter={({ target: { name } }) => setFilter(name)}
+          handleClearFilter={() => setFilter('')}
+        />
+      </div>
+      {(filter || !includedCategories.length) && (
+        <div>
+          <ListItems
+            category={filter}
+            items={notPurchasedItems[filter]}
+            permission={props.permissions}
+            handleItemDelete={handleDelete}
+            handlePurchaseOfItem={handleItemPurchase}
+            handleReadOfItem={handleItemRead}
+            handleUnReadOfItem={handleItemUnRead}
+            handleItemUnPurchase={handleUnPurchase}
+            listType={props.list.type}
+            listUsers={props.listUsers}
+          />
+        </div>
+      )}
+      {!filter &&
+        includedCategories.sort().map((category) => (
+          <div key={category}>
+            <ListItems
+              category={category}
+              items={notPurchasedItems[category]}
+              permission={props.permissions}
+              handleItemDelete={handleDelete}
+              handlePurchaseOfItem={handleItemPurchase}
+              handleReadOfItem={handleItemRead}
+              handleUnReadOfItem={handleItemUnRead}
+              handleItemUnPurchase={handleUnPurchase}
+              listType={props.list.type}
+              listUsers={props.listUsers}
+            />
+            <br />
+          </div>
+        ))}
+      <br />
+      <h2>{props.list.type === 'ToDoList' ? 'Completed' : 'Purchased'}</h2>
+      <ListItems
+        items={purchasedItems}
+        purchased
+        permission={props.permissions}
+        handleItemDelete={handleDelete}
         handlePurchaseOfItem={handleItemPurchase}
         handleReadOfItem={handleItemRead}
         handleUnReadOfItem={handleItemUnRead}
-        handleItemDelete={handleDelete}
         handleItemUnPurchase={handleUnPurchase}
         listType={props.list.type}
         listUsers={props.listUsers}
-        permission={props.permissions}
-        handleCategoryFilter={({ target: { name } }) => setFilter(name)}
-        handleClearFilter={() => setFilter('')}
-        filter={filter}
-        categories={includedCategories}
       />
       <ConfirmModal
         action="delete"
@@ -253,8 +291,6 @@ ListContainer.propTypes = {
       pathname: PropTypes.string,
     }),
   }),
-  initialErrors: PropTypes.string,
-  initialSuccess: PropTypes.string,
   id: PropTypes.string,
   userId: PropTypes.number,
   list: PropTypes.shape({

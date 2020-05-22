@@ -17,12 +17,8 @@ const Filtered = ({ filter, handleClearFilter }) => (
 );
 
 Filtered.propTypes = {
-  filter: PropTypes.string,
+  filter: PropTypes.string.isRequired,
   handleClearFilter: PropTypes.func.isRequired,
-};
-
-Filtered.defaultProps = {
-  filter: '',
 };
 
 export default Filtered;

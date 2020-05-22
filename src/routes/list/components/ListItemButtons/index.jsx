@@ -28,18 +28,7 @@ const ListItemButtons = (props) =>
 ListItemButtons.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    product: PropTypes.string,
-    task: PropTypes.string,
-    quantity: PropTypes.string,
-    author: PropTypes.string,
-    title: PropTypes.string,
-    artist: PropTypes.string,
-    album: PropTypes.string,
-    assignee_id: PropTypes.number,
-    due_by: PropTypes.string,
     read: PropTypes.bool,
-    number_in_series: PropTypes.number,
-    category: PropTypes.string,
   }).isRequired,
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,

@@ -9,13 +9,16 @@ import instance from '../utils/api';
 const history = createMemoryHistory();
 
 describe('AppNav', () => {
+  const renderAppNav = () =>
+    render(
+      <Router history={history}>
+        <AppNav />
+      </Router>,
+    );
+
   describe('when user is not signed in', () => {
     it('renders basic nav with brand linking to sign in', () => {
-      const { getByTestId, getByText } = render(
-        <Router history={history}>
-          <AppNav />
-        </Router>,
-      );
+      const { getByTestId, getByText } = renderAppNav();
 
       expect(getByTestId('nav')).toMatchSnapshot();
       expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
@@ -29,11 +32,7 @@ describe('AppNav', () => {
 
     beforeEach(() => {
       sessionStorage.setItem('user', '{"foo":"bar"}');
-      ({ getByTestId, getByText, queryByText } = render(
-        <Router history={history}>
-          <AppNav />
-        </Router>,
-      ));
+      ({ getByTestId, getByText, queryByText } = renderAppNav());
     });
 
     it('renders nav with brand linking to root, invite link and logout visible', () => {

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
-import Alert from '../../../components/Alert';
 import ListForm from '../components/ListForm';
 import Lists from '../components/Lists';
 import ConfirmModal from '../../../components/ConfirmModal';
@@ -13,49 +13,34 @@ function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [nonCompletedLists, setNonCompletedLists] = useState(props.nonCompletedLists);
-  const [errors, setErrors] = useState(props.initialErrors);
-  const [success, setSuccess] = useState(props.initialSuccess);
   const [listToDelete, setListToDelete] = useState('');
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
-  useEffect(() => {
-    // remove the location state
-    props.history.replace(props.history.location.pathname, null);
-  }, [props.history, props.history.location.pathname]);
-
-  const handleAlertDismiss = () => {
-    setErrors('');
-    setSuccess('');
-  };
-
   const failure = ({ request, response, message }) => {
     if (response) {
       if (response.status === 401) {
-        props.history.push({
-          pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
-        });
+        toast('You must sign in', { type: 'error' });
+        props.history.push('/users/sign_in');
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        toast(responseErrors.join(' and '), { type: 'error' });
       }
     } else if (request) {
-      setErrors('Something went wrong');
+      toast('Something went wrong', { type: 'error' });
     } else {
-      setErrors(message);
+      toast(message, { type: 'error' });
     }
   };
 
   const handleFormSubmit = async (list) => {
-    handleAlertDismiss();
     try {
       const { data } = await axios.post(`/lists`, { list });
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      setSuccess('List successfully added.');
+      toast('List successfully added.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -68,7 +53,6 @@ function ListsContainer(props) {
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
-    handleAlertDismiss();
     const { id, completed } = listToDelete;
     try {
       await axios.delete(`/lists/${id}`);
@@ -79,14 +63,13 @@ function ListsContainer(props) {
         const updatedNonCompletedLists = nonCompletedLists.filter((ll) => ll.id !== id);
         setNonCompletedLists(sortLists(updatedNonCompletedLists));
       }
-      setSuccess('List successfully deleted.');
+      toast('List successfully deleted.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
   const handleCompletion = async (list) => {
-    handleAlertDismiss();
     const theList = list;
     theList.completed = true;
     try {
@@ -95,7 +78,7 @@ function ListsContainer(props) {
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       const updatedCompletedLists = update(completedLists, { $push: [theList] });
       setCompletedLists(sortLists(updatedCompletedLists));
-      setSuccess('List successfully completed.');
+      toast('List successfully completed.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -107,7 +90,6 @@ function ListsContainer(props) {
   };
 
   const acceptList = async (list) => {
-    handleAlertDismiss();
     try {
       await axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, { users_list: { has_accepted: true } });
       const { completed } = list;
@@ -118,7 +100,7 @@ function ListsContainer(props) {
         const updatedNonCompletedLists = update(nonCompletedLists, { $push: [list] });
         setNonCompletedLists(sortLists(updatedNonCompletedLists));
       }
-      setSuccess('List successfully accepted.');
+      toast('List successfully accepted.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -136,27 +118,25 @@ function ListsContainer(props) {
 
   const handleRejectConfirm = async () => {
     setShowRejectConfirm(false);
-    handleAlertDismiss();
     try {
       await axios.patch(`/lists/${listToReject.id}/users_lists/${listToReject.users_list_id}`, {
         users_list: { has_accepted: false },
       });
       removeListFromUnaccepted(listToReject.id);
-      setSuccess('List successfully rejected.');
+      toast('List successfully rejected.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
   const handleRefresh = async (list) => {
-    handleAlertDismiss();
     const localList = list;
     localList.refreshed = true;
     try {
       const { data } = await axios.post(`/lists/${list.id}/refresh_list`, {});
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      setSuccess('List successfully refreshed.');
+      toast('List successfully refreshed.', { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -164,7 +144,6 @@ function ListsContainer(props) {
 
   return (
     <>
-      <Alert errors={errors} success={success} handleDismiss={handleAlertDismiss} />
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} />
       <hr />
@@ -206,8 +185,6 @@ ListsContainer.propTypes = {
       pathname: PropTypes.string,
     }),
   }),
-  initialErrors: PropTypes.string,
-  initialSuccess: PropTypes.string,
   userId: PropTypes.number,
   pendingLists: PropTypes.arrayOf(
     PropTypes.shape({

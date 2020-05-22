@@ -1,6 +1,7 @@
 import React from 'react';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
@@ -9,24 +10,12 @@ import UnknownError from '../error_pages/UnknownError';
 
 function List(props) {
   if (!props.match) {
-    props.history.push({
-      pathname: '/lists',
-      state: { errors: 'Something went wrong' },
-    });
+    toast('Something went wrong', { type: 'error' });
+    props.history.push('/lists');
     return;
   }
 
   const listId = props.match.params.id;
-
-  let initialErrors = '';
-  let initialSuccess = '';
-  if (props.location && props.location.state) {
-    if (props.location.state.errors) {
-      initialErrors = props.location.state.errors;
-    } else if (props.location.state.success) {
-      initialSuccess = props.location.state.success;
-    }
-  }
 
   return (
     <Async promiseFn={fetchList} id={listId} history={props.history}>
@@ -45,8 +34,6 @@ function List(props) {
             includedCategories={data.includedCategories}
             notPurchasedItems={data.notPurchasedItems}
             permissions={data.permissions}
-            initialErrors={initialErrors}
-            initialSuccess={initialSuccess}
             history={props.history}
           />
         )}

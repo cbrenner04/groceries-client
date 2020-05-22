@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
-import Alert from '../../../components/Alert';
 import { SelectField, TextField, CheckboxField } from '../../../components/FormFields';
 import axios from '../../../utils/api';
 
 function EditListForm(props) {
-  const [errors, setErrors] = useState('');
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
   const [type, setType] = useState(props.type);
@@ -21,31 +20,25 @@ function EditListForm(props) {
     };
     try {
       await axios.put(`/lists/${props.listId}`, { list });
-      props.history.push({
-        pathname: '/lists',
-        state: { success: 'List successfully updated' },
-      });
+      toast('List successfully updated', { type: 'info' });
+      props.history.push('/lists');
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
-          props.history.push({
-            pathname: '/users/sign_in',
-            state: { errors: 'You must sign in' },
-          });
+          toast('You must sign in', { type: 'error' });
+          props.history.push('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
-          props.history.push({
-            pathname: '/lists',
-            state: { errors: 'List not found' },
-          });
+          toast('List not found', { type: 'error' });
+          props.history.push('/lists');
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
+          toast(responseErrors.join(' and '), { type: 'error' });
         }
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
@@ -57,7 +50,6 @@ function EditListForm(props) {
         Back to lists
       </Button>
       <br />
-      <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <TextField name="name" label="Name" value={name} handleChange={({ target: { value } }) => setName(value)} />
         <SelectField
