@@ -5,44 +5,22 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
-import CompletedListButtons from './CompleteListButtons';
-import IncompleteListButtons from './IncompleteListButtons';
-import PendingListButtons from './PendingListButtons';
+import ListButtons from '../components/ListButtons';
 
 function List(props) {
-  const { list } = props;
+  const acceptedListTestClass = props.list.completed ? 'completed-list' : 'non-completed-list';
 
-  const acceptedListButtons = () =>
-    list.completed ? (
-      <CompletedListButtons
-        userId={props.userId}
-        list={props.list}
-        onListRefresh={props.onListRefresh}
-        onListDeletion={props.onListDeletion}
-      />
-    ) : (
-      <IncompleteListButtons
-        userId={props.userId}
-        list={props.list}
-        onListCompletion={props.onListCompletion}
-        onListDeletion={props.onListDeletion}
-        currentUserPermissions={props.currentUserPermissions}
-      />
-    );
-
-  const acceptedListTestClass = () => (list.completed ? 'completed-list' : 'non-completed-list');
-
-  const listTitle = () => (
+  const listTitle = (
     <h5 className="mb-1">
-      <i className={`fa ${listIconClass(list.type)} text-info mr-3`} />
-      {list.name}
-      {list.refreshed && '*'}
+      <i className={`fa ${listIconClass(props.list.type)} text-info mr-3`} />
+      {props.list.name}
+      {props.list.refreshed && '*'}
     </h5>
   );
 
-  const acceptedListLink = () => (
-    <Link to={`/lists/${list.id}`} className="router-link">
-      {listTitle()}
+  const acceptedListLink = (
+    <Link to={`/lists/${props.list.id}`} className="router-link">
+      {listTitle}
     </Link>
   );
 
@@ -50,25 +28,17 @@ function List(props) {
     <ListGroup.Item
       className={props.accepted ? 'accepted-list' : 'pending-list'}
       style={{ display: 'block' }}
-      data-test-class={props.accepted ? acceptedListTestClass() : 'pending-list'}
+      data-test-class={props.accepted ? acceptedListTestClass : 'pending-list'}
     >
       <Row>
         <Col md="6" className="pt-1">
-          {props.accepted ? acceptedListLink() : listTitle()}
+          {props.accepted ? acceptedListLink : listTitle}
         </Col>
         <Col md="4" className="pt-1">
-          <small className="text-muted">{formatDate(list.created_at)}</small>
+          <small className="text-muted">{formatDate(props.list.created_at)}</small>
         </Col>
         <Col md="2">
-          {props.accepted ? (
-            acceptedListButtons()
-          ) : (
-            <PendingListButtons
-              list={list}
-              onListAcceptance={props.onListAcceptance}
-              onListRejection={props.onListRejection}
-            />
-          )}
+          <ListButtons {...props} />
         </Col>
       </Row>
     </ListGroup.Item>
@@ -76,7 +46,7 @@ function List(props) {
 }
 
 List.propTypes = {
-  userId: PropTypes.number.isRequired, // eslint-disable-line react/no-unused-prop-types
+  userId: PropTypes.number.isRequired,
   list: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -88,21 +58,21 @@ List.propTypes = {
     refreshed: PropTypes.bool,
   }).isRequired,
   accepted: PropTypes.bool,
-  onListDeletion: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
-  onListCompletion: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
-  onListRefresh: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
+  onListDeletion: PropTypes.func,
+  onListCompletion: PropTypes.func,
+  onListRefresh: PropTypes.func,
   onListAcceptance: PropTypes.func,
   onListRejection: PropTypes.func,
-  currentUserPermissions: PropTypes.string,
+  currentUserPermissions: PropTypes.string.isRequired,
 };
 
 List.defaultProps = {
-  onListDeletion: null,
-  onListCompletion: null,
-  onListRefresh: null,
+  onListDeletion: () => undefined,
+  onListCompletion: () => undefined,
+  onListRefresh: () => undefined,
   accepted: false,
-  onListAcceptance: null,
-  onListRejection: null,
+  onListAcceptance: () => undefined,
+  onListRejection: () => undefined,
 };
 
 export default List;

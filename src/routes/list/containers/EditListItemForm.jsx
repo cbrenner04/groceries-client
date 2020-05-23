@@ -40,7 +40,6 @@ function EditListItemForm(props) {
       );
       toast('Item successfully updated', { type: 'info' });
       props.history.push(`/lists/${props.list.id}`);
-      toast('Item successfully updated.', { type: 'info' });
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
@@ -94,37 +93,38 @@ function EditListItemForm(props) {
 
 EditListItemForm.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      email: PropTypes.string,
-    }),
-  ),
+      id: PropTypes.number.isRequired,
+      email: PropTypes.string.isRequired,
+    }).isRequired,
+  ).isRequired,
+  // fetch in parent component sets default values for these properties
   item: PropTypes.shape({
-    id: PropTypes.number,
-    product: PropTypes.string,
-    task: PropTypes.string,
-    purchased: PropTypes.bool,
-    quantity: PropTypes.string,
-    completed: PropTypes.bool,
-    author: PropTypes.string,
-    title: PropTypes.string,
-    read: PropTypes.bool,
-    artist: PropTypes.string,
-    dueBy: PropTypes.string,
-    assigneeId: PropTypes.string,
-    album: PropTypes.string,
-    numberInSeries: PropTypes.number,
-    category: PropTypes.string,
-  }),
+    id: PropTypes.number.isRequired,
+    product: PropTypes.string.isRequired,
+    task: PropTypes.string.isRequired,
+    purchased: PropTypes.bool.isRequired,
+    quantity: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+    author: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    read: PropTypes.bool.isRequired,
+    artist: PropTypes.string.isRequired,
+    dueBy: PropTypes.string.isRequired,
+    assigneeId: PropTypes.string.isRequired,
+    album: PropTypes.string.isRequired,
+    numberInSeries: PropTypes.number.isRequired,
+    category: PropTypes.string.isRequired,
+  }).isRequired,
   list: PropTypes.shape({
-    id: PropTypes.number,
-    type: PropTypes.string,
-    categories: PropTypes.arrayOf(PropTypes.string),
-  }),
-  userId: PropTypes.number,
+    id: PropTypes.number.isRequired,
+    type: PropTypes.string.isRequired,
+    categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default EditListItemForm;

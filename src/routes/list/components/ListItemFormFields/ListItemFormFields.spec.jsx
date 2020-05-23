@@ -6,6 +6,22 @@ import ListItemFormFields from './index';
 describe('ListItemFormFields', () => {
   const props = {
     setFormData: jest.fn(),
+    formData: {
+      product: '',
+      task: '',
+      quantity: '',
+      author: '',
+      title: '',
+      artist: '',
+      album: '',
+      assigneeId: '',
+      dueBy: '2020-05-21',
+      numberInSeries: 0,
+      category: '',
+      read: false,
+      purchased: false,
+      completed: false,
+    },
   };
 
   it('render Book fields when listType is BookList and calls setFormData when input is changed', () => {

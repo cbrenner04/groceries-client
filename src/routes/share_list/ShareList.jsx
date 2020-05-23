@@ -38,12 +38,12 @@ function ShareList(props) {
 ShareList.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      list_id: PropTypes.string,
-    }),
-  }),
+      list_id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default ShareList;

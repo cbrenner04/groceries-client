@@ -30,7 +30,7 @@ ListItemButtons.propTypes = {
     id: PropTypes.number.isRequired,
     read: PropTypes.bool,
   }).isRequired,
-  purchased: PropTypes.bool,
+  purchased: PropTypes.bool.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
   handleReadOfItem: PropTypes.func.isRequired,

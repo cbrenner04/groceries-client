@@ -97,8 +97,8 @@ function ListItemForm(props) {
 
 ListItemForm.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   userId: PropTypes.number.isRequired,
   listId: PropTypes.number.isRequired,
   listType: PropTypes.string.isRequired,

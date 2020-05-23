@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
@@ -13,10 +14,8 @@ async function fetchData({ history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        history.push({
-          pathname: '/users/sign_in',
-          state: { errors: 'You must sign in' },
-        });
+        toast('You must sign in', { type: 'error' });
+        history.push('/users/sign_in');
         return;
       }
     }
@@ -45,8 +44,8 @@ function PageNotFound(props) {
 
 PageNotFound.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default PageNotFound;

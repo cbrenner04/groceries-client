@@ -36,13 +36,15 @@ function ListContainer(props) {
     return sorted;
   };
 
-  // TODO: refactor? there has got to be a better way
   const handleAddItem = (item) => {
     const category = item.category || '';
-    const updatedNotPurchasedItems = notPurchasedItems;
-    setNotPurchasedItems({});
-    if (!updatedNotPurchasedItems[category]) updatedNotPurchasedItems[category] = [];
-    updatedNotPurchasedItems[category] = sortItems(update(updatedNotPurchasedItems[category], { $push: [item] }));
+    let updatedNotPurchasedItems;
+    if (!notPurchasedItems[category]) {
+      updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $set: [item] } });
+    } else {
+      updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $push: [item] } });
+      updatedNotPurchasedItems[category] = sortItems(updatedNotPurchasedItems[category]);
+    }
     setNotPurchasedItems(updatedNotPurchasedItems);
     if (!categories.includes(category)) {
       const cats = update(categories, { $push: [category] });
@@ -57,16 +59,17 @@ function ListContainer(props) {
   const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
   const listItemPath = (item) => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
 
-  // TODO: refactor?
   const moveItemToPurchased = (item) => {
-    let { category } = item;
-    if (!category) category = '';
-    const updatedNotPurchasedItems = notPurchasedItems[category].filter((notItem) => notItem.id !== item.id);
-    notPurchasedItems[category] = updatedNotPurchasedItems;
+    const category = item.category || '';
+    const itemIndex = notPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
+    const updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
+    setNotPurchasedItems(updatedNotPurchasedItems);
     const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
     setPurchasedItems(sortItems(updatedPurchasedItems));
-    if (!notPurchasedItems[category].length) {
-      setIncludedCategories(includedCategories.filter((cat) => cat !== category));
+    if (!updatedNotPurchasedItems[category].length) {
+      const catIndex = includedCategories.findIndex((inCat) => inCat === category);
+      const updateIncludedCats = update(includedCategories, { $splice: [[catIndex, 1]] });
+      setIncludedCategories(updateIncludedCats);
       setFilter('');
     }
   };
@@ -180,7 +183,7 @@ function ListContainer(props) {
     try {
       await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
       setShowDeleteConfirm(false);
-      const { data } = await axios.get(`/lists/${props.id}`);
+      const { data } = await axios.get(`/lists/${props.list.id}`);
       const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
       const responseNotPurchasedItems = categorizeNotPurchasedItems(
         data.not_purchased_items,
@@ -210,6 +213,7 @@ function ListContainer(props) {
           userId={props.userId}
           handleItemAddition={handleAddItem}
           categories={categories}
+          history={props.history}
         />
       ) : (
         <p>You only have permission to read this list</p>
@@ -285,23 +289,21 @@ function ListContainer(props) {
 
 ListContainer.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-    replace: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
     location: PropTypes.shape({
-      pathname: PropTypes.string,
-    }),
-  }),
-  id: PropTypes.string,
-  userId: PropTypes.number,
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  userId: PropTypes.number.isRequired,
   list: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
-    users_list_id: PropTypes.number,
-    owner_id: PropTypes.number,
-  }),
+    owner_id: PropTypes.number.isRequired,
+  }).isRequired,
   purchasedItems: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -324,8 +326,8 @@ ListContainer.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       email: PropTypes.string.isRequired,
-    }),
-  ),
+    }).isRequired,
+  ).isRequired,
   includedCategories: PropTypes.arrayOf(PropTypes.string),
   notPurchasedItems: PropTypes.objectOf(
     PropTypes.arrayOf(
@@ -346,7 +348,14 @@ ListContainer.propTypes = {
       }),
     ),
   ),
-  permissions: PropTypes.string,
+  permissions: PropTypes.string.isRequired,
+};
+
+ListContainer.defaultProps = {
+  purchasedItems: [],
+  notPurchasedItems: [],
+  includedCategories: [],
+  categories: [],
 };
 
 export default ListContainer;

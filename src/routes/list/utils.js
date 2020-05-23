@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 import axios from '../../utils/api';
 import { formatDueBy } from '../../utils/format';
 
@@ -56,6 +58,8 @@ export function performSort(items, sortAttrs) {
 
 export async function fetchList({ id, history }) {
   try {
+    // TODO: confirm required items always come back
+    // TODO: looks like list.users_list_id is not coming back
     const responses = await Promise.all([axios.get(`/lists/${id}/users_lists`), axios.get(`/lists/${id}`)]);
     const [
       {
@@ -73,12 +77,8 @@ export async function fetchList({ id, history }) {
     ] = responses;
     const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
     if (!userInAccepted) {
-      history.push({
-        pathname: '/lists',
-        state: {
-          error: 'List not found',
-        },
-      });
+      toast('List not found', { type: 'error' });
+      history.push('/lists');
       return;
     }
     const allAcceptedUsers = accepted.map(({ user }) => user);
@@ -101,20 +101,12 @@ export async function fetchList({ id, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        history.push({
-          pathname: '/users/sign_in',
-          state: {
-            errors: 'You must sign in',
-          },
-        });
+        toast('You must sign in', { type: 'error' });
+        history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        history.push({
-          pathname: '/lists',
-          state: {
-            errors: 'List not found',
-          },
-        });
+        toast('List not found', { type: 'error' });
+        history.push('/lists');
         return;
       }
     }
@@ -130,14 +122,10 @@ export async function fetchListToEdit({ id, history }) {
         list: { owner_id, id: listId, name, completed, type },
         current_user_id: currentUserId,
       },
-    } = await axios.get(`/lists/${id}/edit`);
+    } = await axios.get(`/lists/${id}/edit`); // TODO: confirm required items always come back
     if (owner_id !== currentUserId) {
-      history.push({
-        pathname: '/lists',
-        state: {
-          errors: 'List not found',
-        },
-      });
+      toast('List not found', { type: 'error' });
+      history.push('/lists');
       return;
     }
     return {
@@ -149,20 +137,12 @@ export async function fetchListToEdit({ id, history }) {
   } catch ({ response, request, message }) {
     if (response) {
       if (response.status === 401) {
-        history.push({
-          pathname: '/users/sign_in',
-          state: {
-            errors: 'You must sign in',
-          },
-        });
+        toast('You must sign in', { type: 'error' });
+        history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        history.push({
-          pathname: '/lists',
-          state: {
-            errors: 'List not found',
-          },
-        });
+        toast('List not found', { type: 'error' });
+        history.push('/lists');
         return;
       }
     }
@@ -174,6 +154,7 @@ export async function fetchListToEdit({ id, history }) {
 export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   try {
     // TODO: do i need all of this?
+    // TODO: confirm required items always come back
     const [editListResponse, usersListsResponse, listResponse] = await Promise.all([
       axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`),
       axios.get(`/lists/${listId}/users_lists`),
@@ -203,21 +184,17 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const read = item.read || false;
     const artist = item.artist || '';
     const album = item.album || '';
-    const dueBy = formatDueBy(item.due_by);
+    const dueBy = formatDueBy(item.due_by); // TODO: this will default to today. ok?
     const acceptedUsers = accepted.map(({ user }) => user);
     const pendingUsers = pending.map(({ user }) => user);
     const listUsers = acceptedUsers.concat(pendingUsers);
     const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
-    const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
+    const assigneeId = item.assignee_id ? String(item.assignee_id) : ''; // TODO: really?
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
-      history.push({
-        pathname: `/lists/${listId}`,
-        state: {
-          errors: 'List not found',
-        },
-      });
+      toast('List not found', { type: 'error' });
+      history.push(`/lists/${listId}`);
       return;
     }
     return {
@@ -249,20 +226,12 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        history.push({
-          pathname: '/users/sign_in',
-          state: {
-            errors: 'You must sign in',
-          },
-        });
+        toast('You must sign in', { type: 'error' });
+        history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        history.push({
-          pathname: `/lists/${listId}`,
-          state: {
-            errors: 'Item not found',
-          },
-        });
+        toast('Item not found', { type: 'error' });
+        history.push(`/lists/${listId}`);
         return;
       }
     }

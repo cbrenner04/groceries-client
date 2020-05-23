@@ -25,7 +25,6 @@ function List(props) {
       <Async.Fulfilled>
         {(data) => (
           <ListContainer
-            id={listId}
             userId={data.currentUserId}
             list={data.list}
             purchasedItems={data.purchasedItems}
@@ -47,19 +46,17 @@ function List(props) {
 
 List.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }),
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      errors: PropTypes.string,
-      success: PropTypes.string,
-    }),
-  }),
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default List;

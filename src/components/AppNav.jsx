@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import axios from '../utils/api';
 
@@ -15,10 +16,8 @@ export default function AppNav() {
       // TODO: send exception somewhere for logging
     }
     sessionStorage.removeItem('user');
-    history.push({
-      pathname: '/users/sign_in',
-      state: { success: 'Log out successful' },
-    });
+    toast('Log out successful', { type: 'info' });
+    history.push('/users/sign_in');
   };
 
   return (

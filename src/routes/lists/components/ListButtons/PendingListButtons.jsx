@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, Trash } from '../../../components/ActionButtons';
+import { Complete, Trash } from '../../../../components/ActionButtons';
 
 const PendingListButtons = (props) => (
   <ButtonGroup className="float-right">

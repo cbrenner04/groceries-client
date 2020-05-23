@@ -1,9 +1,14 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
 import PageNotFound from './PageNotFound';
+
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
 
 const history = {
   push: jest.fn(),
@@ -38,10 +43,8 @@ describe('PageNotFound', () => {
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
-    expect(history.push).toHaveBeenCalledWith({
-      pathname: '/users/sign_in',
-      state: { errors: 'You must sign in' },
-    });
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
 
     axios.get.mockClear();
   });

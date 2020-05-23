@@ -1,0 +1,719 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListContainer does not render ListForm when user has read permissions 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+      <div
+        class="list-group-item"
+        data-test-class="non-purchased-item"
+        style="display: block;"
+      >
+        <div
+          class="pt-1"
+        >
+          2 foo foo
+        </div>
+        <div
+          class="pt-1"
+        />
+      </div>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer does not render complete items when none exist 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+  </div>
+</div>
+`;
+
+exports[`ListContainer does not render incomplete items when none exist 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer renders ListForm when user has write permissions 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+  >
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+      </datalist>
+    </div>
+    <br />
+    <button
+      class="btn btn-success btn-block"
+      type="submit"
+    >
+      Add New Item
+    </button>
+  </form>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+      <div
+        class="list-group-item"
+        data-test-class="non-purchased-item"
+        style="display: block;"
+      >
+        <div
+          class="pt-1"
+        >
+          2 foo foo
+        </div>
+        <div
+          class="pt-1"
+        />
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/grocery_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+      <div
+        class="float-right btn-group"
+        role="group"
+      >
+        <button
+          class="p-0 mr-3 btn btn-link"
+          type="button"
+        >
+          <i
+            class="fa fa-redo fa-2x text-primary"
+          />
+        </button>
+        <button
+          class="p-0 btn btn-link"
+          type="button"
+        >
+          <i
+            class="fa fa-trash fa-2x text-danger"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer renders filtered items without category buckets when filter exists 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+      <div
+        class="list-group-item"
+        data-test-class="non-purchased-item"
+        style="display: block;"
+      >
+        <div
+          class="pt-1"
+        >
+          2 foo foo
+        </div>
+        <div
+          class="pt-1"
+        />
+      </div>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer renders items with category buckets when includedCategories is not empty and no filter is applied 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <div
+        class="dropdown"
+        data-test-id="filter-dropdown"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-light"
+          id="filter-by-category-button"
+          type="button"
+        >
+          Filter by category
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      <h5
+        data-test-class="category-header"
+      >
+        Foo
+      </h5>
+      <div
+        class="list-group-item"
+        data-test-class="non-purchased-item"
+        style="display: block;"
+      >
+        <div
+          class="pt-1"
+        >
+          2 foo foo
+        </div>
+        <div
+          class="pt-1"
+        />
+      </div>
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer renders items without category buckets when includedCategories is empty 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <p>
+    You only have permission to read this list
+  </p>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <button
+        class="btn btn-light"
+        disabled=""
+        style="cursor: not-allowed;"
+        type="button"
+      >
+        Filter by category
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      
+    </div>
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+    <div
+      class="list-group-item"
+      data-test-class="purchased-item"
+      style="display: block;"
+    >
+      <div
+        class="pt-1"
+      >
+        2 foo foo
+      </div>
+      <div
+        class="pt-1"
+      />
+    </div>
+  </div>
+</div>
+`;

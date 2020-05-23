@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -46,9 +47,9 @@ function EditListForm(props) {
   return (
     <>
       <h1>Edit {name}</h1>
-      <Button href="/lists" className="float-right" variant="link">
+      <Link to="/lists" className="float-right">
         Back to lists
-      </Button>
+      </Link>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <TextField name="name" label="Name" value={name} handleChange={({ target: { value } }) => setName(value)} />
@@ -83,12 +84,12 @@ function EditListForm(props) {
 
 EditListForm.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
-  listId: PropTypes.number,
-  name: PropTypes.string,
-  type: PropTypes.string,
-  completed: PropTypes.bool,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  listId: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  completed: PropTypes.bool.isRequired,
 };
 
 export default EditListForm;

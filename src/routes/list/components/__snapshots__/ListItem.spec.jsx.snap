@@ -61,7 +61,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
 </div>
 `;
 
-exports[`ListItem does not display due by when listType is ToDoList and dueBy exists 1`] = `
+exports[`ListItem does not display due by when listType is ToDoList and dueBy does not exist 1`] = `
 <div>
   <div
     class="list-group-item"

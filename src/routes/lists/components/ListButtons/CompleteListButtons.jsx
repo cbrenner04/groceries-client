@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Refresh, Trash } from '../../../components/ActionButtons';
+import { Refresh, Trash } from '../../../../components/ActionButtons';
 
 const CompletedListButtons = (props) => (
   <ButtonGroup className="float-right">

@@ -183,36 +183,36 @@ function ShareListForm(props) {
 
 ShareListForm.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
-  name: PropTypes.string,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  name: PropTypes.string.isRequired,
   invitableUsers: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       email: PropTypes.string,
     }),
-  ),
-  listId: PropTypes.number,
-  userIsOwner: PropTypes.bool,
+  ).isRequired,
+  listId: PropTypes.number.isRequired,
+  userIsOwner: PropTypes.bool.isRequired,
   pending: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       email: PropTypes.string,
     }),
-  ),
+  ).isRequired,
   accepted: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       email: PropTypes.string,
     }),
-  ),
+  ).isRequired,
   refused: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       email: PropTypes.string,
     }),
-  ),
-  userId: PropTypes.number,
+  ).isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default ShareListForm;

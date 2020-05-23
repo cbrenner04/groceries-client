@@ -19,7 +19,7 @@ describe('ListItem', () => {
       artist: 'foo',
       album: 'foo',
       assignee_id: 1,
-      due_by: new Date().toISOString(),
+      due_by: new Date('05/21/2020').toISOString(),
       read: false,
       number_in_series: 1,
       category: 'foo',
@@ -107,7 +107,7 @@ describe('ListItem', () => {
 
   it('displays due by when listType is ToDoList and dueBy exists', () => {
     props.listType = 'ToDoList';
-    props.item.due_by = new Date().toISOString();
+    props.item.due_by = new Date('05/21/2020').toISOString();
 
     const { container, getByTestId } = renderListItem(props);
 
@@ -115,7 +115,7 @@ describe('ListItem', () => {
     expect(getByTestId('due-by')).toHaveTextContent(`Due By: ${prettyDueBy(props.item.due_by)}`);
   });
 
-  it('does not display due by when listType is ToDoList and dueBy exists', () => {
+  it('does not display due by when listType is ToDoList and dueBy does not exist', () => {
     props.listType = 'ToDoList';
     props.item.due_by = null;
 

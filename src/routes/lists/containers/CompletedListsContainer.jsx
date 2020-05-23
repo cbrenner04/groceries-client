@@ -95,8 +95,8 @@ function CompletedListsContainer(props) {
 
 CompletedListsContainer.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   completedLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -107,7 +107,7 @@ CompletedListsContainer.propTypes = {
       users_list_id: PropTypes.number,
       owner_id: PropTypes.number,
     }),
-  ),
+  ).isRequired,
 };
 
 export default CompletedListsContainer;

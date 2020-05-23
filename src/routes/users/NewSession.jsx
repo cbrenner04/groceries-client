@@ -93,18 +93,12 @@ function NewSession(props) {
 
 NewSession.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-    replace: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
     location: PropTypes.shape({
-      pathname: PropTypes.string,
-    }),
-  }),
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      errors: PropTypes.string,
-      success: PropTypes.string,
-    }),
-  }),
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default NewSession;

@@ -17,6 +17,7 @@ function ListsContainer(props) {
   const [listToReject, setListToReject] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
 
   const failure = ({ request, response, message }) => {
     if (response) {
@@ -38,6 +39,9 @@ function ListsContainer(props) {
   const handleFormSubmit = async (list) => {
     try {
       const { data } = await axios.post(`/lists`, { list });
+      // must update currentUserPermissions prior to nonCompletedLists
+      const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       toast('List successfully added.', { type: 'info' });
@@ -134,6 +138,9 @@ function ListsContainer(props) {
     localList.refreshed = true;
     try {
       const { data } = await axios.post(`/lists/${list.id}/refresh_list`, {});
+      // must update currentUserPermissions prior to nonCompletedLists
+      const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
       toast('List successfully refreshed.', { type: 'info' });
@@ -157,7 +164,7 @@ function ListsContainer(props) {
         onListRefresh={handleRefresh}
         onAccept={handleAccept}
         onReject={handleReject}
-        currentUserPermissions={props.currentUserPermissions}
+        currentUserPermissions={currentUserPermissions}
       />
       <ConfirmModal
         action="delete"
@@ -179,13 +186,13 @@ function ListsContainer(props) {
 
 ListsContainer.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-    replace: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
     location: PropTypes.shape({
-      pathname: PropTypes.string,
-    }),
-  }),
-  userId: PropTypes.number,
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  userId: PropTypes.number.isRequired,
   pendingLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -196,7 +203,7 @@ ListsContainer.propTypes = {
       users_list_id: PropTypes.number,
       owner_id: PropTypes.number,
     }),
-  ),
+  ).isRequired,
   completedLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -207,7 +214,7 @@ ListsContainer.propTypes = {
       users_list_id: PropTypes.number,
       owner_id: PropTypes.number,
     }),
-  ),
+  ).isRequired,
   nonCompletedLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -218,8 +225,8 @@ ListsContainer.propTypes = {
       users_list_id: PropTypes.number,
       owner_id: PropTypes.number,
     }),
-  ),
-  currentUserPermissions: PropTypes.objectOf(PropTypes.string),
+  ).isRequired,
+  currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ListsContainer;
