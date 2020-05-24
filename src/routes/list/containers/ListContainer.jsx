@@ -8,7 +8,7 @@ import { listTypeToSnakeCase } from '../../../utils/format';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
-import { mapIncludedCategories, categorizeNotPurchasedItems, performSort } from '../utils';
+import { sortItems } from '../utils';
 import ListItems from '../components/ListItems';
 import CategoryFilter from '../components/CategoryFilter';
 
@@ -21,21 +21,6 @@ function ListContainer(props) {
   const [itemToDelete, setItemToDelete] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const sortItems = (items) => {
-    let sortAttrs = [];
-    if (props.list.type === 'BookList') {
-      sortAttrs = ['author', 'number_in_series', 'title'];
-    } else if (props.list.type === 'GroceryList') {
-      sortAttrs = ['product'];
-    } else if (props.list.type === 'MusicList') {
-      sortAttrs = ['artist', 'album', 'title'];
-    } else if (props.list.type === 'ToDoList') {
-      sortAttrs = ['due_by', 'assignee_id', 'task'];
-    }
-    const sorted = performSort(items, sortAttrs);
-    return sorted;
-  };
-
   const handleAddItem = (item) => {
     const category = item.category || '';
     let updatedNotPurchasedItems;
@@ -43,7 +28,7 @@ function ListContainer(props) {
       updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $set: [item] } });
     } else {
       updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $push: [item] } });
-      updatedNotPurchasedItems[category] = sortItems(updatedNotPurchasedItems[category]);
+      updatedNotPurchasedItems[category] = sortItems(props.list.type, updatedNotPurchasedItems[category]);
     }
     setNotPurchasedItems(updatedNotPurchasedItems);
     if (!categories.includes(category)) {
@@ -59,19 +44,23 @@ function ListContainer(props) {
   const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
   const listItemPath = (item) => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
 
-  const moveItemToPurchased = (item) => {
+  const removeItemFromNotPurchased = (item) => {
     const category = item.category || '';
     const itemIndex = notPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
     const updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
     setNotPurchasedItems(updatedNotPurchasedItems);
-    const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
-    setPurchasedItems(sortItems(updatedPurchasedItems));
     if (!updatedNotPurchasedItems[category].length) {
       const catIndex = includedCategories.findIndex((inCat) => inCat === category);
       const updateIncludedCats = update(includedCategories, { $splice: [[catIndex, 1]] });
       setIncludedCategories(updateIncludedCats);
       setFilter('');
     }
+  };
+
+  const moveItemToPurchased = (item) => {
+    removeItemFromNotPurchased(item);
+    const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
+    setPurchasedItems(sortItems(props.list.type, updatedPurchasedItems));
   };
 
   const failure = ({ response, request, message }) => {
@@ -142,6 +131,12 @@ function ListContainer(props) {
 
   const handleItemUnRead = async (item) => toggleRead(item, false);
 
+  const removeItemFromPurchased = (item) => {
+    const itemIndex = purchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
+    const updatedPurchasedItems = sortItems(props.list.type, update(purchasedItems, { $splice: [[itemIndex, 1]] }));
+    setPurchasedItems(updatedPurchasedItems);
+  };
+
   const handleUnPurchase = (item) => {
     const newItem = {
       user_id: item.user_id,
@@ -167,8 +162,7 @@ function ListContainer(props) {
     ])
       .then(([{ data }]) => {
         handleAddItem(data);
-        const updatedPurchasedItems = purchasedItems.filter((notItem) => notItem.id !== item.id);
-        setPurchasedItems(sortItems(updatedPurchasedItems));
+        removeItemFromPurchased(item);
         toast('Item successfully refreshed.', { type: 'info' });
       })
       .catch(failure);
@@ -183,15 +177,11 @@ function ListContainer(props) {
     try {
       await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
       setShowDeleteConfirm(false);
-      const { data } = await axios.get(`/lists/${props.list.id}`);
-      const responseIncludedCategories = mapIncludedCategories(data.not_purchased_items);
-      const responseNotPurchasedItems = categorizeNotPurchasedItems(
-        data.not_purchased_items,
-        responseIncludedCategories,
-      );
-      setIncludedCategories(responseIncludedCategories);
-      setNotPurchasedItems(responseNotPurchasedItems); // TODO: need to sort?
-      setPurchasedItems(data.purchased_items); // TODO: need to sort?
+      if (itemToDelete.purchased) {
+        removeItemFromPurchased(itemToDelete);
+      } else {
+        removeItemFromNotPurchased(itemToDelete);
+      }
       toast('Item successfully deleted.', { type: 'info' });
     } catch (error) {
       failure(error);
@@ -319,16 +309,17 @@ ListContainer.propTypes = {
       read: PropTypes.bool,
       number_in_series: PropTypes.number,
       category: PropTypes.string,
+      purchased: PropTypes.bool,
     }),
-  ),
-  categories: PropTypes.arrayOf(PropTypes.string),
+  ).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       email: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
-  includedCategories: PropTypes.arrayOf(PropTypes.string),
+  includedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
   notPurchasedItems: PropTypes.objectOf(
     PropTypes.arrayOf(
       PropTypes.shape({
@@ -345,17 +336,11 @@ ListContainer.propTypes = {
         read: PropTypes.bool,
         number_in_series: PropTypes.number,
         category: PropTypes.string,
+        purchased: PropTypes.bool,
       }),
     ),
-  ),
+  ).isRequired,
   permissions: PropTypes.string.isRequired,
-};
-
-ListContainer.defaultProps = {
-  purchasedItems: [],
-  notPurchasedItems: [],
-  includedCategories: [],
-  categories: [],
 };
 
 export default ListContainer;

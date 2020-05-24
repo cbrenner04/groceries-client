@@ -78,7 +78,7 @@ function ListItemForm(props) {
 
   return (
     <>
-      <Form onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
         <ListItemFormFields
           formData={formData}
           setFormData={setFormData}

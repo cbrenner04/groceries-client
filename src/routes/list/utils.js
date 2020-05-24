@@ -42,7 +42,7 @@ export function categorizeNotPurchasedItems(items, categories) {
   return obj;
 }
 
-export function performSort(items, sortAttrs) {
+function performSort(items, sortAttrs) {
   if (sortAttrs.length === 0) return items;
   const sortAttr = sortAttrs.pop();
   const sorted = items.sort((a, b) => {
@@ -54,6 +54,21 @@ export function performSort(items, sortAttrs) {
     return a[sortAttr] < b[sortAttr] ? -1 : positiveBranch;
   });
   return performSort(sorted, sortAttrs);
+}
+
+export function sortItems(listType, items) {
+  let sortAttrs = [];
+  if (listType === 'BookList') {
+    sortAttrs = ['author', 'number_in_series', 'title'];
+  } else if (listType === 'GroceryList') {
+    sortAttrs = ['product'];
+  } else if (listType === 'MusicList') {
+    sortAttrs = ['artist', 'album', 'title'];
+  } else if (listType === 'ToDoList') {
+    sortAttrs = ['due_by', 'assignee_id', 'task'];
+  }
+  const sorted = performSort(items, sortAttrs);
+  return sorted;
 }
 
 export async function fetchList({ id, history }) {

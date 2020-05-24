@@ -17,11 +17,21 @@ function NotPurchasedItemButtons(props) {
   return (
     <ButtonGroup className="float-right">
       {props.listType === 'BookList' && (
-        <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
+        <Bookmark
+          handleClick={props.item.read ? handleUnRead : handleRead}
+          read={props.item.read}
+          data-test-id={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+        />
       )}
-      <Complete handleClick={() => props.handlePurchaseOfItem(props.item)} />
+      <Complete
+        handleClick={() => props.handlePurchaseOfItem(props.item)}
+        data-test-id={`not-purchased-item-complete-${props.item.id}`}
+      />
       <Edit to={`${listItemPath()}/${props.item.id}/edit`} />
-      <Trash handleClick={() => props.handleItemDelete(props.item)} />
+      <Trash
+        handleClick={() => props.handleItemDelete(props.item)}
+        data-test-id={`not-purchased-item-delete-${props.item.id}`}
+      />
     </ButtonGroup>
   );
 }

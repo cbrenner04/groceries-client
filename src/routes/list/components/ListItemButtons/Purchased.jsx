@@ -10,12 +10,22 @@ function PurchasedItemButtons(props) {
   return (
     <ButtonGroup className="float-right">
       {(props.listType === 'GroceryList' || props.listType === 'ToDoList') && (
-        <Refresh handleClick={() => props.handleItemUnPurchase(props.item)} />
+        <Refresh
+          handleClick={() => props.handleItemUnPurchase(props.item)}
+          data-test-id={`purchased-item-refresh-${props.item.id}`}
+        />
       )}
       {props.listType === 'BookList' && (
-        <Bookmark handleClick={props.item.read ? handleUnRead : handleRead} read={props.item.read} />
+        <Bookmark
+          handleClick={props.item.read ? handleUnRead : handleRead}
+          read={props.item.read}
+          data-test-id={`purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+        />
       )}
-      <Trash handleClick={() => props.handleItemDelete(props.item)} />
+      <Trash
+        handleClick={() => props.handleItemDelete(props.item)}
+        data-test-id={`purchased-item-delete-${props.item.id}`}
+      />
     </ButtonGroup>
   );
 }

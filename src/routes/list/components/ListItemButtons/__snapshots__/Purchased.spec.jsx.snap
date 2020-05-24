@@ -8,6 +8,7 @@ exports[`Purchased does not render Refresh and does render Bookmark when listTyp
   >
     <button
       class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-unread-1"
       type="button"
     >
       <i
@@ -16,6 +17,7 @@ exports[`Purchased does not render Refresh and does render Bookmark when listTyp
     </button>
     <button
       class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
       type="button"
     >
       <i
@@ -34,6 +36,7 @@ exports[`Purchased does not render Refresh or Bookmark when listType is MusicLis
   >
     <button
       class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
       type="button"
     >
       <i
@@ -52,6 +55,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
   >
     <button
       class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-refresh-1"
       type="button"
     >
       <i
@@ -60,6 +64,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
     </button>
     <button
       class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
       type="button"
     >
       <i
@@ -78,6 +83,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
   >
     <button
       class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-refresh-1"
       type="button"
     >
       <i
@@ -86,6 +92,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
     </button>
     <button
       class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
       type="button"
     >
       <i

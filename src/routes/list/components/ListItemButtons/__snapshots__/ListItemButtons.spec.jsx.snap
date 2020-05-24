@@ -8,6 +8,7 @@ exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`]
   >
     <button
       class="p-0 mr-3 btn btn-link"
+      data-test-id="not-purchased-item-complete-1"
       type="button"
     >
       <i
@@ -24,6 +25,7 @@ exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`]
     </a>
     <button
       class="p-0 btn btn-link"
+      data-test-id="not-purchased-item-delete-1"
       type="button"
     >
       <i
@@ -42,6 +44,7 @@ exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
   >
     <button
       class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-refresh-1"
       type="button"
     >
       <i
@@ -50,6 +53,7 @@ exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
     </button>
     <button
       class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
       type="button"
     >
       <i

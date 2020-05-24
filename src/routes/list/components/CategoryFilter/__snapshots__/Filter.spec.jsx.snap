@@ -40,12 +40,14 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
     
     <button
       class="dropdown-item"
+      data-test-id="filter-by-bar"
       name="bar"
     >
       bar
     </button>
     <button
       class="dropdown-item"
+      data-test-id="filter-by-foo"
       name="foo"
     >
       foo

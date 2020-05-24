@@ -42,6 +42,7 @@
       "plugin:prettier/recommended"
     ],
     "rules": {
+      "prettier/prettier": "error",
       "no-console": "error",
       "max-len": [
         "error",

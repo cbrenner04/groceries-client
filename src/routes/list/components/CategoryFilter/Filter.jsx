@@ -11,7 +11,13 @@ const Filter = ({ categories, handleCategoryFilter }) => (
       {categories.sort().map((category) => {
         if (!category) return '';
         return (
-          <Dropdown.Item as="button" key={category} name={category} onClick={handleCategoryFilter}>
+          <Dropdown.Item
+            as="button"
+            key={category}
+            name={category}
+            onClick={handleCategoryFilter}
+            data-test-id={`filter-by-${category}`}
+          >
             {category}
           </Dropdown.Item>
         );

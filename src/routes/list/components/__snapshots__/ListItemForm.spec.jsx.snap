@@ -5,6 +5,7 @@ exports[`ListItemForm renders 1`] = `
   <form
     autocomplete="off"
     class=""
+    data-test-id="list-item-form"
   >
     <div
       class="form-group"

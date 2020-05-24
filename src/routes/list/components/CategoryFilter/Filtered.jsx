@@ -6,7 +6,7 @@ const Filtered = ({ filter, handleClearFilter }) => (
   <>
     <span style={{ lineHeight: '2.5rem', marginRight: '1rem' }}>Filtering by:</span>
     <Button
-      id="clear-filter-button"
+      data-test-id="clear-filter"
       variant="outline-primary"
       style={{ marginRight: '1rem' }}
       onClick={handleClearFilter}

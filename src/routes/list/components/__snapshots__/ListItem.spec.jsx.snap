@@ -34,6 +34,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -50,6 +51,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -93,6 +95,7 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -109,6 +112,7 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -184,6 +188,7 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -200,6 +205,7 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -245,6 +251,7 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -261,6 +268,7 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -304,6 +312,7 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -320,6 +329,7 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -352,6 +362,7 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -368,6 +379,7 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
@@ -400,6 +412,7 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="purchased-item-refresh-1"
         type="button"
       >
         <i
@@ -408,6 +421,7 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
       </button>
       <button
         class="p-0 btn btn-link"
+        data-test-id="purchased-item-delete-1"
         type="button"
       >
         <i
@@ -455,6 +469,7 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
     >
       <button
         class="p-0 mr-3 btn btn-link"
+        data-test-id="not-purchased-item-complete-1"
         type="button"
       >
         <i
@@ -471,6 +486,7 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
       </a>
       <button
         class="p-0 btn btn-link"
+        data-test-id="not-purchased-item-delete-1"
         type="button"
       >
         <i
