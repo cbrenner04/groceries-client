@@ -62,6 +62,8 @@ ListItem.propTypes = {
     read: PropTypes.bool,
     number_in_series: PropTypes.number,
     category: PropTypes.string,
+    completed: PropTypes.bool,
+    purchased: PropTypes.bool,
   }).isRequired,
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,

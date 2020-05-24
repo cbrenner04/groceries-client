@@ -63,6 +63,7 @@ describe('ListContainer', () => {
           number_in_series: 0,
           category: 'foo',
           purchased: true,
+          completed: false,
         },
       ],
       categories: ['', 'foo', 'bar'],
@@ -90,6 +91,7 @@ describe('ListContainer', () => {
             number_in_series: 0,
             category: '',
             purchased: false,
+            completed: false,
           },
         ],
         foo: [
@@ -108,6 +110,7 @@ describe('ListContainer', () => {
             number_in_series: 0,
             category: 'foo',
             purchased: false,
+            completed: false,
           },
           {
             id: 4,
@@ -124,6 +127,7 @@ describe('ListContainer', () => {
             number_in_series: 0,
             category: 'foo',
             purchased: false,
+            completed: false,
           },
         ],
         bar: [
@@ -142,6 +146,7 @@ describe('ListContainer', () => {
             number_in_series: 0,
             category: 'bar',
             purchased: false,
+            completed: false,
           },
         ],
       },

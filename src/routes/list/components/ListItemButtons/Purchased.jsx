@@ -35,6 +35,8 @@ PurchasedItemButtons.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
     read: PropTypes.bool,
+    completed: PropTypes.bool,
+    purchased: PropTypes.bool,
   }).isRequired,
   handleItemUnPurchase: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,

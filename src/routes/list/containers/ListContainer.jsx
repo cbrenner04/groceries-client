@@ -18,7 +18,7 @@ function ListContainer(props) {
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
-  const [itemToDelete, setItemToDelete] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleAddItem = (item) => {
@@ -177,7 +177,7 @@ function ListContainer(props) {
     try {
       await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
       setShowDeleteConfirm(false);
-      if (itemToDelete.purchased) {
+      if (itemToDelete.completed || itemToDelete.purchased) {
         removeItemFromPurchased(itemToDelete);
       } else {
         removeItemFromNotPurchased(itemToDelete);
@@ -309,6 +309,7 @@ ListContainer.propTypes = {
       read: PropTypes.bool,
       number_in_series: PropTypes.number,
       category: PropTypes.string,
+      completed: PropTypes.bool,
       purchased: PropTypes.bool,
     }),
   ).isRequired,
@@ -336,6 +337,7 @@ ListContainer.propTypes = {
         read: PropTypes.bool,
         number_in_series: PropTypes.number,
         category: PropTypes.string,
+        completed: PropTypes.bool,
         purchased: PropTypes.bool,
       }),
     ),
