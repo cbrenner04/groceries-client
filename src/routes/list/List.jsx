@@ -1,7 +1,6 @@
 import React from 'react';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
@@ -9,16 +8,8 @@ import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
 function List(props) {
-  if (!props.match) {
-    toast('Something went wrong', { type: 'error' });
-    props.history.push('/lists');
-    return;
-  }
-
-  const listId = props.match.params.id;
-
   return (
-    <Async promiseFn={fetchList} id={listId} history={props.history}>
+    <Async promiseFn={fetchList} id={props.match.params.id} history={props.history}>
       <Async.Pending>
         <Loading />
       </Async.Pending>

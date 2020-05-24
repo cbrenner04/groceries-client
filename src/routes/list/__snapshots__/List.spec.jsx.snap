@@ -1,0 +1,164 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List displays List 1`] = `
+<div>
+  <h1>
+    foo
+  </h1>
+  <a
+    class="float-right"
+    href="/lists"
+  >
+    Back to lists
+  </a>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+    data-test-id="list-item-form"
+  >
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="categories"
+      />
+    </div>
+    <br />
+    <button
+      class="btn btn-success btn-block"
+      type="submit"
+    >
+      Add New Item
+    </button>
+  </form>
+  <br />
+  <div
+    class="clearfix"
+  >
+    <h2
+      class="float-left"
+    >
+      Items
+    </h2>
+    <div
+      class="float-right"
+    >
+      <button
+        class="btn btn-light"
+        disabled=""
+        style="cursor: not-allowed;"
+        type="button"
+      >
+        Filter by category
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="list-group"
+    >
+      
+    </div>
+    <br />
+  </div>
+  <br />
+  <h2>
+    Purchased
+  </h2>
+  <div
+    class="list-group"
+  >
+    
+  </div>
+</div>
+`;
+
+exports[`List displays UnknownError when an error occurs 1`] = `
+<div>
+  <h1>
+    Something went wrong!
+  </h1>
+  <h2>
+    We are currently unable to render this page.
+  </h2>
+  <p>
+    Please check your connection and try to  
+    <button
+      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
+    >
+      refresh the page
+    </button>
+  </p>
+</div>
+`;
+
+exports[`List renders the Loading component when fetch request is pending 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-items: center;"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 100px; height: 100px; position: absolute; top: 50%;"
+    >
+      <span
+        class="sr-only"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</div>
+`;

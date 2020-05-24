@@ -30,7 +30,7 @@
     "build": "react-scripts build",
     "lint": "eslint --ext .js,.jsx src/",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "test:ci": "CI=true npm test -- --coverage",
+    "test:ci": "npm run lint && CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "format": "prettier --write 'src/**/*.{js,jsx,json,css,md}'"
   },

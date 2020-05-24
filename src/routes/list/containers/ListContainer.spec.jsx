@@ -21,10 +21,10 @@ describe('ListContainer', () => {
     createHref: ({ pathname }) => pathname,
     replace: jest.fn(),
   };
-  const renderListContainer = (props) => {
+  const renderListContainer = (newProps) => {
     return render(
       <Router history={history}>
-        <ListContainer {...props} history={history} />
+        <ListContainer {...newProps} history={history} />
       </Router>,
     );
   };
