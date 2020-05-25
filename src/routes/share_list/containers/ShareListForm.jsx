@@ -111,7 +111,9 @@ function ShareListForm(props) {
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
         const tmpUsersList = newList.users_list;
-        if (tmpUsersList.id === id) tmpUsersList.permissions = permissions;
+        if (tmpUsersList.id === id) {
+          tmpUsersList.permissions = permissions;
+        }
         return newList;
       });
       const stateFunc = status === 'pending' ? setPending : setAccepted;

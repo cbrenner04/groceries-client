@@ -1,6 +1,8 @@
 const setUserInfo = (headers) => {
   const accessToken = headers['access-token'];
-  if (!accessToken) return;
+  if (!accessToken) {
+    return;
+  }
   const { client, uid } = headers;
   sessionStorage.setItem(
     'user',

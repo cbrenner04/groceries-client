@@ -55,6 +55,7 @@ describe('EditListItem', () => {
             item: {
               user_id: 1,
               id: 1,
+              product: 'foo',
             },
             list: { id: 1, type: 'GroceryList' },
           },

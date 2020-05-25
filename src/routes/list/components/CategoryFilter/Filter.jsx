@@ -9,7 +9,9 @@ const Filter = ({ categories, handleCategoryFilter }) => (
     </Dropdown.Toggle>
     <Dropdown.Menu>
       {categories.sort().map((category) => {
-        if (!category) return '';
+        if (!category) {
+          return '';
+        }
         return (
           <Dropdown.Item
             as="button"

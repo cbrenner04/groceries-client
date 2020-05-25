@@ -43,7 +43,7 @@ describe('ListContainer', () => {
         id: 1,
         name: 'foo',
         type: 'GroceryList',
-        created_at: new Date().toISOString(),
+        created_at: new Date('05/24/2020').toISOString(),
         completed: false,
         owner_id: 1,
       },

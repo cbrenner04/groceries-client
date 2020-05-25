@@ -51,6 +51,10 @@
           "tabWidth": 2
         }
       ],
+      "curly": [
+        "error",
+        "all"
+      ],
       "react/require-default-props": "error"
     }
   },

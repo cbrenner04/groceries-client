@@ -25,6 +25,7 @@ export async function fetchLists({ history }) {
     const nonCompletedLists = sortedAcceptedLists.filter((list) => !list.completed);
     const lists = sortedAcceptedLists.concat(pendingLists);
     const currentUserPermissions = {};
+    // TODO: can this be done with a single request?
     const userLists = await Promise.all(
       lists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`).catch(() => undefined)),
     );

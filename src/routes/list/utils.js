@@ -5,22 +5,25 @@ import { formatDueBy } from '../../utils/format';
 
 export function itemName(item, listType) {
   return {
-    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author}`,
-    GroceryList: `${item.quantity} ${item.product}`,
+    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author || ''}`,
+    GroceryList: `${item.quantity || ''} ${item.product || ''}`,
     MusicList:
-      `${item.title ? `"${item.title}"` : ''} ${item.artist} ` +
-      `${item.artist && item.album ? '- ' : ''}` +
-      `${item.album ? item.album : ''}`,
+      `${item.title ? `"${item.title}"` : ''} ${item.artist || ''}` +
+      `${item.artist && item.album ? ' - ' : ''}${item.album || ''}`,
     ToDoList: `${item.task}`,
-  }[listType];
+  }[listType].trim();
 }
 
 export function mapIncludedCategories(items) {
   const cats = [''];
   items.forEach((item) => {
-    if (!item.category) return;
+    if (!item.category) {
+      return;
+    }
     const cat = item.category.toLowerCase();
-    if (!cats.includes(cat)) cats.push(cat);
+    if (!cats.includes(cat)) {
+      cats.push(cat);
+    }
   });
   return cats;
 }
@@ -36,20 +39,29 @@ export function categorizeNotPurchasedItems(items, categories) {
       return;
     }
     const cat = item.category.toLowerCase();
-    if (!obj[cat]) obj[cat] = [];
+    if (!obj[cat]) {
+      obj[cat] = [];
+    }
     obj[cat].push(item);
   });
   return obj;
 }
 
 function performSort(items, sortAttrs) {
-  if (sortAttrs.length === 0) return items;
+  // return when all items are sorted
+  if (sortAttrs.length === 0) {
+    return items;
+  }
   const sortAttr = sortAttrs.pop();
   const sorted = items.sort((a, b) => {
     // the sort from the server comes back with items with number_in_series: `null` at the end of the list
     // without the next two lines this would put those items at the front of the list
-    if (a[sortAttr] === null) return 1;
-    if (b[sortAttr] === null) return -1;
+    if (a[sortAttr] === null) {
+      return 1;
+    }
+    if (b[sortAttr] === null) {
+      return -1;
+    }
     const positiveBranch = a[sortAttr] > b[sortAttr] ? 1 : 0;
     return a[sortAttr] < b[sortAttr] ? -1 : positiveBranch;
   });
@@ -73,7 +85,6 @@ export function sortItems(listType, items) {
 
 export async function fetchList({ id, history }) {
   try {
-    // TODO: confirm required items always come back
     // TODO: looks like list.users_list_id is not coming back
     const responses = await Promise.all([axios.get(`/lists/${id}/users_lists`), axios.get(`/lists/${id}`)]);
     const [
@@ -106,11 +117,11 @@ export async function fetchList({ id, history }) {
     return {
       currentUserId,
       list,
-      purchasedItems, // TODO: need to sort?
+      purchasedItems,
       categories,
       listUsers,
       includedCategories,
-      notPurchasedItems, // TODO: need to sort?
+      notPurchasedItems,
       permissions,
     };
   } catch ({ response }) {
@@ -137,7 +148,7 @@ export async function fetchListToEdit({ id, history }) {
         list: { owner_id, id: listId, name, completed, type },
         current_user_id: currentUserId,
       },
-    } = await axios.get(`/lists/${id}/edit`); // TODO: confirm required items always come back
+    } = await axios.get(`/lists/${id}/edit`);
     if (owner_id !== currentUserId) {
       toast('List not found', { type: 'error' });
       history.push('/lists');
@@ -149,7 +160,7 @@ export async function fetchListToEdit({ id, history }) {
       completed,
       type,
     };
-  } catch ({ response, request, message }) {
+  } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
@@ -208,7 +219,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
-      toast('List not found', { type: 'error' });
+      toast('Item not found', { type: 'error' });
       history.push(`/lists/${listId}`);
       return;
     }
