@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, Edit, Share, Trash } from '../../../components/ActionButtons';
+import { Complete, Edit, Share, Trash } from '../../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
@@ -52,7 +52,7 @@ IncompleteListButtons.propTypes = {
   }).isRequired,
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
-  currentUserPermissions: PropTypes.string,
+  currentUserPermissions: PropTypes.string.isRequired,
 };
 
 export default IncompleteListButtons;

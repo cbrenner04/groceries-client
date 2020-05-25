@@ -50,6 +50,7 @@ exports[`ConfirmModal when show is true renders dialog 1`] = `
       >
         <button
           class="btn btn-secondary"
+          data-test-id="clear-testAction"
           type="button"
         >
           Close

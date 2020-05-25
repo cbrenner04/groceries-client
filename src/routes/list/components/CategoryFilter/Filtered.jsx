@@ -6,7 +6,7 @@ const Filtered = ({ filter, handleClearFilter }) => (
   <>
     <span style={{ lineHeight: '2.5rem', marginRight: '1rem' }}>Filtering by:</span>
     <Button
-      id="clear-filter-button"
+      data-test-id="clear-filter"
       variant="outline-primary"
       style={{ marginRight: '1rem' }}
       onClick={handleClearFilter}
@@ -17,12 +17,8 @@ const Filtered = ({ filter, handleClearFilter }) => (
 );
 
 Filtered.propTypes = {
-  filter: PropTypes.string,
+  filter: PropTypes.string.isRequired,
   handleClearFilter: PropTypes.func.isRequired,
-};
-
-Filtered.defaultProps = {
-  filter: '',
 };
 
 export default Filtered;

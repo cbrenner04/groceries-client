@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
 
 function EditPassword(props) {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [errors, setErrors] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors('');
     try {
       // TODO: this doesn't use global instance b/c need to skip the interceptors b/c the headers aren't coming through
       await axios.put(
@@ -27,26 +25,23 @@ function EditPassword(props) {
           headers: queryString.parse(props.location.search),
         },
       );
-      props.history.push({
-        pathname: '/users/sign_in',
-        state: { success: 'Password successfully updated' },
-      });
+      toast('Password successfully updated', { type: 'info' });
+      props.history.push('/users/sign_in');
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        toast(responseErrors.join(' and '), { type: 'error' });
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
 
   return (
     <>
-      <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Change your password</h2>
       <PasswordForm
         password={password}
@@ -65,8 +60,8 @@ EditPassword.propTypes = {
     search: PropTypes.string,
   }).isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default EditPassword;

@@ -8,16 +8,6 @@ import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
 function Lists(props) {
-  let initialErrors = '';
-  let initialSuccess = '';
-  if (props.location && props.location.state) {
-    if (props.location.state.errors) {
-      initialErrors = props.location.state.errors;
-    } else if (props.location.state.success) {
-      initialSuccess = props.location.state.success;
-    }
-  }
-
   return (
     <Async promiseFn={fetchLists} history={props.history}>
       <Async.Pending>
@@ -32,8 +22,6 @@ function Lists(props) {
             completedLists={data.completedLists}
             nonCompletedLists={data.nonCompletedLists}
             currentUserPermissions={data.currentUserPermissions}
-            initialErrors={initialErrors}
-            initialSuccess={initialSuccess}
           />
         )}
       </Async.Fulfilled>
@@ -46,14 +34,12 @@ function Lists(props) {
 
 Lists.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      errors: PropTypes.string,
-      success: PropTypes.string,
-    }),
-  }),
 };
 
 export default Lists;

@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 import axios from '../../utils/api';
 
 export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -5,10 +7,8 @@ export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) 
 function handleFailure({ response }, history) {
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
   if (response && response.status === 401) {
-    history.push({
-      pathname: '/users/sign_in',
-      state: { errors: 'You must sign in' },
-    });
+    toast('You must sign in', { type: 'error' });
+    history.push('/users/sign_in');
     return;
   }
   throw new Error();
@@ -16,6 +16,7 @@ function handleFailure({ response }, history) {
 
 export async function fetchLists({ history }) {
   try {
+    // TODO: confirm required items come back
     const { data } = await axios.get(`/lists/`);
     const userId = data.current_user_id;
     const sortedAcceptedLists = sortLists(data.accepted_lists);
@@ -24,6 +25,7 @@ export async function fetchLists({ history }) {
     const nonCompletedLists = sortedAcceptedLists.filter((list) => !list.completed);
     const lists = sortedAcceptedLists.concat(pendingLists);
     const currentUserPermissions = {};
+    // TODO: can this be done with a single request?
     const userLists = await Promise.all(
       lists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`).catch(() => undefined)),
     );

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
-import Alert from '../../../components/Alert';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 
@@ -23,54 +23,40 @@ const defaultFormState = {
 
 function ListItemForm(props) {
   const [formData, setFormData] = useState(defaultFormState);
-  const [errors, setErrors] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const dismissAlert = () => {
-    setErrors('');
-    setSuccess('');
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dismissAlert();
-    const listItem = {
-      user_id: props.userId,
-      product: formData.product,
-      task: formData.task,
-      quantity: formData.quantity,
-      author: formData.author,
-      title: formData.title,
-      artist: formData.artist,
-      album: formData.album,
-      assignee_id: formData.assigneeId,
-      due_by: formData.dueBy,
-      number_in_series: formData.numberInSeries || null,
-      category: formData.category.trim().toLowerCase(),
+    const requestListType = listTypeToSnakeCase(props.listType);
+    const postData = {
+      [`${requestListType}_item`]: {
+        user_id: props.userId,
+        product: formData.product,
+        task: formData.task,
+        quantity: formData.quantity,
+        author: formData.author,
+        title: formData.title,
+        artist: formData.artist,
+        album: formData.album,
+        assignee_id: formData.assigneeId,
+        due_by: formData.dueBy,
+        number_in_series: formData.numberInSeries || null,
+        category: formData.category.trim().toLowerCase(),
+        [`${requestListType}_id`]: props.listId,
+      },
     };
-    listItem[`${listTypeToSnakeCase(props.listType)}_id`] = props.listId;
-    const postData = {};
-    postData[`${listTypeToSnakeCase(props.listType)}_item`] = listItem;
     try {
-      const { data } = await axios.post(
-        `/lists/${props.listId}/${listTypeToSnakeCase(props.listType)}_items`,
-        postData,
-      );
+      const { data } = await axios.post(`/lists/${props.listId}/${requestListType}_items`, postData);
       props.handleItemAddition(data);
       setFormData(defaultFormState);
-      setSuccess('Item successfully added.');
+      toast('Item successfully added.', { type: 'info' });
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
-          props.history.push({
-            pathname: '/users/sign_in',
-            state: { errors: 'You must sign in' },
-          });
+          toast('You must sign in', { type: 'error' });
+          props.history.push('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
-          props.history.push({
-            pathname: '/lists',
-            state: { errors: 'List not found' },
-          });
+          toast('List not found', { type: 'error' });
+          props.history.push('/lists');
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
@@ -80,20 +66,19 @@ function ListItemForm(props) {
           } else {
             joinString = ' and ';
           }
-          setErrors(responseErrors.join(joinString));
+          toast(responseErrors.join(joinString), { type: 'error' });
         }
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
 
   return (
-    <div>
-      <Alert errors={errors} success={success} handleDismiss={dismissAlert} />
-      <Form onSubmit={handleSubmit} autoComplete="off">
+    <>
+      <Form onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
         <ListItemFormFields
           formData={formData}
           setFormData={setFormData}
@@ -106,14 +91,14 @@ function ListItemForm(props) {
           Add New Item
         </Button>
       </Form>
-    </div>
+    </>
   );
 }
 
 ListItemForm.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   userId: PropTypes.number.isRequired,
   listId: PropTypes.number.isRequired,
   listType: PropTypes.string.isRequired,

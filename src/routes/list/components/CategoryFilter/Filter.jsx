@@ -3,15 +3,23 @@ import PropTypes from 'prop-types';
 import { Dropdown } from 'react-bootstrap';
 
 const Filter = ({ categories, handleCategoryFilter }) => (
-  <Dropdown>
+  <Dropdown data-test-id="filter-dropdown">
     <Dropdown.Toggle variant="light" id="filter-by-category-button">
       Filter by category
     </Dropdown.Toggle>
     <Dropdown.Menu>
       {categories.sort().map((category) => {
-        if (!category) return '';
+        if (!category) {
+          return '';
+        }
         return (
-          <Dropdown.Item as="button" key={category} name={category} onClick={handleCategoryFilter}>
+          <Dropdown.Item
+            as="button"
+            key={category}
+            name={category}
+            onClick={handleCategoryFilter}
+            data-test-id={`filter-by-${category}`}
+          >
             {category}
           </Dropdown.Item>
         );
@@ -21,12 +29,8 @@ const Filter = ({ categories, handleCategoryFilter }) => (
 );
 
 Filter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string),
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCategoryFilter: PropTypes.func.isRequired,
-};
-
-Filter.defaultProps = {
-  categories: [''],
 };
 
 export default Filter;

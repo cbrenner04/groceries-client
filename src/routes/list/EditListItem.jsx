@@ -40,13 +40,13 @@ function EditListItem(props) {
 EditListItem.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string,
-      list_id: PropTypes.string,
-    }),
-  }),
+      id: PropTypes.string.isRequired,
+      list_id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default EditListItem;

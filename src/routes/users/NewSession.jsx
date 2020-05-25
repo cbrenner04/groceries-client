@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Async from 'react-async';
+import { toast } from 'react-toastify';
 
-import Alert from '../../components/Alert';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
@@ -19,29 +19,12 @@ async function fetchData({ history }) {
 }
 
 function NewSession(props) {
-  let initialErrors = '';
-  let initialSuccess = '';
-  if (props.location && props.location.state) {
-    if (props.location.state.errors) {
-      initialErrors = props.location.state.errors;
-    } else if (props.location.state.success) {
-      initialSuccess = props.location.state.success;
-    }
-  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState(initialErrors);
-  const [success, setSuccess] = useState(initialSuccess);
-
-  useEffect(() => {
-    // remove the location state
-    props.history.replace(props.history.location.pathname, null);
-  }, [props.history, props.history.location.pathname]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors('');
     const user = {
       email,
       password,
@@ -60,24 +43,17 @@ function NewSession(props) {
           uid: data.uid,
         }),
       );
-      props.history.push({
-        pathname: '/lists',
-        state: { success: `Welcome ${email}!` },
-      });
+      toast(`Welcome ${email}!`, { type: 'info' });
+      props.history.push('/lists');
     } catch ({ response, request, message }) {
       if (response) {
-        setErrors(response.data.errors[0]);
+        toast(response.data.errors[0], { type: 'error' });
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
-  };
-
-  const alertDismiss = () => {
-    setErrors('');
-    setSuccess('');
   };
 
   return (
@@ -86,7 +62,6 @@ function NewSession(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        <Alert errors={errors} success={success} handleDismiss={alertDismiss} />
         <h2>Log in</h2>
         <Form onSubmit={handleSubmit}>
           <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
@@ -118,18 +93,12 @@ function NewSession(props) {
 
 NewSession.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-    replace: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    replace: PropTypes.func.isRequired,
     location: PropTypes.shape({
-      pathname: PropTypes.string,
-    }),
-  }),
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      errors: PropTypes.string,
-      success: PropTypes.string,
-    }),
-  }),
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default NewSession;

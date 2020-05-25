@@ -8,7 +8,9 @@ const PermissionButtons = (props) => (
     <br />
     <ListGroup>
       {props.users.map(({ user, users_list: { id, permissions } }) => {
-        if (user.id === props.userId) return '';
+        if (user.id === props.userId) {
+          return '';
+        }
         if (props.userIsOwner) {
           return (
             <div key={id} id={`${props.status}-user-${user.id}`}>

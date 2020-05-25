@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Purchased does not render Refresh and does render Bookmark when listType is BookList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-unread-1"
+      type="button"
+    >
+      <i
+        class="fas fa-bookmark fa-2x text-info"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Purchased does not render Refresh or Bookmark when listType is MusicList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Purchased renders Refresh and does not render Bookmark when listType is GroceryList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-refresh-1"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Purchased renders Refresh and does not render Bookmark when listType is ToDoList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-refresh-1"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;

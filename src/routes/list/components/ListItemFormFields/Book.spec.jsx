@@ -24,40 +24,38 @@ describe('Book', () => {
 
   it('renders edit form when props.editForm is true', () => {
     props.editForm = true;
-    const { container, queryByLabelText } = render(<Book {...props} />);
+    const { container, getByLabelText } = render(<Book {...props} />);
 
     expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Purchased')).toBeTruthy();
-    expect(queryByLabelText('Read')).toBeTruthy();
+    expect(getByLabelText('Purchased')).toBeTruthy();
+    expect(getByLabelText('Read')).toBeTruthy();
   });
 
   it('calls appropriate change handlers when changes occur', () => {
     props.editForm = true;
-    props.purchasedChangeHandler = jest.fn();
-    props.readChangeHandler = jest.fn();
-    const { queryByLabelText } = render(<Book {...props} />);
+    const { getByLabelText } = render(<Book {...props} />);
 
-    fireEvent.change(queryByLabelText('Author'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.change(queryByLabelText('Title'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Title'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.change(queryByLabelText('Number in series'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Number in series'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.change(queryByLabelText('Category'), { target: { value: 'a' } });
+    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.click(queryByLabelText('Purchased'));
+    fireEvent.click(getByLabelText('Purchased'));
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
 
-    fireEvent.click(queryByLabelText('Read'));
+    fireEvent.click(getByLabelText('Read'));
 
     expect(props.inputChangeHandler).toHaveBeenCalled();
   });

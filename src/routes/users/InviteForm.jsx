@@ -2,47 +2,40 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
-import Alert from '../../components/Alert';
 import { EmailField } from '../../components/FormFields';
 import axios from '../../utils/api';
 
 function InviteForm(props) {
   const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors('');
     try {
       await axios.post(`/auth/invitation`, { email });
-      props.history.push({
-        pathname: '/lists',
-        state: { success: `${email} successfully invited` },
-      });
+      toast(`${email} successfully invited`, { type: 'info' });
+      props.history.push('/lists');
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
-          props.history.push({
-            pathname: '/users/sign_in',
-            state: { errors: 'You must sign in' },
-          });
+          toast('You must sign in', { type: 'error' });
+          props.history.push('/users/sign_in');
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-          setErrors(responseErrors.join(' and '));
+          toast(responseErrors.join(' and '), { type: 'error' });
         }
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
 
   return (
     <>
-      <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h1>Send Invitation</h1>
       <Link to="/lists" className="float-right">
         Back to lists
@@ -61,7 +54,7 @@ function InviteForm(props) {
 InviteForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
-  }),
+  }).isRequired,
 };
 
 export default InviteForm;

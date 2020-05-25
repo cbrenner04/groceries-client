@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
 
-import Alert from '../../components/Alert';
 import PasswordForm from './components/PasswordForm';
 import axios from '../../utils/api';
 
 function EditInvite(props) {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [errors, setErrors] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors('');
     const user = {
       password,
       password_confirmation: passwordConfirmation,
@@ -21,26 +19,23 @@ function EditInvite(props) {
     };
     try {
       await axios.put(`/auth/invitation`, user);
-      props.history.push({
-        pathname: '/users/sign_in',
-        state: { success: 'Password successfully updated' },
-      });
+      toast('Password successfully updated', { type: 'info' });
+      props.history.push('/users/sign_in');
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
-        setErrors(responseErrors.join(' and '));
+        toast(responseErrors.join(' and '), { type: 'error' });
       } else if (request) {
-        setErrors('Something went wrong');
+        toast('Something went wrong', { type: 'error' });
       } else {
-        setErrors(message);
+        toast(message, { type: 'error' });
       }
     }
   };
 
   return (
     <>
-      <Alert errors={errors} handleDismiss={() => setErrors('')} />
       <h2>Set your password</h2>
       <PasswordForm
         password={password}
@@ -58,8 +53,8 @@ EditInvite.propTypes = {
     search: PropTypes.string,
   }).isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default EditInvite;

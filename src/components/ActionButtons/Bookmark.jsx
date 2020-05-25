@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Bookmark = (props) => (
-  <Button variant="link" onClick={props.handleClick} className="p-0 mr-3">
-    <i className={`${props.read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
+const Bookmark = ({ handleClick, read, ...rest }) => (
+  <Button variant="link" onClick={handleClick} className="p-0 mr-3" {...rest}>
+    <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
   </Button>
 );
 

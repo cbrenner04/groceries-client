@@ -8,9 +8,13 @@ import Music from './Music';
 import ToDo from './ToDo';
 import { defaultDueBy } from '../../../../utils/format';
 
-const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm = false }) => {
+const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) => {
   const setData = ({ target: { name, value } }) => {
-    const data = update(formData, { [name]: { $set: value } });
+    let newValue = value;
+    if (name === 'numberInSeries') {
+      newValue = Number(value);
+    }
+    const data = update(formData, { [name]: { $set: newValue } });
     setFormData(data);
   };
 
@@ -89,6 +93,8 @@ ListItemFormFields.propTypes = {
     numberInSeries: PropTypes.number,
     category: PropTypes.string,
   }),
+  setFormData: PropTypes.func.isRequired,
+  editForm: PropTypes.bool,
 };
 
 ListItemFormFields.defaultProps = {
@@ -110,6 +116,7 @@ ListItemFormFields.defaultProps = {
     purchased: false,
     completed: false,
   },
+  editForm: false,
 };
 
 export default ListItemFormFields;

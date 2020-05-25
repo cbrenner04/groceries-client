@@ -4,7 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 import { configure } from '@testing-library/react';
-import 'axios';
 
 configure({ testIdAttribute: 'data-test-id' });
 
@@ -21,3 +20,6 @@ jest.mock('axios', () => ({
     delete: jest.fn(),
   }),
 }));
+
+// make sure when `moment()` is called without a date, the same date is always returned
+jest.mock('moment', () => (date) => jest.requireActual('moment')(date || '2020-05-24T10:00:00.000Z'));

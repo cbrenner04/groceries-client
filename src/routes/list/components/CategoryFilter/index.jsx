@@ -7,7 +7,6 @@ import NoFilter from './NoFilter';
 
 const CategoryFilter = (props) => {
   let component;
-  // TODO: why the filter?
   if (props.categories.filter(Boolean).length) {
     if (props.filter) {
       component = <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;

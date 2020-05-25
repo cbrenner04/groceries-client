@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotPurchased does not render Bookmark when listType is not BookList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="not-purchased-item-complete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <a
+      class="p-0 mr-3"
+      href="/lists/1/grocery_list_items/1/edit"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </a>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="not-purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`NotPurchased renders Bookmark when listType is BookList 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="not-purchased-item-unread-1"
+      type="button"
+    >
+      <i
+        class="fas fa-bookmark fa-2x text-info"
+      />
+    </button>
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="not-purchased-item-complete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <a
+      class="p-0 mr-3"
+      href="/lists/1/book_list_items/1/edit"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </a>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="not-purchased-item-delete-1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
