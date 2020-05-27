@@ -47,8 +47,7 @@ IncompleteListButtons.propTypes = {
   userId: PropTypes.number.isRequired,
   list: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    users_list_id: PropTypes.number,
-    owner_id: PropTypes.number,
+    owner_id: PropTypes.number.isRequired,
   }).isRequired,
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,

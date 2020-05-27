@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListButtons renders CompleteListButtons when list is accepted and completed 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="complete-list-refresh"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="complete-list-trash"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ListButtons renders IncompleteListButtons when list is accepted and not completed 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-complete"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <a
+      class="p-0 mr-3"
+      data-test-id="incomplete-list-share"
+      href="/lists/1/users_lists"
+      style="pointer-events: auto; opacity: 1;"
+    >
+      <i
+        class="fa fa-users fa-2x text-primary"
+      />
+    </a>
+    <a
+      class="p-0 mr-3"
+      data-test-id="incomplete-list-edit"
+      href="/lists/1/edit"
+      style="pointer-events: auto; opacity: 1;"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </a>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="incomplete-list-trash"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ListButtons renders PendingListButtons when list is not accepted 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="pending-list-accept"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="pending-list-trash"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
