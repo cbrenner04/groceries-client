@@ -29,11 +29,6 @@ describe('List', () => {
         refreshed: false,
       },
       accepted: false,
-      // onListDeletion: jest.fn(),
-      // onListCompletion: jest.fn(),
-      // onListRefresh: jest.fn(),
-      // onListAcceptance: jest.fn(),
-      // onListRejection: jest.fn(),
       currentUserPermissions: 'write',
     };
   });

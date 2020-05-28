@@ -2,7 +2,6 @@
 
 exports[`Lists does not render pending lists when they do not exist 1`] = `
 <div>
-  0
   <h1>
     Your Lists
   </h1>
@@ -120,7 +119,6 @@ exports[`Lists does not render pending lists when they do not exist 1`] = `
 
 exports[`Lists renders complete lists 1`] = `
 <div>
-  0
   <h1>
     Your Lists
   </h1>
@@ -218,7 +216,6 @@ exports[`Lists renders complete lists 1`] = `
 
 exports[`Lists renders incomplete lists 1`] = `
 <div>
-  0
   <h1>
     Your Lists
   </h1>
