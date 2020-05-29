@@ -12,15 +12,16 @@ jest.mock('react-toastify', () => ({
 }));
 
 describe('EditListForm', () => {
-  const history = createMemoryHistory();
-  const props = {
-    history,
-    listId: 1,
-    name: 'foo',
-    type: 'GroceryList',
-    completed: false,
-  };
-  const renderEditListForm = (props) => {
+  let history;
+  const renderEditListForm = () => {
+    history = createMemoryHistory();
+    const props = {
+      history,
+      listId: 1,
+      name: 'foo',
+      type: 'GroceryList',
+      completed: false,
+    };
     return render(
       <Router history={history}>
         <EditListForm {...props} />)
@@ -29,13 +30,13 @@ describe('EditListForm', () => {
   };
 
   it('renders', () => {
-    const { container } = renderEditListForm(props);
+    const { container } = renderEditListForm();
 
     expect(container).toMatchSnapshot();
   });
 
   it('updates name when changed', async () => {
-    const { getByLabelText } = renderEditListForm(props);
+    const { getByLabelText } = renderEditListForm();
 
     fireEvent.change(getByLabelText('Name'), { target: { value: 'a' } });
 
@@ -43,7 +44,7 @@ describe('EditListForm', () => {
   });
 
   it('updates type when changed', async () => {
-    const { getByLabelText } = renderEditListForm(props);
+    const { getByLabelText } = renderEditListForm();
 
     expect(getByLabelText('Type')).toHaveValue('GroceryList');
 
@@ -53,7 +54,7 @@ describe('EditListForm', () => {
   });
 
   it('updates completed when changed', async () => {
-    const { getByLabelText } = renderEditListForm(props);
+    const { getByLabelText } = renderEditListForm();
 
     fireEvent.click(getByLabelText('Completed'));
 
@@ -65,7 +66,7 @@ describe('EditListForm', () => {
       foo: 'bar',
     };
     axios.put = jest.fn().mockResolvedValue({ data });
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -76,7 +77,7 @@ describe('EditListForm', () => {
 
   it('redirects to user login when 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -87,7 +88,7 @@ describe('EditListForm', () => {
 
   it('redirects to lists page when 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -98,7 +99,7 @@ describe('EditListForm', () => {
 
   it('redirects to lists page when 404', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -118,7 +119,7 @@ describe('EditListForm', () => {
       },
     });
 
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -131,7 +132,7 @@ describe('EditListForm', () => {
       request: 'request failed',
     });
 
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -144,7 +145,7 @@ describe('EditListForm', () => {
       message: 'request failed',
     });
 
-    const { getByRole } = renderEditListForm(props);
+    const { getByRole } = renderEditListForm();
 
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));

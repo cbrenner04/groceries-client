@@ -49,8 +49,26 @@ export async function fetchLists({ history }) {
 
 export async function fetchCompletedLists({ history }) {
   try {
-    const { data } = await axios.get(`/completed_lists/`);
-    return data.completed_lists;
+    const {
+      data: { completed_lists: completedLists },
+    } = await axios.get(`/completed_lists/`);
+    const currentUserPermissions = {};
+    // TODO: can this be done with a single request?
+    const userLists = await Promise.all(
+      completedLists.map((list) =>
+        axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`).catch(() => undefined),
+      ),
+    );
+    userLists.forEach((listData) => {
+      const {
+        data: { list_id: listId, permissions },
+      } = listData;
+      currentUserPermissions[listId] = permissions;
+    });
+    return {
+      completedLists,
+      currentUserPermissions,
+    };
   } catch (error) {
     handleFailure(error, history);
   }

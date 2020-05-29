@@ -71,7 +71,8 @@
         "lines": 90,
         "statements": 90
       }
-    }
+    },
+    "resetMocks": true
   },
   "browserslist": {
     "production": [

@@ -7,13 +7,14 @@ import ListButtons from './index';
 
 describe('ListButtons', () => {
   let props;
-  const history = createMemoryHistory();
-  const renderListButtons = (props) =>
-    render(
+  const renderListButtons = (props) => {
+    const history = createMemoryHistory();
+    return render(
       <Router history={history}>
         <ListButtons {...props} />
       </Router>,
     );
+  };
 
   beforeEach(() => {
     props = {

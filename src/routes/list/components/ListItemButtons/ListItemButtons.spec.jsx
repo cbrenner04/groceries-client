@@ -6,29 +6,33 @@ import { createMemoryHistory } from 'history';
 import ListItemButtons from './index';
 
 describe('ListItemButtons', () => {
-  const history = createMemoryHistory();
-  const props = {
-    item: {
-      grocery_list_id: 1,
-      id: 1,
-      read: true,
-    },
-    purchased: true,
-    handleItemDelete: jest.fn(),
-    handlePurchaseOfItem: jest.fn(),
-    handleReadOfItem: jest.fn(),
-    handleUnReadOfItem: jest.fn(),
-    handleItemUnPurchase: jest.fn(),
-    listType: 'GroceryList',
-  };
+  let props;
 
   const renderListItemButtons = (localProps) => {
+    const history = createMemoryHistory();
     return render(
       <Router history={history}>
         <ListItemButtons {...localProps} />
       </Router>,
     );
   };
+
+  beforeEach(() => {
+    props = {
+      item: {
+        grocery_list_id: 1,
+        id: 1,
+        read: true,
+      },
+      purchased: true,
+      handleItemDelete: jest.fn(),
+      handlePurchaseOfItem: jest.fn(),
+      handleReadOfItem: jest.fn(),
+      handleUnReadOfItem: jest.fn(),
+      handleItemUnPurchase: jest.fn(),
+      listType: 'GroceryList',
+    };
+  });
 
   it('renders Purchased when the item is purchased', () => {
     props.purchased = true;

@@ -7,13 +7,14 @@ import List from './List';
 
 describe('List', () => {
   let props;
-  const history = createMemoryHistory();
-  const renderList = (props) =>
-    render(
+  const renderList = (props) => {
+    const history = createMemoryHistory();
+    return render(
       <Router history={history}>
         <List {...props} />
       </Router>,
     );
+  };
 
   beforeEach(() => {
     props = {

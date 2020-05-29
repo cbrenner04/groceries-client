@@ -6,15 +6,15 @@ import { createMemoryHistory } from 'history';
 import AppNav from './AppNav';
 import instance from '../utils/api';
 
-const history = createMemoryHistory();
-
 describe('AppNav', () => {
-  const renderAppNav = () =>
-    render(
+  const renderAppNav = () => {
+    const history = createMemoryHistory();
+    return render(
       <Router history={history}>
         <AppNav />
       </Router>,
     );
+  };
 
   describe('when user is not signed in', () => {
     it('renders basic nav with brand linking to sign in', () => {

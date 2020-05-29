@@ -7,13 +7,14 @@ import IncompleteListButtons from './IncompleteListButtons';
 
 describe('IncompleteListButtons', () => {
   let props;
-  const history = createMemoryHistory();
-  const renderIncompleteListButtons = (props) =>
-    render(
+  const renderIncompleteListButtons = (props) => {
+    const history = createMemoryHistory();
+    return render(
       <Router history={history}>
         <IncompleteListButtons {...props} />
       </Router>,
     );
+  };
 
   beforeEach(() => {
     props = {

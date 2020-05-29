@@ -8,13 +8,14 @@ import Lists from './Lists';
 describe('Lists', () => {
   let props;
   let list;
-  const history = createMemoryHistory();
-  const renderLists = (props) =>
-    render(
+  const renderLists = (props) => {
+    const history = createMemoryHistory();
+    return render(
       <Router history={history}>
         <Lists {...props} />
       </Router>,
     );
+  };
 
   beforeEach(() => {
     props = {

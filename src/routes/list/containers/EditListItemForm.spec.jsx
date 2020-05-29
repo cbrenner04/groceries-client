@@ -46,10 +46,6 @@ describe('EditListItemForm', () => {
     userId: 1,
   };
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   it('renders', () => {
     const { container } = render(<EditListItemForm {...props} />);
 

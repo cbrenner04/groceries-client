@@ -154,10 +154,6 @@ describe('ListContainer', () => {
     };
   });
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   it('renders ListForm when user has write permissions', () => {
     props.permissions = 'write';
     const { container, getByTestId } = renderListContainer(props);

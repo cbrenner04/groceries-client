@@ -7,26 +7,21 @@ import EditList from './EditList';
 import axios from '../../utils/api';
 
 describe('EditList', () => {
-  const history = createMemoryHistory();
   const props = {
     match: {
       params: {
         id: '1',
       },
     },
-    history,
   };
   const renderEditList = (newProps) => {
+    const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <EditList {...newProps} />
+        <EditList {...newProps} history={history} />
       </Router>,
     );
   };
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
 
   it('renders the Loading component when fetch request is pending', () => {
     const { container, getByText } = renderEditList(props);
