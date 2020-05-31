@@ -25,10 +25,18 @@ export async function fetchLists({ history }) {
     const nonCompletedLists = sortedAcceptedLists.filter((list) => !list.completed);
     const lists = sortedAcceptedLists.concat(pendingLists);
     const currentUserPermissions = {};
-    // TODO: can this be done with a single request?
-    const userLists = await Promise.all(
-      lists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`).catch(() => undefined)),
+    // TODO: this information should be returned with the above request
+    const usersListsRequests = await Promise.allSettled(
+      lists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`)),
     );
+    const userLists = usersListsRequests
+      .map((request) => {
+        if (request.status === 'fulfilled') {
+          return request.value;
+        }
+        return null;
+      })
+      .filter(Boolean);
     userLists.forEach((listData) => {
       const {
         data: { list_id: listId, permissions },
@@ -53,12 +61,18 @@ export async function fetchCompletedLists({ history }) {
       data: { completed_lists: completedLists },
     } = await axios.get(`/completed_lists/`);
     const currentUserPermissions = {};
-    // TODO: can this be done with a single request?
-    const userLists = await Promise.all(
-      completedLists.map((list) =>
-        axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`).catch(() => undefined),
-      ),
+    // TODO: this information should be returned with the above request
+    const usersListsRequests = await Promise.allSettled(
+      completedLists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`)),
     );
+    const userLists = usersListsRequests
+      .map((request) => {
+        if (request.status === 'fulfilled') {
+          return request.value;
+        }
+        return null;
+      })
+      .filter(Boolean);
     userLists.forEach((listData) => {
       const {
         data: { list_id: listId, permissions },
