@@ -1,9 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { toast } from 'react-toastify';
 
 import CompletedListsContainer from './CompletedListsContainer';
+import axios from '../../../utils/api';
+
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
 
 describe('CompletedListsContainer', () => {
   let props;
@@ -58,31 +64,180 @@ describe('CompletedListsContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('refreshes list on successful refresh', () => {});
+  it('refreshes list on successful refresh', async () => {
+    axios.post = jest.fn().mockResolvedValue({});
+    const { getAllByTestId } = renderCompletedListsContainer(props);
 
-  it('redirects to users/sign_in on 401 of refresh', () => {});
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-  it('fires toast and does not redirect on 403 of refresh', () => {});
+    expect(toast).toHaveBeenCalledWith('Your list was successfully refreshed.', { type: 'info' });
+  });
 
-  it('fires toast and does not redirect on 404 of refresh', () => {});
+  it('redirects to users/sign_in on 401 of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
 
-  it('displays errors on error other than 401, 403, 404 of refresh', () => {});
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-  it('displays error on request failure of refresh', () => {});
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+  });
 
-  it('displays error on unknown error of refresh', () => {});
+  it('fires toast and does not redirect on 403 of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
 
-  it('deletes list on successful delete', () => {});
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-  it('redirects to users/sign_in on 401 of delete', () => {});
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
 
-  it('fires toast and does not redirect on 403 of delete', () => {});
+  it('fires toast and does not redirect on 404 of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
 
-  it('fires toast and does not redirect on 404 of delete', () => {});
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-  it('displays errors on error other than 401, 403, 404 of delete', () => {});
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
 
-  it('displays error on request failure of delete', () => {});
+  it('displays errors on error other than 401, 403, 404 of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
 
-  it('displays error on unknown error of delete', () => {});
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+  });
+
+  it('displays error on request failure of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+  });
+
+  it('displays error on unknown error of refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    const { getAllByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
+
+  it('does not delete when confirm modal is cleared', async () => {
+    axios.delete = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('clear-delete'));
+
+    fireEvent.click(getByTestId('clear-delete'));
+    await waitFor(() => expect(queryByTestId('clear-delete')).toBeNull());
+
+    expect(axios.delete).not.toHaveBeenCalled();
+    expect(toast).not.toHaveBeenCalled();
+  });
+
+  it('deletes list on successful delete', async () => {
+    axios.delete = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Your list was successfully deleted.', { type: 'info' });
+  });
+
+  it('redirects to users/sign_in on 401 of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+  });
+
+  it('fires toast and does not redirect on 403 of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('fires toast and does not redirect on 404 of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('displays errors on error other than 401, 403, 404 of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+  });
+
+  it('displays error on request failure of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+  });
+
+  it('displays error on unknown error of delete', async () => {
+    axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
 });

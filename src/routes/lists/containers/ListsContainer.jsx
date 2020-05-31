@@ -24,6 +24,8 @@ function ListsContainer(props) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
         props.history.push('/users/sign_in');
+      } else if ([403, 404].includes(response.status)) {
+        toast('List not found', { type: 'error' });
       } else {
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
@@ -200,8 +202,9 @@ ListsContainer.propTypes = {
       type: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      users_list_id: PropTypes.number.isRequired,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,
   completedLists: PropTypes.arrayOf(
@@ -211,8 +214,9 @@ ListsContainer.propTypes = {
       type: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      users_list_id: PropTypes.number.isRequired,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,
   nonCompletedLists: PropTypes.arrayOf(
@@ -222,8 +226,9 @@ ListsContainer.propTypes = {
       type: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      users_list_id: PropTypes.number.isRequired,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
