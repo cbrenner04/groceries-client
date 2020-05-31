@@ -11,26 +11,27 @@ jest.mock('react-toastify', () => ({
 }));
 
 describe('ListItemForm', () => {
-  const history = createMemoryHistory();
-  const props = {
-    history: {
-      push: jest.fn(),
-    },
-    userId: 1,
-    listId: 1,
-    listType: 'GroceryList',
-    listUsers: [
-      {
-        id: 1,
-        email: 'foo@example.com',
-      },
-    ],
-    handleItemAddition: jest.fn(),
-    categories: ['foo'],
-  };
+  let history;
+  let props;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    history = createMemoryHistory();
+    props = {
+      history: {
+        push: jest.fn(),
+      },
+      userId: 1,
+      listId: 1,
+      listType: 'GroceryList',
+      listUsers: [
+        {
+          id: 1,
+          email: 'foo@example.com',
+        },
+      ],
+      handleItemAddition: jest.fn(),
+      categories: ['foo'],
+    };
   });
 
   it('renders', () => {

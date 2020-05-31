@@ -7,9 +7,7 @@ import List from './List';
 import axios from '../../utils/api';
 
 describe('List', () => {
-  const history = createMemoryHistory();
   const props = {
-    history,
     match: {
       params: {
         id: '1',
@@ -17,16 +15,13 @@ describe('List', () => {
     },
   };
   const renderList = (newProps) => {
+    const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <List {...newProps} />
+        <List {...newProps} history={history} />
       </Router>,
     );
   };
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
 
   it('renders the Loading component when fetch request is pending', () => {
     const { container, getByText } = renderList(props);

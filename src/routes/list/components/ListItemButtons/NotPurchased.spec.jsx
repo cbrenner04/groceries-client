@@ -6,10 +6,11 @@ import { createMemoryHistory } from 'history';
 import NotPurchased from './NotPurchased';
 
 describe('NotPurchased', () => {
-  const history = createMemoryHistory();
   let props;
+  let history;
 
   const renderNotPurchased = (localProps) => {
+    history = createMemoryHistory();
     return render(
       <Router history={history}>
         <NotPurchased {...localProps} />

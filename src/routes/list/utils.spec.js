@@ -17,10 +17,6 @@ jest.mock('react-toastify', () => ({
 }));
 
 describe('utils', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   describe('itemName', () => {
     it('returns correct title', () => {
       expect(itemName({ title: 'foo', author: 'bar' }, 'BookList')).toBe('"foo" bar');

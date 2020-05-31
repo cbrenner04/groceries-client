@@ -6,7 +6,6 @@ import { createMemoryHistory } from 'history';
 import ListItems from './ListItems';
 
 describe('ListItems', () => {
-  const history = createMemoryHistory();
   const props = {
     category: 'foo',
     items: [
@@ -42,6 +41,7 @@ describe('ListItems', () => {
     permission: 'write',
   };
   const renderListItems = (localProps) => {
+    const history = createMemoryHistory();
     return render(
       <Router history={history}>
         <ListItems {...localProps} />

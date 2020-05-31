@@ -29,6 +29,7 @@ function List(props) {
       className={props.accepted ? 'accepted-list' : 'pending-list'}
       style={{ display: 'block' }}
       data-test-class={props.accepted ? acceptedListTestClass : 'pending-list'}
+      data-test-id={`list-${props.list.id}`}
     >
       <Row>
         <Col md="6" className="pt-1">
@@ -54,8 +55,8 @@ List.propTypes = {
     created_at: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
     users_list_id: PropTypes.number,
-    owner_id: PropTypes.number,
-    refreshed: PropTypes.bool,
+    owner_id: PropTypes.number.isRequired,
+    refreshed: PropTypes.bool.isRequired,
   }).isRequired,
   accepted: PropTypes.bool,
   onListDeletion: PropTypes.func,

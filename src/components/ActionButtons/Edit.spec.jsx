@@ -5,33 +5,35 @@ import { createMemoryHistory } from 'history';
 
 import Edit from './Edit';
 
-const defaultProps = {
-  to: '/fake/route',
-};
-const history = createMemoryHistory();
-
 describe('Edit', () => {
-  let editLink;
+  let history;
 
-  beforeEach(() => {
-    const { getByRole } = render(
+  const renderEdit = () => {
+    history = createMemoryHistory();
+    const defaultProps = {
+      to: '/fake/route',
+    };
+    return render(
       <Router history={history}>
         <Edit {...defaultProps} />
       </Router>,
     );
-    editLink = getByRole('link');
-  });
+  };
 
   it('renders a link', () => {
-    expect(editLink).toMatchSnapshot();
-    expect(editLink).toHaveAttribute('href', defaultProps.to);
+    const { getByRole } = renderEdit();
+
+    expect(getByRole('link')).toMatchSnapshot();
+    expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
   });
 
   describe('when link is clicked', () => {
     it('calls handleClick', () => {
-      fireEvent.click(editLink);
+      const { getByRole } = renderEdit();
 
-      expect(history.location.pathname).toBe(defaultProps.to);
+      fireEvent.click(getByRole('link'));
+
+      expect(history.location.pathname).toBe('/fake/route');
     });
   });
 });

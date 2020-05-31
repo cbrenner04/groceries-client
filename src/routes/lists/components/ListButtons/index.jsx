@@ -43,25 +43,16 @@ ListButtons.propTypes = {
     created_at: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
     users_list_id: PropTypes.number,
-    owner_id: PropTypes.number,
+    owner_id: PropTypes.number.isRequired,
     refreshed: PropTypes.bool,
   }).isRequired,
-  accepted: PropTypes.bool,
-  onListDeletion: PropTypes.func,
-  onListCompletion: PropTypes.func,
-  onListRefresh: PropTypes.func,
-  onListAcceptance: PropTypes.func,
-  onListRejection: PropTypes.func,
+  accepted: PropTypes.bool.isRequired,
+  onListDeletion: PropTypes.func.isRequired,
+  onListCompletion: PropTypes.func.isRequired,
+  onListRefresh: PropTypes.func.isRequired,
+  onListAcceptance: PropTypes.func.isRequired,
+  onListRejection: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
-};
-
-ListButtons.defaultProps = {
-  onListDeletion: () => undefined,
-  onListCompletion: () => undefined,
-  onListRefresh: () => undefined,
-  accepted: false,
-  onListAcceptance: () => undefined,
-  onListRejection: () => undefined,
 };
 
 export default ListButtons;

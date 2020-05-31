@@ -7,7 +7,6 @@ import ListItem from './ListItem';
 import { prettyDueBy } from '../../../utils/format';
 
 describe('ListItem', () => {
-  const history = createMemoryHistory();
   const props = {
     item: {
       id: 1,
@@ -36,6 +35,7 @@ describe('ListItem', () => {
   };
 
   const renderListItem = (localProps) => {
+    const history = createMemoryHistory();
     return render(
       <Router history={history}>
         <ListItem {...localProps} />

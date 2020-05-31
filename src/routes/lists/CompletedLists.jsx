@@ -14,7 +14,13 @@ function CompletedLists(props) {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data) => <CompletedListsContainer completedLists={data} history={props.history} />}
+        {(data) => (
+          <CompletedListsContainer
+            completedLists={data.completedLists}
+            currentUserPermissions={data.currentUserPermissions}
+            history={props.history}
+          />
+        )}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

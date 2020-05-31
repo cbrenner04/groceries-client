@@ -78,6 +78,7 @@ function CompletedListsContainer(props) {
             onListDeletion={handleDelete}
             completed={list.completed}
             onListRefresh={handleRefresh}
+            currentUserPermissions={props.currentUserPermissions[list.id]}
             accepted
           />
         ))}
@@ -106,8 +107,11 @@ CompletedListsContainer.propTypes = {
       completed: PropTypes.bool.isRequired,
       users_list_id: PropTypes.number,
       owner_id: PropTypes.number,
+      user_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,
+  currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default CompletedListsContainer;

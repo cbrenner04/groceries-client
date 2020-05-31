@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CompleteListButtons renders buttons disabled with userId !== list.owner_id 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="complete-list-refresh"
+      disabled=""
+      style="opacity: 0.3;"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="complete-list-trash"
+      disabled=""
+      style="opacity: 0.3;"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CompleteListButtons renders buttons enabled with userId === list.owner_id 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="complete-list-refresh"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-redo fa-2x text-primary"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="complete-list-trash"
+      style="opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;

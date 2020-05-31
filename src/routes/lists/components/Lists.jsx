@@ -7,7 +7,7 @@ import List from './List';
 
 const Lists = (props) => (
   <>
-    {props.pendingLists.length > 0 && (
+    {props.pendingLists.length > 0 && ( // cannot just check length as it will render 0
       <>
         <p>These lists have been shared with you but you have not accepted the invitation.</p>
         <ListGroup>
@@ -75,7 +75,8 @@ Lists.propTypes = {
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
       users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }).isRequired,
   ).isRequired,
   nonCompletedLists: PropTypes.arrayOf(
@@ -86,7 +87,8 @@ Lists.propTypes = {
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
       users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }).isRequired,
   ).isRequired,
   pendingLists: PropTypes.arrayOf(
@@ -97,7 +99,8 @@ Lists.propTypes = {
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
       users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
     }).isRequired,
   ).isRequired,
   onAccept: PropTypes.func.isRequired,

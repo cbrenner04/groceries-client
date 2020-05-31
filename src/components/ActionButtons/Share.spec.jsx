@@ -5,33 +5,35 @@ import { createMemoryHistory } from 'history';
 
 import Share from './Share';
 
-const defaultProps = {
-  to: '/fake/route',
-};
-const history = createMemoryHistory();
-
 describe('Share', () => {
-  let shareLink;
+  let history;
 
-  beforeEach(() => {
-    const { getByRole } = render(
+  const renderShare = () => {
+    history = createMemoryHistory();
+    const defaultProps = {
+      to: '/fake/route',
+    };
+    return render(
       <Router history={history}>
         <Share {...defaultProps} />
       </Router>,
     );
-    shareLink = getByRole('link');
-  });
+  };
 
   it('renders a link', () => {
-    expect(shareLink).toMatchSnapshot();
-    expect(shareLink).toHaveAttribute('href', defaultProps.to);
+    const { getByRole } = renderShare();
+
+    expect(getByRole('link')).toMatchSnapshot();
+    expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
   });
 
   describe('when link is clicked', () => {
     it('calls handleClick', () => {
-      fireEvent.click(shareLink);
+      const { getByRole } = renderShare();
 
-      expect(history.location.pathname).toBe(defaultProps.to);
+      fireEvent.click(getByRole('link'));
+
+      expect(history.location.pathname).toBe('/fake/route');
     });
   });
 });
