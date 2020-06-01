@@ -67,6 +67,7 @@ describe('NewSession', () => {
       data: { data: { uid: 1 } },
       headers: { 'access-token': 'foo', client: 'bar' },
     });
+    const spy = jest.spyOn(window.sessionStorage.__proto__, 'setItem');
 
     const { getByLabelText, getByRole } = renderNewSession(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -76,6 +77,14 @@ describe('NewSession', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
+    expect(spy).toHaveBeenCalledWith(
+      'user',
+      JSON.stringify({
+        'access-token': 'foo',
+        client: 'bar',
+        uid: 1,
+      }),
+    );
     expect(toast).toHaveBeenCalledWith('Welcome foo@example.com!', { type: 'info' });
     expect(props.history.push).toHaveBeenCalledWith('/lists');
   });
@@ -83,6 +92,7 @@ describe('NewSession', () => {
   it('displays error on failed submission', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    const spy = jest.spyOn(window.sessionStorage.__proto__, 'setItem');
 
     const { getByLabelText, getByRole } = renderNewSession(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -97,5 +107,6 @@ describe('NewSession', () => {
       type: 'error',
     });
     expect(props.history.push).not.toHaveBeenCalled();
+    expect(spy).not.toHaveBeenCalled();
   });
 });
