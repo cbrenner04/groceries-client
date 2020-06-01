@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShareList renders ShareList when data fetch is successful 1`] = `
+<div>
+  <div>
+    <h1>
+      Share 
+      foo
+    </h1>
+    <a
+      class="float-right"
+      href="/lists"
+    >
+      Back to lists
+    </a>
+    <br />
+    <form
+      class=""
+    >
+      <div
+        class="form-group"
+      >
+        <label
+          class="form-label"
+          for="new-email"
+        >
+          Enter an email to invite someone to share this list:
+        </label>
+        <input
+          class="form-control"
+          id="new-email"
+          name="new-email"
+          placeholder="jane.smith@example.com"
+          type="email"
+          value=""
+        />
+      </div>
+      <button
+        class="btn btn-success btn-block"
+        type="submit"
+      >
+        Share List
+      </button>
+    </form>
+    <br />
+    <p
+      class="text-lead"
+    >
+      Or select someone you've previously shared with:
+    </p>
+    <div
+      class="list-group"
+    >
+      <div
+        data-test-id="invite-user-5"
+      >
+        <button
+          class="btn btn-link list-group-item list-group-item-action"
+        >
+          foobar@example.com
+        </button>
+      </div>
+    </div>
+    <br />
+    <h2>
+      Already shared
+    </h2>
+    <p
+      class="text-lead"
+    >
+      Click to toggle permissions between read and write
+    </p>
+    <br />
+    <h3
+      class="text-capitalize"
+    >
+      pending
+    </h3>
+    <br />
+    <div
+      class="list-group"
+    >
+      <div
+        data-test-id="pending-user-2"
+      >
+        <button
+          class="d-flex justify-content-between align-items-center list-group-item list-group-item-action"
+        >
+          <span>
+            bar@example.com
+          </span>
+          <span
+            class="badge badge-success"
+            data-test-id="perm-write"
+          >
+            write
+          </span>
+        </button>
+      </div>
+    </div>
+    <br />
+    <h3
+      class="text-capitalize"
+    >
+      accepted
+    </h3>
+    <br />
+    <div
+      class="list-group"
+    >
+      <div
+        data-test-id="accepted-user-1"
+      >
+        <button
+          class="d-flex justify-content-between align-items-center list-group-item list-group-item-action"
+        >
+          <span>
+            foo@example.com
+          </span>
+          <span
+            class="badge badge-primary"
+            data-test-id="perm-read"
+          >
+            read
+          </span>
+        </button>
+      </div>
+      
+    </div>
+    <br />
+    <h3>
+      Refused
+    </h3>
+    <br />
+    <div
+      class="list-group"
+    >
+      <div
+        data-test-id="refused-user-3"
+      >
+        <div
+          class="list-group-item"
+        >
+          baz@example.com
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ShareList renders loading when data fetch is not complete 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-items: center;"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 100px; height: 100px; position: absolute; top: 50%;"
+    >
+      <span
+        class="sr-only"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ShareList renders unknown error component when error occurs 1`] = `
+<div>
+  <h1>
+    Something went wrong!
+  </h1>
+  <h2>
+    We are currently unable to render this page.
+  </h2>
+  <p>
+    Please check your connection and try to  
+    <button
+      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
+    >
+      refresh the page
+    </button>
+  </p>
+</div>
+`;

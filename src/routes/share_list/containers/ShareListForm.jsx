@@ -20,6 +20,11 @@ function ShareListForm(props) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
         props.history.push('/users/sign_in');
+      } else if (response.status === 403) {
+        toast('You do not have permission to take that action', { type: 'error' });
+        props.history.push('/lists');
+      } else if (response.status === 404) {
+        toast('User not found', { type: 'error' });
       } else {
         if (response.data.responseText) {
           toast(response.data.responseText, { type: 'error' });
@@ -76,6 +81,7 @@ function ShareListForm(props) {
     try {
       const { data } = await axios.post(`/lists/${props.listId}/users_lists`, { users_list: usersList });
       const newUsers = invitableUsers.filter((tmpUser) => tmpUser.id !== user.id);
+      setInvitableUsers(newUsers);
       const newPending = update(pending, {
         $push: [
           {
@@ -90,10 +96,8 @@ function ShareListForm(props) {
           },
         ],
       });
-      toast(`"${props.name}" has been successfully shared with ${user.email}.`, { type: 'info' });
-      setInvitableUsers(newUsers);
-      // TODO: these need to be sorted?
       setPending(newPending);
+      toast(`"${props.name}" has been successfully shared with ${user.email}.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -145,7 +149,7 @@ function ShareListForm(props) {
       <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>
       <ListGroup>
         {invitableUsers.map((user) => (
-          <div id={`invite-user-${user.id}`} key={user.id}>
+          <div data-test-id={`invite-user-${user.id}`} key={user.id}>
             <ListGroup.Item action key={user.id} className="btn btn-link" onClick={() => handleSelectUser(user)}>
               {user.email}
             </ListGroup.Item>
@@ -198,20 +202,38 @@ ShareListForm.propTypes = {
   userIsOwner: PropTypes.bool.isRequired,
   pending: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      email: PropTypes.string,
+      user: PropTypes.shape({
+        id: PropTypes.number,
+        email: PropTypes.string,
+      }),
+      users_list: PropTypes.shape({
+        id: PropTypes.number,
+        permissions: PropTypes.string,
+      }),
     }),
   ).isRequired,
   accepted: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      email: PropTypes.string,
+      user: PropTypes.shape({
+        id: PropTypes.number,
+        email: PropTypes.string,
+      }),
+      users_list: PropTypes.shape({
+        id: PropTypes.number,
+        permissions: PropTypes.string,
+      }),
     }),
   ).isRequired,
   refused: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      email: PropTypes.string,
+      user: PropTypes.shape({
+        id: PropTypes.number,
+        email: PropTypes.string,
+      }),
+      users_list: PropTypes.shape({
+        id: PropTypes.number,
+        permissions: PropTypes.string,
+      }),
     }),
   ).isRequired,
   userId: PropTypes.number.isRequired,

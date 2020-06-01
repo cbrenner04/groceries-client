@@ -6,7 +6,7 @@ export async function fetchData({ listId, history }) {
   try {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
     const userInAccepted = data.accepted.find((acceptedList) => acceptedList.user.id === data.current_user_id);
-    if (!userInAccepted || !userInAccepted.users_list.permissions === 'write') {
+    if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       toast('List not found', { type: 'error' });
       history.push('/lists');
       return;
@@ -21,7 +21,7 @@ export async function fetchData({ listId, history }) {
       refused: data.refused,
       userId: data.current_user_id,
     };
-  } catch ({ response, request, message }) {
+  } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
