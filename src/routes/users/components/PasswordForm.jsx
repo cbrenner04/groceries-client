@@ -5,7 +5,7 @@ import { Button, Form } from 'react-bootstrap';
 import { PasswordField } from '../../../components/FormFields';
 
 const PasswordForm = (props) => (
-  <Form onSubmit={props.submissionHandler} autoComplete="off">
+  <Form onSubmit={props.submissionHandler} autoComplete="off" data-test-id="password-form">
     <PasswordField
       name="password"
       label="Password"

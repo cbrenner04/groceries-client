@@ -14,7 +14,7 @@ async function fetchData({ history }) {
     await axios.get(`/auth/validate_token`);
     history.push('/lists');
   } catch {
-    // TODO: send exception somewhere for logging
+    // noop. all errors require login
   }
 }
 
@@ -45,14 +45,8 @@ function NewSession(props) {
       );
       toast(`Welcome ${email}!`, { type: 'info' });
       props.history.push('/lists');
-    } catch ({ response, request, message }) {
-      if (response) {
-        toast(response.data.errors[0], { type: 'error' });
-      } else if (request) {
-        toast('Something went wrong', { type: 'error' });
-      } else {
-        toast(message, { type: 'error' });
-      }
+    } catch {
+      toast('Something went wrong. Please check your credentials and try again.', { type: 'error' });
     }
   };
 
@@ -85,8 +79,6 @@ function NewSession(props) {
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>
-      {/* This should never render, all errors result in redirect back to /lists */}
-      <Async.Rejected>Something went wrong!</Async.Rejected>
     </Async>
   );
 }
@@ -94,10 +86,6 @@ function NewSession(props) {
 NewSession.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-    }).isRequired,
   }).isRequired,
 };
 
