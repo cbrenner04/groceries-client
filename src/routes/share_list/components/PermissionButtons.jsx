@@ -13,14 +13,14 @@ const PermissionButtons = (props) => (
         }
         if (props.userIsOwner) {
           return (
-            <div key={id} id={`${props.status}-user-${user.id}`}>
+            <div key={id} data-test-id={`${props.status}-user-${user.id}`}>
               <ListGroup.Item
                 action
                 className={'d-flex justify-content-between align-items-center'}
                 onClick={() => props.togglePermission(id, permissions, props.status)}
               >
                 <span>{user.email}</span>
-                <Badge id={`perm-${permissions}`} variant={permissions === 'write' ? 'success' : 'primary'}>
+                <Badge data-test-id={`perm-${permissions}`} variant={permissions === 'write' ? 'success' : 'primary'}>
                   {permissions}
                 </Badge>
               </ListGroup.Item>
@@ -28,7 +28,7 @@ const PermissionButtons = (props) => (
           );
         }
         return (
-          <div key={id} id={`${props.status}-user-${user.id}`}>
+          <div key={id} data-test-id={`${props.status}-user-${user.id}`}>
             <ListGroup.Item>{user.email}</ListGroup.Item>
           </div>
         );
@@ -45,8 +45,14 @@ PermissionButtons.propTypes = {
   status: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      email: PropTypes.string,
+      user: PropTypes.shape({
+        id: PropTypes.number,
+        email: PropTypes.string,
+      }),
+      users_list: PropTypes.shape({
+        id: PropTypes.number,
+        permissions: PropTypes.string,
+      }),
     }).isRequired,
   ).isRequired,
 };
