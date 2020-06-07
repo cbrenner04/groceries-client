@@ -85,7 +85,6 @@ export function sortItems(listType, items) {
 
 export async function fetchList({ id, history }) {
   try {
-    // TODO: looks like list.users_list_id is not coming back
     const responses = await Promise.all([axios.get(`/lists/${id}/users_lists`), axios.get(`/lists/${id}`)]);
     const [
       {
@@ -180,24 +179,24 @@ export async function fetchListToEdit({ id, history }) {
 export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   try {
     // TODO: do i need all of this?
-    // TODO: confirm required items always come back
-    const [editListResponse, usersListsResponse, listResponse] = await Promise.all([
+    const [
+      {
+        data: {
+          item,
+          list: { id: returnedListId, type },
+        },
+      },
+      {
+        data: { accepted, pending, current_user_id: currentUserId },
+      },
+      {
+        data: { categories },
+      },
+    ] = await Promise.all([
       axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`),
       axios.get(`/lists/${listId}/users_lists`),
       axios.get(`/lists/${listId}`),
     ]);
-    const {
-      data: {
-        item,
-        list: { id: returnedListId, type },
-      },
-    } = editListResponse;
-    const {
-      data: { accepted, pending, current_user_id: currentUserId },
-    } = usersListsResponse;
-    const {
-      data: { categories },
-    } = listResponse;
     const userId = item.user_id;
     const returnedItemId = item.id;
     const product = item.product || '';
@@ -210,12 +209,12 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const read = item.read || false;
     const artist = item.artist || '';
     const album = item.album || '';
-    const dueBy = formatDueBy(item.due_by); // TODO: this will default to today. ok?
+    const dueBy = formatDueBy(item.due_by);
     const acceptedUsers = accepted.map(({ user }) => user);
     const pendingUsers = pending.map(({ user }) => user);
     const listUsers = acceptedUsers.concat(pendingUsers);
     const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
-    const assigneeId = item.assignee_id ? String(item.assignee_id) : ''; // TODO: really?
+    const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {

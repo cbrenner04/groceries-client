@@ -7,7 +7,6 @@ import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
 
 const ListItem = (props) => {
-  // TODO: can we handle this elsewhere? need to be sure the assignee is in the listUsers. feels fucky
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
     const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);

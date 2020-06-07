@@ -14,7 +14,7 @@ function EditPassword(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // TODO: this doesn't use global instance b/c need to skip the interceptors b/c the headers aren't coming through
+      // this doesn't use global instance b/c need to skip the interceptors b/c the headers aren't coming through
       await axios.put(
         `${process.env.REACT_APP_API_BASE}/auth/password`,
         {

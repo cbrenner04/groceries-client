@@ -16,7 +16,6 @@ function handleFailure({ response }, history) {
 
 export async function fetchLists({ history }) {
   try {
-    // TODO: confirm required items come back
     const { data } = await axios.get(`/lists/`);
     const userId = data.current_user_id;
     const sortedAcceptedLists = sortLists(data.accepted_lists);

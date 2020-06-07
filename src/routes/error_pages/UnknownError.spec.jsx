@@ -29,7 +29,6 @@ describe('UnknownError', () => {
     expect(button.style.textDecoration).toBe('none');
   });
 
-  // TODO: onClick
   it('reloads the page on click', () => {
     // get location to reset it later
     const { location } = window;

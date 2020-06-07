@@ -18,7 +18,7 @@ function NewPassword(props) {
         redirect_url: `${process.env.REACT_APP_PUBLIC_URL}/users/password/edit`,
       });
     } catch {
-      // TODO: send exception somewhere for logging
+      // noop
     } finally {
       toast(`If ${email} is in our system, you will receive an email shortly with reset instructions.`, {
         type: 'info',

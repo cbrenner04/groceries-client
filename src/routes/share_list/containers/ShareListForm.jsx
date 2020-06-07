@@ -64,7 +64,6 @@ function ShareListForm(props) {
           },
         ],
       });
-      // TODO: these need to be sorted?
       setPending(newPending);
       setNewEmail('');
       toast(`"${props.name}" has been successfully shared with ${newEmail}.`, { type: 'info' });

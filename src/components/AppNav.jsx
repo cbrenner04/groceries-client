@@ -13,7 +13,7 @@ export default function AppNav() {
     try {
       await axios.delete('/auth/sign_out');
     } catch {
-      // TODO: send exception somewhere for logging
+      // noop
     }
     sessionStorage.removeItem('user');
     toast('Log out successful', { type: 'info' });
