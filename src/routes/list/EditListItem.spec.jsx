@@ -36,43 +36,27 @@ describe('EditListItem', () => {
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, getByRole } = renderEditListItem(props);
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
     expect(getByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('displays EditListItem', async () => {
-    axios.get = jest.fn().mockImplementation((route) => {
-      if (route === '/lists/1/grocery_list_items/1/edit') {
-        return {
-          data: {
-            item: {
-              user_id: 1,
-              id: 1,
-              product: 'foo',
-            },
-            list: { id: 1, type: 'GroceryList' },
-          },
-        };
-      }
-      if (route === '/lists/1/users_lists') {
-        return {
-          data: {
-            accepted: [{ id: 1, user: { id: 1, email: 'foo@example.com' }, users_list: { permissions: 'write' } }],
-            pending: [],
-            current_user_id: 1,
-          },
-        };
-      }
-      if (route === '/lists/1') {
-        return {
-          data: { categories: [] },
-        };
-      }
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        item: {
+          user_id: 1,
+          id: 1,
+          product: 'foo',
+        },
+        list: { id: 1, type: 'GroceryList' },
+        list_users: [{ id: 1, email: 'foo@example.com' }],
+        categories: [],
+      },
     });
     const { container, getByText } = renderEditListItem(props);
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
     expect(getByText('Update Item')).toBeVisible();

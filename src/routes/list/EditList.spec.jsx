@@ -42,10 +42,7 @@ describe('EditList', () => {
 
   it('displays EditList', async () => {
     axios.get = jest.fn().mockResolvedValue({
-      data: {
-        list: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
-        current_user_id: 1,
-      },
+      data: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
     });
     const { container, getByText } = renderEditList(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));

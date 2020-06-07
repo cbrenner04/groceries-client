@@ -180,29 +180,21 @@ describe('utils', () => {
     };
 
     it('returns correct body on success', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === `/lists/${id}/users_lists`) {
-          return {
-            data: {
-              accepted: [{ user: { id: 1 }, users_list: { permissions: 'read' } }],
-              pending: [{ user: { id: 1 } }],
-            },
-          };
-        }
-
-        if (route === `/lists/${id}`) {
-          return {
-            data: {
-              current_user_id: 1,
-              not_purchased_items: [],
-              purchased_items: [],
-              list: {
-                id: 1,
-              },
-              categories: [],
-            },
-          };
-        }
+      axios.get = jest.fn().mockResolvedValue({
+        data: {
+          current_user_id: 1,
+          not_purchased_items: [],
+          purchased_items: [],
+          list: {
+            id: 1,
+          },
+          categories: [],
+          list_users: [
+            { id: 1, email: 'foo@example.com' },
+            { id: 2, email: 'bar@example.com' },
+          ],
+          permissions: 'read',
+        },
       });
 
       expect(await fetchList({ id, history })).toStrictEqual({
@@ -210,43 +202,14 @@ describe('utils', () => {
         list: { id: 1 },
         purchasedItems: [],
         categories: [],
-        listUsers: [{ id: 1 }, { id: 1 }],
+        listUsers: [
+          { id: 1, email: 'foo@example.com' },
+          { id: 2, email: 'bar@example.com' },
+        ],
         includedCategories: [''],
         notPurchasedItems: { '': [] },
         permissions: 'read',
       });
-    });
-
-    it('redirects to /lists when user is not in accepted', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === `/lists/${id}/users_lists`) {
-          return {
-            data: {
-              accepted: [],
-              pending: [],
-            },
-          };
-        }
-
-        if (route === `/lists/${id}`) {
-          return {
-            data: {
-              current_user_id: 1,
-              not_purchased_items: [],
-              purchased_items: [],
-              list: {
-                id: 1,
-              },
-              categories: [],
-            },
-          };
-        }
-      });
-
-      await fetchList({ id, history });
-
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
     });
 
     it('redirects to /users/sign_in when 401', async () => {
@@ -303,10 +266,7 @@ describe('utils', () => {
 
     it('returns correct body on success', async () => {
       axios.get = jest.fn().mockResolvedValue({
-        data: {
-          list: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
-          current_user_id: 1,
-        },
+        data: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
       });
 
       expect(await fetchListToEdit({ id, history })).toStrictEqual({
@@ -315,20 +275,6 @@ describe('utils', () => {
         completed: false,
         type: 'GroceryList',
       });
-    });
-
-    it('redirects to /lists when owner id is not same as current user id', async () => {
-      axios.get = jest.fn().mockResolvedValue({
-        data: {
-          list: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
-          current_user_id: 2,
-        },
-      });
-
-      await fetchListToEdit({ id, history });
-
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
     });
 
     it('redirects to /users/sign_in when 401', async () => {
@@ -386,38 +332,26 @@ describe('utils', () => {
     };
 
     it('returns correct body on success', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === `/lists/${listId}/${itemType}/${itemId}/edit`) {
-          return {
-            data: {
-              item: {
-                id: 1,
-                user_id: 1,
-              },
-              list: { id: 1, type: 'GroceryList' },
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}/users_lists`) {
-          return {
-            data: {
-              accepted: [{ user: { id: 1 }, users_list: { permissions: 'write' } }],
-              pending: [{ user: { id: 1 } }],
-              current_user_id: 1,
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}`) {
-          return {
-            data: { categories: [] },
-          };
-        }
+      axios.get = jest.fn().mockResolvedValue({
+        data: {
+          item: {
+            id: 1,
+            user_id: 1,
+          },
+          list: { id: 1, type: 'GroceryList' },
+          categories: [],
+          list_users: [
+            { id: 1, email: 'foo@example.com' },
+            { id: 2, email: 'bar@example.com' },
+          ],
+        },
       });
 
       expect(await fetchItemToEdit({ itemId, listId, itemType, history })).toStrictEqual({
-        listUsers: [{ id: 1 }, { id: 1 }],
+        listUsers: [
+          { id: 1, email: 'foo@example.com' },
+          { id: 2, email: 'bar@example.com' },
+        ],
         userId: 1,
         list: {
           id: 1,
@@ -442,78 +376,6 @@ describe('utils', () => {
           category: '',
         },
       });
-    });
-
-    it('redirects to /lists/:listId when user is not in accepted', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === `/lists/${listId}/${itemType}/${itemId}/edit`) {
-          return {
-            data: {
-              item: {
-                id: 1,
-              },
-              list: { id: 1, type: 'GroceryList' },
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}/users_lists`) {
-          return {
-            data: {
-              accepted: [{ user: { id: 1 }, users_list: { permissions: 'write' } }],
-              pending: [],
-              current_user_id: 2,
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}`) {
-          return {
-            data: { categories: [] },
-          };
-        }
-      });
-
-      await fetchItemToEdit({ itemId, listId, itemType, history });
-
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith(`/lists/${listId}`);
-    });
-
-    it('redirects to /lists/:listId when user does not have write permission', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === `/lists/${listId}/${itemType}/${itemId}/edit`) {
-          return {
-            data: {
-              item: {
-                id: 1,
-              },
-              list: { id: 1, type: 'GroceryList' },
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}/users_lists`) {
-          return {
-            data: {
-              accepted: [{ user: { id: 1 }, users_list: { permissions: 'read' } }],
-              pending: [],
-              current_user_id: 1,
-            },
-          };
-        }
-
-        if (route === `/lists/${listId}`) {
-          return {
-            data: { categories: [] },
-          };
-        }
-      });
-
-      await fetchItemToEdit({ itemId, listId, itemType, history });
-
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith(`/lists/${listId}`);
     });
 
     it('redirects to /users/sign_in when 401', async () => {

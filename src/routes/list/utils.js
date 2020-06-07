@@ -85,33 +85,19 @@ export function sortItems(listType, items) {
 
 export async function fetchList({ id, history }) {
   try {
-    const responses = await Promise.all([axios.get(`/lists/${id}/users_lists`), axios.get(`/lists/${id}`)]);
-    const [
-      {
-        data: { accepted, pending },
+    const {
+      data: {
+        current_user_id: currentUserId,
+        not_purchased_items: responseNotPurchasedItems,
+        purchased_items: purchasedItems,
+        list,
+        categories,
+        permissions,
+        list_users: listUsers,
       },
-      {
-        data: {
-          current_user_id: currentUserId,
-          not_purchased_items: responseNotPurchasedItems,
-          purchased_items: purchasedItems,
-          list,
-          categories,
-        },
-      },
-    ] = responses;
-    const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
-    if (!userInAccepted) {
-      toast('List not found', { type: 'error' });
-      history.push('/lists');
-      return;
-    }
-    const allAcceptedUsers = accepted.map(({ user }) => user);
-    const allPendingUsers = pending.map(({ user }) => user);
-    const listUsers = allAcceptedUsers.concat(allPendingUsers);
+    } = await axios.get(`/lists/${id}`);
     const includedCategories = mapIncludedCategories(responseNotPurchasedItems);
     const notPurchasedItems = categorizeNotPurchasedItems(responseNotPurchasedItems, includedCategories);
-    const { permissions } = userInAccepted.users_list;
 
     return {
       currentUserId,
@@ -143,16 +129,8 @@ export async function fetchList({ id, history }) {
 export async function fetchListToEdit({ id, history }) {
   try {
     const {
-      data: {
-        list: { owner_id, id: listId, name, completed, type },
-        current_user_id: currentUserId,
-      },
+      data: { id: listId, name, completed, type },
     } = await axios.get(`/lists/${id}/edit`);
-    if (owner_id !== currentUserId) {
-      toast('List not found', { type: 'error' });
-      history.push('/lists');
-      return;
-    }
     return {
       listId,
       name,
@@ -178,25 +156,14 @@ export async function fetchListToEdit({ id, history }) {
 
 export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   try {
-    // TODO: do i need all of this?
-    const [
-      {
-        data: {
-          item,
-          list: { id: returnedListId, type },
-        },
+    const {
+      data: {
+        item,
+        list: { id: returnedListId, type },
+        categories,
+        list_users,
       },
-      {
-        data: { accepted, pending, current_user_id: currentUserId },
-      },
-      {
-        data: { categories },
-      },
-    ] = await Promise.all([
-      axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`),
-      axios.get(`/lists/${listId}/users_lists`),
-      axios.get(`/lists/${listId}`),
-    ]);
+    } = await axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`);
     const userId = item.user_id;
     const returnedItemId = item.id;
     const product = item.product || '';
@@ -210,20 +177,11 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const artist = item.artist || '';
     const album = item.album || '';
     const dueBy = formatDueBy(item.due_by);
-    const acceptedUsers = accepted.map(({ user }) => user);
-    const pendingUsers = pending.map(({ user }) => user);
-    const listUsers = acceptedUsers.concat(pendingUsers);
-    const userInAccepted = accepted.find((acceptedList) => acceptedList.user.id === currentUserId);
     const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
-    if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
-      toast('Item not found', { type: 'error' });
-      history.push(`/lists/${listId}`);
-      return;
-    }
     return {
-      listUsers,
+      listUsers: list_users || [],
       userId,
       list: {
         id: returnedListId,
