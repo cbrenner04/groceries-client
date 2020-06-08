@@ -30,74 +30,67 @@ describe('utils', () => {
 
   describe('fetchLists', () => {
     it('returns lists when successful', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === '/lists/') {
-          return Promise.resolve({
-            data: {
-              current_user_id: 1,
-              accepted_lists: [
-                {
-                  id: 1,
-                  users_list_id: 1,
-                  name: 'foo',
-                  user_id: 1,
-                  type: 'GroceryList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: true,
-                  refreshed: false,
-                  owner_id: 1,
-                },
-                {
-                  id: 2,
-                  users_list_id: 2,
-                  name: 'bar',
-                  user_id: 1,
-                  type: 'BookList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: false,
-                  refreshed: false,
-                  owner_id: 1,
-                },
-              ],
-              pending_lists: [
-                {
-                  id: 3,
-                  users_list_id: 3,
-                  name: 'foo',
-                  user_id: 1,
-                  type: 'GroceryList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: false,
-                  refreshed: false,
-                  owner_id: 2,
-                },
-                {
-                  id: 4,
-                  users_list_id: 4,
-                  name: 'foo',
-                  user_id: 1,
-                  type: 'GroceryList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: false,
-                  refreshed: false,
-                  owner_id: 2,
-                },
-              ],
+      axios.get = jest.fn().mockResolvedValue({
+        data: {
+          current_user_id: 1,
+          accepted_lists: {
+            completed_lists: [
+              {
+                id: 1,
+                users_list_id: 1,
+                name: 'foo',
+                user_id: 1,
+                type: 'GroceryList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: true,
+                refreshed: false,
+                owner_id: 1,
+              },
+            ],
+            not_completed_lists: [
+              {
+                id: 2,
+                users_list_id: 2,
+                name: 'bar',
+                user_id: 1,
+                type: 'BookList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: false,
+                refreshed: false,
+                owner_id: 1,
+              },
+            ],
+          },
+          pending_lists: [
+            {
+              id: 3,
+              users_list_id: 3,
+              name: 'foo',
+              user_id: 1,
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: false,
+              refreshed: false,
+              owner_id: 2,
             },
-          });
-        }
-        if (route === '/lists/1/users_lists/1') {
-          return Promise.resolve({ data: { list_id: 1, permissions: 'write' } });
-        }
-        if (route === '/lists/2/users_lists/2') {
-          return Promise.resolve({ data: { list_id: 2, permissions: 'write' } });
-        }
-        if (route === '/lists/3/users_lists/3') {
-          return Promise.resolve({ data: { list_id: 3, permissions: 'write' } });
-        }
-        if (route === '/lists/4/users_lists/4') {
-          return Promise.reject({ response: { status: 404 } });
-        }
+            {
+              id: 4,
+              users_list_id: 4,
+              name: 'foo',
+              user_id: 1,
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: false,
+              refreshed: false,
+              owner_id: 2,
+            },
+          ],
+          current_list_permissions: {
+            1: 'write',
+            2: 'write',
+            3: 'write',
+          },
+        },
       });
 
       expect(await fetchLists({ history })).toStrictEqual({
@@ -177,43 +170,36 @@ describe('utils', () => {
 
   describe('fetchCompletedLists', () => {
     it('returns lists when successful', async () => {
-      axios.get = jest.fn().mockImplementation((route) => {
-        if (route === '/completed_lists/') {
-          return Promise.resolve({
-            data: {
-              completed_lists: [
-                {
-                  id: 1,
-                  users_list_id: 1,
-                  name: 'foo',
-                  user_id: 1,
-                  type: 'GroceryList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: true,
-                  refreshed: false,
-                  owner_id: 1,
-                },
-                {
-                  id: 2,
-                  users_list_id: 2,
-                  name: 'foo',
-                  user_id: 1,
-                  type: 'GroceryList',
-                  created_at: new Date('05/31/2020').toISOString(),
-                  completed: true,
-                  refreshed: false,
-                  owner_id: 1,
-                },
-              ],
+      axios.get = jest.fn().mockResolvedValue({
+        data: {
+          completed_lists: [
+            {
+              id: 1,
+              users_list_id: 1,
+              name: 'foo',
+              user_id: 1,
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 1,
             },
-          });
-        }
-        if (route === '/lists/1/users_lists/1') {
-          return Promise.resolve({ data: { list_id: 1, permissions: 'write' } });
-        }
-        if (route === '/lists/2/users_lists/2') {
-          return Promise.reject({ response: { status: 404 } });
-        }
+            {
+              id: 2,
+              users_list_id: 2,
+              name: 'foo',
+              user_id: 1,
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 1,
+            },
+          ],
+          current_list_permissions: {
+            1: 'write',
+          },
+        },
       });
 
       expect(await fetchCompletedLists({ history })).toStrictEqual({

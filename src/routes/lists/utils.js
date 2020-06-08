@@ -16,32 +16,17 @@ function handleFailure({ response }, history) {
 
 export async function fetchLists({ history }) {
   try {
-    const { data } = await axios.get(`/lists/`);
-    const userId = data.current_user_id;
-    const sortedAcceptedLists = sortLists(data.accepted_lists);
-    const pendingLists = sortLists(data.pending_lists);
-    const completedLists = sortedAcceptedLists.filter((list) => list.completed);
-    const nonCompletedLists = sortedAcceptedLists.filter((list) => !list.completed);
-    const lists = sortedAcceptedLists.concat(pendingLists);
-    const currentUserPermissions = {};
-    // TODO: this information should be returned with the above request
-    const usersListsRequests = await Promise.allSettled(
-      lists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`)),
-    );
-    const userLists = usersListsRequests
-      .map((request) => {
-        if (request.status === 'fulfilled') {
-          return request.value;
-        }
-        return null;
-      })
-      .filter(Boolean);
-    userLists.forEach((listData) => {
-      const {
-        data: { list_id: listId, permissions },
-      } = listData;
-      currentUserPermissions[listId] = permissions;
-    });
+    const {
+      data: {
+        current_user_id: userId,
+        accepted_lists: { completed_lists, not_completed_lists },
+        pending_lists,
+        current_list_permissions: currentUserPermissions,
+      },
+    } = await axios.get(`/lists/`);
+    const pendingLists = sortLists(pending_lists);
+    const completedLists = sortLists(completed_lists);
+    const nonCompletedLists = sortLists(not_completed_lists);
     return {
       userId,
       pendingLists,
@@ -57,27 +42,8 @@ export async function fetchLists({ history }) {
 export async function fetchCompletedLists({ history }) {
   try {
     const {
-      data: { completed_lists: completedLists },
+      data: { completed_lists: completedLists, current_list_permissions: currentUserPermissions },
     } = await axios.get(`/completed_lists/`);
-    const currentUserPermissions = {};
-    // TODO: this information should be returned with the above request
-    const usersListsRequests = await Promise.allSettled(
-      completedLists.map((list) => axios.get(`/lists/${list.id}/users_lists/${list.users_list_id}`)),
-    );
-    const userLists = usersListsRequests
-      .map((request) => {
-        if (request.status === 'fulfilled') {
-          return request.value;
-        }
-        return null;
-      })
-      .filter(Boolean);
-    userLists.forEach((listData) => {
-      const {
-        data: { list_id: listId, permissions },
-      } = listData;
-      currentUserPermissions[listId] = permissions;
-    });
     return {
       completedLists,
       currentUserPermissions,

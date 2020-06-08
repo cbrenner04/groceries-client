@@ -36,32 +36,26 @@ describe('CompletedLists', () => {
   });
 
   it('renders CompletedLists when data retrieval is complete', async () => {
-    axios.get = jest.fn().mockImplementation((route) => {
-      if (route === '/completed_lists/') {
-        return Promise.resolve({
-          data: {
-            completed_lists: [
-              {
-                id: 1,
-                users_list_id: 1,
-                name: 'foo',
-                user_id: 1,
-                type: 'GroceryList',
-                created_at: new Date('05/31/2020').toISOString(),
-                completed: true,
-                refreshed: false,
-                owner_id: 1,
-              },
-            ],
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        completed_lists: [
+          {
+            id: 1,
+            users_list_id: 1,
+            name: 'foo',
+            user_id: 1,
+            type: 'GroceryList',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: true,
+            refreshed: false,
+            owner_id: 1,
           },
-        });
-      }
-      if (route === '/lists/1/users_lists/1') {
-        return Promise.resolve({ data: { list_id: 1, permissions: 'write' } });
-      }
+        ],
+        current_list_permissions: { 1: 'write' },
+      },
     });
     const { container, getByTestId } = renderCompletedLists();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');

@@ -66,10 +66,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 96.58,
-        "functions": 96.25,
-        "lines": 98.23,
-        "statements": 98.31
+        "branches": 96.54,
+        "functions": 96.12,
+        "lines": 98.19,
+        "statements": 98.27
       }
     },
     "resetMocks": true
