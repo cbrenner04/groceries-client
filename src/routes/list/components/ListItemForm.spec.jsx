@@ -45,9 +45,9 @@ describe('ListItemForm', () => {
       foo: 'bar',
     };
     axios.post = jest.fn().mockResolvedValue({ data });
-    const { getByRole } = render(<ListItemForm {...props} />);
+    const { getAllByRole } = render(<ListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(props.handleItemAddition).toHaveBeenCalledWith(data);
@@ -56,9 +56,9 @@ describe('ListItemForm', () => {
 
   it('redirects to user login when 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -67,9 +67,9 @@ describe('ListItemForm', () => {
 
   it('redirects to lists page when 403', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -78,9 +78,9 @@ describe('ListItemForm', () => {
 
   it('redirects to lists page when 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -98,9 +98,9 @@ describe('ListItemForm', () => {
       },
     });
     props.listType = 'BookList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -117,9 +117,9 @@ describe('ListItemForm', () => {
       },
     });
     props.listType = 'GroceryList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -136,9 +136,9 @@ describe('ListItemForm', () => {
       },
     });
     props.listType = 'MusicList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -155,9 +155,9 @@ describe('ListItemForm', () => {
       },
     });
     props.listType = 'ToDoList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -168,9 +168,9 @@ describe('ListItemForm', () => {
       request: 'request failed',
     });
     props.listType = 'ToDoList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -181,9 +181,9 @@ describe('ListItemForm', () => {
       message: 'request failed',
     });
     props.listType = 'ToDoList';
-    const { getByRole } = render(<ListItemForm {...props} history={history} />);
+    const { getAllByRole } = render(<ListItemForm {...props} history={history} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });

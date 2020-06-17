@@ -7,7 +7,7 @@ import EditListItem from './routes/list/EditListItem';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
 import List from './routes/list/List';
-import EditList from './routes/list//EditList';
+import EditList from './routes/lists/EditList';
 import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';

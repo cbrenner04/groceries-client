@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import { SelectField, TextField, CheckboxField } from '../../../components/FormFields';
+import ListFormFields from '../components/ListFormFields';
 import axios from '../../../utils/api';
 
 function EditListForm(props) {
@@ -52,27 +52,14 @@ function EditListForm(props) {
       </Link>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        <TextField name="name" label="Name" value={name} handleChange={({ target: { value } }) => setName(value)} />
-        <SelectField
-          name="type"
-          label="Type"
-          value={type}
-          handleChange={({ target: { value } }) => setType(value)}
-          options={[
-            { value: 'BookList', label: 'books' },
-            { value: 'GroceryList', label: 'groceries' },
-            { value: 'MusicList', label: 'music' },
-            { value: 'ToDoList', label: 'to-do' },
-          ]}
-          blankOption={false}
-        />
-        <CheckboxField
-          name="completed"
-          label="Completed"
-          value={completed}
-          handleChange={() => setCompleted(!completed)}
-          blankOption={false}
-          classes="mb-3"
+        <ListFormFields
+          name={name}
+          type={type}
+          completed={completed}
+          handleNameChange={({ target: { value } }) => setName(value)}
+          handleTypeChange={({ target: { value } }) => setType(value)}
+          handleCompletedChange={() => setCompleted(!completed)}
+          editForm
         />
         <Button type="submit" variant="success" block>
           Update List

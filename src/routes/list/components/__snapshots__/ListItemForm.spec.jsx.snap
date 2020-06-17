@@ -2,10 +2,21 @@
 
 exports[`ListItemForm renders 1`] = `
 <div>
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -74,6 +85,12 @@ exports[`ListItemForm renders 1`] = `
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
 </div>

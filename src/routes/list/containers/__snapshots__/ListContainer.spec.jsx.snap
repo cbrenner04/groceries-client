@@ -169,10 +169,21 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -247,6 +258,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />
@@ -513,10 +530,21 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -619,6 +647,12 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     >
       Add New Item
     </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
+    </button>
   </form>
   <br />
   <div
@@ -720,10 +754,21 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -798,6 +843,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />
@@ -1103,10 +1154,21 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -1181,6 +1243,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />
@@ -1484,10 +1552,21 @@ exports[`ListContainer renders filtered items without category buckets when filt
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -1562,6 +1641,12 @@ exports[`ListContainer renders filtered items without category buckets when filt
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />
@@ -1757,10 +1842,21 @@ exports[`ListContainer renders items with category buckets when includedCategori
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -1835,6 +1931,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />
@@ -2138,10 +2240,21 @@ exports[`ListContainer renders items without category buckets when includedCateg
     Back to lists
   </a>
   <br />
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    style="margin-bottom: 30px;"
+    type="button"
+  >
+    Add Item
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
     data-test-id="list-item-form"
+    id="form-collapse"
+    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -2216,6 +2329,12 @@ exports[`ListContainer renders items without category buckets when includedCateg
       type="submit"
     >
       Add New Item
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <br />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
@@ -23,6 +23,7 @@ const defaultFormState = {
 
 function ListItemForm(props) {
   const [formData, setFormData] = useState(defaultFormState);
+  const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -78,19 +79,43 @@ function ListItemForm(props) {
 
   return (
     <>
-      <Form onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
-        <ListItemFormFields
-          formData={formData}
-          setFormData={setFormData}
-          categories={props.categories}
-          listType={props.listType}
-          listUsers={props.listUsers}
-        />
-        <br />
-        <Button type="submit" variant="success" block>
-          Add New Item
-        </Button>
-      </Form>
+      {!showForm && (
+        <>
+          <Button
+            variant="link"
+            onClick={() => setShowForm(true)}
+            aria-controls="form-collapse"
+            aria-expanded={showForm}
+            style={{ marginBottom: '30px' }}
+          >
+            Add Item
+          </Button>
+        </>
+      )}
+      <Collapse in={showForm}>
+        <Form
+          id="form-collapse"
+          onSubmit={handleSubmit}
+          autoComplete="off"
+          data-test-id="list-item-form"
+          style={{ padding: 7 }}
+        >
+          <ListItemFormFields
+            formData={formData}
+            setFormData={setFormData}
+            categories={props.categories}
+            listType={props.listType}
+            listUsers={props.listUsers}
+          />
+          <br />
+          <Button type="submit" variant="success" block>
+            Add New Item
+          </Button>
+          <Button variant="link" onClick={() => setShowForm(false)} block>
+            Collapse Form
+          </Button>
+        </Form>
+      </Collapse>
     </>
   );
 }
