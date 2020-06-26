@@ -64,14 +64,16 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!<rootDir>/node_modules/",
-      "!<rootDir>/src/serviceWorker.js"
+      "!<rootDir>/src/serviceWorker.js",
+      "!<rootDir>/src/AppRouter.jsx",
+      "!<rootDir>/src/index.js"
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 96.54,
-        "functions": 96.12,
-        "lines": 98.19,
-        "statements": 98.27
+        "branches": 96.6,
+        "functions": 96.2,
+        "lines": 98.54,
+        "statements": 98.6
       }
     },
     "resetMocks": true

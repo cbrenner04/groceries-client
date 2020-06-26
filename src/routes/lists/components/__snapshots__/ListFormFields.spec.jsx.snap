@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListFormFields renders edit form 1`] = `
+<div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="form-label"
+      for="name"
+    >
+      Name
+    </label>
+    <input
+      class="form-control"
+      id="name"
+      name="name"
+      placeholder="My super cool list"
+      type="text"
+      value="foo"
+    />
+  </div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="form-label"
+      for="type"
+    >
+      Type
+    </label>
+    <select
+      class="form-control"
+      id="type"
+      name="type"
+    >
+      <option
+        value="BookList"
+      >
+        books
+      </option>
+      <option
+        value="GroceryList"
+      >
+        groceries
+      </option>
+      <option
+        value="MusicList"
+      >
+        music
+      </option>
+      <option
+        value="ToDoList"
+      >
+        to-do
+      </option>
+    </select>
+  </div>
+  <div
+    class="mb-3 form-group"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="completed"
+        name="completed"
+        type="checkbox"
+      />
+      <label
+        class="form-check-label"
+        for="completed"
+        title=""
+      >
+        Completed
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListFormFields renders new form 1`] = `
+<div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="form-label"
+      for="name"
+    >
+      Name
+    </label>
+    <input
+      class="form-control"
+      id="name"
+      name="name"
+      placeholder="My super cool list"
+      type="text"
+      value="foo"
+    />
+  </div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="form-label"
+      for="type"
+    >
+      Type
+    </label>
+    <select
+      class="form-control"
+      id="type"
+      name="type"
+    >
+      <option
+        value="BookList"
+      >
+        books
+      </option>
+      <option
+        value="GroceryList"
+      >
+        groceries
+      </option>
+      <option
+        value="MusicList"
+      >
+        music
+      </option>
+      <option
+        value="ToDoList"
+      >
+        to-do
+      </option>
+    </select>
+  </div>
+</div>
+`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 
 import ListForm from './ListForm';
 
@@ -8,6 +8,27 @@ describe('ListForm', () => {
     const { container } = render(<ListForm onFormSubmit={jest.fn()} />);
 
     expect(container).toMatchSnapshot();
+  });
+
+  it('expands form', async () => {
+    const { baseElement, getByText } = render(<ListForm onFormSubmit={jest.fn()} />);
+
+    fireEvent.click(getByText('Add List'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).toHaveClass('show');
+  });
+
+  it('collapses form', async () => {
+    const { baseElement, getByText } = render(<ListForm onFormSubmit={jest.fn()} />);
+
+    fireEvent.click(getByText('Add List'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
+    fireEvent.click(getByText('Collapse Form'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).not.toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).not.toHaveClass('show');
   });
 
   it('changes the value in the name field', () => {
@@ -28,11 +49,11 @@ describe('ListForm', () => {
 
   it('calls props.onFormSubmit when form is submitted', () => {
     const onFormSubmit = jest.fn();
-    const { getByLabelText, getByRole } = render(<ListForm onFormSubmit={onFormSubmit} />);
+    const { getByLabelText, getAllByRole } = render(<ListForm onFormSubmit={onFormSubmit} />);
 
     fireEvent.change(getByLabelText('Name'), { target: { value: 'foo' } });
     fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[1]);
 
     expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', type: 'BookList' });
   });

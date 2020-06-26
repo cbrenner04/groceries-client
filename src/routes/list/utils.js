@@ -126,34 +126,6 @@ export async function fetchList({ id, history }) {
   }
 }
 
-export async function fetchListToEdit({ id, history }) {
-  try {
-    const {
-      data: { id: listId, name, completed, type },
-    } = await axios.get(`/lists/${id}/edit`);
-    return {
-      listId,
-      name,
-      completed,
-      type,
-    };
-  } catch ({ response }) {
-    if (response) {
-      if (response.status === 401) {
-        toast('You must sign in', { type: 'error' });
-        history.push('/users/sign_in');
-        return;
-      } else if ([403, 404].includes(response.status)) {
-        toast('List not found', { type: 'error' });
-        history.push('/lists');
-        return;
-      }
-    }
-    // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
-  }
-}
-
 export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   try {
     const {

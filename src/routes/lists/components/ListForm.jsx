@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Collapse, Form } from 'react-bootstrap';
 
-import { SelectField, TextField } from '../../../components/FormFields';
+import ListFormFields from '../components/ListFormFields';
 
 function ListForm({ onFormSubmit }) {
   const defaultListType = 'GroceryList';
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
+  const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -17,31 +18,29 @@ function ListForm({ onFormSubmit }) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} autoComplete="off">
-      <TextField
-        name="name"
-        label="Name"
-        value={name}
-        handleChange={({ target: { value } }) => setName(value)}
-        placeholder="My super cool list"
-      />
-      <SelectField
-        name="type"
-        label="Type"
-        value={type}
-        handleChange={({ target: { value } }) => setType(value)}
-        options={[
-          { value: 'BookList', label: 'books' },
-          { value: 'GroceryList', label: 'groceries' },
-          { value: 'MusicList', label: 'music' },
-          { value: 'ToDoList', label: 'to-do' },
-        ]}
-        blankOption={false}
-      />
-      <Button type="submit" variant="success" block>
-        Create List
-      </Button>
-    </Form>
+    <>
+      {!showForm && (
+        <Button variant="link" onClick={() => setShowForm(true)} aria-controls="form-collapse" aria-expanded={showForm}>
+          Add List
+        </Button>
+      )}
+      <Collapse in={showForm}>
+        <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" style={{ padding: 6 }}>
+          <ListFormFields
+            name={name}
+            type={type}
+            handleNameChange={({ target: { value } }) => setName(value)}
+            handleTypeChange={({ target: { value } }) => setType(value)}
+          />
+          <Button type="submit" variant="success" block>
+            Create List
+          </Button>
+          <Button variant="link" onClick={() => setShowForm(false)} block>
+            Collapse Form
+          </Button>
+        </Form>
+      </Collapse>
+    </>
   );
 }
 

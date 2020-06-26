@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-import { sortLists, fetchLists, fetchCompletedLists } from './utils';
+import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './utils';
 import axios from '../../utils/api';
 
 jest.mock('react-toastify', () => ({
@@ -245,6 +245,71 @@ describe('utils', () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
 
       expect(fetchCompletedLists({ history })).rejects.toThrow();
+    });
+  });
+
+  describe('fetchListToEdit', () => {
+    const id = 1;
+    const history = {
+      push: jest.fn(),
+    };
+
+    it('returns correct body on success', async () => {
+      axios.get = jest.fn().mockResolvedValue({
+        data: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
+      });
+
+      expect(await fetchListToEdit({ id, history })).toStrictEqual({
+        listId: 1,
+        name: 'foo',
+        completed: false,
+        type: 'GroceryList',
+      });
+    });
+
+    it('redirects to /users/sign_in when 401', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+
+      await fetchListToEdit({ id, history });
+
+      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('redirects to /lists when 403', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
+
+      await fetchListToEdit({ id, history });
+
+      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith('/lists');
+    });
+
+    it('redirects to /lists when 404', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+
+      await fetchListToEdit({ id, history });
+
+      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith('/lists');
+    });
+
+    it('throws when status is not 401, 403, 404', () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+
+      expect(fetchListToEdit({ id, history })).rejects.toThrow();
+    });
+
+    it('throws when request fails', () => {
+      axios.get = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+
+      expect(fetchListToEdit({ id, history })).rejects.toThrow();
+    });
+
+    it('throws when unknown error occurs', () => {
+      axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+
+      expect(fetchListToEdit({ id, history })).rejects.toThrow();
     });
   });
 });

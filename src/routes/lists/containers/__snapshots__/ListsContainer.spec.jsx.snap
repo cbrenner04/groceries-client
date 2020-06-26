@@ -5,9 +5,19 @@ exports[`ListsContainer renders 1`] = `
   <h1>
     Lists
   </h1>
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    type="button"
+  >
+    Add List
+  </button>
   <form
     autocomplete="off"
-    class=""
+    class="collapse"
+    id="form-collapse"
+    style="padding: 6px;"
   >
     <div
       class="form-group"
@@ -68,6 +78,12 @@ exports[`ListsContainer renders 1`] = `
       type="submit"
     >
       Create List
+    </button>
+    <button
+      class="btn btn-link btn-block"
+      type="button"
+    >
+      Collapse Form
     </button>
   </form>
   <hr />
