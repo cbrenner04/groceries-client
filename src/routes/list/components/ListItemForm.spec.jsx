@@ -40,6 +40,27 @@ describe('ListItemForm', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('expands form', async () => {
+    const { baseElement, getByText } = render(<ListItemForm {...props} />);
+
+    fireEvent.click(getByText('Add Item'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).toHaveClass('show');
+  });
+
+  it('collapses form', async () => {
+    const { baseElement, getByText } = render(<ListItemForm {...props} />);
+
+    fireEvent.click(getByText('Add Item'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
+    fireEvent.click(getByText('Collapse Form'));
+    await waitFor(() => expect(baseElement.children[0].children[0]).not.toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).not.toHaveClass('show');
+  });
+
   it('calls handleItemAddition and fires toast on successful submission', async () => {
     const data = {
       foo: 'bar',
