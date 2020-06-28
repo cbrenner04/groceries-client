@@ -6,7 +6,8 @@ import { Button, Form, ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { EmailField } from '../../../components/FormFields';
-import PermissionButtons from '../components/PermissionButtons';
+import UsersList from '../components/UsersList';
+import RefusedUsersList from '../components/RefusedUsersList';
 import axios from '../../../utils/api';
 
 function ShareListForm(props) {
@@ -14,6 +15,7 @@ function ShareListForm(props) {
   const [newEmail, setNewEmail] = useState('');
   const [pending, setPending] = useState(props.pending);
   const [accepted, setAccepted] = useState(props.accepted);
+  const [refused, setRefused] = useState(props.refused);
 
   const failure = ({ response, request, message }) => {
     if (response) {
@@ -102,6 +104,14 @@ function ShareListForm(props) {
     }
   };
 
+  const getUsers = (status) => {
+    if (status === 'pending') {
+      return [pending, setPending];
+    } else {
+      return [accepted, setAccepted];
+    }
+  };
+
   const togglePermission = async (id, currentPermission, status) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
@@ -110,7 +120,7 @@ function ShareListForm(props) {
           permissions,
         },
       });
-      const users = status === 'pending' ? pending : accepted;
+      const [users, stateFunc] = getUsers(status);
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
         const tmpUsersList = newList.users_list;
@@ -119,8 +129,47 @@ function ShareListForm(props) {
         }
         return newList;
       });
-      const stateFunc = status === 'pending' ? setPending : setAccepted;
       stateFunc(updatedUsers);
+    } catch (error) {
+      failure(error);
+    }
+  };
+
+  const refreshShare = async (id, userId) => {
+    const { user } = refused.find(({ user }) => user.id === userId);
+    try {
+      const { data } = await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
+        users_list: {
+          has_accepted: null,
+          permissions: 'write',
+        },
+      });
+      const updatedPending = update(pending, {
+        $push: [
+          {
+            user,
+            users_list: data,
+          },
+        ],
+      });
+      setPending(updatedPending);
+      const updatedRefused = refused.filter(({ user }) => user.id !== userId);
+      setRefused(updatedRefused);
+    } catch (error) {
+      failure(error);
+    }
+  };
+
+  const removeShare = async (id) => {
+    try {
+      await axios.delete(`/lists/${props.listId}/users_lists/${id}`);
+      const {
+        data: { accepted, invitable_users: invitableUsers, pending, refused },
+      } = await axios.get(`/lists/${props.listId}/users_lists`);
+      setAccepted(accepted);
+      setInvitableUsers(invitableUsers);
+      setPending(pending);
+      setRefused(refused);
     } catch (error) {
       failure(error);
     }
@@ -132,8 +181,7 @@ function ShareListForm(props) {
       <Link to="/lists" className="float-right">
         Back to lists
       </Link>
-      <br />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="pt-3 pb-3">
         <EmailField
           name="new-email"
           label="Enter an email to invite someone to share this list:"
@@ -144,8 +192,7 @@ function ShareListForm(props) {
           Share List
         </Button>
       </Form>
-      <br />
-      <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>
+      {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup>
         {invitableUsers.map((user) => (
           <div data-test-id={`invite-user-${user.id}`} key={user.id}>
@@ -155,33 +202,30 @@ function ShareListForm(props) {
           </div>
         ))}
       </ListGroup>
-      <br />
-      <h2>Already shared</h2>
-      <p className="text-lead">Click to toggle permissions between read and write</p>
-      <br />
-      <PermissionButtons
+      <h2 className="pt-3">Shared with:</h2>
+      <p className="text-lead">Click the arrows to upgrade or downgrade the permissions between read and write</p>
+      <UsersList
         togglePermission={togglePermission}
+        removeShare={removeShare}
         userIsOwner={props.userIsOwner}
         userId={props.userId}
         status="pending"
         users={pending}
       />
-      <PermissionButtons
+      <UsersList
         togglePermission={togglePermission}
+        removeShare={removeShare}
         userIsOwner={props.userIsOwner}
         userId={props.userId}
         status="accepted"
         users={accepted}
       />
-      <h3>Refused</h3>
-      <br />
-      <ListGroup>
-        {props.refused.map(({ user }) => (
-          <div key={user.id} data-test-id={`refused-user-${user.id}`}>
-            <ListGroup.Item>{user.email}</ListGroup.Item>
-          </div>
-        ))}
-      </ListGroup>
+      <RefusedUsersList
+        refreshShare={refreshShare}
+        userIsOwner={props.userIsOwner}
+        userId={props.userId}
+        users={refused}
+      />
     </div>
   );
 }

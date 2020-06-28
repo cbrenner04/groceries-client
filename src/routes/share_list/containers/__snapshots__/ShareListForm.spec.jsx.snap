@@ -13,9 +13,8 @@ exports[`ShareListForm renders 1`] = `
     >
       Back to lists
     </a>
-    <br />
     <form
-      class=""
+      class="pt-3 pb-3"
     >
       <div
         class="form-group"
@@ -42,7 +41,6 @@ exports[`ShareListForm renders 1`] = `
         Share List
       </button>
     </form>
-    <br />
     <p
       class="text-lead"
     >
@@ -61,86 +59,180 @@ exports[`ShareListForm renders 1`] = `
         </button>
       </div>
     </div>
-    <br />
-    <h2>
-      Already shared
+    <h2
+      class="pt-3"
+    >
+      Shared with:
     </h2>
     <p
       class="text-lead"
     >
-      Click to toggle permissions between read and write
+      Click the arrows to upgrade or downgrade the permissions between read and write
     </p>
-    <br />
     <h3
-      class="text-capitalize"
+      class="pt-3 text-capitalize"
     >
       pending
     </h3>
-    <br />
     <div
       class="list-group"
     >
       <div
+        class="list-group-item"
         data-test-id="pending-user-2"
+        style="display: block;"
       >
-        <button
-          class="d-flex justify-content-between align-items-center list-group-item list-group-item-action"
+        <div
+          class="row"
         >
-          <span>
-            bar@example.com
-          </span>
-          <span
-            class="badge badge-primary"
-            data-test-id="perm-read"
+          <div
+            class="pt-1 col-md-6"
           >
-            read
-          </span>
-        </button>
+            bar@example.com
+          </div>
+          <div
+            class="pt-1 col-md-4"
+          >
+            <span
+              class="badge badge-primary"
+              data-test-id="perm-read"
+            >
+              read
+            </span>
+          </div>
+          <div
+            class="col-md-2"
+          >
+            <div
+              class="float-right btn-group"
+              role="group"
+            >
+              <button
+                class="p-0 mr-4 btn btn-link"
+                data-test-id="toggle-permissions"
+                type="button"
+              >
+                <i
+                  class="fas fa-angle-double-up fa-2x text-warning"
+                />
+              </button>
+              <button
+                class="p-0 btn btn-link"
+                data-test-id="remove-share"
+                type="button"
+              >
+                <i
+                  class="fa fa-trash fa-2x text-danger"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <br />
     <h3
-      class="text-capitalize"
+      class="pt-3 text-capitalize"
     >
       accepted
     </h3>
-    <br />
     <div
       class="list-group"
     >
       <div
+        class="list-group-item"
         data-test-id="accepted-user-3"
-      >
-        <button
-          class="d-flex justify-content-between align-items-center list-group-item list-group-item-action"
-        >
-          <span>
-            baz@example.com
-          </span>
-          <span
-            class="badge badge-success"
-            data-test-id="perm-write"
-          >
-            write
-          </span>
-        </button>
-      </div>
-    </div>
-    <br />
-    <h3>
-      Refused
-    </h3>
-    <br />
-    <div
-      class="list-group"
-    >
-      <div
-        data-test-id="refused-user-4"
+        style="display: block;"
       >
         <div
-          class="list-group-item"
+          class="row"
         >
-          foobar@example.com
+          <div
+            class="pt-1 col-md-6"
+          >
+            baz@example.com
+          </div>
+          <div
+            class="pt-1 col-md-4"
+          >
+            <span
+              class="badge badge-success"
+              data-test-id="perm-write"
+            >
+              write
+            </span>
+          </div>
+          <div
+            class="col-md-2"
+          >
+            <div
+              class="float-right btn-group"
+              role="group"
+            >
+              <button
+                class="p-0 mr-4 btn btn-link"
+                data-test-id="toggle-permissions"
+                type="button"
+              >
+                <i
+                  class="fas fa-angle-double-down fa-2x text-warning"
+                />
+              </button>
+              <button
+                class="p-0 btn btn-link"
+                data-test-id="remove-share"
+                type="button"
+              >
+                <i
+                  class="fa fa-trash fa-2x text-danger"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3
+      class="pt-3"
+    >
+      Refused
+    </h3>
+    <div
+      class="list-group"
+    >
+      <div
+        class="list-group-item"
+        data-test-id="refused-user-4"
+        style="display: block;"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="pt-1 col-md-6"
+          >
+            foobar@example.com
+          </div>
+          <div
+            class="pt-1 col-md-4"
+          />
+          <div
+            class="col-md-2"
+          >
+            <div
+              class="float-right btn-group"
+              role="group"
+            >
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="refresh-share"
+                type="button"
+              >
+                <i
+                  class="fa fa-redo fa-2x text-primary"
+                />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
