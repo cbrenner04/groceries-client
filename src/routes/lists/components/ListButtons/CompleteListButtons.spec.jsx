@@ -10,13 +10,14 @@ describe('CompleteListButtons', () => {
     props = {
       onListRefresh: jest.fn(),
       onListDeletion: jest.fn(),
+      onListRemoval: jest.fn(),
       userId: 1,
       list: {
         owner_id: 1,
       },
     };
   });
-  it('renders buttons disabled with userId !== list.owner_id', () => {
+  it('renders refresh disabled when user is not owner', () => {
     props.userId = 2;
     props.list.owner_id = 1;
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
@@ -24,11 +25,9 @@ describe('CompleteListButtons', () => {
     expect(container).toMatchSnapshot();
     expect(getByTestId('complete-list-refresh')).toBeDisabled();
     expect(getByTestId('complete-list-refresh')).toHaveStyle({ opacity: 0.3 });
-    expect(getByTestId('complete-list-trash')).toBeDisabled();
-    expect(getByTestId('complete-list-trash')).toHaveStyle({ opacity: 0.3 });
   });
 
-  it('renders buttons enabled with userId === list.owner_id', () => {
+  it('renders refresh enabled when user is owner', () => {
     props.userId = 1;
     props.list.owner_id = 1;
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
@@ -36,8 +35,6 @@ describe('CompleteListButtons', () => {
     expect(container).toMatchSnapshot();
     expect(getByTestId('complete-list-refresh')).toBeEnabled();
     expect(getByTestId('complete-list-refresh')).toHaveStyle({ opacity: 1 });
-    expect(getByTestId('complete-list-trash')).toBeEnabled();
-    expect(getByTestId('complete-list-trash')).toHaveStyle({ opacity: 1 });
   });
 
   it('calls props.onListRefresh when refresh button is clicked', () => {
@@ -54,5 +51,15 @@ describe('CompleteListButtons', () => {
     fireEvent.click(getByTestId('complete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
+  });
+
+  it('calls props.onListRemoval when trash button is clicked and user is not owner', () => {
+    props.list.owner_id = 2;
+
+    const { getByTestId } = render(<CompleteListButtons {...props} />);
+
+    fireEvent.click(getByTestId('complete-list-trash'));
+
+    expect(props.onListRemoval).toHaveBeenCalledWith(props.list);
   });
 });

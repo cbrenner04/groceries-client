@@ -238,7 +238,94 @@ exports[`ListsContainer renders 1`] = `
             <button
               class="p-0 btn btn-link"
               data-test-id="incomplete-list-trash"
-              style="opacity: 1;"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="accepted-list list-group-item"
+      data-test-class="non-completed-list"
+      data-test-id="list-5"
+      style="display: block;"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="pt-1 col-md-6"
+        >
+          <a
+            class="router-link"
+            href="/lists/5"
+          >
+            <h5
+              class="mb-1"
+            >
+              <i
+                class="fa fa-list text-info mr-3"
+              />
+              foobar
+            </h5>
+          </a>
+        </div>
+        <div
+          class="pt-1 col-md-4"
+        >
+          <small
+            class="text-muted"
+          >
+            May 31 2020, 12:00:00 am
+          </small>
+        </div>
+        <div
+          class="col-md-2"
+        >
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="incomplete-list-complete"
+              disabled=""
+              style="opacity: 0.3;"
+              type="button"
+            >
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <a
+              class="p-0 mr-3"
+              data-test-id="incomplete-list-share"
+              disabled=""
+              href="/lists/5/users_lists"
+              style="pointer-events: none; opacity: 0.3;"
+            >
+              <i
+                class="fa fa-users fa-2x text-primary"
+              />
+            </a>
+            <a
+              class="p-0 mr-3"
+              data-test-id="incomplete-list-edit"
+              disabled=""
+              href="/lists/5/edit"
+              style="pointer-events: none; opacity: 0.3;"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </a>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="incomplete-list-trash"
               type="button"
             >
               <i
@@ -321,7 +408,72 @@ exports[`ListsContainer renders 1`] = `
             <button
               class="p-0 btn btn-link"
               data-test-id="complete-list-trash"
-              style="opacity: 1;"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="accepted-list list-group-item"
+      data-test-class="completed-list"
+      data-test-id="list-4"
+      style="display: block;"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="pt-1 col-md-6"
+        >
+          <a
+            class="router-link"
+            href="/lists/4"
+          >
+            <h5
+              class="mb-1"
+            >
+              <i
+                class="fa fa-book text-info mr-3"
+              />
+              bar
+            </h5>
+          </a>
+        </div>
+        <div
+          class="pt-1 col-md-4"
+        >
+          <small
+            class="text-muted"
+          >
+            May 31 2020, 12:00:00 am
+          </small>
+        </div>
+        <div
+          class="col-md-2"
+        >
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="complete-list-refresh"
+              disabled=""
+              style="opacity: 0.3;"
+              type="button"
+            >
+              <i
+                class="fa fa-redo fa-2x text-primary"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="complete-list-trash"
               type="button"
             >
               <i

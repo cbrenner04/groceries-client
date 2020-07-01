@@ -50,10 +50,22 @@ describe('CompletedListsContainer', () => {
           user_id: 1,
           refreshed: false,
         },
+        {
+          id: 3,
+          name: 'baz',
+          type: 'BookList',
+          created_at: new Date('05/28/2020').toISOString(),
+          completed: true,
+          users_list_id: 3,
+          owner_id: 2,
+          user_id: 1,
+          refreshed: false,
+        },
       ],
       currentUserPermissions: {
         1: 'write',
         2: 'write',
+        3: 'read',
       },
     };
   });
@@ -237,6 +249,114 @@ describe('CompletedListsContainer', () => {
 
     fireEvent.click(getByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
+
+  it('does not remove list when confirm modal is cleared', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('clear-remove'));
+
+    fireEvent.click(getByTestId('clear-remove'));
+    await waitFor(() => expect(queryByTestId('clear-remove')).toBeNull());
+
+    expect(toast).not.toHaveBeenCalled();
+    expect(axios.patch).not.toHaveBeenCalled();
+  });
+
+  it('removes list', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('List successfully removed.', { type: 'info' });
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.completedLists[2].id}`)).toBeNull();
+  });
+
+  it('redirects to login when remove fails with 401', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+  });
+
+  it('shows errors when remove fails with 403', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('shows errors when remove fails with 404', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('shows errors when remove fails with error other than 401, 403, 404', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+  });
+
+  it('shows errors when remove fails to send request', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+  });
+
+  it('shows errors when remove unknown error occurs', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[2]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });

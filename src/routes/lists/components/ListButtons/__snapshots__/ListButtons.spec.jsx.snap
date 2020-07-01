@@ -19,7 +19,6 @@ exports[`ListButtons renders CompleteListButtons when list is accepted and compl
     <button
       class="p-0 btn btn-link"
       data-test-id="complete-list-trash"
-      style="opacity: 1;"
       type="button"
     >
       <i
@@ -69,7 +68,6 @@ exports[`ListButtons renders IncompleteListButtons when list is accepted and not
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"
-      style="opacity: 1;"
       type="button"
     >
       <i

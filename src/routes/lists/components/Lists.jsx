@@ -37,6 +37,7 @@ const Lists = (props) => (
           onListCompletion={props.onListCompletion}
           completed={list.completed}
           currentUserPermissions={props.currentUserPermissions[list.id]}
+          onListRemoval={props.onRemove}
           accepted
         />
       ))}
@@ -58,6 +59,7 @@ const Lists = (props) => (
           completed={list.completed}
           onListRefresh={props.onListRefresh}
           currentUserPermissions={props.currentUserPermissions[list.id]}
+          onListRemoval={props.onRemove}
           accepted
         />
       ))}
@@ -109,6 +111,7 @@ Lists.propTypes = {
   onListDelete: PropTypes.func.isRequired,
   onListRefresh: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
+  onRemove: PropTypes.func.isRequired,
 };
 
 export default Lists;

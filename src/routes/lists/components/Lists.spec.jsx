@@ -25,6 +25,7 @@ describe('Lists', () => {
       pendingLists: [],
       onAccept: jest.fn(),
       onReject: jest.fn(),
+      onRemove: jest.fn(),
       onListCompletion: jest.fn(),
       onListDelete: jest.fn(),
       onListRefresh: jest.fn(),

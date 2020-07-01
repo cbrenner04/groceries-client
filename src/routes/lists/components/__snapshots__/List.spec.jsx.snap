@@ -58,7 +58,6 @@ exports[`List renders * when list has been refreshed 1`] = `
           <button
             class="p-0 btn btn-link"
             data-test-id="complete-list-trash"
-            style="opacity: 1;"
             type="button"
           >
             <i
@@ -129,7 +128,6 @@ exports[`List renders correct list data-test-class and classes when list is acce
           <button
             class="p-0 btn btn-link"
             data-test-id="complete-list-trash"
-            style="opacity: 1;"
             type="button"
           >
             <i
@@ -220,7 +218,6 @@ exports[`List renders correct list data-test-class and classes when list is acce
           <button
             class="p-0 btn btn-link"
             data-test-id="incomplete-list-trash"
-            style="opacity: 1;"
             type="button"
           >
             <i

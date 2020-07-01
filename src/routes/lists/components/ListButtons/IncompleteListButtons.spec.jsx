@@ -25,11 +25,12 @@ describe('IncompleteListButtons', () => {
       },
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
+      onListRemoval: jest.fn(),
       currentUserPermissions: 'write',
     };
   });
 
-  it('complete, edit, and delete are disabled when user is not owner', () => {
+  it('complete and edit are disabled when user is not owner', () => {
     props.userId = 2;
     props.list.owner_id = 3;
     const { container, getByTestId } = renderIncompleteListButtons(props);
@@ -39,11 +40,9 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-complete')).toHaveStyle({ opacity: 0.3 });
     expect(getByTestId('incomplete-list-edit')).toHaveAttribute('disabled', '');
     expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
-    expect(getByTestId('incomplete-list-trash')).toBeDisabled();
-    expect(getByTestId('incomplete-list-trash')).toHaveStyle({ opacity: 0.3 });
   });
 
-  it('complete, edit, and delete are enabled when user is owner', () => {
+  it('complete and edit are enabled when user is owner', () => {
     props.userId = 1;
     props.list.owner_id = 1;
     const { container, getByTestId } = renderIncompleteListButtons(props);
@@ -53,8 +52,6 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-complete')).toHaveStyle({ opacity: 1 });
     expect(getByTestId('incomplete-list-edit')).not.toHaveAttribute('disabled', '');
     expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
-    expect(getByTestId('incomplete-list-trash')).toBeEnabled();
-    expect(getByTestId('incomplete-list-trash')).toHaveStyle({ opacity: 1 });
   });
 
   it('share is disabled when user does not have write permissions', () => {
@@ -89,5 +86,15 @@ describe('IncompleteListButtons', () => {
     fireEvent.click(getByTestId('incomplete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
+  });
+
+  it('calls props.onListRemoval when trash is clicked and user is not owner', () => {
+    props.list.owner_id = 2;
+
+    const { getByTestId } = renderIncompleteListButtons(props);
+
+    fireEvent.click(getByTestId('incomplete-list-trash'));
+
+    expect(props.onListRemoval).toHaveBeenCalledWith(props.list);
   });
 });

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`IncompleteListButtons complete, edit, and delete are disabled when user is not owner 1`] = `
+exports[`IncompleteListButtons complete and edit are disabled when user is not owner 1`] = `
 <div>
   <div
     class="float-right btn-group"
@@ -41,8 +41,6 @@ exports[`IncompleteListButtons complete, edit, and delete are disabled when user
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"
-      disabled=""
-      style="opacity: 0.3;"
       type="button"
     >
       <i
@@ -53,7 +51,7 @@ exports[`IncompleteListButtons complete, edit, and delete are disabled when user
 </div>
 `;
 
-exports[`IncompleteListButtons complete, edit, and delete are enabled when user is owner 1`] = `
+exports[`IncompleteListButtons complete and edit are enabled when user is owner 1`] = `
 <div>
   <div
     class="float-right btn-group"
@@ -92,7 +90,6 @@ exports[`IncompleteListButtons complete, edit, and delete are enabled when user 
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"
-      style="opacity: 1;"
       type="button"
     >
       <i
@@ -143,7 +140,6 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"
-      style="opacity: 1;"
       type="button"
     >
       <i
@@ -193,7 +189,6 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"
-      style="opacity: 1;"
       type="button"
     >
       <i

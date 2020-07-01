@@ -35,6 +35,7 @@ describe('ListButtons', () => {
       onListRefresh: jest.fn(),
       onListAcceptance: jest.fn(),
       onListRejection: jest.fn(),
+      onListRemoval: jest.fn(),
       currentUserPermissions: 'write',
     };
   });
