@@ -12,6 +12,8 @@ function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [listToDelete, setListToDelete] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [listToRemove, setListToRemove] = useState('');
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
   const failure = ({ response, request, message }) => {
     if (response) {
@@ -60,6 +62,25 @@ function CompletedListsContainer(props) {
     }
   };
 
+  const handleRemove = (list) => {
+    setListToRemove(list);
+    setShowRemoveConfirm(true);
+  };
+
+  const handleRemoveConfirm = async () => {
+    setShowRemoveConfirm(false);
+    try {
+      await axios.patch(`/lists/${listToRemove.id}/users_lists/${listToRemove.users_list_id}`, {
+        users_list: { has_accepted: false },
+      });
+      const updatedCompletedLists = completedLists.filter((ll) => ll.id !== listToRemove.id);
+      setCompletedLists(updatedCompletedLists);
+      toast('List successfully removed.', { type: 'info' });
+    } catch (error) {
+      failure(error);
+    }
+  };
+
   return (
     <>
       <h1>Completed Lists</h1>
@@ -79,6 +100,7 @@ function CompletedListsContainer(props) {
             completed={list.completed}
             onListRefresh={handleRefresh}
             currentUserPermissions={props.currentUserPermissions[list.id]}
+            onListRemoval={handleRemove}
             accepted
           />
         ))}
@@ -89,6 +111,16 @@ function CompletedListsContainer(props) {
         show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
         handleClear={() => setShowDeleteConfirm(false)}
+      />
+      <ConfirmModal
+        action="remove"
+        body={
+          'Are you sure you want to remove this list? The list will continue to exist for the owner, you will ' +
+          'just be removed from the list of users.'
+        }
+        show={showRemoveConfirm}
+        handleConfirm={() => handleRemoveConfirm()}
+        handleClear={() => setShowRemoveConfirm(false)}
       />
     </>
   );

@@ -65,6 +65,7 @@ List.propTypes = {
   onListAcceptance: PropTypes.func,
   onListRejection: PropTypes.func,
   currentUserPermissions: PropTypes.string.isRequired,
+  onListRemoval: PropTypes.func,
 };
 
 List.defaultProps = {
@@ -74,6 +75,7 @@ List.defaultProps = {
   accepted: false,
   onListAcceptance: () => undefined,
   onListRejection: () => undefined,
+  onListRemoval: () => undefined,
 };
 
 export default List;

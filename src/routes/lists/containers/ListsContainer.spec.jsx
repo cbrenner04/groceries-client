@@ -55,6 +55,16 @@ describe('ListsContainer', () => {
           owner_id: 1,
           refreshed: false,
         },
+        {
+          id: 4,
+          name: 'bar',
+          type: 'BookList',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: true,
+          users_list_id: 4,
+          owner_id: 2,
+          refreshed: false,
+        },
       ],
       nonCompletedLists: [
         {
@@ -67,11 +77,23 @@ describe('ListsContainer', () => {
           owner_id: 1,
           refreshed: false,
         },
+        {
+          id: 5,
+          name: 'foobar',
+          type: 'ToDoList',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 5,
+          owner_id: 2,
+          refreshed: false,
+        },
       ],
       currentUserPermissions: {
         1: 'write',
         2: 'write',
         3: 'write',
+        4: 'read',
+        5: 'read',
       },
     };
   });
@@ -85,7 +107,7 @@ describe('ListsContainer', () => {
   it('creates list on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
-        id: 4,
+        id: 6,
         name: 'new list',
         type: 'BookList',
         created_at: new Date('05/31/2020').toISOString(),
@@ -102,7 +124,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
-    expect(getByTestId('list-4')).toHaveTextContent('new list');
+    expect(getByTestId('list-6')).toHaveTextContent('new list');
   });
 
   it('redirects to login when submit response is 401', async () => {
@@ -352,7 +374,7 @@ describe('ListsContainer', () => {
   it('refreshes list', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
-        id: 4,
+        id: 6,
         name: 'new list',
         type: 'BookList',
         created_at: new Date('05/31/2020').toISOString(),
@@ -367,7 +389,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
-    expect(getByTestId('list-4')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
   });
 
   it('redirects on 401 from list refresh', async () => {
@@ -618,6 +640,129 @@ describe('ListsContainer', () => {
     await waitFor(() => getByTestId('confirm-reject'));
 
     fireEvent.click(getByTestId('confirm-reject'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
+
+  it('does not remove list when confirm modal is cleared', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('clear-remove'));
+
+    fireEvent.click(getByTestId('clear-remove'));
+    await waitFor(() => expect(queryByTestId('clear-remove')).toBeNull());
+
+    expect(toast).not.toHaveBeenCalled();
+    expect(axios.patch).not.toHaveBeenCalled();
+  });
+
+  it('removes incomplete list', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('List successfully removed.', { type: 'info' });
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.nonCompletedLists[1].id}`)).toBeNull();
+  });
+
+  it('removes complete list', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('List successfully removed.', { type: 'info' });
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.completedLists[1].id}`)).toBeNull();
+  });
+
+  it('redirects to login when remove fails with 401', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+  });
+
+  it('shows errors when remove fails with 403', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('shows errors when remove fails with 404', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  });
+
+  it('shows errors when remove fails with error other than 401, 403, 404', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+  });
+
+  it('shows errors when remove fails to send request', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+  });
+
+  it('shows errors when remove unknown error occurs', async () => {
+    axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    const { getAllByTestId, getByTestId } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[1]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });

@@ -7,6 +7,15 @@ import { Complete, Edit, Share, Trash } from '../../../../components/ActionButto
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
   const userHasWritePermission = props.currentUserPermissions === 'write';
+
+  const handleTrash = () => {
+    if (userIsOwner) {
+      props.onListDeletion(props.list);
+    } else {
+      props.onListRemoval(props.list);
+    }
+  };
+
   return (
     <ButtonGroup className="float-right">
       <Complete
@@ -33,12 +42,7 @@ function IncompleteListButtons(props) {
         }}
         data-test-id="incomplete-list-edit"
       />
-      <Trash
-        handleClick={() => props.onListDeletion(props.list)}
-        disabled={!userIsOwner}
-        style={{ opacity: userIsOwner ? 1 : 0.3 }}
-        data-test-id="incomplete-list-trash"
-      />
+      <Trash handleClick={handleTrash} data-test-id="incomplete-list-trash" />
     </ButtonGroup>
   );
 }
@@ -52,6 +56,7 @@ IncompleteListButtons.propTypes = {
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
+  onListRemoval: PropTypes.func.isRequired,
 };
 
 export default IncompleteListButtons;

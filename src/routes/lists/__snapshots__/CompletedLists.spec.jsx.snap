@@ -78,7 +78,6 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
             <button
               class="p-0 btn btn-link"
               data-test-id="complete-list-trash"
-              style="opacity: 1;"
               type="button"
             >
               <i

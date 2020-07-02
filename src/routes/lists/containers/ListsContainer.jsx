@@ -13,11 +13,13 @@ function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [nonCompletedLists, setNonCompletedLists] = useState(props.nonCompletedLists);
+  const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [listToDelete, setListToDelete] = useState('');
   const [listToReject, setListToReject] = useState('');
+  const [listToRemove, setListToRemove] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
-  const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
   const failure = ({ request, response, message }) => {
     if (response) {
@@ -135,6 +137,31 @@ function ListsContainer(props) {
     }
   };
 
+  const handleRemove = (list) => {
+    setListToRemove(list);
+    setShowRemoveConfirm(true);
+  };
+
+  const handleRemoveConfirm = async () => {
+    setShowRemoveConfirm(false);
+    const { id, completed } = listToRemove;
+    try {
+      await axios.patch(`/lists/${listToRemove.id}/users_lists/${listToRemove.users_list_id}`, {
+        users_list: { has_accepted: false },
+      });
+      if (completed) {
+        const updatedCompletedLists = completedLists.filter((ll) => ll.id !== id);
+        setCompletedLists(sortLists(updatedCompletedLists));
+      } else {
+        const updatedNonCompletedLists = nonCompletedLists.filter((ll) => ll.id !== id);
+        setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      }
+      toast('List successfully removed.', { type: 'info' });
+    } catch (error) {
+      failure(error);
+    }
+  };
+
   const handleRefresh = async (list) => {
     const localList = list;
     localList.refreshed = true;
@@ -167,6 +194,7 @@ function ListsContainer(props) {
         onAccept={handleAccept}
         onReject={handleReject}
         currentUserPermissions={currentUserPermissions}
+        onRemove={handleRemove}
       />
       <ConfirmModal
         action="delete"
@@ -181,6 +209,16 @@ function ListsContainer(props) {
         show={showRejectConfirm}
         handleConfirm={() => handleRejectConfirm()}
         handleClear={() => setShowRejectConfirm(false)}
+      />
+      <ConfirmModal
+        action="remove"
+        body={
+          'Are you sure you want to remove this list? The list will continue to exist for the owner, you will ' +
+          'just be removed from the list of users.'
+        }
+        show={showRemoveConfirm}
+        handleConfirm={() => handleRemoveConfirm()}
+        handleClear={() => setShowRemoveConfirm(false)}
       />
     </>
   );
