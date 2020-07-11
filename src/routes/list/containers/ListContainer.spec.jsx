@@ -479,6 +479,7 @@ describe('ListContainer', () => {
     expect(getByText('New category')).toBeVisible();
   });
 
+  // TODO: why is this different?
   it('moves item to purchased when ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
     props.list.type = 'ToDoList';
@@ -486,20 +487,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].assignee_id = 1;
     const { getByText, getByTestId } = renderListContainer(props);
 
-    expect(getByText('whatever').parentElement).toHaveAttribute('data-test-class', 'non-purchased-item');
-
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
-
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-    expect(getByText('whatever').parentElement).toHaveAttribute('data-test-class', 'purchased-item');
-  });
-
-  it('moves item to purchased when not ToDo', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId } = renderListContainer(props);
-
-    expect(getByText('not purchased quantity no category not purchased product').parentElement).toHaveAttribute(
+    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -508,10 +496,27 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByText('not purchased quantity no category not purchased product').parentElement).toHaveAttribute(
+    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
+  });
+
+  it('moves item to purchased when not ToDo', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getByText, getByTestId } = renderListContainer(props);
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+
+    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('handles 401 on purchase', async () => {
@@ -601,20 +606,18 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId, getByText } = renderListContainer(props);
 
-    expect(getByText('purchased quantity foo purchased product').parentElement).toHaveAttribute(
-      'data-test-class',
-      'purchased-item',
-    );
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
 
     fireEvent.click(getByTestId('purchased-item-refresh-1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByText('purchased quantity foo purchased product').parentElement).toHaveAttribute(
-      'data-test-class',
-      'non-purchased-item',
-    );
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
   it('toggles read when item not purchased', async () => {

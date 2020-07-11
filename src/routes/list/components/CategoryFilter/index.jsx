@@ -6,18 +6,15 @@ import Filtered from './Filtered';
 import NoFilter from './NoFilter';
 
 const CategoryFilter = (props) => {
-  let component;
   if (props.categories.filter(Boolean).length) {
     if (props.filter) {
-      component = <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;
+      return <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;
     } else {
-      component = <Filter categories={props.categories} handleCategoryFilter={props.handleCategoryFilter} />;
+      return <Filter categories={props.categories} handleCategoryFilter={props.handleCategoryFilter} />;
     }
   } else {
-    component = <NoFilter />;
+    return <NoFilter />;
   }
-
-  return <div className="float-right">{component}</div>;
 };
 
 CategoryFilter.propTypes = {

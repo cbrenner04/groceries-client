@@ -8,56 +8,64 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
-        <div
-          data-test-id="due-by"
+          class="pt-1"
         >
-          Due By: May 21, 2020
+          foo
         </div>
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -71,54 +79,62 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
+          class="pt-1"
+        >
+          foo
+        </div>
         <div
-          data-test-id="due-by"
-        />
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            />
+          </small>
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -132,23 +148,31 @@ exports[`ListItem does not render ListItemButtons when the user has read permiss
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
+          class="pt-1"
+        >
+          foo
+        </div>
         <div
-          data-test-id="due-by"
-        />
-      </small>
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            />
+          </small>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -162,56 +186,64 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
-        <div
-          data-test-id="due-by"
+          class="pt-1"
         >
-          Due By: May 21, 2020
+          foo
         </div>
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -225,56 +257,64 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
-        <div
-          data-test-id="due-by"
+          class="pt-1"
         >
-          Due By: May 21, 2020
+          foo
         </div>
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -288,54 +328,62 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
-        />
+          class="pt-1"
+        >
+          foo
+        </div>
         <div
-          data-test-id="due-by"
-        />
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+          class="pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            />
+          </small>
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -349,43 +397,48 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo foo
-    </div>
-    <div
-      class="pt-1"
-    />
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
+      <div
+        class="col-sm-12 col-12"
       >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/grocery_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/grocery_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -399,35 +452,40 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo foo
-    </div>
-    <div
-      class="pt-1"
-    />
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="purchased-item-refresh-1"
-        type="button"
+      <div
+        class="col-sm-12 col-12"
       >
-        <i
-          class="fa fa-redo fa-2x text-primary"
-        />
-      </button>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="purchased-item-refresh-1"
+            type="button"
+          >
+            <i
+              class="fa fa-redo fa-2x text-primary"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -441,58 +499,66 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
     style="display: block;"
   >
     <div
-      class="pt-1"
+      class="row"
     >
-      foo
-    </div>
-    <div
-      class="pt-1"
-    >
-      <small
-        class="text-muted"
+      <div
+        class="col-sm-12 col-12"
       >
         <div
-          data-test-id="assignee-email"
+          class="pt-1"
         >
-          Assigned To: foo@example.com
+          foo
         </div>
         <div
-          data-test-id="due-by"
+          class="pt-1"
         >
-          Due By: May 21, 2020
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            >
+              Assigned To: foo@example.com
+            </div>
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
         </div>
-      </small>
-    </div>
-    <div
-      class="float-right btn-group"
-      role="group"
-    >
-      <button
-        class="p-0 mr-3 btn btn-link"
-        data-test-id="not-purchased-item-complete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-check fa-2x text-success"
-        />
-      </button>
-      <a
-        class="p-0 mr-3"
-        href="/lists/undefined/to_do_list_items/1/edit"
-      >
-        <i
-          class="fa fa-edit fa-2x text-warning"
-        />
-      </a>
-      <button
-        class="p-0 btn btn-link"
-        data-test-id="not-purchased-item-delete-1"
-        type="button"
-      >
-        <i
-          class="fa fa-trash fa-2x text-danger"
-        />
-      </button>
+        <div
+          class="float-right btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-complete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <a
+            class="p-0 mr-3"
+            href="/lists/undefined/to_do_list_items/1/edit"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </a>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -6,12 +6,6 @@ exports[`EditList displays EditList 1`] = `
     Edit 
     foo
   </h1>
-  <a
-    class="float-right"
-    href="/lists"
-  >
-    Back to lists
-  </a>
   <br />
   <form
     autocomplete="off"
@@ -98,6 +92,12 @@ exports[`EditList displays EditList 1`] = `
     >
       Update List
     </button>
+    <a
+      class="btn btn-link btn-block"
+      href="/lists"
+    >
+      Cancel
+    </a>
   </form>
 </div>
 `;

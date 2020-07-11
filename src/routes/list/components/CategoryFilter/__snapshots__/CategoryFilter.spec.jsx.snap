@@ -3,65 +3,53 @@
 exports[`CategoryFilter renders Filter when categories exist but filter does not 1`] = `
 <div>
   <div
-    class="float-right"
+    class="dropdown"
+    data-test-id="filter-dropdown"
   >
-    <div
-      class="dropdown"
-      data-test-id="filter-dropdown"
+    <button
+      aria-expanded="false"
+      aria-haspopup="true"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
     >
-      <button
-        aria-expanded="false"
-        aria-haspopup="true"
-        class="dropdown-toggle btn btn-light"
-        id="filter-by-category-button"
-        type="button"
-      >
-        Filter by category
-      </button>
-    </div>
+      Filter by category
+    </button>
   </div>
 </div>
 `;
 
 exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = `
 <div>
-  <div
-    class="float-right"
+  <span
+    style="line-height: 2.5rem; margin-right: 1rem;"
   >
-    <span
-      style="line-height: 2.5rem; margin-right: 1rem;"
-    >
-      Filtering by:
-    </span>
-    <button
-      class="btn btn-outline-primary"
-      data-test-id="clear-filter"
-      style="margin-right: 1rem;"
-      type="button"
-    >
-      foo
-       
-      <i
-        class="fa fa-trash"
-      />
-    </button>
-  </div>
+    Filtering by:
+  </span>
+  <button
+    class="btn btn-outline-primary"
+    data-test-id="clear-filter"
+    style="margin-right: 1rem;"
+    type="button"
+  >
+    foo
+     
+    <i
+      class="fa fa-trash"
+    />
+  </button>
 </div>
 `;
 
 exports[`CategoryFilter renders NoFilter when categories do not exist 1`] = `
 <div>
-  <div
-    class="float-right"
+  <button
+    class="btn btn-light"
+    disabled=""
+    style="cursor: not-allowed;"
+    type="button"
   >
-    <button
-      class="btn btn-light"
-      disabled=""
-      style="cursor: not-allowed;"
-      type="button"
-    >
-      Filter by category
-    </button>
-  </div>
+    Filter by category
+  </button>
 </div>
 `;

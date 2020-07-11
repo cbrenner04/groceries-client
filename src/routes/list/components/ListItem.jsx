@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListGroup } from 'react-bootstrap';
+import { Col, ListGroup, Row } from 'react-bootstrap';
+import update from 'immutability-helper';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
@@ -15,33 +16,50 @@ const ListItem = (props) => {
     }
   }
 
+  const updateSelectedItems = () => {
+    const updatedItems = update(props.selectedItems, { $push: [props.item] });
+    props.setSelectedItems(updatedItems);
+  };
+
   return (
     <ListGroup.Item
       key={props.item.id}
       style={{ display: 'block' }}
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
     >
-      <div className="pt-1">{itemName(props.item, props.listType)}</div>
-      <div className="pt-1">
-        {props.listType === 'ToDoList' && (
-          <small className="text-muted">
-            <div data-test-id="assignee-email">{assignee}</div>
-            <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
-          </small>
+      <Row className={props.multiSelect ? 'list-item-row' : ''}>
+        {props.multiSelect && (
+          <Col xs="1" className="mx-sm-auto">
+            <input
+              type="checkbox"
+              style={{ position: 'absolute', top: '40%', left: '40%' }}
+              onClick={updateSelectedItems}
+            />
+          </Col>
         )}
-      </div>
-      {props.permission === 'write' && (
-        <ListItemButtons
-          purchased={props.purchased}
-          listType={props.listType}
-          item={props.item}
-          handleItemUnPurchase={props.handleItemUnPurchase}
-          handleItemDelete={props.handleItemDelete}
-          handleReadOfItem={props.handleReadOfItem}
-          handleUnReadOfItem={props.handleUnReadOfItem}
-          handlePurchaseOfItem={props.handlePurchaseOfItem}
-        />
-      )}
+        <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
+          <div className="pt-1">{itemName(props.item, props.listType)}</div>
+          {props.listType === 'ToDoList' && (
+            <div className="pt-1">
+              <small className="text-muted">
+                <div data-test-id="assignee-email">{assignee}</div>
+                <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
+              </small>
+            </div>
+          )}
+          {props.permission === 'write' && (
+            <ListItemButtons
+              purchased={props.purchased}
+              listType={props.listType}
+              item={props.item}
+              handleItemUnPurchase={props.handleItemUnPurchase}
+              handleItemDelete={props.handleItemDelete}
+              handlePurchaseOfItem={props.handlePurchaseOfItem}
+              toggleItemRead={props.toggleItemRead}
+            />
+          )}
+        </Col>
+      </Row>
     </ListGroup.Item>
   );
 };
@@ -67,8 +85,6 @@ ListItem.propTypes = {
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleReadOfItem: PropTypes.func.isRequired,
-  handleUnReadOfItem: PropTypes.func.isRequired,
   handleItemUnPurchase: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
@@ -78,6 +94,10 @@ ListItem.propTypes = {
     }),
   ),
   permission: PropTypes.string.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  setSelectedItems: PropTypes.func.isRequired,
+  toggleItemRead: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {

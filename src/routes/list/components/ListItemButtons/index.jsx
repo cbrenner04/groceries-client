@@ -11,8 +11,7 @@ const ListItemButtons = (props) =>
       item={props.item}
       handleItemUnPurchase={props.handleItemUnPurchase}
       handleItemDelete={props.handleItemDelete}
-      handleReadOfItem={props.handleReadOfItem}
-      handleUnReadOfItem={props.handleUnReadOfItem}
+      toggleItemRead={props.toggleItemRead}
     />
   ) : (
     <NotPurchased
@@ -20,8 +19,7 @@ const ListItemButtons = (props) =>
       item={props.item}
       handlePurchaseOfItem={props.handlePurchaseOfItem}
       handleItemDelete={props.handleItemDelete}
-      handleReadOfItem={props.handleReadOfItem}
-      handleUnReadOfItem={props.handleUnReadOfItem}
+      toggleItemRead={props.toggleItemRead}
     />
   );
 
@@ -33,10 +31,9 @@ ListItemButtons.propTypes = {
   purchased: PropTypes.bool.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleReadOfItem: PropTypes.func.isRequired,
-  handleUnReadOfItem: PropTypes.func.isRequired,
   handleItemUnPurchase: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
+  toggleItemRead: PropTypes.func.isRequired,
 };
 
 export default ListItemButtons;
