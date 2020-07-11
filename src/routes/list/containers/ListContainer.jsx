@@ -75,7 +75,6 @@ function ListContainer(props) {
       }
     });
     setIncludedCategories(updateIncludedCats);
-    setFilter('');
   };
 
   const moveItemsToPurchased = (items) => {
