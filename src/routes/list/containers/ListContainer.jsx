@@ -291,11 +291,13 @@ function ListContainer(props) {
           />
         </div>
       </div>
-      <div className="clearfix">
-        <Button variant="link" className="mx-auto float-right" onClick={() => setMultiSelect(!multiSelect)}>
-          {multiSelect ? 'Hide' : ''} Select
-        </Button>
-      </div>
+      {props.permissions === 'write' && (
+        <div className="clearfix">
+          <Button variant="link" className="mx-auto float-right" onClick={() => setMultiSelect(!multiSelect)}>
+            {multiSelect ? 'Hide' : ''} Select
+          </Button>
+        </div>
+      )}
       {(filter || !includedCategories.length) && (
         <div>
           <ListItems

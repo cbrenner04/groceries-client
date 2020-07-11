@@ -1005,7 +1005,15 @@ describe('ListContainer', () => {
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
+  it('cannot multi select if user does not have write access', () => {
+    props.permissions = 'read';
+    const { queryByText } = renderListContainer(props);
+
+    expect(queryByText('Select')).toBeNull();
+  });
+
   it('changes select to hide select when multi select is on', async () => {
+    props.permissions = 'write';
     const { getAllByRole } = renderListContainer(props);
 
     expect(getAllByRole('button')[4]).toHaveTextContent('Select');

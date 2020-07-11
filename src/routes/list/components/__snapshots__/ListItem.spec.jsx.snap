@@ -406,6 +406,9 @@ exports[`ListItem sets selected items when multi select checkbox is selected 1`]
           style="position: absolute; top: 40%; left: 40%;"
           type="checkbox"
         />
+        <div
+          class="list-item-multi-divider"
+        />
       </div>
       <div
         class="col-sm-11 col-10"

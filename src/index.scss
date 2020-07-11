@@ -39,3 +39,16 @@ body {
     margin-right: -45px
   }
 }
+
+.list-item-multi-divider {
+  @include media-breakpoint-down(xs) {
+    margin-right: -22px;
+  }
+
+  @include media-breakpoint-up(sm) {
+    margin-right: -15px;
+  }
+
+  border-right: 1px solid lightgray;
+  height: 100%;
+}

@@ -39,17 +39,6 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       </div>
     </div>
   </div>
-  <div
-    class="clearfix"
-  >
-    <button
-      class="mx-auto float-right btn btn-link"
-      type="button"
-    >
-      
-       Select
-    </button>
-  </div>
   <div>
     <div
       class="list-group"

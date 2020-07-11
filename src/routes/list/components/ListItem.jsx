@@ -35,6 +35,7 @@ const ListItem = (props) => {
               style={{ position: 'absolute', top: '40%', left: '40%' }}
               onClick={updateSelectedItems}
             />
+            <div className="list-item-multi-divider"></div>
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
