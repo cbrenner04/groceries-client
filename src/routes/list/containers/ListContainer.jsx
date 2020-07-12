@@ -72,6 +72,9 @@ function ListContainer(props) {
       if (category && !updatedNotPurchasedItems[category].length) {
         const catIndex = updateIncludedCats.findIndex((inCat) => inCat === category);
         updateIncludedCats = update(updateIncludedCats, { $splice: [[catIndex, 1]] });
+        if (filter === category) {
+          setFilter('');
+        }
       }
     });
     setIncludedCategories(updateIncludedCats);
@@ -163,10 +166,12 @@ function ListContainer(props) {
           newPurchasedItems = update(newPurchasedItems, { $set: newItems });
         } else {
           const itemsInCat = newNotPurchasedItems[item.category];
-          const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
-          const newItemsInCat = [...itemsInCat];
-          newItemsInCat[itemIndex] = item;
-          newNotPurchasedItems = update(newNotPurchasedItems, { [item.category]: { $set: newItemsInCat } });
+          if (itemsInCat) {
+            const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
+            const newItemsInCat = [...itemsInCat];
+            newItemsInCat[itemIndex] = item;
+            newNotPurchasedItems = update(newNotPurchasedItems, { [item.category]: { $set: newItemsInCat } });
+          }
         }
       });
       setPurchasedItems(newPurchasedItems);
