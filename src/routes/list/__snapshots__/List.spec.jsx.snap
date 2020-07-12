@@ -16,7 +16,6 @@ exports[`List displays List 1`] = `
     aria-controls="form-collapse"
     aria-expanded="false"
     class="btn btn-link"
-    style="margin-bottom: 30px;"
     type="button"
   >
     Add Item
@@ -99,18 +98,14 @@ exports[`List displays List 1`] = `
       Collapse Form
     </button>
   </form>
-  <br />
+  <hr />
   <div
-    class="clearfix"
+    class="d-flex justify-content-between"
   >
-    <h2
-      class="float-left"
-    >
+    <h2>
       Items
     </h2>
-    <div
-      class="float-right"
-    >
+    <div>
       <button
         class="btn btn-light"
         disabled=""
@@ -121,13 +116,16 @@ exports[`List displays List 1`] = `
       </button>
     </div>
   </div>
-  <div>
-    <div
-      class="list-group"
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
     >
       
-    </div>
-    <br />
+       Select
+    </button>
   </div>
   <br />
   <h2>

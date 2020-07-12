@@ -27,8 +27,7 @@ describe('ListItemButtons', () => {
       purchased: true,
       handleItemDelete: jest.fn(),
       handlePurchaseOfItem: jest.fn(),
-      handleReadOfItem: jest.fn(),
-      handleUnReadOfItem: jest.fn(),
+      toggleItemRead: jest.fn(),
       handleItemUnPurchase: jest.fn(),
       listType: 'GroceryList',
     };

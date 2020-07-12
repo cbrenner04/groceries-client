@@ -86,7 +86,6 @@ function ListItemForm(props) {
             onClick={() => setShowForm(true)}
             aria-controls="form-collapse"
             aria-expanded={showForm}
-            style={{ marginBottom: '30px' }}
           >
             Add Item
           </Button>

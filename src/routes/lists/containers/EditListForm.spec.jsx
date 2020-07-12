@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
 
@@ -22,11 +21,7 @@ describe('EditListForm', () => {
       type: 'GroceryList',
       completed: false,
     };
-    return render(
-      <Router history={history}>
-        <EditListForm {...props} />)
-      </Router>,
-    );
+    return render(<EditListForm {...props} />);
   };
 
   it('renders', () => {

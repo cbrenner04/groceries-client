@@ -70,9 +70,6 @@ function EditListItemForm(props) {
   return (
     <>
       <h1>Edit {itemName(item, props.list.type)}</h1>
-      <Button href={`/lists/${props.list.id}`} className="float-right" variant="link">
-        Back to list
-      </Button>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
@@ -85,6 +82,9 @@ function EditListItemForm(props) {
         />
         <Button type="submit" variant="success" block>
           Update Item
+        </Button>
+        <Button href={`/lists/${props.list.id}`} variant="link" block>
+          Cancel
         </Button>
       </Form>
     </>

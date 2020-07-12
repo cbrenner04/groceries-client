@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -26,9 +26,11 @@ describe('ListItem', () => {
     purchased: false,
     handleItemDelete: jest.fn(),
     handlePurchaseOfItem: jest.fn(),
-    handleReadOfItem: jest.fn(),
-    handleUnReadOfItem: jest.fn(),
     handleItemUnPurchase: jest.fn(),
+    multiSelect: false,
+    selectedItems: [],
+    setSelectedItems: jest.fn(),
+    toggleItemRead: jest.fn(),
     listType: 'GroceryList',
     listUsers: [],
     permission: 'write',
@@ -141,5 +143,17 @@ describe('ListItem', () => {
 
     expect(container).toMatchSnapshot();
     expect(queryAllByRole('button').length).toBeFalsy();
+  });
+
+  it('sets selected items when multi select checkbox is selected', () => {
+    props.multiSelect = true;
+
+    const { container, getByRole } = renderListItem(props);
+
+    expect(container).toMatchSnapshot();
+
+    fireEvent.click(getByRole('checkbox'));
+
+    expect(props.setSelectedItems).toHaveBeenCalledWith([props.item]);
   });
 });

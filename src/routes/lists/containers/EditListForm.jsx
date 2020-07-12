@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -47,9 +46,6 @@ function EditListForm(props) {
   return (
     <>
       <h1>Edit {name}</h1>
-      <Link to="/lists" className="float-right">
-        Back to lists
-      </Link>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListFormFields
@@ -63,6 +59,9 @@ function EditListForm(props) {
         />
         <Button type="submit" variant="success" block>
           Update List
+        </Button>
+        <Button href="/lists" variant="link" block>
+          Cancel
         </Button>
       </Form>
     </>

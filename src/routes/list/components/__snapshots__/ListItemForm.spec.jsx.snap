@@ -6,7 +6,6 @@ exports[`ListItemForm renders 1`] = `
     aria-controls="form-collapse"
     aria-expanded="false"
     class="btn btn-link"
-    style="margin-bottom: 30px;"
     type="button"
   >
     Add Item

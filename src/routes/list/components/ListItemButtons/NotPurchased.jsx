@@ -11,14 +11,11 @@ function NotPurchasedItemButtons(props) {
     return `/lists/${listId}/${listTypeToSnakeCase(props.listType)}_items`;
   };
 
-  const handleRead = () => props.handleReadOfItem(props.item);
-  const handleUnRead = () => props.handleUnReadOfItem(props.item);
-
   return (
     <ButtonGroup className="float-right">
       {props.listType === 'BookList' && (
         <Bookmark
-          handleClick={props.item.read ? handleUnRead : handleRead}
+          handleClick={() => props.toggleItemRead(props.item)}
           read={props.item.read}
           data-test-id={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
         />
@@ -46,8 +43,7 @@ NotPurchasedItemButtons.propTypes = {
   }).isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
-  handleReadOfItem: PropTypes.func.isRequired,
-  handleUnReadOfItem: PropTypes.func.isRequired,
+  toggleItemRead: PropTypes.func.isRequired,
 };
 
 export default NotPurchasedItemButtons;

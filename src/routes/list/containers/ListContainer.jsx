@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { Button } from 'react-bootstrap';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
-import { sortItems } from '../utils';
+import { itemName, sortItems } from '../utils';
 import ListItems from '../components/ListItems';
 import CategoryFilter from '../components/CategoryFilter';
 
@@ -18,48 +19,78 @@ function ListContainer(props) {
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
-  const [itemToDelete, setItemToDelete] = useState({});
+  const [itemsToDelete, setItemsToDelete] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  const handleAddItem = (item) => {
-    const category = item.category || '';
-    let updatedNotPurchasedItems;
-    if (!notPurchasedItems[category]) {
-      updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $set: [item] } });
-    } else {
-      updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $push: [item] } });
-      updatedNotPurchasedItems[category] = sortItems(props.list.type, updatedNotPurchasedItems[category]);
-    }
+  const handleAddItem = (data) => {
+    // this is to deal the ListItemForm being passed this function
+    const items = Array.isArray(data) ? data : [data];
+    let updatedNotPurchasedItems = notPurchasedItems;
+    const itemCategories = [];
+    items.forEach((item) => {
+      const category = item.category || '';
+      itemCategories.push(category);
+      if (!updatedNotPurchasedItems[category]) {
+        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $set: [item] } });
+      } else {
+        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $push: [item] } });
+        updatedNotPurchasedItems[category] = sortItems(props.list.type, updatedNotPurchasedItems[category]);
+      }
+    });
     setNotPurchasedItems(updatedNotPurchasedItems);
-    if (!categories.includes(category)) {
-      const cats = update(categories, { $push: [category] });
-      setCategories(cats);
-    }
-    if (!includedCategories.includes(category)) {
-      const includedCats = update(includedCategories, { $push: [category] });
-      setIncludedCategories(includedCats);
-    }
+    let cats = categories;
+    let includedCats = includedCategories;
+    itemCategories.forEach((category) => {
+      if (!cats.includes(category)) {
+        cats = update(cats, { $push: [category] });
+      }
+      if (!includedCats.includes(category)) {
+        includedCats = update(includedCats, { $push: [category] });
+      }
+    });
+    setCategories(cats);
+    setIncludedCategories(includedCats);
   };
 
   const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
   const listItemPath = (item) => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
 
-  const removeItemFromNotPurchased = (item) => {
-    const category = item.category || '';
-    const itemIndex = notPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
-    const updatedNotPurchasedItems = update(notPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
+  const removeItemsFromNotPurchased = (items) => {
+    let updatedNotPurchasedItems = notPurchasedItems;
+    const itemCategories = [];
+    items.forEach((item) => {
+      const category = item.category || '';
+      itemCategories.push(category);
+      const itemIndex = updatedNotPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
+      updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
+    });
     setNotPurchasedItems(updatedNotPurchasedItems);
-    if (!updatedNotPurchasedItems[category].length) {
-      const catIndex = includedCategories.findIndex((inCat) => inCat === category);
-      const updateIncludedCats = update(includedCategories, { $splice: [[catIndex, 1]] });
-      setIncludedCategories(updateIncludedCats);
-      setFilter('');
-    }
+    let updateIncludedCats = includedCategories;
+    itemCategories.forEach((category) => {
+      if (category && !updatedNotPurchasedItems[category].length) {
+        const catIndex = updateIncludedCats.findIndex((inCat) => inCat === category);
+        updateIncludedCats = update(updateIncludedCats, { $splice: [[catIndex, 1]] });
+        if (filter === category) {
+          setFilter('');
+        }
+      }
+    });
+    setIncludedCategories(updateIncludedCats);
   };
 
-  const moveItemToPurchased = (item) => {
-    removeItemFromNotPurchased(item);
-    const updatedPurchasedItems = update(purchasedItems, { $push: [item] });
+  const moveItemsToPurchased = (items) => {
+    removeItemsFromNotPurchased(items);
+    const updatedItems = items.map((item) => {
+      if (props.list.type === 'ToDoList') {
+        item.completed = true;
+      } else {
+        item.purchased = true;
+      }
+      return item;
+    });
+    const updatedPurchasedItems = update(purchasedItems, { $push: updatedItems });
     setPurchasedItems(sortItems(props.list.type, updatedPurchasedItems));
   };
 
@@ -82,107 +113,152 @@ function ListContainer(props) {
     }
   };
 
+  const resetMultiSelect = () => {
+    setMultiSelect(false);
+    setSelectedItems([]);
+  };
+
+  const pluralize = (items) => {
+    return items.length > 1 ? 'Items' : 'Item';
+  };
+
   const handleItemPurchase = async (item) => {
+    const items = selectedItems.length ? selectedItems : [item];
+    const filteredItems = items.filter((item) => !item.purchased && !item.completed);
     const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
     try {
-      await axios.put(`${listItemPath(item)}/${item.id}`, {
-        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
-          [completionType]: true,
-        },
-      });
-      moveItemToPurchased(item);
-      toast('Item successfully purchased.', { type: 'info' });
+      const updateRequests = filteredItems.map((item) =>
+        axios.put(`${listItemPath(item)}/${item.id}`, {
+          [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+            [completionType]: true,
+          },
+        }),
+      );
+      await Promise.all(updateRequests);
+      moveItemsToPurchased(filteredItems);
+      resetMultiSelect();
+      toast(`${pluralize(filteredItems)} successfully purchased.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
-  const toggleRead = async (item, isRead) => {
-    const localItem = item;
-    localItem.read = isRead;
-    try {
-      await axios.put(`${listItemPath(item)}/${item.id}`, {
+  const toggleRead = async (item) => {
+    const items = selectedItems.length ? selectedItems : [item];
+    const updateRequests = items.map((item) => {
+      const isRead = !item.read;
+      return axios.put(`${listItemPath(item)}/${item.id}`, {
         [`${listTypeToSnakeCase(props.list.type)}_item`]: {
           read: isRead,
         },
       });
-      if (item.purchased) {
-        const itemIndex = purchasedItems.findIndex((purchasedItem) => item.id === purchasedItem.id);
-        const newItems = [...purchasedItems];
-        newItems[itemIndex] = localItem;
-        const newPurchasedItems = update(purchasedItems, { $set: newItems });
-        setPurchasedItems(newPurchasedItems);
-      } else {
-        const itemsInCat = notPurchasedItems[item.category];
-        const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
-        const newItemsInCat = [...itemsInCat];
-        newItemsInCat[itemIndex] = localItem;
-        const newNotPurchasedItems = update(notPurchasedItems, { [item.category]: { $set: newItemsInCat } });
-        setNotPurchasedItems(newNotPurchasedItems);
-      }
-
-      toast(`Item successfully ${isRead ? 'read' : 'unread'}.`, { type: 'info' });
+    });
+    try {
+      await Promise.all(updateRequests);
+      let newPurchasedItems = purchasedItems;
+      let newNotPurchasedItems = notPurchasedItems;
+      items.forEach((item) => {
+        item.read = !item.read;
+        if (item.purchased) {
+          const itemIndex = newPurchasedItems.findIndex((purchasedItem) => item.id === purchasedItem.id);
+          const newItems = [...newPurchasedItems];
+          newItems[itemIndex] = item;
+          newPurchasedItems = update(newPurchasedItems, { $set: newItems });
+        } else {
+          const itemsInCat = newNotPurchasedItems[item.category];
+          if (itemsInCat) {
+            const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
+            const newItemsInCat = [...itemsInCat];
+            newItemsInCat[itemIndex] = item;
+            newNotPurchasedItems = update(newNotPurchasedItems, { [item.category]: { $set: newItemsInCat } });
+          }
+        }
+      });
+      setPurchasedItems(newPurchasedItems);
+      setNotPurchasedItems(newNotPurchasedItems);
+      resetMultiSelect();
+      toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
-  const handleItemRead = async (item) => toggleRead(item, true);
-
-  const handleItemUnRead = async (item) => toggleRead(item, false);
-
-  const removeItemFromPurchased = (item) => {
-    const itemIndex = purchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
-    const updatedPurchasedItems = sortItems(props.list.type, update(purchasedItems, { $splice: [[itemIndex, 1]] }));
-    setPurchasedItems(updatedPurchasedItems);
+  const removeItemsFromPurchased = (items) => {
+    let updatePurchasedItems = purchasedItems;
+    items.forEach((item) => {
+      const itemIndex = updatePurchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
+      updatePurchasedItems = sortItems(props.list.type, update(updatePurchasedItems, { $splice: [[itemIndex, 1]] }));
+    });
+    setPurchasedItems(updatePurchasedItems);
   };
 
-  const handleUnPurchase = (item) => {
-    const newItem = {
-      user_id: item.user_id,
-      product: item.product,
-      task: item.task,
-      quantity: item.quantity,
-      purchased: false,
-      completed: false,
-      assignee_id: item.assignee_id,
-      due_by: item.due_by,
-      category: item.category || '',
-    };
-    newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
-    const postData = {};
-    postData[`${listTypeToSnakeCase(props.list.type)}_item`] = newItem;
-    Promise.all([
-      axios.post(`${listItemPath(newItem)}`, postData),
-      axios.put(`${listItemPath(item)}/${item.id}`, {
-        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
-          refreshed: true,
-        },
-      }),
-    ])
-      .then(([{ data }]) => {
-        handleAddItem(data);
-        removeItemFromPurchased(item);
-        toast('Item successfully refreshed.', { type: 'info' });
-      })
-      .catch(failure);
+  const handleUnPurchase = async (item) => {
+    const items = selectedItems.length ? selectedItems : [item];
+    const filteredItems = items.filter((item) => item.purchased || item.completed);
+    const createNewItemRequests = [];
+    const updateOldItemRequests = [];
+    filteredItems.forEach((item) => {
+      const newItem = {
+        user_id: item.user_id,
+        product: item.product,
+        task: item.task,
+        quantity: item.quantity,
+        purchased: false,
+        completed: false,
+        assignee_id: item.assignee_id,
+        due_by: item.due_by,
+        category: item.category || '',
+      };
+      newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
+      const postData = {};
+      postData[`${listTypeToSnakeCase(props.list.type)}_item`] = newItem;
+      createNewItemRequests.push(axios.post(`${listItemPath(newItem)}`, postData));
+      updateOldItemRequests.push(
+        axios.put(`${listItemPath(item)}/${item.id}`, {
+          [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+            refreshed: true,
+          },
+        }),
+      );
+    });
+    try {
+      const newItemResponses = await Promise.all(createNewItemRequests);
+      await Promise.all(updateOldItemRequests);
+      const newItems = newItemResponses.map(({ data }) => data);
+      handleAddItem(newItems);
+      removeItemsFromPurchased(filteredItems);
+      resetMultiSelect();
+      toast(`${pluralize(filteredItems)} successfully refreshed.`, { type: 'info' });
+    } catch (error) {
+      failure(error);
+    }
   };
 
   const handleDelete = (item) => {
-    setItemToDelete(item);
+    const items = selectedItems.length ? selectedItems : [item];
+    setItemsToDelete(items);
     setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`${listItemPath(itemToDelete)}/${itemToDelete.id}`);
+      const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath(item)}/${item.id}`));
+      await Promise.all(deleteRequests);
       setShowDeleteConfirm(false);
-      if (itemToDelete.completed || itemToDelete.purchased) {
-        removeItemFromPurchased(itemToDelete);
-      } else {
-        removeItemFromNotPurchased(itemToDelete);
-      }
-      toast('Item successfully deleted.', { type: 'info' });
+      const notPurchasedDeletedItems = [];
+      const purchasedDeletedItems = [];
+      itemsToDelete.forEach((item) => {
+        if (item.completed || item.purchased) {
+          purchasedDeletedItems.push(item);
+        } else {
+          notPurchasedDeletedItems.push(item);
+        }
+      });
+      removeItemsFromPurchased(purchasedDeletedItems);
+      removeItemsFromNotPurchased(notPurchasedDeletedItems);
+      resetMultiSelect();
+      setItemsToDelete([]);
+      toast(`${pluralize(itemsToDelete)} successfully deleted.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -208,16 +284,25 @@ function ListContainer(props) {
       ) : (
         <p>You only have permission to read this list</p>
       )}
-      <br />
-      <div className="clearfix">
-        <h2 className="float-left">Items</h2>
-        <CategoryFilter
-          categories={includedCategories}
-          filter={filter}
-          handleCategoryFilter={({ target: { name } }) => setFilter(name)}
-          handleClearFilter={() => setFilter('')}
-        />
+      <hr />
+      <div className="d-flex justify-content-between">
+        <h2>Items</h2>
+        <div>
+          <CategoryFilter
+            categories={includedCategories}
+            filter={filter}
+            handleCategoryFilter={({ target: { name } }) => setFilter(name)}
+            handleClearFilter={() => setFilter('')}
+          />
+        </div>
       </div>
+      {props.permissions === 'write' && (
+        <div className="clearfix">
+          <Button variant="link" className="mx-auto float-right" onClick={() => setMultiSelect(!multiSelect)}>
+            {multiSelect ? 'Hide' : ''} Select
+          </Button>
+        </div>
+      )}
       {(filter || !includedCategories.length) && (
         <div>
           <ListItems
@@ -226,32 +311,39 @@ function ListContainer(props) {
             permission={props.permissions}
             handleItemDelete={handleDelete}
             handlePurchaseOfItem={handleItemPurchase}
-            handleReadOfItem={handleItemRead}
-            handleUnReadOfItem={handleItemUnRead}
+            toggleItemRead={toggleRead}
             handleItemUnPurchase={handleUnPurchase}
             listType={props.list.type}
             listUsers={props.listUsers}
+            multiSelect={multiSelect}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
           />
         </div>
       )}
       {!filter &&
-        includedCategories.sort().map((category) => (
-          <div key={category}>
-            <ListItems
-              category={category}
-              items={notPurchasedItems[category]}
-              permission={props.permissions}
-              handleItemDelete={handleDelete}
-              handlePurchaseOfItem={handleItemPurchase}
-              handleReadOfItem={handleItemRead}
-              handleUnReadOfItem={handleItemUnRead}
-              handleItemUnPurchase={handleUnPurchase}
-              listType={props.list.type}
-              listUsers={props.listUsers}
-            />
-            <br />
-          </div>
-        ))}
+        includedCategories.sort().map(
+          (category) =>
+            (category || (notPurchasedItems[category] && notPurchasedItems[category].length > 0)) && (
+              <div key={category}>
+                <ListItems
+                  category={category}
+                  items={notPurchasedItems[category]}
+                  permission={props.permissions}
+                  handleItemDelete={handleDelete}
+                  handlePurchaseOfItem={handleItemPurchase}
+                  toggleItemRead={toggleRead}
+                  handleItemUnPurchase={handleUnPurchase}
+                  listType={props.list.type}
+                  listUsers={props.listUsers}
+                  multiSelect={multiSelect}
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                />
+                <br />
+              </div>
+            ),
+        )}
       <br />
       <h2>{props.list.type === 'ToDoList' ? 'Completed' : 'Purchased'}</h2>
       <ListItems
@@ -260,15 +352,19 @@ function ListContainer(props) {
         permission={props.permissions}
         handleItemDelete={handleDelete}
         handlePurchaseOfItem={handleItemPurchase}
-        handleReadOfItem={handleItemRead}
-        handleUnReadOfItem={handleItemUnRead}
         handleItemUnPurchase={handleUnPurchase}
+        toggleItemRead={toggleRead}
         listType={props.list.type}
         listUsers={props.listUsers}
+        multiSelect={multiSelect}
+        selectedItems={selectedItems}
+        setSelectedItems={setSelectedItems}
       />
       <ConfirmModal
         action="delete"
-        body="Are you sure you want to delete this item?"
+        body={`Are you sure you want to delete the following items? ${itemsToDelete
+          .map((item) => itemName(item, props.list.type))
+          .join(', ')}`}
         show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
         handleClear={() => setShowDeleteConfirm(false)}

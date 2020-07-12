@@ -385,6 +385,43 @@ describe('ListContainer', () => {
     expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
   });
 
+  it('deletes all items when multiple are selected', async () => {
+    axios.delete = jest.fn().mockResolvedValue({});
+    const { getAllByRole, getByText, getByTestId, queryByText } = renderListContainer(props);
+
+    expect(getByText('purchased quantity foo purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(getByText('Foo')).toBeVisible();
+    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(getByText('Bar')).toBeVisible();
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[4]);
+
+    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
+
+    fireEvent.click(getByTestId('purchased-item-delete-1'));
+
+    expect(getByTestId('confirm-delete')).toBeVisible();
+
+    fireEvent.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(3));
+
+    expect(queryByText('purchased quantity foo purchased product')).toBeNull();
+    expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
+    expect(getByText('Foo')).toBeVisible();
+    expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
+    expect(queryByText('Bar')).toBeNull();
+  });
+
   it('does not delete item when delete is cleared, hides modal', async () => {
     const { getByTestId, getByText, queryByTestId } = renderListContainer(props);
 
@@ -479,6 +516,7 @@ describe('ListContainer', () => {
     expect(getByText('New category')).toBeVisible();
   });
 
+  // TODO: why is this different?
   it('moves item to purchased when ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
     props.list.type = 'ToDoList';
@@ -486,20 +524,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].assignee_id = 1;
     const { getByText, getByTestId } = renderListContainer(props);
 
-    expect(getByText('whatever').parentElement).toHaveAttribute('data-test-class', 'non-purchased-item');
-
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
-
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-    expect(getByText('whatever').parentElement).toHaveAttribute('data-test-class', 'purchased-item');
-  });
-
-  it('moves item to purchased when not ToDo', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId } = renderListContainer(props);
-
-    expect(getByText('not purchased quantity no category not purchased product').parentElement).toHaveAttribute(
+    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -508,10 +533,97 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByText('not purchased quantity no category not purchased product').parentElement).toHaveAttribute(
+    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
+  });
+
+  it('moves item to purchased when not ToDo', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getByText, getByTestId } = renderListContainer(props);
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+
+    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+  });
+
+  it('moves item to purchased and clears filter when item is last of category', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+
+    fireEvent.click(getByText('Filter by category'));
+
+    await waitFor(() => getByTestId('filter-by-bar'));
+
+    fireEvent.click(getByTestId('filter-by-bar'));
+
+    await waitFor(() => expect(queryByText('not purchased quantity foo not purchased product')).toBeNull());
+
+    expect(getByTestId('clear-filter')).toBeVisible();
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+
+    fireEvent.click(getByTestId('not-purchased-item-complete-5'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(queryByTestId('clear-filter')).toBeNull();
+    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+  });
+
+  it('moves items to purchased when multiple selected, handles purchased items appropriately', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getAllByRole, getByText, getByTestId, queryByText } = renderListContainer(props);
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[4]);
+
+    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
+
+    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+    expect(queryByText('Bar')).toBeNull();
   });
 
   it('handles 401 on purchase', async () => {
@@ -601,20 +713,148 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId, getByText } = renderListContainer(props);
 
-    expect(getByText('purchased quantity foo purchased product').parentElement).toHaveAttribute(
-      'data-test-class',
-      'purchased-item',
-    );
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
 
     fireEvent.click(getByTestId('purchased-item-refresh-1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByText('purchased quantity foo purchased product').parentElement).toHaveAttribute(
-      'data-test-class',
-      'non-purchased-item',
-    );
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+  });
+
+  it('moves items to not purchased when refreshed with mutliple selected, handles not completed items', async () => {
+    axios.post = jest.fn().mockResolvedValue({
+      data: {
+        archived_at: null,
+        category: 'foo',
+        created_at: '2020-05-24T11:07:48.751-05:00',
+        grocery_list_id: 1,
+        id: 6,
+        product: 'foo purchased product',
+        purchased: false,
+        quantity: 'purchased quantity',
+        refreshed: false,
+        updated_at: '2020-05-24T11:07:48.751-05:00',
+        user_id: 1,
+      },
+    });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getAllByRole, getByTestId, getByText } = renderListContainer(props);
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[4]);
+
+    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(
+      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+    expect(
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+  });
+
+  it('handles 401 on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+  });
+
+  it('handles 403 on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+  });
+
+  it('handles 404 on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+  });
+
+  it('handles not 401, 403, 404 on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+  });
+
+  it('handles failed request on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+  });
+
+  it('handles unknown failure on refresh', async () => {
+    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.put = jest.fn().mockResolvedValue();
+    const { getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
   it('toggles read when item not purchased', async () => {
@@ -673,6 +913,36 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
+    expect(getByTestId('purchased-item-read-1')).toBeVisible();
+    expect(queryByTestId('purchased-item-unread-1')).toBeNull();
+  });
+
+  it('toggles read on multiple items when selected', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    props.list.type = 'BookList';
+    props.purchasedItems[0].title = 'whatever';
+    props.purchasedItems[0].read = true;
+    props.notPurchasedItems[''][0].title = 'whatever';
+    props.notPurchasedItems[''][0].read = false;
+    const { getAllByRole, getByTestId, queryByTestId } = renderListContainer(props);
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[4]);
+
+    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
+
+    fireEvent.click(getByTestId('purchased-item-unread-1'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('not-purchased-item-unread-2')).toBeVisible();
+    expect(queryByTestId('not-purchased-item-read-2')).toBeNull();
     expect(getByTestId('purchased-item-read-1')).toBeVisible();
     expect(queryByTestId('purchased-item-unread-1')).toBeNull();
   });
@@ -761,5 +1031,25 @@ describe('ListContainer', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
+
+  it('cannot multi select if user does not have write access', () => {
+    props.permissions = 'read';
+    const { queryByText } = renderListContainer(props);
+
+    expect(queryByText('Select')).toBeNull();
+  });
+
+  it('changes select to hide select when multi select is on', async () => {
+    props.permissions = 'write';
+    const { getAllByRole } = renderListContainer(props);
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select');
   });
 });

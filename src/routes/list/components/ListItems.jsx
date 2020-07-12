@@ -16,12 +16,14 @@ function ListItems(props) {
           purchased={props.purchased}
           handleItemDelete={props.handleItemDelete}
           handlePurchaseOfItem={props.handlePurchaseOfItem}
-          handleReadOfItem={props.handleReadOfItem}
-          handleUnReadOfItem={props.handleUnReadOfItem}
           handleItemUnPurchase={props.handleItemUnPurchase}
           listType={props.listType}
           listUsers={props.listUsers}
           permission={props.permission}
+          multiSelect={props.multiSelect}
+          selectedItems={props.selectedItems}
+          setSelectedItems={props.setSelectedItems}
+          toggleItemRead={props.toggleItemRead}
         />
       ))}
     </ListGroup>
@@ -52,8 +54,6 @@ ListItems.propTypes = {
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleReadOfItem: PropTypes.func.isRequired,
-  handleUnReadOfItem: PropTypes.func.isRequired,
   handleItemUnPurchase: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
@@ -63,6 +63,10 @@ ListItems.propTypes = {
     }),
   ),
   permission: PropTypes.string.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  setSelectedItems: PropTypes.func.isRequired,
+  toggleItemRead: PropTypes.func.isRequired,
 };
 
 ListItems.defaultProps = {

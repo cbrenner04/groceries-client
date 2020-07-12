@@ -28,9 +28,11 @@ describe('ListItems', () => {
     purchased: false,
     handleItemDelete: jest.fn(),
     handlePurchaseOfItem: jest.fn(),
-    handleReadOfItem: jest.fn(),
-    handleUnReadOfItem: jest.fn(),
     handleItemUnPurchase: jest.fn(),
+    multiSelect: false,
+    selectedItems: [],
+    setSelectedItems: jest.fn(),
+    toggleItemRead: jest.fn(),
     listType: 'GroceryList',
     listUsers: [
       {
