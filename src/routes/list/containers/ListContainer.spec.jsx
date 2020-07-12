@@ -556,6 +556,34 @@ describe('ListContainer', () => {
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
+  it('moves item to purchased and clears filter when item is last of category', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+
+    fireEvent.click(getByText('Filter by category'));
+
+    await waitFor(() => getByTestId('filter-by-bar'));
+
+    fireEvent.click(getByTestId('filter-by-bar'));
+
+    await waitFor(() => expect(queryByText('not purchased quantity foo not purchased product')).toBeNull());
+
+    expect(getByTestId('clear-filter')).toBeVisible();
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'non-purchased-item');
+
+    fireEvent.click(getByTestId('not-purchased-item-complete-5'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(queryByTestId('clear-filter')).toBeNull();
+    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(
+      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+    ).toHaveAttribute('data-test-class', 'purchased-item');
+  });
+
   it('moves items to purchased when multiple selected, handles purchased items appropriately', async () => {
     axios.put = jest.fn().mockResolvedValue({});
     const { getAllByRole, getByText, getByTestId, queryByText } = renderListContainer(props);
