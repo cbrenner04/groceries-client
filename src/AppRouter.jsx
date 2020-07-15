@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
 import EditListItem from './routes/list/EditListItem';
+import BulkEditListItems from './routes/list/BulkEditListItems';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
 import List from './routes/list/List';
@@ -28,6 +29,7 @@ export default function AppRouter() {
         <Route exact path="/lists/:id" component={List} />
         <Route exact path="/lists/:id/edit" component={EditList} />
         <Route path="/lists/:list_id/*/:id/edit" component={EditListItem} />
+        <Route path="/lists/:list_id/*/bulk-edit" component={BulkEditListItems} />
         {/* routes/share_list */}
         <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
         {/* routes/users */}

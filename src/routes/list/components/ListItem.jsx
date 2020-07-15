@@ -57,6 +57,7 @@ const ListItem = (props) => {
               handleItemDelete={props.handleItemDelete}
               handlePurchaseOfItem={props.handlePurchaseOfItem}
               toggleItemRead={props.toggleItemRead}
+              handleItemEdit={props.handleItemEdit}
             />
           )}
         </Col>
@@ -99,6 +100,7 @@ ListItem.propTypes = {
   selectedItems: PropTypes.array.isRequired,
   setSelectedItems: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
+  handleItemEdit: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {

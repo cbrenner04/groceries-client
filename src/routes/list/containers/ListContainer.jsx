@@ -114,8 +114,8 @@ function ListContainer(props) {
   };
 
   const resetMultiSelect = () => {
-    setMultiSelect(false);
     setSelectedItems([]);
+    setMultiSelect(false);
   };
 
   const pluralize = (items) => {
@@ -264,6 +264,16 @@ function ListContainer(props) {
     }
   };
 
+  const handleItemEdit = async (item) => {
+    const path = listItemPath(item);
+    if (selectedItems.length) {
+      const itemIds = selectedItems.map((item) => item.id).join(',');
+      props.history.push(`${path}/bulk-edit?item_ids=${itemIds}`);
+    } else {
+      props.history.push(`${path}/${item.id}/edit`);
+    }
+  };
+
   return (
     <>
       <h1>{props.list.name}</h1>
@@ -298,7 +308,16 @@ function ListContainer(props) {
       </div>
       {props.permissions === 'write' && (
         <div className="clearfix">
-          <Button variant="link" className="mx-auto float-right" onClick={() => setMultiSelect(!multiSelect)}>
+          <Button
+            variant="link"
+            className="mx-auto float-right"
+            onClick={() => {
+              if (multiSelect && selectedItems.length > 0) {
+                setSelectedItems([]);
+              }
+              setMultiSelect(!multiSelect);
+            }}
+          >
             {multiSelect ? 'Hide' : ''} Select
           </Button>
         </div>
@@ -318,6 +337,7 @@ function ListContainer(props) {
             multiSelect={multiSelect}
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
+            handleItemEdit={handleItemEdit}
           />
         </div>
       )}
@@ -339,6 +359,7 @@ function ListContainer(props) {
                   multiSelect={multiSelect}
                   selectedItems={selectedItems}
                   setSelectedItems={setSelectedItems}
+                  handleItemEdit={handleItemEdit}
                 />
                 <br />
               </div>
@@ -359,6 +380,7 @@ function ListContainer(props) {
         multiSelect={multiSelect}
         selectedItems={selectedItems}
         setSelectedItems={setSelectedItems}
+        handleItemEdit={handleItemEdit}
       />
       <ConfirmModal
         action="delete"

@@ -20,6 +20,7 @@ const ListItemButtons = (props) =>
       handlePurchaseOfItem={props.handlePurchaseOfItem}
       handleItemDelete={props.handleItemDelete}
       toggleItemRead={props.toggleItemRead}
+      handleItemEdit={props.handleItemEdit}
     />
   );
 
@@ -34,6 +35,7 @@ ListItemButtons.propTypes = {
   handleItemUnPurchase: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
+  handleItemEdit: PropTypes.func.isRequired,
 };
 
 export default ListItemButtons;

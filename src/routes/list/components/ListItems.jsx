@@ -24,6 +24,7 @@ function ListItems(props) {
           selectedItems={props.selectedItems}
           setSelectedItems={props.setSelectedItems}
           toggleItemRead={props.toggleItemRead}
+          handleItemEdit={props.handleItemEdit}
         />
       ))}
     </ListGroup>
@@ -67,6 +68,7 @@ ListItems.propTypes = {
   selectedItems: PropTypes.array.isRequired,
   setSelectedItems: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
+  handleItemEdit: PropTypes.func.isRequired,
 };
 
 ListItems.defaultProps = {

@@ -2,15 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { listTypeToSnakeCase } from '../../../../utils/format';
-import { Bookmark, Complete, Edit, Trash } from '../../../../components/ActionButtons';
+import { Bookmark, Complete, EditButton, Trash } from '../../../../components/ActionButtons';
 
 function NotPurchasedItemButtons(props) {
-  const listItemPath = () => {
-    const listId = props.item[`${listTypeToSnakeCase(props.listType)}_id`];
-    return `/lists/${listId}/${listTypeToSnakeCase(props.listType)}_items`;
-  };
-
   return (
     <ButtonGroup className="float-right">
       {props.listType === 'BookList' && (
@@ -24,7 +18,7 @@ function NotPurchasedItemButtons(props) {
         handleClick={() => props.handlePurchaseOfItem(props.item)}
         data-test-id={`not-purchased-item-complete-${props.item.id}`}
       />
-      <Edit to={`${listItemPath()}/${props.item.id}/edit`} />
+      <EditButton handleClick={() => props.handleItemEdit(props.item)} />
       <Trash
         handleClick={() => props.handleItemDelete(props.item)}
         data-test-id={`not-purchased-item-delete-${props.item.id}`}
@@ -44,6 +38,7 @@ NotPurchasedItemButtons.propTypes = {
   handlePurchaseOfItem: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
+  handleItemEdit: PropTypes.func.isRequired,
 };
 
 export default NotPurchasedItemButtons;
