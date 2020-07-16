@@ -22,14 +22,14 @@ function BulkEditListItemsForm(props) {
   // set attributes to initial value if all items have the same value for the attribute
   const initialAttr = (attribute) => {
     const uniqValues = [...new Set(props.items.map(({ [attribute]: value }) => value))];
-    return uniqValues.length === 1 ? uniqValues[0] : '';
+    return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : '';
   };
   const initialCategory = initialAttr('category');
   const initialAuthor = initialAttr('author');
   const initialQuantity = initialAttr('quantity');
   const initialArtist = initialAttr('artist');
   const initialAlbum = initialAttr('album');
-  const initialAssigneeId = initialAttr('assignee_id');
+  const initialAssigneeId = String(initialAttr('assignee_id'));
   const initialDueBy = formatDueBy(initialAttr('due_by'));
 
   // clear any attributes on all items
@@ -60,7 +60,7 @@ function BulkEditListItemsForm(props) {
       artist,
       album,
       assignee_id: assigneeId || null,
-      due_by: dueBy || formatDueBy(new Date()),
+      due_by: dueBy,
       clear_category: clearCategory,
       clear_author: clearAuthor,
       clear_quantity: clearQuantity,
@@ -450,7 +450,7 @@ BulkEditListItemsForm.propTypes = {
       assigneeId: PropTypes.string,
       album: PropTypes.string,
       numberInSeries: PropTypes.number,
-      category: PropTypes.string.isRequired,
+      category: PropTypes.string,
     }),
   ).isRequired,
   list: PropTypes.shape({
