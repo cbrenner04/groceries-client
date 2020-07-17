@@ -264,6 +264,17 @@ function ListContainer(props) {
     }
   };
 
+  const handleItemSelect = (item) => {
+    const itemIds = selectedItems.map((i) => i.id).join(',');
+    let updatedItems;
+    if (itemIds.includes(item.id)) {
+      updatedItems = selectedItems.filter((i) => i.id !== item.id);
+    } else {
+      updatedItems = update(selectedItems, { $push: [item] });
+    }
+    setSelectedItems(updatedItems);
+  };
+
   const handleItemEdit = async (item) => {
     const path = listItemPath(item);
     if (selectedItems.length) {
@@ -335,9 +346,8 @@ function ListContainer(props) {
             listType={props.list.type}
             listUsers={props.listUsers}
             multiSelect={multiSelect}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
             handleItemEdit={handleItemEdit}
+            handleItemSelect={handleItemSelect}
           />
         </div>
       )}
@@ -357,8 +367,7 @@ function ListContainer(props) {
                   listType={props.list.type}
                   listUsers={props.listUsers}
                   multiSelect={multiSelect}
-                  selectedItems={selectedItems}
-                  setSelectedItems={setSelectedItems}
+                  handleItemSelect={handleItemSelect}
                   handleItemEdit={handleItemEdit}
                 />
                 <br />
@@ -378,8 +387,7 @@ function ListContainer(props) {
         listType={props.list.type}
         listUsers={props.listUsers}
         multiSelect={multiSelect}
-        selectedItems={selectedItems}
-        setSelectedItems={setSelectedItems}
+        handleItemSelect={handleItemSelect}
         handleItemEdit={handleItemEdit}
       />
       <ConfirmModal

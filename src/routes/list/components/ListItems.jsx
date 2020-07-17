@@ -21,8 +21,7 @@ function ListItems(props) {
           listUsers={props.listUsers}
           permission={props.permission}
           multiSelect={props.multiSelect}
-          selectedItems={props.selectedItems}
-          setSelectedItems={props.setSelectedItems}
+          handleItemSelect={props.handleItemSelect}
           toggleItemRead={props.toggleItemRead}
           handleItemEdit={props.handleItemEdit}
         />
@@ -65,8 +64,7 @@ ListItems.propTypes = {
   ),
   permission: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedItems: PropTypes.array.isRequired,
-  setSelectedItems: PropTypes.func.isRequired,
+  handleItemSelect: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
 };

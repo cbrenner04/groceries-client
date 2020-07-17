@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import update from 'immutability-helper';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
 
 const ListItem = (props) => {
-  const [itemSelected, setItemSelected] = useState(false);
-
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
     const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);
@@ -17,21 +14,6 @@ const ListItem = (props) => {
       assignee = `Assigned To: ${assignedUser.email}`;
     }
   }
-
-  // TODO: this is just not a great way to handle this
-  // TODO: this is manipulating state of the top level container
-  // TODO: this should not have or need its own state
-  // TODO: this should just be flipping a switch (selected or not selected)
-  const updateSelectedItems = () => {
-    let updatedItems;
-    if (!itemSelected) {
-      updatedItems = update(props.selectedItems, { $push: [props.item] });
-    } else {
-      updatedItems = props.selectedItems.filter((item) => item.id !== props.item.id);
-    }
-    setItemSelected(!itemSelected);
-    props.setSelectedItems(updatedItems);
-  };
 
   return (
     <ListGroup.Item
@@ -45,7 +27,7 @@ const ListItem = (props) => {
             <input
               type="checkbox"
               style={{ position: 'absolute', top: '40%', left: '40%' }}
-              onClick={updateSelectedItems}
+              onClick={() => props.handleItemSelect(props.item)}
             />
             <div className="list-item-multi-divider"></div>
           </Col>
@@ -109,8 +91,7 @@ ListItem.propTypes = {
   ),
   permission: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedItems: PropTypes.array.isRequired,
-  setSelectedItems: PropTypes.func.isRequired,
+  handleItemSelect: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
 };

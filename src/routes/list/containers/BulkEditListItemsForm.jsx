@@ -55,10 +55,10 @@ function BulkEditListItemsForm(props) {
     event.preventDefault();
     const putData = {
       category: category || null,
-      author,
-      quantity,
-      artist,
-      album,
+      author: author || null,
+      quantity: quantity || null,
+      artist: artist || null,
+      album: album || null,
       assignee_id: assigneeId || null,
       due_by: dueBy || null,
       clear_category: clearCategory,
