@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
@@ -8,6 +8,8 @@ import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
 
 const ListItem = (props) => {
+  const [itemSelected, setItemSelected] = useState(false);
+
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
     const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);
@@ -16,8 +18,18 @@ const ListItem = (props) => {
     }
   }
 
+  // TODO: this is just not a great way to handle this
+  // TODO: this is manipulating state of the top level container
+  // TODO: this should not have or need its own state
+  // TODO: this should just be flipping a switch (selected or not selected)
   const updateSelectedItems = () => {
-    const updatedItems = update(props.selectedItems, { $push: [props.item] });
+    let updatedItems;
+    if (!itemSelected) {
+      updatedItems = update(props.selectedItems, { $push: [props.item] });
+    } else {
+      updatedItems = props.selectedItems.filter((item) => item.id !== props.item.id);
+    }
+    setItemSelected(!itemSelected);
     props.setSelectedItems(updatedItems);
   };
 

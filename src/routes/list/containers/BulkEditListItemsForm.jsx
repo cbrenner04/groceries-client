@@ -54,13 +54,13 @@ function BulkEditListItemsForm(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const putData = {
-      category,
+      category: category || null,
       author,
       quantity,
       artist,
       album,
       assignee_id: assigneeId || null,
-      due_by: dueBy,
+      due_by: dueBy || null,
       clear_category: clearCategory,
       clear_author: clearAuthor,
       clear_quantity: clearQuantity,
