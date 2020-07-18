@@ -19,6 +19,7 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -37,6 +38,7 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -75,6 +77,7 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
     <datalist
       id="categories"
     />
+    
   </div>
 </div>
 `;
@@ -98,6 +101,7 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -116,6 +120,7 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -137,6 +142,7 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
     <datalist
       id="categories"
     />
+    
   </div>
 </div>
 `;
@@ -160,6 +166,7 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -178,6 +185,7 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -196,6 +204,7 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -217,6 +226,7 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
     <datalist
       id="categories"
     />
+    
   </div>
 </div>
 `;
@@ -240,6 +250,7 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
       type="text"
       value=""
     />
+    
   </div>
   <div
     class="form-group"
@@ -262,6 +273,7 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
         Select Assignee
       </option>
     </select>
+    
   </div>
   <div
     class="form-group"
@@ -280,6 +292,7 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
       type="date"
       value="2020-05-21"
     />
+    
   </div>
   <div
     class="form-group"
@@ -301,6 +314,7 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
     <datalist
       id="categories"
     />
+    
   </div>
 </div>
 `;

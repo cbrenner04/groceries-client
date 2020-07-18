@@ -36,6 +36,7 @@ exports[`ListsContainer renders 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -72,6 +73,7 @@ exports[`ListsContainer renders 1`] = `
           to-do
         </option>
       </select>
+      
     </div>
     <button
       class="btn btn-success btn-block"

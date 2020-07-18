@@ -30,8 +30,8 @@ describe('ListItems', () => {
     handlePurchaseOfItem: jest.fn(),
     handleItemUnPurchase: jest.fn(),
     multiSelect: false,
-    selectedItems: [],
-    setSelectedItems: jest.fn(),
+    handleItemEdit: jest.fn(),
+    handleItemSelect: jest.fn(),
     toggleItemRead: jest.fn(),
     listType: 'GroceryList',
     listUsers: [

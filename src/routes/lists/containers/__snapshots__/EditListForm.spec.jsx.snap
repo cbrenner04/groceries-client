@@ -28,6 +28,7 @@ exports[`EditListForm renders 1`] = `
         type="text"
         value="foo"
       />
+      
     </div>
     <div
       class="form-group"
@@ -64,6 +65,7 @@ exports[`EditListForm renders 1`] = `
           to-do
         </option>
       </select>
+      
     </div>
     <div
       class="mb-3 form-group"

@@ -18,5 +18,6 @@ exports[`DateField renders input 1`] = `
     type="date"
     value="03/03/2020"
   />
+  
 </div>
 `;

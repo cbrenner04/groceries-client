@@ -19,6 +19,7 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
       type="text"
       value="foo"
     />
+    
   </div>
   <div
     class="form-group"
@@ -45,6 +46,7 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
         foo@example.com
       </option>
     </select>
+    
   </div>
   <div
     class="form-group"
@@ -63,6 +65,7 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
       type="date"
       value="05/20/2020"
     />
+    
   </div>
   <div
     class="form-group"
@@ -91,6 +94,7 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
         value="bar"
       />
     </datalist>
+    
   </div>
 </div>
 `;
@@ -114,6 +118,7 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
       type="text"
       value="foo"
     />
+    
   </div>
   <div
     class="form-group"
@@ -140,6 +145,7 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
         foo@example.com
       </option>
     </select>
+    
   </div>
   <div
     class="form-group"
@@ -158,6 +164,7 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
       type="date"
       value="05/20/2020"
     />
+    
   </div>
   <div
     class="form-group"
@@ -186,6 +193,7 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
         value="bar"
       />
     </datalist>
+    
   </div>
   <div
     class="mb-3 form-group"
