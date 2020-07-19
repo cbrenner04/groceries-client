@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import update from 'immutability-helper';
 
 import Book from './Book';
 import Grocery from './Grocery';
@@ -8,17 +7,8 @@ import Music from './Music';
 import ToDo from './ToDo';
 import { defaultDueBy } from '../../../../utils/format';
 
-const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) => {
-  const setData = ({ target: { name, value } }) => {
-    let newValue = value;
-    if (name === 'numberInSeries') {
-      newValue = Number(value);
-    }
-    const data = update(formData, { [name]: { $set: newValue } });
-    setFormData(data);
-  };
-
-  return {
+const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) =>
+  ({
     BookList: (
       <Book
         author={formData.author}
@@ -26,7 +16,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         numberInSeries={formData.numberInSeries}
         category={formData.category}
         categories={categories}
-        inputChangeHandler={setData}
+        inputChangeHandler={setFormData}
         read={formData.read}
         purchased={formData.purchased}
         editForm={editForm}
@@ -38,7 +28,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         product={formData.product}
         category={formData.category}
         categories={categories}
-        inputChangeHandler={setData}
+        inputChangeHandler={setFormData}
         purchased={formData.purchased}
         editForm={editForm}
       />
@@ -50,7 +40,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         album={formData.album}
         category={formData.category}
         categories={categories}
-        inputChangeHandler={setData}
+        inputChangeHandler={setFormData}
         purchased={formData.purchased}
         editForm={editForm}
       />
@@ -63,13 +53,12 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         dueBy={formData.dueBy}
         category={formData.category}
         categories={categories}
-        inputChangeHandler={setData}
+        inputChangeHandler={setFormData}
         completed={formData.completed}
         editForm={editForm}
       />
     ),
-  }[listType];
-};
+  }[listType]);
 
 ListItemFormFields.propTypes = {
   listType: PropTypes.string.isRequired,

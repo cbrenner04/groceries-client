@@ -6,5 +6,6 @@ const formatDueBy = (date) => (date ? moment(date).format('YYYY-MM-DD') : '');
 const prettyDueBy = (date) => moment(date).format('LL');
 const listTypeToSnakeCase = (listType) => listType.replace(/([A-Z])/g, ($1) => `_${$1}`.toLowerCase()).slice(1);
 const capitalize = (category) => category.charAt(0).toUpperCase() + category.slice(1);
+const prettyListType = (listType) => listType.replace(/([A-Z])/g, ($1) => ` ${$1.toUpperCase()}`);
 
-export { formatDate, defaultDueBy, formatDueBy, prettyDueBy, listTypeToSnakeCase, capitalize };
+export { formatDate, defaultDueBy, formatDueBy, prettyDueBy, listTypeToSnakeCase, capitalize, prettyListType };

@@ -357,4 +357,7 @@ describe('utils', () => {
       expect(fetchItemToEdit({ itemId, listId, itemType, history })).rejects.toThrow();
     });
   });
+
+  // TODO: fill out
+  describe('fetchItemsToEdit', () => {});
 });
