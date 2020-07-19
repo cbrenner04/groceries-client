@@ -27,7 +27,7 @@ function BulkEditListItems(props) {
             lists={data.lists}
             items={data.items}
             categories={data.categories}
-            listUsers={data.listUsers}
+            listUsers={data.list_users}
           />
         )}
       </Async.Fulfilled>

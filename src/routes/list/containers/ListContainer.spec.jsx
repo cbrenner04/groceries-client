@@ -92,6 +92,7 @@ describe('ListContainer', () => {
             category: '',
             purchased: false,
             completed: false,
+            grocery_list_id: 1,
           },
         ],
         foo: [
@@ -111,6 +112,7 @@ describe('ListContainer', () => {
             category: 'foo',
             purchased: false,
             completed: false,
+            grocery_list_id: 1,
           },
           {
             id: 4,
@@ -128,6 +130,7 @@ describe('ListContainer', () => {
             category: 'foo',
             purchased: false,
             completed: false,
+            grocery_list_id: 1,
           },
         ],
         bar: [
@@ -1051,5 +1054,87 @@ describe('ListContainer', () => {
     await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
 
     expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select');
+  });
+
+  it('handles item select for multi select when item has not been selected', async () => {
+    props.permissions = 'write';
+    const { getAllByRole } = renderListContainer(props);
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+
+    expect(getAllByRole('checkbox')[0]).toBeChecked();
+  });
+
+  it('handles item select for multi select when item has been selected', async () => {
+    props.permissions = 'write';
+    const { getAllByRole } = renderListContainer(props);
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+    fireEvent.click(getAllByRole('checkbox')[0]);
+
+    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+  });
+
+  it('clears selected items for mutli select is hidden', async () => {
+    props.permissions = 'write';
+    const { getAllByRole } = renderListContainer(props);
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Select'));
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+  });
+
+  it('navigates to single edit form when no multi select', async () => {
+    props.permissions = 'write';
+    const { getByTestId } = renderListContainer(props);
+    fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
+
+    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+
+    expect(history.push).toHaveBeenCalledWith('/lists/1/grocery_list_items/3/edit');
+  });
+
+  it('navigates to bulk edit form when multi select', async () => {
+    props.permissions = 'write';
+    const { getAllByRole, getByTestId } = renderListContainer(props);
+
+    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+
+    fireEvent.click(getAllByRole('button')[4]);
+
+    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+    fireEvent.click(getAllByRole('checkbox')[1]);
+    fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
+
+    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+
+    expect(history.push).toHaveBeenCalledWith('/lists/1/grocery_list_items/bulk-edit?item_ids=2,5');
   });
 });

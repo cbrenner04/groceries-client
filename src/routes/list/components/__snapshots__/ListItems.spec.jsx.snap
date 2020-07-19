@@ -41,6 +41,7 @@ exports[`ListItems renders a mapping of ListItem 1`] = `
             </button>
             <button
               class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-1"
               type="button"
             >
               <i

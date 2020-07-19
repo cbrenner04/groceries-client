@@ -49,6 +49,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -118,6 +119,7 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -227,6 +229,7 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -298,6 +301,7 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -367,6 +371,7 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -471,6 +476,7 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i
@@ -591,6 +597,7 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
           </button>
           <button
             class="p-0 mr-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-1"
             type="button"
           >
             <i

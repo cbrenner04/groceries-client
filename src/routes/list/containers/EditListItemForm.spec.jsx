@@ -11,40 +11,44 @@ jest.mock('react-toastify', () => ({
 }));
 
 describe('EditListItemForm', () => {
-  const props = {
-    history: {
-      push: jest.fn(),
-    },
-    listUsers: [
-      {
-        id: 1,
-        email: 'foo@example.com',
+  let props;
+
+  beforeEach(() => {
+    props = {
+      history: {
+        push: jest.fn(),
       },
-    ],
-    item: {
-      id: 1,
-      product: 'foo',
-      task: '',
-      purchased: false,
-      quantity: 'foo',
-      completed: false,
-      author: '',
-      title: '',
-      read: false,
-      artist: '',
-      dueBy: defaultDueBy(),
-      assigneeId: '',
-      album: '',
-      numberInSeries: 0,
-      category: '',
-    },
-    list: {
-      id: 1,
-      type: 'GroceryList',
-      categories: [''],
-    },
-    userId: 1,
-  };
+      listUsers: [
+        {
+          id: 1,
+          email: 'foo@example.com',
+        },
+      ],
+      item: {
+        id: 1,
+        product: 'foo',
+        task: '',
+        purchased: false,
+        quantity: 'foo',
+        completed: false,
+        author: '',
+        title: '',
+        read: false,
+        artist: '',
+        dueBy: defaultDueBy(),
+        assigneeId: '',
+        album: '',
+        numberInSeries: 0,
+        category: '',
+      },
+      list: {
+        id: 1,
+        type: 'GroceryList',
+        categories: [''],
+      },
+      userId: 1,
+    };
+  });
 
   it('renders', () => {
     const { container } = render(<EditListItemForm {...props} />);
@@ -196,5 +200,30 @@ describe('EditListItemForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
+  });
+
+  it('sets value for input', async () => {
+    const { getByLabelText, getByRole } = render(<EditListItemForm {...props} />);
+
+    fireEvent.change(getByLabelText('Product'), { target: { value: 'foo' } });
+    fireEvent.click(getByRole('button'));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(axios.put).toHaveBeenCalledWith('/lists/1/grocery_list_items/1', {
+      grocery_list_item: expect.objectContaining({ product: 'foo' }),
+    });
+  });
+
+  it('sets value for numberInSeries as a number when input', async () => {
+    props.list.type = 'BookList';
+    const { getByLabelText, getByRole } = render(<EditListItemForm {...props} />);
+
+    fireEvent.change(getByLabelText('Number in series'), { target: { value: '2' } });
+    fireEvent.click(getByRole('button'));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(axios.put).toHaveBeenCalledWith('/lists/1/book_list_items/1', {
+      book_list_item: expect.objectContaining({ number_in_series: 2 }),
+    });
   });
 });

@@ -360,6 +360,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
                 type="button"
               >
                 <i
@@ -422,6 +423,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
                 type="button"
               >
                 <i
@@ -484,6 +486,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
                 type="button"
               >
                 <i
@@ -534,6 +537,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
                 type="button"
               >
                 <i
@@ -984,6 +988,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
                 type="button"
               >
                 <i
@@ -1046,6 +1051,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
                 type="button"
               >
                 <i
@@ -1108,6 +1114,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
                 type="button"
               >
                 <i
@@ -1158,6 +1165,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
                 type="button"
               >
                 <i
@@ -1418,6 +1426,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
                 type="button"
               >
                 <i
@@ -1480,6 +1489,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
                 type="button"
               >
                 <i
@@ -1542,6 +1552,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
                 type="button"
               >
                 <i
@@ -1592,6 +1603,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
                 type="button"
               >
                 <i
@@ -1857,6 +1869,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
                 type="button"
               >
                 <i
@@ -1907,6 +1920,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
                 type="button"
               >
                 <i
@@ -2164,6 +2178,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
                 type="button"
               >
                 <i
@@ -2226,6 +2241,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
                 type="button"
               >
                 <i
@@ -2288,6 +2304,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
                 type="button"
               >
                 <i
@@ -2338,6 +2355,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
                 type="button"
               >
                 <i
@@ -2590,6 +2608,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
               </button>
               <button
                 class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
                 type="button"
               >
                 <i

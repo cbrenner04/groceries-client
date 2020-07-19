@@ -18,7 +18,10 @@ function NotPurchasedItemButtons(props) {
         handleClick={() => props.handlePurchaseOfItem(props.item)}
         data-test-id={`not-purchased-item-complete-${props.item.id}`}
       />
-      <EditButton handleClick={() => props.handleItemEdit(props.item)} />
+      <EditButton
+        handleClick={() => props.handleItemEdit(props.item)}
+        data-test-id={`not-purchased-item-edit-${props.item.id}`}
+      />
       <Trash
         handleClick={() => props.handleItemDelete(props.item)}
         data-test-id={`not-purchased-item-delete-${props.item.id}`}

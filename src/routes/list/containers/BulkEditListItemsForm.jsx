@@ -120,11 +120,10 @@ function BulkEditListItemsForm(props) {
   };
 
   const clearNewListForm = () => {
-    const updates = {
+    const updatedFormData = update(formData, {
       newListName: { $set: '' },
       showNewListForm: { $set: initialValues.showNewListForm },
-    };
-    const updatedFormData = update(formData, updates);
+    });
     setFormData(updatedFormData);
   };
 
@@ -145,8 +144,12 @@ function BulkEditListItemsForm(props) {
     setFormData(updatedFormData);
   };
 
-  const handleInput = ({ target: { name, value } }) => {
-    const updatedFormData = update(formData, { [name]: { $set: value } });
+  const handleInput = ({ target: { name, value, checked } }) => {
+    let newValue = value;
+    if (name === 'updateCurrentItems') {
+      newValue = checked;
+    }
+    const updatedFormData = update(formData, { [name]: { $set: newValue } });
     setFormData(updatedFormData);
   };
 
@@ -155,7 +158,7 @@ function BulkEditListItemsForm(props) {
     if (!formData[clearAttribute] && formData[attribute]) {
       updates[attribute] = { $set: '' };
     }
-    if (formData[clearAttribute] && initialValues[attribute]) {
+    if (formData[clearAttribute]) {
       updates[attribute] = { $set: initialValues[attribute] };
     }
     updates[clearAttribute] = { $set: !formData[clearAttribute] };

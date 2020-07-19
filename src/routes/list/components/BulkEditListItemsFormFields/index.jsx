@@ -16,7 +16,7 @@ const BulkEditListItemsFormFields = (props) => {
       <ChangeOtherList
         handleOtherListChange={props.handleOtherListChange}
         copy={props.formData.copy}
-        move={props.formData.copy}
+        move={props.formData.move}
         showNewListForm={props.formData.showNewListForm}
         existingListsOptions={props.existingListsOptions}
         listType={props.listType}
