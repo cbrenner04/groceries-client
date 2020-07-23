@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import update from 'immutability-helper';
 
 import { listTypeToSnakeCase } from '../../../utils/format';
 import axios from '../../../utils/api';
@@ -10,6 +11,14 @@ import { itemName } from '../utils';
 
 function EditListItemForm(props) {
   const [item, setItem] = useState(props.item);
+  const setData = ({ target: { name, value } }) => {
+    let newValue = value;
+    if (name === 'numberInSeries') {
+      newValue = Number(value);
+    }
+    const data = update(item, { [name]: { $set: newValue } });
+    setItem(data);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -74,7 +83,7 @@ function EditListItemForm(props) {
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           formData={item}
-          setFormData={setItem}
+          setFormData={setData}
           categories={props.list.categories}
           listType={props.list.type}
           listUsers={props.listUsers}

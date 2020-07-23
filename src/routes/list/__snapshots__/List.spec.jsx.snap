@@ -44,6 +44,7 @@ exports[`List displays List 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -62,6 +63,7 @@ exports[`List displays List 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -83,6 +85,7 @@ exports[`List displays List 1`] = `
       <datalist
         id="categories"
       />
+      
     </div>
     <br />
     <button

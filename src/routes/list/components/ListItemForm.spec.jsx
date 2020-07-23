@@ -108,7 +108,7 @@ describe('ListItemForm', () => {
     expect(history.location.pathname).toBe('/lists');
   });
 
-  it('displays appropriate error message when  and listType is BookList', async () => {
+  it('displays appropriate error message when listType is BookList', async () => {
     axios.post = jest.fn().mockRejectedValue({
       response: {
         status: 500,
@@ -127,7 +127,7 @@ describe('ListItemForm', () => {
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
   });
 
-  it('displays appropriate error message when  and listType is GroceryList', async () => {
+  it('displays appropriate error message when listType is GroceryList', async () => {
     axios.post = jest.fn().mockRejectedValue({
       response: {
         status: 500,
@@ -146,7 +146,7 @@ describe('ListItemForm', () => {
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
   });
 
-  it('displays appropriate error message when  and listType is MusicList', async () => {
+  it('displays appropriate error message when listType is MusicList', async () => {
     axios.post = jest.fn().mockRejectedValue({
       response: {
         status: 500,
@@ -165,7 +165,7 @@ describe('ListItemForm', () => {
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
   });
 
-  it('displays appropriate error message when  and listType is ToDoList', async () => {
+  it('displays appropriate error message when listType is ToDoList', async () => {
     axios.post = jest.fn().mockRejectedValue({
       response: {
         status: 500,
@@ -208,5 +208,18 @@ describe('ListItemForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
+  });
+
+  it('sets value for numberInSeries as a number when input', async () => {
+    props.listType = 'BookList';
+    const { getByLabelText, getAllByRole } = render(<ListItemForm {...props} history={history} />);
+
+    fireEvent.change(getByLabelText('Number in series'), { target: { value: '2' } });
+    fireEvent.click(getAllByRole('button')[1]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(axios.post).toHaveBeenCalledWith('/lists/1/book_list_items', {
+      book_list_item: expect.objectContaining({ number_in_series: 2 }),
+    });
   });
 });

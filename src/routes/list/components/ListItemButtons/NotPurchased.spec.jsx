@@ -1,22 +1,11 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 
 import NotPurchased from './NotPurchased';
 
 describe('NotPurchased', () => {
   let props;
-  let history;
-
-  const renderNotPurchased = (localProps) => {
-    history = createMemoryHistory();
-    return render(
-      <Router history={history}>
-        <NotPurchased {...localProps} />
-      </Router>,
-    );
-  };
+  const renderNotPurchased = (localProps) => render(<NotPurchased {...localProps} />);
 
   beforeEach(() => {
     props = {
@@ -30,6 +19,7 @@ describe('NotPurchased', () => {
       handlePurchaseOfItem: jest.fn(),
       toggleItemRead: jest.fn(),
       handleItemUnPurchase: jest.fn(),
+      handleItemEdit: jest.fn(),
       listType: 'GroceryList',
     };
   });
@@ -82,17 +72,17 @@ describe('NotPurchased', () => {
   });
 
   it('navigates to edit list item when Edit is clicked', () => {
-    const { getByRole } = renderNotPurchased(props);
+    const { getAllByRole } = renderNotPurchased(props);
 
-    fireEvent.click(getByRole('link'));
+    fireEvent.click(getAllByRole('button')[1]);
 
-    expect(history.location.pathname).toBe('/lists/1/grocery_list_items/1/edit');
+    expect(props.handleItemEdit).toHaveBeenCalledWith(props.item);
   });
 
   it('calls handleItemDelete when Trash is clicked', () => {
     const { getAllByRole } = renderNotPurchased(props);
 
-    fireEvent.click(getAllByRole('button')[1]);
+    fireEvent.click(getAllByRole('button')[2]);
 
     expect(props.handleItemDelete).toHaveBeenCalledWith(props.item);
   });

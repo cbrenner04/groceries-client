@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BulkEditListItems displays BulkEditListItems 1`] = `
+<div>
+  <h1>
+    Edit 
+    foo
+  </h1>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+  >
+    <div>
+      Move or copy these items to another list.
+    </div>
+    <br />
+    <div
+      class="form-check-inline form-group"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="move-action-copy"
+          name="copy"
+          type="radio"
+          value="false"
+        />
+        <label
+          class="form-check-label"
+          for="move-action-copy"
+          title=""
+        >
+          Copy
+        </label>
+      </div>
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="move-action-move"
+          name="move"
+          type="radio"
+          value="false"
+        />
+        <label
+          class="form-check-label"
+          for="move-action-move"
+          title=""
+        >
+          Move
+        </label>
+      </div>
+    </div>
+    <hr />
+    <div>
+      Update attributes for all items.
+    </div>
+    <br />
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+      <div
+        class="ml-1 mt-1 form-group"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clearQuantity"
+            name="clearQuantity"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clearQuantity"
+            title=""
+          >
+            Clear quantity
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="form-group"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="categories"
+      />
+      <div
+        class="ml-1 mt-1 form-group"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clearCategory"
+            name="clearCategory"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clearCategory"
+            title=""
+          >
+            Clear category
+          </label>
+        </div>
+      </div>
+    </div>
+    <button
+      class="btn btn-success btn-block"
+      type="submit"
+    >
+      Update Items
+    </button>
+    <a
+      class="btn btn-link btn-block"
+      href="/lists/1"
+    >
+      Cancel
+    </a>
+  </form>
+</div>
+`;
+
+exports[`BulkEditListItems displays UnknownError when an error occurs 1`] = `
+<div>
+  <h1>
+    Something went wrong!
+  </h1>
+  <h2>
+    We are currently unable to render this page.
+  </h2>
+  <p>
+    Please check your connection and try to  
+    <button
+      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
+    >
+      refresh the page
+    </button>
+  </p>
+</div>
+`;
+
+exports[`BulkEditListItems renders the Loading component when fetch request is pending 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-items: center;"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 100px; height: 100px; position: absolute; top: 50%;"
+    >
+      <span
+        class="sr-only"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</div>
+`;

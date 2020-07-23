@@ -7,6 +7,7 @@ import {
   sortItems,
   fetchList,
   fetchItemToEdit,
+  fetchItemsToEdit,
 } from './utils';
 import axios from '../../utils/api';
 import { formatDueBy } from '../../utils/format';
@@ -355,6 +356,96 @@ describe('utils', () => {
       axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
 
       expect(fetchItemToEdit({ itemId, listId, itemType, history })).rejects.toThrow();
+    });
+  });
+
+  describe('fetchItemsToEdit', () => {
+    const listId = 1;
+    const itemType = 'grocery_list_items';
+    const history = {
+      push: jest.fn(),
+    };
+    const search = '?item_ids=1,2';
+
+    it('returns correct body on success', async () => {
+      axios.get = jest.fn().mockResolvedValue({
+        data: {
+          items: [
+            {
+              id: 1,
+              user_id: 1,
+            },
+          ],
+          list: { id: 1, type: 'GroceryList' },
+          categories: [],
+          list_users: [
+            { id: 1, email: 'foo@example.com' },
+            { id: 2, email: 'bar@example.com' },
+          ],
+          lists: [{ id: 1, type: 'GroceryList', name: 'foobar' }],
+        },
+      });
+
+      expect(await fetchItemsToEdit({ search, listId, itemType, history })).toStrictEqual({
+        list_users: [
+          { id: 1, email: 'foo@example.com' },
+          { id: 2, email: 'bar@example.com' },
+        ],
+        list: { id: 1, type: 'GroceryList' },
+        items: [
+          {
+            id: 1,
+            user_id: 1,
+          },
+        ],
+        categories: [],
+        lists: [{ id: 1, type: 'GroceryList', name: 'foobar' }],
+      });
+    });
+
+    it('redirects to /users/sign_in when 401', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+
+      await fetchItemsToEdit({ search, listId, itemType, history });
+
+      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('redirects to /lists when 403', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
+
+      await fetchItemsToEdit({ search, listId, itemType, history });
+
+      expect(toast).toHaveBeenCalledWith('One or more items not found', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith(`/lists/${listId}`);
+    });
+
+    it('redirects to /lists when 404', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+
+      await fetchItemsToEdit({ search, listId, itemType, history });
+
+      expect(toast).toHaveBeenCalledWith('One or more items not found', { type: 'error' });
+      expect(history.push).toHaveBeenCalledWith(`/lists/${listId}`);
+    });
+
+    it('throws when status is not 401, 403, 404', () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+
+      expect(fetchItemsToEdit({ search, listId, itemType, history })).rejects.toThrow();
+    });
+
+    it('throws when request fails', () => {
+      axios.get = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+
+      expect(fetchItemsToEdit({ search, listId, itemType, history })).rejects.toThrow();
+    });
+
+    it('throws when unknown error occurs', () => {
+      axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+
+      expect(fetchItemsToEdit({ search, listId, itemType, history })).rejects.toThrow();
     });
   });
 });

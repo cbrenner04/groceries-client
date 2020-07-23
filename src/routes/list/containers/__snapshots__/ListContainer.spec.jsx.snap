@@ -222,6 +222,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -240,6 +241,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -271,6 +273,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -355,14 +358,15 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/2/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-2"
@@ -417,14 +421,15 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/5/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-5"
@@ -479,14 +484,15 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/3/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-3"
@@ -529,14 +535,15 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/4/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-4"
@@ -609,6 +616,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -636,6 +644,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
           foo@example.com
         </option>
       </select>
+      
     </div>
     <div
       class="form-group"
@@ -654,6 +663,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         type="date"
         value="2020-05-24"
       />
+      
     </div>
     <div
       class="form-group"
@@ -685,6 +695,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -839,6 +850,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -857,6 +869,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -888,6 +901,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -972,14 +986,15 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/2/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-2"
@@ -1034,14 +1049,15 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/5/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-5"
@@ -1096,14 +1112,15 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/3/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-3"
@@ -1146,14 +1163,15 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/4/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-4"
@@ -1270,6 +1288,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -1288,6 +1307,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -1319,6 +1339,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -1403,14 +1424,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/2/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-2"
@@ -1465,14 +1487,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/5/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-5"
@@ -1527,14 +1550,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/3/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-3"
@@ -1577,14 +1601,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/4/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-4"
@@ -1699,6 +1724,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -1717,6 +1743,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -1748,6 +1775,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -1839,14 +1867,15 @@ exports[`ListContainer renders filtered items without category buckets when filt
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/3/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-3"
@@ -1889,14 +1918,15 @@ exports[`ListContainer renders filtered items without category buckets when filt
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/4/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-4"
@@ -2010,6 +2040,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -2028,6 +2059,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -2059,6 +2091,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -2143,14 +2176,15 @@ exports[`ListContainer renders items with category buckets when includedCategori
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/2/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-2"
@@ -2205,14 +2239,15 @@ exports[`ListContainer renders items with category buckets when includedCategori
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/5/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-5"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-5"
@@ -2267,14 +2302,15 @@ exports[`ListContainer renders items with category buckets when includedCategori
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/3/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-3"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-3"
@@ -2317,14 +2353,15 @@ exports[`ListContainer renders items with category buckets when includedCategori
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/4/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-4"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-4"
@@ -2439,6 +2476,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -2457,6 +2495,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
         type="text"
         value=""
       />
+      
     </div>
     <div
       class="form-group"
@@ -2488,6 +2527,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
           value="bar"
         />
       </datalist>
+      
     </div>
     <br />
     <button
@@ -2566,14 +2606,15 @@ exports[`ListContainer renders items without category buckets when includedCateg
                   class="fa fa-check fa-2x text-success"
                 />
               </button>
-              <a
-                class="p-0 mr-3"
-                href="/lists/undefined/grocery_list_items/2/edit"
+              <button
+                class="p-0 mr-3 btn btn-link"
+                data-test-id="not-purchased-item-edit-2"
+                type="button"
               >
                 <i
                   class="fa fa-edit fa-2x text-warning"
                 />
-              </a>
+              </button>
               <button
                 class="p-0 btn btn-link"
                 data-test-id="not-purchased-item-delete-2"

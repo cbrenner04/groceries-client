@@ -114,8 +114,8 @@ function ListContainer(props) {
   };
 
   const resetMultiSelect = () => {
-    setMultiSelect(false);
     setSelectedItems([]);
+    setMultiSelect(false);
   };
 
   const pluralize = (items) => {
@@ -264,6 +264,27 @@ function ListContainer(props) {
     }
   };
 
+  const handleItemSelect = (item) => {
+    const itemIds = selectedItems.map((i) => i.id).join(',');
+    let updatedItems;
+    if (itemIds.includes(item.id)) {
+      updatedItems = selectedItems.filter((i) => i.id !== item.id);
+    } else {
+      updatedItems = update(selectedItems, { $push: [item] });
+    }
+    setSelectedItems(updatedItems);
+  };
+
+  const handleItemEdit = async (item) => {
+    const path = listItemPath(item);
+    if (selectedItems.length) {
+      const itemIds = selectedItems.map((item) => item.id).join(',');
+      props.history.push(`${path}/bulk-edit?item_ids=${itemIds}`);
+    } else {
+      props.history.push(`${path}/${item.id}/edit`);
+    }
+  };
+
   return (
     <>
       <h1>{props.list.name}</h1>
@@ -298,7 +319,16 @@ function ListContainer(props) {
       </div>
       {props.permissions === 'write' && (
         <div className="clearfix">
-          <Button variant="link" className="mx-auto float-right" onClick={() => setMultiSelect(!multiSelect)}>
+          <Button
+            variant="link"
+            className="mx-auto float-right"
+            onClick={() => {
+              if (multiSelect && selectedItems.length > 0) {
+                setSelectedItems([]);
+              }
+              setMultiSelect(!multiSelect);
+            }}
+          >
             {multiSelect ? 'Hide' : ''} Select
           </Button>
         </div>
@@ -316,8 +346,8 @@ function ListContainer(props) {
             listType={props.list.type}
             listUsers={props.listUsers}
             multiSelect={multiSelect}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
+            handleItemEdit={handleItemEdit}
+            handleItemSelect={handleItemSelect}
           />
         </div>
       )}
@@ -337,8 +367,8 @@ function ListContainer(props) {
                   listType={props.list.type}
                   listUsers={props.listUsers}
                   multiSelect={multiSelect}
-                  selectedItems={selectedItems}
-                  setSelectedItems={setSelectedItems}
+                  handleItemSelect={handleItemSelect}
+                  handleItemEdit={handleItemEdit}
                 />
                 <br />
               </div>
@@ -357,8 +387,8 @@ function ListContainer(props) {
         listType={props.list.type}
         listUsers={props.listUsers}
         multiSelect={multiSelect}
-        selectedItems={selectedItems}
-        setSelectedItems={setSelectedItems}
+        handleItemSelect={handleItemSelect}
+        handleItemEdit={handleItemEdit}
       />
       <ConfirmModal
         action="delete"

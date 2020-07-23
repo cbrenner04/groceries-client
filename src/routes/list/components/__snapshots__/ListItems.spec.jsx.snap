@@ -39,14 +39,15 @@ exports[`ListItems renders a mapping of ListItem 1`] = `
                 class="fa fa-check fa-2x text-success"
               />
             </button>
-            <a
-              class="p-0 mr-3"
-              href="/lists/undefined/grocery_list_items/1/edit"
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-1"
+              type="button"
             >
               <i
                 class="fa fa-edit fa-2x text-warning"
               />
-            </a>
+            </button>
             <button
               class="p-0 btn btn-link"
               data-test-id="not-purchased-item-delete-1"

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import update from 'immutability-helper';
 
 import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
 import ListItemFormFields from './ListItemFormFields';
@@ -24,6 +25,15 @@ const defaultFormState = {
 function ListItemForm(props) {
   const [formData, setFormData] = useState(defaultFormState);
   const [showForm, setShowForm] = useState(false);
+
+  const setData = ({ target: { name, value } }) => {
+    let newValue = value;
+    if (name === 'numberInSeries') {
+      newValue = Number(value);
+    }
+    const data = update(formData, { [name]: { $set: newValue } });
+    setFormData(data);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -101,7 +111,7 @@ function ListItemForm(props) {
         >
           <ListItemFormFields
             formData={formData}
-            setFormData={setFormData}
+            setFormData={setData}
             categories={props.categories}
             listType={props.listType}
             listUsers={props.listUsers}

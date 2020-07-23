@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import update from 'immutability-helper';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
@@ -16,11 +15,6 @@ const ListItem = (props) => {
     }
   }
 
-  const updateSelectedItems = () => {
-    const updatedItems = update(props.selectedItems, { $push: [props.item] });
-    props.setSelectedItems(updatedItems);
-  };
-
   return (
     <ListGroup.Item
       key={props.item.id}
@@ -33,7 +27,7 @@ const ListItem = (props) => {
             <input
               type="checkbox"
               style={{ position: 'absolute', top: '40%', left: '40%' }}
-              onClick={updateSelectedItems}
+              onClick={() => props.handleItemSelect(props.item)}
             />
             <div className="list-item-multi-divider"></div>
           </Col>
@@ -57,6 +51,7 @@ const ListItem = (props) => {
               handleItemDelete={props.handleItemDelete}
               handlePurchaseOfItem={props.handlePurchaseOfItem}
               toggleItemRead={props.toggleItemRead}
+              handleItemEdit={props.handleItemEdit}
             />
           )}
         </Col>
@@ -96,9 +91,9 @@ ListItem.propTypes = {
   ),
   permission: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedItems: PropTypes.array.isRequired,
-  setSelectedItems: PropTypes.func.isRequired,
+  handleItemSelect: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
+  handleItemEdit: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {

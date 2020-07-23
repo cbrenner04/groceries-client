@@ -136,6 +136,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
         list_users,
       },
     } = await axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`);
+    // TODO: why? can these just be optional?
     const userId = item.user_id;
     const returnedItemId = item.id;
     const product = item.product || '';
@@ -148,7 +149,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const read = item.read || false;
     const artist = item.artist || '';
     const album = item.album || '';
-    const dueBy = formatDueBy(item.due_by);
+    const dueBy = item.due_by ? formatDueBy(item.due_by) : '';
     const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
@@ -186,6 +187,27 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('Item not found', { type: 'error' });
+        history.push(`/lists/${listId}`);
+        return;
+      }
+    }
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
+  }
+}
+
+export async function fetchItemsToEdit({ listId, itemType, search, history }) {
+  try {
+    const { data } = await axios.get(`/lists/${listId}/${itemType}/bulk_update${search}`);
+    return data;
+  } catch ({ response }) {
+    if (response) {
+      if (response.status === 401) {
+        toast('You must sign in', { type: 'error' });
+        history.push('/users/sign_in');
+        return;
+      } else if ([403, 404].includes(response.status)) {
+        toast('One or more items not found', { type: 'error' });
         history.push(`/lists/${listId}`);
         return;
       }

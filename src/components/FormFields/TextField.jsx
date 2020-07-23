@@ -2,10 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const TextField = ({ name, label, value, handleChange, placeholder }) => (
+const TextField = ({ name, label, value, handleChange, placeholder, child, disabled }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control type="text" value={value} onChange={handleChange} placeholder={placeholder} name={name} />
+    <Form.Control
+      type="text"
+      value={value}
+      onChange={handleChange}
+      placeholder={placeholder}
+      name={name}
+      disabled={disabled}
+    />
+    {child}
   </Form.Group>
 );
 
@@ -15,10 +23,14 @@ TextField.propTypes = {
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  child: PropTypes.node,
+  disabled: PropTypes.bool,
 };
 
 TextField.defaultProps = {
   placeholder: '',
+  child: '',
+  disabled: false,
 };
 
 export default TextField;

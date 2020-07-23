@@ -29,6 +29,7 @@ describe('ListItemButtons', () => {
       handlePurchaseOfItem: jest.fn(),
       toggleItemRead: jest.fn(),
       handleItemUnPurchase: jest.fn(),
+      handleItemEdit: jest.fn(),
       listType: 'GroceryList',
     };
   });
@@ -46,14 +47,13 @@ describe('ListItemButtons', () => {
 
   it('renders NotPurchased when the item is not purchased', () => {
     props.purchased = false;
-    const { container, getAllByRole, getByRole } = renderListItemButtons(props);
+    const { container, getAllByRole } = renderListItemButtons(props);
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-check');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
-    expect(getAllByRole('link').length).toBe(1);
-    expect(getByRole('link').firstChild).toHaveClass('fa-edit');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 });

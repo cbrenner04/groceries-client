@@ -27,9 +27,9 @@ describe('ListItem', () => {
     handleItemDelete: jest.fn(),
     handlePurchaseOfItem: jest.fn(),
     handleItemUnPurchase: jest.fn(),
+    handleItemSelect: jest.fn(),
+    handleItemEdit: jest.fn(),
     multiSelect: false,
-    selectedItems: [],
-    setSelectedItems: jest.fn(),
     toggleItemRead: jest.fn(),
     listType: 'GroceryList',
     listUsers: [],
@@ -154,6 +154,6 @@ describe('ListItem', () => {
 
     fireEvent.click(getByRole('checkbox'));
 
-    expect(props.setSelectedItems).toHaveBeenCalledWith([props.item]);
+    expect(props.handleItemSelect).toHaveBeenCalledWith(props.item);
   });
 });

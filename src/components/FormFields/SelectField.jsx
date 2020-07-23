@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const SelectField = ({ name, label, value, handleChange, options, blankOption }) => (
+const SelectField = ({ name, label, value, handleChange, options, blankOption, child, disabled }) => (
   <Form.Group controlId={name}>
     <Form.Label>{label}</Form.Label>
-    <Form.Control as="select" value={value} onChange={handleChange} name={name}>
+    <Form.Control as="select" value={value} onChange={handleChange} name={name} disabled={disabled}>
       {blankOption && (
         <option value="" disabled={!value}>
           {value ? `Clear ${label}` : `Select ${label}`}
@@ -17,6 +17,7 @@ const SelectField = ({ name, label, value, handleChange, options, blankOption })
         </option>
       ))}
     </Form.Control>
+    {child}
   </Form.Group>
 );
 
@@ -32,10 +33,14 @@ SelectField.propTypes = {
     }),
   ).isRequired,
   blankOption: PropTypes.bool.isRequired,
+  child: PropTypes.node,
+  disabled: PropTypes.bool,
 };
 
 SelectField.defaultProps = {
   value: '',
+  child: '',
+  disabled: false,
 };
 
 export default SelectField;
