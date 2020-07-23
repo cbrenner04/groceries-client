@@ -48,6 +48,11 @@ function BulkEditListItemsForm(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // must have existing list or new list identified to copy or move
+    if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
+      toast(`You must specify a list to ${formData.copy ? 'copy' : 'move'} items`, { type: 'error' });
+      return;
+    }
     const putData = {
       category: formData.category || null,
       author: formData.author || null,
@@ -73,10 +78,6 @@ function BulkEditListItemsForm(props) {
     }
     if (formData.move) {
       putData.move = formData.move;
-    }
-    if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
-      toast(`You must specify a list to ${formData.copy ? 'copy' : 'move'} items`, { type: 'error' });
-      return;
     }
     if (formData.existingList) {
       putData.existing_list_id = formData.existingList;
@@ -128,18 +129,17 @@ function BulkEditListItemsForm(props) {
   };
 
   const handleOtherListChange = (isCopy) => {
-    const firstAttribute = isCopy ? 'copy' : 'move';
-    const secondAttribute = isCopy ? 'move' : 'copy';
+    const [action, oppositeAction] = isCopy ? ['copy', 'move'] : ['move', 'copy'];
     const updates = {};
-    if (!formData[firstAttribute] && formData[secondAttribute]) {
-      updates[secondAttribute] = { $set: false };
+    if (!formData[action] && formData[oppositeAction]) {
+      updates[oppositeAction] = { $set: false };
     }
-    if (formData[firstAttribute]) {
+    if (formData[action]) {
       updates.showNewListForm = { $set: initialValues.showNewListForm };
       updates.newListName = { $set: '' };
       updates.existingList = { $set: '' };
     }
-    updates[firstAttribute] = { $set: !formData[firstAttribute] };
+    updates[action] = { $set: !formData[action] };
     const updatedFormData = update(formData, updates);
     setFormData(updatedFormData);
   };
