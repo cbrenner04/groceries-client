@@ -12,6 +12,9 @@ const ListItemButtons = (props) =>
       handleItemUnPurchase={props.handleItemUnPurchase}
       handleItemDelete={props.handleItemDelete}
       toggleItemRead={props.toggleItemRead}
+      handleItemEdit={props.handleItemEdit}
+      multiSelect={props.multiSelect}
+      selectedItems={props.selectedItems}
     />
   ) : (
     <NotPurchased
@@ -36,6 +39,26 @@ ListItemButtons.propTypes = {
   listType: PropTypes.string.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  selectedItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      product: PropTypes.string,
+      task: PropTypes.string,
+      quantity: PropTypes.string,
+      author: PropTypes.string,
+      title: PropTypes.string,
+      artist: PropTypes.string,
+      album: PropTypes.string,
+      assignee_id: PropTypes.number,
+      due_by: PropTypes.string,
+      read: PropTypes.bool,
+      number_in_series: PropTypes.number,
+      category: PropTypes.string,
+      completed: PropTypes.bool,
+      purchased: PropTypes.bool,
+    }),
+  ).isRequired,
 };
 
 export default ListItemButtons;

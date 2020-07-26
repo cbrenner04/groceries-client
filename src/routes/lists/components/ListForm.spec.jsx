@@ -47,13 +47,15 @@ describe('ListForm', () => {
     expect(getByLabelText('Type')).toHaveValue('MusicList');
   });
 
-  it('calls props.onFormSubmit when form is submitted', () => {
-    const onFormSubmit = jest.fn();
+  it('calls props.onFormSubmit when form is submitted', async () => {
+    const onFormSubmit = jest.fn().mockResolvedValue({});
     const { getByLabelText, getAllByRole } = render(<ListForm onFormSubmit={onFormSubmit} />);
 
     fireEvent.change(getByLabelText('Name'), { target: { value: 'foo' } });
     fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
     fireEvent.click(getAllByRole('button')[1]);
+
+    await waitFor(() => expect(onFormSubmit).toHaveBeenCalledTimes(1));
 
     expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', type: 'BookList' });
   });

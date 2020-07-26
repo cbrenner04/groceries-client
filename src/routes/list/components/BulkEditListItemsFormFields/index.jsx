@@ -26,69 +26,74 @@ const BulkEditListItemsFormFields = (props) => {
         existingList={props.formData.existingList}
         newListName={props.formData.newListName}
         updateCurrentItems={props.formData.updateCurrentItems}
+        allComplete={props.formData.allComplete}
       />
       <hr />
-      <div>Update attributes for all items.</div>
-      <br />
-      {
-        {
-          BookList: (
-            <Book
-              author={props.formData.author}
-              clearAuthor={props.formData.clearAuthor}
-              handleClearAuthor={() => props.clearAttribute('author', 'clearAuthor')}
-              handleInput={props.handleInput}
-            />
-          ),
-          GroceryList: (
-            <Grocery
-              quantity={props.formData.quantity}
-              clearQuantity={props.formData.clearQuantity}
-              handleClearQuantity={() => props.clearAttribute('quantity', 'clearQuantity')}
-              handleInput={props.handleInput}
-            />
-          ),
-          MusicList: (
-            <Music
-              artist={props.formData.artist}
-              clearArtist={props.formData.clearArtist}
-              handleClearArtist={() => props.clearAttribute('artist', 'clearArtist')}
-              album={props.formData.album}
-              clearAlbum={props.formData.clearAlbum}
-              handleClearAlbum={() => props.clearAttribute('album', 'clearAlbum')}
-              handleInput={props.handleInput}
-            />
-          ),
-          ToDoList: (
-            <ToDo
-              dueBy={props.formData.dueBy}
-              clearDueBy={props.formData.clearDueBy}
-              handleClearDueBy={() => props.clearAttribute('dueBy', 'clearDueBy')}
-              assigneeId={props.formData.assigneeId}
-              clearAssignee={props.formData.clearAssignee}
-              handleClearAssignee={() => props.clearAttribute('assigneeId', 'clearAssignee')}
-              handleInput={props.handleInput}
-              listUsers={props.listUsers}
-            />
-          ),
-        }[props.listType]
-      }
-      <CategoryField
-        name="category"
-        category={props.formData.category}
-        categories={props.categories}
-        handleInput={props.handleInput}
-        disabled={props.formData.clearCategory}
-        child={
-          <CheckboxField
-            name="clearCategory"
-            label="Clear category"
-            handleChange={() => props.clearAttribute('category', 'clearCategory')}
-            value={props.formData.clearCategory}
-            classes="ml-1 mt-1"
+      {!props.formData.allComplete && (
+        <>
+          <div>Update attributes for all items.</div>
+          <br />
+          {
+            {
+              BookList: (
+                <Book
+                  author={props.formData.author}
+                  clearAuthor={props.formData.clearAuthor}
+                  handleClearAuthor={() => props.clearAttribute('author', 'clearAuthor')}
+                  handleInput={props.handleInput}
+                />
+              ),
+              GroceryList: (
+                <Grocery
+                  quantity={props.formData.quantity}
+                  clearQuantity={props.formData.clearQuantity}
+                  handleClearQuantity={() => props.clearAttribute('quantity', 'clearQuantity')}
+                  handleInput={props.handleInput}
+                />
+              ),
+              MusicList: (
+                <Music
+                  artist={props.formData.artist}
+                  clearArtist={props.formData.clearArtist}
+                  handleClearArtist={() => props.clearAttribute('artist', 'clearArtist')}
+                  album={props.formData.album}
+                  clearAlbum={props.formData.clearAlbum}
+                  handleClearAlbum={() => props.clearAttribute('album', 'clearAlbum')}
+                  handleInput={props.handleInput}
+                />
+              ),
+              ToDoList: (
+                <ToDo
+                  dueBy={props.formData.dueBy}
+                  clearDueBy={props.formData.clearDueBy}
+                  handleClearDueBy={() => props.clearAttribute('dueBy', 'clearDueBy')}
+                  assigneeId={props.formData.assigneeId}
+                  clearAssignee={props.formData.clearAssignee}
+                  handleClearAssignee={() => props.clearAttribute('assigneeId', 'clearAssignee')}
+                  handleInput={props.handleInput}
+                  listUsers={props.listUsers}
+                />
+              ),
+            }[props.listType]
+          }
+          <CategoryField
+            name="category"
+            category={props.formData.category}
+            categories={props.categories}
+            handleInput={props.handleInput}
+            disabled={props.formData.clearCategory}
+            child={
+              <CheckboxField
+                name="clearCategory"
+                label="Clear category"
+                handleChange={() => props.clearAttribute('category', 'clearCategory')}
+                value={props.formData.clearCategory}
+                classes="ml-1 mt-1"
+              />
+            }
           />
-        }
-      />
+        </>
+      )}
     </>
   );
 };
@@ -116,6 +121,7 @@ BulkEditListItemsFormFields.propTypes = {
     quantity: PropTypes.string,
     clearQuantity: PropTypes.bool.isRequired,
     showNewListForm: PropTypes.bool.isRequired,
+    allComplete: PropTypes.bool.isRequired,
   }).isRequired,
   handleInput: PropTypes.func.isRequired,
   clearAttribute: PropTypes.func.isRequired,

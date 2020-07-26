@@ -19,6 +19,9 @@ describe('Purchased', () => {
       toggleItemRead: jest.fn(),
       handleItemUnPurchase: jest.fn(),
       listType: 'GroceryList',
+      handleItemEdit: jest.fn(),
+      multiSelect: false,
+      selectedItems: [],
     };
   });
 
@@ -28,9 +31,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-redo');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('renders Refresh and does not render Bookmark when listType is ToDoList', () => {
@@ -39,9 +43,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-redo');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('does not render Refresh and does render Bookmark when listType is BookList', () => {
@@ -50,9 +55,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('does not render Refresh or Bookmark when listType is MusicList', () => {
@@ -61,8 +67,9 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(1);
-    expect(buttons[0].firstChild).toHaveClass('fa-trash');
+    expect(buttons.length).toBe(2);
+    expect(buttons[0].firstChild).toHaveClass('fa-edit');
+    expect(buttons[1].firstChild).toHaveClass('fa-trash');
   });
 
   it('calls handleItemUnPurchase when listType is GroceryList and Refresh is clicked', () => {
@@ -106,7 +113,7 @@ describe('Purchased', () => {
   it('calls handleItemDelete when Trash is clicked', () => {
     const { getAllByRole } = render(<Purchased {...props} />);
 
-    fireEvent.click(getAllByRole('button')[1]);
+    fireEvent.click(getAllByRole('button')[2]);
 
     expect(props.handleItemDelete).toHaveBeenCalledWith(props.item);
   });

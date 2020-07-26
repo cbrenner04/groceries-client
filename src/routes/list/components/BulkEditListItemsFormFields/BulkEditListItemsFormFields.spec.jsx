@@ -27,6 +27,7 @@ describe('BulkEditListItemsFormFields', () => {
       quantity: '',
       clearQuantity: false,
       showNewListForm: false,
+      allComplete: false,
     },
     handleInput: jest.fn(),
     clearAttribute: jest.fn(),

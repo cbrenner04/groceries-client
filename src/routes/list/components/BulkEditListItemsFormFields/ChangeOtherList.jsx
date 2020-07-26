@@ -74,7 +74,7 @@ const ChangeOtherList = (props) => {
               placeholder="My super cool list"
             />
           )}
-          {props.copy && (
+          {props.copy && !props.allComplete && (
             <CheckboxField
               name="updateCurrentItems"
               label="Would you like to also update the current items?"
@@ -107,6 +107,7 @@ ChangeOtherList.propTypes = {
   existingList: PropTypes.string.isRequired,
   newListName: PropTypes.string.isRequired,
   updateCurrentItems: PropTypes.bool.isRequired,
+  allComplete: PropTypes.bool.isRequired,
 };
 
 export default ChangeOtherList;

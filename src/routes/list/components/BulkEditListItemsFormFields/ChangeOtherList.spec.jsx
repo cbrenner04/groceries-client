@@ -25,6 +25,7 @@ describe('ChangeOtherList', () => {
       existingList: '',
       newListName: '',
       updateCurrentItems: false,
+      allComplete: false,
     };
   });
 

@@ -52,6 +52,8 @@ const ListItem = (props) => {
               handlePurchaseOfItem={props.handlePurchaseOfItem}
               toggleItemRead={props.toggleItemRead}
               handleItemEdit={props.handleItemEdit}
+              multiSelect={props.multiSelect}
+              selectedItems={props.selectedItems}
             />
           )}
         </Col>
@@ -94,6 +96,25 @@ ListItem.propTypes = {
   handleItemSelect: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
+  selectedItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      product: PropTypes.string,
+      task: PropTypes.string,
+      quantity: PropTypes.string,
+      author: PropTypes.string,
+      title: PropTypes.string,
+      artist: PropTypes.string,
+      album: PropTypes.string,
+      assignee_id: PropTypes.number,
+      due_by: PropTypes.string,
+      read: PropTypes.bool,
+      number_in_series: PropTypes.number,
+      category: PropTypes.string,
+      completed: PropTypes.bool,
+      purchased: PropTypes.bool,
+    }),
+  ).isRequired,
 };
 
 ListItem.defaultProps = {

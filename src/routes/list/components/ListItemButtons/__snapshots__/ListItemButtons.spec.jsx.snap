@@ -53,6 +53,16 @@ exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
       />
     </button>
     <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="purchased-item-edit-1"
+      disabled=""
+      type="button"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </button>
+    <button
       class="p-0 btn btn-link"
       data-test-id="purchased-item-delete-1"
       type="button"

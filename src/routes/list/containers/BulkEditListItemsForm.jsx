@@ -42,6 +42,7 @@ function BulkEditListItemsForm(props) {
     quantity: initialAttr('quantity'),
     clearQuantity: false,
     showNewListForm: !existingListsOptions.length,
+    allComplete: initialAttr('purchased') || initialAttr('completed') || false,
   };
 
   const [formData, setFormData] = useState(initialValues);

@@ -9,12 +9,15 @@ function ListForm({ onFormSubmit }) {
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
   const [showForm, setShowForm] = useState(false);
+  const [pending, setPending] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onFormSubmit({ name, type });
+    setPending(true);
+    await onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
+    setPending(false);
   };
 
   return (
@@ -32,7 +35,7 @@ function ListForm({ onFormSubmit }) {
             handleNameChange={({ target: { value } }) => setName(value)}
             handleTypeChange={({ target: { value } }) => setType(value)}
           />
-          <Button type="submit" variant="success" block>
+          <Button type="submit" variant="success" disabled={pending} block>
             Create List
           </Button>
           <Button variant="link" onClick={() => setShowForm(false)} block>

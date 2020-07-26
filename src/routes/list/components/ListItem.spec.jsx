@@ -34,6 +34,7 @@ describe('ListItem', () => {
     listType: 'GroceryList',
     listUsers: [],
     permission: 'write',
+    selectedItems: [],
   };
 
   const renderListItem = (localProps) => {
