@@ -110,6 +110,16 @@ describe('Purchased', () => {
     expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
   });
 
+  it('calls handleItemEdi when Edit is clicked', () => {
+    props.multiSelect = true;
+    props.selectedItems = [{ id: 1 }];
+    const { getAllByRole } = render(<Purchased {...props} />);
+
+    fireEvent.click(getAllByRole('button')[1]);
+
+    expect(props.handleItemEdit).toHaveBeenCalledWith(props.item);
+  });
+
   it('calls handleItemDelete when Trash is clicked', () => {
     const { getAllByRole } = render(<Purchased {...props} />);
 
