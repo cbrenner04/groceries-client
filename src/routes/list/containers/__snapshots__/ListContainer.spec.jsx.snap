@@ -2743,3 +2743,23 @@ exports[`ListContainer renders items without category buckets when includedCateg
   </div>
 </div>
 `;
+
+exports[`ListContainer renders loading state when items are refreshed before the response is returned 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-items: center;"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 100px; height: 100px; position: absolute; top: 50%;"
+    >
+      <span
+        class="sr-only"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</div>
+`;

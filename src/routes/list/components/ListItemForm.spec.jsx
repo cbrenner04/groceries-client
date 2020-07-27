@@ -75,6 +75,17 @@ describe('ListItemForm', () => {
     expect(toast).toHaveBeenCalledWith('Item successfully added.', { type: 'info' });
   });
 
+  it('disables submit button when form has been submitted', async () => {
+    // post is not resolved so that the pending state will remain after calling post
+    axios.post = jest.fn();
+    const { getAllByRole } = render(<ListItemForm {...props} />);
+
+    fireEvent.click(getAllByRole('button')[1]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(getAllByRole('button')[1]).toBeDisabled();
+  });
+
   it('redirects to user login when 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getAllByRole } = render(<ListItemForm {...props} history={history} />);

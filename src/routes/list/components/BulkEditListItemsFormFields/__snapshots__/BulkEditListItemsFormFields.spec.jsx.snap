@@ -1,5 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`BulkEditListItemsFormFields does not render list item attribute fields when all items are completed 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline form-group"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+</div>
+`;
+
 exports[`BulkEditListItemsFormFields render Book fields when listType is BookList and fires appropriate change handlers 1`] = `
 <div>
   <div>

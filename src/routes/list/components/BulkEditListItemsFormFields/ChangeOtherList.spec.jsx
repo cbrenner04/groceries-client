@@ -145,4 +145,13 @@ describe('ChangeOtherList', () => {
     expect(queryByLabelText('New list name')).toBeNull();
     expect(getByLabelText('Would you like to also update the current items?')).toBeVisible();
   });
+
+  it('does not render update current items when all items are complete', () => {
+    props.copy = true;
+    props.allComplete = true;
+    const { container, queryByLabelText } = render(<ChangeOtherList {...props} />);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Would you like to also update the current items?')).toBeNull();
+  });
 });

@@ -152,4 +152,13 @@ describe('BulkEditListItemsFormFields', () => {
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
   });
+
+  it('does not render list item attribute fields when all items are completed', () => {
+    props.listType = 'GroceryList';
+    props.formData.allComplete = true;
+    const { container, queryByLabelText } = render(<BulkEditListItemsFormFields {...props} />);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Quantity')).toBeNull();
+  });
 });
