@@ -17,8 +17,11 @@ describe('Purchased', () => {
       handleItemDelete: jest.fn(),
       handlePurchaseOfItem: jest.fn(),
       toggleItemRead: jest.fn(),
-      handleItemUnPurchase: jest.fn(),
+      handleItemRefresh: jest.fn(),
       listType: 'GroceryList',
+      handleItemEdit: jest.fn(),
+      multiSelect: false,
+      selectedItems: [],
     };
   });
 
@@ -28,9 +31,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-redo');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('renders Refresh and does not render Bookmark when listType is ToDoList', () => {
@@ -39,9 +43,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-redo');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('does not render Refresh and does render Bookmark when listType is BookList', () => {
@@ -50,9 +55,10 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
-    expect(buttons[1].firstChild).toHaveClass('fa-trash');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
   it('does not render Refresh or Bookmark when listType is MusicList', () => {
@@ -61,26 +67,27 @@ describe('Purchased', () => {
     const buttons = getAllByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(buttons.length).toBe(1);
-    expect(buttons[0].firstChild).toHaveClass('fa-trash');
+    expect(buttons.length).toBe(2);
+    expect(buttons[0].firstChild).toHaveClass('fa-edit');
+    expect(buttons[1].firstChild).toHaveClass('fa-trash');
   });
 
-  it('calls handleItemUnPurchase when listType is GroceryList and Refresh is clicked', () => {
+  it('calls handleItemRefresh when listType is GroceryList and Refresh is clicked', () => {
     props.listType = 'GroceryList';
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[0]);
 
-    expect(props.handleItemUnPurchase).toHaveBeenCalledWith(props.item);
+    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemUnPurchase when listType is ToDoList and Refresh is clicked', () => {
+  it('calls handleItemRefresh when listType is ToDoList and Refresh is clicked', () => {
     props.listType = 'ToDoList';
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[0]);
 
-    expect(props.handleItemUnPurchase).toHaveBeenCalledWith(props.item);
+    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
   });
 
   it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', () => {
@@ -103,10 +110,20 @@ describe('Purchased', () => {
     expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemDelete when Trash is clicked', () => {
+  it('calls handleItemEdi when Edit is clicked', () => {
+    props.multiSelect = true;
+    props.selectedItems = [{ id: 1 }];
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[1]);
+
+    expect(props.handleItemEdit).toHaveBeenCalledWith(props.item);
+  });
+
+  it('calls handleItemDelete when Trash is clicked', () => {
+    const { getAllByRole } = render(<Purchased {...props} />);
+
+    fireEvent.click(getAllByRole('button')[2]);
 
     expect(props.handleItemDelete).toHaveBeenCalledWith(props.item);
   });

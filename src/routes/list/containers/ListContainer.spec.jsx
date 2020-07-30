@@ -730,6 +730,21 @@ describe('ListContainer', () => {
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
+  it('renders Loading when refresh is pending', async () => {
+    // not resolving either to persist pending state for test
+    axios.post = jest.fn();
+    axios.put = jest.fn();
+    const { container, getByTestId, getByRole } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(container).toMatchSnapshot();
+    expect(getByRole('status')).toBeVisible();
+  });
+
   it('moves items to not purchased when refreshed with mutliple selected, handles not completed items', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {

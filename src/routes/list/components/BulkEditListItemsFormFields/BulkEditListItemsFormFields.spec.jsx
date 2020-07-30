@@ -27,6 +27,7 @@ describe('BulkEditListItemsFormFields', () => {
       quantity: '',
       clearQuantity: false,
       showNewListForm: false,
+      allComplete: false,
     },
     handleInput: jest.fn(),
     clearAttribute: jest.fn(),
@@ -150,5 +151,14 @@ describe('BulkEditListItemsFormFields', () => {
     fireEvent.click(getAllByRole('checkbox')[2]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
+  });
+
+  it('does not render list item attribute fields when all items are completed', () => {
+    props.listType = 'GroceryList';
+    props.formData.allComplete = true;
+    const { container, queryByLabelText } = render(<BulkEditListItemsFormFields {...props} />);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Quantity')).toBeNull();
   });
 });

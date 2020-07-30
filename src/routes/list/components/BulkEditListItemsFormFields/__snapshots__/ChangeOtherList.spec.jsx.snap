@@ -1,5 +1,90 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ChangeOtherList does not render update current items when all items are complete 1`] = `
+<div>
+  <div
+    class="form-check-inline form-group"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        checked=""
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="true"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    Choose an existing list or create a new one.
+  </div>
+  <button
+    class="mb-3 btn btn-link"
+    type="button"
+  >
+    Create new list
+  </button>
+  <div
+    class="form-group"
+  >
+    <label
+      class="form-label"
+      for="existingList"
+    >
+      Existing list
+    </label>
+    <select
+      class="form-control"
+      id="existingList"
+      name="existingList"
+    >
+      <option
+        disabled=""
+        value=""
+      >
+        Select Existing list
+      </option>
+      <option
+        value="1"
+      >
+        foobar
+      </option>
+    </select>
+    
+  </div>
+</div>
+`;
+
 exports[`ChangeOtherList does not show choose existing list link when not existingListsOptions and showNewList 1`] = `
 <div>
   <div

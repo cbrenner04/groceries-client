@@ -531,6 +531,16 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
             />
           </button>
           <button
+            class="p-0 mr-3 btn btn-link"
+            data-test-id="purchased-item-edit-1"
+            disabled=""
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
             class="p-0 btn btn-link"
             data-test-id="purchased-item-delete-1"
             type="button"

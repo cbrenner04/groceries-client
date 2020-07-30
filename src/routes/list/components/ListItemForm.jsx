@@ -25,6 +25,7 @@ const defaultFormState = {
 function ListItemForm(props) {
   const [formData, setFormData] = useState(defaultFormState);
   const [showForm, setShowForm] = useState(false);
+  const [pending, setPending] = useState(false);
 
   const setData = ({ target: { name, value } }) => {
     let newValue = value;
@@ -37,6 +38,7 @@ function ListItemForm(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setPending(true);
     const requestListType = listTypeToSnakeCase(props.listType);
     const postData = {
       [`${requestListType}_item`]: {
@@ -59,6 +61,7 @@ function ListItemForm(props) {
       const { data } = await axios.post(`/lists/${props.listId}/${requestListType}_items`, postData);
       props.handleItemAddition(data);
       setFormData(defaultFormState);
+      setPending(false);
       toast('Item successfully added.', { type: 'info' });
     } catch ({ response, request, message }) {
       if (response) {
@@ -117,7 +120,7 @@ function ListItemForm(props) {
             listUsers={props.listUsers}
           />
           <br />
-          <Button type="submit" variant="success" block>
+          <Button type="submit" variant="success" disabled={pending} block>
             Add New Item
           </Button>
           <Button variant="link" onClick={() => setShowForm(false)} block>

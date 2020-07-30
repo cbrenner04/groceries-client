@@ -790,6 +790,16 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
               />
             </button>
             <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
               class="p-0 btn btn-link"
               data-test-id="purchased-item-delete-1"
               type="button"
@@ -1223,6 +1233,16 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             >
               <i
                 class="fa fa-redo fa-2x text-primary"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
               />
             </button>
             <button
@@ -1664,6 +1684,16 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
               class="p-0 btn btn-link"
               data-test-id="purchased-item-delete-1"
               type="button"
@@ -1977,6 +2007,16 @@ exports[`ListContainer renders filtered items without category buckets when filt
             >
               <i
                 class="fa fa-redo fa-2x text-primary"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
               />
             </button>
             <button
@@ -2416,6 +2456,16 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
               class="p-0 btn btn-link"
               data-test-id="purchased-item-delete-1"
               type="button"
@@ -2668,6 +2718,16 @@ exports[`ListContainer renders items without category buckets when includedCateg
               />
             </button>
             <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="purchased-item-edit-1"
+              disabled=""
+              type="button"
+            >
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
               class="p-0 btn btn-link"
               data-test-id="purchased-item-delete-1"
               type="button"
@@ -2679,6 +2739,26 @@ exports[`ListContainer renders items without category buckets when includedCateg
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListContainer renders loading state when items are refreshed before the response is returned 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-items: center;"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+      style="width: 100px; height: 100px; position: absolute; top: 50%;"
+    >
+      <span
+        class="sr-only"
+      >
+        Loading...
+      </span>
     </div>
   </div>
 </div>
