@@ -8,7 +8,7 @@ const PurchasedItemButtons = (props) => (
   <ButtonGroup className="float-right">
     {(props.listType === 'GroceryList' || props.listType === 'ToDoList') && (
       <Refresh
-        handleClick={() => props.handleItemUnPurchase(props.item)}
+        handleClick={() => props.handleItemRefresh(props.item)}
         data-test-id={`purchased-item-refresh-${props.item.id}`}
       />
     )}
@@ -39,7 +39,7 @@ PurchasedItemButtons.propTypes = {
     completed: PropTypes.bool,
     purchased: PropTypes.bool,
   }).isRequired,
-  handleItemUnPurchase: PropTypes.func.isRequired,
+  handleItemRefresh: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,

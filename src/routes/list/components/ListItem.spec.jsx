@@ -26,7 +26,7 @@ describe('ListItem', () => {
     purchased: false,
     handleItemDelete: jest.fn(),
     handlePurchaseOfItem: jest.fn(),
-    handleItemUnPurchase: jest.fn(),
+    handleItemRefresh: jest.fn(),
     handleItemSelect: jest.fn(),
     handleItemEdit: jest.fn(),
     multiSelect: false,

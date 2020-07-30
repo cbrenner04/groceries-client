@@ -697,6 +697,19 @@ describe('ListContainer', () => {
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
+  it('renders Loading when refresh is pending', async () => {
+    axios.post = jest.fn();
+    axios.put = jest.fn();
+    const { getByTestId, getByRole } = renderListContainer(props);
+
+    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+
+    expect(getByRole('status')).toBeVisible();
+  });
+
   it('moves item to not purchased when refreshed', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {

@@ -195,7 +195,7 @@ function ListContainer(props) {
   };
 
   // TODO: rename! this is an awful name. `handleRefresh` or `handleItemRefresh`
-  const handleUnPurchase = async (item) => {
+  const handleRefresh = async (item) => {
     setPending(true);
     const items = selectedItems.length ? selectedItems : [item];
     const filteredItems = items.filter((item) => item.purchased || item.completed);
@@ -350,7 +350,7 @@ function ListContainer(props) {
                 handleItemDelete={handleDelete}
                 handlePurchaseOfItem={handleItemPurchase}
                 toggleItemRead={toggleRead}
-                handleItemUnPurchase={handleUnPurchase}
+                handleItemRefresh={handleRefresh}
                 listType={props.list.type}
                 listUsers={props.listUsers}
                 multiSelect={multiSelect}
@@ -372,7 +372,7 @@ function ListContainer(props) {
                       handleItemDelete={handleDelete}
                       handlePurchaseOfItem={handleItemPurchase}
                       toggleItemRead={toggleRead}
-                      handleItemUnPurchase={handleUnPurchase}
+                      handleItemRefresh={handleRefresh}
                       listType={props.list.type}
                       listUsers={props.listUsers}
                       multiSelect={multiSelect}
@@ -392,7 +392,7 @@ function ListContainer(props) {
             permission={props.permissions}
             handleItemDelete={handleDelete}
             handlePurchaseOfItem={handleItemPurchase}
-            handleItemUnPurchase={handleUnPurchase}
+            handleItemRefresh={handleRefresh}
             toggleItemRead={toggleRead}
             listType={props.list.type}
             listUsers={props.listUsers}

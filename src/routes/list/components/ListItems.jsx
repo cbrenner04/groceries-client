@@ -16,7 +16,7 @@ function ListItems(props) {
           purchased={props.purchased}
           handleItemDelete={props.handleItemDelete}
           handlePurchaseOfItem={props.handlePurchaseOfItem}
-          handleItemUnPurchase={props.handleItemUnPurchase}
+          handleItemRefresh={props.handleItemRefresh}
           listType={props.listType}
           listUsers={props.listUsers}
           permission={props.permission}
@@ -55,7 +55,7 @@ ListItems.propTypes = {
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleItemUnPurchase: PropTypes.func.isRequired,
+  handleItemRefresh: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({

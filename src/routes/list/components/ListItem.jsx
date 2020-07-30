@@ -47,7 +47,7 @@ const ListItem = (props) => {
               purchased={props.purchased}
               listType={props.listType}
               item={props.item}
-              handleItemUnPurchase={props.handleItemUnPurchase}
+              handleItemRefresh={props.handleItemRefresh}
               handleItemDelete={props.handleItemDelete}
               handlePurchaseOfItem={props.handlePurchaseOfItem}
               toggleItemRead={props.toggleItemRead}
@@ -83,7 +83,7 @@ ListItem.propTypes = {
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleItemUnPurchase: PropTypes.func.isRequired,
+  handleItemRefresh: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({

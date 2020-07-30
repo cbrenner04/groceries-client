@@ -9,7 +9,7 @@ const ListItemButtons = (props) =>
     <Purchased
       listType={props.listType}
       item={props.item}
-      handleItemUnPurchase={props.handleItemUnPurchase}
+      handleItemRefresh={props.handleItemRefresh}
       handleItemDelete={props.handleItemDelete}
       toggleItemRead={props.toggleItemRead}
       handleItemEdit={props.handleItemEdit}
@@ -35,7 +35,7 @@ ListItemButtons.propTypes = {
   purchased: PropTypes.bool.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleItemUnPurchase: PropTypes.func.isRequired,
+  handleItemRefresh: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,

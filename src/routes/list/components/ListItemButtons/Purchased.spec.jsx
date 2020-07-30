@@ -17,7 +17,7 @@ describe('Purchased', () => {
       handleItemDelete: jest.fn(),
       handlePurchaseOfItem: jest.fn(),
       toggleItemRead: jest.fn(),
-      handleItemUnPurchase: jest.fn(),
+      handleItemRefresh: jest.fn(),
       listType: 'GroceryList',
       handleItemEdit: jest.fn(),
       multiSelect: false,
@@ -72,22 +72,22 @@ describe('Purchased', () => {
     expect(buttons[1].firstChild).toHaveClass('fa-trash');
   });
 
-  it('calls handleItemUnPurchase when listType is GroceryList and Refresh is clicked', () => {
+  it('calls handleItemRefresh when listType is GroceryList and Refresh is clicked', () => {
     props.listType = 'GroceryList';
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[0]);
 
-    expect(props.handleItemUnPurchase).toHaveBeenCalledWith(props.item);
+    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemUnPurchase when listType is ToDoList and Refresh is clicked', () => {
+  it('calls handleItemRefresh when listType is ToDoList and Refresh is clicked', () => {
     props.listType = 'ToDoList';
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[0]);
 
-    expect(props.handleItemUnPurchase).toHaveBeenCalledWith(props.item);
+    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
   });
 
   it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', () => {
