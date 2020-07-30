@@ -194,7 +194,6 @@ function ListContainer(props) {
     setPurchasedItems(updatePurchasedItems);
   };
 
-  // TODO: rename! this is an awful name. `handleRefresh` or `handleItemRefresh`
   const handleRefresh = async (item) => {
     setPending(true);
     const items = selectedItems.length ? selectedItems : [item];
