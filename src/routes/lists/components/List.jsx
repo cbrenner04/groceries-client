@@ -26,10 +26,10 @@ function List(props) {
   );
 
   const handleListSelect = (list) => {
-    const listIds = props.selectedLists.map((i) => i.id).join(',');
+    const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
     if (listIds.includes(list.id)) {
-      updatedLists = props.selectedLists.filter((i) => i.id !== list.id);
+      updatedLists = props.selectedLists.filter((l) => l.id !== list.id);
     } else {
       updatedLists = update(props.selectedLists, { $push: [list] });
     }
@@ -107,6 +107,7 @@ List.propTypes = {
   setSelectedLists: PropTypes.func,
 };
 
+/* istanbul ignore next */
 List.defaultProps = {
   onListDeletion: () => undefined,
   onListCompletion: () => undefined,

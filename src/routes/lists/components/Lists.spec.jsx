@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -32,6 +32,10 @@ describe('Lists', () => {
       currentUserPermissions: {
         1: 'write',
       },
+      selectedLists: [],
+      multiSelect: false,
+      setMultiSelect: jest.fn(),
+      setSelectedLists: jest.fn(),
     };
     list = {
       id: 1,
@@ -77,5 +81,28 @@ describe('Lists', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');
+  });
+
+  it('sets multiSelect to true when select is clicked', () => {
+    props.multiSelect = false;
+    props.selectedLists = [];
+    const { container, getByText } = renderLists(props);
+
+    fireEvent.click(getByText('Select'));
+
+    expect(container).toMatchSnapshot();
+    expect(props.setMultiSelect).toHaveBeenCalledWith(true);
+  });
+
+  it('sets multiSelect to false and clears selectedLists when Hide Select is clicked', () => {
+    props.multiSelect = true;
+    props.selectedLists = [list];
+    const { container, getByText } = renderLists(props);
+
+    fireEvent.click(getByText('Hide Select'));
+
+    expect(container).toMatchSnapshot();
+    expect(props.setMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.setSelectedLists).toHaveBeenCalledWith([]);
   });
 });

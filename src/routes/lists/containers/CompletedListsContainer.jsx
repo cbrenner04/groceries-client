@@ -46,8 +46,13 @@ function CompletedListsContainer(props) {
   };
 
   const handleDelete = (list) => {
-    setListToDelete(list);
-    setShowDeleteConfirm(true);
+    if (list.user_id === list.owner_id) {
+      setListToDelete(list);
+      setShowDeleteConfirm(true);
+    } else {
+      setListToRemove(list);
+      setShowRemoveConfirm(true);
+    }
   };
 
   const handleDeleteConfirm = async () => {
@@ -60,11 +65,6 @@ function CompletedListsContainer(props) {
     } catch (error) {
       failure(error);
     }
-  };
-
-  const handleRemove = (list) => {
-    setListToRemove(list);
-    setShowRemoveConfirm(true);
   };
 
   const handleRemoveConfirm = async () => {
@@ -100,7 +100,6 @@ function CompletedListsContainer(props) {
             completed={list.completed}
             onListRefresh={handleRefresh}
             currentUserPermissions={props.currentUserPermissions[list.id]}
-            onListRemoval={handleRemove}
             accepted
           />
         ))}

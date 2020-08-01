@@ -168,6 +168,7 @@ function ListContainer(props) {
           newPurchasedItems = update(newPurchasedItems, { $set: newItems });
         } else {
           const itemsInCat = newNotPurchasedItems[item.category];
+          /* istanbul ignore else */
           if (itemsInCat) {
             const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
             const newItemsInCat = [...itemsInCat];
@@ -246,8 +247,8 @@ function ListContainer(props) {
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
+    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath(item)}/${item.id}`));
     try {
-      const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath(item)}/${item.id}`));
       await Promise.all(deleteRequests);
       const notPurchasedDeletedItems = [];
       const purchasedDeletedItems = [];

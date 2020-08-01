@@ -13,6 +13,7 @@ function EditListItemForm(props) {
   const [item, setItem] = useState(props.item);
   const setData = ({ target: { name, value } }) => {
     let newValue = value;
+    /* istanbul ignore else */
     if (name === 'numberInSeries') {
       newValue = Number(value);
     }

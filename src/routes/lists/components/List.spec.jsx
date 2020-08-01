@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -7,11 +7,11 @@ import List from './List';
 
 describe('List', () => {
   let props;
-  const renderList = (props) => {
+  const renderList = (p) => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <List {...props} />
+        <List {...p} />
       </Router>,
     );
   };
@@ -71,5 +71,32 @@ describe('List', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByRole('heading')).toHaveTextContent(`${props.list.name}*`);
+  });
+
+  it('calls setSelectedLists with list when selecting list', async () => {
+    props.multiSelect = true;
+    props.setSelectedLists = jest.fn();
+
+    const { container, getByRole } = renderList(props);
+
+    expect(container).toMatchSnapshot();
+
+    fireEvent.click(getByRole('checkbox'));
+
+    expect(props.setSelectedLists).toHaveBeenCalledWith([props.list]);
+  });
+
+  it('calls setSelectedLists with empty array when deselecting list', async () => {
+    props.multiSelect = true;
+    props.setSelectedLists = jest.fn();
+    props.selectedLists = [props.list];
+
+    const { container, getByRole } = renderList(props);
+
+    expect(container).toMatchSnapshot();
+
+    fireEvent.click(getByRole('checkbox'));
+
+    expect(props.setSelectedLists).toHaveBeenCalledWith([]);
   });
 });

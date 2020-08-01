@@ -25,7 +25,6 @@ describe('IncompleteListButtons', () => {
       },
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
-      onListRemoval: jest.fn(),
       currentUserPermissions: 'write',
     };
   });
@@ -86,15 +85,5 @@ describe('IncompleteListButtons', () => {
     fireEvent.click(getByTestId('incomplete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
-  });
-
-  it('calls props.onListRemoval when trash is clicked and user is not owner', () => {
-    props.list.owner_id = 2;
-
-    const { getByTestId } = renderIncompleteListButtons(props);
-
-    fireEvent.click(getByTestId('incomplete-list-trash'));
-
-    expect(props.onListRemoval).toHaveBeenCalledWith(props.list);
   });
 });

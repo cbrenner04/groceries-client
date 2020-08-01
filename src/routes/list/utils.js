@@ -70,6 +70,7 @@ function performSort(items, sortAttrs) {
 
 export function sortItems(listType, items) {
   let sortAttrs = [];
+  /* istanbul ignore else */
   if (listType === 'BookList') {
     sortAttrs = ['author', 'number_in_series', 'title'];
   } else if (listType === 'GroceryList') {

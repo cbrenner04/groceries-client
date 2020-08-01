@@ -9,6 +9,17 @@ exports[`Lists does not render pending lists when they do not exist 1`] = `
     These are lists you've created or you've accepted an invitation from someone else.
   </p>
   <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
+  <div
     class="list-group"
   >
     <div
@@ -21,77 +32,85 @@ exports[`Lists does not render pending lists when they do not exist 1`] = `
         class="row"
       >
         <div
-          class="pt-1 col-md-6"
-        >
-          <a
-            class="router-link"
-            href="/lists/1"
-          >
-            <h5
-              class="mb-1"
-            >
-              <i
-                class="fa fa-shopping-bag text-info mr-3"
-              />
-              foo
-            </h5>
-          </a>
-        </div>
-        <div
-          class="pt-1 col-md-4"
-        >
-          <small
-            class="text-muted"
-          >
-            May 27 2020, 12:00:00 am
-          </small>
-        </div>
-        <div
-          class="col-md-2"
+          class="col-sm-12 col-12"
         >
           <div
-            class="float-right btn-group"
-            role="group"
+            class="row"
           >
-            <button
-              class="p-0 mr-3 btn btn-link"
-              data-test-id="incomplete-list-complete"
-              style="opacity: 1;"
-              type="button"
+            <div
+              class="pt-1 col-md-6"
             >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <a
-              class="p-0 mr-3"
-              data-test-id="incomplete-list-share"
-              href="/lists/1/users_lists"
-              style="pointer-events: auto; opacity: 1;"
+              <a
+                class="router-link"
+                href="/lists/1"
+              >
+                <h5
+                  class="mb-1"
+                >
+                  <i
+                    class="fa fa-shopping-bag text-info mr-3"
+                  />
+                  foo
+                </h5>
+              </a>
+            </div>
+            <div
+              class="pt-1 col-md-4"
             >
-              <i
-                class="fa fa-users fa-2x text-primary"
-              />
-            </a>
-            <a
-              class="p-0 mr-3"
-              data-test-id="incomplete-list-edit"
-              href="/lists/1/edit"
-              style="pointer-events: auto; opacity: 1;"
+              <small
+                class="text-muted"
+              >
+                May 27 2020, 12:00:00 am
+              </small>
+            </div>
+            <div
+              class="col-md-2"
             >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </a>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="incomplete-list-trash"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
+              <div
+                class="float-right btn-group"
+                role="group"
+              >
+                <button
+                  class="p-0 mr-3 btn btn-link"
+                  data-test-id="incomplete-list-complete"
+                  style="opacity: 1;"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-check fa-2x text-success"
+                  />
+                </button>
+                <a
+                  class="p-0 mr-3"
+                  data-test-id="incomplete-list-share"
+                  href="/lists/1/users_lists"
+                  style="pointer-events: auto; opacity: 1;"
+                >
+                  <i
+                    class="fa fa-users fa-2x text-primary"
+                  />
+                </a>
+                <a
+                  class="p-0 mr-3"
+                  data-test-id="incomplete-list-edit"
+                  href="/lists/1/edit"
+                  style="pointer-events: auto; opacity: 1;"
+                >
+                  <i
+                    class="fa fa-edit fa-2x text-warning"
+                  />
+                </a>
+                <button
+                  class="p-0 btn btn-link"
+                  data-test-id="incomplete-list-trash"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-trash fa-2x text-danger"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,6 +144,17 @@ exports[`Lists renders complete lists 1`] = `
     These are lists you've created or you've accepted an invitation from someone else.
   </p>
   <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
+  <div
     class="list-group"
   />
   <br />
@@ -153,57 +183,65 @@ exports[`Lists renders complete lists 1`] = `
         class="row"
       >
         <div
-          class="pt-1 col-md-6"
-        >
-          <a
-            class="router-link"
-            href="/lists/1"
-          >
-            <h5
-              class="mb-1"
-            >
-              <i
-                class="fa fa-shopping-bag text-info mr-3"
-              />
-              foo
-            </h5>
-          </a>
-        </div>
-        <div
-          class="pt-1 col-md-4"
-        >
-          <small
-            class="text-muted"
-          >
-            May 27 2020, 12:00:00 am
-          </small>
-        </div>
-        <div
-          class="col-md-2"
+          class="col-sm-12 col-12"
         >
           <div
-            class="float-right btn-group"
-            role="group"
+            class="row"
           >
-            <button
-              class="p-0 mr-3 btn btn-link"
-              data-test-id="complete-list-refresh"
-              style="opacity: 1;"
-              type="button"
+            <div
+              class="pt-1 col-md-6"
             >
-              <i
-                class="fa fa-redo fa-2x text-primary"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="complete-list-trash"
-              type="button"
+              <a
+                class="router-link"
+                href="/lists/1"
+              >
+                <h5
+                  class="mb-1"
+                >
+                  <i
+                    class="fa fa-shopping-bag text-info mr-3"
+                  />
+                  foo
+                </h5>
+              </a>
+            </div>
+            <div
+              class="pt-1 col-md-4"
             >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
+              <small
+                class="text-muted"
+              >
+                May 27 2020, 12:00:00 am
+              </small>
+            </div>
+            <div
+              class="col-md-2"
+            >
+              <div
+                class="float-right btn-group"
+                role="group"
+              >
+                <button
+                  class="p-0 mr-3 btn btn-link"
+                  data-test-id="complete-list-refresh"
+                  style="opacity: 1;"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-redo fa-2x text-primary"
+                  />
+                </button>
+                <button
+                  class="p-0 btn btn-link"
+                  data-test-id="complete-list-trash"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-trash fa-2x text-danger"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -221,6 +259,17 @@ exports[`Lists renders incomplete lists 1`] = `
     These are lists you've created or you've accepted an invitation from someone else.
   </p>
   <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
+  <div
     class="list-group"
   >
     <div
@@ -233,77 +282,85 @@ exports[`Lists renders incomplete lists 1`] = `
         class="row"
       >
         <div
-          class="pt-1 col-md-6"
-        >
-          <a
-            class="router-link"
-            href="/lists/1"
-          >
-            <h5
-              class="mb-1"
-            >
-              <i
-                class="fa fa-shopping-bag text-info mr-3"
-              />
-              foo
-            </h5>
-          </a>
-        </div>
-        <div
-          class="pt-1 col-md-4"
-        >
-          <small
-            class="text-muted"
-          >
-            May 27 2020, 12:00:00 am
-          </small>
-        </div>
-        <div
-          class="col-md-2"
+          class="col-sm-12 col-12"
         >
           <div
-            class="float-right btn-group"
-            role="group"
+            class="row"
           >
-            <button
-              class="p-0 mr-3 btn btn-link"
-              data-test-id="incomplete-list-complete"
-              style="opacity: 1;"
-              type="button"
+            <div
+              class="pt-1 col-md-6"
             >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <a
-              class="p-0 mr-3"
-              data-test-id="incomplete-list-share"
-              href="/lists/1/users_lists"
-              style="pointer-events: auto; opacity: 1;"
+              <a
+                class="router-link"
+                href="/lists/1"
+              >
+                <h5
+                  class="mb-1"
+                >
+                  <i
+                    class="fa fa-shopping-bag text-info mr-3"
+                  />
+                  foo
+                </h5>
+              </a>
+            </div>
+            <div
+              class="pt-1 col-md-4"
             >
-              <i
-                class="fa fa-users fa-2x text-primary"
-              />
-            </a>
-            <a
-              class="p-0 mr-3"
-              data-test-id="incomplete-list-edit"
-              href="/lists/1/edit"
-              style="pointer-events: auto; opacity: 1;"
+              <small
+                class="text-muted"
+              >
+                May 27 2020, 12:00:00 am
+              </small>
+            </div>
+            <div
+              class="col-md-2"
             >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </a>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="incomplete-list-trash"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
+              <div
+                class="float-right btn-group"
+                role="group"
+              >
+                <button
+                  class="p-0 mr-3 btn btn-link"
+                  data-test-id="incomplete-list-complete"
+                  style="opacity: 1;"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-check fa-2x text-success"
+                  />
+                </button>
+                <a
+                  class="p-0 mr-3"
+                  data-test-id="incomplete-list-share"
+                  href="/lists/1/users_lists"
+                  style="pointer-events: auto; opacity: 1;"
+                >
+                  <i
+                    class="fa fa-users fa-2x text-primary"
+                  />
+                </a>
+                <a
+                  class="p-0 mr-3"
+                  data-test-id="incomplete-list-edit"
+                  href="/lists/1/edit"
+                  style="pointer-events: auto; opacity: 1;"
+                >
+                  <i
+                    class="fa fa-edit fa-2x text-warning"
+                  />
+                </a>
+                <button
+                  class="p-0 btn btn-link"
+                  data-test-id="incomplete-list-trash"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-trash fa-2x text-danger"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -346,51 +403,59 @@ exports[`Lists renders pending lists when they exist 1`] = `
         class="row"
       >
         <div
-          class="pt-1 col-md-6"
-        >
-          <h5
-            class="mb-1"
-          >
-            <i
-              class="fa fa-shopping-bag text-info mr-3"
-            />
-            foo
-          </h5>
-        </div>
-        <div
-          class="pt-1 col-md-4"
-        >
-          <small
-            class="text-muted"
-          >
-            May 27 2020, 12:00:00 am
-          </small>
-        </div>
-        <div
-          class="col-md-2"
+          class="col-sm-12 col-12"
         >
           <div
-            class="float-right btn-group"
-            role="group"
+            class="row"
           >
-            <button
-              class="p-0 mr-3 btn btn-link"
-              data-test-id="pending-list-accept"
-              type="button"
+            <div
+              class="pt-1 col-md-6"
             >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="pending-list-trash"
-              type="button"
+              <h5
+                class="mb-1"
+              >
+                <i
+                  class="fa fa-shopping-bag text-info mr-3"
+                />
+                foo
+              </h5>
+            </div>
+            <div
+              class="pt-1 col-md-4"
             >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
+              <small
+                class="text-muted"
+              >
+                May 27 2020, 12:00:00 am
+              </small>
+            </div>
+            <div
+              class="col-md-2"
+            >
+              <div
+                class="float-right btn-group"
+                role="group"
+              >
+                <button
+                  class="p-0 mr-3 btn btn-link"
+                  data-test-id="pending-list-accept"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-check fa-2x text-success"
+                  />
+                </button>
+                <button
+                  class="p-0 btn btn-link"
+                  data-test-id="pending-list-trash"
+                  type="button"
+                >
+                  <i
+                    class="fa fa-trash fa-2x text-danger"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -403,6 +468,99 @@ exports[`Lists renders pending lists when they exist 1`] = `
   <p>
     These are lists you've created or you've accepted an invitation from someone else.
   </p>
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
+  <div
+    class="list-group"
+  />
+  <br />
+  <h2>
+    Completed Lists
+  </h2>
+  <p>
+    These are the completed lists most recently created. 
+    <a
+      href="/completed_lists"
+    >
+      See all completed lists here.
+    </a>
+      Previously refreshed lists are marked with an asterisk (*).
+  </p>
+  <div
+    class="list-group"
+  />
+</div>
+`;
+
+exports[`Lists sets multiSelect to false and clears selectedLists when Hide Select is clicked 1`] = `
+<div>
+  <h1>
+    Your Lists
+  </h1>
+  <p>
+    These are lists you've created or you've accepted an invitation from someone else.
+  </p>
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      Hide
+       Select
+    </button>
+  </div>
+  <div
+    class="list-group"
+  />
+  <br />
+  <h2>
+    Completed Lists
+  </h2>
+  <p>
+    These are the completed lists most recently created. 
+    <a
+      href="/completed_lists"
+    >
+      See all completed lists here.
+    </a>
+      Previously refreshed lists are marked with an asterisk (*).
+  </p>
+  <div
+    class="list-group"
+  />
+</div>
+`;
+
+exports[`Lists sets multiSelect to true when select is clicked 1`] = `
+<div>
+  <h1>
+    Your Lists
+  </h1>
+  <p>
+    These are lists you've created or you've accepted an invitation from someone else.
+  </p>
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
   <div
     class="list-group"
   />

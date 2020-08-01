@@ -220,6 +220,36 @@ describe('ListsContainer', () => {
     expect(queryByTestId(`list-${props.completedLists[0].id}`)).toBeNull();
   });
 
+  it('deletes multiple lists', async () => {
+    axios.delete = jest.fn().mockResolvedValue({});
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId, getAllByRole, getByText } = renderListsContainer(props);
+
+    fireEvent.click(getByText('Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
+    expect(axios.delete).toHaveBeenCalledTimes(2);
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.nonCompletedLists[0].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.nonCompletedLists[1].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.completedLists[0].id}`)).toBeNull();
+  });
+
   it('redirects to login when delete fails with 401', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getAllByTestId, getByTestId } = renderListsContainer(props);
@@ -310,6 +340,26 @@ describe('ListsContainer', () => {
     expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'completed-list');
   });
 
+  it('completes multiple lists', async () => {
+    axios.put = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderListsContainer(props);
+
+    fireEvent.click(getByText('Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // one list is already complete
+
+    expect(toast).toHaveBeenCalledWith('Lists successfully completed.', { type: 'info' });
+    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(getByTestId('list-5')).toHaveAttribute('data-test-class', 'completed-list');
+  });
+
   it('redirects on 401 from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getAllByTestId } = renderListsContainer(props);
@@ -371,6 +421,17 @@ describe('ListsContainer', () => {
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
+  it('renders Loading when refresh pending', async () => {
+    // don't resolve to keep pending
+    axios.post = jest.fn();
+    const { getAllByTestId, getByRole } = renderListsContainer(props);
+
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(getByRole('status')).toBeVisible();
+  });
+
   it('refreshes list', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
@@ -390,6 +451,51 @@ describe('ListsContainer', () => {
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
     expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
+  });
+
+  it('refreshes multiple lists', async () => {
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          id: 6,
+          name: 'new list',
+          type: 'BookList',
+          created_at: new Date('05/31/2020').toISOString(),
+          owner_id: 1,
+          completed: false,
+          refreshed: false,
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          id: 7,
+          name: 'bar',
+          type: 'BookList',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 4,
+          owner_id: 2,
+          refreshed: false,
+        },
+      });
+    const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderListsContainer(props);
+
+    fireEvent.click(getByText('Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[3]);
+
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+
+    expect(toast).toHaveBeenCalledWith('Lists successfully refreshed.', { type: 'info' });
+    expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-7')).toHaveAttribute('data-test-class', 'non-completed-list');
   });
 
   it('redirects on 401 from list refresh', async () => {
