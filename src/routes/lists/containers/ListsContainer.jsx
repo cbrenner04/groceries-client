@@ -20,6 +20,8 @@ function ListsContainer(props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [selectedLists, setSelectedLists] = useState([]);
 
   const failure = ({ request, response, message }) => {
     if (response) {
@@ -195,6 +197,10 @@ function ListsContainer(props) {
         onReject={handleReject}
         currentUserPermissions={currentUserPermissions}
         onRemove={handleRemove}
+        multiSelect={multiSelect}
+        setMultiSelect={setMultiSelect}
+        selectedLists={selectedLists}
+        setSelectedLists={setSelectedLists}
       />
       <ConfirmModal
         action="delete"

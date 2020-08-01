@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Button } from 'react-bootstrap';
 
 import List from './List';
 
@@ -27,6 +27,20 @@ const Lists = (props) => (
     )}
     <h1>Your Lists</h1>
     <p>These are lists you&apos;ve created or you&apos;ve accepted an invitation from someone else.</p>
+    <div className="clearfix">
+      <Button
+        variant="link"
+        className="mx-auto float-right"
+        onClick={() => {
+          if (props.multiSelect && props.selectedLists.length > 0) {
+            props.setSelectedLists([]);
+          }
+          props.setMultiSelect(!props.multiSelect);
+        }}
+      >
+        {props.multiSelect ? 'Hide' : ''} Select
+      </Button>
+    </div>
     <ListGroup>
       {props.nonCompletedLists.map((list) => (
         <List
@@ -38,6 +52,9 @@ const Lists = (props) => (
           completed={list.completed}
           currentUserPermissions={props.currentUserPermissions[list.id]}
           onListRemoval={props.onRemove}
+          multiSelect={props.multiSelect}
+          selectedLists={props.selectedLists}
+          setSelectedLists={props.setSelectedLists}
           accepted
         />
       ))}
@@ -60,6 +77,9 @@ const Lists = (props) => (
           onListRefresh={props.onListRefresh}
           currentUserPermissions={props.currentUserPermissions[list.id]}
           onListRemoval={props.onRemove}
+          multiSelect={props.multiSelect}
+          selectedLists={props.selectedLists}
+          setSelectedLists={props.setSelectedLists}
           accepted
         />
       ))}
@@ -112,6 +132,21 @@ Lists.propTypes = {
   onListRefresh: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   onRemove: PropTypes.func.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  setMultiSelect: PropTypes.func.isRequired,
+  selectedLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
+    }).isRequired,
+  ).isRequired,
+  setSelectedLists: PropTypes.func.isRequired,
 };
 
 export default Lists;

@@ -52,3 +52,10 @@ body {
   border-right: 1px solid lightgray;
   height: 100%;
 }
+
+.list-multi-created {
+  @include media-breakpoint-up(md) {
+    margin-right: 45px;
+    margin-left: -45px;
+  }
+}
