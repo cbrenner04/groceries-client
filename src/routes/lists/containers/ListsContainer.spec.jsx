@@ -454,31 +454,17 @@ describe('ListsContainer', () => {
   });
 
   it('refreshes multiple lists', async () => {
-    axios.post = jest
-      .fn()
-      .mockResolvedValueOnce({
-        data: {
-          id: 6,
-          name: 'new list',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 1,
-          completed: false,
-          refreshed: false,
-        },
-      })
-      .mockResolvedValueOnce({
-        data: {
-          id: 7,
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 4,
-          owner_id: 2,
-          refreshed: false,
-        },
-      });
+    axios.post = jest.fn().mockResolvedValueOnce({
+      data: {
+        id: 6,
+        name: 'new list',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        owner_id: 1,
+        completed: false,
+        refreshed: false,
+      },
+    });
     const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderListsContainer(props);
 
     fireEvent.click(getByText('Select'));
@@ -490,12 +476,12 @@ describe('ListsContainer', () => {
     fireEvent.click(checkboxes[3]);
 
     fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Lists successfully refreshed.', { type: 'info' });
+    expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
+    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'completed-list');
     expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'non-completed-list');
     expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
-    expect(getByTestId('list-7')).toHaveAttribute('data-test-class', 'non-completed-list');
   });
 
   it('redirects on 401 from list refresh', async () => {

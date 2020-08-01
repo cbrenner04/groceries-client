@@ -17,7 +17,7 @@ function ListsContainer(props) {
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [listsToDelete, setListsToDelete] = useState([]);
   const [listToReject, setListToReject] = useState('');
-  const [listsToRemove, setListsToRemove] = useState('');
+  const [listsToRemove, setListsToRemove] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
@@ -203,7 +203,8 @@ function ListsContainer(props) {
   const handleRefresh = async (list) => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
-    const filteredLists = lists.filter((l) => l.completed);
+    const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean);
+    const filteredLists = ownedLists.filter((l) => l.completed);
     filteredLists.forEach((l) => {
       l.refreshed = true;
     });
@@ -271,7 +272,7 @@ function ListsContainer(props) {
             action="remove"
             body={
               `Are you sure you want to remove the following lists? The list will continue to exist for the owner, ` +
-              `you will just be removed from the list of users. ${listsToDelete.map((list) => list.name).join(', ')}`
+              `you will just be removed from the list of users. ${listsToRemove.map((list) => list.name).join(', ')}`
             }
             show={showRemoveConfirm}
             handleConfirm={() => handleRemoveConfirm()}

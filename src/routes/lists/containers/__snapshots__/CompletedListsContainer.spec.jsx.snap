@@ -20,6 +20,18 @@ exports[`CompletedListsContainer renders 1`] = `
       Previously refreshed lists are marked with an asterisk (*).
     </p>
   </div>
+   
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
   <div
     class="list-group"
   >
