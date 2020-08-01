@@ -7,14 +7,6 @@ import { Refresh, Trash } from '../../../../components/ActionButtons';
 function CompletedListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
 
-  const handleTrash = () => {
-    if (userIsOwner) {
-      props.onListDeletion(props.list);
-    } else {
-      props.onListRemoval(props.list);
-    }
-  };
-
   return (
     <ButtonGroup className="float-right">
       <Refresh
@@ -23,7 +15,7 @@ function CompletedListButtons(props) {
         style={{ opacity: userIsOwner ? 1 : 0.3 }}
         data-test-id="complete-list-refresh"
       />
-      <Trash handleClick={handleTrash} data-test-id="complete-list-trash" />
+      <Trash handleClick={() => props.onListDeletion(props.list)} data-test-id="complete-list-trash" />
     </ButtonGroup>
   );
 }
@@ -35,7 +27,6 @@ CompletedListButtons.propTypes = {
   }).isRequired,
   onListRefresh: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
-  onListRemoval: PropTypes.func.isRequired,
 };
 
 export default CompletedListButtons;

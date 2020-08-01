@@ -91,7 +91,6 @@ List.propTypes = {
   onListAcceptance: PropTypes.func,
   onListRejection: PropTypes.func,
   currentUserPermissions: PropTypes.string.isRequired,
-  onListRemoval: PropTypes.func,
   multiSelect: PropTypes.bool,
   selectedLists: PropTypes.arrayOf(
     PropTypes.shape({
@@ -115,7 +114,6 @@ List.defaultProps = {
   accepted: false,
   onListAcceptance: () => undefined,
   onListRejection: () => undefined,
-  onListRemoval: () => undefined,
   multiSelect: false,
   selectedLists: [],
   setSelectedLists: () => undefined,

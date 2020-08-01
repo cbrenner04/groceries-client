@@ -12,7 +12,6 @@ function ListButtons(props) {
       list={props.list}
       onListRefresh={props.onListRefresh}
       onListDeletion={props.onListDeletion}
-      onListRemoval={props.onListRemoval}
     />
   ) : (
     <IncompleteListButtons
@@ -21,7 +20,6 @@ function ListButtons(props) {
       onListCompletion={props.onListCompletion}
       onListDeletion={props.onListDeletion}
       currentUserPermissions={props.currentUserPermissions}
-      onListRemoval={props.onListRemoval}
     />
   );
 
@@ -55,7 +53,6 @@ ListButtons.propTypes = {
   onListAcceptance: PropTypes.func.isRequired,
   onListRejection: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
-  onListRemoval: PropTypes.func.isRequired,
 };
 
 export default ListButtons;

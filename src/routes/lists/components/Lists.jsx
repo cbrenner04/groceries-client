@@ -51,7 +51,6 @@ const Lists = (props) => (
           onListCompletion={props.onListCompletion}
           completed={list.completed}
           currentUserPermissions={props.currentUserPermissions[list.id]}
-          onListRemoval={props.onRemove}
           multiSelect={props.multiSelect}
           selectedLists={props.selectedLists}
           setSelectedLists={props.setSelectedLists}
@@ -76,7 +75,6 @@ const Lists = (props) => (
           completed={list.completed}
           onListRefresh={props.onListRefresh}
           currentUserPermissions={props.currentUserPermissions[list.id]}
-          onListRemoval={props.onRemove}
           multiSelect={props.multiSelect}
           selectedLists={props.selectedLists}
           setSelectedLists={props.setSelectedLists}
@@ -131,7 +129,6 @@ Lists.propTypes = {
   onListDelete: PropTypes.func.isRequired,
   onListRefresh: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
-  onRemove: PropTypes.func.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   setMultiSelect: PropTypes.func.isRequired,
   selectedLists: PropTypes.arrayOf(

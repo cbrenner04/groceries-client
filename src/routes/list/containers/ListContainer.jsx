@@ -126,10 +126,10 @@ function ListContainer(props) {
 
   const handleItemPurchase = async (item) => {
     const items = selectedItems.length ? selectedItems : [item];
-    const filteredItems = items.filter((item) => !item.purchased && !item.completed);
+    const filteredItems = items.filter((i) => !i.purchased && !i.completed);
     const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
-    const updateRequests = filteredItems.map((item) =>
-      axios.put(`${listItemPath(item)}/${item.id}`, {
+    const updateRequests = filteredItems.map((i) =>
+      axios.put(`${listItemPath(i)}/${i.id}`, {
         [`${listTypeToSnakeCase(props.list.type)}_item`]: {
           [completionType]: true,
         },
@@ -245,10 +245,10 @@ function ListContainer(props) {
   };
 
   const handleDeleteConfirm = async () => {
+    setShowDeleteConfirm(false);
     try {
       const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath(item)}/${item.id}`));
       await Promise.all(deleteRequests);
-      setShowDeleteConfirm(false);
       const notPurchasedDeletedItems = [];
       const purchasedDeletedItems = [];
       itemsToDelete.forEach((item) => {
