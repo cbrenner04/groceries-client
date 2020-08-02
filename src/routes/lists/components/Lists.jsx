@@ -54,6 +54,7 @@ const Lists = (props) => (
           multiSelect={props.multiSelect}
           selectedLists={props.selectedLists}
           setSelectedLists={props.setSelectedLists}
+          handleMerge={props.handleMerge}
           accepted
         />
       ))}
@@ -78,6 +79,7 @@ const Lists = (props) => (
           multiSelect={props.multiSelect}
           selectedLists={props.selectedLists}
           setSelectedLists={props.setSelectedLists}
+          handleMerge={props.handleMerge}
           accepted
         />
       ))}
@@ -144,6 +146,7 @@ Lists.propTypes = {
     }).isRequired,
   ).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
+  handleMerge: PropTypes.func.isRequired,
 };
 
 export default Lists;

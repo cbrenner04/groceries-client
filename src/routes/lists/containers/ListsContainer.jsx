@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 import ListForm from '../components/ListForm';
 import Lists from '../components/Lists';
@@ -9,6 +10,7 @@ import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { sortLists } from '../utils';
 import Loading from '../../../components/Loading';
+import { TextField } from '../../../components/FormFields';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -24,6 +26,9 @@ function ListsContainer(props) {
   const [multiSelect, setMultiSelect] = useState(false);
   const [selectedLists, setSelectedLists] = useState([]);
   const [pending, setPending] = useState(false);
+  const [showMergeModal, setShowMergeModal] = useState(false);
+  const [mergeName, setMergeName] = useState('');
+  const [listsToMerge, setListsToMerge] = useState([]);
 
   const failure = ({ request, response, message }) => {
     if (response) {
@@ -228,6 +233,35 @@ function ListsContainer(props) {
     }
   };
 
+  const mergeLists = () => {
+    // just using the first list selected arbitrarily
+    const listType = selectedLists[0].type;
+    const filteredLists = selectedLists.filter((l) => l.type === listType);
+    setListsToMerge(filteredLists);
+    setShowMergeModal(true);
+  };
+
+  const handleMergeConfirm = async () => {
+    setPending(true);
+    const listIds = listsToMerge.map((l) => l.id).join(',');
+    try {
+      const { data } = await axios.post('/lists/merge_lists', {
+        merge_lists: { list_ids: listIds, new_list_name: mergeName },
+      });
+      const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
+      const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
+      // must update currentUserPermissions prior to nonCompletedLists
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      setPending(false);
+      setShowMergeModal(false);
+      resetMultiSelect();
+      toast('Lists successfully merged.', { type: 'info' });
+    } catch (err) {
+      failure(err);
+    }
+  };
+
   return (
     <>
       {pending && <Loading />}
@@ -251,6 +285,7 @@ function ListsContainer(props) {
             setMultiSelect={setMultiSelect}
             selectedLists={selectedLists}
             setSelectedLists={setSelectedLists}
+            handleMerge={mergeLists}
           />
           <ConfirmModal
             action="delete"
@@ -278,6 +313,30 @@ function ListsContainer(props) {
             handleConfirm={() => handleRemoveConfirm()}
             handleClear={() => setShowRemoveConfirm(false)}
           />
+          <Modal show={showMergeModal} onHide={() => setShowMergeModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Merge {`"${listsToMerge.map((l) => l.name).join('", "')}"`}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <TextField
+                  name="name"
+                  label="Name of new list"
+                  value={mergeName}
+                  handleChange={({ target: { value } }) => setMergeName(value)}
+                  placeholder="My super cool list"
+                />
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowMergeModal(false)} data-test-id={`clear-merge`}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleMergeConfirm} data-test-id={`confirm-merge`}>
+                Merge lists
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </>

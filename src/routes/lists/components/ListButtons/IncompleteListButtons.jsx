@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, Edit, Share, Trash } from '../../../../components/ActionButtons';
+import { Complete, Edit, Merge, Share, Trash } from '../../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
@@ -25,15 +25,18 @@ function IncompleteListButtons(props) {
         }}
         data-test-id="incomplete-list-share"
       />
-      <Edit
-        to={`/lists/${props.list.id}/edit`}
-        disabled={!userIsOwner}
-        style={{
-          pointerEvents: userIsOwner ? 'auto' : 'none',
-          opacity: userIsOwner ? 1 : 0.3,
-        }}
-        data-test-id="incomplete-list-edit"
-      />
+      {props.multiSelect && <Merge handleClick={props.handleMerge} />}
+      {!props.multiSelect && (
+        <Edit
+          to={`/lists/${props.list.id}/edit`}
+          disabled={!userIsOwner}
+          style={{
+            pointerEvents: userIsOwner ? 'auto' : 'none',
+            opacity: userIsOwner ? 1 : 0.3,
+          }}
+          data-test-id="incomplete-list-edit"
+        />
+      )}
       <Trash handleClick={() => props.onListDeletion(props.list)} data-test-id="incomplete-list-trash" />
     </ButtonGroup>
   );
@@ -48,6 +51,8 @@ IncompleteListButtons.propTypes = {
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  handleMerge: PropTypes.func.isRequired,
 };
 
 export default IncompleteListButtons;
