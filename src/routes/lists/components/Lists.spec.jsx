@@ -36,6 +36,7 @@ describe('Lists', () => {
       multiSelect: false,
       setMultiSelect: jest.fn(),
       setSelectedLists: jest.fn(),
+      handleMerge: jest.fn(),
     };
     list = {
       id: 1,

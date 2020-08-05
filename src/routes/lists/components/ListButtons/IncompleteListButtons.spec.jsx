@@ -26,6 +26,8 @@ describe('IncompleteListButtons', () => {
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
       currentUserPermissions: 'write',
+      multiSelect: false,
+      handleMerge: jest.fn(),
     };
   });
 

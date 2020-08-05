@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { Modal, Button, Form } from 'react-bootstrap';
 
 import ListForm from '../components/ListForm';
 import Lists from '../components/Lists';
@@ -10,7 +9,7 @@ import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { sortLists } from '../utils';
 import Loading from '../../../components/Loading';
-import { TextField } from '../../../components/FormFields';
+import MergeModal from '../components/MergeModal';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -38,13 +37,16 @@ function ListsContainer(props) {
       } else if ([403, 404].includes(response.status)) {
         toast('List not found', { type: 'error' });
       } else {
+        setPending(false);
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         toast(responseErrors.join(' and '), { type: 'error' });
       }
     } else if (request) {
+      setPending(false);
       toast('Something went wrong', { type: 'error' });
     } else {
+      setPending(false);
       toast(message, { type: 'error' });
     }
   };
@@ -253,6 +255,7 @@ function ListsContainer(props) {
       // must update currentUserPermissions prior to nonCompletedLists
       setCurrentUserPermissions(updatedCurrentUserPermissions);
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      setMergeName('');
       setPending(false);
       setShowMergeModal(false);
       resetMultiSelect();
@@ -313,30 +316,14 @@ function ListsContainer(props) {
             handleConfirm={() => handleRemoveConfirm()}
             handleClear={() => setShowRemoveConfirm(false)}
           />
-          <Modal show={showMergeModal} onHide={() => setShowMergeModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Merge {`"${listsToMerge.map((l) => l.name).join('", "')}"`}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <TextField
-                  name="name"
-                  label="Name of new list"
-                  value={mergeName}
-                  handleChange={({ target: { value } }) => setMergeName(value)}
-                  placeholder="My super cool list"
-                />
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowMergeModal(false)} data-test-id={`clear-merge`}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleMergeConfirm} data-test-id={`confirm-merge`}>
-                Merge lists
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <MergeModal
+            showModal={showMergeModal}
+            clearModal={() => setShowMergeModal(false)}
+            listNames={listsToMerge.map((l) => l.name).join('", "')}
+            mergeName={mergeName}
+            handleMergeNameChange={({ target: { value } }) => setMergeName(value)}
+            handleMergeConfirm={handleMergeConfirm}
+          />
         </>
       )}
     </>

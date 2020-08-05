@@ -25,7 +25,7 @@ function IncompleteListButtons(props) {
         }}
         data-test-id="incomplete-list-share"
       />
-      {props.multiSelect && <Merge handleClick={props.handleMerge} />}
+      {props.multiSelect && <Merge handleClick={props.handleMerge} data-test-id="incomplete-list-merge" />}
       {!props.multiSelect && (
         <Edit
           to={`/lists/${props.list.id}/edit`}

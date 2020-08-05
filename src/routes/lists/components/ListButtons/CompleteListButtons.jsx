@@ -15,7 +15,9 @@ function CompletedListButtons(props) {
         style={{ opacity: userIsOwner ? 1 : 0.3 }}
         data-test-id="complete-list-refresh"
       />
-      {props.multiSelect && props.selectedLists.length > 1 && <Merge handleClick={props.handleMerge} />}
+      {props.multiSelect && props.selectedLists.length > 1 && (
+        <Merge handleClick={props.handleMerge} data-test-id="complete-list-merge" />
+      )}
       <Trash handleClick={() => props.onListDeletion(props.list)} data-test-id="complete-list-trash" />
     </ButtonGroup>
   );

@@ -14,6 +14,9 @@ describe('CompleteListButtons', () => {
       list: {
         owner_id: 1,
       },
+      multiSelect: false,
+      selectedLists: [],
+      handleMerge: jest.fn(),
     };
   });
   it('renders refresh disabled when user is not owner', () => {
