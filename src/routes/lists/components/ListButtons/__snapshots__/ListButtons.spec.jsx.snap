@@ -45,16 +45,16 @@ exports[`ListButtons renders IncompleteListButtons when list is accepted and not
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <a
-      class="p-0 mr-3"
+    <button
+      class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-share"
-      href="/lists/1/users_lists"
       style="pointer-events: auto; opacity: 1;"
+      type="button"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
-    </a>
+    </button>
     <a
       class="p-0 mr-3"
       data-test-id="incomplete-list-edit"

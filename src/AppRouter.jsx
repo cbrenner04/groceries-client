@@ -1,20 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
+import AppNav from './components/AppNav';
+import BulkEditListItems from './routes/list/BulkEditListItems';
+import BulkShare from './routes/lists/BulkShare';
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
+import EditList from './routes/lists/EditList';
 import EditListItem from './routes/list/EditListItem';
-import BulkEditListItems from './routes/list/BulkEditListItems';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
 import List from './routes/list/List';
-import EditList from './routes/lists/EditList';
 import Lists from './routes/lists/Lists';
-import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
-import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
+import ShareList from './routes/share_list/ShareList';
 
 export default function AppRouter() {
   return (
@@ -25,9 +26,10 @@ export default function AppRouter() {
         <Redirect exact path="/" to="/lists" />
         <Route exact path="/lists" component={Lists} />
         <Route exact path="/completed_lists" component={CompletedLists} />
+        <Route exact path="/lists/:id/edit" component={EditList} />
+        <Route exact path="/lists/bulk_share" component={BulkShare} />
         {/* routes/list */}
         <Route exact path="/lists/:id" component={List} />
-        <Route exact path="/lists/:id/edit" component={EditList} />
         <Route path="/lists/:list_id/*/:id/edit" component={EditListItem} />
         <Route path="/lists/:list_id/*/bulk-edit" component={BulkEditListItems} />
         {/* routes/share_list */}

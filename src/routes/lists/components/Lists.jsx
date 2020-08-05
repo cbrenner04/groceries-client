@@ -55,6 +55,7 @@ const Lists = (props) => (
           selectedLists={props.selectedLists}
           setSelectedLists={props.setSelectedLists}
           handleMerge={props.handleMerge}
+          handleShare={props.handleShare}
           accepted
         />
       ))}
@@ -147,6 +148,7 @@ Lists.propTypes = {
   ).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
   handleMerge: PropTypes.func.isRequired,
+  handleShare: PropTypes.func.isRequired,
 };
 
 export default Lists;
