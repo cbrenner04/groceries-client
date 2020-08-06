@@ -24,6 +24,7 @@ function ListButtons(props) {
       onListDeletion={props.onListDeletion}
       currentUserPermissions={props.currentUserPermissions}
       multiSelect={props.multiSelect}
+      selectedLists={props.selectedLists}
       handleMerge={props.handleMerge}
     />
   );

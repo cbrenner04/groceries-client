@@ -28,6 +28,7 @@ describe('IncompleteListButtons', () => {
       currentUserPermissions: 'write',
       multiSelect: false,
       handleMerge: jest.fn(),
+      selectedLists: [],
     };
   });
 
@@ -55,6 +56,24 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
   });
 
+  it('edit is hidden when multiSelect and selectedLists > 1', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, queryByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByTestId('incomplete-list-edit')).toBeNull();
+  });
+
+  it('merge is displayed when multiSelect and selectedLists > 1', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, getByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(getByTestId('incomplete-list-merge')).toBeVisible();
+  });
+
   it('share is disabled when user does not have write permissions', () => {
     props.currentUserPermissions = 'read';
     const { container, getByTestId } = renderIncompleteListButtons(props);
@@ -64,13 +83,13 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
   });
 
-  it('share is disabled when multiSelect', () => {
+  it('share is hidden when multiSelect and selectedLists > 1', () => {
     props.multiSelect = true;
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, queryByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
+    expect(queryByTestId('incomplete-list-share')).toBeNull();
   });
 
   it('share is enabled when user has write permissions and not multiSelect', () => {

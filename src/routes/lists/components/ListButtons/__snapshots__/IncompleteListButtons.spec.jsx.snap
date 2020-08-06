@@ -100,7 +100,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
 </div>
 `;
 
-exports[`IncompleteListButtons share is disabled when multiSelect 1`] = `
+exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists > 1 1`] = `
 <div>
   <div
     class="float-right btn-group"
@@ -116,17 +116,44 @@ exports[`IncompleteListButtons share is disabled when multiSelect 1`] = `
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <a
-      class="p-0 mr-3"
-      data-test-id="incomplete-list-share"
-      disabled=""
-      href="/lists/1/users_lists"
-      style="pointer-events: none; opacity: 0.3;"
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-merge"
+      type="button"
     >
       <i
-        class="fa fa-users fa-2x text-primary"
+        class="fa fa-compress-alt fa-2x text-warning"
       />
-    </a>
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="incomplete-list-trash"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`IncompleteListButtons merge is displayed when multiSelect and selectedLists > 1 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-complete"
+      style="pointer-events: auto; opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
     <button
       class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-merge"
@@ -235,6 +262,44 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
         class="fa fa-edit fa-2x text-warning"
       />
     </a>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="incomplete-list-trash"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`IncompleteListButtons share is hidden when multiSelect and selectedLists > 1 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-complete"
+      style="pointer-events: auto; opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-merge"
+      type="button"
+    >
+      <i
+        class="fa fa-compress-alt fa-2x text-warning"
+      />
+    </button>
     <button
       class="p-0 btn btn-link"
       data-test-id="incomplete-list-trash"

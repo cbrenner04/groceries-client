@@ -849,11 +849,14 @@ describe('ListsContainer', () => {
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
-  it('shows merge button when multi select', async () => {
-    const { container, getByText, getAllByTestId } = renderListsContainer(props);
+  it('shows merge button when multi select and more than 1 list is selected', async () => {
+    const { container, getByText, getAllByTestId, getAllByRole } = renderListsContainer(props);
 
     fireEvent.click(getByText('Select'));
     await waitFor(() => getByText('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+    fireEvent.click(getAllByRole('checkbox')[1]);
 
     expect(container).toMatchSnapshot();
     expect(getAllByTestId('incomplete-list-merge')).toHaveLength(2);
