@@ -22,7 +22,7 @@ const RefusedUsersList = (props) => (
                 <Col md="4" className="pt-1"></Col>
                 <Col md="2">
                   <ButtonGroup className="float-right">
-                    <Refresh data-test-id="refresh-share" handleClick={() => props.refreshShare(id, user.id)} />
+                    <Refresh testID="refresh-share" handleClick={() => props.refreshShare(id, user.id)} />
                   </ButtonGroup>
                 </Col>
               </Row>

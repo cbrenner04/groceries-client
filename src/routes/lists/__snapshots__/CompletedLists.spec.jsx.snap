@@ -86,7 +86,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i

@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const Share = ({ to, testID, disabled, style }) => (
-  <Link className="p-0 mr-3" to={to} data-test-id={testID} disabled={disabled} style={style}>
-    <i className="fa fa-users fa-2x text-primary" />
+const EditLink = ({ to, disabled, style, testID }) => (
+  <Link className="p-0 mr-3" to={to} disabled={disabled} style={style} data-test-id={testID}>
+    <i className="fa fa-edit fa-2x text-warning" />
   </Link>
 );
 
-Share.propTypes = {
+EditLink.propTypes = {
   to: PropTypes.string.isRequired,
-  testID: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
   style: PropTypes.shape({
     pointerEvents: PropTypes.string,
     opacity: PropTypes.number,
   }).isRequired,
+  testID: PropTypes.string.isRequired,
 };
 
-export default Share;
+export default EditLink;

@@ -64,8 +64,18 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
   });
 
-  it('share is enabled when user has write permissions', () => {
+  it('share is disabled when multiSelect', () => {
+    props.multiSelect = true;
+    const { container, getByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(getByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
+    expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
+  });
+
+  it('share is enabled when user has write permissions and not multiSelect', () => {
     props.currentUserPermissions = 'write';
+    props.multiSelect = false;
     const { container, getByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();

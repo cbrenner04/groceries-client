@@ -3,25 +3,28 @@ import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import Edit from './Edit';
+import EditLink from './EditLink';
 
-describe('Edit', () => {
+describe('EditLink', () => {
   let history;
 
-  const renderEdit = () => {
+  const renderEditLink = () => {
     history = createMemoryHistory();
     const defaultProps = {
       to: '/fake/route',
+      disabled: false,
+      style: {},
+      testID: 'foo',
     };
     return render(
       <Router history={history}>
-        <Edit {...defaultProps} />
+        <EditLink {...defaultProps} />
       </Router>,
     );
   };
 
   it('renders a link', () => {
-    const { getByRole } = renderEdit();
+    const { getByRole } = renderEditLink();
 
     expect(getByRole('link')).toMatchSnapshot();
     expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
@@ -29,7 +32,7 @@ describe('Edit', () => {
 
   describe('when link is clicked', () => {
     it('calls handleClick', () => {
-      const { getByRole } = renderEdit();
+      const { getByRole } = renderEditLink();
 
       fireEvent.click(getByRole('link'));
 

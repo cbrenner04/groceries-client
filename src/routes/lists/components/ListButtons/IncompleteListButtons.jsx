@@ -2,42 +2,45 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, Edit, Merge, Share, Trash } from '../../../../components/ActionButtons';
+import { Complete, EditLink, Merge, Share, Trash } from '../../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
-  const userHasWritePermission = props.currentUserPermissions === 'write';
+  const userCanShare = !props.multiSelect && props.currentUserPermissions === 'write';
 
   return (
     <ButtonGroup className="float-right">
       <Complete
         handleClick={() => props.onListCompletion(props.list)}
         disabled={!userIsOwner}
-        style={{ opacity: userIsOwner ? 1 : 0.3 }}
-        data-test-id="incomplete-list-complete"
+        style={{
+          pointerEvents: userIsOwner ? 'auto' : 'none',
+          opacity: userIsOwner ? 1 : 0.3,
+        }}
+        testID="incomplete-list-complete"
       />
       <Share
         to={`lists/${props.list.id}/users_lists`}
-        disabled={!userHasWritePermission}
+        disabled={!userCanShare}
         style={{
-          pointerEvents: userHasWritePermission ? 'auto' : 'none',
-          opacity: userHasWritePermission ? 1 : 0.3,
+          pointerEvents: userCanShare ? 'auto' : 'none',
+          opacity: userCanShare ? 1 : 0.3,
         }}
-        data-test-id="incomplete-list-share"
+        testID="incomplete-list-share"
       />
-      {props.multiSelect && <Merge handleClick={props.handleMerge} data-test-id="incomplete-list-merge" />}
+      {props.multiSelect && <Merge handleClick={props.handleMerge} testID="incomplete-list-merge" />}
       {!props.multiSelect && (
-        <Edit
+        <EditLink
           to={`/lists/${props.list.id}/edit`}
           disabled={!userIsOwner}
           style={{
             pointerEvents: userIsOwner ? 'auto' : 'none',
             opacity: userIsOwner ? 1 : 0.3,
           }}
-          data-test-id="incomplete-list-edit"
+          testID="incomplete-list-edit"
         />
       )}
-      <Trash handleClick={() => props.onListDeletion(props.list)} data-test-id="incomplete-list-trash" />
+      <Trash handleClick={() => props.onListDeletion(props.list)} testID="incomplete-list-trash" />
     </ButtonGroup>
   );
 }

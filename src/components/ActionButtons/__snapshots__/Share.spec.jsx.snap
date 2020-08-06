@@ -3,6 +3,7 @@
 exports[`Share renders a link 1`] = `
 <a
   class="p-0 mr-3"
+  data-test-id="foo"
   href="/fake/route"
 >
   <i

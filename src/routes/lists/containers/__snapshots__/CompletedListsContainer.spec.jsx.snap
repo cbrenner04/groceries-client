@@ -86,7 +86,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -159,7 +159,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -233,7 +233,7 @@ exports[`CompletedListsContainer renders 1`] = `
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i

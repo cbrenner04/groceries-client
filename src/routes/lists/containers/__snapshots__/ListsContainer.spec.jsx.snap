@@ -235,7 +235,7 @@ exports[`ListsContainer renders 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -329,7 +329,7 @@ exports[`ListsContainer renders 1`] = `
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i
@@ -441,7 +441,7 @@ exports[`ListsContainer renders 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -515,7 +515,7 @@ exports[`ListsContainer renders 1`] = `
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i
@@ -787,7 +787,7 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -797,8 +797,9 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                 <a
                   class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
+                  disabled=""
                   href="/lists/3/users_lists"
-                  style="pointer-events: auto; opacity: 1;"
+                  style="pointer-events: none; opacity: 0.3;"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
@@ -891,7 +892,7 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i
@@ -1012,7 +1013,7 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -1097,7 +1098,7 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i
@@ -1371,7 +1372,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -1381,8 +1382,9 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                 <a
                   class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
+                  disabled=""
                   href="/lists/3/users_lists"
-                  style="pointer-events: auto; opacity: 1;"
+                  style="pointer-events: none; opacity: 0.3;"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
@@ -1475,7 +1477,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i
@@ -1596,7 +1598,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -1690,7 +1692,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
                   disabled=""
-                  style="opacity: 0.3;"
+                  style="pointer-events: none; opacity: 0.3;"
                   type="button"
                 >
                   <i

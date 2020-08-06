@@ -11,20 +11,20 @@ function NotPurchasedItemButtons(props) {
         <Bookmark
           handleClick={() => props.toggleItemRead(props.item)}
           read={props.item.read}
-          data-test-id={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+          testID={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
         />
       )}
       <Complete
         handleClick={() => props.handlePurchaseOfItem(props.item)}
-        data-test-id={`not-purchased-item-complete-${props.item.id}`}
+        testID={`not-purchased-item-complete-${props.item.id}`}
       />
       <EditButton
         handleClick={() => props.handleItemEdit(props.item)}
-        data-test-id={`not-purchased-item-edit-${props.item.id}`}
+        testID={`not-purchased-item-edit-${props.item.id}`}
       />
       <Trash
         handleClick={() => props.handleItemDelete(props.item)}
-        data-test-id={`not-purchased-item-delete-${props.item.id}`}
+        testID={`not-purchased-item-delete-${props.item.id}`}
       />
     </ButtonGroup>
   );

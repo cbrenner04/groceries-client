@@ -9,7 +9,7 @@ describe('Merge', () => {
   beforeEach(() => {
     props = {
       handleClick: jest.fn(),
-      'data-test-id': 'test-id',
+      testID: 'test-id',
     };
   });
 

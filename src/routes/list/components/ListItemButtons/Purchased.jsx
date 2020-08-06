@@ -9,25 +9,22 @@ const PurchasedItemButtons = (props) => (
     {(props.listType === 'GroceryList' || props.listType === 'ToDoList') && (
       <Refresh
         handleClick={() => props.handleItemRefresh(props.item)}
-        data-test-id={`purchased-item-refresh-${props.item.id}`}
+        testID={`purchased-item-refresh-${props.item.id}`}
       />
     )}
     {props.listType === 'BookList' && (
       <Bookmark
         handleClick={() => props.toggleItemRead(props.item)}
         read={props.item.read}
-        data-test-id={`purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+        testID={`purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
       />
     )}
     <EditButton
       handleClick={() => props.handleItemEdit(props.item)}
-      data-test-id={`purchased-item-edit-${props.item.id}`}
+      testID={`purchased-item-edit-${props.item.id}`}
       disabled={!props.multiSelect || props.selectedItems.length === 0}
     />
-    <Trash
-      handleClick={() => props.handleItemDelete(props.item)}
-      data-test-id={`purchased-item-delete-${props.item.id}`}
-    />
+    <Trash handleClick={() => props.handleItemDelete(props.item)} testID={`purchased-item-delete-${props.item.id}`} />
   </ButtonGroup>
 );
 

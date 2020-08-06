@@ -5,6 +5,7 @@ import Trash from './Trash';
 
 const defaultProps = {
   handleClick: jest.fn(),
+  testID: 'foo',
 };
 
 describe('Trash', () => {

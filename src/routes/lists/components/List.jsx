@@ -63,7 +63,20 @@ function List(props) {
               <small className="text-muted">{formatDate(props.list.created_at)}</small>
             </Col>
             <Col md="2">
-              <ListButtons {...props} />
+              <ListButtons
+                userId={props.userId}
+                list={props.list}
+                accepted={props.accepted}
+                onListDeletion={props.onListDeletion}
+                onListCompletion={props.onListCompletion}
+                onListRefresh={props.onListRefresh}
+                onListAcceptance={props.onListAcceptance}
+                onListRejection={props.onListRejection}
+                currentUserPermissions={props.currentUserPermissions}
+                multiSelect={props.multiSelect}
+                selectedLists={props.selectedLists}
+                handleMerge={props.handleMerge}
+              />
             </Col>
           </Row>
         </Col>

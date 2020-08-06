@@ -73,7 +73,7 @@ exports[`Lists does not render pending lists when they do not exist 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -224,7 +224,7 @@ exports[`Lists renders complete lists 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="complete-list-refresh"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i
@@ -323,7 +323,7 @@ exports[`Lists renders incomplete lists 1`] = `
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-complete"
-                  style="opacity: 1;"
+                  style="pointer-events: auto; opacity: 1;"
                   type="button"
                 >
                   <i

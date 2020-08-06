@@ -10,7 +10,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       disabled=""
-      style="opacity: 0.3;"
+      style="pointer-events: none; opacity: 0.3;"
       type="button"
     >
       <i
@@ -60,7 +60,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
     <button
       class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="opacity: 1;"
+      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -100,6 +100,55 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
 </div>
 `;
 
+exports[`IncompleteListButtons share is disabled when multiSelect 1`] = `
+<div>
+  <div
+    class="float-right btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-complete"
+      style="pointer-events: auto; opacity: 1;"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <a
+      class="p-0 mr-3"
+      data-test-id="incomplete-list-share"
+      disabled=""
+      href="/lists/1/users_lists"
+      style="pointer-events: none; opacity: 0.3;"
+    >
+      <i
+        class="fa fa-users fa-2x text-primary"
+      />
+    </a>
+    <button
+      class="p-0 mr-3 btn btn-link"
+      data-test-id="incomplete-list-merge"
+      type="button"
+    >
+      <i
+        class="fa fa-compress-alt fa-2x text-warning"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="incomplete-list-trash"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;
+
 exports[`IncompleteListButtons share is disabled when user does not have write permissions 1`] = `
 <div>
   <div
@@ -109,7 +158,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
     <button
       class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="opacity: 1;"
+      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -150,7 +199,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
 </div>
 `;
 
-exports[`IncompleteListButtons share is enabled when user has write permissions 1`] = `
+exports[`IncompleteListButtons share is enabled when user has write permissions and not multiSelect 1`] = `
 <div>
   <div
     class="float-right btn-group"
@@ -159,7 +208,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     <button
       class="p-0 mr-3 btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="opacity: 1;"
+      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i

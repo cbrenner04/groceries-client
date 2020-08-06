@@ -5,6 +5,8 @@ import Bookmark from './Bookmark';
 
 const defaultProps = {
   handleClick: jest.fn(),
+  read: false,
+  testID: 'foo',
 };
 
 describe('Bookmark', () => {

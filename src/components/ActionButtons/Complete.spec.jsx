@@ -5,6 +5,7 @@ import Complete from './Complete';
 
 const defaultProps = {
   handleClick: jest.fn(),
+  testID: 'foo',
 };
 
 describe('Complete', () => {

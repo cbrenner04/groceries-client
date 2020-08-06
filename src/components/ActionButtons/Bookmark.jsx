@@ -2,19 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Bookmark = ({ handleClick, read, ...rest }) => (
-  <Button variant="link" onClick={handleClick} className="p-0 mr-3" {...rest}>
+const Bookmark = ({ handleClick, read, testID }) => (
+  <Button variant="link" onClick={handleClick} className="p-0 mr-3" data-test-id={testID}>
     <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
   </Button>
 );
 
 Bookmark.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  read: PropTypes.bool,
-};
-
-Bookmark.defaultProps = {
-  read: false,
+  read: PropTypes.bool.isRequired,
+  testID: PropTypes.string.isRequired,
 };
 
 export default Bookmark;
