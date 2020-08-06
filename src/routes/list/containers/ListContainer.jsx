@@ -283,7 +283,7 @@ function ListContainer(props) {
   const handleItemEdit = async (item) => {
     const path = listItemPath(item);
     if (selectedItems.length) {
-      const itemIds = selectedItems.map((i) => i.id).join(',');
+      const itemIds = selectedItems.map((item) => item.id).join(',');
       props.history.push(`${path}/bulk-edit?item_ids=${itemIds}`);
     } else {
       props.history.push(`${path}/${item.id}/edit`);

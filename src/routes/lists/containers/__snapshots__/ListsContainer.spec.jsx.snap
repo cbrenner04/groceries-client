@@ -242,16 +242,16 @@ exports[`ListsContainer renders 1`] = `
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
+                  href="/lists/3/users_lists"
                   style="pointer-events: auto; opacity: 1;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <a
                   class="p-0 mr-3"
                   data-test-id="incomplete-list-edit"
@@ -336,17 +336,17 @@ exports[`ListsContainer renders 1`] = `
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
                   disabled=""
+                  href="/lists/5/users_lists"
                   style="pointer-events: none; opacity: 0.3;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <a
                   class="p-0 mr-3"
                   data-test-id="incomplete-list-edit"
@@ -794,16 +794,16 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
+                  href="/lists/3/users_lists"
                   style="pointer-events: auto; opacity: 1;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-merge"
@@ -898,17 +898,17 @@ exports[`ListsContainer shows merge button when multi select 1`] = `
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
                   disabled=""
+                  href="/lists/5/users_lists"
                   style="pointer-events: none; opacity: 0.3;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-merge"
@@ -1378,16 +1378,16 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
+                  href="/lists/3/users_lists"
                   style="pointer-events: auto; opacity: 1;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-merge"
@@ -1482,17 +1482,17 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                     class="fa fa-check fa-2x text-success"
                   />
                 </button>
-                <button
-                  class="p-0 mr-3 btn btn-link"
+                <a
+                  class="p-0 mr-3"
                   data-test-id="incomplete-list-share"
                   disabled=""
+                  href="/lists/5/users_lists"
                   style="pointer-events: none; opacity: 0.3;"
-                  type="button"
                 >
                   <i
                     class="fa fa-users fa-2x text-primary"
                   />
-                </button>
+                </a>
                 <button
                   class="p-0 mr-3 btn btn-link"
                   data-test-id="incomplete-list-merge"

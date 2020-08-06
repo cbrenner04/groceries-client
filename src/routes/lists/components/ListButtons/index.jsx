@@ -25,7 +25,6 @@ function ListButtons(props) {
       currentUserPermissions={props.currentUserPermissions}
       multiSelect={props.multiSelect}
       handleMerge={props.handleMerge}
-      handleShare={props.handleShare}
     />
   );
 
@@ -73,7 +72,6 @@ ListButtons.propTypes = {
     }).isRequired,
   ).isRequired,
   handleMerge: PropTypes.func.isRequired,
-  handleShare: PropTypes.func.isRequired,
 };
 
 export default ListButtons;

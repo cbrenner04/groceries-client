@@ -17,7 +17,7 @@ function IncompleteListButtons(props) {
         data-test-id="incomplete-list-complete"
       />
       <Share
-        handleClick={() => props.handleShare(props.list)}
+        to={`lists/${props.list.id}/users_lists`}
         disabled={!userHasWritePermission}
         style={{
           pointerEvents: userHasWritePermission ? 'auto' : 'none',
@@ -53,7 +53,6 @@ IncompleteListButtons.propTypes = {
   currentUserPermissions: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   handleMerge: PropTypes.func.isRequired,
-  handleShare: PropTypes.func.isRequired,
 };
 
 export default IncompleteListButtons;

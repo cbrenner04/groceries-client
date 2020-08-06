@@ -106,7 +106,6 @@ List.propTypes = {
   ),
   setSelectedLists: PropTypes.func,
   handleMerge: PropTypes.func,
-  handleShare: PropTypes.func,
 };
 
 /* istanbul ignore next */
@@ -121,7 +120,6 @@ List.defaultProps = {
   selectedLists: [],
   setSelectedLists: () => undefined,
   handleMerge: () => undefined,
-  handleShare: () => undefined,
 };
 
 export default List;

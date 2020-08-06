@@ -265,17 +265,6 @@ function ListsContainer(props) {
     }
   };
 
-  const shareLists = (list) => {
-    // write access has the ability to share with others (as well as seeing sharing)
-    const filteredLists = selectedLists.filter((l) => currentUserPermissions[l.id] === 'write');
-    if (filteredLists.length) {
-      const listIds = filteredLists.map((l) => l.id).join(',');
-      props.history.push(`lists/bulk_share?list_ids=${listIds}`);
-    } else {
-      props.history.push(`lists/${list.id}/users_lists`);
-    }
-  };
-
   return (
     <>
       {pending && <Loading />}
@@ -300,7 +289,6 @@ function ListsContainer(props) {
             selectedLists={selectedLists}
             setSelectedLists={setSelectedLists}
             handleMerge={mergeLists}
-            handleShare={shareLists}
           />
           <ConfirmModal
             action="delete"

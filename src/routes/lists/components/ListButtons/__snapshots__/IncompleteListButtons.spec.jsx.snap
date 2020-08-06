@@ -17,16 +17,16 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <button
-      class="p-0 mr-3 btn btn-link"
+    <a
+      class="p-0 mr-3"
       data-test-id="incomplete-list-share"
+      href="/lists/1/users_lists"
       style="pointer-events: auto; opacity: 1;"
-      type="button"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
-    </button>
+    </a>
     <a
       class="p-0 mr-3"
       data-test-id="incomplete-list-edit"
@@ -67,16 +67,16 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <button
-      class="p-0 mr-3 btn btn-link"
+    <a
+      class="p-0 mr-3"
       data-test-id="incomplete-list-share"
+      href="/lists/1/users_lists"
       style="pointer-events: auto; opacity: 1;"
-      type="button"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
-    </button>
+    </a>
     <a
       class="p-0 mr-3"
       data-test-id="incomplete-list-edit"
@@ -116,17 +116,17 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <button
-      class="p-0 mr-3 btn btn-link"
+    <a
+      class="p-0 mr-3"
       data-test-id="incomplete-list-share"
       disabled=""
+      href="/lists/1/users_lists"
       style="pointer-events: none; opacity: 0.3;"
-      type="button"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
-    </button>
+    </a>
     <a
       class="p-0 mr-3"
       data-test-id="incomplete-list-edit"
@@ -166,16 +166,16 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
         class="fa fa-check fa-2x text-success"
       />
     </button>
-    <button
-      class="p-0 mr-3 btn btn-link"
+    <a
+      class="p-0 mr-3"
       data-test-id="incomplete-list-share"
+      href="/lists/1/users_lists"
       style="pointer-events: auto; opacity: 1;"
-      type="button"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
-    </button>
+    </a>
     <a
       class="p-0 mr-3"
       data-test-id="incomplete-list-edit"
