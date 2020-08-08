@@ -3,6 +3,7 @@
 exports[`Trash renders a button 1`] = `
 <button
   class="p-0 btn btn-link"
+  data-test-id="foo"
   type="button"
 >
   <i

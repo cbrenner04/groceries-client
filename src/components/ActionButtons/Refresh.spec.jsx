@@ -5,6 +5,7 @@ import Refresh from './Refresh';
 
 const defaultProps = {
   handleClick: jest.fn(),
+  testID: 'foo',
 };
 
 describe('Refresh', () => {

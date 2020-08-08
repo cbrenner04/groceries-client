@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Trash = ({ handleClick, ...rest }) => (
-  <Button variant="link" onClick={handleClick} className="p-0" {...rest}>
+const Trash = ({ handleClick, testID }) => (
+  <Button variant="link" onClick={handleClick} className="p-0" data-test-id={testID}>
     <i className="fa fa-trash fa-2x text-danger" />
   </Button>
 );
 
 Trash.propTypes = {
   handleClick: PropTypes.func.isRequired,
+  testID: PropTypes.string.isRequired,
 };
 
 export default Trash;

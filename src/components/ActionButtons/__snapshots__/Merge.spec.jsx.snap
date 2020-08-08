@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Merge renders 1`] = `
+<div>
+  <button
+    class="p-0 mr-3 btn btn-link"
+    data-test-id="test-id"
+    type="button"
+  >
+    <i
+      class="fa fa-compress-alt fa-2x text-warning"
+    />
+  </button>
+</div>
+`;

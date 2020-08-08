@@ -2,47 +2,48 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, Edit, Share, Trash } from '../../../../components/ActionButtons';
+import { Complete, EditLink, Merge, Share, Trash } from '../../../../components/ActionButtons';
 
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
-  const userHasWritePermission = props.currentUserPermissions === 'write';
-
-  const handleTrash = () => {
-    if (userIsOwner) {
-      props.onListDeletion(props.list);
-    } else {
-      props.onListRemoval(props.list);
-    }
-  };
+  const multipleListsSelected = props.multiSelect && props.selectedLists.length > 1;
+  const userCanShare = props.currentUserPermissions === 'write';
 
   return (
     <ButtonGroup className="float-right">
       <Complete
         handleClick={() => props.onListCompletion(props.list)}
         disabled={!userIsOwner}
-        style={{ opacity: userIsOwner ? 1 : 0.3 }}
-        data-test-id="incomplete-list-complete"
-      />
-      <Share
-        to={`lists/${props.list.id}/users_lists`}
-        disabled={!userHasWritePermission}
-        style={{
-          pointerEvents: userHasWritePermission ? 'auto' : 'none',
-          opacity: userHasWritePermission ? 1 : 0.3,
-        }}
-        data-test-id="incomplete-list-share"
-      />
-      <Edit
-        to={`/lists/${props.list.id}/edit`}
-        disabled={!userIsOwner}
         style={{
           pointerEvents: userIsOwner ? 'auto' : 'none',
           opacity: userIsOwner ? 1 : 0.3,
         }}
-        data-test-id="incomplete-list-edit"
+        testID="incomplete-list-complete"
       />
-      <Trash handleClick={handleTrash} data-test-id="incomplete-list-trash" />
+      {!multipleListsSelected && (
+        <Share
+          to={`lists/${props.list.id}/users_lists`}
+          disabled={!userCanShare}
+          style={{
+            pointerEvents: userCanShare ? 'auto' : 'none',
+            opacity: userCanShare ? 1 : 0.3,
+          }}
+          testID="incomplete-list-share"
+        />
+      )}
+      {multipleListsSelected && <Merge handleClick={props.handleMerge} testID="incomplete-list-merge" />}
+      {!multipleListsSelected && (
+        <EditLink
+          to={`/lists/${props.list.id}/edit`}
+          disabled={!userIsOwner}
+          style={{
+            pointerEvents: userIsOwner ? 'auto' : 'none',
+            opacity: userIsOwner ? 1 : 0.3,
+          }}
+          testID="incomplete-list-edit"
+        />
+      )}
+      <Trash handleClick={() => props.onListDeletion(props.list)} testID="incomplete-list-trash" />
     </ButtonGroup>
   );
 }
@@ -56,7 +57,20 @@ IncompleteListButtons.propTypes = {
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
-  onListRemoval: PropTypes.func.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  handleMerge: PropTypes.func.isRequired,
+  selectedLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      type: PropTypes.string,
+      created_at: PropTypes.string,
+      completed: PropTypes.bool,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number,
+      refreshed: PropTypes.bool,
+    }).isRequired,
+  ).isRequired,
 };
 
 export default IncompleteListButtons;

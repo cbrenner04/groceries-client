@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -48,7 +48,7 @@ describe('AppNav', () => {
 
       fireEvent.click(getByText('Log out'));
 
-      await waitForElementToBeRemoved(() => queryByText('Invite'));
+      await waitFor(() => expect(queryByText('Invite')).toBeNull());
 
       expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
       expect(sessionStorage.getItem('user')).toBeNull();

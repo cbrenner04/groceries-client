@@ -37,6 +37,9 @@ describe('ListButtons', () => {
       onListRejection: jest.fn(),
       onListRemoval: jest.fn(),
       currentUserPermissions: 'write',
+      multiSelect: false,
+      selectedLists: [],
+      handleMerge: jest.fn(),
     };
   });
 

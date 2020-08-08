@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Bookmark = ({ handleClick, read, testID }) => (
+const Merge = ({ handleClick, testID }) => (
   <Button variant="link" onClick={handleClick} className="p-0 mr-3" data-test-id={testID}>
-    <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
+    <i className="fa fa-compress-alt fa-2x text-warning" />
   </Button>
 );
 
-Bookmark.propTypes = {
+Merge.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  read: PropTypes.bool.isRequired,
   testID: PropTypes.string.isRequired,
 };
 
-export default Bookmark;
+export default Merge;

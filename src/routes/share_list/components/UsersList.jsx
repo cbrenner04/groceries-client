@@ -39,7 +39,7 @@ const UsersList = (props) => (
                           } fa-2x text-warning`}
                         />
                       </Button>
-                      <Trash data-test-id="remove-share" handleClick={() => props.removeShare(id)} />
+                      <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
                     </>
                   </ButtonGroup>
                 </Col>

@@ -8,18 +8,26 @@ import Lists from '../components/Lists';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { sortLists } from '../utils';
+import Loading from '../../../components/Loading';
+import MergeModal from '../components/MergeModal';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [nonCompletedLists, setNonCompletedLists] = useState(props.nonCompletedLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
-  const [listToDelete, setListToDelete] = useState('');
+  const [listsToDelete, setListsToDelete] = useState([]);
   const [listToReject, setListToReject] = useState('');
-  const [listToRemove, setListToRemove] = useState('');
+  const [listsToRemove, setListsToRemove] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [selectedLists, setSelectedLists] = useState([]);
+  const [pending, setPending] = useState(false);
+  const [showMergeModal, setShowMergeModal] = useState(false);
+  const [mergeName, setMergeName] = useState('');
+  const [listsToMerge, setListsToMerge] = useState([]);
 
   const failure = ({ request, response, message }) => {
     if (response) {
@@ -29,13 +37,16 @@ function ListsContainer(props) {
       } else if ([403, 404].includes(response.status)) {
         toast('List not found', { type: 'error' });
       } else {
+        setPending(false);
         const responseTextKeys = Object.keys(response.data);
         const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
         toast(responseErrors.join(' and '), { type: 'error' });
       }
     } else if (request) {
+      setPending(false);
       toast('Something went wrong', { type: 'error' });
     } else {
+      setPending(false);
       toast(message, { type: 'error' });
     }
   };
@@ -54,39 +65,100 @@ function ListsContainer(props) {
     }
   };
 
+  const resetMultiSelect = () => {
+    setSelectedLists([]);
+    setMultiSelect(false);
+  };
+
+  const pluralize = (listCount) => {
+    return listCount > 1 ? 'Lists' : 'List';
+  };
+
   const handleDelete = (list) => {
-    setListToDelete(list);
-    setShowDeleteConfirm(true);
+    const lists = selectedLists.length ? selectedLists : [list];
+    const ownedLists = lists.filter((l) => props.userId === l.owner_id);
+    const sharedLists = lists.filter((l) => props.userId !== l.owner_id);
+    if (ownedLists.length) {
+      setListsToDelete(ownedLists);
+      setShowDeleteConfirm(true);
+    }
+    if (sharedLists.length) {
+      setListsToRemove(sharedLists);
+      setShowRemoveConfirm(true);
+    }
   };
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
-    const { id, completed } = listToDelete;
+    const deleteRequests = listsToDelete.map((list) => axios.delete(`lists/${list.id}`));
     try {
-      await axios.delete(`/lists/${id}`);
-      if (completed) {
-        const updatedCompletedLists = completedLists.filter((ll) => ll.id !== id);
-        setCompletedLists(sortLists(updatedCompletedLists));
-      } else {
-        const updatedNonCompletedLists = nonCompletedLists.filter((ll) => ll.id !== id);
-        setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      }
-      toast('List successfully deleted.', { type: 'info' });
+      await Promise.all(deleteRequests);
+      let updatedCompletedLists = completedLists;
+      let updatedNonCompletedLists = nonCompletedLists;
+      listsToDelete.forEach(({ completed, id }) => {
+        if (completed) {
+          updatedCompletedLists = updatedCompletedLists.filter((ll) => ll.id !== id);
+        } else {
+          updatedNonCompletedLists = updatedNonCompletedLists.filter((ll) => ll.id !== id);
+        }
+      });
+      setCompletedLists(sortLists(updatedCompletedLists));
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      resetMultiSelect();
+      setListsToDelete([]);
+      toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
+    } catch (error) {
+      failure(error);
+    }
+  };
+
+  const handleRemoveConfirm = async () => {
+    setShowRemoveConfirm(false);
+    const removeRequests = listsToRemove.map((list) =>
+      axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
+        users_list: { has_accepted: false },
+      }),
+    );
+    try {
+      await Promise.all(removeRequests);
+      let updatedCompletedLists = completedLists;
+      let updatedNonCompletedLists = nonCompletedLists;
+      listsToRemove.forEach(({ completed, id }) => {
+        if (completed) {
+          updatedCompletedLists = updatedCompletedLists.filter((ll) => ll.id !== id);
+        } else {
+          updatedNonCompletedLists = updatedNonCompletedLists.filter((ll) => ll.id !== id);
+        }
+      });
+      setCompletedLists(sortLists(updatedCompletedLists));
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      resetMultiSelect();
+      setListsToRemove([]);
+      toast(`${pluralize(listsToRemove.length)} successfully removed.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
   const handleCompletion = async (list) => {
-    const theList = list;
-    theList.completed = true;
+    const lists = selectedLists.length ? selectedLists : [list];
+    // can only complete lists you own
+    const ownedLists = lists.filter((l) => props.userId === l.owner_id);
+    const filteredLists = ownedLists.filter((l) => !l.completed);
+    const filteredListsIds = filteredLists.map((l) => l.id);
+    const updateRequests = filteredLists.map((l) => axios.put(`lists/${l.id}`, { list: { completed: true } }));
     try {
-      await axios.put(`/lists/${theList.id}`, { list: { completed: true } });
-      const updatedNonCompletedLists = nonCompletedLists.filter((nonList) => nonList.id !== theList.id);
+      await Promise.all(updateRequests);
+      const updatedNonCompletedLists = nonCompletedLists.filter((nonList) => !filteredListsIds.includes(nonList.id));
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      const updatedCompletedLists = update(completedLists, { $push: [theList] });
+      let updatedCompletedLists = completedLists;
+      filteredLists.forEach((l) => {
+        l.completed = true;
+        updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+      });
       setCompletedLists(sortLists(updatedCompletedLists));
-      toast('List successfully completed.', { type: 'info' });
+      resetMultiSelect();
+      toast(`${pluralize(filteredLists.length)} successfully completed.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
@@ -137,89 +209,125 @@ function ListsContainer(props) {
     }
   };
 
-  const handleRemove = (list) => {
-    setListToRemove(list);
-    setShowRemoveConfirm(true);
-  };
-
-  const handleRemoveConfirm = async () => {
-    setShowRemoveConfirm(false);
-    const { id, completed } = listToRemove;
+  const handleRefresh = async (list) => {
+    setPending(true);
+    const lists = selectedLists.length ? selectedLists : [list];
+    const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean);
+    const filteredLists = ownedLists.filter((l) => l.completed);
+    filteredLists.forEach((l) => {
+      l.refreshed = true;
+    });
+    const refreshRequests = filteredLists.map((l) => axios.post(`/lists/${l.id}/refresh_list`, {}));
     try {
-      await axios.patch(`/lists/${listToRemove.id}/users_lists/${listToRemove.users_list_id}`, {
-        users_list: { has_accepted: false },
+      const responses = await Promise.all(refreshRequests);
+      let updatedCurrentUserPermissions = currentUserPermissions;
+      let updatedNonCompletedLists = nonCompletedLists;
+      responses.forEach(({ data }) => {
+        updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, { [data.id]: { $set: 'write' } });
+        updatedNonCompletedLists = update(updatedNonCompletedLists, { $push: [data] });
       });
-      if (completed) {
-        const updatedCompletedLists = completedLists.filter((ll) => ll.id !== id);
-        setCompletedLists(sortLists(updatedCompletedLists));
-      } else {
-        const updatedNonCompletedLists = nonCompletedLists.filter((ll) => ll.id !== id);
-        setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      }
-      toast('List successfully removed.', { type: 'info' });
+      // must update currentUserPermissions prior to nonCompletedLists
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
+      setNonCompletedLists(sortLists(updatedNonCompletedLists));
+      setPending(false);
+      resetMultiSelect();
+      toast(`${pluralize(filteredLists.length)} successfully refreshed.`, { type: 'info' });
     } catch (error) {
       failure(error);
     }
   };
 
-  const handleRefresh = async (list) => {
-    const localList = list;
-    localList.refreshed = true;
+  const mergeLists = () => {
+    // just using the first list selected arbitrarily
+    const listType = selectedLists[0].type;
+    const filteredLists = selectedLists.filter((l) => l.type === listType);
+    setListsToMerge(filteredLists);
+    setShowMergeModal(true);
+  };
+
+  const handleMergeConfirm = async () => {
+    setPending(true);
+    const listIds = listsToMerge.map((l) => l.id).join(',');
     try {
-      const { data } = await axios.post(`/lists/${list.id}/refresh_list`, {});
-      // must update currentUserPermissions prior to nonCompletedLists
+      const { data } = await axios.post('/lists/merge_lists', {
+        merge_lists: { list_ids: listIds, new_list_name: mergeName },
+      });
       const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
-      setCurrentUserPermissions(updatedCurrentUserPermissions);
       const updatedNonCompletedLists = update(nonCompletedLists, { $push: [data] });
+      // must update currentUserPermissions prior to nonCompletedLists
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
       setNonCompletedLists(sortLists(updatedNonCompletedLists));
-      toast('List successfully refreshed.', { type: 'info' });
-    } catch (error) {
-      failure(error);
+      setMergeName('');
+      setPending(false);
+      setShowMergeModal(false);
+      resetMultiSelect();
+      toast('Lists successfully merged.', { type: 'info' });
+    } catch (err) {
+      failure(err);
     }
   };
 
   return (
     <>
-      <h1>Lists</h1>
-      <ListForm onFormSubmit={handleFormSubmit} />
-      <hr />
-      <Lists
-        userId={props.userId}
-        onListDelete={handleDelete}
-        onListCompletion={handleCompletion}
-        pendingLists={pendingLists}
-        completedLists={completedLists}
-        nonCompletedLists={nonCompletedLists}
-        onListRefresh={handleRefresh}
-        onAccept={handleAccept}
-        onReject={handleReject}
-        currentUserPermissions={currentUserPermissions}
-        onRemove={handleRemove}
-      />
-      <ConfirmModal
-        action="delete"
-        body="Are you sure you want to delete this list?"
-        show={showDeleteConfirm}
-        handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => setShowDeleteConfirm(false)}
-      />
-      <ConfirmModal
-        action="reject"
-        body="Are you sure you want to reject this list?"
-        show={showRejectConfirm}
-        handleConfirm={() => handleRejectConfirm()}
-        handleClear={() => setShowRejectConfirm(false)}
-      />
-      <ConfirmModal
-        action="remove"
-        body={
-          'Are you sure you want to remove this list? The list will continue to exist for the owner, you will ' +
-          'just be removed from the list of users.'
-        }
-        show={showRemoveConfirm}
-        handleConfirm={() => handleRemoveConfirm()}
-        handleClear={() => setShowRemoveConfirm(false)}
-      />
+      {pending && <Loading />}
+      {!pending && (
+        <>
+          <h1>Lists</h1>
+          <ListForm onFormSubmit={handleFormSubmit} />
+          <hr />
+          <Lists
+            userId={props.userId}
+            onListDelete={handleDelete}
+            onListCompletion={handleCompletion}
+            pendingLists={pendingLists}
+            completedLists={completedLists}
+            nonCompletedLists={nonCompletedLists}
+            onListRefresh={handleRefresh}
+            onAccept={handleAccept}
+            onReject={handleReject}
+            currentUserPermissions={currentUserPermissions}
+            multiSelect={multiSelect}
+            setMultiSelect={setMultiSelect}
+            selectedLists={selectedLists}
+            setSelectedLists={setSelectedLists}
+            handleMerge={mergeLists}
+          />
+          <ConfirmModal
+            action="delete"
+            body={`Are you sure you want to delete the following lists? ${listsToDelete
+              .map((list) => list.name)
+              .join(', ')}`}
+            show={showDeleteConfirm}
+            handleConfirm={() => handleDeleteConfirm()}
+            handleClear={() => setShowDeleteConfirm(false)}
+          />
+          <ConfirmModal
+            action="reject"
+            body="Are you sure you want to reject this list?"
+            show={showRejectConfirm}
+            handleConfirm={() => handleRejectConfirm()}
+            handleClear={() => setShowRejectConfirm(false)}
+          />
+          <ConfirmModal
+            action="remove"
+            body={
+              `Are you sure you want to remove the following lists? The list will continue to exist for the owner, ` +
+              `you will just be removed from the list of users. ${listsToRemove.map((list) => list.name).join(', ')}`
+            }
+            show={showRemoveConfirm}
+            handleConfirm={() => handleRemoveConfirm()}
+            handleClear={() => setShowRemoveConfirm(false)}
+          />
+          <MergeModal
+            showModal={showMergeModal}
+            clearModal={() => setShowMergeModal(false)}
+            listNames={listsToMerge.map((l) => l.name).join('", "')}
+            mergeName={mergeName}
+            handleMergeNameChange={({ target: { value } }) => setMergeName(value)}
+            handleMergeConfirm={handleMergeConfirm}
+          />
+        </>
+      )}
     </>
   );
 }

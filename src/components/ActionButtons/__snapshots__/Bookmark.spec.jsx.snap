@@ -3,6 +3,7 @@
 exports[`Bookmark when read is false renders the bookmark outline 1`] = `
 <button
   class="p-0 mr-3 btn btn-link"
+  data-test-id="foo"
   type="button"
 >
   <i
@@ -14,6 +15,7 @@ exports[`Bookmark when read is false renders the bookmark outline 1`] = `
 exports[`Bookmark when read is true renders the filled in bookmark 1`] = `
 <button
   class="p-0 mr-3 btn btn-link"
+  data-test-id="foo"
   type="button"
 >
   <i

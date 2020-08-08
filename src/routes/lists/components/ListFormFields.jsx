@@ -50,6 +50,7 @@ ListFormFields.propTypes = {
   editForm: PropTypes.bool,
 };
 
+/* istanbul ignore next */
 ListFormFields.defaultProps = {
   completed: false,
   handleCompletedChange: () => undefined,

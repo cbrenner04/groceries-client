@@ -12,7 +12,9 @@ function ListButtons(props) {
       list={props.list}
       onListRefresh={props.onListRefresh}
       onListDeletion={props.onListDeletion}
-      onListRemoval={props.onListRemoval}
+      multiSelect={props.multiSelect}
+      selectedLists={props.selectedLists}
+      handleMerge={props.handleMerge}
     />
   ) : (
     <IncompleteListButtons
@@ -21,7 +23,9 @@ function ListButtons(props) {
       onListCompletion={props.onListCompletion}
       onListDeletion={props.onListDeletion}
       currentUserPermissions={props.currentUserPermissions}
-      onListRemoval={props.onListRemoval}
+      multiSelect={props.multiSelect}
+      selectedLists={props.selectedLists}
+      handleMerge={props.handleMerge}
     />
   );
 
@@ -55,7 +59,20 @@ ListButtons.propTypes = {
   onListAcceptance: PropTypes.func.isRequired,
   onListRejection: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
-  onListRemoval: PropTypes.func.isRequired,
+  multiSelect: PropTypes.bool.isRequired,
+  selectedLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+      users_list_id: PropTypes.number,
+      owner_id: PropTypes.number.isRequired,
+      refreshed: PropTypes.bool.isRequired,
+    }).isRequired,
+  ).isRequired,
+  handleMerge: PropTypes.func.isRequired,
 };
 
 export default ListButtons;

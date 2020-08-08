@@ -83,7 +83,28 @@ describe('CompletedListsContainer', () => {
     fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Your list was successfully refreshed.', { type: 'info' });
+    expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
+  });
+
+  it('refreshes multiple lists', async () => {
+    axios.post = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getAllByRole, getByText, queryByText } = renderCompletedListsContainer(props);
+
+    fireEvent.click(getByText('Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+
+    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+
+    expect(toast).toHaveBeenCalledWith('Lists successfully refreshed.', { type: 'info' });
+    expect(getByText(`${props.completedLists[0].name}*`)).toBeVisible();
+    expect(getByText(`${props.completedLists[1].name}*`)).toBeVisible();
+    expect(queryByText(`${props.completedLists[2].name}*`)).toBeNull();
   });
 
   it('redirects to users/sign_in on 401 of refresh', async () => {
@@ -171,7 +192,39 @@ describe('CompletedListsContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Your list was successfully deleted.', { type: 'info' });
+    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+  });
+
+  it('deletes multiple lists', async () => {
+    axios.delete = jest.fn().mockResolvedValue({});
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { getAllByTestId, getByTestId, queryByTestId, getAllByRole, getByText } = renderCompletedListsContainer(
+      props,
+    );
+
+    fireEvent.click(getByText('Select'));
+
+    const checkboxes = getAllByRole('checkbox');
+
+    fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+
+    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-remove'));
+
+    fireEvent.click(getByTestId('confirm-remove'));
+    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+
+    fireEvent.click(getByTestId('confirm-delete'));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
+    expect(axios.delete).toHaveBeenCalledTimes(2);
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.completedLists[0].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.completedLists[1].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.completedLists[2].id}`)).toBeNull();
   });
 
   it('redirects to users/sign_in on 401 of delete', async () => {
@@ -359,5 +412,22 @@ describe('CompletedListsContainer', () => {
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+  });
+
+  it('shows and hides multi select when clicked', () => {
+    props.multiSelect = false;
+    props.selectedLists = [];
+    const { getByText, getAllByRole, queryByRole } = renderCompletedListsContainer(props);
+
+    expect(queryByRole('checkbox')).toBeNull();
+
+    fireEvent.click(getByText('Select'));
+
+    expect(getAllByRole('checkbox')).toHaveLength(3);
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+    fireEvent.click(getByText('Hide Select'));
+
+    expect(queryByRole('checkbox')).toBeNull();
   });
 });

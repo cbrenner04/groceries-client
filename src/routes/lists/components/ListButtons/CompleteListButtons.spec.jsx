@@ -10,11 +10,13 @@ describe('CompleteListButtons', () => {
     props = {
       onListRefresh: jest.fn(),
       onListDeletion: jest.fn(),
-      onListRemoval: jest.fn(),
       userId: 1,
       list: {
         owner_id: 1,
       },
+      multiSelect: false,
+      selectedLists: [],
+      handleMerge: jest.fn(),
     };
   });
   it('renders refresh disabled when user is not owner', () => {
@@ -51,15 +53,5 @@ describe('CompleteListButtons', () => {
     fireEvent.click(getByTestId('complete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
-  });
-
-  it('calls props.onListRemoval when trash button is clicked and user is not owner', () => {
-    props.list.owner_id = 2;
-
-    const { getByTestId } = render(<CompleteListButtons {...props} />);
-
-    fireEvent.click(getByTestId('complete-list-trash'));
-
-    expect(props.onListRemoval).toHaveBeenCalledWith(props.list);
   });
 });

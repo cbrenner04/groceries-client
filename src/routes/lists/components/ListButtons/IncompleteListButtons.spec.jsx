@@ -25,8 +25,10 @@ describe('IncompleteListButtons', () => {
       },
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
-      onListRemoval: jest.fn(),
       currentUserPermissions: 'write',
+      multiSelect: false,
+      handleMerge: jest.fn(),
+      selectedLists: [],
     };
   });
 
@@ -54,6 +56,24 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
   });
 
+  it('edit is hidden when multiSelect and selectedLists > 1', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, queryByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByTestId('incomplete-list-edit')).toBeNull();
+  });
+
+  it('merge is displayed when multiSelect and selectedLists > 1', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, getByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(getByTestId('incomplete-list-merge')).toBeVisible();
+  });
+
   it('share is disabled when user does not have write permissions', () => {
     props.currentUserPermissions = 'read';
     const { container, getByTestId } = renderIncompleteListButtons(props);
@@ -63,8 +83,18 @@ describe('IncompleteListButtons', () => {
     expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
   });
 
-  it('share is enabled when user has write permissions', () => {
+  it('share is hidden when multiSelect and selectedLists > 1', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    const { container, queryByTestId } = renderIncompleteListButtons(props);
+
+    expect(container).toMatchSnapshot();
+    expect(queryByTestId('incomplete-list-share')).toBeNull();
+  });
+
+  it('share is enabled when user has write permissions and not multiSelect', () => {
     props.currentUserPermissions = 'write';
+    props.multiSelect = false;
     const { container, getByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();
@@ -86,15 +116,5 @@ describe('IncompleteListButtons', () => {
     fireEvent.click(getByTestId('incomplete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
-  });
-
-  it('calls props.onListRemoval when trash is clicked and user is not owner', () => {
-    props.list.owner_id = 2;
-
-    const { getByTestId } = renderIncompleteListButtons(props);
-
-    fireEvent.click(getByTestId('incomplete-list-trash'));
-
-    expect(props.onListRemoval).toHaveBeenCalledWith(props.list);
   });
 });

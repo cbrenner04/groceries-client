@@ -60,10 +60,10 @@ describe('ListForm', () => {
     expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', type: 'BookList' });
   });
 
-  // TODO: not sure why this isn't working
-  it.skip('disables submit when in pending state', async () => {
+  it('disables submit when in pending state', async () => {
+    jest.useFakeTimers();
     // not resolving to persist pending state for test
-    const onFormSubmit = jest.fn();
+    const onFormSubmit = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
     const { getByLabelText, getAllByRole } = render(<ListForm onFormSubmit={onFormSubmit} />);
 
     fireEvent.change(getByLabelText('Name'), { target: { value: 'foo' } });
@@ -73,5 +73,6 @@ describe('ListForm', () => {
     await waitFor(() => expect(onFormSubmit).toHaveBeenCalledTimes(1));
 
     expect(getAllByRole('button')[1]).toBeDisabled();
+    jest.clearAllTimers();
   });
 });

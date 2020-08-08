@@ -12,6 +12,9 @@ describe('Share', () => {
     history = createMemoryHistory();
     const defaultProps = {
       to: '/fake/route',
+      testID: 'foo',
+      disabled: false,
+      style: {},
     };
     return render(
       <Router history={history}>
