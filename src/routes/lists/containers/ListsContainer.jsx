@@ -76,8 +76,8 @@ function ListsContainer(props) {
 
   const handleDelete = (list) => {
     const lists = selectedLists.length ? selectedLists : [list];
-    const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean);
-    const sharedLists = lists.map((l) => (props.userId !== l.owner_id ? l : undefined)).filter(Boolean);
+    const ownedLists = lists.filter((l) => props.userId === l.owner_id);
+    const sharedLists = lists.filter((l) => props.userId !== l.owner_id);
     if (ownedLists.length) {
       setListsToDelete(ownedLists);
       setShowDeleteConfirm(true);
@@ -142,7 +142,9 @@ function ListsContainer(props) {
 
   const handleCompletion = async (list) => {
     const lists = selectedLists.length ? selectedLists : [list];
-    const filteredLists = lists.filter((l) => !l.completed);
+    // can only complete lists you own
+    const ownedLists = lists.filter((l) => props.userId === l.owner_id);
+    const filteredLists = ownedLists.filter((l) => !l.completed);
     const filteredListsIds = filteredLists.map((l) => l.id);
     const updateRequests = filteredLists.map((l) => axios.put(`lists/${l.id}`, { list: { completed: true } }));
     try {

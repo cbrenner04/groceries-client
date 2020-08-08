@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import axios from '../utils/api';
 
 export default function AppNav() {
   const history = useHistory();
-  const userIsSignedIn = !!JSON.parse(sessionStorage.getItem('user'));
+  const location = useLocation();
+  const [userIsSignedIn, setUserIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    setUserIsSignedIn(!!JSON.parse(sessionStorage.getItem('user')));
+  }, [location]);
 
   const handleLogout = async () => {
     try {

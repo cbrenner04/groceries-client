@@ -352,12 +352,12 @@ describe('ListsContainer', () => {
     fireEvent.click(checkboxes[1]);
     fireEvent.click(checkboxes[2]);
     fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // one list is already complete
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1)); // 1 list is already complete & 1 user doesn't own
 
-    expect(toast).toHaveBeenCalledWith('Lists successfully completed.', { type: 'info' });
+    expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
     expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'completed-list');
     expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-5')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(getByTestId('list-5')).toHaveAttribute('data-test-class', 'non-completed-list');
   });
 
   it('redirects on 401 from list completion', async () => {
