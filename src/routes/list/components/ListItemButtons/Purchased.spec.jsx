@@ -1,4 +1,4 @@
-import React from 'React';
+import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import Purchased from './Purchased';
