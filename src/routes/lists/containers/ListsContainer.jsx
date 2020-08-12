@@ -274,7 +274,7 @@ function ListsContainer(props) {
         <>
           <h1>Lists</h1>
           <ListForm onFormSubmit={handleFormSubmit} />
-          <hr />
+          <hr className="mb-4" />
           <Lists
             userId={props.userId}
             onListDelete={handleDelete}

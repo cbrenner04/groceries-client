@@ -177,10 +177,10 @@ function ShareListForm(props) {
 
   return (
     <div>
-      <h1>Share {props.name}</h1>
       <Link to="/lists" className="float-right">
         Back to lists
       </Link>
+      <h1>Share {props.name}</h1>
       <Form onSubmit={handleSubmit} className="pt-3 pb-3">
         <EmailField
           name="new-email"
@@ -193,7 +193,7 @@ function ShareListForm(props) {
         </Button>
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
-      <ListGroup>
+      <ListGroup className="mb-5">
         {invitableUsers.map((user) => (
           <div data-test-id={`invite-user-${user.id}`} key={user.id}>
             <ListGroup.Item action key={user.id} className="btn btn-link" onClick={() => handleSelectUser(user)}>
@@ -202,8 +202,6 @@ function ShareListForm(props) {
           </div>
         ))}
       </ListGroup>
-      <h2 className="pt-3">Shared with:</h2>
-      <p className="text-lead">Click the arrows to upgrade or downgrade the permissions between read and write</p>
       <UsersList
         togglePermission={togglePermission}
         removeShare={removeShare}

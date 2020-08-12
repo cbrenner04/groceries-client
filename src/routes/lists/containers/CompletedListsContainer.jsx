@@ -9,6 +9,7 @@ import List from '../components/List';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import Loading from '../../../components/Loading';
+import TitlePopover from '../../../components/TitlePopover';
 
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
@@ -125,13 +126,12 @@ function CompletedListsContainer(props) {
       {pending && <Loading />}
       {!pending && (
         <>
-          <h1>Completed Lists</h1>
-          <div className="clearfix">
+          <div className="clearfix mb-3">
             <Link to="/lists" className="float-right">
               Back to lists
             </Link>
-            <p className="float-left">Previously refreshed lists are marked with an asterisk (*).</p>
-          </div>{' '}
+          </div>
+          <TitlePopover title="Completed Lists" message="Previously refreshed lists are marked with an asterisk (*)." />
           <div className="clearfix">
             <Button
               variant="link"

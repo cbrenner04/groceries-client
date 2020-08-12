@@ -2,11 +2,8 @@
 
 exports[`CompletedListsContainer renders 1`] = `
 <div>
-  <h1>
-    Completed Lists
-  </h1>
   <div
-    class="clearfix"
+    class="clearfix mb-3"
   >
     <a
       class="float-right"
@@ -14,13 +11,20 @@ exports[`CompletedListsContainer renders 1`] = `
     >
       Back to lists
     </a>
-    <p
-      class="float-left"
-    >
-      Previously refreshed lists are marked with an asterisk (*).
-    </p>
   </div>
-   
+  <div
+    class="row"
+    style="margin: 0px;"
+  >
+    <h2
+      class="text-capitalize"
+    >
+      Completed Lists
+    </h2>
+    <i
+      class="far fa-question-circle float-right text-secondary"
+    />
+  </div>
   <div
     class="clearfix"
   >

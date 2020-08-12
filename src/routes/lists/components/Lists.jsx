@@ -1,15 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { ListGroup, Button } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 
 import List from './List';
+import TitlePopover from '../../../components/TitlePopover';
 
 const Lists = (props) => (
   <>
     {props.pendingLists.length > 0 && ( // cannot just check length as it will render 0
-      <>
-        <p>These lists have been shared with you but you have not accepted the invitation.</p>
+      <div className="mb-4">
+        <div className="clearfix">
+          <div className="mx-auto float-left">
+            <TitlePopover
+              title="Pending"
+              message="These lists have been shared with you but you have not accepted the invitation."
+            />
+          </div>
+          {/* <Button
+            variant="link"
+            className="mx-auto float-right"
+            onClick={() => {
+              if (props.multiSelect && props.selectedLists.length > 0) {
+                props.setSelectedLists([]);
+              }
+              props.setMultiSelect(!props.multiSelect);
+            }}
+          >
+            {props.multiSelect ? 'Hide' : ''} Select
+          </Button> */}
+        </div>
         <ListGroup>
           {props.pendingLists.map((list) => (
             <List
@@ -22,68 +42,94 @@ const Lists = (props) => (
             />
           ))}
         </ListGroup>
-        <hr />
-      </>
+      </div>
     )}
-    <h1>Your Lists</h1>
-    <p>These are lists you&apos;ve created or you&apos;ve accepted an invitation from someone else.</p>
-    <div className="clearfix">
-      <Button
-        variant="link"
-        className="mx-auto float-right"
-        onClick={() => {
-          if (props.multiSelect && props.selectedLists.length > 0) {
-            props.setSelectedLists([]);
-          }
-          props.setMultiSelect(!props.multiSelect);
-        }}
-      >
-        {props.multiSelect ? 'Hide' : ''} Select
-      </Button>
+    <div className="mb-4">
+      <div className="clearfix">
+        <div className="mx-auto float-left">
+          <TitlePopover
+            title="Incomplete"
+            message="These are lists you've created or you've accepted an invitation from someone else."
+          />
+        </div>
+        <Button
+          variant="link"
+          className="mx-auto float-right"
+          onClick={() => {
+            if (props.multiSelect && props.selectedLists.length > 0) {
+              props.setSelectedLists([]);
+            }
+            props.setMultiSelect(!props.multiSelect);
+          }}
+        >
+          {props.multiSelect ? 'Hide' : ''} Select
+        </Button>
+      </div>
+      <ListGroup>
+        {props.nonCompletedLists.map((list) => (
+          <List
+            userId={props.userId}
+            list={list}
+            key={list.id}
+            onListDeletion={props.onListDelete}
+            onListCompletion={props.onListCompletion}
+            completed={list.completed}
+            currentUserPermissions={props.currentUserPermissions[list.id]}
+            multiSelect={props.multiSelect}
+            selectedLists={props.selectedLists}
+            setSelectedLists={props.setSelectedLists}
+            handleMerge={props.handleMerge}
+            accepted
+          />
+        ))}
+      </ListGroup>
     </div>
-    <ListGroup>
-      {props.nonCompletedLists.map((list) => (
-        <List
-          userId={props.userId}
-          list={list}
-          key={list.id}
-          onListDeletion={props.onListDelete}
-          onListCompletion={props.onListCompletion}
-          completed={list.completed}
-          currentUserPermissions={props.currentUserPermissions[list.id]}
-          multiSelect={props.multiSelect}
-          selectedLists={props.selectedLists}
-          setSelectedLists={props.setSelectedLists}
-          handleMerge={props.handleMerge}
-          accepted
-        />
-      ))}
-    </ListGroup>
-    <br />
-    <h2>Completed Lists</h2>
-    <p>
-      These are the completed lists most recently created.&nbsp;
-      <Link to="/completed_lists">See all completed lists here.</Link>&nbsp; Previously refreshed lists are marked with
-      an asterisk (*).
-    </p>
-    <ListGroup>
-      {props.completedLists.map((list) => (
-        <List
-          userId={props.userId}
-          list={list}
-          key={list.id}
-          onListDeletion={props.onListDelete}
-          completed={list.completed}
-          onListRefresh={props.onListRefresh}
-          currentUserPermissions={props.currentUserPermissions[list.id]}
-          multiSelect={props.multiSelect}
-          selectedLists={props.selectedLists}
-          setSelectedLists={props.setSelectedLists}
-          handleMerge={props.handleMerge}
-          accepted
-        />
-      ))}
-    </ListGroup>
+    <div className="mb-4">
+      <div className="clearfix">
+        <div className="mx-auto float-left">
+          <TitlePopover
+            title="Completed"
+            message={
+              <>
+                These are the completed lists most recently created.&nbsp;
+                <Link to="/completed_lists">See all completed lists here.</Link>&nbsp; Previously refreshed lists are
+                marked with an asterisk (*).
+              </>
+            }
+          />
+        </div>
+        {/* <Button
+          variant="link"
+          className="mx-auto float-right"
+          onClick={() => {
+            if (props.multiSelect && props.selectedLists.length > 0) {
+              props.setSelectedLists([]);
+            }
+            props.setMultiSelect(!props.multiSelect);
+          }}
+        >
+          {props.multiSelect ? 'Hide' : ''} Select
+        </Button> */}
+      </div>
+      <ListGroup>
+        {props.completedLists.map((list) => (
+          <List
+            userId={props.userId}
+            list={list}
+            key={list.id}
+            onListDeletion={props.onListDelete}
+            completed={list.completed}
+            onListRefresh={props.onListRefresh}
+            currentUserPermissions={props.currentUserPermissions[list.id]}
+            multiSelect={props.multiSelect}
+            selectedLists={props.selectedLists}
+            setSelectedLists={props.setSelectedLists}
+            handleMerge={props.handleMerge}
+            accepted
+          />
+        ))}
+      </ListGroup>
+    </div>
   </>
 );
 

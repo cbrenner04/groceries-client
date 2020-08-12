@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -37,14 +36,13 @@ function InviteForm(props) {
   return (
     <>
       <h1>Send Invitation</h1>
-      <Link to="/lists" className="float-right">
-        Back to lists
-      </Link>
-      <br />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="mt-3">
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
         <Button type="submit" variant="success" block>
           Invite User
+        </Button>
+        <Button href="/lists" variant="link" block>
+          Cancel
         </Button>
       </Form>
     </>

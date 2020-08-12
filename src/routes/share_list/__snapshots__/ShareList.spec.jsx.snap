@@ -3,16 +3,16 @@
 exports[`ShareList renders ShareList when data fetch is successful 1`] = `
 <div>
   <div>
-    <h1>
-      Share 
-      foo
-    </h1>
     <a
       class="float-right"
       href="/lists"
     >
       Back to lists
     </a>
+    <h1>
+      Share 
+      foo
+    </h1>
     <form
       class="pt-3 pb-3"
     >
@@ -47,7 +47,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       Or select someone you've previously shared with:
     </p>
     <div
-      class="list-group"
+      class="mb-5 list-group"
     >
       <div
         data-test-id="invite-user-5"
@@ -59,23 +59,21 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
         </button>
       </div>
     </div>
-    <h2
-      class="pt-3"
-    >
-      Shared with:
-    </h2>
-    <p
-      class="text-lead"
-    >
-      Click the arrows to upgrade or downgrade the permissions between read and write
-    </p>
-    <h3
-      class="pt-3 text-capitalize"
-    >
-      pending
-    </h3>
     <div
-      class="list-group"
+      class="row"
+      style="margin: 0px;"
+    >
+      <h2
+        class="text-capitalize"
+      >
+        pending
+      </h2>
+      <i
+        class="far fa-question-circle float-right text-secondary"
+      />
+    </div>
+    <div
+      class="mb-4 list-group"
     >
       <div
         class="list-group-item"
@@ -130,13 +128,21 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
         </div>
       </div>
     </div>
-    <h3
-      class="pt-3 text-capitalize"
-    >
-      accepted
-    </h3>
     <div
-      class="list-group"
+      class="row"
+      style="margin: 0px;"
+    >
+      <h2
+        class="text-capitalize"
+      >
+        accepted
+      </h2>
+      <i
+        class="far fa-question-circle float-right text-secondary"
+      />
+    </div>
+    <div
+      class="mb-4 list-group"
     >
       <div
         class="list-group-item"
@@ -192,11 +198,9 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       </div>
       
     </div>
-    <h3
-      class="pt-3"
-    >
+    <h2>
       Refused
-    </h3>
+    </h2>
     <div
       class="list-group"
     >

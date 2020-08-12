@@ -2,15 +2,15 @@
 
 exports[`ListContainer does not render ListForm when user has read permissions 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <p>
     You only have permission to read this list
@@ -41,7 +41,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -64,11 +64,10 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -95,11 +94,10 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -145,14 +143,13 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
         </div>
       </div>
     </div>
-    <br />
   </div>
   <br />
   <h2>
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -180,15 +177,15 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
 
 exports[`ListContainer does not render complete items when none exist 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -326,7 +323,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -381,11 +378,10 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -444,11 +440,10 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -558,14 +553,13 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <br />
   <h2>
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
   </div>
@@ -574,15 +568,15 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
 
 exports[`ListContainer does not render incomplete items when none exist 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -745,7 +739,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     Completed
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -818,15 +812,15 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
 
 exports[`ListContainer renders ListForm when user has write permissions 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -964,7 +958,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -1019,11 +1013,10 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -1082,11 +1075,10 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -1196,14 +1188,13 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <br />
   <h2>
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -1286,15 +1277,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
 <div
   aria-hidden="true"
 >
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -1432,7 +1423,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -1487,11 +1478,10 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -1550,11 +1540,10 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -1664,14 +1653,13 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         </div>
       </div>
     </div>
-    <br />
   </div>
   <br />
   <h2>
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -1732,15 +1720,15 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
 
 exports[`ListContainer renders filtered items without category buckets when filter exists 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -1881,7 +1869,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -1997,7 +1985,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -2058,15 +2046,15 @@ exports[`ListContainer renders filtered items without category buckets when filt
 
 exports[`ListContainer renders items with category buckets when includedCategories is not empty and no filter is applied 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -2204,7 +2192,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -2259,11 +2247,10 @@ exports[`ListContainer renders items with category buckets when includedCategori
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -2322,11 +2309,10 @@ exports[`ListContainer renders items with category buckets when includedCategori
         </div>
       </div>
     </div>
-    <br />
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       <h5
         data-test-class="category-header"
@@ -2436,14 +2422,13 @@ exports[`ListContainer renders items with category buckets when includedCategori
         </div>
       </div>
     </div>
-    <br />
   </div>
   <br />
   <h2>
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div
@@ -2504,15 +2489,15 @@ exports[`ListContainer renders items with category buckets when includedCategori
 
 exports[`ListContainer renders items without category buckets when includedCategories is empty 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -2644,7 +2629,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
   </div>
   <div>
     <div
-      class="list-group"
+      class="mb-3 list-group"
     >
       
       <div
@@ -2705,7 +2690,7 @@ exports[`ListContainer renders items without category buckets when includedCateg
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
     <div

@@ -295,10 +295,10 @@ function ListContainer(props) {
       {pending && <Loading />}
       {!pending && (
         <>
-          <h1>{props.list.name}</h1>
           <Link to="/lists" className="float-right">
             Back to lists
           </Link>
+          <h1>{props.list.name}</h1>
           <br />
           {props.permissions === 'write' ? (
             <ListItemForm
@@ -380,7 +380,6 @@ function ListContainer(props) {
                       handleItemEdit={handleItemEdit}
                       selectedItems={selectedItems}
                     />
-                    <br />
                   </div>
                 ),
             )}

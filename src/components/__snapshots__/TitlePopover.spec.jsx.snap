@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TitlePopover renders 1`] = `
+<div>
+  <div
+    class="row"
+    style="margin: 0px;"
+  >
+    <h2
+      class="text-capitalize"
+    >
+      foo
+    </h2>
+    <i
+      class="far fa-question-circle float-right text-secondary"
+    />
+  </div>
+</div>
+`;

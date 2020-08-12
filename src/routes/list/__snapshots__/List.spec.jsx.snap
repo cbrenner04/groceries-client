@@ -2,15 +2,15 @@
 
 exports[`List displays List 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -135,7 +135,7 @@ exports[`List displays List 1`] = `
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
   </div>

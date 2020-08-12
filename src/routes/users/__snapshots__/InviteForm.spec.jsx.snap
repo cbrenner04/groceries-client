@@ -5,15 +5,8 @@ exports[`InviteForm invites new user 1`] = `
   <h1>
     Send Invitation
   </h1>
-  <a
-    class="float-right"
-    href="/lists"
-  >
-    Back to lists
-  </a>
-  <br />
   <form
-    class=""
+    class="mt-3"
   >
     <div
       class="form-group"
@@ -39,6 +32,12 @@ exports[`InviteForm invites new user 1`] = `
     >
       Invite User
     </button>
+    <a
+      class="btn btn-link btn-block"
+      href="/lists"
+    >
+      Cancel
+    </a>
   </form>
 </div>
 `;
