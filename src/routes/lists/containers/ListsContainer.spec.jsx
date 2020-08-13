@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
@@ -223,9 +223,9 @@ describe('ListsContainer', () => {
   it('deletes multiple lists', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId, getAllByRole, getByText } = renderListsContainer(props);
+    const { getAllByTestId, getByTestId, queryByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
+    fireEvent.click(getAllByText('Select')[0]);
 
     const checkboxes = getAllByRole('checkbox');
 
@@ -237,10 +237,10 @@ describe('ListsContainer', () => {
     await waitFor(() => getByTestId('confirm-remove'));
 
     fireEvent.click(getByTestId('confirm-remove'));
-    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+    await waitForElementToBeRemoved(() => queryByTestId('confirm-remove'));
 
     fireEvent.click(getByTestId('confirm-delete'));
-    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
+    await waitForElementToBeRemoved(() => queryByTestId('confirm-delete'));
 
     expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
     expect(axios.delete).toHaveBeenCalledTimes(2);
@@ -342,9 +342,9 @@ describe('ListsContainer', () => {
 
   it('completes multiple lists', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderListsContainer(props);
+    const { getAllByTestId, getByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
+    fireEvent.click(getAllByText('Select')[0]);
 
     const checkboxes = getAllByRole('checkbox');
 
@@ -454,9 +454,9 @@ describe('ListsContainer', () => {
         refreshed: false,
       },
     });
-    const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderListsContainer(props);
+    const { getAllByTestId, getByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
+    fireEvent.click(getAllByText('Select')[0]);
 
     const checkboxes = getAllByRole('checkbox');
 
@@ -850,10 +850,10 @@ describe('ListsContainer', () => {
   });
 
   it('shows merge button when multi select and more than 1 list is selected', async () => {
-    const { container, getByText, getAllByTestId, getAllByRole } = renderListsContainer(props);
+    const { container, getAllByText, getAllByTestId, getAllByRole } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -863,12 +863,12 @@ describe('ListsContainer', () => {
   });
 
   it('shows modal to set the new list name for merging and clears', async () => {
-    const { container, getAllByRole, getByTestId, getAllByTestId, queryByTestId, getByText } = renderListsContainer(
+    const { container, getAllByRole, getByTestId, getAllByTestId, queryByTestId, getAllByText } = renderListsContainer(
       props,
     );
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -902,10 +902,10 @@ describe('ListsContainer', () => {
         users_list_id: 29,
       },
     });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -928,10 +928,10 @@ describe('ListsContainer', () => {
 
   it('shows errors when merge fails with 403', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -951,10 +951,10 @@ describe('ListsContainer', () => {
 
   it('shows errors when merge fails with 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -974,10 +974,10 @@ describe('ListsContainer', () => {
 
   it('shows errors when merge fails with error other than 401, 403, 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -997,10 +997,10 @@ describe('ListsContainer', () => {
 
   it('shows errors when merge fails to send request', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -1020,10 +1020,10 @@ describe('ListsContainer', () => {
 
   it('shows errors when merge unknown error occurs', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(props);
+    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
+    await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -1065,12 +1065,17 @@ describe('ListsContainer', () => {
     it('shows loading when merge is pending', async () => {
       // not resolving to keep in pending state
       axios.post = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
-      const { getByLabelText, getByRole, getAllByRole, getByTestId, getAllByTestId, getByText } = renderListsContainer(
-        props,
-      );
+      const {
+        getByLabelText,
+        getByRole,
+        getAllByRole,
+        getByTestId,
+        getAllByTestId,
+        getAllByText,
+      } = renderListsContainer(props);
 
-      fireEvent.click(getByText('Select'));
-      await waitFor(() => getByText('Hide Select'));
+      fireEvent.click(getAllByText('Select')[0]);
+      await waitFor(() => getAllByText('Hide Select'));
 
       fireEvent.click(getAllByRole('checkbox')[0]);
       fireEvent.click(getAllByRole('checkbox')[1]);

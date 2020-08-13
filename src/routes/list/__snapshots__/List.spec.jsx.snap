@@ -2,15 +2,15 @@
 
 exports[`List displays List 1`] = `
 <div>
-  <h1>
-    foo
-  </h1>
   <a
     class="float-right"
     href="/lists"
   >
     Back to lists
   </a>
+  <h1>
+    foo
+  </h1>
   <br />
   <button
     aria-controls="form-collapse"
@@ -135,29 +135,10 @@ exports[`List displays List 1`] = `
     Purchased
   </h2>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     
   </div>
-</div>
-`;
-
-exports[`List displays UnknownError when an error occurs 1`] = `
-<div>
-  <h1>
-    Something went wrong!
-  </h1>
-  <h2>
-    We are currently unable to render this page.
-  </h2>
-  <p>
-    Please check your connection and try to  
-    <button
-      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
-    >
-      refresh the page
-    </button>
-  </p>
 </div>
 `;
 

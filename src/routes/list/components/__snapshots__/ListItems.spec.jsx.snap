@@ -3,7 +3,7 @@
 exports[`ListItems renders a mapping of ListItem 1`] = `
 <div>
   <div
-    class="list-group"
+    class="mb-3 list-group"
   >
     <h5
       data-test-class="category-header"

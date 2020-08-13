@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Trash } from '../../../components/ActionButtons';
+import TitlePopover from '../../../components/TitlePopover';
 
 const UsersList = (props) => (
   <>
-    <h3 className="pt-3 text-capitalize">{props.status}</h3>
-    <ListGroup>
+    <TitlePopover
+      title={props.status}
+      message="Click the arrows to upgrade or downgrade the permissions between read and write"
+    />
+    <ListGroup className="mb-4">
       {props.users.map(({ user, users_list: { id, permissions } }) => {
         if (user.id === props.userId) {
           return '';

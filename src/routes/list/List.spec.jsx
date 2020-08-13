@@ -33,10 +33,9 @@ describe('List', () => {
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, getByRole } = renderList(props);
+    const { getByRole } = renderList(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(getByRole('button')).toHaveTextContent('refresh the page');
   });
 

@@ -7,7 +7,7 @@ import ListItem from './ListItem';
 
 function ListItems(props) {
   return (
-    <ListGroup>
+    <ListGroup className="mb-3">
       {props.category && <h5 data-test-class="category-header">{capitalize(props.category)}</h5>}
       {props.items.map((item) => (
         <ListItem

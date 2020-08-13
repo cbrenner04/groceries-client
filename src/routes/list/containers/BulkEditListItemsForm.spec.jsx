@@ -77,10 +77,10 @@ describe('BulkEditListItemsForm', () => {
 
   it('clears new list form when switching from new to existing', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const { getByText, getByLabelText, getAllByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getByText, getByLabelText } = render(<BulkEditListItemsForm {...props} />);
 
     fireEvent.click(getByLabelText('Copy'));
-    fireEvent.click(getAllByRole('button')[0]);
+    fireEvent.click(getByText('Create new list'));
 
     await waitFor(() => expect(getByLabelText('New list name')).toBeVisible());
 
@@ -88,7 +88,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(getByLabelText('New list name')).toHaveValue('foo'));
 
-    fireEvent.click(getAllByRole('button')[0]);
+    fireEvent.click(getByText('Choose existing list'));
 
     await waitFor(() => expect(getByLabelText('Existing list')).toBeVisible());
 

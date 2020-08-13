@@ -1,7 +1,5 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
 
 import InviteForm from './InviteForm';
@@ -13,13 +11,8 @@ jest.mock('react-toastify', () => ({
 
 describe('InviteForm', () => {
   let props;
-  const renderInviteForm = (props) => {
-    const history = createMemoryHistory();
-    return render(
-      <Router history={history}>
-        <InviteForm {...props} />
-      </Router>,
-    );
+  const renderInviteForm = (someProps) => {
+    return render(<InviteForm {...someProps} />);
   };
 
   beforeEach(() => {

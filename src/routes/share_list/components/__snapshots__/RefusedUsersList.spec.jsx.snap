@@ -2,11 +2,9 @@
 
 exports[`RefusedUsersList does not render refresh share button 1`] = `
 <div>
-  <h3
-    class="pt-3"
-  >
+  <h2>
     Refused
-  </h3>
+  </h2>
   <div
     class="list-group"
   >
@@ -26,11 +24,9 @@ exports[`RefusedUsersList does not render refresh share button 1`] = `
 
 exports[`RefusedUsersList renders refresh share button 1`] = `
 <div>
-  <h3
-    class="pt-3"
-  >
+  <h2>
     Refused
-  </h3>
+  </h2>
   <div
     class="list-group"
   >

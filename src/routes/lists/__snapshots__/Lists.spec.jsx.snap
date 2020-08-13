@@ -88,233 +88,53 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       Collapse Form
     </button>
   </form>
-  <hr />
-  <p>
-    These lists have been shared with you but you have not accepted the invitation.
-  </p>
+  <hr
+    class="mb-4"
+  />
   <div
-    class="list-group"
+    class="mb-4"
   >
     <div
-      class="pending-list list-group-item"
-      data-test-class="pending-list"
-      data-test-id="list-3"
-      style="display: block;"
+      class="clearfix"
     >
       <div
-        class="row"
+        class="mx-auto float-left"
       >
         <div
-          class="col-sm-12 col-12"
+          class="row"
+          style="margin: 0px;"
         >
-          <div
-            class="row"
+          <h2
+            class="text-capitalize"
           >
-            <div
-              class="pt-1 col-md-6"
-            >
-              <h5
-                class="mb-1"
-              >
-                <i
-                  class="fa fa-shopping-bag text-info mr-3"
-                />
-                foo
-              </h5>
-            </div>
-            <div
-              class="pt-1 col-md-4"
-            >
-              <small
-                class="text-muted"
-              >
-                May 31 2020, 12:00:00 am
-              </small>
-            </div>
-            <div
-              class="col-md-2"
-            >
-              <div
-                class="float-right btn-group"
-                role="group"
-              >
-                <button
-                  class="p-0 mr-3 btn btn-link"
-                  data-test-id="pending-list-accept"
-                  type="button"
-                >
-                  <i
-                    class="fa fa-check fa-2x text-success"
-                  />
-                </button>
-                <button
-                  class="p-0 btn btn-link"
-                  data-test-id="pending-list-trash"
-                  type="button"
-                >
-                  <i
-                    class="fa fa-trash fa-2x text-danger"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
+            Pending
+          </h2>
+          <i
+            class="far fa-question-circle float-right text-secondary"
+          />
         </div>
       </div>
     </div>
-  </div>
-  <hr />
-  <h1>
-    Your Lists
-  </h1>
-  <p>
-    These are lists you've created or you've accepted an invitation from someone else.
-  </p>
-  <div
-    class="clearfix"
-  >
-    <button
-      class="mx-auto float-right btn btn-link"
-      type="button"
-    >
-      
-       Select
-    </button>
-  </div>
-  <div
-    class="list-group"
-  >
     <div
-      class="accepted-list list-group-item"
-      data-test-class="non-completed-list"
-      data-test-id="list-2"
-      style="display: block;"
+      class="list-group"
     >
       <div
-        class="row"
+        class="pending-list list-group-item"
+        data-test-class="pending-list"
+        data-test-id="list-3"
+        style="display: block;"
       >
         <div
-          class="col-sm-12 col-12"
+          class="row"
         >
           <div
-            class="row"
+            class="col-sm-12 col-12"
           >
             <div
-              class="pt-1 col-md-6"
-            >
-              <a
-                class="router-link"
-                href="/lists/2"
-              >
-                <h5
-                  class="mb-1"
-                >
-                  <i
-                    class="fa fa-book text-info mr-3"
-                  />
-                  bar
-                </h5>
-              </a>
-            </div>
-            <div
-              class="pt-1 col-md-4"
-            >
-              <small
-                class="text-muted"
-              >
-                May 31 2020, 12:00:00 am
-              </small>
-            </div>
-            <div
-              class="col-md-2"
+              class="row"
             >
               <div
-                class="float-right btn-group"
-                role="group"
-              >
-                <button
-                  class="p-0 mr-3 btn btn-link"
-                  data-test-id="incomplete-list-complete"
-                  style="pointer-events: auto; opacity: 1;"
-                  type="button"
-                >
-                  <i
-                    class="fa fa-check fa-2x text-success"
-                  />
-                </button>
-                <a
-                  class="p-0 mr-3"
-                  data-test-id="incomplete-list-share"
-                  href="/lists/2/users_lists"
-                  style="pointer-events: auto; opacity: 1;"
-                >
-                  <i
-                    class="fa fa-users fa-2x text-primary"
-                  />
-                </a>
-                <a
-                  class="p-0 mr-3"
-                  data-test-id="incomplete-list-edit"
-                  href="/lists/2/edit"
-                  style="pointer-events: auto; opacity: 1;"
-                >
-                  <i
-                    class="fa fa-edit fa-2x text-warning"
-                  />
-                </a>
-                <button
-                  class="p-0 btn btn-link"
-                  data-test-id="incomplete-list-trash"
-                  type="button"
-                >
-                  <i
-                    class="fa fa-trash fa-2x text-danger"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <br />
-  <h2>
-    Completed Lists
-  </h2>
-  <p>
-    These are the completed lists most recently created. 
-    <a
-      href="/completed_lists"
-    >
-      See all completed lists here.
-    </a>
-      Previously refreshed lists are marked with an asterisk (*).
-  </p>
-  <div
-    class="list-group"
-  >
-    <div
-      class="accepted-list list-group-item"
-      data-test-class="completed-list"
-      data-test-id="list-1"
-      style="display: block;"
-    >
-      <div
-        class="row"
-      >
-        <div
-          class="col-sm-12 col-12"
-        >
-          <div
-            class="row"
-          >
-            <div
-              class="pt-1 col-md-6"
-            >
-              <a
-                class="router-link"
-                href="/lists/1"
+                class="pt-1 col-md-6"
               >
                 <h5
                   class="mb-1"
@@ -324,43 +144,273 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   />
                   foo
                 </h5>
-              </a>
-            </div>
-            <div
-              class="pt-1 col-md-4"
-            >
-              <small
-                class="text-muted"
+              </div>
+              <div
+                class="pt-1 col-md-4"
               >
-                May 31 2020, 12:00:00 am
-              </small>
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="pending-list-accept"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="pending-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div
+          class="row"
+          style="margin: 0px;"
+        >
+          <h2
+            class="text-capitalize"
+          >
+            Incomplete
+          </h2>
+          <i
+            class="far fa-question-circle float-right text-secondary"
+          />
+        </div>
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
+    </div>
+    <div
+      class="list-group"
+    >
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="non-completed-list"
+        data-test-id="list-2"
+        style="display: block;"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-sm-12 col-12"
+          >
             <div
-              class="col-md-2"
+              class="row"
             >
               <div
-                class="float-right btn-group"
-                role="group"
+                class="pt-1 col-md-6"
               >
-                <button
-                  class="p-0 mr-3 btn btn-link"
-                  data-test-id="complete-list-refresh"
-                  style="pointer-events: auto; opacity: 1;"
-                  type="button"
+                <a
+                  class="router-link"
+                  href="/lists/2"
                 >
-                  <i
-                    class="fa fa-redo fa-2x text-primary"
-                  />
-                </button>
-                <button
-                  class="p-0 btn btn-link"
-                  data-test-id="complete-list-trash"
-                  type="button"
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-book text-info mr-3"
+                    />
+                    bar
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
                 >
-                  <i
-                    class="fa fa-trash fa-2x text-danger"
-                  />
-                </button>
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    style="pointer-events: auto; opacity: 1;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <a
+                    class="p-0 mr-3"
+                    data-test-id="incomplete-list-share"
+                    href="/lists/2/users_lists"
+                    style="pointer-events: auto; opacity: 1;"
+                  >
+                    <i
+                      class="fa fa-users fa-2x text-primary"
+                    />
+                  </a>
+                  <a
+                    class="p-0 mr-3"
+                    data-test-id="incomplete-list-edit"
+                    href="/lists/2/edit"
+                    style="pointer-events: auto; opacity: 1;"
+                  >
+                    <i
+                      class="fa fa-edit fa-2x text-warning"
+                    />
+                  </a>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div
+          class="row"
+          style="margin: 0px;"
+        >
+          <h2
+            class="text-capitalize"
+          >
+            Completed
+          </h2>
+          <i
+            class="far fa-question-circle float-right text-secondary"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="list-group"
+    >
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="completed-list"
+        data-test-id="list-1"
+        style="display: block;"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-sm-12 col-12"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="pt-1 col-md-6"
+              >
+                <a
+                  class="router-link"
+                  href="/lists/1"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-shopping-bag text-info mr-3"
+                    />
+                    foo
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="complete-list-refresh"
+                    style="pointer-events: auto; opacity: 1;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-redo fa-2x text-primary"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="complete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

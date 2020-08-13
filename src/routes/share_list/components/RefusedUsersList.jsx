@@ -6,7 +6,7 @@ import { Refresh } from '../../../components/ActionButtons';
 
 const RefusedUsersList = (props) => (
   <>
-    <h3 className="pt-3">Refused</h3>
+    <h2>Refused</h2>
     <ListGroup>
       {props.users.map(({ user, users_list: { id } }) => {
         if (user.id === props.userId) {

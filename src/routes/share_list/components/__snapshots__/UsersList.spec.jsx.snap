@@ -2,13 +2,21 @@
 
 exports[`UsersList does not render read and write badges when user is not owner 1`] = `
 <div>
-  <h3
-    class="pt-3 text-capitalize"
-  >
-    accepted
-  </h3>
   <div
-    class="list-group"
+    class="row"
+    style="margin: 0px;"
+  >
+    <h2
+      class="text-capitalize"
+    >
+      accepted
+    </h2>
+    <i
+      class="far fa-question-circle float-right text-secondary"
+    />
+  </div>
+  <div
+    class="mb-4 list-group"
   >
     
     <div
@@ -35,13 +43,21 @@ exports[`UsersList does not render read and write badges when user is not owner 
 
 exports[`UsersList renders read and write badges when user is owner 1`] = `
 <div>
-  <h3
-    class="pt-3 text-capitalize"
-  >
-    accepted
-  </h3>
   <div
-    class="list-group"
+    class="row"
+    style="margin: 0px;"
+  >
+    <h2
+      class="text-capitalize"
+    >
+      accepted
+    </h2>
+    <i
+      class="far fa-question-circle float-right text-secondary"
+    />
+  </div>
+  <div
+    class="mb-4 list-group"
   >
     
     <div

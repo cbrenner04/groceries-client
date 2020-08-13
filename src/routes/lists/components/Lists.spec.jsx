@@ -55,7 +55,7 @@ describe('Lists', () => {
     const { container, getByTestId, getByText } = renderLists(props);
 
     expect(container).toMatchSnapshot();
-    expect(getByText('These lists have been shared with you but you have not accepted the invitation.')).toBeVisible();
+    expect(getByText('Pending')).toBeVisible();
     expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'pending-list');
   });
 
@@ -64,7 +64,7 @@ describe('Lists', () => {
     const { container, queryByText } = renderLists(props);
 
     expect(container).toMatchSnapshot();
-    expect(queryByText('These lists have been shared with you but you have not accepted the invitation.')).toBeNull();
+    expect(queryByText('Pending')).toBeNull();
   });
 
   it('renders incomplete lists', () => {
@@ -87,9 +87,9 @@ describe('Lists', () => {
   it('sets multiSelect to true when select is clicked', () => {
     props.multiSelect = false;
     props.selectedLists = [];
-    const { container, getByText } = renderLists(props);
+    const { container, getAllByText } = renderLists(props);
 
-    fireEvent.click(getByText('Select'));
+    fireEvent.click(getAllByText('Select')[0]);
 
     expect(container).toMatchSnapshot();
     expect(props.setMultiSelect).toHaveBeenCalledWith(true);
@@ -98,9 +98,9 @@ describe('Lists', () => {
   it('sets multiSelect to false and clears selectedLists when Hide Select is clicked', () => {
     props.multiSelect = true;
     props.selectedLists = [list];
-    const { container, getByText } = renderLists(props);
+    const { container, getAllByText } = renderLists(props);
 
-    fireEvent.click(getByText('Hide Select'));
+    fireEvent.click(getAllByText('Hide Select')[0]);
 
     expect(container).toMatchSnapshot();
     expect(props.setMultiSelect).toHaveBeenCalledWith(false);
