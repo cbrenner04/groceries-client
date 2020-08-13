@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
@@ -237,10 +237,10 @@ describe('ListsContainer', () => {
     await waitFor(() => getByTestId('confirm-remove'));
 
     fireEvent.click(getByTestId('confirm-remove'));
-    await waitFor(() => expect(queryByTestId('confirm-remove')).toBeNull());
+    await waitForElementToBeRemoved(() => queryByTestId('confirm-remove'));
 
     fireEvent.click(getByTestId('confirm-delete'));
-    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
+    await waitForElementToBeRemoved(() => queryByTestId('confirm-delete'));
 
     expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
     expect(axios.delete).toHaveBeenCalledTimes(2);
