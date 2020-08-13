@@ -10,7 +10,8 @@ export function itemName(item, listType) {
     MusicList:
       `${item.title ? `"${item.title}"` : ''} ${item.artist || ''}` +
       `${item.artist && item.album ? ' - ' : ''}${item.album || ''}`,
-    ToDoList: `${item.task}`,
+    SimpleList: item.content,
+    ToDoList: item.task,
   }[listType].trim();
 }
 
@@ -77,6 +78,8 @@ export function sortItems(listType, items) {
     sortAttrs = ['product'];
   } else if (listType === 'MusicList') {
     sortAttrs = ['artist', 'album', 'title'];
+  } else if (listType === 'SimpleList') {
+    sortAttrs = ['created_at', 'content'];
   } else if (listType === 'ToDoList') {
     sortAttrs = ['due_by', 'assignee_id', 'task'];
   }
@@ -113,11 +116,15 @@ export async function fetchList({ id, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        toast('You must sign in', {
+          type: 'error',
+        });
         history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        toast('List not found', { type: 'error' });
+        toast('List not found', {
+          type: 'error',
+        });
         history.push('/lists');
         return;
       }
@@ -142,6 +149,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
     const returnedItemId = item.id;
     const product = item.product || '';
     const task = item.task || '';
+    const content = item.content || '';
     const purchased = item.purchased || false;
     const quantity = item.quantity || '';
     const completed = item.completed || false;
@@ -166,6 +174,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
         id: returnedItemId,
         product,
         task,
+        content,
         purchased,
         quantity,
         completed,
@@ -183,11 +192,15 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        toast('You must sign in', {
+          type: 'error',
+        });
         history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        toast('Item not found', { type: 'error' });
+        toast('Item not found', {
+          type: 'error',
+        });
         history.push(`/lists/${listId}`);
         return;
       }
@@ -204,11 +217,15 @@ export async function fetchItemsToEdit({ listId, itemType, search, history }) {
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        toast('You must sign in', {
+          type: 'error',
+        });
         history.push('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
-        toast('One or more items not found', { type: 'error' });
+        toast('One or more items not found', {
+          type: 'error',
+        });
         history.push(`/lists/${listId}`);
         return;
       }

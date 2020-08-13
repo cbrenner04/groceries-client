@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
 
-const EditMusicListItemFormFields = (props) => (
+const MusicFormFields = (props) => (
   <>
     <TextField
       name="title"
@@ -39,7 +39,7 @@ const EditMusicListItemFormFields = (props) => (
   </>
 );
 
-EditMusicListItemFormFields.propTypes = {
+MusicFormFields.propTypes = {
   title: PropTypes.string.isRequired,
   artist: PropTypes.string.isRequired,
   album: PropTypes.string.isRequired,
@@ -50,11 +50,11 @@ EditMusicListItemFormFields.propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
 };
 
-EditMusicListItemFormFields.defaultProps = {
+MusicFormFields.defaultProps = {
   purchased: false,
   editForm: false,
   category: '',
   categories: [],
 };
 
-export default EditMusicListItemFormFields;
+export default MusicFormFields;

@@ -68,6 +68,11 @@ exports[`ListsContainer renders 1`] = `
           music
         </option>
         <option
+          value="SimpleList"
+        >
+          simple
+        </option>
+        <option
           value="ToDoList"
         >
           to-do
@@ -657,6 +662,11 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
           value="MusicList"
         >
           music
+        </option>
+        <option
+          value="SimpleList"
+        >
+          simple
         </option>
         <option
           value="ToDoList"
@@ -1288,6 +1298,11 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
           value="MusicList"
         >
           music
+        </option>
+        <option
+          value="SimpleList"
+        >
+          simple
         </option>
         <option
           value="ToDoList"

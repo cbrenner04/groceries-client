@@ -6,7 +6,7 @@ import { Bookmark, Refresh, EditButton, Trash } from '../../../../components/Act
 
 const PurchasedItemButtons = (props) => (
   <ButtonGroup className="float-right">
-    {(props.listType === 'GroceryList' || props.listType === 'ToDoList') && (
+    {['GroceryList', 'SimpleList', 'ToDoList'].includes(props.listType) && (
       <Refresh
         handleClick={() => props.handleItemRefresh(props.item)}
         testID={`purchased-item-refresh-${props.item.id}`}
@@ -46,6 +46,7 @@ PurchasedItemButtons.propTypes = {
       id: PropTypes.number.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
+      content: PropTypes.string,
       quantity: PropTypes.string,
       author: PropTypes.string,
       title: PropTypes.string,

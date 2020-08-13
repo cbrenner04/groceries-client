@@ -51,6 +51,11 @@ exports[`ListFormFields renders edit form 1`] = `
         music
       </option>
       <option
+        value="SimpleList"
+      >
+        simple
+      </option>
+      <option
         value="ToDoList"
       >
         to-do
@@ -131,6 +136,11 @@ exports[`ListFormFields renders new form 1`] = `
         value="MusicList"
       >
         music
+      </option>
+      <option
+        value="SimpleList"
+      >
+        simple
       </option>
       <option
         value="ToDoList"

@@ -9,6 +9,7 @@ describe('ListItemFormFields', () => {
     formData: {
       product: '',
       task: '',
+      content: '',
       quantity: '',
       author: '',
       title: '',

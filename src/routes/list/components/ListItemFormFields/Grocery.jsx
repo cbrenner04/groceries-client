@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { CategoryField, TextField, CheckboxField } from '../../../../components/FormFields';
 
-const GroceryListItemFormFields = (props) => (
+const GroceryFormFields = (props) => (
   <>
     <TextField
       name="product"
@@ -32,7 +32,7 @@ const GroceryListItemFormFields = (props) => (
   </>
 );
 
-GroceryListItemFormFields.propTypes = {
+GroceryFormFields.propTypes = {
   product: PropTypes.string.isRequired,
   quantity: PropTypes.string.isRequired,
   purchased: PropTypes.bool,
@@ -42,11 +42,11 @@ GroceryListItemFormFields.propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
 };
 
-GroceryListItemFormFields.defaultProps = {
+GroceryFormFields.defaultProps = {
   purchased: false,
   editForm: false,
   category: '',
   categories: [],
 };
 
-export default GroceryListItemFormFields;
+export default GroceryFormFields;

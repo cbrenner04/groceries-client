@@ -85,7 +85,7 @@ function ListContainer(props) {
   const moveItemsToPurchased = (items) => {
     removeItemsFromNotPurchased(items);
     const updatedItems = items.map((item) => {
-      if (props.list.type === 'ToDoList') {
+      if (['ToDoList', 'SimpleList'].includes(props.list.type)) {
         item.completed = true;
       } else {
         item.purchased = true;
@@ -127,7 +127,7 @@ function ListContainer(props) {
   const handleItemPurchase = async (item) => {
     const items = selectedItems.length ? selectedItems : [item];
     const filteredItems = items.filter((i) => !i.purchased && !i.completed);
-    const completionType = props.list.type === 'ToDoList' ? 'completed' : 'purchased';
+    const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
     const updateRequests = filteredItems.map((i) =>
       axios.put(`${listItemPath(i)}/${i.id}`, {
         [`${listTypeToSnakeCase(props.list.type)}_item`]: {
@@ -206,6 +206,7 @@ function ListContainer(props) {
         user_id: item.user_id,
         product: item.product,
         task: item.task,
+        content: item.content,
         quantity: item.quantity,
         purchased: false,
         completed: false,
@@ -384,7 +385,7 @@ function ListContainer(props) {
                 ),
             )}
           <br />
-          <h2>{props.list.type === 'ToDoList' ? 'Completed' : 'Purchased'}</h2>
+          <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
           <ListItems
             items={purchasedItems}
             purchased
@@ -437,6 +438,7 @@ ListContainer.propTypes = {
       id: PropTypes.number.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
+      content: PropTypes.string,
       quantity: PropTypes.string,
       author: PropTypes.string,
       title: PropTypes.string,
@@ -465,6 +467,7 @@ ListContainer.propTypes = {
         id: PropTypes.number.isRequired,
         product: PropTypes.string,
         task: PropTypes.string,
+        content: PropTypes.string,
         quantity: PropTypes.string,
         author: PropTypes.string,
         title: PropTypes.string,

@@ -60,6 +60,11 @@ exports[`EditList displays EditList 1`] = `
           music
         </option>
         <option
+          value="SimpleList"
+        >
+          simple
+        </option>
+        <option
           value="ToDoList"
         >
           to-do

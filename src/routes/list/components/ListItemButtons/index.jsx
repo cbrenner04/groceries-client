@@ -45,6 +45,7 @@ ListItemButtons.propTypes = {
       id: PropTypes.number.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
+      content: PropTypes.string,
       quantity: PropTypes.string,
       author: PropTypes.string,
       title: PropTypes.string,

@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 import { CategoryField, TextField, NumberField, CheckboxField } from '../../../../components/FormFields';
 
-const BookListItemFormFields = (props) => (
+const BookFormFields = (props) => (
   <>
     <TextField
       name="author"
@@ -48,7 +48,7 @@ const BookListItemFormFields = (props) => (
   </>
 );
 
-BookListItemFormFields.propTypes = {
+BookFormFields.propTypes = {
   author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   purchased: PropTypes.bool,
@@ -60,7 +60,7 @@ BookListItemFormFields.propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
 };
 
-BookListItemFormFields.defaultProps = {
+BookFormFields.defaultProps = {
   purchased: false,
   read: false,
   editForm: false,
@@ -69,4 +69,4 @@ BookListItemFormFields.defaultProps = {
   categories: [],
 };
 
-export default BookListItemFormFields;
+export default BookFormFields;
