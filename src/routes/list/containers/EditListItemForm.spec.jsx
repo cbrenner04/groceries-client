@@ -28,6 +28,7 @@ describe('EditListItemForm', () => {
         id: 1,
         product: 'foo',
         task: '',
+        content: '',
         purchased: false,
         quantity: 'foo',
         completed: false,

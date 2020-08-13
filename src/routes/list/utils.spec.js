@@ -32,6 +32,7 @@ describe('utils', () => {
       expect(itemName({ title: 'foo' }, 'MusicList')).toBe('"foo"');
       expect(itemName({ album: 'foo' }, 'MusicList')).toBe('foo');
       expect(itemName({ artist: 'foo' }, 'MusicList')).toBe('foo');
+      expect(itemName({ content: 'foo' }, 'SimpleList')).toBe('foo');
       expect(itemName({ task: 'foo' }, 'ToDoList')).toBe('foo');
     });
   });
@@ -297,6 +298,7 @@ describe('utils', () => {
           id: 1,
           product: '',
           task: '',
+          content: '',
           purchased: false,
           quantity: '',
           completed: false,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
 
-const EditToDoListItemFormFields = (props) => (
+const ToDoFormFields = (props) => (
   <>
     <TextField
       name="task"
@@ -40,7 +40,7 @@ const EditToDoListItemFormFields = (props) => (
   </>
 );
 
-EditToDoListItemFormFields.propTypes = {
+ToDoFormFields.propTypes = {
   task: PropTypes.string.isRequired,
   assigneeId: PropTypes.string.isRequired,
   dueBy: PropTypes.string.isRequired,
@@ -57,11 +57,11 @@ EditToDoListItemFormFields.propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
 };
 
-EditToDoListItemFormFields.defaultProps = {
+ToDoFormFields.defaultProps = {
   completed: false,
   editForm: false,
   category: '',
   categories: [],
 };
 
-export default EditToDoListItemFormFields;
+export default ToDoFormFields;

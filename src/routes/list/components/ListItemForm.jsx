@@ -11,6 +11,7 @@ import axios from '../../../utils/api';
 const defaultFormState = {
   product: '',
   task: '',
+  content: '',
   quantity: '',
   author: '',
   title: '',
@@ -45,6 +46,7 @@ function ListItemForm(props) {
         user_id: props.userId,
         product: formData.product,
         task: formData.task,
+        content: formData.content,
         quantity: formData.quantity,
         author: formData.author,
         title: formData.title,

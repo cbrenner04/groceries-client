@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Book from './Book';
 import Grocery from './Grocery';
 import Music from './Music';
+import Simple from './Simple';
 import ToDo from './ToDo';
 import { defaultDueBy } from '../../../../utils/format';
 
@@ -45,6 +46,16 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         editForm={editForm}
       />
     ),
+    SimpleList: (
+      <Simple
+        content={formData.content}
+        category={formData.category}
+        categories={categories}
+        inputChangeHandler={setFormData}
+        completed={formData.completed}
+        editForm={editForm}
+      />
+    ),
     ToDoList: (
       <ToDo
         task={formData.task}
@@ -72,6 +83,7 @@ ListItemFormFields.propTypes = {
   formData: PropTypes.shape({
     product: PropTypes.string,
     task: PropTypes.string,
+    content: PropTypes.string,
     quantity: PropTypes.string,
     author: PropTypes.string,
     title: PropTypes.string,
@@ -92,6 +104,7 @@ ListItemFormFields.defaultProps = {
   formData: {
     product: '',
     task: '',
+    content: '',
     quantity: '',
     author: '',
     title: '',

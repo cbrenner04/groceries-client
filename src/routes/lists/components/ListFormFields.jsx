@@ -22,6 +22,7 @@ function ListFormFields(props) {
           { value: 'BookList', label: 'books' },
           { value: 'GroceryList', label: 'groceries' },
           { value: 'MusicList', label: 'music' },
+          { value: 'SimpleList', label: 'simple' },
           { value: 'ToDoList', label: 'to-do' },
         ]}
         blankOption={false}

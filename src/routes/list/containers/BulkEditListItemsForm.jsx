@@ -212,6 +212,7 @@ BulkEditListItemsForm.propTypes = {
       id: PropTypes.number.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
+      content: PropTypes.string,
       purchased: PropTypes.bool,
       quantity: PropTypes.string,
       completed: PropTypes.bool,
