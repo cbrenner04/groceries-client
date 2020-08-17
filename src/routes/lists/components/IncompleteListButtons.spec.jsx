@@ -29,6 +29,7 @@ describe('IncompleteListButtons', () => {
       multiSelect: false,
       handleMerge: jest.fn(),
       selectedLists: [],
+      pending: false,
     };
   });
 

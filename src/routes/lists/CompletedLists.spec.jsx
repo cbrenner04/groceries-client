@@ -38,6 +38,7 @@ describe('CompletedLists', () => {
   it('renders CompletedLists when data retrieval is complete', async () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
+        current_user_id: 1,
         completed_lists: [
           {
             id: 1,

@@ -116,9 +116,17 @@ exports[`ListsContainer renders 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Pending-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -212,6 +220,7 @@ exports[`ListsContainer renders 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Incomplete-popover"
           />
         </div>
       </div>
@@ -228,7 +237,7 @@ exports[`ListsContainer renders 1`] = `
     >
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-3"
         style="display: block;"
       >
@@ -321,7 +330,7 @@ exports[`ListsContainer renders 1`] = `
       </div>
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-5"
         style="display: block;"
       >
@@ -437,9 +446,17 @@ exports[`ListsContainer renders 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Completed-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -712,9 +729,17 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Pending-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -808,6 +833,7 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Incomplete-popover"
           />
         </div>
       </div>
@@ -824,7 +850,7 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
     >
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-3"
         style="display: block;"
       >
@@ -917,7 +943,7 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
       </div>
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-5"
         style="display: block;"
       >
@@ -1031,9 +1057,17 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Completed-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -1045,21 +1079,10 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
         style="display: block;"
       >
         <div
-          class="list-item-row row"
+          class="row"
         >
           <div
-            class="mx-sm-auto col-1"
-          >
-            <input
-              style="position: absolute; top: 40%; left: 40%;"
-              type="checkbox"
-            />
-            <div
-              class="list-item-multi-divider"
-            />
-          </div>
-          <div
-            class="col-sm-11 col-10"
+            class="col-sm-12 col-12"
           >
             <div
               class="row"
@@ -1082,7 +1105,7 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="pt-1 col-md-4"
               >
                 <small
                   class="text-muted"
@@ -1108,15 +1131,6 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
-                    data-test-id="complete-list-merge"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-compress-alt fa-2x text-warning"
-                    />
-                  </button>
-                  <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
@@ -1138,21 +1152,10 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
         style="display: block;"
       >
         <div
-          class="list-item-row row"
+          class="row"
         >
           <div
-            class="mx-sm-auto col-1"
-          >
-            <input
-              style="position: absolute; top: 40%; left: 40%;"
-              type="checkbox"
-            />
-            <div
-              class="list-item-multi-divider"
-            />
-          </div>
-          <div
-            class="col-sm-11 col-10"
+            class="col-sm-12 col-12"
           >
             <div
               class="row"
@@ -1175,7 +1178,7 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="pt-1 col-md-4"
               >
                 <small
                   class="text-muted"
@@ -1199,15 +1202,6 @@ exports[`ListsContainer shows merge button when multi select and more than 1 lis
                   >
                     <i
                       class="fa fa-redo fa-2x text-primary"
-                    />
-                  </button>
-                  <button
-                    class="p-0 mr-3 btn btn-link"
-                    data-test-id="complete-list-merge"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-compress-alt fa-2x text-warning"
                     />
                   </button>
                   <button
@@ -1348,9 +1342,17 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Pending-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -1444,6 +1446,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Incomplete-popover"
           />
         </div>
       </div>
@@ -1460,7 +1463,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
     >
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-3"
         style="display: block;"
       >
@@ -1553,7 +1556,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
       </div>
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-5"
         style="display: block;"
       >
@@ -1667,9 +1670,17 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Completed-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -1681,21 +1692,10 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
         style="display: block;"
       >
         <div
-          class="list-item-row row"
+          class="row"
         >
           <div
-            class="mx-sm-auto col-1"
-          >
-            <input
-              style="position: absolute; top: 40%; left: 40%;"
-              type="checkbox"
-            />
-            <div
-              class="list-item-multi-divider"
-            />
-          </div>
-          <div
-            class="col-sm-11 col-10"
+            class="col-sm-12 col-12"
           >
             <div
               class="row"
@@ -1718,7 +1718,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="pt-1 col-md-4"
               >
                 <small
                   class="text-muted"
@@ -1744,15 +1744,6 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
-                    data-test-id="complete-list-merge"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-compress-alt fa-2x text-warning"
-                    />
-                  </button>
-                  <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
@@ -1774,21 +1765,10 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
         style="display: block;"
       >
         <div
-          class="list-item-row row"
+          class="row"
         >
           <div
-            class="mx-sm-auto col-1"
-          >
-            <input
-              style="position: absolute; top: 40%; left: 40%;"
-              type="checkbox"
-            />
-            <div
-              class="list-item-multi-divider"
-            />
-          </div>
-          <div
-            class="col-sm-11 col-10"
+            class="col-sm-12 col-12"
           >
             <div
               class="row"
@@ -1811,7 +1791,7 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="pt-1 col-md-4"
               >
                 <small
                   class="text-muted"
@@ -1835,15 +1815,6 @@ exports[`ListsContainer shows modal to set the new list name for merging and cle
                   >
                     <i
                       class="fa fa-redo fa-2x text-primary"
-                    />
-                  </button>
-                  <button
-                    class="p-0 mr-3 btn btn-link"
-                    data-test-id="complete-list-merge"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-compress-alt fa-2x text-warning"
                     />
                   </button>
                   <button

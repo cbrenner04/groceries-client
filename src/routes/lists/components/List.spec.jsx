@@ -18,7 +18,11 @@ describe('List', () => {
 
   beforeEach(() => {
     props = {
-      userId: 1,
+      listButtons: <div />,
+      listName: 'foo',
+      listClass: 'foo',
+      testClass: 'foo',
+      includeLinkToList: false,
       list: {
         id: 1,
         name: 'foo',
@@ -29,48 +33,26 @@ describe('List', () => {
         owner_id: 1,
         refreshed: false,
       },
-      accepted: false,
-      currentUserPermissions: 'write',
+      multiSelect: false,
+      selectedLists: [],
+      setSelectedLists: jest.fn(),
     };
   });
 
-  it('renders correct list data-test-class and classes when list is accepted and completed', () => {
-    props.accepted = true;
-    props.list.completed = true;
-    const { container, getByTestId } = renderList(props);
+  it('does not render Link when includeLinkToList is false', () => {
+    props.includeLinkToList = false;
+    const { container, queryByRole } = renderList(props);
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-1')).toHaveClass('accepted-list');
+    expect(queryByRole('link')).toBeNull();
   });
 
-  it('renders correct list data-test-class and classes when list is accepted and not completed', () => {
-    props.accepted = true;
-    props.list.completed = false;
-    const { container, getByTestId } = renderList(props);
-
-    expect(container).toMatchSnapshot();
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'non-completed-list');
-    expect(getByTestId('list-1')).toHaveClass('accepted-list');
-  });
-
-  it('renders correct list data-test-class and classes when list is not accepted', () => {
-    props.accepted = false;
-    const { container, getByTestId } = renderList(props);
-
-    expect(container).toMatchSnapshot();
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'pending-list');
-    expect(getByTestId('list-1')).toHaveClass('pending-list');
-  });
-
-  it('renders * when list has been refreshed', () => {
-    props.accepted = true;
-    props.list.refreshed = true;
-
+  it('does render Link when includeLinkToList is true', () => {
+    props.includeLinkToList = true;
     const { container, getByRole } = renderList(props);
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('heading')).toHaveTextContent(`${props.list.name}*`);
+    expect(getByRole('link')).toBeVisible();
   });
 
   it('calls setSelectedLists with list when selecting list', async () => {

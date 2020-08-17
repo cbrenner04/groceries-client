@@ -25,6 +25,7 @@ function NotPurchasedItemButtons(props) {
       <Trash
         handleClick={() => props.handleItemDelete(props.item)}
         testID={`not-purchased-item-delete-${props.item.id}`}
+        disabled={false}
       />
     </ButtonGroup>
   );

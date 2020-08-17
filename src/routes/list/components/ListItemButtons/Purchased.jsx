@@ -24,7 +24,11 @@ const PurchasedItemButtons = (props) => (
       testID={`purchased-item-edit-${props.item.id}`}
       disabled={!props.multiSelect || props.selectedItems.length === 0}
     />
-    <Trash handleClick={() => props.handleItemDelete(props.item)} testID={`purchased-item-delete-${props.item.id}`} />
+    <Trash
+      handleClick={() => props.handleItemDelete(props.item)}
+      testID={`purchased-item-delete-${props.item.id}`}
+      disabled={false}
+    />
   </ButtonGroup>
 );
 

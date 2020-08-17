@@ -19,6 +19,7 @@ function CompletedLists(props) {
             completedLists={data.completedLists}
             currentUserPermissions={data.currentUserPermissions}
             history={props.history}
+            userId={data.userId}
           />
         )}
       </Async.Fulfilled>

@@ -13,6 +13,7 @@ exports[`UsersList does not render read and write badges when user is not owner 
     </h2>
     <i
       class="far fa-question-circle float-right text-secondary"
+      data-test-id="accepted-popover"
     />
   </div>
   <div
@@ -54,6 +55,7 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
     </h2>
     <i
       class="far fa-question-circle float-right text-secondary"
+      data-test-id="accepted-popover"
     />
   </div>
   <div

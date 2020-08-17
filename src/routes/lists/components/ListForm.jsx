@@ -4,20 +4,17 @@ import { Button, Collapse, Form } from 'react-bootstrap';
 
 import ListFormFields from '../components/ListFormFields';
 
-function ListForm({ onFormSubmit }) {
+function ListForm({ onFormSubmit, pending }) {
   const defaultListType = 'GroceryList';
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
   const [showForm, setShowForm] = useState(false);
-  const [pending, setPending] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setPending(true);
     await onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
-    setPending(false);
   };
 
   return (
@@ -49,6 +46,7 @@ function ListForm({ onFormSubmit }) {
 
 ListForm.propTypes = {
   onFormSubmit: PropTypes.func.isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 export default ListForm;

@@ -27,6 +27,7 @@ describe('CompletedListsContainer', () => {
       history: {
         push: jest.fn(),
       },
+      userId: 1,
       completedLists: [
         {
           id: 1,

@@ -1,17 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CompletedListsContainer renders 1`] = `
+exports[`CompleteLists does not render link to full list when fullList is true 1`] = `
 <div>
-  <div
-    class="clearfix mb-3"
-  >
-    <a
-      class="float-right"
-      href="/lists"
-    >
-      Back to lists
-    </a>
-  </div>
   <div
     class="mb-4"
   >
@@ -85,7 +75,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 28 2020, 12:00:00 am
+                  May 27 2020, 12:00:00 am
                 </small>
               </div>
               <div
@@ -120,10 +110,52 @@ exports[`CompletedListsContainer renders 1`] = `
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CompleteLists renders link to full list in blurb when fullList is false 1`] = `
+<div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div
+          class="row"
+          style="margin: 0px;"
+        >
+          <h2
+            class="text-capitalize"
+          >
+            Completed
+          </h2>
+          <i
+            class="far fa-question-circle float-right text-secondary"
+            data-test-id="Completed-popover"
+          />
+        </div>
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
+    </div>
+    <div
+      class="list-group"
+    >
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-2"
+        data-test-id="list-1"
         style="display: block;"
       >
         <div
@@ -140,15 +172,15 @@ exports[`CompletedListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/2"
+                  href="/lists/1"
                 >
                   <h5
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-shopping-bag text-info mr-3"
                     />
-                    bar
+                    foo
                   </h5>
                 </a>
               </div>
@@ -158,7 +190,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 28 2020, 12:00:00 am
+                  May 27 2020, 12:00:00 am
                 </small>
               </div>
               <div
@@ -172,80 +204,6 @@ exports[`CompletedListsContainer renders 1`] = `
                     class="p-0 mr-3 btn btn-link"
                     data-test-id="complete-list-refresh"
                     style="pointer-events: auto; opacity: 1;"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-redo fa-2x text-primary"
-                    />
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="complete-list-trash"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="accepted-list list-group-item"
-        data-test-class="completed-list"
-        data-test-id="list-3"
-        style="display: block;"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class="row"
-            >
-              <div
-                class="pt-1 col-md-6"
-              >
-                <a
-                  class="router-link"
-                  href="/lists/3"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    <i
-                      class="fa fa-book text-info mr-3"
-                    />
-                    baz
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="pt-1 col-md-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 28 2020, 12:00:00 am
-                </small>
-              </div>
-              <div
-                class="col-md-2"
-              >
-                <div
-                  class="float-right btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 mr-3 btn btn-link"
-                    data-test-id="complete-list-refresh"
-                    disabled=""
-                    style="pointer-events: none; opacity: 0.3;"
                     type="button"
                   >
                     <i

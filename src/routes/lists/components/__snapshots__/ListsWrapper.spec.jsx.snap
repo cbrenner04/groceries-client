@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListsWrapper sets multiSelect to false and clears selectedLists when Hide Select is clicked 1`] = `
+<div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div />
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        Hide
+         Select
+      </button>
+    </div>
+    <div />
+  </div>
+</div>
+`;
+
+exports[`ListsWrapper sets multiSelect to true when select is clicked 1`] = `
+<div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div />
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
+    </div>
+    <div />
+  </div>
+</div>
+`;

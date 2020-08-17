@@ -132,7 +132,7 @@ describe('utils', () => {
             owner_id: 1,
           },
         ],
-        nonCompletedLists: [
+        incompleteLists: [
           {
             id: 2,
             users_list_id: 2,
@@ -172,6 +172,7 @@ describe('utils', () => {
     it('returns lists when successful', async () => {
       axios.get = jest.fn().mockResolvedValue({
         data: {
+          current_user_id: 1,
           completed_lists: [
             {
               id: 1,
@@ -227,6 +228,7 @@ describe('utils', () => {
             owner_id: 1,
           },
         ],
+        userId: 1,
         currentUserPermissions: {
           1: 'write',
         },

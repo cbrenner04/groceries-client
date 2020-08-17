@@ -66,7 +66,7 @@ describe('ListsContainer', () => {
           refreshed: false,
         },
       ],
-      nonCompletedLists: [
+      incompleteLists: [
         {
           id: 3,
           name: 'baz',
@@ -114,6 +114,7 @@ describe('ListsContainer', () => {
         owner_id: 1,
         completed: false,
         refreshed: false,
+        users_list_id: 9,
       },
     });
     const { getByLabelText, getByTestId, getByText } = renderListsContainer(props);
@@ -202,7 +203,7 @@ describe('ListsContainer', () => {
 
     expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
     expect(axios.delete).toHaveBeenCalledTimes(1);
-    expect(queryByTestId(`list-${props.nonCompletedLists[0].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.incompleteLists[0].id}`)).toBeNull();
   });
 
   it('deletes complete list', async () => {
@@ -222,32 +223,25 @@ describe('ListsContainer', () => {
 
   it('deletes multiple lists', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    axios.patch = jest.fn().mockResolvedValue({});
     const { getAllByTestId, getByTestId, queryByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
 
     const checkboxes = getAllByRole('checkbox');
 
     fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
 
-    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-remove'));
-
-    fireEvent.click(getByTestId('confirm-remove'));
-    await waitForElementToBeRemoved(() => queryByTestId('confirm-remove'));
+    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
+    await waitFor(() => getByTestId('confirm-delete'));
 
     fireEvent.click(getByTestId('confirm-delete'));
     await waitForElementToBeRemoved(() => queryByTestId('confirm-delete'));
 
-    expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
-    expect(axios.delete).toHaveBeenCalledTimes(2);
-    expect(axios.patch).toHaveBeenCalledTimes(1);
-    expect(queryByTestId(`list-${props.nonCompletedLists[0].id}`)).toBeNull();
-    expect(queryByTestId(`list-${props.nonCompletedLists[1].id}`)).toBeNull();
-    expect(queryByTestId(`list-${props.completedLists[0].id}`)).toBeNull();
+    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+    expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(queryByTestId(`list-${props.incompleteLists[0].id}`)).toBeNull();
+    expect(getByTestId(`list-${props.incompleteLists[1].id}`)).toBeVisible();
   });
 
   it('redirects to login when delete fails with 401', async () => {
@@ -344,20 +338,19 @@ describe('ListsContainer', () => {
     axios.put = jest.fn().mockResolvedValue({});
     const { getAllByTestId, getByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
 
     const checkboxes = getAllByRole('checkbox');
 
     fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
+
     fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1)); // 1 list is already complete & 1 user doesn't own
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1)); // 1 list user doesn't own
 
     expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
-    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'completed-list');
     expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-5')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-5')).toHaveAttribute('data-test-class', 'incomplete-list');
   });
 
   it('redirects on 401 from list completion', async () => {
@@ -431,6 +424,7 @@ describe('ListsContainer', () => {
         owner_id: 1,
         completed: false,
         refreshed: false,
+        users_list_id: 8,
       },
     });
     const { getAllByTestId, getByTestId } = renderListsContainer(props);
@@ -439,7 +433,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
-    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'incomplete-list');
   });
 
   it('refreshes multiple lists', async () => {
@@ -452,25 +446,24 @@ describe('ListsContainer', () => {
         owner_id: 1,
         completed: false,
         refreshed: false,
+        users_list_id: 8,
       },
     });
     const { getAllByTestId, getByTestId, getAllByRole, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[2]);
 
     const checkboxes = getAllByRole('checkbox');
 
+    fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
-    fireEvent.click(checkboxes[3]);
 
     fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
     expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'non-completed-list');
-    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-6')).toHaveAttribute('data-test-class', 'incomplete-list');
   });
 
   it('redirects on 401 from list refresh', async () => {
@@ -542,7 +535,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully accepted.', { type: 'info' });
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'incomplete-list');
   });
 
   it('accepts complete list', async () => {
@@ -752,7 +745,7 @@ describe('ListsContainer', () => {
 
     expect(toast).toHaveBeenCalledWith('List successfully removed.', { type: 'info' });
     expect(axios.patch).toHaveBeenCalledTimes(1);
-    expect(queryByTestId(`list-${props.nonCompletedLists[1].id}`)).toBeNull();
+    expect(queryByTestId(`list-${props.incompleteLists[1].id}`)).toBeNull();
   });
 
   it('removes complete list', async () => {
@@ -852,7 +845,7 @@ describe('ListsContainer', () => {
   it('shows merge button when multi select and more than 1 list is selected', async () => {
     const { container, getAllByText, getAllByTestId, getAllByRole } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -867,7 +860,7 @@ describe('ListsContainer', () => {
       props,
     );
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -904,7 +897,7 @@ describe('ListsContainer', () => {
     });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -930,7 +923,7 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -953,7 +946,7 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -976,7 +969,7 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -999,7 +992,7 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -1022,7 +1015,7 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getAllByText } = renderListsContainer(props);
 
-    fireEvent.click(getAllByText('Select')[0]);
+    fireEvent.click(getAllByText('Select')[1]);
     await waitFor(() => getAllByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -1039,58 +1032,5 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
-  });
-
-  // using fake timers seemed to have affected other tests so keeping it separated
-  describe('loading state when certain actions are pending', () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
-    });
-
-    afterEach(() => {
-      jest.clearAllTimers();
-    });
-
-    it('renders Loading when refresh pending', async () => {
-      // not resolving to keep in pending state
-      axios.post = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
-      const { getAllByTestId, getByRole } = renderListsContainer(props);
-
-      fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-
-      expect(getByRole('status')).toBeVisible();
-    });
-
-    it('shows loading when merge is pending', async () => {
-      // not resolving to keep in pending state
-      axios.post = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
-      const {
-        getByLabelText,
-        getByRole,
-        getAllByRole,
-        getByTestId,
-        getAllByTestId,
-        getAllByText,
-      } = renderListsContainer(props);
-
-      fireEvent.click(getAllByText('Select')[0]);
-      await waitFor(() => getAllByText('Hide Select'));
-
-      fireEvent.click(getAllByRole('checkbox')[0]);
-      fireEvent.click(getAllByRole('checkbox')[1]);
-      fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-      fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
-
-      expect(getByLabelText('Name for the merged list')).toHaveValue('a');
-
-      await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
-
-      fireEvent.click(getByTestId('confirm-merge'));
-
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-
-      expect(getByRole('status')).toBeVisible();
-    });
   });
 });

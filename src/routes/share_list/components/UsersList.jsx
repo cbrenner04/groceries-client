@@ -43,7 +43,7 @@ const UsersList = (props) => (
                           } fa-2x text-warning`}
                         />
                       </Button>
-                      <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
+                      <Trash testID="remove-share" handleClick={() => props.removeShare(id)} disabled={false} />
                     </>
                   </ButtonGroup>
                 </Col>
