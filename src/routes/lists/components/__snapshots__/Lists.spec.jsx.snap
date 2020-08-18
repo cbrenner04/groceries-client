@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ListsWrapper sets multiSelect to false and clears selectedLists when Hide Select is clicked 1`] = `
+exports[`Lists sets multiSelect to false and clears selectedLists when Hide Select is clicked 1`] = `
 <div>
   <div
     class="mb-4"
@@ -26,7 +26,7 @@ exports[`ListsWrapper sets multiSelect to false and clears selectedLists when Hi
 </div>
 `;
 
-exports[`ListsWrapper sets multiSelect to true when select is clicked 1`] = `
+exports[`Lists sets multiSelect to true when select is clicked 1`] = `
 <div>
   <div
     class="mb-4"

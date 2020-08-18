@@ -10,7 +10,7 @@ import List from './List';
 import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
-import ListsWrapper from './ListsWrapper';
+import Lists from './Lists';
 
 function PendingLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -91,7 +91,7 @@ function PendingLists(props) {
   };
 
   return (
-    <ListsWrapper
+    <Lists
       title={
         <TitlePopover
           title="Pending"
@@ -133,7 +133,7 @@ function PendingLists(props) {
         handleConfirm={() => handleRejectConfirm()}
         handleClear={() => setShowRejectConfirm(false)}
       />
-    </ListsWrapper>
+    </Lists>
   );
 }
 

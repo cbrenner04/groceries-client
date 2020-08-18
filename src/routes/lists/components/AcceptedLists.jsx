@@ -11,7 +11,7 @@ import MergeModal from './MergeModal';
 import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
-import ListsWrapper from './ListsWrapper';
+import Lists from './Lists';
 
 function AcceptedLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -34,6 +34,9 @@ function AcceptedLists(props) {
     const lists = selectedLists.length ? selectedLists : [list];
     const ownedLists = lists.filter((l) => props.userId === l.owner_id);
     const sharedLists = lists.filter((l) => props.userId !== l.owner_id);
+    // TODO: this can cause a race condition.
+    // Both will update the list set but will have different lists
+    // If `handleDeleteConfirm` isn't complete by the time `handleRemoveConfirm` the displayed lists will not be correct
     if (ownedLists.length) {
       setListsToDelete(ownedLists);
       setShowDeleteConfirm(true);
@@ -233,7 +236,7 @@ function AcceptedLists(props) {
       ));
 
   return (
-    <ListsWrapper
+    <Lists
       title={props.title}
       multiSelect={multiSelect}
       selectedLists={selectedLists}
@@ -268,7 +271,7 @@ function AcceptedLists(props) {
         handleMergeNameChange={({ target: { value } }) => setMergeName(value)}
         handleMergeConfirm={handleMergeConfirm}
       />
-    </ListsWrapper>
+    </Lists>
   );
 }
 
@@ -309,6 +312,7 @@ AcceptedLists.propTypes = {
   setCurrentUserPermissions: PropTypes.func.isRequired,
 };
 
+/* istanbul ignore next */
 AcceptedLists.defaultProps = {
   incompleteLists: [],
   setIncompleteLists: () => undefined,

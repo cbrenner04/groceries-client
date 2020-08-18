@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import ListsWrapper from './ListsWrapper';
+import Lists from './Lists';
 
-describe('ListsWrapper', () => {
+describe('Lists', () => {
   let props;
-  const renderListsWrapper = (p) => {
-    return render(<ListsWrapper {...p} />);
+  const renderLists = (p) => {
+    return render(<Lists {...p} />);
   };
 
   const list = {
@@ -34,7 +34,7 @@ describe('ListsWrapper', () => {
   it('sets multiSelect to true when select is clicked', () => {
     props.multiSelect = false;
     props.selectedLists = [];
-    const { container, getAllByText } = renderListsWrapper(props);
+    const { container, getAllByText } = renderLists(props);
 
     fireEvent.click(getAllByText('Select')[0]);
 
@@ -45,7 +45,7 @@ describe('ListsWrapper', () => {
   it('sets multiSelect to false and clears selectedLists when Hide Select is clicked', () => {
     props.multiSelect = true;
     props.selectedLists = [list];
-    const { container, getAllByText } = renderListsWrapper(props);
+    const { container, getAllByText } = renderLists(props);
 
     fireEvent.click(getAllByText('Hide Select')[0]);
 

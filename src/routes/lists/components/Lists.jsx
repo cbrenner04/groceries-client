@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-function ListsWrapper(props) {
+function Lists(props) {
   return (
     <div className="mb-4">
       <div className="clearfix">
@@ -25,7 +25,7 @@ function ListsWrapper(props) {
   );
 }
 
-ListsWrapper.propTypes = {
+Lists.propTypes = {
   title: PropTypes.element.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(
@@ -45,4 +45,4 @@ ListsWrapper.propTypes = {
   children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
-export default ListsWrapper;
+export default Lists;
