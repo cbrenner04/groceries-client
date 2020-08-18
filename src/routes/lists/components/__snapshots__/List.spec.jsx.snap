@@ -3,8 +3,8 @@
 exports[`List calls setSelectedLists with empty array when deselecting list 1`] = `
 <div>
   <div
-    class="pending-list list-group-item"
-    data-test-class="pending-list"
+    class="foo list-group-item"
+    data-test-class="foo"
     data-test-id="list-1"
     style="display: block;"
   >
@@ -52,29 +52,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
           <div
             class="col-md-2"
           >
-            <div
-              class="float-right btn-group"
-              role="group"
-            >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="pending-list-accept"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="pending-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+            <div />
           </div>
         </div>
       </div>
@@ -86,8 +64,8 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
 exports[`List calls setSelectedLists with list when selecting list 1`] = `
 <div>
   <div
-    class="pending-list list-group-item"
-    data-test-class="pending-list"
+    class="foo list-group-item"
+    data-test-class="foo"
     data-test-id="list-1"
     style="display: block;"
   >
@@ -135,29 +113,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
           <div
             class="col-md-2"
           >
-            <div
-              class="float-right btn-group"
-              role="group"
-            >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="pending-list-accept"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="pending-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+            <div />
           </div>
         </div>
       </div>
@@ -166,266 +122,11 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
 </div>
 `;
 
-exports[`List renders * when list has been refreshed 1`] = `
+exports[`List does not render Link when includeLinkToList is false 1`] = `
 <div>
   <div
-    class="accepted-list list-group-item"
-    data-test-class="completed-list"
-    data-test-id="list-1"
-    style="display: block;"
-  >
-    <div
-      class="row"
-    >
-      <div
-        class="col-sm-12 col-12"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="pt-1 col-md-6"
-          >
-            <a
-              class="router-link"
-              href="/lists/1"
-            >
-              <h5
-                class="mb-1"
-              >
-                <i
-                  class="fa fa-shopping-bag text-info mr-3"
-                />
-                foo
-                *
-              </h5>
-            </a>
-          </div>
-          <div
-            class="pt-1 col-md-4"
-          >
-            <small
-              class="text-muted"
-            >
-              May 27 2020, 12:00:00 am
-            </small>
-          </div>
-          <div
-            class="col-md-2"
-          >
-            <div
-              class="float-right btn-group"
-              role="group"
-            >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="complete-list-refresh"
-                style="pointer-events: auto; opacity: 1;"
-                type="button"
-              >
-                <i
-                  class="fa fa-redo fa-2x text-primary"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="complete-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`List renders correct list data-test-class and classes when list is accepted and completed 1`] = `
-<div>
-  <div
-    class="accepted-list list-group-item"
-    data-test-class="completed-list"
-    data-test-id="list-1"
-    style="display: block;"
-  >
-    <div
-      class="row"
-    >
-      <div
-        class="col-sm-12 col-12"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="pt-1 col-md-6"
-          >
-            <a
-              class="router-link"
-              href="/lists/1"
-            >
-              <h5
-                class="mb-1"
-              >
-                <i
-                  class="fa fa-shopping-bag text-info mr-3"
-                />
-                foo
-              </h5>
-            </a>
-          </div>
-          <div
-            class="pt-1 col-md-4"
-          >
-            <small
-              class="text-muted"
-            >
-              May 27 2020, 12:00:00 am
-            </small>
-          </div>
-          <div
-            class="col-md-2"
-          >
-            <div
-              class="float-right btn-group"
-              role="group"
-            >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="complete-list-refresh"
-                style="pointer-events: auto; opacity: 1;"
-                type="button"
-              >
-                <i
-                  class="fa fa-redo fa-2x text-primary"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="complete-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`List renders correct list data-test-class and classes when list is accepted and not completed 1`] = `
-<div>
-  <div
-    class="accepted-list list-group-item"
-    data-test-class="non-completed-list"
-    data-test-id="list-1"
-    style="display: block;"
-  >
-    <div
-      class="row"
-    >
-      <div
-        class="col-sm-12 col-12"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="pt-1 col-md-6"
-          >
-            <a
-              class="router-link"
-              href="/lists/1"
-            >
-              <h5
-                class="mb-1"
-              >
-                <i
-                  class="fa fa-shopping-bag text-info mr-3"
-                />
-                foo
-              </h5>
-            </a>
-          </div>
-          <div
-            class="pt-1 col-md-4"
-          >
-            <small
-              class="text-muted"
-            >
-              May 27 2020, 12:00:00 am
-            </small>
-          </div>
-          <div
-            class="col-md-2"
-          >
-            <div
-              class="float-right btn-group"
-              role="group"
-            >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="incomplete-list-complete"
-                style="pointer-events: auto; opacity: 1;"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <a
-                class="p-0 mr-3"
-                data-test-id="incomplete-list-share"
-                href="/lists/1/users_lists"
-                style="pointer-events: auto; opacity: 1;"
-              >
-                <i
-                  class="fa fa-users fa-2x text-primary"
-                />
-              </a>
-              <a
-                class="p-0 mr-3"
-                data-test-id="incomplete-list-edit"
-                href="/lists/1/edit"
-                style="pointer-events: auto; opacity: 1;"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </a>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="incomplete-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`List renders correct list data-test-class and classes when list is not accepted 1`] = `
-<div>
-  <div
-    class="pending-list list-group-item"
-    data-test-class="pending-list"
+    class="foo list-group-item"
+    data-test-class="foo"
     data-test-id="list-1"
     style="display: block;"
   >
@@ -462,29 +163,62 @@ exports[`List renders correct list data-test-class and classes when list is not 
           <div
             class="col-md-2"
           >
-            <div
-              class="float-right btn-group"
-              role="group"
+            <div />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`List does render Link when includeLinkToList is true 1`] = `
+<div>
+  <div
+    class="foo list-group-item"
+    data-test-class="foo"
+    data-test-id="list-1"
+    style="display: block;"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="pt-1 col-md-6"
+          >
+            <a
+              class="router-link"
+              href="/lists/1"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="pending-list-accept"
-                type="button"
+              <h5
+                class="mb-1"
               >
                 <i
-                  class="fa fa-check fa-2x text-success"
+                  class="fa fa-shopping-bag text-info mr-3"
                 />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="pending-list-trash"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+                foo
+              </h5>
+            </a>
+          </div>
+          <div
+            class="pt-1 col-md-4"
+          >
+            <small
+              class="text-muted"
+            >
+              May 27 2020, 12:00:00 am
+            </small>
+          </div>
+          <div
+            class="col-md-2"
+          >
+            <div />
           </div>
         </div>
       </div>

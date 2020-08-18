@@ -10,6 +10,7 @@ describe('Merge', () => {
     props = {
       handleClick: jest.fn(),
       testID: 'test-id',
+      disabled: false,
     };
   });
 

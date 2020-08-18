@@ -17,6 +17,7 @@ describe('CompleteListButtons', () => {
       multiSelect: false,
       selectedLists: [],
       handleMerge: jest.fn(),
+      pending: false,
     };
   });
   it('renders refresh disabled when user is not owner', () => {
@@ -53,5 +54,17 @@ describe('CompleteListButtons', () => {
     fireEvent.click(getByTestId('complete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
+  });
+
+  it('calls handleMerge when Merge is selected', () => {
+    props.multiSelect = true;
+    props.selectedLists = [{ id: 1 }, { id: 2 }];
+    const { container, getByTestId } = render(<CompleteListButtons {...props} />);
+
+    expect(container).toMatchSnapshot();
+
+    fireEvent.click(getByTestId('complete-list-merge'));
+
+    expect(props.handleMerge).toHaveBeenCalled();
   });
 });

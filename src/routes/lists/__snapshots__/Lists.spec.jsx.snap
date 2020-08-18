@@ -116,9 +116,17 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Pending-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"
@@ -212,6 +220,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Incomplete-popover"
           />
         </div>
       </div>
@@ -228,7 +237,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
     >
       <div
         class="accepted-list list-group-item"
-        data-test-class="non-completed-list"
+        data-test-class="incomplete-list"
         data-test-id="list-2"
         style="display: block;"
       >
@@ -341,9 +350,17 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
+            data-test-id="Completed-popover"
           />
         </div>
       </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        
+         Select
+      </button>
     </div>
     <div
       class="list-group"

@@ -13,6 +13,7 @@ exports[`TitlePopover renders 1`] = `
     </h2>
     <i
       class="far fa-question-circle float-right text-secondary"
+      data-test-id="foo-popover"
     />
   </div>
 </div>

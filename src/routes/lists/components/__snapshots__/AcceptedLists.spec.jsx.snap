@@ -1,0 +1,439 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AcceptedLists shows merge button when multi select and more than 1 list is selected 1`] = `
+<div>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div>
+          Foo
+        </div>
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        Hide
+         Select
+      </button>
+    </div>
+    <div
+      class="list-group"
+    >
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-3"
+        style="display: block;"
+      >
+        <div
+          class="list-item-row row"
+        >
+          <div
+            class="mx-sm-auto col-1"
+          >
+            <input
+              style="position: absolute; top: 40%; left: 40%;"
+              type="checkbox"
+            />
+            <div
+              class="list-item-multi-divider"
+            />
+          </div>
+          <div
+            class="col-sm-11 col-10"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="pt-1 col-md-6"
+              >
+                <a
+                  class="router-link"
+                  href="/lists/3"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-music text-info mr-3"
+                    />
+                    baz
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="list-multi-created pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    style="pointer-events: auto; opacity: 1;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-merge"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-compress-alt fa-2x text-warning"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-5"
+        style="display: block;"
+      >
+        <div
+          class="list-item-row row"
+        >
+          <div
+            class="mx-sm-auto col-1"
+          >
+            <input
+              style="position: absolute; top: 40%; left: 40%;"
+              type="checkbox"
+            />
+            <div
+              class="list-item-multi-divider"
+            />
+          </div>
+          <div
+            class="col-sm-11 col-10"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="pt-1 col-md-6"
+              >
+                <a
+                  class="router-link"
+                  href="/lists/5"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-list text-info mr-3"
+                    />
+                    foobar
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="list-multi-created pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    disabled=""
+                    style="pointer-events: none; opacity: 0.3;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-merge"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-compress-alt fa-2x text-warning"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AcceptedLists shows modal to set the new list name for merging and clears 1`] = `
+<div
+  aria-hidden="true"
+>
+  <div
+    class="mb-4"
+  >
+    <div
+      class="clearfix"
+    >
+      <div
+        class="mx-auto float-left"
+      >
+        <div>
+          Foo
+        </div>
+      </div>
+      <button
+        class="mx-auto float-right btn btn-link"
+        type="button"
+      >
+        Hide
+         Select
+      </button>
+    </div>
+    <div
+      class="list-group"
+    >
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-3"
+        style="display: block;"
+      >
+        <div
+          class="list-item-row row"
+        >
+          <div
+            class="mx-sm-auto col-1"
+          >
+            <input
+              style="position: absolute; top: 40%; left: 40%;"
+              type="checkbox"
+            />
+            <div
+              class="list-item-multi-divider"
+            />
+          </div>
+          <div
+            class="col-sm-11 col-10"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="pt-1 col-md-6"
+              >
+                <a
+                  class="router-link"
+                  href="/lists/3"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-music text-info mr-3"
+                    />
+                    baz
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="list-multi-created pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    style="pointer-events: auto; opacity: 1;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-merge"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-compress-alt fa-2x text-warning"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="accepted-list list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-5"
+        style="display: block;"
+      >
+        <div
+          class="list-item-row row"
+        >
+          <div
+            class="mx-sm-auto col-1"
+          >
+            <input
+              style="position: absolute; top: 40%; left: 40%;"
+              type="checkbox"
+            />
+            <div
+              class="list-item-multi-divider"
+            />
+          </div>
+          <div
+            class="col-sm-11 col-10"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="pt-1 col-md-6"
+              >
+                <a
+                  class="router-link"
+                  href="/lists/5"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <i
+                      class="fa fa-list text-info mr-3"
+                    />
+                    foobar
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="list-multi-created pt-1 col-md-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class="col-md-2"
+              >
+                <div
+                  class="float-right btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    disabled=""
+                    style="pointer-events: none; opacity: 0.3;"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-check fa-2x text-success"
+                    />
+                  </button>
+                  <button
+                    class="p-0 mr-3 btn btn-link"
+                    data-test-id="incomplete-list-merge"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-compress-alt fa-2x text-warning"
+                    />
+                  </button>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <i
+                      class="fa fa-trash fa-2x text-danger"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -93,7 +93,7 @@ describe('Lists', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'non-completed-list');
+    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'incomplete-list');
     expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'pending-list');
   });
 });

@@ -20,7 +20,7 @@ function Lists(props) {
             userId={data.userId}
             pendingLists={data.pendingLists}
             completedLists={data.completedLists}
-            nonCompletedLists={data.nonCompletedLists}
+            incompleteLists={data.incompleteLists}
             currentUserPermissions={data.currentUserPermissions}
           />
         )}

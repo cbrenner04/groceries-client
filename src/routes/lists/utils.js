@@ -26,12 +26,12 @@ export async function fetchLists({ history }) {
     } = await axios.get(`/lists/`);
     const pendingLists = sortLists(pending_lists);
     const completedLists = sortLists(completed_lists);
-    const nonCompletedLists = sortLists(not_completed_lists);
+    const incompleteLists = sortLists(not_completed_lists);
     return {
       userId,
       pendingLists,
       completedLists,
-      nonCompletedLists,
+      incompleteLists,
       currentUserPermissions,
     };
   } catch (error) {
@@ -42,9 +42,14 @@ export async function fetchLists({ history }) {
 export async function fetchCompletedLists({ history }) {
   try {
     const {
-      data: { completed_lists: completedLists, current_list_permissions: currentUserPermissions },
+      data: {
+        current_user_id: userId,
+        completed_lists: completedLists,
+        current_list_permissions: currentUserPermissions,
+      },
     } = await axios.get(`/completed_lists/`);
     return {
+      userId,
       completedLists,
       currentUserPermissions,
     };
@@ -79,4 +84,30 @@ export async function fetchListToEdit({ id, history }) {
     // any other errors will just be caught and render the generic UnknownError
     throw new Error();
   }
+}
+
+export function failure({ request, response, message }, history, setPending) {
+  if (response) {
+    if (response.status === 401) {
+      toast('You must sign in', { type: 'error' });
+      history.push('/users/sign_in');
+    } else if ([403, 404].includes(response.status)) {
+      toast('List not found', { type: 'error' });
+    } else {
+      setPending(false);
+      const responseTextKeys = Object.keys(response.data);
+      const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+      toast(responseErrors.join(' and '), { type: 'error' });
+    }
+  } else if (request) {
+    setPending(false);
+    toast('Something went wrong', { type: 'error' });
+  } else {
+    setPending(false);
+    toast(message, { type: 'error' });
+  }
+}
+
+export function pluralize(listCount) {
+  return listCount > 1 ? 'Lists' : 'List';
 }

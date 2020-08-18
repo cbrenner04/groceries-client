@@ -62,6 +62,7 @@ const BulkEditListItemsFormFields = (props) => {
                   handleInput={props.handleInput}
                 />
               ),
+              // simple list has no updatable attributes
               ToDoList: (
                 <ToDo
                   dueBy={props.formData.dueBy}
