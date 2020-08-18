@@ -18,8 +18,6 @@ function AcceptedLists(props) {
   const [selectedLists, setSelectedLists] = useState([]);
   const [listsToDelete, setListsToDelete] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [listsToRemove, setListsToRemove] = useState([]);
-  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const [listsToMerge, setListsToMerge] = useState([]);
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [mergeName, setMergeName] = useState('');
@@ -32,27 +30,23 @@ function AcceptedLists(props) {
 
   const handleDelete = (list) => {
     const lists = selectedLists.length ? selectedLists : [list];
-    const ownedLists = lists.filter((l) => props.userId === l.owner_id);
-    const sharedLists = lists.filter((l) => props.userId !== l.owner_id);
-    // TODO: this can cause a race condition.
-    // Both will update the list set but will have different lists
-    // If `handleDeleteConfirm` isn't complete by the time `handleRemoveConfirm` the displayed lists will not be correct
-    if (ownedLists.length) {
-      setListsToDelete(ownedLists);
-      setShowDeleteConfirm(true);
-    }
-    if (sharedLists.length) {
-      setListsToRemove(sharedLists);
-      setShowRemoveConfirm(true);
-    }
+    setListsToDelete(lists);
+    setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
     setPending(true);
-    const deleteRequests = listsToDelete.map((list) => axios.delete(`lists/${list.id}`));
+    const ownedLists = listsToDelete.filter((l) => props.userId === l.owner_id);
+    const sharedLists = listsToDelete.filter((l) => props.userId !== l.owner_id);
+    const deleteRequests = ownedLists.map((list) => axios.delete(`lists/${list.id}`));
+    const removeRequests = sharedLists.map((list) =>
+      axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
+        users_list: { has_accepted: false },
+      }),
+    );
     try {
-      await Promise.all(deleteRequests);
+      await Promise.all(deleteRequests.concat(removeRequests));
       let updatedLists = props.completed ? props.completedLists : props.incompleteLists;
       listsToDelete.forEach(({ id }) => {
         updatedLists = updatedLists.filter((ll) => ll.id !== id);
@@ -63,31 +57,6 @@ function AcceptedLists(props) {
       setListsToDelete([]);
       setPending(false);
       toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
-    } catch (error) {
-      failure(error, props.history, setPending);
-    }
-  };
-
-  const handleRemoveConfirm = async () => {
-    setShowRemoveConfirm(false);
-    setPending(true);
-    const removeRequests = listsToRemove.map((list) =>
-      axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
-        users_list: { has_accepted: false },
-      }),
-    );
-    try {
-      await Promise.all(removeRequests);
-      let updatedLists = props.completed ? props.completedLists : props.incompleteLists;
-      listsToRemove.forEach(({ id }) => {
-        updatedLists = updatedLists.filter((ll) => ll.id !== id);
-      });
-      updatedLists = sortLists(updatedLists);
-      props.completed ? props.setCompletedLists(updatedLists) : props.setIncompleteLists(updatedLists);
-      resetMultiSelect();
-      setListsToRemove([]);
-      setPending(false);
-      toast(`${pluralize(listsToRemove.length)} successfully removed.`, { type: 'info' });
     } catch (error) {
       failure(error, props.history, setPending);
     }
@@ -246,22 +215,15 @@ function AcceptedLists(props) {
       <ListGroup>{lists}</ListGroup>
       <ConfirmModal
         action="delete"
-        body={`Are you sure you want to delete the following lists? ${listsToDelete
-          .map((list) => list.name)
-          .join(', ')}`}
+        body={
+          `Are you sure you want to delete the following lists? The lists you do not own will continue to exist for ` +
+          `the owner, you will just be removed from the list of users. ${listsToDelete
+            .map((list) => list.name)
+            .join(', ')}`
+        }
         show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
         handleClear={() => setShowDeleteConfirm(false)}
-      />
-      <ConfirmModal
-        action="remove"
-        body={
-          `Are you sure you want to remove the following lists? The list will continue to exist for the owner, ` +
-          `you will just be removed from the list of users. ${listsToRemove.map((list) => list.name).join(', ')}`
-        }
-        show={showRemoveConfirm}
-        handleConfirm={() => handleRemoveConfirm()}
-        handleClear={() => setShowRemoveConfirm(false)}
       />
       <MergeModal
         showModal={showMergeModal}
