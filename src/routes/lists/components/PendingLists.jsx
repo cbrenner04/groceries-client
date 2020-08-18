@@ -45,8 +45,8 @@ function PendingLists(props) {
       });
       props.setCompletedLists(sortLists(updatedCompletedLists));
       props.setIncompleteLists(sortLists(updatedIncompleteLists));
-      // otherwise PendingLists will be unmounted
       props.setPendingLists(updatedPendingLists);
+      // otherwise PendingLists will be unmounted
       if (updatedPendingLists.length) {
         resetMultiSelect();
         setPending(false);

@@ -4,7 +4,7 @@ import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash, Merge } from '../../../components/ActionButtons';
 
-function ListButtons(props) {
+function CompletedListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
 
   return (
@@ -30,7 +30,7 @@ function ListButtons(props) {
   );
 }
 
-ListButtons.propTypes = {
+CompletedListButtons.propTypes = {
   userId: PropTypes.number.isRequired,
   list: PropTypes.shape({
     owner_id: PropTypes.number.isRequired,
@@ -54,4 +54,4 @@ ListButtons.propTypes = {
   pending: PropTypes.bool.isRequired,
 };
 
-export default ListButtons;
+export default CompletedListButtons;
