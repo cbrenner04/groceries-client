@@ -33,6 +33,7 @@ describe('ListItemButtons', () => {
       listType: 'GroceryList',
       multiSelect: false,
       selectedItems: [],
+      pending: false,
     };
   });
 

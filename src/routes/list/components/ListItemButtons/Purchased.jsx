@@ -10,6 +10,7 @@ const PurchasedItemButtons = (props) => (
       <Refresh
         handleClick={() => props.handleItemRefresh(props.item)}
         testID={`purchased-item-refresh-${props.item.id}`}
+        disabled={props.pending}
       />
     )}
     {props.listType === 'BookList' && (
@@ -17,14 +18,19 @@ const PurchasedItemButtons = (props) => (
         handleClick={() => props.toggleItemRead(props.item)}
         read={props.item.read}
         testID={`purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+        disabled={props.pending}
       />
     )}
     <EditButton
       handleClick={() => props.handleItemEdit(props.item)}
       testID={`purchased-item-edit-${props.item.id}`}
-      disabled={!props.multiSelect || props.selectedItems.length === 0}
+      disabled={!props.multiSelect || props.selectedItems.length === 0 || props.pending}
     />
-    <Trash handleClick={() => props.handleItemDelete(props.item)} testID={`purchased-item-delete-${props.item.id}`} />
+    <Trash
+      handleClick={() => props.handleItemDelete(props.item)}
+      testID={`purchased-item-delete-${props.item.id}`}
+      disabled={props.pending}
+    />
   </ButtonGroup>
 );
 
@@ -61,6 +67,7 @@ PurchasedItemButtons.propTypes = {
       purchased: PropTypes.bool,
     }),
   ).isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 export default PurchasedItemButtons;

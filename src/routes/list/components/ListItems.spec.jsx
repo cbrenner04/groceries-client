@@ -42,6 +42,7 @@ describe('ListItems', () => {
     ],
     permission: 'write',
     selectedItems: [],
+    pending: false,
   };
   const renderListItems = (localProps) => {
     const history = createMemoryHistory();

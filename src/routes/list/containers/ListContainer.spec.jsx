@@ -187,17 +187,6 @@ describe('ListContainer', () => {
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
   });
 
-  it('renders items without category buckets when includedCategories is empty', () => {
-    props.includedCategories = [];
-    const { container, getByText, queryByText } = renderListContainer(props);
-
-    expect(container).toMatchSnapshot();
-    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
-    expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
-    expect(queryByText('Foo')).toBeNull();
-    expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
-  });
-
   it('renders items with category buckets when includedCategories is not empty and no filter is applied', () => {
     props.includedCategories = ['', 'foo', 'bar'];
     const { container, getByText } = renderListContainer(props);
@@ -390,35 +379,29 @@ describe('ListContainer', () => {
 
   it('deletes all items when multiple are selected', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByText } = renderListContainer(props);
+    const { getAllByRole, getByText, getByTestId, queryByText, getAllByText } = renderListContainer(props);
 
-    expect(getByText('purchased quantity foo purchased product')).toBeVisible();
     expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(getByText('Foo')).toBeVisible();
     expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
     expect(getByText('Bar')).toBeVisible();
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     const checkboxes = getAllByRole('checkbox');
 
     fireEvent.click(checkboxes[1]);
     fireEvent.click(checkboxes[2]);
-    fireEvent.click(checkboxes[4]);
-
-    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
-
-    fireEvent.click(getByTestId('purchased-item-delete-1'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-2'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
     fireEvent.click(getByTestId('confirm-delete'));
 
-    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
 
-    expect(queryByText('purchased quantity foo purchased product')).toBeNull();
     expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
     expect(getByText('Foo')).toBeVisible();
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
@@ -587,9 +570,9 @@ describe('ListContainer', () => {
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
-  it('moves items to purchased when multiple selected, handles purchased items appropriately', async () => {
+  it('moves items to purchased when multiple selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByText } = renderListContainer(props);
+    const { getAllByRole, getByText, getByTestId, queryByText, getAllByText } = renderListContainer(props);
 
     expect(
       getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
@@ -597,22 +580,15 @@ describe('ListContainer', () => {
     expect(
       getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
-    expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
-    ).toHaveAttribute('data-test-class', 'purchased-item');
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     const checkboxes = getAllByRole('checkbox');
 
     fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[4]);
-
-    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
-
     fireEvent.click(getByTestId('not-purchased-item-complete-2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
@@ -622,9 +598,6 @@ describe('ListContainer', () => {
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(
       getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
-    ).toHaveAttribute('data-test-class', 'purchased-item');
-    expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(queryByText('Bar')).toBeNull();
   });
@@ -730,68 +703,79 @@ describe('ListContainer', () => {
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
-  it('renders Loading when refresh is pending', async () => {
-    // not resolving either to persist pending state for test
-    axios.post = jest.fn();
-    axios.put = jest.fn();
-    const { container, getByTestId, getByRole } = renderListContainer(props);
-
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
-
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-    expect(container).toMatchSnapshot();
-    expect(getByRole('status')).toBeVisible();
-  });
-
-  it('moves items to not purchased when refreshed with mutliple selected, handles not completed items', async () => {
-    axios.post = jest.fn().mockResolvedValue({
-      data: {
-        archived_at: null,
-        category: 'foo',
-        created_at: '2020-05-24T11:07:48.751-05:00',
-        grocery_list_id: 1,
-        id: 6,
-        product: 'foo purchased product',
-        purchased: false,
-        quantity: 'purchased quantity',
-        refreshed: false,
-        updated_at: '2020-05-24T11:07:48.751-05:00',
-        user_id: 1,
-      },
+  it('moves items to not purchased when refreshed with multiple selected', async () => {
+    props.purchasedItems.push({
+      id: 2,
+      product: 'bar purchased product',
+      task: '',
+      quantity: 'purchased quantity',
+      author: '',
+      title: '',
+      artist: '',
+      album: '',
+      assignee_id: 0,
+      due_by: '',
+      read: false,
+      number_in_series: 0,
+      category: 'bar',
+      purchased: true,
+      completed: false,
     });
-    axios.put = jest.fn().mockResolvedValue();
-    const { getAllByRole, getByTestId, getByText } = renderListContainer(props);
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          archived_at: null,
+          category: 'foo',
+          created_at: '2020-05-24T11:07:48.751-05:00',
+          grocery_list_id: 1,
+          id: 6,
+          product: 'foo purchased product',
+          purchased: false,
+          quantity: 'purchased quantity',
+          refreshed: false,
+          updated_at: '2020-05-24T11:07:48.751-05:00',
+          user_id: 1,
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          archived_at: null,
+          category: 'bar',
+          created_at: '2020-05-24T11:07:48.751-05:00',
+          grocery_list_id: 1,
+          id: 7,
+          product: 'bar purchased product',
+          purchased: false,
+          quantity: 'purchased quantity',
+          refreshed: false,
+          updated_at: '2020-05-24T11:07:48.751-05:00',
+          user_id: 1,
+        },
+      });
+    const { getAllByRole, getByTestId, getByText, getAllByText } = renderListContainer(props);
 
-    expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
-    ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
       getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[1]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     const checkboxes = getAllByRole('checkbox');
 
     fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[4]);
-
-    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
-
+    fireEvent.click(checkboxes[1]);
     fireEvent.click(getByTestId('purchased-item-refresh-1'));
 
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
 
     expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+      getByText('purchased quantity bar purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
@@ -938,31 +922,28 @@ describe('ListContainer', () => {
   it('toggles read on multiple items when selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
     props.list.type = 'BookList';
-    props.purchasedItems[0].title = 'whatever';
-    props.purchasedItems[0].read = true;
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getAllByRole, getByTestId, queryByTestId } = renderListContainer(props);
+    props.notPurchasedItems.foo[0].title = 'whatever';
+    props.notPurchasedItems.foo[0].read = false;
+    props.notPurchasedItems.foo[1].title = 'asdf';
+    props.notPurchasedItems.foo[1].read = true;
+    const { getAllByRole, getByTestId, queryByTestId, getAllByText, getByText } = renderListContainer(props);
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     const checkboxes = getAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[4]);
-
-    await waitFor(() => expect(getAllByRole('checkbox')[4].checked).toEqual(true));
-
-    fireEvent.click(getByTestId('purchased-item-unread-1'));
+    fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[3]);
+    fireEvent.click(getByTestId('not-purchased-item-read-3'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
-    expect(getByTestId('not-purchased-item-unread-2')).toBeVisible();
-    expect(queryByTestId('not-purchased-item-read-2')).toBeNull();
-    expect(getByTestId('purchased-item-read-1')).toBeVisible();
-    expect(queryByTestId('purchased-item-unread-1')).toBeNull();
+    expect(getByTestId('not-purchased-item-unread-3')).toBeVisible();
+    expect(queryByTestId('not-purchased-item-read-3')).toBeNull();
+    expect(queryByTestId('not-purchased-item-unread-4')).toBeNull();
+    expect(getByTestId('not-purchased-item-read-4')).toBeVisible();
   });
 
   it('handles 401 on read', async () => {
@@ -1060,26 +1041,24 @@ describe('ListContainer', () => {
 
   it('changes select to hide select when multi select is on', async () => {
     props.permissions = 'write';
-    const { getAllByRole } = renderListContainer(props);
+    const { getAllByText, getByText } = renderListContainer(props);
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+    expect(getAllByText('Select')[0]).toHaveTextContent('Select');
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select');
+    expect(getByText('Hide Select')).toBeVisible();
   });
 
   it('handles item select for multi select when item has not been selected', async () => {
     props.permissions = 'write';
-    const { getAllByRole } = renderListContainer(props);
+    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+    fireEvent.click(getAllByText('Select')[0]);
 
-    fireEvent.click(getAllByRole('button')[4]);
-
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
 
@@ -1088,13 +1067,11 @@ describe('ListContainer', () => {
 
   it('handles item select for multi select when item has been selected', async () => {
     props.permissions = 'write';
-    const { getAllByRole } = renderListContainer(props);
+    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+    fireEvent.click(getAllByText('Select')[0]);
 
-    fireEvent.click(getAllByRole('button')[4]);
-
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[0]);
@@ -1102,24 +1079,42 @@ describe('ListContainer', () => {
     expect(getAllByRole('checkbox')[0]).not.toBeChecked();
   });
 
-  it('clears selected items for mutli select is hidden', async () => {
+  it('clears selected items for mutli select is hidden for not purchased items', async () => {
     props.permissions = 'write';
-    const { getAllByRole } = renderListContainer(props);
+    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+    fireEvent.click(getAllByText('Select')[0]);
 
-    fireEvent.click(getAllByRole('button')[4]);
-
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('button')[4]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Select'));
+    expect(getAllByRole('checkbox')[0]).toBeChecked();
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
+
+    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+  });
+
+  it('clears selected items for mutli select is hidden for purchased items', async () => {
+    props.permissions = 'write';
+    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
+
+    fireEvent.click(getAllByText('Select')[1]);
+
+    await waitFor(() => getByText('Hide Select'));
+
+    fireEvent.click(getAllByRole('checkbox')[0]);
+
+    expect(getAllByRole('checkbox')[0]).toBeChecked();
+
+    fireEvent.click(getByText('Hide Select'));
+    fireEvent.click(getAllByText('Select')[1]);
+
+    await waitFor(() => getByText('Hide Select'));
 
     expect(getAllByRole('checkbox')[0]).not.toBeChecked();
   });
@@ -1136,13 +1131,13 @@ describe('ListContainer', () => {
 
   it('navigates to bulk edit form when multi select', async () => {
     props.permissions = 'write';
-    const { getAllByRole, getByTestId } = renderListContainer(props);
+    const { getAllByRole, getByTestId, getAllByText, getByText } = renderListContainer(props);
 
-    expect(getAllByRole('button')[4]).toHaveTextContent('Select');
+    expect(getAllByText('Select')[0]).toHaveTextContent('Select');
 
-    fireEvent.click(getAllByRole('button')[4]);
+    fireEvent.click(getAllByText('Select')[0]);
 
-    await waitFor(() => expect(getAllByRole('button')[4]).toHaveTextContent('Hide Select'));
+    await waitFor(() => getByText('Hide Select'));
 
     fireEvent.click(getAllByRole('checkbox')[0]);
     fireEvent.click(getAllByRole('checkbox')[1]);
@@ -1151,5 +1146,38 @@ describe('ListContainer', () => {
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
     expect(history.push).toHaveBeenCalledWith('/lists/1/grocery_list_items/bulk-edit?item_ids=2,5');
+  });
+
+  it('adds item while filter, stays filtered', async () => {
+    axios.post = jest.fn().mockResolvedValue({
+      data: {
+        archived_at: null,
+        category: 'bar',
+        created_at: '2020-05-24T11:07:48.751-05:00',
+        grocery_list_id: 1,
+        id: 6,
+        product: 'new product',
+        purchased: false,
+        quantity: 'new quantity',
+        refreshed: false,
+        updated_at: '2020-05-24T11:07:48.751-05:00',
+        user_id: 1,
+      },
+    });
+    const { getByLabelText, getByText, getByTestId, queryByText } = renderListContainer(props);
+
+    fireEvent.click(getByText('Filter by category'));
+
+    await waitFor(() => getByTestId('filter-by-foo'));
+
+    fireEvent.click(getByTestId('filter-by-foo'));
+    fireEvent.change(getByLabelText('Product'), { target: { value: 'new product' } });
+    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'new quantity' } });
+    fireEvent.change(getByLabelText('Category'), { target: { value: 'bar' } });
+    fireEvent.click(getByText('Add New Item'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+
+    expect(queryByText('new quantity new product')).toBeNull();
   });
 });

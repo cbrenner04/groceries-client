@@ -35,6 +35,7 @@ describe('ListItem', () => {
     listUsers: [],
     permission: 'write',
     selectedItems: [],
+    pending: false,
   };
 
   const renderListItem = (localProps) => {

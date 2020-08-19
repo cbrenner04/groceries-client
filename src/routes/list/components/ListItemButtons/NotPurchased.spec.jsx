@@ -21,6 +21,7 @@ describe('NotPurchased', () => {
       handleItemRefresh: jest.fn(),
       handleItemEdit: jest.fn(),
       listType: 'GroceryList',
+      pending: false,
     };
   });
 

@@ -22,6 +22,7 @@ describe('Purchased', () => {
       handleItemEdit: jest.fn(),
       multiSelect: false,
       selectedItems: [],
+      pending: false,
     };
   });
 
