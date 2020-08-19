@@ -30,6 +30,7 @@ describe('AcceptedLists', () => {
       completed: false,
       userId: 1,
       title: <div>Foo</div>,
+      fullList: false,
       completedLists: [
         {
           id: 2,
@@ -331,8 +332,9 @@ describe('AcceptedLists', () => {
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
-  it('refreshes list', async () => {
+  it('refreshes list on lists page', async () => {
     props.completed = true;
+    props.fullList = false;
     const newList = {
       id: 6,
       name: 'new list',
@@ -357,9 +359,10 @@ describe('AcceptedLists', () => {
     ]);
   });
 
-  it('refreshes lists on completed lists page with empty incomplete lists', async () => {
+  it('refreshes lists on completed lists page', async () => {
     props.completed = true;
     props.incompleteLists = [];
+    props.fullList = true;
     const newList = {
       id: 6,
       name: 'new list',
@@ -584,7 +587,7 @@ describe('AcceptedLists', () => {
     expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
   });
 
-  it('merges on completed lists page with empty incomplete lists', async () => {
+  it('merges on completed lists page', async () => {
     const newList = {
       archived_at: null,
       completed: false,
@@ -601,6 +604,7 @@ describe('AcceptedLists', () => {
     };
     props.completed = true;
     props.incompleteLists = [];
+    props.fullList = true;
     axios.post = jest.fn().mockResolvedValue({ data: newList });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
 
