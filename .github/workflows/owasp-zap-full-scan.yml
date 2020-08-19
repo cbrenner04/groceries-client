@@ -1,0 +1,13 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scans staging
+    steps:
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.1.0
+        with:
+          target: 'https://staging.groceries-app.com'
