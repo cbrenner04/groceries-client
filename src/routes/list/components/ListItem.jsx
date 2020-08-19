@@ -54,6 +54,7 @@ const ListItem = (props) => {
               handleItemEdit={props.handleItemEdit}
               multiSelect={props.multiSelect}
               selectedItems={props.selectedItems}
+              pending={props.pending}
             />
           )}
         </Col>
@@ -117,6 +118,7 @@ ListItem.propTypes = {
       purchased: PropTypes.bool,
     }),
   ).isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 ListItem.defaultProps = {

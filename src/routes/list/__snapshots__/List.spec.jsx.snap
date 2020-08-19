@@ -130,10 +130,28 @@ exports[`List displays List 1`] = `
        Select
     </button>
   </div>
+  <div>
+    <div
+      class="mb-3 list-group"
+    >
+      
+    </div>
+  </div>
   <br />
   <h2>
     Purchased
   </h2>
+  <div
+    class="clearfix"
+  >
+    <button
+      class="mx-auto float-right btn btn-link"
+      type="button"
+    >
+      
+       Select
+    </button>
+  </div>
   <div
     class="mb-3 list-group"
   >

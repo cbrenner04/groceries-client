@@ -15,6 +15,7 @@ const ListItemButtons = (props) =>
       handleItemEdit={props.handleItemEdit}
       multiSelect={props.multiSelect}
       selectedItems={props.selectedItems}
+      pending={props.pending}
     />
   ) : (
     <NotPurchased
@@ -24,6 +25,7 @@ const ListItemButtons = (props) =>
       handleItemDelete={props.handleItemDelete}
       toggleItemRead={props.toggleItemRead}
       handleItemEdit={props.handleItemEdit}
+      pending={props.pending}
     />
   );
 
@@ -60,6 +62,7 @@ ListItemButtons.propTypes = {
       purchased: PropTypes.bool,
     }),
   ).isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 export default ListItemButtons;

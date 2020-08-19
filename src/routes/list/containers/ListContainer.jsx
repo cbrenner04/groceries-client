@@ -12,7 +12,6 @@ import axios from '../../../utils/api';
 import { itemName, sortItems } from '../utils';
 import ListItems from '../components/ListItems';
 import CategoryFilter from '../components/CategoryFilter';
-import Loading from '../../../components/Loading';
 
 function ListContainer(props) {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
@@ -22,9 +21,11 @@ function ListContainer(props) {
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
   const [itemsToDelete, setItemsToDelete] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [multiSelect, setMultiSelect] = useState(false);
+  const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
+  const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [pending, setPending] = useState(false);
+  const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
 
   const handleAddItem = (data) => {
     // this is to deal the ListItemForm being passed this function
@@ -54,6 +55,9 @@ function ListContainer(props) {
     });
     setCategories(cats);
     setIncludedCategories(includedCats);
+    if (!filter) {
+      setDisplayedCategories(includedCats);
+    }
   };
 
   const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
@@ -70,8 +74,10 @@ function ListContainer(props) {
     });
     setNotPurchasedItems(updatedNotPurchasedItems);
     let updateIncludedCats = includedCategories;
+    let updateDisplayedCategories = false;
     itemCategories.forEach((category) => {
       if (category && !updatedNotPurchasedItems[category].length) {
+        updateDisplayedCategories = true;
         const catIndex = updateIncludedCats.findIndex((inCat) => inCat === category);
         updateIncludedCats = update(updateIncludedCats, { $splice: [[catIndex, 1]] });
         if (filter === category) {
@@ -80,6 +86,9 @@ function ListContainer(props) {
       }
     });
     setIncludedCategories(updateIncludedCats);
+    if (updateDisplayedCategories) {
+      setDisplayedCategories(updateIncludedCats);
+    }
   };
 
   const moveItemsToPurchased = (items) => {
@@ -115,11 +124,6 @@ function ListContainer(props) {
     }
   };
 
-  const resetMultiSelect = () => {
-    setSelectedItems([]);
-    setMultiSelect(false);
-  };
-
   const pluralize = (items) => {
     return items.length > 1 ? 'Items' : 'Item';
   };
@@ -138,7 +142,8 @@ function ListContainer(props) {
     try {
       await Promise.all(updateRequests);
       moveItemsToPurchased(filteredItems);
-      resetMultiSelect();
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
       toast(`${pluralize(filteredItems)} successfully purchased.`, { type: 'info' });
     } catch (error) {
       failure(error);
@@ -179,7 +184,9 @@ function ListContainer(props) {
       });
       setPurchasedItems(newPurchasedItems);
       setNotPurchasedItems(newNotPurchasedItems);
-      resetMultiSelect();
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
+      setCompleteMultiSelect(false);
       toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
     } catch (error) {
       failure(error);
@@ -232,7 +239,8 @@ function ListContainer(props) {
       const newItems = newItemResponses.map(({ data }) => data);
       handleAddItem(newItems);
       removeItemsFromPurchased(filteredItems);
-      resetMultiSelect();
+      setSelectedItems([]);
+      setCompleteMultiSelect(false);
       setPending(false);
       toast(`${pluralize(filteredItems)} successfully refreshed.`, { type: 'info' });
     } catch (error) {
@@ -262,7 +270,9 @@ function ListContainer(props) {
       });
       removeItemsFromPurchased(purchasedDeletedItems);
       removeItemsFromNotPurchased(notPurchasedDeletedItems);
-      resetMultiSelect();
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
+      setCompleteMultiSelect(false);
       setItemsToDelete([]);
       toast(`${pluralize(itemsToDelete)} successfully deleted.`, { type: 'info' });
     } catch (error) {
@@ -271,7 +281,7 @@ function ListContainer(props) {
   };
 
   const handleItemSelect = (item) => {
-    const itemIds = selectedItems.map((i) => i.id).join(',');
+    const itemIds = selectedItems.map((i) => i.id);
     let updatedItems;
     if (itemIds.includes(item.id)) {
       updatedItems = selectedItems.filter((i) => i.id !== item.id);
@@ -293,125 +303,121 @@ function ListContainer(props) {
 
   return (
     <>
-      {pending && <Loading />}
-      {!pending && (
-        <>
-          <Link to="/lists" className="float-right">
-            Back to lists
-          </Link>
-          <h1>{props.list.name}</h1>
-          <br />
-          {props.permissions === 'write' ? (
-            <ListItemForm
-              listId={props.list.id}
-              listType={props.list.type}
-              listUsers={props.listUsers}
-              userId={props.userId}
-              handleItemAddition={handleAddItem}
-              categories={categories}
-              history={props.history}
-            />
-          ) : (
-            <p>You only have permission to read this list</p>
-          )}
-          <hr />
-          <div className="d-flex justify-content-between">
-            <h2>Items</h2>
-            <div>
-              <CategoryFilter
-                categories={includedCategories}
-                filter={filter}
-                handleCategoryFilter={({ target: { name } }) => setFilter(name)}
-                handleClearFilter={() => setFilter('')}
-              />
-            </div>
-          </div>
-          {props.permissions === 'write' && (
-            <div className="clearfix">
-              <Button
-                variant="link"
-                className="mx-auto float-right"
-                onClick={() => {
-                  if (multiSelect && selectedItems.length > 0) {
-                    setSelectedItems([]);
-                  }
-                  setMultiSelect(!multiSelect);
-                }}
-              >
-                {multiSelect ? 'Hide' : ''} Select
-              </Button>
-            </div>
-          )}
-          {(filter || !includedCategories.length) && (
-            <div>
-              <ListItems
-                category={filter}
-                items={notPurchasedItems[filter]}
-                permission={props.permissions}
-                handleItemDelete={handleDelete}
-                handlePurchaseOfItem={handleItemPurchase}
-                toggleItemRead={toggleRead}
-                handleItemRefresh={handleRefresh}
-                listType={props.list.type}
-                listUsers={props.listUsers}
-                multiSelect={multiSelect}
-                handleItemEdit={handleItemEdit}
-                handleItemSelect={handleItemSelect}
-                selectedItems={selectedItems}
-              />
-            </div>
-          )}
-          {!filter &&
-            includedCategories.sort().map(
-              (category) =>
-                (category || (notPurchasedItems[category] && notPurchasedItems[category].length > 0)) && (
-                  <div key={category}>
-                    <ListItems
-                      category={category}
-                      items={notPurchasedItems[category]}
-                      permission={props.permissions}
-                      handleItemDelete={handleDelete}
-                      handlePurchaseOfItem={handleItemPurchase}
-                      toggleItemRead={toggleRead}
-                      handleItemRefresh={handleRefresh}
-                      listType={props.list.type}
-                      listUsers={props.listUsers}
-                      multiSelect={multiSelect}
-                      handleItemSelect={handleItemSelect}
-                      handleItemEdit={handleItemEdit}
-                      selectedItems={selectedItems}
-                    />
-                  </div>
-                ),
-            )}
-          <br />
-          <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
+      <Link to="/lists" className="float-right">
+        Back to lists
+      </Link>
+      <h1>{props.list.name}</h1>
+      <br />
+      {props.permissions === 'write' ? (
+        <ListItemForm
+          listId={props.list.id}
+          listType={props.list.type}
+          listUsers={props.listUsers}
+          userId={props.userId}
+          handleItemAddition={handleAddItem}
+          categories={categories}
+          history={props.history}
+        />
+      ) : (
+        <p>You only have permission to read this list</p>
+      )}
+      <hr />
+      <div className="d-flex justify-content-between">
+        <h2>Items</h2>
+        <div>
+          <CategoryFilter
+            categories={includedCategories}
+            filter={filter}
+            handleCategoryFilter={({ target: { name } }) => {
+              setFilter(name);
+              setDisplayedCategories([name]);
+            }}
+            handleClearFilter={() => {
+              setFilter('');
+              setDisplayedCategories(includedCategories);
+            }}
+          />
+        </div>
+      </div>
+      {props.permissions === 'write' && (
+        <div className="clearfix">
+          <Button
+            variant="link"
+            className="mx-auto float-right"
+            onClick={() => {
+              if (incompleteMultiSelect && selectedItems.length > 0) {
+                setSelectedItems([]);
+              }
+              setIncompleteMultiSelect(!incompleteMultiSelect);
+            }}
+          >
+            {incompleteMultiSelect ? 'Hide' : ''} Select
+          </Button>
+        </div>
+      )}
+      {displayedCategories.sort().map((category) => (
+        <div key={category}>
           <ListItems
-            items={purchasedItems}
-            purchased
+            category={category}
+            items={notPurchasedItems[category]}
             permission={props.permissions}
             handleItemDelete={handleDelete}
             handlePurchaseOfItem={handleItemPurchase}
-            handleItemRefresh={handleRefresh}
             toggleItemRead={toggleRead}
+            handleItemRefresh={handleRefresh}
             listType={props.list.type}
             listUsers={props.listUsers}
-            multiSelect={multiSelect}
+            multiSelect={incompleteMultiSelect}
             handleItemSelect={handleItemSelect}
             handleItemEdit={handleItemEdit}
             selectedItems={selectedItems}
+            pending={pending}
           />
-          <ConfirmModal
-            action="delete"
-            body={`Are you sure you want to delete the following items? ${itemsToDelete
-              .map((item) => itemName(item, props.list.type))
-              .join(', ')}`}
-            show={showDeleteConfirm}
-            handleConfirm={() => handleDeleteConfirm()}
-            handleClear={() => setShowDeleteConfirm(false)}
-          />
-        </>
+        </div>
+      ))}
+      <br />
+      <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
+      {props.permissions === 'write' && (
+        <div className="clearfix">
+          <Button
+            variant="link"
+            className="mx-auto float-right"
+            onClick={() => {
+              if (completeMultiSelect && selectedItems.length > 0) {
+                setSelectedItems([]);
+              }
+              setCompleteMultiSelect(!completeMultiSelect);
+            }}
+          >
+            {completeMultiSelect ? 'Hide' : ''} Select
+          </Button>
+        </div>
       )}
+      <ListItems
+        items={purchasedItems}
+        purchased
+        permission={props.permissions}
+        handleItemDelete={handleDelete}
+        handlePurchaseOfItem={handleItemPurchase}
+        handleItemRefresh={handleRefresh}
+        toggleItemRead={toggleRead}
+        listType={props.list.type}
+        listUsers={props.listUsers}
+        multiSelect={completeMultiSelect}
+        handleItemSelect={handleItemSelect}
+        handleItemEdit={handleItemEdit}
+        selectedItems={selectedItems}
+        pending={pending}
+      />
+      <ConfirmModal
+        action="delete"
+        body={`Are you sure you want to delete the following items? ${itemsToDelete
+          .map((item) => itemName(item, props.list.type))
+          .join(', ')}`}
+        show={showDeleteConfirm}
+        handleConfirm={() => handleDeleteConfirm()}
+        handleClear={() => setShowDeleteConfirm(false)}
+      />
     </>
   );
 }

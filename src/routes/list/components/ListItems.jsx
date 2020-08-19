@@ -25,6 +25,7 @@ function ListItems(props) {
           toggleItemRead={props.toggleItemRead}
           handleItemEdit={props.handleItemEdit}
           selectedItems={props.selectedItems}
+          pending={props.pending}
         />
       ))}
     </ListGroup>
@@ -89,6 +90,7 @@ ListItems.propTypes = {
       purchased: PropTypes.bool,
     }),
   ).isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 ListItems.defaultProps = {
