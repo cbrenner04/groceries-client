@@ -79,7 +79,7 @@ function AcceptedLists(props) {
         merge_lists: { list_ids: listIds, new_list_name: mergeName },
       });
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
-      if (props.incompleteLists.length) {
+      if (!props.completed || !props.fullList) {
         const updatedCurrentUserPermissions = update(props.currentUserPermissions, { [data.id]: { $set: 'write' } });
         const updatedIncompleteLists = update(props.incompleteLists, { $push: [data] });
         // must update currentUserPermissions prior to incompleteLists
@@ -132,7 +132,7 @@ function AcceptedLists(props) {
     try {
       const responses = await Promise.all(refreshRequests);
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
-      if (props.incompleteLists.length) {
+      if (!props.completed || !props.fullList) {
         let updatedCurrentUserPermissions = props.currentUserPermissions;
         let updatedIncompleteLists = props.incompleteLists;
         responses.forEach(({ data }) => {
@@ -255,8 +255,8 @@ AcceptedLists.propTypes = {
       owner_id: PropTypes.number.isRequired,
       refreshed: PropTypes.bool.isRequired,
     }),
-  ),
-  setIncompleteLists: PropTypes.func,
+  ).isRequired,
+  setIncompleteLists: PropTypes.func.isRequired,
   completedLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -272,12 +272,7 @@ AcceptedLists.propTypes = {
   setCompletedLists: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
-};
-
-/* istanbul ignore next */
-AcceptedLists.defaultProps = {
-  incompleteLists: [],
-  setIncompleteLists: () => undefined,
+  fullList: PropTypes.bool.isRequired,
 };
 
 export default AcceptedLists;
