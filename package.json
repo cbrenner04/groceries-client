@@ -30,7 +30,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build:production": "react-scripts build",
+    "deploy:production": "sh scripts/deploy-prod.sh",
     "build:staging": "env-cmd -f .env.staging react-scripts build",
+    "deploy:staging": "sh scripts/deploy-staging.sh",
     "lint": "eslint --ext .js,.jsx src/",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "test:ci": "npm run lint && CI=true npm test -- --coverage",
