@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import CompleteLists from '../components/CompleteLists';
+import AcceptedLists from '../components/AcceptedLists';
+import TitlePopover from '../../../components/TitlePopover';
 
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
@@ -23,6 +25,22 @@ function CompletedListsContainer(props) {
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
         fullList={true}
+      />
+      <AcceptedLists
+        title={
+          <TitlePopover
+            title="Completed Lists"
+            message={'Previously refreshed lists are marked with an asterisk (*).'}
+          />
+        }
+        completed={true}
+        fullList={true}
+        history={props.history}
+        userId={props.userId}
+        completedLists={completedLists}
+        setCompletedLists={setCompletedLists}
+        currentUserPermissions={currentUserPermissions}
+        setCurrentUserPermissions={setCurrentUserPermissions}
       />
     </>
   );

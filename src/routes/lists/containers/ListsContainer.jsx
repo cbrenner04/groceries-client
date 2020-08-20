@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
 import { sortLists, failure } from '../utils';
-import IncompleteLists from '../components/IncompleteLists';
-import CompleteLists from '../components/CompleteLists';
 import PendingLists from '../components/PendingLists';
+import AcceptedLists from '../components/AcceptedLists';
+import TitlePopover from '../../../components/TitlePopover';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -51,25 +52,47 @@ function ListsContainer(props) {
           setIncompleteLists={setIncompleteLists}
         />
       )}
-      <IncompleteLists
+      <AcceptedLists
+        title={
+          <TitlePopover
+            title="Incomplete"
+            message="These are lists you've created or you've accepted an invitation from someone else."
+          />
+        }
+        completed={false}
+        fullList={false}
         history={props.history}
         userId={props.userId}
-        currentUserPermissions={currentUserPermissions}
-        setCurrentUserPermissions={setCurrentUserPermissions}
-        completedLists={completedLists}
-        setCompletedLists={setCompletedLists}
         incompleteLists={incompleteLists}
         setIncompleteLists={setIncompleteLists}
+        completedLists={completedLists}
+        setCompletedLists={setCompletedLists}
+        currentUserPermissions={currentUserPermissions}
+        setCurrentUserPermissions={setCurrentUserPermissions}
       />
-      <CompleteLists
+      <AcceptedLists
+        title={
+          <TitlePopover
+            title="Completed"
+            message={
+              <>
+                These are the completed lists most recently created.&nbsp;
+                <Link to="/completed_lists">See all completed lists here.</Link>&nbsp; Previously refreshed lists are
+                marked with an asterisk (*).
+              </>
+            }
+          />
+        }
+        completed={true}
+        fullList={false}
         history={props.history}
         userId={props.userId}
-        currentUserPermissions={currentUserPermissions}
-        setCurrentUserPermissions={setCurrentUserPermissions}
-        completedLists={completedLists}
-        setCompletedLists={setCompletedLists}
         incompleteLists={incompleteLists}
         setIncompleteLists={setIncompleteLists}
+        completedLists={completedLists}
+        setCompletedLists={setCompletedLists}
+        currentUserPermissions={currentUserPermissions}
+        setCurrentUserPermissions={setCurrentUserPermissions}
       />
     </>
   );
