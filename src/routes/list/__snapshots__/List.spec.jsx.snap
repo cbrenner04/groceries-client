@@ -130,12 +130,10 @@ exports[`List displays List 1`] = `
        Select
     </button>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
-    >
-      
-    </div>
+  <div
+    class="mb-3 list-group"
+  >
+    
   </div>
   <br />
   <h2>
@@ -154,9 +152,7 @@ exports[`List displays List 1`] = `
   </div>
   <div
     class="mb-3 list-group"
-  >
-    
-  </div>
+  />
 </div>
 `;
 
