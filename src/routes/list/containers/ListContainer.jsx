@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
 
 import { capitalize } from '../../../utils/format';
-import ListItem from './ListItem';
+import ListItem from '../components/ListItem';
 import { listTypeToSnakeCase } from '../../../utils/format';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
@@ -360,25 +360,26 @@ function ListContainer(props) {
       {displayedCategories.sort().map((category) => (
         <ListGroup className="mb-3" key={category}>
           {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
-          {notPurchasedItems[category].map((item) => (
-            <ListItem
-              item={item}
-              key={item.id}
-              purchased={false}
-              handleItemDelete={handleDelete}
-              handlePurchaseOfItem={handleItemPurchase}
-              handleItemRefresh={handleRefresh}
-              listType={props.list.type}
-              listUsers={props.listUsers}
-              permission={props.permissions}
-              multiSelect={incompleteMultiSelect}
-              handleItemSelect={handleItemSelect}
-              toggleItemRead={toggleRead}
-              handleItemEdit={handleItemEdit}
-              selectedItems={selectedItems}
-              pending={pending}
-            />
-          ))}
+          {notPurchasedItems[category] &&
+            notPurchasedItems[category].map((item) => (
+              <ListItem
+                item={item}
+                key={item.id}
+                purchased={false}
+                handleItemDelete={handleDelete}
+                handlePurchaseOfItem={handleItemPurchase}
+                handleItemRefresh={handleRefresh}
+                listType={props.list.type}
+                listUsers={props.listUsers}
+                permission={props.permissions}
+                multiSelect={incompleteMultiSelect}
+                handleItemSelect={handleItemSelect}
+                toggleItemRead={toggleRead}
+                handleItemEdit={handleItemEdit}
+                selectedItems={selectedItems}
+                pending={pending}
+              />
+            ))}
         </ListGroup>
       ))}
       <br />

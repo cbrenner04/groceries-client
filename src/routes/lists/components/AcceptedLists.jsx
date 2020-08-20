@@ -255,8 +255,8 @@ AcceptedLists.propTypes = {
       owner_id: PropTypes.number.isRequired,
       refreshed: PropTypes.bool.isRequired,
     }),
-  ).isRequired,
-  setIncompleteLists: PropTypes.func.isRequired,
+  ),
+  setIncompleteLists: PropTypes.func,
   completedLists: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -273,6 +273,12 @@ AcceptedLists.propTypes = {
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
   fullList: PropTypes.bool.isRequired,
+};
+
+/* istanbul ignore next */
+AcceptedLists.defaultProps = {
+  incompleteLists: [],
+  setIncompleteLists: () => undefined,
 };
 
 export default AcceptedLists;

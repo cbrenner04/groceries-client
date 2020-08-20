@@ -39,106 +39,100 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3 list-group"
+  >
+    
     <div
-      class="mb-3 list-group"
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
     >
-      
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
-            >
-              not purchased quantity no category not purchased product
-            </div>
+            not purchased quantity no category not purchased product
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Bar
-      </h5>
+      Bar
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
-            >
-              not purchased quantity bar not purchased product
-            </div>
+            not purchased quantity bar not purchased product
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
-            >
-              not purchased quantity foo not purchased product
-            </div>
+            not purchased quantity foo not purchased product
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
-            >
-              not purchased quantity foo not purchased product 2
-            </div>
+            not purchased quantity foo not purchased product 2
           </div>
         </div>
       </div>
@@ -151,7 +145,6 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"
@@ -321,234 +314,228 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
        Select
     </button>
   </div>
-  <div>
+  <div
+    class="mb-3 list-group"
+  >
+    
     <div
-      class="mb-3 list-group"
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
     >
-      
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity no category not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-2"
+              type="button"
             >
-              not purchased quantity no category not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-2"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-2"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Bar
-      </h5>
+      Bar
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity bar not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-5"
+              type="button"
             >
-              not purchased quantity bar not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-5"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-5"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-3"
+              type="button"
             >
-              not purchased quantity foo not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-3"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-3"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product 2
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-4"
+              type="button"
             >
-              not purchased quantity foo not purchased product 2
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-4"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-4"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -571,9 +558,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
   </div>
   <div
     class="mb-3 list-group"
-  >
-    
-  </div>
+  />
 </div>
 `;
 
@@ -745,12 +730,10 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
        Select
     </button>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
-    >
-      
-    </div>
+  <div
+    class="mb-3 list-group"
+  >
+    
   </div>
   <br />
   <h2>
@@ -770,7 +753,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"
@@ -985,234 +967,228 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
        Select
     </button>
   </div>
-  <div>
+  <div
+    class="mb-3 list-group"
+  >
+    
     <div
-      class="mb-3 list-group"
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
     >
-      
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity no category not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-2"
+              type="button"
             >
-              not purchased quantity no category not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-2"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-2"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Bar
-      </h5>
+      Bar
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity bar not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-5"
+              type="button"
             >
-              not purchased quantity bar not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-5"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-5"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-3"
+              type="button"
             >
-              not purchased quantity foo not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-3"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-3"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product 2
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-4"
+              type="button"
             >
-              not purchased quantity foo not purchased product 2
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-4"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-4"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -1236,7 +1212,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"
@@ -1441,234 +1416,228 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
        Select
     </button>
   </div>
-  <div>
+  <div
+    class="mb-3 list-group"
+  >
+    
     <div
-      class="mb-3 list-group"
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
     >
-      
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity no category not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-2"
+              type="button"
             >
-              not purchased quantity no category not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-2"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-2"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Bar
-      </h5>
+      Bar
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity bar not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-5"
+              type="button"
             >
-              not purchased quantity bar not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-5"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-5"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-3"
+              type="button"
             >
-              not purchased quantity foo not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-3"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-3"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product 2
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-4"
+              type="button"
             >
-              not purchased quantity foo not purchased product 2
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-4"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-4"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -1692,7 +1661,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"
@@ -1898,114 +1866,112 @@ exports[`ListContainer renders filtered items without category buckets when filt
        Select
     </button>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-3"
+              type="button"
             >
-              not purchased quantity foo not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-3"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-3"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product 2
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-4"
+              type="button"
             >
-              not purchased quantity foo not purchased product 2
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-4"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-4"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -2029,7 +1995,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"
@@ -2232,234 +2197,228 @@ exports[`ListContainer renders items with category buckets when includedCategori
        Select
     </button>
   </div>
-  <div>
+  <div
+    class="mb-3 list-group"
+  >
+    
     <div
-      class="mb-3 list-group"
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
     >
-      
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity no category not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-2"
+              type="button"
             >
-              not purchased quantity no category not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-2"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-2"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-2"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Bar
-      </h5>
+      Bar
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity bar not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-5"
+              type="button"
             >
-              not purchased quantity bar not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-5"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-5"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-5"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div
-      class="mb-3 list-group"
+  <div
+    class="mb-3 list-group"
+  >
+    <h5
+      data-test-class="category-header"
     >
-      <h5
-        data-test-class="category-header"
-      >
-        Foo
-      </h5>
+      Foo
+    </h5>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-3"
+              type="button"
             >
-              not purchased quantity foo not purchased product
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-3"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-3"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-3"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="list-group-item"
+      data-test-class="non-purchased-item"
+      style="display: block;"
+    >
       <div
-        class="list-group-item"
-        data-test-class="non-purchased-item"
-        style="display: block;"
+        class="row"
       >
         <div
-          class="row"
+          class="col-sm-12 col-12"
         >
           <div
-            class="col-sm-12 col-12"
+            class="pt-1"
           >
-            <div
-              class="pt-1"
+            not purchased quantity foo not purchased product 2
+          </div>
+          <div
+            class="float-right btn-group"
+            role="group"
+          >
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-complete-4"
+              type="button"
             >
-              not purchased quantity foo not purchased product 2
-            </div>
-            <div
-              class="float-right btn-group"
-              role="group"
+              <i
+                class="fa fa-check fa-2x text-success"
+              />
+            </button>
+            <button
+              class="p-0 mr-3 btn btn-link"
+              data-test-id="not-purchased-item-edit-4"
+              type="button"
             >
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-complete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-check fa-2x text-success"
-                />
-              </button>
-              <button
-                class="p-0 mr-3 btn btn-link"
-                data-test-id="not-purchased-item-edit-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-edit fa-2x text-warning"
-                />
-              </button>
-              <button
-                class="p-0 btn btn-link"
-                data-test-id="not-purchased-item-delete-4"
-                type="button"
-              >
-                <i
-                  class="fa fa-trash fa-2x text-danger"
-                />
-              </button>
-            </div>
+              <i
+                class="fa fa-edit fa-2x text-warning"
+              />
+            </button>
+            <button
+              class="p-0 btn btn-link"
+              data-test-id="not-purchased-item-delete-4"
+              type="button"
+            >
+              <i
+                class="fa fa-trash fa-2x text-danger"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -2483,7 +2442,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-group-item"
       data-test-class="purchased-item"

@@ -28,11 +28,11 @@ exports[`CompletedListsContainer renders 1`] = `
           <h2
             class="text-capitalize"
           >
-            Completed
+            Completed Lists
           </h2>
           <i
             class="far fa-question-circle float-right text-secondary"
-            data-test-id="Completed-popover"
+            data-test-id="Completed Lists-popover"
           />
         </div>
       </div>

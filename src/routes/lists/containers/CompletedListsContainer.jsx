@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import CompleteLists from '../components/CompleteLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 
@@ -17,15 +16,6 @@ function CompletedListsContainer(props) {
           Back to lists
         </Link>
       </div>
-      <CompleteLists
-        history={props.history}
-        userId={props.userId}
-        completedLists={completedLists}
-        setCompletedLists={setCompletedLists}
-        currentUserPermissions={currentUserPermissions}
-        setCurrentUserPermissions={setCurrentUserPermissions}
-        fullList={true}
-      />
       <AcceptedLists
         title={
           <TitlePopover
