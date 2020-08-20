@@ -4,13 +4,15 @@ import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Button } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 
+import { capitalize } from '../../../utils/format';
+import ListItem from './ListItem';
 import { listTypeToSnakeCase } from '../../../utils/format';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { itemName, sortItems } from '../utils';
-import ListItems from '../components/ListItems';
 import CategoryFilter from '../components/CategoryFilter';
 
 function ListContainer(props) {
@@ -356,24 +358,28 @@ function ListContainer(props) {
         </div>
       )}
       {displayedCategories.sort().map((category) => (
-        <div key={category}>
-          <ListItems
-            category={category}
-            items={notPurchasedItems[category]}
-            permission={props.permissions}
-            handleItemDelete={handleDelete}
-            handlePurchaseOfItem={handleItemPurchase}
-            toggleItemRead={toggleRead}
-            handleItemRefresh={handleRefresh}
-            listType={props.list.type}
-            listUsers={props.listUsers}
-            multiSelect={incompleteMultiSelect}
-            handleItemSelect={handleItemSelect}
-            handleItemEdit={handleItemEdit}
-            selectedItems={selectedItems}
-            pending={pending}
-          />
-        </div>
+        <ListGroup className="mb-3" key={category}>
+          {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
+          {notPurchasedItems[category].map((item) => (
+            <ListItem
+              item={item}
+              key={item.id}
+              purchased={false}
+              handleItemDelete={handleDelete}
+              handlePurchaseOfItem={handleItemPurchase}
+              handleItemRefresh={handleRefresh}
+              listType={props.list.type}
+              listUsers={props.listUsers}
+              permission={props.permissions}
+              multiSelect={incompleteMultiSelect}
+              handleItemSelect={handleItemSelect}
+              toggleItemRead={toggleRead}
+              handleItemEdit={handleItemEdit}
+              selectedItems={selectedItems}
+              pending={pending}
+            />
+          ))}
+        </ListGroup>
       ))}
       <br />
       <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
@@ -393,22 +399,27 @@ function ListContainer(props) {
           </Button>
         </div>
       )}
-      <ListItems
-        items={purchasedItems}
-        purchased
-        permission={props.permissions}
-        handleItemDelete={handleDelete}
-        handlePurchaseOfItem={handleItemPurchase}
-        handleItemRefresh={handleRefresh}
-        toggleItemRead={toggleRead}
-        listType={props.list.type}
-        listUsers={props.listUsers}
-        multiSelect={completeMultiSelect}
-        handleItemSelect={handleItemSelect}
-        handleItemEdit={handleItemEdit}
-        selectedItems={selectedItems}
-        pending={pending}
-      />
+      <ListGroup className="mb-3">
+        {purchasedItems.map((item) => (
+          <ListItem
+            item={item}
+            key={item.id}
+            purchased={true}
+            handleItemDelete={handleDelete}
+            handlePurchaseOfItem={handleItemPurchase}
+            handleItemRefresh={handleRefresh}
+            listType={props.list.type}
+            listUsers={props.listUsers}
+            permission={props.permissions}
+            multiSelect={completeMultiSelect}
+            handleItemSelect={handleItemSelect}
+            toggleItemRead={toggleRead}
+            handleItemEdit={handleItemEdit}
+            selectedItems={selectedItems}
+            pending={pending}
+          />
+        ))}
+      </ListGroup>
       <ConfirmModal
         action="delete"
         body={`Are you sure you want to delete the following items? ${itemsToDelete
