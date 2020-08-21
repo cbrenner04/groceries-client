@@ -13,7 +13,6 @@ function EditListItem(props) {
       promiseFn={fetchItemToEdit}
       itemId={props.match.params.id}
       listId={props.match.params.list_id}
-      itemType={props.match.params[0]}
       history={props.history}
     >
       <Async.Pending>

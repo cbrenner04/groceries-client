@@ -28,8 +28,8 @@ export default function AppRouter() {
         {/* routes/list */}
         <Route exact path="/lists/:id" component={List} />
         <Route exact path="/lists/:id/edit" component={EditList} />
-        <Route path="/lists/:list_id/*/:id/edit" component={EditListItem} />
-        <Route path="/lists/:list_id/*/bulk-edit" component={BulkEditListItems} />
+        <Route exact path="/lists/:list_id/list_items/:id/edit" component={EditListItem} />
+        <Route exact path="/lists/:list_id/list_items/bulk-edit" component={BulkEditListItems} />
         {/* routes/share_list */}
         <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
         {/* routes/users */}

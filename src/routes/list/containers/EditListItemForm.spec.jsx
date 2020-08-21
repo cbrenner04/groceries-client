@@ -210,8 +210,8 @@ describe('EditListItemForm', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/grocery_list_items/1', {
-      grocery_list_item: expect.objectContaining({ product: 'foo' }),
+    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/1', {
+      list_item: expect.objectContaining({ product: 'foo' }),
     });
   });
 
@@ -223,8 +223,8 @@ describe('EditListItemForm', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/book_list_items/1', {
-      book_list_item: expect.objectContaining({ number_in_series: 2 }),
+    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/1', {
+      list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });
 });
