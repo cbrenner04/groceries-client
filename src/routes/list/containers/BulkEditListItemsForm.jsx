@@ -4,7 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { formatDueBy, listTypeToSnakeCase } from '../../../utils/format';
+import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
@@ -86,11 +86,10 @@ function BulkEditListItemsForm(props) {
     if (formData.newListName) {
       putData.new_list_name = formData.newListName;
     }
-    const urlListType = listTypeToSnakeCase(props.list.type);
     const itemIds = props.items.map(({ id }) => id).join(',');
     try {
-      await axios.put(`/lists/${props.list.id}/${urlListType}_items/bulk_update?item_ids=${itemIds}`, {
-        [`${urlListType}_items`]: putData,
+      await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
+        list_items: putData,
       });
       toast('Items successfully updated', { type: 'info' });
       props.history.push(`/lists/${props.list.id}`);

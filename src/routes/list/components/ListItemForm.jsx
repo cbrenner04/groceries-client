@@ -4,7 +4,7 @@ import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { defaultDueBy, listTypeToSnakeCase } from '../../../utils/format';
+import { defaultDueBy } from '../../../utils/format';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 
@@ -40,9 +40,8 @@ function ListItemForm(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setPending(true);
-    const requestListType = listTypeToSnakeCase(props.listType);
     const postData = {
-      [`${requestListType}_item`]: {
+      list_item: {
         user_id: props.userId,
         product: formData.product,
         task: formData.task,
@@ -56,11 +55,10 @@ function ListItemForm(props) {
         due_by: formData.dueBy,
         number_in_series: formData.numberInSeries || null,
         category: formData.category.trim().toLowerCase(),
-        [`${requestListType}_id`]: props.listId,
       },
     };
     try {
-      const { data } = await axios.post(`/lists/${props.listId}/${requestListType}_items`, postData);
+      const { data } = await axios.post(`/lists/${props.listId}/list_items`, postData);
       props.handleItemAddition(data);
       setFormData(defaultFormState);
       setPending(false);
