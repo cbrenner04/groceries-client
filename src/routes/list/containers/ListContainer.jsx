@@ -223,7 +223,6 @@ function ListContainer(props) {
         due_by: item.due_by,
         category: item.category || '',
       };
-      // newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
       const postData = {};
       postData.list_item = newItem;
       createNewItemRequests.push(axios.post(`${listItemPath(item)}`, postData));
