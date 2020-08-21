@@ -229,8 +229,8 @@ describe('ListItemForm', () => {
     fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/lists/1/book_list_items', {
-      book_list_item: expect.objectContaining({ number_in_series: 2 }),
+    expect(axios.post).toHaveBeenCalledWith('/lists/1/list_items', {
+      list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });
 });

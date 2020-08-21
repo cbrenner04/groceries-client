@@ -63,7 +63,7 @@ function ListContainer(props) {
   };
 
   const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
-  const listItemPath = (item) => `/lists/${listId(item)}/${listTypeToSnakeCase(props.list.type)}_items`;
+  const listItemPath = (item) => `/lists/${listId(item)}/list_items`;
 
   const removeItemsFromNotPurchased = (items) => {
     let updatedNotPurchasedItems = notPurchasedItems;
@@ -136,7 +136,7 @@ function ListContainer(props) {
     const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
     const updateRequests = filteredItems.map((i) =>
       axios.put(`${listItemPath(i)}/${i.id}`, {
-        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+        list_item: {
           [completionType]: true,
         },
       }),
@@ -157,7 +157,7 @@ function ListContainer(props) {
     const updateRequests = items.map((item) => {
       const isRead = !item.read;
       return axios.put(`${listItemPath(item)}/${item.id}`, {
-        [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+        list_item: {
           read: isRead,
         },
       });
@@ -223,13 +223,12 @@ function ListContainer(props) {
         due_by: item.due_by,
         category: item.category || '',
       };
-      newItem[`${listTypeToSnakeCase(props.list.type)}_id`] = listId(item);
       const postData = {};
-      postData[`${listTypeToSnakeCase(props.list.type)}_item`] = newItem;
-      createNewItemRequests.push(axios.post(`${listItemPath(newItem)}`, postData));
+      postData.list_item = newItem;
+      createNewItemRequests.push(axios.post(`${listItemPath(item)}`, postData));
       updateOldItemRequests.push(
         axios.put(`${listItemPath(item)}/${item.id}`, {
-          [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+          list_item: {
             refreshed: true,
           },
         }),
@@ -294,12 +293,11 @@ function ListContainer(props) {
   };
 
   const handleItemEdit = async (item) => {
-    const path = listItemPath(item);
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
-      props.history.push(`${path}/bulk-edit?item_ids=${itemIds}`);
+      props.history.push(`${listItemPath(item)}/bulk-edit?item_ids=${itemIds}`);
     } else {
-      props.history.push(`${path}/${item.id}/edit`);
+      props.history.push(`${listItemPath(item)}/${item.id}/edit`);
     }
   };
 

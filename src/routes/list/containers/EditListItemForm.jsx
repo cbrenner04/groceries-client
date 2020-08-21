@@ -4,7 +4,6 @@ import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { listTypeToSnakeCase } from '../../../utils/format';
 import axios from '../../../utils/api';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
@@ -24,7 +23,7 @@ function EditListItemForm(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const putData = {
-      [`${listTypeToSnakeCase(props.list.type)}_item`]: {
+      list_item: {
         user_id: props.userId,
         product: item.product,
         task: item.task,
@@ -41,14 +40,11 @@ function EditListItemForm(props) {
         assignee_id: item.assigneeId,
         number_in_series: item.numberInSeries,
         category: item.category.trim().toLowerCase(),
-        [`${listTypeToSnakeCase(props.list.type)}_id`]: props.list.id,
+        list_id: props.list.id,
       },
     };
     try {
-      await axios.put(
-        `/lists/${props.list.id}/${listTypeToSnakeCase(props.list.type)}_items/${props.item.id}`,
-        putData,
-      );
+      await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, putData);
       toast('Item successfully updated', { type: 'info' });
       props.history.push(`/lists/${props.list.id}`);
     } catch ({ response, request, message }) {
