@@ -8,7 +8,6 @@ import { ListGroup } from 'react-bootstrap';
 
 import { capitalize } from '../../../utils/format';
 import ListItem from '../components/ListItem';
-import { listTypeToSnakeCase } from '../../../utils/format';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
@@ -62,8 +61,7 @@ function ListContainer(props) {
     }
   };
 
-  const listId = (item) => item[`${listTypeToSnakeCase(props.list.type)}_id`];
-  const listItemPath = (item) => `/lists/${listId(item)}/list_items`;
+  const listItemPath = `/lists/${props.list.id}/list_items`;
 
   const removeItemsFromNotPurchased = (items) => {
     let updatedNotPurchasedItems = notPurchasedItems;
@@ -135,7 +133,7 @@ function ListContainer(props) {
     const filteredItems = items.filter((i) => !i.purchased && !i.completed);
     const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
     const updateRequests = filteredItems.map((i) =>
-      axios.put(`${listItemPath(i)}/${i.id}`, {
+      axios.put(`${listItemPath}/${i.id}`, {
         list_item: {
           [completionType]: true,
         },
@@ -156,7 +154,7 @@ function ListContainer(props) {
     const items = selectedItems.length ? selectedItems : [item];
     const updateRequests = items.map((item) => {
       const isRead = !item.read;
-      return axios.put(`${listItemPath(item)}/${item.id}`, {
+      return axios.put(`${listItemPath}/${item.id}`, {
         list_item: {
           read: isRead,
         },
@@ -225,9 +223,9 @@ function ListContainer(props) {
       };
       const postData = {};
       postData.list_item = newItem;
-      createNewItemRequests.push(axios.post(`${listItemPath(item)}`, postData));
+      createNewItemRequests.push(axios.post(listItemPath, postData));
       updateOldItemRequests.push(
-        axios.put(`${listItemPath(item)}/${item.id}`, {
+        axios.put(`${listItemPath}/${item.id}`, {
           list_item: {
             refreshed: true,
           },
@@ -257,7 +255,7 @@ function ListContainer(props) {
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
-    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath(item)}/${item.id}`));
+    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath}/${item.id}`));
     try {
       await Promise.all(deleteRequests);
       const notPurchasedDeletedItems = [];
@@ -295,9 +293,9 @@ function ListContainer(props) {
   const handleItemEdit = async (item) => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
-      props.history.push(`${listItemPath(item)}/bulk-edit?item_ids=${itemIds}`);
+      props.history.push(`${listItemPath}/bulk-edit?item_ids=${itemIds}`);
     } else {
-      props.history.push(`${listItemPath(item)}/${item.id}/edit`);
+      props.history.push(`${listItemPath}/${item.id}/edit`);
     }
   };
 
