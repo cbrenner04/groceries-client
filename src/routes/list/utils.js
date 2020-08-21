@@ -134,7 +134,7 @@ export async function fetchList({ id, history }) {
   }
 }
 
-export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
+export async function fetchItemToEdit({ itemId, listId, history }) {
   try {
     const {
       data: {
@@ -143,7 +143,7 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
         categories,
         list_users,
       },
-    } = await axios.get(`/lists/${listId}/${itemType}/${itemId}/edit`);
+    } = await axios.get(`/lists/${listId}/list_items/${itemId}/edit`);
     // TODO: why? can these just be optional?
     const userId = item.user_id;
     const returnedItemId = item.id;
@@ -210,9 +210,9 @@ export async function fetchItemToEdit({ itemId, listId, itemType, history }) {
   }
 }
 
-export async function fetchItemsToEdit({ listId, itemType, search, history }) {
+export async function fetchItemsToEdit({ listId, search, history }) {
   try {
-    const { data } = await axios.get(`/lists/${listId}/${itemType}/bulk_update${search}`);
+    const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
     return data;
   } catch ({ response }) {
     if (response) {

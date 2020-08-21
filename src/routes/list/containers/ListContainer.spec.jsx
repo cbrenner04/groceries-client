@@ -1126,7 +1126,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/1/grocery_list_items/3/edit');
+    expect(history.push).toHaveBeenCalledWith('/lists/1/list_items/3/edit');
   });
 
   it('navigates to bulk edit form when multi select', async () => {
@@ -1145,7 +1145,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/1/grocery_list_items/bulk-edit?item_ids=2,5');
+    expect(history.push).toHaveBeenCalledWith('/lists/1/list_items/bulk-edit?item_ids=2,5');
   });
 
   it('adds item while filter, stays filtered', async () => {

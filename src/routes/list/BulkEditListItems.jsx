@@ -12,7 +12,6 @@ function BulkEditListItems(props) {
     <Async
       promiseFn={fetchItemsToEdit}
       listId={props.match.params.list_id}
-      itemType={props.match.params[0]}
       search={props.location.search}
       history={props.history}
     >
