@@ -104,13 +104,13 @@ EditListItemForm.propTypes = {
   }).isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
   // fetch in parent component sets default values for these properties
   item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     product: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
@@ -128,11 +128,11 @@ EditListItemForm.propTypes = {
     category: PropTypes.string.isRequired,
   }).isRequired,
   list: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default EditListItemForm;

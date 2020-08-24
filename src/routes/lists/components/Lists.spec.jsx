@@ -10,13 +10,13 @@ describe('Lists', () => {
   };
 
   const list = {
-    id: 1,
+    id: 'id1',
     name: 'foo',
     type: 'GroceryList',
     created_at: new Date('05/27/2020').toISOString(),
     completed: true,
-    users_list_id: 1,
-    owner_id: 1,
+    users_list_id: 'id1',
+    owner_id: 'id1',
     refreshed: false,
   };
 

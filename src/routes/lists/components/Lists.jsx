@@ -30,13 +30,13 @@ Lists.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.number.isRequired,
-      owner_id: PropTypes.number.isRequired,
+      users_list_id: PropTypes.string.isRequired,
+      owner_id: PropTypes.string.isRequired,
       refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,

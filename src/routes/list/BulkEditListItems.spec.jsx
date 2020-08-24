@@ -11,11 +11,11 @@ describe('BulkEditListItems', () => {
     match: {
       params: {
         0: 'grocery_list_items',
-        list_id: '1',
+        list_id: 'id1',
       },
     },
     location: {
-      search: '?item_ids=1,2',
+      search: '?item_ids=id1,id2',
     },
   };
   const renderBulkEditListItems = (newProps) => {
@@ -49,15 +49,15 @@ describe('BulkEditListItems', () => {
       data: {
         items: [
           {
-            user_id: 1,
-            id: 1,
+            user_id: 'id1',
+            id: 'id1',
             product: 'foo',
           },
         ],
-        list: { id: 1, type: 'GroceryList' },
-        list_users: [{ id: 1, email: 'foo@example.com' }],
+        list: { id: 'id1', type: 'GroceryList' },
+        list_users: [{ id: 'id1', email: 'foo@example.com' }],
         categories: [],
-        lists: [{ id: 1, type: 'GroceryList', name: 'foobar' }],
+        lists: [{ id: 'id1', type: 'GroceryList', name: 'foobar' }],
       },
     });
     const { container, getByText } = renderBulkEditListItems(props);

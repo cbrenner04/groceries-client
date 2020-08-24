@@ -28,60 +28,60 @@ describe('AcceptedLists', () => {
         push: jest.fn(),
       },
       completed: false,
-      userId: 1,
+      userId: 'id1',
       title: <div>Foo</div>,
       fullList: false,
       completedLists: [
         {
-          id: 2,
+          id: 'id2',
           name: 'bar',
           type: 'BookList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: true,
-          users_list_id: 2,
-          owner_id: 1,
+          users_list_id: 'id2',
+          owner_id: 'id1',
           refreshed: false,
         },
         {
-          id: 4,
+          id: 'id4',
           name: 'bar',
           type: 'BookList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: true,
-          users_list_id: 4,
-          owner_id: 2,
+          users_list_id: 'id4',
+          owner_id: 'id2',
           refreshed: false,
         },
       ],
       setCompletedLists: jest.fn(),
       incompleteLists: [
         {
-          id: 3,
+          id: 'id3',
           name: 'baz',
           type: 'MusicList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: false,
-          users_list_id: 3,
-          owner_id: 1,
+          users_list_id: 'id3',
+          owner_id: 'id1',
           refreshed: false,
         },
         {
-          id: 5,
+          id: 'id5',
           name: 'foobar',
           type: 'ToDoList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: false,
-          users_list_id: 5,
-          owner_id: 2,
+          users_list_id: 'id5',
+          owner_id: 'id2',
           refreshed: false,
         },
       ],
       setIncompleteLists: jest.fn(),
       currentUserPermissions: {
-        2: 'write',
-        3: 'write',
-        4: 'read',
-        5: 'read',
+        id2: 'write',
+        id3: 'write',
+        id4: 'read',
+        id5: 'read',
       },
       setCurrentUserPermissions: jest.fn(),
     };
@@ -336,14 +336,14 @@ describe('AcceptedLists', () => {
     props.completed = true;
     props.fullList = false;
     const newList = {
-      id: 6,
+      id: 'id7',
       name: 'new list',
       type: 'BookList',
       created_at: new Date('05/31/2020').toISOString(),
-      owner_id: 1,
+      owner_id: 'id1',
       completed: false,
       refreshed: false,
-      users_list_id: 8,
+      users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
     const { getAllByTestId } = renderAcceptedLists(props);
@@ -364,14 +364,14 @@ describe('AcceptedLists', () => {
     props.incompleteLists = [];
     props.fullList = true;
     const newList = {
-      id: 6,
+      id: 'id6',
       name: 'new list',
       type: 'BookList',
       created_at: new Date('05/31/2020').toISOString(),
-      owner_id: 1,
+      owner_id: 'id1',
       completed: false,
       refreshed: false,
-      users_list_id: 8,
+      users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
     const { getAllByTestId } = renderAcceptedLists(props);
@@ -386,14 +386,14 @@ describe('AcceptedLists', () => {
   it('refreshes multiple lists', async () => {
     props.completed = true;
     const newList = {
-      id: 6,
+      id: 'id6',
       name: 'new list',
       type: 'BookList',
       created_at: new Date('05/31/2020').toISOString(),
-      owner_id: 1,
+      owner_id: 'id1',
       completed: false,
       refreshed: false,
-      users_list_id: 8,
+      users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValueOnce({ data: newList });
     const { getAllByTestId, getAllByRole, getByText } = renderAcceptedLists(props);
@@ -525,14 +525,14 @@ describe('AcceptedLists', () => {
       completed: false,
       created_at: '2020-08-03T08:42:13.331-05:00',
       has_accepted: true,
-      id: 17,
+      id: 'id17',
       name: 'a',
-      owner_id: 1,
+      owner_id: 'id1',
       refreshed: false,
       type: 'MusicList',
       updated_at: '2020-08-03T08:42:13.331-05:00',
-      user_id: 1,
-      users_list_id: 29,
+      user_id: 'id1',
+      users_list_id: 'id29',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
     const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
@@ -554,7 +554,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
-      merge_lists: { list_ids: '3', new_list_name: 'a' },
+      merge_lists: { list_ids: 'id3', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
       newList,
@@ -593,14 +593,14 @@ describe('AcceptedLists', () => {
       completed: false,
       created_at: '2020-08-03T08:42:13.331-05:00',
       has_accepted: true,
-      id: 17,
+      id: 'id17',
       name: 'a',
-      owner_id: 1,
+      owner_id: 'id1',
       refreshed: false,
       type: 'BookList',
       updated_at: '2020-08-03T08:42:13.331-05:00',
-      user_id: 1,
-      users_list_id: 29,
+      user_id: 'id1',
+      users_list_id: 'id29',
     };
     props.completed = true;
     props.incompleteLists = [];
@@ -625,7 +625,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
-      merge_lists: { list_ids: '2,4', new_list_name: 'a' },
+      merge_lists: { list_ids: 'id2,id4', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).not.toHaveBeenCalled();
   });

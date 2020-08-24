@@ -31,69 +31,69 @@ describe('ListsContainer', () => {
           pathname: '/lists',
         },
       },
-      userId: 1,
+      userId: 'id1',
       pendingLists: [
         {
-          id: 1,
+          id: 'id1',
           name: 'foo',
           type: 'GroceryList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: false,
-          users_list_id: 1,
-          owner_id: 1,
+          users_list_id: 'id1',
+          owner_id: 'id1',
           refreshed: false,
         },
       ],
       completedLists: [
         {
-          id: 2,
+          id: 'id2',
           name: 'bar',
           type: 'BookList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: true,
-          users_list_id: 2,
-          owner_id: 1,
+          users_list_id: 'id2',
+          owner_id: 'id1',
           refreshed: false,
         },
         {
-          id: 4,
+          id: 'id4',
           name: 'bar',
           type: 'BookList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: true,
-          users_list_id: 4,
-          owner_id: 2,
+          users_list_id: 'id4',
+          owner_id: 'id2',
           refreshed: false,
         },
       ],
       incompleteLists: [
         {
-          id: 3,
+          id: 'id3',
           name: 'baz',
           type: 'MusicList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: false,
-          users_list_id: 3,
-          owner_id: 1,
+          users_list_id: 'id3',
+          owner_id: 'id1',
           refreshed: false,
         },
         {
-          id: 5,
+          id: 'id5',
           name: 'foobar',
           type: 'ToDoList',
           created_at: new Date('05/31/2020').toISOString(),
           completed: false,
-          users_list_id: 5,
-          owner_id: 2,
+          users_list_id: 'id5',
+          owner_id: 'id1',
           refreshed: false,
         },
       ],
       currentUserPermissions: {
-        1: 'write',
-        2: 'write',
-        3: 'write',
-        4: 'read',
-        5: 'read',
+        id1: 'write',
+        id2: 'write',
+        id3: 'write',
+        id4: 'read',
+        id5: 'read',
       },
     };
   });
@@ -115,14 +115,14 @@ describe('ListsContainer', () => {
   it('creates list on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
-        id: 6,
+        id: 'id6',
         name: 'new list',
         type: 'BookList',
         created_at: new Date('05/31/2020').toISOString(),
-        owner_id: 1,
+        owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 9,
+        users_list_id: 'id9',
       },
     });
     const { getByLabelText, getByTestId, getByText } = renderListsContainer(props);
@@ -133,7 +133,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
-    expect(getByTestId('list-6')).toHaveTextContent('new list');
+    expect(getByTestId('list-id6')).toHaveTextContent('new list');
   });
 
   it('redirects to login when submit response is 401', async () => {

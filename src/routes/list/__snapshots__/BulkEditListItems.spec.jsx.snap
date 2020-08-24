@@ -149,7 +149,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
     </button>
     <a
       class="btn btn-link btn-block"
-      href="/lists/1"
+      href="/lists/id1"
     >
       Cancel
     </a>

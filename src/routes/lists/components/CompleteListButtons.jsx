@@ -31,22 +31,22 @@ function CompletedListButtons(props) {
 }
 
 CompletedListButtons.propTypes = {
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
   list: PropTypes.shape({
-    owner_id: PropTypes.number.isRequired,
+    owner_id: PropTypes.string.isRequired,
   }).isRequired,
   onListRefresh: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.string,
       name: PropTypes.string,
       type: PropTypes.string,
       created_at: PropTypes.string,
       completed: PropTypes.bool,
-      users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
+      users_list_id: PropTypes.string,
+      owner_id: PropTypes.string,
       refreshed: PropTypes.bool,
     }),
   ).isRequired,

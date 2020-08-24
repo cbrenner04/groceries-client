@@ -9,7 +9,7 @@ import { prettyDueBy } from '../../../utils/format';
 describe('ListItem', () => {
   const props = {
     item: {
-      id: 1,
+      id: 'id1',
       product: 'foo',
       task: 'foo',
       quantity: 'foo',
@@ -17,7 +17,7 @@ describe('ListItem', () => {
       title: 'foo',
       artist: 'foo',
       album: 'foo',
-      assignee_id: 1,
+      assignee_id: 'id1',
       due_by: new Date('05/21/2020').toISOString(),
       read: false,
       number_in_series: 1,
@@ -66,10 +66,10 @@ describe('ListItem', () => {
   it('shows assignee when listType is ToDoList and the item is assigned and the assignee is in the listUsers', () => {
     const email = 'foo@example.com';
     props.listType = 'ToDoList';
-    props.item.assignee_id = 1;
+    props.item.assignee_id = 'id1';
     props.listUsers = [
       {
-        id: 1,
+        id: 'id1',
         email,
       },
     ];
@@ -81,10 +81,10 @@ describe('ListItem', () => {
 
   it('does not show assignee when listType is ToDoList, the item is assigned, the assignee is not in listUsers', () => {
     props.listType = 'ToDoList';
-    props.item.assignee_id = 1;
+    props.item.assignee_id = 'id1';
     props.listUsers = [
       {
-        id: 2,
+        id: 'id2',
         email: 'foo@example.com',
       },
     ];
@@ -99,7 +99,7 @@ describe('ListItem', () => {
     props.item.assignee_id = null;
     props.listUsers = [
       {
-        id: 1,
+        id: 'id1',
         email: 'foo@example.com',
       },
     ];

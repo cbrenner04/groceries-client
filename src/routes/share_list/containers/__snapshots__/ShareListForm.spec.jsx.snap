@@ -50,7 +50,7 @@ exports[`ShareListForm renders 1`] = `
       class="mb-5 list-group"
     >
       <div
-        data-test-id="invite-user-1"
+        data-test-id="invite-user-id1"
       >
         <button
           class="btn btn-link list-group-item list-group-item-action"
@@ -78,7 +78,7 @@ exports[`ShareListForm renders 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="pending-user-2"
+        data-test-id="pending-user-id2"
         style="display: block;"
       >
         <div
@@ -148,7 +148,7 @@ exports[`ShareListForm renders 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="accepted-user-3"
+        data-test-id="accepted-user-id3"
         style="display: block;"
       >
         <div
@@ -207,7 +207,7 @@ exports[`ShareListForm renders 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="refused-user-4"
+        data-test-id="refused-user-id4"
         style="display: block;"
       >
         <div

@@ -46,12 +46,12 @@ describe('EditListItem', () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
         item: {
-          user_id: 1,
-          id: 1,
+          user_id: 'id1',
+          id: 'id1',
           product: 'foo',
         },
-        list: { id: 1, type: 'GroceryList' },
-        list_users: [{ id: 1, email: 'foo@example.com' }],
+        list: { id: 'id1', type: 'GroceryList' },
+        list_users: [{ id: 'id1', email: 'foo@example.com' }],
         categories: [],
       },
     });

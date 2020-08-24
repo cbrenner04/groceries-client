@@ -12,7 +12,7 @@ describe('ToDo', () => {
     editForm: false,
     listUsers: [
       {
-        id: 1,
+        id: 'id1',
         email: 'foo@example.com',
       },
     ],

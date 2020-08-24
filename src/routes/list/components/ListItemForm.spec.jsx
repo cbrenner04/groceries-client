@@ -20,12 +20,12 @@ describe('ListItemForm', () => {
       history: {
         push: jest.fn(),
       },
-      userId: 1,
-      listId: 1,
+      userId: 'id1',
+      listId: 'id1',
       listType: 'GroceryList',
       listUsers: [
         {
-          id: 1,
+          id: 'id1',
           email: 'foo@example.com',
         },
       ],
@@ -229,7 +229,7 @@ describe('ListItemForm', () => {
     fireEvent.click(getAllByRole('button')[1]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/lists/1/list_items', {
+    expect(axios.post).toHaveBeenCalledWith('/lists/id1/list_items', {
       list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });

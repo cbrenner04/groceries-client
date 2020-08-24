@@ -44,17 +44,17 @@ describe('ShareList', () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
         accepted: [
-          { user: { id: 1, email: 'foo@example.com' }, users_list: { id: 1, permissions: 'read' } },
-          { user: { id: 4, email: 'foobaz@example.com' }, users_list: { id: 4, permissions: 'write' } },
+          { user: { id: 'id1', email: 'foo@example.com' }, users_list: { id: 'id1', permissions: 'read' } },
+          { user: { id: 'id4', email: 'foobaz@example.com' }, users_list: { id: 'id4', permissions: 'write' } },
         ],
-        pending: [{ user: { id: 2, email: 'bar@example.com' }, users_list: { id: 2, permissions: 'write' } }],
-        refused: [{ user: { id: 3, email: 'baz@example.com' }, users_list: { id: 3, permissions: 'read' } }],
-        current_user_id: 4,
+        pending: [{ user: { id: 'id2', email: 'bar@example.com' }, users_list: { id: 'id2', permissions: 'write' } }],
+        refused: [{ user: { id: 'id3', email: 'baz@example.com' }, users_list: { id: 'id3', permissions: 'read' } }],
+        current_user_id: 'id4',
         user_is_owner: true,
-        invitable_users: [{ id: 5, email: 'foobar@example.com' }],
+        invitable_users: [{ id: 'id5', email: 'foobar@example.com' }],
         list: {
           name: 'foo',
-          id: 1,
+          id: 'id1',
         },
       },
     });
@@ -62,10 +62,10 @@ describe('ShareList', () => {
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('invite-user-5')).toHaveTextContent('foobar@example.com');
-    expect(getByTestId('accepted-user-1')).toHaveTextContent('foo@example.com');
-    expect(queryByTestId('accepted-user-4')).toBeNull();
-    expect(getByTestId('pending-user-2')).toHaveTextContent('bar@example.com');
-    expect(getByTestId('refused-user-3')).toHaveTextContent('baz@example.com');
+    expect(getByTestId('invite-user-id5')).toHaveTextContent('foobar@example.com');
+    expect(getByTestId('accepted-user-id1')).toHaveTextContent('foo@example.com');
+    expect(queryByTestId('accepted-user-id4')).toBeNull();
+    expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
+    expect(getByTestId('refused-user-id3')).toHaveTextContent('baz@example.com');
   });
 });

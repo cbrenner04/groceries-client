@@ -23,7 +23,7 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@ex.co
       </option>
@@ -115,7 +115,7 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@ex.co
       </option>
@@ -207,7 +207,7 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@ex.co
       </option>
@@ -302,7 +302,7 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@ex.co
       </option>

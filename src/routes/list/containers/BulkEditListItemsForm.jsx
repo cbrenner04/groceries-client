@@ -208,7 +208,7 @@ BulkEditListItemsForm.propTypes = {
   }).isRequired,
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
       content: PropTypes.string,
@@ -227,19 +227,19 @@ BulkEditListItemsForm.propTypes = {
     }),
   ).isRequired,
   list: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
   lists: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }).isRequired,
   ),

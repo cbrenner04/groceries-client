@@ -10,7 +10,7 @@ describe('EditList', () => {
   const props = {
     match: {
       params: {
-        id: '1',
+        id: 'id1',
       },
     },
   };
@@ -42,7 +42,7 @@ describe('EditList', () => {
 
   it('displays EditList', async () => {
     axios.get = jest.fn().mockResolvedValue({
-      data: { owner_id: 1, id: 1, name: 'foo', completed: false, type: 'GroceryList' },
+      data: { owner_id: 'id1', id: 'id1', name: 'foo', completed: false, type: 'GroceryList' },
     });
     const { container, getByText } = renderEditList(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));

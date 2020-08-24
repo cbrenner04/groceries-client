@@ -12,7 +12,7 @@ describe('ToDo', () => {
     dueBy: 'bar',
     clearDueBy: false,
     handleClearDueBy: jest.fn(),
-    listUsers: [{ id: 1, email: 'foo@ex.co' }],
+    listUsers: [{ id: 'id1', email: 'foo@ex.co' }],
   };
 
   it('renders assigneeId input enabled when clearAssignee is false', () => {

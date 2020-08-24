@@ -38,52 +38,52 @@ describe('Lists', () => {
   it('renders Lists when data retrieval is complete', async () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
-        current_user_id: 1,
+        current_user_id: 'id1',
         accepted_lists: {
           completed_lists: [
             {
-              id: 1,
-              users_list_id: 1,
+              id: 'id1',
+              users_list_id: 'id1',
               name: 'foo',
-              user_id: 1,
+              user_id: 'id1',
               type: 'GroceryList',
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
-              owner_id: 1,
+              owner_id: 'id1',
             },
           ],
           not_completed_lists: [
             {
-              id: 2,
-              users_list_id: 2,
+              id: 'id2',
+              users_list_id: 'id2',
               name: 'bar',
-              user_id: 1,
+              user_id: 'id1',
               type: 'BookList',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
-              owner_id: 1,
+              owner_id: 'id1',
             },
           ],
         },
         pending_lists: [
           {
-            id: 3,
-            users_list_id: 3,
+            id: 'id3',
+            users_list_id: 'id3',
             name: 'foo',
-            user_id: 1,
+            user_id: 'id1',
             type: 'GroceryList',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
-            owner_id: 2,
+            owner_id: 'id2',
           },
         ],
         current_list_permissions: {
-          1: 'write',
-          2: 'write',
-          3: 'write',
+          id1: 'write',
+          id2: 'write',
+          id3: 'write',
         },
       },
     });
@@ -92,8 +92,8 @@ describe('Lists', () => {
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-2')).toHaveAttribute('data-test-class', 'incomplete-list');
-    expect(getByTestId('list-3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(getByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(getByTestId('list-id2')).toHaveAttribute('data-test-class', 'incomplete-list');
+    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
   });
 });

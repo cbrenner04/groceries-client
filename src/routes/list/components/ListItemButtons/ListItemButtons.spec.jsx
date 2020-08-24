@@ -20,8 +20,8 @@ describe('ListItemButtons', () => {
   beforeEach(() => {
     props = {
       item: {
-        grocery_list_id: 1,
-        id: 1,
+        grocery_list_id: 'id1',
+        id: 'id1',
         read: true,
       },
       purchased: true,

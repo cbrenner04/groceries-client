@@ -9,8 +9,8 @@ describe('Purchased', () => {
   beforeEach(() => {
     props = {
       item: {
-        grocery_list_id: 1,
-        id: 1,
+        grocery_list_id: 'id1',
+        id: 'id1',
         read: true,
       },
       purchased: false,
@@ -113,7 +113,7 @@ describe('Purchased', () => {
 
   it('calls handleItemEdi when Edit is clicked', () => {
     props.multiSelect = true;
-    props.selectedItems = [{ id: 1 }];
+    props.selectedItems = [{ id: 'id1' }];
     const { getAllByRole } = render(<Purchased {...props} />);
 
     fireEvent.click(getAllByRole('button')[1]);

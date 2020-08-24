@@ -41,7 +41,7 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@example.com
       </option>
@@ -140,7 +140,7 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
         Clear Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       >
         foo@example.com
       </option>

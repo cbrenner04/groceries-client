@@ -235,20 +235,20 @@ ShareListForm.propTypes = {
   name: PropTypes.string.isRequired,
   invitableUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.string,
       email: PropTypes.string,
     }),
   ).isRequired,
-  listId: PropTypes.number.isRequired,
+  listId: PropTypes.string.isRequired,
   userIsOwner: PropTypes.bool.isRequired,
   pending: PropTypes.arrayOf(
     PropTypes.shape({
       user: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         email: PropTypes.string,
       }),
       users_list: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         permissions: PropTypes.string,
       }),
     }),
@@ -256,11 +256,11 @@ ShareListForm.propTypes = {
   accepted: PropTypes.arrayOf(
     PropTypes.shape({
       user: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         email: PropTypes.string,
       }),
       users_list: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         permissions: PropTypes.string,
       }),
     }),
@@ -268,16 +268,16 @@ ShareListForm.propTypes = {
   refused: PropTypes.arrayOf(
     PropTypes.shape({
       user: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         email: PropTypes.string,
       }),
       users_list: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         permissions: PropTypes.string,
       }),
     }),
   ).isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default ShareListForm;

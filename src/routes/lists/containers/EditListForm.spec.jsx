@@ -16,7 +16,7 @@ describe('EditListForm', () => {
     history = createMemoryHistory();
     const props = {
       history,
-      listId: 1,
+      listId: 'id1',
       name: 'foo',
       type: 'GroceryList',
       completed: false,

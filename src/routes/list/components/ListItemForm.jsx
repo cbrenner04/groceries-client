@@ -136,12 +136,12 @@ ListItemForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  userId: PropTypes.number.isRequired,
-  listId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
+  listId: PropTypes.string.isRequired,
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }),
   ),

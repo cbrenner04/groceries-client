@@ -61,7 +61,7 @@ function ListContainer(props) {
     }
   };
 
-  const listItemPath = `/lists/${props.list.id}/list_items`;
+  const listItemPath = () => `/lists/${props.list.id}/list_items`;
 
   const removeItemsFromNotPurchased = (items) => {
     let updatedNotPurchasedItems = notPurchasedItems;
@@ -133,7 +133,7 @@ function ListContainer(props) {
     const filteredItems = items.filter((i) => !i.purchased && !i.completed);
     const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
     const updateRequests = filteredItems.map((i) =>
-      axios.put(`${listItemPath}/${i.id}`, {
+      axios.put(`${listItemPath()}/${i.id}`, {
         list_item: {
           [completionType]: true,
         },
@@ -154,7 +154,7 @@ function ListContainer(props) {
     const items = selectedItems.length ? selectedItems : [item];
     const updateRequests = items.map((item) => {
       const isRead = !item.read;
-      return axios.put(`${listItemPath}/${item.id}`, {
+      return axios.put(`${listItemPath()}/${item.id}`, {
         list_item: {
           read: isRead,
         },
@@ -223,9 +223,9 @@ function ListContainer(props) {
       };
       const postData = {};
       postData.list_item = newItem;
-      createNewItemRequests.push(axios.post(listItemPath, postData));
+      createNewItemRequests.push(axios.post(listItemPath(), postData));
       updateOldItemRequests.push(
-        axios.put(`${listItemPath}/${item.id}`, {
+        axios.put(`${listItemPath()}/${item.id}`, {
           list_item: {
             refreshed: true,
           },
@@ -255,7 +255,7 @@ function ListContainer(props) {
 
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
-    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath}/${item.id}`));
+    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath()}/${item.id}`));
     try {
       await Promise.all(deleteRequests);
       const notPurchasedDeletedItems = [];
@@ -293,9 +293,9 @@ function ListContainer(props) {
   const handleItemEdit = async (item) => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
-      props.history.push(`${listItemPath}/bulk-edit?item_ids=${itemIds}`);
+      props.history.push(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
     } else {
-      props.history.push(`${listItemPath}/${item.id}/edit`);
+      props.history.push(`${listItemPath()}/${item.id}/edit`);
     }
   };
 
@@ -438,18 +438,18 @@ ListContainer.propTypes = {
       pathname: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
   list: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
-    owner_id: PropTypes.number.isRequired,
+    owner_id: PropTypes.string.isRequired,
   }).isRequired,
   purchasedItems: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
       content: PropTypes.string,
@@ -458,7 +458,7 @@ ListContainer.propTypes = {
       title: PropTypes.string,
       artist: PropTypes.string,
       album: PropTypes.string,
-      assignee_id: PropTypes.number,
+      assignee_id: PropTypes.string,
       due_by: PropTypes.string,
       read: PropTypes.bool,
       number_in_series: PropTypes.number,
@@ -470,7 +470,7 @@ ListContainer.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
@@ -478,7 +478,7 @@ ListContainer.propTypes = {
   notPurchasedItems: PropTypes.objectOf(
     PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.number.isRequired,
+        id: PropTypes.string.isRequired,
         product: PropTypes.string,
         task: PropTypes.string,
         content: PropTypes.string,
@@ -487,7 +487,7 @@ ListContainer.propTypes = {
         title: PropTypes.string,
         artist: PropTypes.string,
         album: PropTypes.string,
-        assignee_id: PropTypes.number,
+        assignee_id: PropTypes.string,
         due_by: PropTypes.string,
         read: PropTypes.bool,
         number_in_series: PropTypes.number,
