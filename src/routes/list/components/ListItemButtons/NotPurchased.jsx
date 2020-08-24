@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Bookmark, Complete, EditButton, Trash } from '../../../../components/ActionButtons';
+import { listItem } from '../../../../types';
 
 function NotPurchasedItemButtons(props) {
   return (
@@ -36,12 +37,7 @@ function NotPurchasedItemButtons(props) {
 
 NotPurchasedItemButtons.propTypes = {
   listType: PropTypes.string.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    read: PropTypes.bool,
-    completed: PropTypes.bool,
-    purchased: PropTypes.bool,
-  }).isRequired,
+  item: listItem.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,

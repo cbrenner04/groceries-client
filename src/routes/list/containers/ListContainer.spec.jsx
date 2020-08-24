@@ -46,6 +46,8 @@ describe('ListContainer', () => {
         created_at: new Date('05/24/2020').toISOString(),
         completed: false,
         owner_id: 'id1',
+        users_list_id: 'id1',
+        refreshed: false,
       },
       purchasedItems: [
         {

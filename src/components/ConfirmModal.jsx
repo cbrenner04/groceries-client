@@ -23,7 +23,7 @@ function ConfirmModal(props) {
 
 ConfirmModal.propTypes = {
   action: PropTypes.string.isRequired,
-  body: PropTypes.string.isRequired,
+  body: PropTypes.node.isRequired,
   show: PropTypes.bool.isRequired,
   handleConfirm: PropTypes.func.isRequired,
   handleClear: PropTypes.func.isRequired,

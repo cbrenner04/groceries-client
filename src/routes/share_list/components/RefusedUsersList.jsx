@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Refresh } from '../../../components/ActionButtons';
+import { usersLists } from '../../../types';
 
 const RefusedUsersList = (props) => (
   <>
@@ -43,18 +44,7 @@ RefusedUsersList.propTypes = {
   refreshShare: PropTypes.func.isRequired,
   userIsOwner: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      user: PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-      }),
-      users_list: PropTypes.shape({
-        id: PropTypes.string,
-        permissions: PropTypes.string,
-      }),
-    }).isRequired,
-  ).isRequired,
+  users: PropTypes.arrayOf(usersLists).isRequired,
 };
 
 export default RefusedUsersList;

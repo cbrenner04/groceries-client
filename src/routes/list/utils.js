@@ -137,13 +137,9 @@ export async function fetchList({ id, history }) {
 export async function fetchItemToEdit({ itemId, listId, history }) {
   try {
     const {
-      data: {
-        item,
-        list: { id: returnedListId, type },
-        categories,
-        list_users,
-      },
+      data: { item, list, categories, list_users },
     } = await axios.get(`/lists/${listId}/list_items/${itemId}/edit`);
+    list.categories = categories;
     // TODO: why? can these just be optional?
     const userId = item.user_id;
     const returnedItemId = item.id;
@@ -165,11 +161,7 @@ export async function fetchItemToEdit({ itemId, listId, history }) {
     return {
       listUsers: list_users || [],
       userId,
-      list: {
-        id: returnedListId,
-        type,
-        categories,
-      },
+      list,
       item: {
         id: returnedItemId,
         product,

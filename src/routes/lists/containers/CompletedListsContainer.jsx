@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
+import { list } from '../../../types';
 
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
@@ -41,19 +42,7 @@ CompletedListsContainer.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  completedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string,
-      owner_id: PropTypes.string,
-      user_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  completedLists: PropTypes.arrayOf(list).isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 

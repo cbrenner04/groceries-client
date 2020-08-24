@@ -52,6 +52,7 @@ describe('List', () => {
           created_at: new Date('05/22/2020').toISOString(),
           completed: false,
           owner_id: 'id1',
+          refreshed: false,
         },
         categories: [],
         list_users: [{ id: 'id1', email: 'foo@example.com' }],

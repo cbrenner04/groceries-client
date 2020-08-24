@@ -54,10 +54,28 @@ describe('BulkEditListItems', () => {
             product: 'foo',
           },
         ],
-        list: { id: 'id1', type: 'GroceryList' },
+        list: {
+          id: 'id1',
+          type: 'GroceryList',
+          name: 'foo',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+          owner_id: 'id1',
+        },
         list_users: [{ id: 'id1', email: 'foo@example.com' }],
         categories: [],
-        lists: [{ id: 'id1', type: 'GroceryList', name: 'foobar' }],
+        lists: [
+          {
+            id: 'id1',
+            type: 'GroceryList',
+            name: 'foobar',
+            created_at: 'some date',
+            completed: false,
+            refreshed: false,
+            owner_id: 'id1',
+          },
+        ],
       },
     });
     const { container, getByText } = renderBulkEditListItems(props);

@@ -35,10 +35,6 @@ function Lists(props) {
 Lists.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-    }).isRequired,
   }).isRequired,
 };
 

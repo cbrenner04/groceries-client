@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Bookmark, Refresh, EditButton, Trash } from '../../../../components/ActionButtons';
+import { listItem } from '../../../../types';
 
 const PurchasedItemButtons = (props) => (
   <ButtonGroup className="float-right">
@@ -36,37 +37,13 @@ const PurchasedItemButtons = (props) => (
 
 PurchasedItemButtons.propTypes = {
   listType: PropTypes.string.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    read: PropTypes.bool,
-    completed: PropTypes.bool,
-    purchased: PropTypes.bool,
-  }).isRequired,
+  item: listItem.isRequired,
   handleItemRefresh: PropTypes.func.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      product: PropTypes.string,
-      task: PropTypes.string,
-      content: PropTypes.string,
-      quantity: PropTypes.string,
-      author: PropTypes.string,
-      title: PropTypes.string,
-      artist: PropTypes.string,
-      album: PropTypes.string,
-      assignee_id: PropTypes.string,
-      due_by: PropTypes.string,
-      read: PropTypes.bool,
-      number_in_series: PropTypes.number,
-      category: PropTypes.string,
-      completed: PropTypes.bool,
-      purchased: PropTypes.bool,
-    }),
-  ).isRequired,
+  selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
 };
 

@@ -7,6 +7,7 @@ import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
 import { defaultDueBy } from '../../../../utils/format';
+import { listUsers } from '../../../../types';
 
 const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) =>
   ({
@@ -73,12 +74,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
 
 ListItemFormFields.propTypes = {
   listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  ),
+  listUsers: PropTypes.arrayOf(listUsers),
   categories: PropTypes.arrayOf(PropTypes.string),
   formData: PropTypes.shape({
     product: PropTypes.string,

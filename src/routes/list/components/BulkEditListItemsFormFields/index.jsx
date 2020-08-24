@@ -7,6 +7,7 @@ import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
 import { CategoryField, CheckboxField } from '../../../../components/FormFields';
+import { listUsers } from '../../../../types';
 
 const BulkEditListItemsFormFields = (props) => {
   return (
@@ -126,12 +127,7 @@ BulkEditListItemsFormFields.propTypes = {
   }).isRequired,
   handleInput: PropTypes.func.isRequired,
   clearAttribute: PropTypes.func.isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  listUsers: PropTypes.arrayOf(listUsers).isRequired,
   handleOtherListChange: PropTypes.func.isRequired,
   existingListsOptions: PropTypes.arrayOf(
     PropTypes.shape({

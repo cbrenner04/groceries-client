@@ -7,6 +7,7 @@ import update from 'immutability-helper';
 import { defaultDueBy } from '../../../utils/format';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
+import { listUsers } from '../../../types';
 
 const defaultFormState = {
   product: '',
@@ -139,12 +140,7 @@ ListItemForm.propTypes = {
   userId: PropTypes.string.isRequired,
   listId: PropTypes.string.isRequired,
   listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  ),
+  listUsers: PropTypes.arrayOf(listUsers),
   handleItemAddition: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.string),
 };

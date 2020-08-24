@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
+import { list } from '../../../types';
 
 function List(props) {
   const handleListSelect = (list) => {
@@ -74,29 +75,9 @@ List.propTypes = {
   listClass: PropTypes.string.isRequired,
   testClass: PropTypes.string.isRequired,
   includeLinkToList: PropTypes.bool.isRequired,
-  list: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired,
-    completed: PropTypes.bool.isRequired,
-    users_list_id: PropTypes.string,
-    owner_id: PropTypes.string.isRequired,
-    refreshed: PropTypes.bool.isRequired,
-  }).isRequired,
+  list: list.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }).isRequired,
-  ).isRequired,
+  selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
 };
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Complete, EditLink, Merge, Share, Trash } from '../../../components/ActionButtons';
+import { list } from '../../../types';
 
 function IncompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
@@ -56,27 +57,13 @@ function IncompleteListButtons(props) {
 
 IncompleteListButtons.propTypes = {
   userId: PropTypes.string.isRequired,
-  list: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    owner_id: PropTypes.string.isRequired,
-  }).isRequired,
+  list: list.isRequired,
   onListCompletion: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   handleMerge: PropTypes.func.isRequired,
-  selectedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      type: PropTypes.string,
-      created_at: PropTypes.string,
-      completed: PropTypes.bool,
-      users_list_id: PropTypes.string,
-      owner_id: PropTypes.string,
-      refreshed: PropTypes.bool,
-    }).isRequired,
-  ).isRequired,
+  selectedLists: PropTypes.arrayOf(list).isRequired,
   pending: PropTypes.bool.isRequired,
 };
 
