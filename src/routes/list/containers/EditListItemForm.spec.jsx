@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
 
 import EditListItemForm from './EditListItemForm';
-import { defaultDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 
 jest.mock('react-toastify', () => ({
@@ -36,7 +35,7 @@ describe('EditListItemForm', () => {
         title: '',
         read: false,
         artist: '',
-        dueBy: defaultDueBy(),
+        dueBy: '',
         assigneeId: '',
         album: '',
         numberInSeries: 0,

@@ -651,7 +651,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         name="dueBy"
         placeholder="mm/dd/yyyy"
         type="date"
-        value="2020-05-24"
+        value=""
       />
       
     </div>

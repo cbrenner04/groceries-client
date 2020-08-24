@@ -4,7 +4,6 @@ import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { defaultDueBy } from '../../../utils/format';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 import { listUsers } from '../../../types';
@@ -19,7 +18,7 @@ const defaultFormState = {
   artist: '',
   album: '',
   assigneeId: '',
-  dueBy: defaultDueBy(),
+  dueBy: '',
   numberInSeries: 0,
   category: '',
 };
