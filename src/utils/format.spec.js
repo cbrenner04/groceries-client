@@ -1,15 +1,9 @@
-import { formatDate, defaultDueBy, formatDueBy, prettyDueBy, capitalize, prettyListType } from './format';
+import { formatDate, formatDueBy, prettyDueBy, capitalize, prettyListType } from './format';
 
 describe('format', () => {
   describe('formatDate', () => {
     it('returns formatted date', () => {
       expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020, 12:00:00 am');
-    });
-  });
-
-  describe('defaultDueBy', () => {
-    it('returns default due by', () => {
-      expect(defaultDueBy()).toBe('2020-05-24'); // default date set in setupTests
     });
   });
 
