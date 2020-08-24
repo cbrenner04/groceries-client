@@ -50,7 +50,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-1"
+        data-test-id="list-id1"
         style="display: block;"
       >
         <div
@@ -67,7 +67,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
               >
                 <a
                   class="router-link"
-                  href="/lists/1"
+                  href="/lists/id1"
                 >
                   <h5
                     class="mb-1"

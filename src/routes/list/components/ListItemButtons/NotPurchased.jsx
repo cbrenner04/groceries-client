@@ -37,7 +37,7 @@ function NotPurchasedItemButtons(props) {
 NotPurchasedItemButtons.propTypes = {
   listType: PropTypes.string.isRequired,
   item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     read: PropTypes.bool,
     completed: PropTypes.bool,
     purchased: PropTypes.bool,

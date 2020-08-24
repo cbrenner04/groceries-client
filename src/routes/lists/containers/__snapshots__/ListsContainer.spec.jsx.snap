@@ -134,7 +134,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-3"
+        data-test-id="list-id3"
         style="display: block;"
       >
         <div
@@ -151,7 +151,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
-                  href="/lists/3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -192,7 +192,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-share"
-                    href="/lists/3/users_lists"
+                    href="/lists/id3/users_lists"
                     style="pointer-events: auto; opacity: 1;"
                   >
                     <i
@@ -202,7 +202,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/3/edit"
+                    href="/lists/id3/edit"
                     style="pointer-events: auto; opacity: 1;"
                   >
                     <i
@@ -227,7 +227,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-5"
+        data-test-id="list-id5"
         style="display: block;"
       >
         <div
@@ -244,7 +244,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
-                  href="/lists/5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
@@ -275,8 +275,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <button
                     class="p-0 mr-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    disabled=""
-                    style="pointer-events: none; opacity: 0.3;"
+                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -287,7 +286,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-share"
                     disabled=""
-                    href="/lists/5/users_lists"
+                    href="/lists/id5/users_lists"
                     style="pointer-events: none; opacity: 0.3;"
                   >
                     <i
@@ -297,9 +296,8 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-edit"
-                    disabled=""
-                    href="/lists/5/edit"
-                    style="pointer-events: none; opacity: 0.3;"
+                    href="/lists/id5/edit"
+                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -360,7 +358,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-2"
+        data-test-id="list-id2"
         style="display: block;"
       >
         <div
@@ -377,7 +375,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
-                  href="/lists/2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -433,7 +431,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-4"
+        data-test-id="list-id4"
         style="display: block;"
       >
         <div
@@ -450,7 +448,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
-                  href="/lists/4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"
@@ -643,7 +641,7 @@ exports[`ListsContainer renders 1`] = `
       <div
         class="pending-list list-group-item"
         data-test-class="pending-list"
-        data-test-id="list-1"
+        data-test-id="list-id1"
         style="display: block;"
       >
         <div
@@ -747,7 +745,7 @@ exports[`ListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-3"
+        data-test-id="list-id3"
         style="display: block;"
       >
         <div
@@ -764,7 +762,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -805,7 +803,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-share"
-                    href="/lists/3/users_lists"
+                    href="/lists/id3/users_lists"
                     style="pointer-events: auto; opacity: 1;"
                   >
                     <i
@@ -815,7 +813,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/3/edit"
+                    href="/lists/id3/edit"
                     style="pointer-events: auto; opacity: 1;"
                   >
                     <i
@@ -840,7 +838,7 @@ exports[`ListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-5"
+        data-test-id="list-id5"
         style="display: block;"
       >
         <div
@@ -857,7 +855,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
@@ -888,8 +886,7 @@ exports[`ListsContainer renders 1`] = `
                   <button
                     class="p-0 mr-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    disabled=""
-                    style="pointer-events: none; opacity: 0.3;"
+                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -900,7 +897,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-share"
                     disabled=""
-                    href="/lists/5/users_lists"
+                    href="/lists/id5/users_lists"
                     style="pointer-events: none; opacity: 0.3;"
                   >
                     <i
@@ -910,9 +907,8 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 mr-3"
                     data-test-id="incomplete-list-edit"
-                    disabled=""
-                    href="/lists/5/edit"
-                    style="pointer-events: none; opacity: 0.3;"
+                    href="/lists/id5/edit"
+                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -973,7 +969,7 @@ exports[`ListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-2"
+        data-test-id="list-id2"
         style="display: block;"
       >
         <div
@@ -990,7 +986,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -1046,7 +1042,7 @@ exports[`ListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-4"
+        data-test-id="list-id4"
         style="display: block;"
       >
         <div
@@ -1063,7 +1059,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"

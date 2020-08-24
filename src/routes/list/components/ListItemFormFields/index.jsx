@@ -75,7 +75,7 @@ ListItemFormFields.propTypes = {
   listType: PropTypes.string.isRequired,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }),
   ),

@@ -38,27 +38,27 @@ describe('CompletedLists', () => {
   it('renders CompletedLists when data retrieval is complete', async () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
-        current_user_id: 1,
+        current_user_id: 'id1',
         completed_lists: [
           {
-            id: 1,
-            users_list_id: 1,
+            id: 'id1',
+            users_list_id: 'id1',
             name: 'foo',
-            user_id: 1,
+            user_id: 'id1',
             type: 'GroceryList',
             created_at: new Date('05/31/2020').toISOString(),
             completed: true,
             refreshed: false,
-            owner_id: 1,
+            owner_id: 'id1',
           },
         ],
-        current_list_permissions: { 1: 'write' },
+        current_list_permissions: { id1: 'write' },
       },
     });
     const { container, getByTestId } = renderCompletedLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-1')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(getByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
   });
 });

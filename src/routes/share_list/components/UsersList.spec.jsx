@@ -11,36 +11,36 @@ describe('UsersList', () => {
       togglePermission: jest.fn(),
       removeShare: jest.fn(),
       userIsOwner: true,
-      userId: 1,
+      userId: 'id1',
       status: 'accepted',
       users: [
         {
           user: {
-            id: 1,
+            id: 'id1',
             email: 'foo@example.com',
           },
           users_list: {
-            id: 1,
+            id: 'id1',
             permissions: 'write',
           },
         },
         {
           user: {
-            id: 2,
+            id: 'id2',
             email: 'bar@example.com',
           },
           users_list: {
-            id: 2,
+            id: 'id2',
             permissions: 'write',
           },
         },
         {
           user: {
-            id: 3,
+            id: 'id3',
             email: 'baz@example.com',
           },
           users_list: {
-            id: 4,
+            id: 'id4',
             permissions: 'read',
           },
         },
@@ -53,17 +53,17 @@ describe('UsersList', () => {
     const { container, getByTestId, queryByTestId } = render(<UsersList {...props} />);
 
     expect(container).toMatchSnapshot();
-    expect(queryByTestId('accepted-user-1')).toBeNull();
-    expect(getByTestId('accepted-user-2').firstChild.children[1].firstChild).toHaveAttribute(
+    expect(queryByTestId('accepted-user-id1')).toBeNull();
+    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-write',
     );
-    expect(getByTestId('accepted-user-2').firstChild.children[1].firstChild).toHaveClass('badge-success');
-    expect(getByTestId('accepted-user-3').firstChild.children[1].firstChild).toHaveAttribute(
+    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveClass('badge-success');
+    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-read',
     );
-    expect(getByTestId('accepted-user-3').firstChild.children[1].firstChild).toHaveClass('badge-primary');
+    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveClass('badge-primary');
   });
 
   it('does not render read and write badges when user is not owner', () => {
@@ -72,10 +72,10 @@ describe('UsersList', () => {
 
     expect(container).toMatchSnapshot();
     expect(queryByText('foo@example.com')).toBeNull();
-    expect(getByTestId('accepted-user-2')).toHaveTextContent('bar@example.com');
-    expect(getByTestId('accepted-user-2')).not.toHaveTextContent('write');
-    expect(getByTestId('accepted-user-3')).toHaveTextContent('baz@example.com');
-    expect(getByTestId('accepted-user-3')).not.toHaveTextContent('read');
+    expect(getByTestId('accepted-user-id2')).toHaveTextContent('bar@example.com');
+    expect(getByTestId('accepted-user-id2')).not.toHaveTextContent('write');
+    expect(getByTestId('accepted-user-id3')).toHaveTextContent('baz@example.com');
+    expect(getByTestId('accepted-user-id3')).not.toHaveTextContent('read');
   });
 
   it('toggles user permissions', async () => {

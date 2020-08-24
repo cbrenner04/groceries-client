@@ -50,7 +50,7 @@ exports[`CompletedListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-1"
+        data-test-id="list-id1"
         style="display: block;"
       >
         <div
@@ -67,7 +67,7 @@ exports[`CompletedListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/1"
+                  href="/lists/id1"
                 >
                   <h5
                     class="mb-1"
@@ -123,7 +123,7 @@ exports[`CompletedListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-2"
+        data-test-id="list-id2"
         style="display: block;"
       >
         <div
@@ -140,7 +140,7 @@ exports[`CompletedListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -196,7 +196,7 @@ exports[`CompletedListsContainer renders 1`] = `
       <div
         class="accepted-list list-group-item"
         data-test-class="completed-list"
-        data-test-id="list-3"
+        data-test-id="list-id3"
         style="display: block;"
       >
         <div
@@ -213,7 +213,7 @@ exports[`CompletedListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
-                  href="/lists/3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"

@@ -20,12 +20,12 @@ describe('EditListItemForm', () => {
       },
       listUsers: [
         {
-          id: 1,
+          id: 'id1',
           email: 'foo@example.com',
         },
       ],
       item: {
-        id: 1,
+        id: 'id1',
         product: 'foo',
         task: '',
         content: '',
@@ -43,11 +43,11 @@ describe('EditListItemForm', () => {
         category: '',
       },
       list: {
-        id: 1,
+        id: 'id1',
         type: 'GroceryList',
         categories: [''],
       },
-      userId: 1,
+      userId: 'id1',
     };
   });
 
@@ -210,7 +210,7 @@ describe('EditListItemForm', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/1', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {
       list_item: expect.objectContaining({ product: 'foo' }),
     });
   });
@@ -223,7 +223,7 @@ describe('EditListItemForm', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/1', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {
       list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });

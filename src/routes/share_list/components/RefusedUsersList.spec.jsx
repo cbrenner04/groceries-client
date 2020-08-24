@@ -10,25 +10,25 @@ describe('RefusedUsersList', () => {
     props = {
       refreshShare: jest.fn(),
       userIsOwner: true,
-      userId: 1,
+      userId: 'id1',
       users: [
         {
           user: {
-            id: 1,
+            id: 'id1',
             email: 'foo@example.com',
           },
           users_list: {
-            id: 1,
+            id: 'id1',
             permissions: 'write',
           },
         },
         {
           user: {
-            id: 2,
+            id: 'id2',
             email: 'bar@example.com',
           },
           users_list: {
-            id: 2,
+            id: 'id2',
             permissions: 'write',
           },
         },
@@ -41,8 +41,8 @@ describe('RefusedUsersList', () => {
     const { container, getByRole, getByTestId, queryByTestId } = render(<RefusedUsersList {...props} />);
 
     expect(container).toMatchSnapshot();
-    expect(queryByTestId('refused-user-1')).toBeNull();
-    expect(getByTestId('refused-user-2')).toHaveTextContent('bar@example.com');
+    expect(queryByTestId('refused-user-id1')).toBeNull();
+    expect(getByTestId('refused-user-id2')).toHaveTextContent('bar@example.com');
     expect(getByRole('button')).toBeVisible();
   });
 
@@ -52,7 +52,7 @@ describe('RefusedUsersList', () => {
 
     expect(container).toMatchSnapshot();
     expect(queryByText('foo@example.com')).toBeNull();
-    expect(getByTestId('refused-user-2')).toHaveTextContent('bar@example.com');
+    expect(getByTestId('refused-user-id2')).toHaveTextContent('bar@example.com');
     expect(queryByRole('button')).toBeNull();
   });
 

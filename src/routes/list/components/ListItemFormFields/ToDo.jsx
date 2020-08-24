@@ -47,7 +47,7 @@ ToDoFormFields.propTypes = {
   completed: PropTypes.bool,
   listUsers: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.string,
       email: PropTypes.string,
     }),
   ).isRequired,

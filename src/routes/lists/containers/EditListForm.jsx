@@ -72,7 +72,7 @@ EditListForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  listId: PropTypes.number.isRequired,
+  listId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   completed: PropTypes.bool.isRequired,

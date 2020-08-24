@@ -50,7 +50,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="mb-5 list-group"
     >
       <div
-        data-test-id="invite-user-5"
+        data-test-id="invite-user-id5"
       >
         <button
           class="btn btn-link list-group-item list-group-item-action"
@@ -78,7 +78,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="pending-user-2"
+        data-test-id="pending-user-id2"
         style="display: block;"
       >
         <div
@@ -148,7 +148,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="accepted-user-1"
+        data-test-id="accepted-user-id1"
         style="display: block;"
       >
         <div
@@ -208,7 +208,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
     >
       <div
         class="list-group-item"
-        data-test-id="refused-user-3"
+        data-test-id="refused-user-id3"
         style="display: block;"
       >
         <div

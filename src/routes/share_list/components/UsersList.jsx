@@ -65,16 +65,16 @@ UsersList.propTypes = {
   togglePermission: PropTypes.func.isRequired,
   removeShare: PropTypes.func.isRequired,
   userIsOwner: PropTypes.bool.isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       user: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         email: PropTypes.string,
       }),
       users_list: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         permissions: PropTypes.string,
       }),
     }).isRequired,

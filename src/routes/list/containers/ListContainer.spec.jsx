@@ -38,18 +38,18 @@ describe('ListContainer', () => {
           pathname: 'foo',
         },
       },
-      userId: 1,
+      userId: 'id1',
       list: {
-        id: 1,
+        id: 'id1',
         name: 'foo',
         type: 'GroceryList',
         created_at: new Date('05/24/2020').toISOString(),
         completed: false,
-        owner_id: 1,
+        owner_id: 'id1',
       },
       purchasedItems: [
         {
-          id: 1,
+          id: 'id1',
           product: 'foo purchased product',
           task: '',
           quantity: 'purchased quantity',
@@ -57,7 +57,7 @@ describe('ListContainer', () => {
           title: '',
           artist: '',
           album: '',
-          assignee_id: 0,
+          assignee_id: 'id1',
           due_by: '',
           read: false,
           number_in_series: 0,
@@ -69,7 +69,7 @@ describe('ListContainer', () => {
       categories: ['', 'foo', 'bar'],
       listUsers: [
         {
-          id: 1,
+          id: 'id1',
           email: 'foo@example.com',
         },
       ],
@@ -77,7 +77,7 @@ describe('ListContainer', () => {
       notPurchasedItems: {
         '': [
           {
-            id: 2,
+            id: 'id2',
             product: 'no category not purchased product',
             task: '',
             quantity: 'not purchased quantity',
@@ -85,19 +85,19 @@ describe('ListContainer', () => {
             title: '',
             artist: '',
             album: '',
-            assignee_id: 0,
+            assignee_id: 'id1',
             due_by: '',
             read: false,
             number_in_series: 0,
             category: '',
             purchased: false,
             completed: false,
-            grocery_list_id: 1,
+            grocery_list_id: 'id1',
           },
         ],
         foo: [
           {
-            id: 3,
+            id: 'id3',
             product: 'foo not purchased product',
             task: '',
             quantity: 'not purchased quantity',
@@ -105,17 +105,17 @@ describe('ListContainer', () => {
             title: '',
             artist: '',
             album: '',
-            assignee_id: 0,
+            assignee_id: 'id1',
             due_by: '',
             read: false,
             number_in_series: 0,
             category: 'foo',
             purchased: false,
             completed: false,
-            grocery_list_id: 1,
+            grocery_list_id: 'id1',
           },
           {
-            id: 4,
+            id: 'id4',
             product: 'foo not purchased product 2',
             task: '',
             quantity: 'not purchased quantity',
@@ -123,19 +123,19 @@ describe('ListContainer', () => {
             title: '',
             artist: '',
             album: '',
-            assignee_id: 0,
+            assignee_id: 'id1',
             due_by: '',
             read: false,
             number_in_series: 0,
             category: 'foo',
             purchased: false,
             completed: false,
-            grocery_list_id: 1,
+            grocery_list_id: 'id1',
           },
         ],
         bar: [
           {
-            id: 5,
+            id: 'id5',
             product: 'bar not purchased product',
             task: '',
             quantity: 'not purchased quantity',
@@ -143,7 +143,7 @@ describe('ListContainer', () => {
             title: '',
             artist: '',
             album: '',
-            assignee_id: 0,
+            assignee_id: 'id1',
             due_by: '',
             read: false,
             number_in_series: 0,
@@ -218,7 +218,7 @@ describe('ListContainer', () => {
   it('renders confirmation modal when delete is clicked', () => {
     const { container, getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('confirm-delete')).toBeVisible();
@@ -228,7 +228,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -245,7 +245,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -260,7 +260,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -275,7 +275,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -290,7 +290,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -305,7 +305,7 @@ describe('ListContainer', () => {
     axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -323,7 +323,7 @@ describe('ListContainer', () => {
     expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
     expect(getByText('Bar')).toBeVisible();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-5'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id5'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -344,7 +344,7 @@ describe('ListContainer', () => {
     expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(getByText('Foo')).toBeVisible();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-3'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -364,7 +364,7 @@ describe('ListContainer', () => {
 
     expect(getByText('purchased quantity foo purchased product')).toBeVisible();
 
-    fireEvent.click(getByTestId('purchased-item-delete-1'));
+    fireEvent.click(getByTestId('purchased-item-delete-id1'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -394,7 +394,7 @@ describe('ListContainer', () => {
 
     fireEvent.click(checkboxes[1]);
     fireEvent.click(checkboxes[2]);
-    fireEvent.click(getByTestId('not-purchased-item-delete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
 
     expect(getByTestId('confirm-delete')).toBeVisible();
 
@@ -411,7 +411,7 @@ describe('ListContainer', () => {
   it('does not delete item when delete is cleared, hides modal', async () => {
     const { getByTestId, getByText, queryByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
 
     expect(getByTestId('clear-delete')).toBeVisible();
 
@@ -451,14 +451,14 @@ describe('ListContainer', () => {
         archived_at: null,
         category: 'foo',
         created_at: '2020-05-24T11:07:48.751-05:00',
-        grocery_list_id: 1,
-        id: 6,
+        grocery_list_id: 'id1',
+        id: 'id6',
         product: 'new product',
         purchased: false,
         quantity: 'new quantity',
         refreshed: false,
         updated_at: '2020-05-24T11:07:48.751-05:00',
-        user_id: 1,
+        user_id: 'id1',
       },
     });
     const { getByLabelText, getByText } = renderListContainer(props);
@@ -479,14 +479,14 @@ describe('ListContainer', () => {
         archived_at: null,
         category: 'new category',
         created_at: '2020-05-24T11:07:48.751-05:00',
-        grocery_list_id: 1,
-        id: 6,
+        grocery_list_id: 'id1',
+        id: 'id6',
         product: 'new product',
         purchased: false,
         quantity: 'new quantity',
         refreshed: false,
         updated_at: '2020-05-24T11:07:48.751-05:00',
-        user_id: 1,
+        user_id: 'id1',
       },
     });
     const { getByLabelText, getByText } = renderListContainer(props);
@@ -507,7 +507,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue({});
     props.list.type = 'ToDoList';
     props.notPurchasedItems[''][0].task = 'whatever';
-    props.notPurchasedItems[''][0].assignee_id = 1;
+    props.notPurchasedItems[''][0].assignee_id = 'id1';
     const { getByText, getByTestId } = renderListContainer(props);
 
     expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
@@ -515,7 +515,7 @@ describe('ListContainer', () => {
       'non-purchased-item',
     );
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -533,7 +533,7 @@ describe('ListContainer', () => {
       getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -559,7 +559,7 @@ describe('ListContainer', () => {
       getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-5'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id5'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -589,7 +589,7 @@ describe('ListContainer', () => {
 
     fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -606,7 +606,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
@@ -619,7 +619,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -630,7 +630,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -641,7 +641,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -652,7 +652,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -663,7 +663,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-2'));
+    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -676,14 +676,14 @@ describe('ListContainer', () => {
         archived_at: null,
         category: 'foo',
         created_at: '2020-05-24T11:07:48.751-05:00',
-        grocery_list_id: 1,
-        id: 6,
+        grocery_list_id: 'id1',
+        id: 'id6',
         product: 'foo purchased product',
         purchased: false,
         quantity: 'purchased quantity',
         refreshed: false,
         updated_at: '2020-05-24T11:07:48.751-05:00',
-        user_id: 1,
+        user_id: 'id1',
       },
     });
     axios.put = jest.fn().mockResolvedValue();
@@ -693,7 +693,7 @@ describe('ListContainer', () => {
       getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -705,7 +705,7 @@ describe('ListContainer', () => {
 
   it('moves items to not purchased when refreshed with multiple selected', async () => {
     props.purchasedItems.push({
-      id: 2,
+      id: 'id2',
       product: 'bar purchased product',
       task: '',
       quantity: 'purchased quantity',
@@ -713,7 +713,7 @@ describe('ListContainer', () => {
       title: '',
       artist: '',
       album: '',
-      assignee_id: 0,
+      assignee_id: 'id1',
       due_by: '',
       read: false,
       number_in_series: 0,
@@ -728,14 +728,14 @@ describe('ListContainer', () => {
           archived_at: null,
           category: 'foo',
           created_at: '2020-05-24T11:07:48.751-05:00',
-          grocery_list_id: 1,
-          id: 6,
+          grocery_list_id: 'id1',
+          id: 'id6',
           product: 'foo purchased product',
           purchased: false,
           quantity: 'purchased quantity',
           refreshed: false,
           updated_at: '2020-05-24T11:07:48.751-05:00',
-          user_id: 1,
+          user_id: 'id1',
         },
       })
       .mockResolvedValueOnce({
@@ -743,14 +743,14 @@ describe('ListContainer', () => {
           archived_at: null,
           category: 'bar',
           created_at: '2020-05-24T11:07:48.751-05:00',
-          grocery_list_id: 1,
-          id: 7,
+          grocery_list_id: 'id1',
+          id: 'id7',
           product: 'bar purchased product',
           purchased: false,
           quantity: 'purchased quantity',
           refreshed: false,
           updated_at: '2020-05-24T11:07:48.751-05:00',
-          user_id: 1,
+          user_id: 'id1',
         },
       });
     const { getAllByRole, getByTestId, getByText, getAllByText } = renderListContainer(props);
@@ -767,7 +767,7 @@ describe('ListContainer', () => {
 
     fireEvent.click(checkboxes[0]);
     fireEvent.click(checkboxes[1]);
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
 
@@ -784,7 +784,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -799,7 +799,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -812,7 +812,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -825,7 +825,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -838,7 +838,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -851,7 +851,7 @@ describe('ListContainer', () => {
     axios.put = jest.fn().mockResolvedValue();
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-refresh-1'));
+    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -866,12 +866,12 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId, queryByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('not-purchased-item-unread-2')).toBeVisible();
-    expect(queryByTestId('not-purchased-item-read-2')).toBeNull();
+    expect(getByTestId('not-purchased-item-unread-id2')).toBeVisible();
+    expect(queryByTestId('not-purchased-item-read-id2')).toBeNull();
   });
 
   it('toggles unread when item not purchased', async () => {
@@ -881,12 +881,12 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = true;
     const { getByTestId, queryByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-unread-2'));
+    fireEvent.click(getByTestId('not-purchased-item-unread-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('not-purchased-item-read-2')).toBeVisible();
-    expect(queryByTestId('not-purchased-item-unread-2')).toBeNull();
+    expect(getByTestId('not-purchased-item-read-id2')).toBeVisible();
+    expect(queryByTestId('not-purchased-item-unread-id2')).toBeNull();
   });
 
   it('toggles read when item purchased', async () => {
@@ -896,12 +896,12 @@ describe('ListContainer', () => {
     props.purchasedItems[0].read = false;
     const { getByTestId, queryByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-read-1'));
+    fireEvent.click(getByTestId('purchased-item-read-id1'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('purchased-item-unread-1')).toBeVisible();
-    expect(queryByTestId('purchased-item-read-1')).toBeNull();
+    expect(getByTestId('purchased-item-unread-id1')).toBeVisible();
+    expect(queryByTestId('purchased-item-read-id1')).toBeNull();
   });
 
   it('toggles unread when item purchased', async () => {
@@ -911,12 +911,12 @@ describe('ListContainer', () => {
     props.purchasedItems[0].read = true;
     const { getByTestId, queryByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('purchased-item-unread-1'));
+    fireEvent.click(getByTestId('purchased-item-unread-id1'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('purchased-item-read-1')).toBeVisible();
-    expect(queryByTestId('purchased-item-unread-1')).toBeNull();
+    expect(getByTestId('purchased-item-read-id1')).toBeVisible();
+    expect(queryByTestId('purchased-item-unread-id1')).toBeNull();
   });
 
   it('toggles read on multiple items when selected', async () => {
@@ -936,14 +936,14 @@ describe('ListContainer', () => {
 
     fireEvent.click(checkboxes[2]);
     fireEvent.click(checkboxes[3]);
-    fireEvent.click(getByTestId('not-purchased-item-read-3'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id3'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
-    expect(getByTestId('not-purchased-item-unread-3')).toBeVisible();
-    expect(queryByTestId('not-purchased-item-read-3')).toBeNull();
-    expect(queryByTestId('not-purchased-item-unread-4')).toBeNull();
-    expect(getByTestId('not-purchased-item-read-4')).toBeVisible();
+    expect(getByTestId('not-purchased-item-unread-id3')).toBeVisible();
+    expect(queryByTestId('not-purchased-item-read-id3')).toBeNull();
+    expect(queryByTestId('not-purchased-item-unread-id4')).toBeNull();
+    expect(getByTestId('not-purchased-item-read-id4')).toBeVisible();
   });
 
   it('handles 401 on read', async () => {
@@ -953,7 +953,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
@@ -969,7 +969,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -983,7 +983,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -997,7 +997,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1011,7 +1011,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1025,7 +1025,7 @@ describe('ListContainer', () => {
     props.notPurchasedItems[''][0].read = false;
     const { getByTestId } = renderListContainer(props);
 
-    fireEvent.click(getByTestId('not-purchased-item-read-2'));
+    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1126,7 +1126,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/1/list_items/3/edit');
+    expect(history.push).toHaveBeenCalledWith('/lists/id1/list_items/id3/edit');
   });
 
   it('navigates to bulk edit form when multi select', async () => {
@@ -1145,7 +1145,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/1/list_items/bulk-edit?item_ids=2,5');
+    expect(history.push).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id5');
   });
 
   it('adds item while filter, stays filtered', async () => {
@@ -1154,14 +1154,14 @@ describe('ListContainer', () => {
         archived_at: null,
         category: 'bar',
         created_at: '2020-05-24T11:07:48.751-05:00',
-        grocery_list_id: 1,
-        id: 6,
+        grocery_list_id: 'id1',
+        id: 'id6',
         product: 'new product',
         purchased: false,
         quantity: 'new quantity',
         refreshed: false,
         updated_at: '2020-05-24T11:07:48.751-05:00',
-        user_id: 1,
+        user_id: 'id1',
       },
     });
     const { getByLabelText, getByText, getByTestId, queryByText } = renderListContainer(props);

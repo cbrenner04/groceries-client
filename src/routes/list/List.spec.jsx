@@ -42,19 +42,19 @@ describe('List', () => {
   it('displays List', async () => {
     axios.get = jest.fn().mockResolvedValue({
       data: {
-        current_user_id: 1,
+        current_user_id: 'id1',
         not_purchased_items: [],
         purchased_items: [],
         list: {
-          id: 1,
+          id: 'id1',
           name: 'foo',
           type: 'GroceryList',
           created_at: new Date('05/22/2020').toISOString(),
           completed: false,
-          owner_id: 1,
+          owner_id: 'id1',
         },
         categories: [],
-        list_users: [{ id: 1, email: 'foo@example.com' }],
+        list_users: [{ id: 'id1', email: 'foo@example.com' }],
         permissions: 'write',
       },
     });

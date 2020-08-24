@@ -16,7 +16,7 @@ describe('BulkEditListItemsForm', () => {
     },
     items: [
       {
-        id: 1,
+        id: 'id1',
         product: '',
         task: '',
         purchased: false,
@@ -33,7 +33,7 @@ describe('BulkEditListItemsForm', () => {
         category: '',
       },
       {
-        id: 2,
+        id: 'id2',
         product: '',
         task: '',
         purchased: false,
@@ -51,19 +51,19 @@ describe('BulkEditListItemsForm', () => {
       },
     ],
     list: {
-      id: 1,
+      id: 'id1',
       type: 'GroceryList',
     },
     lists: [
       {
-        id: 1,
+        id: 'id1',
         type: 'GroceryList',
       },
     ],
     categories: ['foo'],
     listUsers: [
       {
-        id: 1,
+        id: 'id1',
         email: 'foobar@example.com',
       },
     ],
@@ -92,15 +92,15 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(getByLabelText('Existing list')).toBeVisible());
 
-    fireEvent.change(getByLabelText('Existing list'), { target: { value: '1' } });
+    fireEvent.change(getByLabelText('Existing list'), { target: { value: 'id1' } });
 
-    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('1'));
+    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('id1'));
 
     fireEvent.click(getByText('Update Items'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.not.objectContaining({ new_list_name: 'foo' }),
     });
   });
@@ -113,9 +113,9 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(getByLabelText('Existing list')).toBeVisible());
 
-    fireEvent.change(getByLabelText('Existing list'), { target: { value: '1' } });
+    fireEvent.change(getByLabelText('Existing list'), { target: { value: 'id1' } });
 
-    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('1'));
+    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('id1'));
 
     fireEvent.click(getByLabelText('Copy'));
 
@@ -125,10 +125,10 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
-      list_items: expect.not.objectContaining({ existing_list_id: '1' }),
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+      list_items: expect.not.objectContaining({ existing_list_id: 'id1' }),
     });
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.not.objectContaining({ copy: true }),
     });
   });
@@ -141,9 +141,9 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(getByLabelText('Existing list')).toBeVisible());
 
-    fireEvent.change(getByLabelText('Existing list'), { target: { value: '1' } });
+    fireEvent.change(getByLabelText('Existing list'), { target: { value: 'id1' } });
 
-    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('1'));
+    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('id1'));
 
     fireEvent.click(getByLabelText('Copy'));
 
@@ -151,11 +151,11 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.not.objectContaining({ move: expect.any(Boolean) }),
     });
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
-      list_items: expect.objectContaining({ copy: true, existing_list_id: '1' }),
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1' }),
     });
   });
 
@@ -175,7 +175,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.objectContaining({ quantity: null, clear_quantity: true }),
     });
   });
@@ -200,7 +200,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.objectContaining({ quantity: 'foo', clear_quantity: false }),
     });
   });
@@ -221,9 +221,9 @@ describe('BulkEditListItemsForm', () => {
     const { getByText, getByLabelText } = render(<BulkEditListItemsForm {...props} />);
 
     fireEvent.click(getByLabelText('Copy'));
-    fireEvent.change(getByLabelText('Existing list'), { target: { value: '1' } });
+    fireEvent.change(getByLabelText('Existing list'), { target: { value: 'id1' } });
 
-    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('1'));
+    await waitFor(() => expect(getByLabelText('Existing list')).toHaveValue('id1'));
 
     fireEvent.click(getByLabelText('Would you like to also update the current items?'));
 
@@ -231,8 +231,8 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
-      list_items: expect.objectContaining({ copy: true, existing_list_id: '1', update_current_items: true }),
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1', update_current_items: true }),
     });
   });
 
@@ -250,7 +250,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/1/list_items/bulk_update?item_ids=1,2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.objectContaining({ move: true, new_list_name: 'foo' }),
     });
   });

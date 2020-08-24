@@ -10,9 +10,9 @@ describe('CompleteListButtons', () => {
     props = {
       onListRefresh: jest.fn(),
       onListDeletion: jest.fn(),
-      userId: 1,
+      userId: 'id1',
       list: {
-        owner_id: 1,
+        owner_id: 'id1',
       },
       multiSelect: false,
       selectedLists: [],
@@ -21,8 +21,8 @@ describe('CompleteListButtons', () => {
     };
   });
   it('renders refresh disabled when user is not owner', () => {
-    props.userId = 2;
-    props.list.owner_id = 1;
+    props.userId = 'id2';
+    props.list.owner_id = 'id1';
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
 
     expect(container).toMatchSnapshot();
@@ -31,8 +31,8 @@ describe('CompleteListButtons', () => {
   });
 
   it('renders refresh enabled when user is owner', () => {
-    props.userId = 1;
-    props.list.owner_id = 1;
+    props.userId = 'id1';
+    props.list.owner_id = 'id1';
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
 
     expect(container).toMatchSnapshot();
@@ -58,7 +58,7 @@ describe('CompleteListButtons', () => {
 
   it('calls handleMerge when Merge is selected', () => {
     props.multiSelect = true;
-    props.selectedLists = [{ id: 1 }, { id: 2 }];
+    props.selectedLists = [{ id: 'id1' }, { id: 'id12' }];
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
 
     expect(container).toMatchSnapshot();

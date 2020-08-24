@@ -18,10 +18,10 @@ describe('IncompleteListButtons', () => {
 
   beforeEach(() => {
     props = {
-      userId: 1,
+      userId: 'id1',
       list: {
-        id: 1,
-        owner_id: 1,
+        id: 'id1',
+        owner_id: 'id1',
       },
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
@@ -34,8 +34,8 @@ describe('IncompleteListButtons', () => {
   });
 
   it('complete and edit are disabled when user is not owner', () => {
-    props.userId = 2;
-    props.list.owner_id = 3;
+    props.userId = 'id2';
+    props.list.owner_id = 'id3';
     const { container, getByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();
@@ -46,8 +46,8 @@ describe('IncompleteListButtons', () => {
   });
 
   it('complete and edit are enabled when user is owner', () => {
-    props.userId = 1;
-    props.list.owner_id = 1;
+    props.userId = 'id1';
+    props.list.owner_id = 'id1';
     const { container, getByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();

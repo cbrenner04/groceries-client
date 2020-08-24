@@ -10,7 +10,7 @@ exports[`RefusedUsersList does not render refresh share button 1`] = `
   >
     
     <div
-      data-test-id="refused-user-2"
+      data-test-id="refused-user-id2"
     >
       <div
         class="list-group-item"
@@ -33,7 +33,7 @@ exports[`RefusedUsersList renders refresh share button 1`] = `
     
     <div
       class="list-group-item"
-      data-test-id="refused-user-2"
+      data-test-id="refused-user-id2"
       style="display: block;"
     >
       <div

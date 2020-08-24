@@ -30,21 +30,21 @@ describe('ShareListForm', () => {
       name: 'foo',
       invitableUsers: [
         {
-          id: 1,
+          id: 'id1',
           email: 'foo@example.com',
         },
       ],
 
-      listId: 1,
+      listId: 'id1',
       userIsOwner: true,
       pending: [
         {
           user: {
-            id: 2,
+            id: 'id2',
             email: 'bar@example.com',
           },
           users_list: {
-            id: 2,
+            id: 'id2',
             permissions: 'read',
           },
         },
@@ -52,11 +52,11 @@ describe('ShareListForm', () => {
       accepted: [
         {
           user: {
-            id: 3,
+            id: 'id3',
             email: 'baz@example.com',
           },
           users_list: {
-            id: 3,
+            id: 'id3',
             permissions: 'write',
           },
         },
@@ -64,16 +64,16 @@ describe('ShareListForm', () => {
       refused: [
         {
           user: {
-            id: 4,
+            id: 'id4',
             email: 'foobar@example.com',
           },
           users_list: {
-            id: 4,
+            id: 'id4',
             permissions: 'read',
           },
         },
       ],
-      userId: 5,
+      userId: 'id5',
     };
   });
 
@@ -85,7 +85,7 @@ describe('ShareListForm', () => {
 
   it('creates new user on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
-      data: { user: { id: 6, email: 'foobaz@example.com' }, users_list: { id: 6, permissions: 'write' } },
+      data: { user: { id: 'id6', email: 'foobaz@example.com' }, users_list: { id: 'id6', permissions: 'write' } },
     });
 
     const { getByLabelText, getByTestId, getByText } = renderShareListForm(props);
@@ -96,8 +96,8 @@ describe('ShareListForm', () => {
     fireEvent.click(getByText('Share List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('pending-user-6')).toHaveTextContent('foobaz@example.com');
-    expect(getByTestId('pending-user-6')).toHaveTextContent('write');
+    expect(getByTestId('pending-user-id6')).toHaveTextContent('foobaz@example.com');
+    expect(getByTestId('pending-user-id6')).toHaveTextContent('write');
     expect(toast).toHaveBeenCalledWith(`"${props.name}" has been successfully shared with foobaz@example.com.`, {
       type: 'info',
     });
@@ -163,14 +163,14 @@ describe('ShareListForm', () => {
   it('adds user to list when selected', async () => {
     axios.post = jest
       .fn()
-      .mockResolvedValue({ data: { user_id: 1, email: 'foo@example.com', id: 6, permissions: 'write' } });
+      .mockResolvedValue({ data: { user_id: 'id1', email: 'foo@example.com', id: 'id6', permissions: 'write' } });
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('pending-user-1')).toHaveTextContent('foo@example.com');
-    expect(getByTestId('pending-user-1')).toHaveTextContent('write');
+    expect(getByTestId('pending-user-id1')).toHaveTextContent('foo@example.com');
+    expect(getByTestId('pending-user-id1')).toHaveTextContent('write');
     expect(toast).toHaveBeenCalledWith(`"${props.name}" has been successfully shared with foo@example.com.`, {
       type: 'info',
     });
@@ -181,7 +181,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -193,7 +193,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
@@ -205,7 +205,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
@@ -216,7 +216,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo', { type: 'error' });
@@ -227,7 +227,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -238,7 +238,7 @@ describe('ShareListForm', () => {
 
     const { getByTestId } = renderShareListForm(props);
 
-    fireEvent.click(getByTestId('invite-user-1').firstChild);
+    fireEvent.click(getByTestId('invite-user-id1').firstChild);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
@@ -250,12 +250,12 @@ describe('ShareListForm', () => {
 
       const { getByTestId, getAllByTestId } = renderShareListForm(props);
 
-      expect(getByTestId('pending-user-2')).toHaveTextContent('read');
+      expect(getByTestId('pending-user-id2')).toHaveTextContent('read');
 
       fireEvent.click(getAllByTestId('toggle-permissions')[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(getByTestId('pending-user-2')).toHaveTextContent('write');
+      expect(getByTestId('pending-user-id2')).toHaveTextContent('write');
     });
 
     it('toggles permissions in accepted', async () => {
@@ -263,12 +263,12 @@ describe('ShareListForm', () => {
 
       const { getByTestId, getAllByTestId } = renderShareListForm(props);
 
-      expect(getByTestId('accepted-user-3')).toHaveTextContent('write');
+      expect(getByTestId('accepted-user-id3')).toHaveTextContent('write');
 
       fireEvent.click(getAllByTestId('toggle-permissions')[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(getByTestId('accepted-user-3')).toHaveTextContent('read');
+      expect(getByTestId('accepted-user-id3')).toHaveTextContent('read');
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
@@ -342,16 +342,16 @@ describe('ShareListForm', () => {
 
   describe('refresh share', () => {
     it('refreshes share', async () => {
-      axios.patch = jest.fn().mockResolvedValue({ data: { id: 1, permissions: 'write' } });
+      axios.patch = jest.fn().mockResolvedValue({ data: { id: 'id1', permissions: 'write' } });
 
       const { getByTestId, getAllByTestId, queryByTestId } = renderShareListForm(props);
 
-      expect(getByTestId('refused-user-4')).toHaveTextContent('foobar@example.com');
+      expect(getByTestId('refused-user-id4')).toHaveTextContent('foobar@example.com');
 
       fireEvent.click(getAllByTestId('refresh-share')[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(queryByTestId('refused-user-4')).toBeNull();
+      expect(queryByTestId('refused-user-id4')).toBeNull();
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
@@ -437,12 +437,12 @@ describe('ShareListForm', () => {
 
       const { getByTestId, getAllByTestId, queryByTestId } = renderShareListForm(props);
 
-      expect(getByTestId('pending-user-2')).toHaveTextContent('bar@example.com');
+      expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
       fireEvent.click(getAllByTestId('remove-share')[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(queryByTestId('pending-user-2')).toBeNull();
+      expect(queryByTestId('pending-user-id2')).toBeNull();
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {

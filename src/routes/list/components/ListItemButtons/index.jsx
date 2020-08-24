@@ -31,7 +31,7 @@ const ListItemButtons = (props) =>
 
 ListItemButtons.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     read: PropTypes.bool,
   }).isRequired,
   purchased: PropTypes.bool.isRequired,
@@ -44,7 +44,7 @@ ListItemButtons.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedItems: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       product: PropTypes.string,
       task: PropTypes.string,
       content: PropTypes.string,
@@ -53,7 +53,7 @@ ListItemButtons.propTypes = {
       title: PropTypes.string,
       artist: PropTypes.string,
       album: PropTypes.string,
-      assignee_id: PropTypes.number,
+      assignee_id: PropTypes.string,
       due_by: PropTypes.string,
       read: PropTypes.bool,
       number_in_series: PropTypes.number,

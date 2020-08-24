@@ -29,7 +29,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-3"
+        data-test-id="list-id3"
         style="display: block;"
       >
         <div
@@ -57,7 +57,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
               >
                 <a
                   class="router-link"
-                  href="/lists/3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -122,7 +122,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-5"
+        data-test-id="list-id5"
         style="display: block;"
       >
         <div
@@ -150,7 +150,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
               >
                 <a
                   class="router-link"
-                  href="/lists/5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
@@ -249,7 +249,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-3"
+        data-test-id="list-id3"
         style="display: block;"
       >
         <div
@@ -277,7 +277,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
               >
                 <a
                   class="router-link"
-                  href="/lists/3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -342,7 +342,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
       <div
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
-        data-test-id="list-5"
+        data-test-id="list-id5"
         style="display: block;"
       >
         <div
@@ -370,7 +370,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
               >
                 <a
                   class="router-link"
-                  href="/lists/5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"

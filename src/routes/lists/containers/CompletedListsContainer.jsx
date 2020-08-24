@@ -40,17 +40,17 @@ CompletedListsContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
   completedLists: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.number,
-      owner_id: PropTypes.number,
-      user_id: PropTypes.number.isRequired,
+      users_list_id: PropTypes.string,
+      owner_id: PropTypes.string,
+      user_id: PropTypes.string.isRequired,
       refreshed: PropTypes.bool.isRequired,
     }),
   ).isRequired,

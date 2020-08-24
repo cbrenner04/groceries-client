@@ -578,7 +578,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
         Select Assignee
       </option>
       <option
-        value="1"
+        value="id1"
       />
     </select>
     <div

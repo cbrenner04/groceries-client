@@ -1,12 +1,4 @@
-import {
-  formatDate,
-  defaultDueBy,
-  formatDueBy,
-  prettyDueBy,
-  listTypeToSnakeCase,
-  capitalize,
-  prettyListType,
-} from './format';
+import { formatDate, defaultDueBy, formatDueBy, prettyDueBy, capitalize, prettyListType } from './format';
 
 describe('format', () => {
   describe('formatDate', () => {
@@ -38,12 +30,6 @@ describe('format', () => {
   describe('prettyDueBy', () => {
     it('returns pretty format for due by', () => {
       expect(prettyDueBy(new Date('02/02/2020'))).toBe('February 2, 2020');
-    });
-  });
-
-  describe('listTypeToSnakeCase', () => {
-    it('returns snake case of given value', () => {
-      expect(listTypeToSnakeCase('GroceryList')).toBe('grocery_list');
     });
   });
 

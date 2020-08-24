@@ -33,7 +33,7 @@ describe('BulkEditListItemsFormFields', () => {
     clearAttribute: jest.fn(),
     listUsers: [
       {
-        id: 1,
+        id: 'id1',
         email: '',
       },
     ],
