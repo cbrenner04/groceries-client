@@ -57,7 +57,6 @@ describe('BulkEditListItemsForm', () => {
       created_at: 'some date',
       completed: false,
       refreshed: false,
-      users_list_id: 'id1',
       owner_id: 'id1',
     },
     lists: [
@@ -68,7 +67,6 @@ describe('BulkEditListItemsForm', () => {
         completed: false,
         refreshed: false,
         created_at: 'some date',
-        users_list_id: 'id1',
         owner_id: 'id1',
       },
     ],
