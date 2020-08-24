@@ -46,6 +46,11 @@ describe('EditListItemForm', () => {
         id: 'id1',
         type: 'GroceryList',
         categories: [''],
+        name: 'foo',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+        owner_id: 'id1',
       },
       userId: 'id1',
     };

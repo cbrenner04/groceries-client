@@ -11,6 +11,7 @@ import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
 import Lists from './Lists';
+import { list } from '../../../types';
 
 function PendingLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -142,44 +143,11 @@ PendingLists.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  pendingLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  pendingLists: PropTypes.arrayOf(list).isRequired,
   setPendingLists: PropTypes.func.isRequired,
-  incompleteLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  incompleteLists: PropTypes.arrayOf(list).isRequired,
   setIncompleteLists: PropTypes.func.isRequired,
-  completedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  completedLists: PropTypes.arrayOf(list).isRequired,
   setCompletedLists: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };

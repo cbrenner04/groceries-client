@@ -9,6 +9,7 @@ import { EmailField } from '../../../components/FormFields';
 import UsersList from '../components/UsersList';
 import RefusedUsersList from '../components/RefusedUsersList';
 import axios from '../../../utils/api';
+import { usersLists } from '../../../types';
 
 function ShareListForm(props) {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
@@ -241,42 +242,9 @@ ShareListForm.propTypes = {
   ).isRequired,
   listId: PropTypes.string.isRequired,
   userIsOwner: PropTypes.bool.isRequired,
-  pending: PropTypes.arrayOf(
-    PropTypes.shape({
-      user: PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-      }),
-      users_list: PropTypes.shape({
-        id: PropTypes.string,
-        permissions: PropTypes.string,
-      }),
-    }),
-  ).isRequired,
-  accepted: PropTypes.arrayOf(
-    PropTypes.shape({
-      user: PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-      }),
-      users_list: PropTypes.shape({
-        id: PropTypes.string,
-        permissions: PropTypes.string,
-      }),
-    }),
-  ).isRequired,
-  refused: PropTypes.arrayOf(
-    PropTypes.shape({
-      user: PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-      }),
-      users_list: PropTypes.shape({
-        id: PropTypes.string,
-        permissions: PropTypes.string,
-      }),
-    }),
-  ).isRequired,
+  pending: PropTypes.arrayOf(usersLists).isRequired,
+  accepted: PropTypes.arrayOf(usersLists).isRequired,
+  refused: PropTypes.arrayOf(usersLists).isRequired,
   userId: PropTypes.string.isRequired,
 };
 

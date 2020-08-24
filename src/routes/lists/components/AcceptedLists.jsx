@@ -12,6 +12,7 @@ import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
+import { list } from '../../../types';
 
 function AcceptedLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -216,10 +217,13 @@ function AcceptedLists(props) {
       <ConfirmModal
         action="delete"
         body={
-          `Are you sure you want to delete the following lists? The lists you do not own will continue to exist for ` +
-          `the owner, you will just be removed from the list of users. ${listsToDelete
-            .map((list) => list.name)
-            .join(', ')}`
+          <>
+            <p>
+              Are you sure you want to delete the following lists? The lists you do not own will continue to exist for
+              the owner, you will just be removed from the list of users.
+            </p>
+            <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
+          </>
         }
         show={showDeleteConfirm}
         handleConfirm={() => handleDeleteConfirm()}
@@ -244,31 +248,9 @@ AcceptedLists.propTypes = {
   }).isRequired,
   title: PropTypes.element.isRequired,
   userId: PropTypes.string.isRequired,
-  incompleteLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ),
+  incompleteLists: PropTypes.arrayOf(list),
   setIncompleteLists: PropTypes.func,
-  completedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  completedLists: PropTypes.arrayOf(list).isRequired,
   setCompletedLists: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,

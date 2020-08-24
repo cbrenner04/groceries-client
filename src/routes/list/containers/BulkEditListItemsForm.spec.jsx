@@ -53,11 +53,21 @@ describe('BulkEditListItemsForm', () => {
     list: {
       id: 'id1',
       type: 'GroceryList',
+      name: 'foo',
+      created_at: 'some date',
+      completed: false,
+      refreshed: false,
+      owner_id: 'id1',
     },
     lists: [
       {
         id: 'id1',
         type: 'GroceryList',
+        name: 'foo',
+        completed: false,
+        refreshed: false,
+        created_at: 'some date',
+        owner_id: 'id1',
       },
     ],
     categories: ['foo'],

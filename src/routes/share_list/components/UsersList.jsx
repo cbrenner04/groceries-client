@@ -4,6 +4,7 @@ import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap
 
 import { Trash } from '../../../components/ActionButtons';
 import TitlePopover from '../../../components/TitlePopover';
+import { usersLists } from '../../../types';
 
 const UsersList = (props) => (
   <>
@@ -67,18 +68,7 @@ UsersList.propTypes = {
   userIsOwner: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      user: PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-      }),
-      users_list: PropTypes.shape({
-        id: PropTypes.string,
-        permissions: PropTypes.string,
-      }),
-    }).isRequired,
-  ).isRequired,
+  users: PropTypes.arrayOf(usersLists).isRequired,
 };
 
 export default UsersList;

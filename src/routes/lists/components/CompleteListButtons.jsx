@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash, Merge } from '../../../components/ActionButtons';
+import { list } from '../../../types';
 
 function CompletedListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
@@ -32,24 +33,11 @@ function CompletedListButtons(props) {
 
 CompletedListButtons.propTypes = {
   userId: PropTypes.string.isRequired,
-  list: PropTypes.shape({
-    owner_id: PropTypes.string.isRequired,
-  }).isRequired,
+  list: list.isRequired,
   onListRefresh: PropTypes.func.isRequired,
   onListDeletion: PropTypes.func.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      type: PropTypes.string,
-      created_at: PropTypes.string,
-      completed: PropTypes.bool,
-      users_list_id: PropTypes.string,
-      owner_id: PropTypes.string,
-      refreshed: PropTypes.bool,
-    }),
-  ).isRequired,
+  selectedLists: PropTypes.arrayOf(list).isRequired,
   handleMerge: PropTypes.func.isRequired,
   pending: PropTypes.bool.isRequired,
 };

@@ -22,6 +22,11 @@ describe('IncompleteListButtons', () => {
       list: {
         id: 'id1',
         owner_id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
       },
       onListCompletion: jest.fn(),
       onListDeletion: jest.fn(),
@@ -59,7 +64,26 @@ describe('IncompleteListButtons', () => {
 
   it('edit is hidden when multiSelect and selectedLists > 1', () => {
     props.multiSelect = true;
-    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    props.selectedLists = [
+      {
+        id: 'id1',
+        owner_id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+      {
+        id: 'id2',
+        owner_id: 'id1',
+        name: 'bar',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+    ];
     const { container, queryByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();
@@ -68,7 +92,26 @@ describe('IncompleteListButtons', () => {
 
   it('merge is displayed when multiSelect and selectedLists > 1', () => {
     props.multiSelect = true;
-    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    props.selectedLists = [
+      {
+        id: 'id1',
+        owner_id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+      {
+        id: 'id2',
+        owner_id: 'id1',
+        name: 'bar',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+    ];
     const { container, getByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();
@@ -86,7 +129,26 @@ describe('IncompleteListButtons', () => {
 
   it('share is hidden when multiSelect and selectedLists > 1', () => {
     props.multiSelect = true;
-    props.selectedLists = [{ name: 'foo' }, { name: 'bar' }];
+    props.selectedLists = [
+      {
+        id: 'id1',
+        owner_id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+      {
+        id: 'id2',
+        owner_id: 'id1',
+        name: 'bar',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+      },
+    ];
     const { container, queryByTestId } = renderIncompleteListButtons(props);
 
     expect(container).toMatchSnapshot();

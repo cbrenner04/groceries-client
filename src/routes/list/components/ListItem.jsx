@@ -5,6 +5,7 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
+import { listItem, listUsers } from '../../../types';
 
 const ListItem = (props) => {
   let assignee = '';
@@ -64,60 +65,19 @@ const ListItem = (props) => {
 };
 
 ListItem.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    product: PropTypes.string,
-    task: PropTypes.string,
-    content: PropTypes.string,
-    quantity: PropTypes.string,
-    author: PropTypes.string,
-    title: PropTypes.string,
-    artist: PropTypes.string,
-    album: PropTypes.string,
-    assignee_id: PropTypes.string,
-    due_by: PropTypes.string,
-    read: PropTypes.bool,
-    number_in_series: PropTypes.number,
-    category: PropTypes.string,
-    completed: PropTypes.bool,
-    purchased: PropTypes.bool,
-  }).isRequired,
+  item: listItem.isRequired,
   purchased: PropTypes.bool,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
   handleItemRefresh: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  ),
+  listUsers: PropTypes.arrayOf(listUsers),
   permission: PropTypes.string.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   handleItemSelect: PropTypes.func.isRequired,
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
-  selectedItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      product: PropTypes.string,
-      task: PropTypes.string,
-      content: PropTypes.string,
-      quantity: PropTypes.string,
-      author: PropTypes.string,
-      title: PropTypes.string,
-      artist: PropTypes.string,
-      album: PropTypes.string,
-      assignee_id: PropTypes.string,
-      due_by: PropTypes.string,
-      read: PropTypes.bool,
-      number_in_series: PropTypes.number,
-      category: PropTypes.string,
-      completed: PropTypes.bool,
-      purchased: PropTypes.bool,
-    }),
-  ).isRequired,
+  selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
 };
 

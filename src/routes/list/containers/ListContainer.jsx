@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
 
+import { list, listItem, listUsers } from '../../../types';
 import { capitalize } from '../../../utils/format';
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
@@ -433,70 +434,14 @@ function ListContainer(props) {
 ListContainer.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-    }).isRequired,
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  list: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired,
-    completed: PropTypes.bool.isRequired,
-    owner_id: PropTypes.string.isRequired,
-  }).isRequired,
-  purchasedItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      product: PropTypes.string,
-      task: PropTypes.string,
-      content: PropTypes.string,
-      quantity: PropTypes.string,
-      author: PropTypes.string,
-      title: PropTypes.string,
-      artist: PropTypes.string,
-      album: PropTypes.string,
-      assignee_id: PropTypes.string,
-      due_by: PropTypes.string,
-      read: PropTypes.bool,
-      number_in_series: PropTypes.number,
-      category: PropTypes.string,
-      completed: PropTypes.bool,
-      purchased: PropTypes.bool,
-    }),
-  ).isRequired,
+  list: list.isRequired,
+  purchasedItems: PropTypes.arrayOf(listItem).isRequired,
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }).isRequired,
-  ).isRequired,
+  listUsers: PropTypes.arrayOf(listUsers).isRequired,
   includedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  notPurchasedItems: PropTypes.objectOf(
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        product: PropTypes.string,
-        task: PropTypes.string,
-        content: PropTypes.string,
-        quantity: PropTypes.string,
-        author: PropTypes.string,
-        title: PropTypes.string,
-        artist: PropTypes.string,
-        album: PropTypes.string,
-        assignee_id: PropTypes.string,
-        due_by: PropTypes.string,
-        read: PropTypes.bool,
-        number_in_series: PropTypes.number,
-        category: PropTypes.string,
-        completed: PropTypes.bool,
-        purchased: PropTypes.bool,
-      }),
-    ),
-  ).isRequired,
+  notPurchasedItems: PropTypes.objectOf(PropTypes.arrayOf(listItem)).isRequired,
   permissions: PropTypes.string.isRequired,
 };
 

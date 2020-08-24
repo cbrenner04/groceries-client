@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
+import { listUsers } from '../../../../types';
 
 const ToDoFormFields = (props) => (
   <>
@@ -45,12 +46,7 @@ ToDoFormFields.propTypes = {
   assigneeId: PropTypes.string.isRequired,
   dueBy: PropTypes.string.isRequired,
   completed: PropTypes.bool,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      email: PropTypes.string,
-    }),
-  ).isRequired,
+  listUsers: PropTypes.arrayOf(listUsers).isRequired,
   editForm: PropTypes.bool,
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),

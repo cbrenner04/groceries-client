@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
+import { list } from '../../../types';
+
 function Lists(props) {
   return (
     <div className="mb-4">
@@ -28,18 +30,7 @@ function Lists(props) {
 Lists.propTypes = {
   title: PropTypes.element.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
-      completed: PropTypes.bool.isRequired,
-      users_list_id: PropTypes.string.isRequired,
-      owner_id: PropTypes.string.isRequired,
-      refreshed: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
+  selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
   setMultiSelect: PropTypes.func.isRequired,
   children: PropTypes.arrayOf(PropTypes.node).isRequired,

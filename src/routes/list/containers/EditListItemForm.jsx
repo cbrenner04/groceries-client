@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
+import { list, listItem, listUsers } from '../../../types';
 import axios from '../../../utils/api';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
@@ -102,36 +103,9 @@ EditListItemForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }).isRequired,
-  ).isRequired,
-  // fetch in parent component sets default values for these properties
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    product: PropTypes.string.isRequired,
-    task: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    purchased: PropTypes.bool.isRequired,
-    quantity: PropTypes.string.isRequired,
-    completed: PropTypes.bool.isRequired,
-    author: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    read: PropTypes.bool.isRequired,
-    artist: PropTypes.string.isRequired,
-    dueBy: PropTypes.string.isRequired,
-    assigneeId: PropTypes.string.isRequired,
-    album: PropTypes.string.isRequired,
-    numberInSeries: PropTypes.number.isRequired,
-    category: PropTypes.string.isRequired,
-  }).isRequired,
-  list: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
+  listUsers: PropTypes.arrayOf(listUsers).isRequired,
+  item: listItem.isRequired,
+  list: list.isRequired,
   userId: PropTypes.string.isRequired,
 };
 

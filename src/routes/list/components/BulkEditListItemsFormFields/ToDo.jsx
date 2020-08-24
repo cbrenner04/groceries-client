@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { CheckboxField, DateField, SelectField } from '../../../../components/FormFields';
+import { listUsers } from '../../../../types';
 
 const ToDo = ({
   assigneeId,
@@ -60,12 +61,7 @@ ToDo.propTypes = {
   clearDueBy: PropTypes.bool.isRequired,
   handleClearDueBy: PropTypes.func.isRequired,
   handleInput: PropTypes.func.isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  listUsers: PropTypes.arrayOf(listUsers).isRequired,
 };
 
 export default ToDo;

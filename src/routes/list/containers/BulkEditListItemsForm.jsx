@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
+import { list, listItem, listUsers } from '../../../types';
 import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';
@@ -206,43 +207,11 @@ BulkEditListItemsForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      product: PropTypes.string,
-      task: PropTypes.string,
-      content: PropTypes.string,
-      purchased: PropTypes.bool,
-      quantity: PropTypes.string,
-      completed: PropTypes.bool,
-      author: PropTypes.string,
-      title: PropTypes.string,
-      read: PropTypes.bool,
-      artist: PropTypes.string,
-      dueBy: PropTypes.string,
-      assigneeId: PropTypes.string,
-      album: PropTypes.string,
-      numberInSeries: PropTypes.number,
-      category: PropTypes.string,
-    }),
-  ).isRequired,
-  list: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-  }).isRequired,
-  lists: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-    }).isRequired,
-  ).isRequired,
+  items: PropTypes.arrayOf(listItem).isRequired,
+  list: list.isRequired,
+  lists: PropTypes.arrayOf(list).isRequired,
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  listUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }).isRequired,
-  ),
+  listUsers: PropTypes.arrayOf(listUsers),
 };
 
 BulkEditListItemsForm.defaultProps = {

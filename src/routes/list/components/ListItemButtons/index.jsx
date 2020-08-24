@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import NotPurchased from './NotPurchased';
 import Purchased from './Purchased';
+import { listItem } from '../../../../types';
 
 const ListItemButtons = (props) =>
   props.purchased ? (
@@ -30,10 +31,7 @@ const ListItemButtons = (props) =>
   );
 
 ListItemButtons.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    read: PropTypes.bool,
-  }).isRequired,
+  item: listItem.isRequired,
   purchased: PropTypes.bool.isRequired,
   handleItemDelete: PropTypes.func.isRequired,
   handlePurchaseOfItem: PropTypes.func.isRequired,
@@ -42,26 +40,7 @@ ListItemButtons.propTypes = {
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
   multiSelect: PropTypes.bool.isRequired,
-  selectedItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      product: PropTypes.string,
-      task: PropTypes.string,
-      content: PropTypes.string,
-      quantity: PropTypes.string,
-      author: PropTypes.string,
-      title: PropTypes.string,
-      artist: PropTypes.string,
-      album: PropTypes.string,
-      assignee_id: PropTypes.string,
-      due_by: PropTypes.string,
-      read: PropTypes.bool,
-      number_in_series: PropTypes.number,
-      category: PropTypes.string,
-      completed: PropTypes.bool,
-      purchased: PropTypes.bool,
-    }),
-  ).isRequired,
+  selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
 };
 

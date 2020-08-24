@@ -12,7 +12,13 @@ describe('CompleteListButtons', () => {
       onListDeletion: jest.fn(),
       userId: 'id1',
       list: {
+        id: 'id1',
         owner_id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
       },
       multiSelect: false,
       selectedLists: [],
@@ -58,7 +64,26 @@ describe('CompleteListButtons', () => {
 
   it('calls handleMerge when Merge is selected', () => {
     props.multiSelect = true;
-    props.selectedLists = [{ id: 'id1' }, { id: 'id12' }];
+    props.selectedLists = [
+      {
+        id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+        owner_id: 'id1',
+      },
+      {
+        id: 'id12',
+        name: 'bar',
+        type: 'GroceryList',
+        created_at: 'some date',
+        completed: false,
+        refreshed: false,
+        owner_id: 'id1',
+      },
+    ];
     const { container, getByTestId } = render(<CompleteListButtons {...props} />);
 
     expect(container).toMatchSnapshot();
