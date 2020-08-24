@@ -6,7 +6,6 @@ import Grocery from './Grocery';
 import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
-import { defaultDueBy } from '../../../../utils/format';
 import { listUsers } from '../../../../types';
 
 const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) =>
@@ -107,7 +106,7 @@ ListItemFormFields.defaultProps = {
     artist: '',
     album: '',
     assigneeId: '',
-    dueBy: defaultDueBy(),
+    dueBy: '',
     numberInSeries: 0,
     category: '',
     read: false,
