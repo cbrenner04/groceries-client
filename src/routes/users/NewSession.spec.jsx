@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import NewSession from './NewSession';
 import axios from '../../utils/api';
+import { UserContext } from '../../context/UserContext';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -13,11 +14,14 @@ jest.mock('react-toastify', () => ({
 
 describe('NewSession', () => {
   let props;
+  const signInUser = jest.fn();
   const renderNewSession = (props) => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <NewSession {...props} />
+        <UserContext.Provider value={{ signInUser }}>
+          <NewSession {...props} />
+        </UserContext.Provider>
       </Router>,
     );
   };
@@ -67,7 +71,6 @@ describe('NewSession', () => {
       data: { data: { uid: 1 } },
       headers: { 'access-token': 'foo', client: 'bar' },
     });
-    const spy = jest.spyOn(window.sessionStorage.__proto__, 'setItem');
 
     const { getByLabelText, getByRole } = renderNewSession(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -77,14 +80,7 @@ describe('NewSession', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(spy).toHaveBeenCalledWith(
-      'user',
-      JSON.stringify({
-        'access-token': 'foo',
-        client: 'bar',
-        uid: 1,
-      }),
-    );
+    expect(signInUser).toHaveBeenCalledWith('foo', 'bar', 1);
     expect(toast).toHaveBeenCalledWith('Welcome foo@example.com!', { type: 'info' });
     expect(props.history.push).toHaveBeenCalledWith('/lists');
   });
