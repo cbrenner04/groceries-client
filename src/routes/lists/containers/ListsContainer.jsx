@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { ActionCableConsumer } from 'react-actioncable-provider';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
@@ -35,8 +36,21 @@ function ListsContainer(props) {
     }
   };
 
+  const handleReceivedLists = ({
+    accepted_lists: { completed_lists, not_completed_lists },
+    pending_lists,
+    current_list_permissions,
+  }) => {
+    console.log('RECEIVED!!!!'); //eslint-disable-line
+    setPendingLists(pending_lists);
+    setCompletedLists(completed_lists);
+    setIncompleteLists(not_completed_lists);
+    setCurrentUserPermissions(current_list_permissions);
+  };
+
   return (
     <>
+      <ActionCableConsumer channel={{ channel: 'ListsChannel' }} onReceived={handleReceivedLists} />
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
