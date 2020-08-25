@@ -5,7 +5,13 @@ const UserContext = createContext({ user: null });
 
 // TODO: this probably better off somewhere else
 function UserContextProvider(props) {
-  const [user, setUser] = useState(null);
+  let defaultUser = null;
+  const storedUser = JSON.parse(sessionStorage.getItem('user'));
+  if (storedUser) {
+    const { 'access-token': accessToken, client, uid } = storedUser;
+    defaultUser = { accessToken, client, uid };
+  }
+  const [user, setUser] = useState(defaultUser);
   const signInUser = (accessToken, client, uid) => {
     sessionStorage.setItem(
       'user',

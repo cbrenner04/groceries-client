@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import { ActionCableConsumer } from 'react-actioncable-provider';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
@@ -12,6 +11,8 @@ import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { list } from '../../../types';
+import { UserContext } from '../../../context/UserContext';
+import { ActionCableContextConsumer } from '../../../context/ActionCableContext';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -19,6 +20,7 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
+  const { user } = useContext(UserContext);
 
   const handleFormSubmit = async (list) => {
     setPending(true);
@@ -36,21 +38,20 @@ function ListsContainer(props) {
     }
   };
 
-  const handleReceivedLists = ({
-    accepted_lists: { completed_lists, not_completed_lists },
-    pending_lists,
-    current_list_permissions,
-  }) => {
-    console.log('RECEIVED!!!!'); //eslint-disable-line
-    setPendingLists(pending_lists);
+  const handleReceivedData = (data) => {
+    const {
+      accepted_lists: { completed_lists, not_completed_lists },
+      pending_lists,
+      current_list_permissions,
+    } = data;
     setCompletedLists(completed_lists);
     setIncompleteLists(not_completed_lists);
+    setPendingLists(pending_lists);
     setCurrentUserPermissions(current_list_permissions);
   };
 
   return (
-    <>
-      <ActionCableConsumer channel={{ channel: 'ListsChannel' }} onReceived={handleReceivedLists} />
+    <ActionCableContextConsumer channel="ListsChannel" onReceived={handleReceivedData} user={user}>
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
@@ -109,7 +110,7 @@ function ListsContainer(props) {
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
       />
-    </>
+    </ActionCableContextConsumer>
   );
 }
 

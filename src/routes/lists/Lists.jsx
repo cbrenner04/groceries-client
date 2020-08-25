@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Async from 'react-async';
 import PropTypes from 'prop-types';
-import { ActionCableProvider } from 'react-actioncable-provider';
 
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
+import { UserContext } from '../../context/UserContext';
+import { ActionCableContextProvider } from '../../context/ActionCableContext';
 
 function Lists(props) {
-  const { 'access-token': accessToken, uid, client } = JSON.parse(sessionStorage.getItem('user'));
-  const wsUrl = `${process.env.REACT_APP_WS_BASE}/?access-token=${accessToken}&uid=${uid}&client=${client}`;
+  const { user } = useContext(UserContext);
+  let wsUrl = process.env.REACT_APP_WS_BASE;
+  if (user) {
+    const { accessToken, client, uid } = user;
+    wsUrl = `${process.env.REACT_APP_WS_BASE}/?access-token=${accessToken}&uid=${uid}&client=${client}`;
+  }
 
   return (
-    <ActionCableProvider url={wsUrl}>
+    <ActionCableContextProvider url={wsUrl}>
       <Async promiseFn={fetchLists} history={props.history}>
         <Async.Pending>
           <Loading />
@@ -34,7 +39,7 @@ function Lists(props) {
           <UnknownError />
         </Async.Rejected>
       </Async>
-    </ActionCableProvider>
+    </ActionCableContextProvider>
   );
 }
 
