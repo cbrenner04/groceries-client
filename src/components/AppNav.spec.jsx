@@ -1,24 +1,27 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import AppNav from './AppNav';
 import instance from '../utils/api';
+import { UserContext } from '../context/UserContext';
 
 describe('AppNav', () => {
-  const renderAppNav = () => {
+  const renderAppNav = (context) => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <AppNav />
+        <UserContext.Provider value={context}>
+          <AppNav />
+        </UserContext.Provider>
       </Router>,
     );
   };
 
   describe('when user is not signed in', () => {
     it('renders basic nav with brand linking to sign in', () => {
-      const { getByTestId, getByText } = renderAppNav();
+      const { getByTestId, getByText } = renderAppNav({ user: null });
 
       expect(getByTestId('nav')).toMatchSnapshot();
       expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
@@ -26,13 +29,15 @@ describe('AppNav', () => {
   });
 
   describe('when user is signed in', () => {
-    let queryByText;
     let getByTestId;
     let getByText;
+    const userContext = {
+      user: { uid: 1, client: 2, accessToken: 3 },
+      signOutUser: jest.fn(),
+    };
 
     beforeEach(() => {
-      sessionStorage.setItem('user', '{"foo":"bar"}');
-      ({ getByTestId, getByText, queryByText } = renderAppNav());
+      ({ getByTestId, getByText } = renderAppNav(userContext));
     });
 
     it('renders nav with brand linking to root, invite link and logout visible', () => {
@@ -42,17 +47,11 @@ describe('AppNav', () => {
       expect(getByText('Log out')).toHaveAttribute('href', '#');
     });
 
-    it('clears logs the user out when Log out is clicked', async () => {
-      expect(getByText('Groceries')).toHaveAttribute('href', '/');
-      expect(sessionStorage.getItem('user')).not.toBeNull();
-
+    it('logs the user out when Log out is clicked', () => {
       fireEvent.click(getByText('Log out'));
 
-      await waitFor(() => expect(queryByText('Invite')).toBeNull());
-
-      expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
-      expect(sessionStorage.getItem('user')).toBeNull();
       expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
+      expect(userContext.signOutUser).toHaveBeenCalled();
     });
   });
 });

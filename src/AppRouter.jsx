@@ -15,32 +15,35 @@ import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
+import { UserContextProvider } from './context/UserContext';
 
 export default function AppRouter() {
   return (
     <Router>
-      <AppNav />
-      <Switch>
-        {/* routes/lists */}
-        <Redirect exact path="/" to="/lists" />
-        <Route exact path="/lists" component={Lists} />
-        <Route exact path="/completed_lists" component={CompletedLists} />
-        {/* routes/list */}
-        <Route exact path="/lists/:id" component={List} />
-        <Route exact path="/lists/:id/edit" component={EditList} />
-        <Route exact path="/lists/:list_id/list_items/:id/edit" component={EditListItem} />
-        <Route exact path="/lists/:list_id/list_items/bulk-edit" component={BulkEditListItems} />
-        {/* routes/share_list */}
-        <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
-        {/* routes/users */}
-        <Route exact path="/users/sign_in" component={NewSession} />
-        <Route exact path="/users/password/new" component={NewPassword} />
-        <Route exact path="/users/password/edit" component={EditPassword} />
-        <Route exact path="/users/invitation/new" component={InviteForm} />
-        <Route exact path="/users/invitation/accept" component={EditInvite} />
-        {/* routes/error_pages */}
-        <Route component={PageNotFound} />
-      </Switch>
+      <UserContextProvider>
+        <AppNav />
+        <Switch>
+          {/* routes/lists */}
+          <Redirect exact path="/" to="/lists" />
+          <Route exact path="/lists" component={Lists} />
+          <Route exact path="/completed_lists" component={CompletedLists} />
+          {/* routes/list */}
+          <Route exact path="/lists/:id" component={List} />
+          <Route exact path="/lists/:id/edit" component={EditList} />
+          <Route exact path="/lists/:list_id/list_items/:id/edit" component={EditListItem} />
+          <Route exact path="/lists/:list_id/list_items/bulk-edit" component={BulkEditListItems} />
+          {/* routes/share_list */}
+          <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
+          {/* routes/users */}
+          <Route exact path="/users/sign_in" component={NewSession} />
+          <Route exact path="/users/password/new" component={NewPassword} />
+          <Route exact path="/users/password/edit" component={EditPassword} />
+          <Route exact path="/users/invitation/new" component={InviteForm} />
+          <Route exact path="/users/invitation/accept" component={EditInvite} />
+          {/* routes/error_pages */}
+          <Route component={PageNotFound} />
+        </Switch>
+      </UserContextProvider>
     </Router>
   );
 }

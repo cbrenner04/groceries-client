@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
+import { UserContext } from '../../context/UserContext';
 
 async function fetchData({ history }) {
   try {
@@ -22,6 +23,7 @@ function NewSession(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const { signInUser } = useContext(UserContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,17 +34,12 @@ function NewSession(props) {
     };
     try {
       const {
-        data: { data },
-        headers,
+        data: {
+          data: { uid },
+        },
+        headers: { 'access-token': accessToken, client },
       } = await axios.post(`/auth/sign_in`, user);
-      sessionStorage.setItem(
-        'user',
-        JSON.stringify({
-          'access-token': headers['access-token'],
-          client: headers['client'],
-          uid: data.uid,
-        }),
-      );
+      signInUser(accessToken, client, uid);
       toast(`Welcome ${email}!`, { type: 'info' });
       props.history.push('/lists');
     } catch {
