@@ -2,24 +2,28 @@ import React, { createContext } from 'react';
 import actioncable from 'actioncable';
 import PropTypes from 'prop-types';
 
-const ActionCableContext = createContext();
+const ActionCableContext = createContext({ cable: null });
 
-const ActionCableContextProvider = ({ url, children }) => {
-  const cable = actioncable.createConsumer(url);
+const ActionCableProvider = ({ children }) => {
+  const storedUser = JSON.parse(sessionStorage.getItem('user'));
+  let wsUrl = process.env.REACT_APP_WS_BASE;
+  if (storedUser) {
+    const { 'access-token': accessToken, client, uid } = storedUser;
+    wsUrl = `${process.env.REACT_APP_WS_BASE}/?access-token=${accessToken}&uid=${uid}&client=${client}`;
+  }
+  const cable = actioncable.createConsumer(wsUrl);
   return <ActionCableContext.Provider value={{ cable }}>{children}</ActionCableContext.Provider>;
 };
 
-ActionCableContextProvider.propTypes = {
-  url: PropTypes.string.isRequired,
+ActionCableProvider.propTypes = {
   children: PropTypes.any.isRequired,
 };
 
-const ActionCableContextConsumer = ({ channel, children, onReceived }) => {
+const ActionCableConsumer = ({ channel, children, onReceived }) => {
   return (
     <ActionCableContext.Consumer>
       {({ cable }) => {
-        let myCable = cable;
-        myCable.subscriptions.create(
+        cable.subscriptions.create(
           { channel },
           {
             initialized() {
@@ -29,9 +33,10 @@ const ActionCableContextConsumer = ({ channel, children, onReceived }) => {
               console.log('CONNECTED!!!!'); //eslint-disable-line
             },
             received(data) {
+              console.log('RECEIVED!!'); //eslint-disable-line
               onReceived(data);
             },
-            disconnected(data) {
+            disconnected() {
               console.log('DISCONNECTED!!!!'); //eslint-disable-line
             },
             rejected() {
@@ -45,15 +50,10 @@ const ActionCableContextConsumer = ({ channel, children, onReceived }) => {
   );
 };
 
-ActionCableContextConsumer.propTypes = {
+ActionCableConsumer.propTypes = {
   channel: PropTypes.string.isRequired,
   children: PropTypes.any.isRequired,
   onReceived: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    accessToken: PropTypes.string.isRequired,
-    uid: PropTypes.string.isRequired,
-    client: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
-export { ActionCableContext, ActionCableContextProvider, ActionCableContextConsumer };
+export { ActionCableContext, ActionCableProvider, ActionCableConsumer };

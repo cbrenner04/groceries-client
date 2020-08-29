@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -11,8 +11,7 @@ import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { list } from '../../../types';
-import { UserContext } from '../../../context/UserContext';
-import { ActionCableContextConsumer } from '../../../context/ActionCableContext';
+import { ActionCableConsumer } from '../../../context/ActionCableContext';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -20,7 +19,6 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
-  const { user } = useContext(UserContext);
 
   const handleFormSubmit = async (list) => {
     setPending(true);
@@ -39,6 +37,7 @@ function ListsContainer(props) {
   };
 
   const handleReceivedData = (data) => {
+    console.log('HANDLING RECEIVED!!!'); //eslint-disable-line
     const {
       accepted_lists: { completed_lists, not_completed_lists },
       pending_lists,
@@ -51,7 +50,7 @@ function ListsContainer(props) {
   };
 
   return (
-    <ActionCableContextConsumer channel="ListsChannel" onReceived={handleReceivedData} user={user}>
+    <ActionCableConsumer channel="ListsChannel" onReceived={handleReceivedData}>
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
@@ -110,7 +109,7 @@ function ListsContainer(props) {
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
       />
-    </ActionCableContextConsumer>
+    </ActionCableConsumer>
   );
 }
 

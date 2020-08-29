@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const UserContext = createContext({ user: null });
 
 // TODO: this probably better off somewhere else
-function UserContextProvider(props) {
+function UserContextProvider({ children }) {
   let defaultUser = null;
   const storedUser = JSON.parse(sessionStorage.getItem('user'));
   if (storedUser) {
@@ -33,7 +33,7 @@ function UserContextProvider(props) {
     signOutUser,
   };
 
-  return <UserContext.Provider value={userContext}>{props.children}</UserContext.Provider>;
+  return <UserContext.Provider value={userContext}>{children}</UserContext.Provider>;
 }
 
 UserContextProvider.propTypes = {
