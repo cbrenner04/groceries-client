@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import ListsContainer from './ListsContainer';
 import axios from '../../../utils/api';
+import { ActionCableContext } from '../../../context/ActionCableContext';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -17,7 +18,11 @@ describe('ListsContainer', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <ListsContainer {...props} />
+        <ActionCableContext.Provider
+          value={{ cable: { subscriptions: { create: jest.fn() }, disconnect: jest.fn() }, setCableContext: jest.fn() }}
+        >
+          <ListsContainer {...props} />
+        </ActionCableContext.Provider>
       </Router>,
     );
   };

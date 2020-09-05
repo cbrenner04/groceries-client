@@ -28,22 +28,18 @@ function ListsContainer(props) {
       { channel: 'ListsChannel' },
       {
         initialized() {
-          console.log('INITIALIZED!!'); //eslint-disable-line
+          // noop
         },
         connected() {
-          console.log('CONNECTED!!!!'); //eslint-disable-line
+          // noop
         },
         // TODO: somehow this is still updating unmounted components
         received(data) {
-          console.log('RECEIVED!!'); //eslint-disable-line
           if (isMounted) {
             handleReceivedData(data);
-          } else {
-            console.log('COMPONENT IS NO LONGER MOUNTED, NOT HANDLING RECEIVED!!!'); //eslint-disable-line
           }
         },
         disconnected() {
-          console.log('DISCONNECTED!!!!'); //eslint-disable-line
           // TODO: this seems fucking stupid
           const storedUser = JSON.parse(sessionStorage.getItem('user'));
           if (storedUser) {
@@ -55,7 +51,7 @@ function ListsContainer(props) {
           }
         },
         rejected() {
-          console.log('REJECTED!!!!'); //eslint-disable-line
+          // noop
         },
       },
     );
@@ -64,7 +60,7 @@ function ListsContainer(props) {
       isMounted = false;
       cable.disconnect();
     };
-  }, [cable, setCableContext]);
+  }, [cable, setCableContext]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFormSubmit = async (list) => {
     setPending(true);
@@ -83,7 +79,6 @@ function ListsContainer(props) {
   };
 
   const handleReceivedData = (data) => {
-    console.log('HANDLING RECEIVED!!!'); //eslint-disable-line
     const { list, status, permissions } = data;
     if (status === 'pending') {
       const updatedPendingLists = update(pendingLists, { $unshift: [list] });

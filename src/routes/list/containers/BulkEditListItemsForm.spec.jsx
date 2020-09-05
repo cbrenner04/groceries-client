@@ -217,9 +217,9 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on successful submission', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
@@ -287,9 +287,9 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to login on 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -298,9 +298,9 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
@@ -309,9 +309,9 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
@@ -329,9 +329,9 @@ describe('BulkEditListItemsForm', () => {
       },
     });
     props.list.type = 'BookList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -348,9 +348,9 @@ describe('BulkEditListItemsForm', () => {
       },
     });
     props.list.type = 'GroceryList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -367,9 +367,9 @@ describe('BulkEditListItemsForm', () => {
       },
     });
     props.list.type = 'MusicList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -386,9 +386,9 @@ describe('BulkEditListItemsForm', () => {
       },
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -399,9 +399,9 @@ describe('BulkEditListItemsForm', () => {
       request: 'request failed',
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -412,9 +412,9 @@ describe('BulkEditListItemsForm', () => {
       message: 'request failed',
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<BulkEditListItemsForm {...props} />);
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });

@@ -5,6 +5,7 @@ import { createMemoryHistory } from 'history';
 
 import Lists from './Lists';
 import axios from '../../utils/api';
+import { ActionCableContext } from '../../context/ActionCableContext';
 
 describe('Lists', () => {
   const renderLists = () => {
@@ -14,7 +15,11 @@ describe('Lists', () => {
     };
     return render(
       <Router history={history}>
-        <Lists {...props} />
+        <ActionCableContext.Provider
+          value={{ cable: { subscriptions: { create: jest.fn() }, disconnect: jest.fn() }, setCableContext: jest.fn() }}
+        >
+          <Lists {...props} />
+        </ActionCableContext.Provider>
       </Router>,
     );
   };

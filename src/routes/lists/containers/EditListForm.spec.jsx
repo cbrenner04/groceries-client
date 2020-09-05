@@ -61,9 +61,9 @@ describe('EditListForm', () => {
       foo: 'bar',
     };
     axios.put = jest.fn().mockResolvedValue({ data });
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
@@ -72,9 +72,9 @@ describe('EditListForm', () => {
 
   it('redirects to user login when 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -83,9 +83,9 @@ describe('EditListForm', () => {
 
   it('redirects to lists page when 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -94,9 +94,9 @@ describe('EditListForm', () => {
 
   it('redirects to lists page when 404', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -114,9 +114,9 @@ describe('EditListForm', () => {
       },
     });
 
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -127,9 +127,9 @@ describe('EditListForm', () => {
       request: 'request failed',
     });
 
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -140,9 +140,9 @@ describe('EditListForm', () => {
       message: 'request failed',
     });
 
-    const { getByRole } = renderEditListForm();
+    const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });

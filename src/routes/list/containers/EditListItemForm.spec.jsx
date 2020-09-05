@@ -63,9 +63,9 @@ describe('EditListItemForm', () => {
 
   it('displays toast and redirects to list on successful submission', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item successfully updated', { type: 'info' });
@@ -74,9 +74,9 @@ describe('EditListItemForm', () => {
 
   it('displays toast and redirects to login on 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -85,9 +85,9 @@ describe('EditListItemForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
@@ -96,9 +96,9 @@ describe('EditListItemForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
@@ -116,9 +116,9 @@ describe('EditListItemForm', () => {
       },
     });
     props.list.type = 'BookList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -135,9 +135,9 @@ describe('EditListItemForm', () => {
       },
     });
     props.list.type = 'GroceryList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -154,9 +154,9 @@ describe('EditListItemForm', () => {
       },
     });
     props.list.type = 'MusicList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar or baz foobar', { type: 'error' });
@@ -173,9 +173,9 @@ describe('EditListItemForm', () => {
       },
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
@@ -186,9 +186,9 @@ describe('EditListItemForm', () => {
       request: 'request failed',
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -199,19 +199,19 @@ describe('EditListItemForm', () => {
       message: 'request failed',
     });
     props.list.type = 'ToDoList';
-    const { getByRole } = render(<EditListItemForm {...props} />);
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
 
   it('sets value for input', async () => {
-    const { getByLabelText, getByRole } = render(<EditListItemForm {...props} />);
+    const { getByLabelText, getAllByRole } = render(<EditListItemForm {...props} />);
 
     fireEvent.change(getByLabelText('Product'), { target: { value: 'foo' } });
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {
@@ -221,10 +221,10 @@ describe('EditListItemForm', () => {
 
   it('sets value for numberInSeries as a number when input', async () => {
     props.list.type = 'BookList';
-    const { getByLabelText, getByRole } = render(<EditListItemForm {...props} />);
+    const { getByLabelText, getAllByRole } = render(<EditListItemForm {...props} />);
 
     fireEvent.change(getByLabelText('Number in series'), { target: { value: '2' } });
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getAllByRole('button')[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {

@@ -1,19 +1,20 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+// import { createMemoryHistory } from 'history';
 
 import AppNav from './AppNav';
 import instance from '../utils/api';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../AppRouter';
 
 describe('AppNav', () => {
   const signOutUser = jest.fn();
+  const mockHistory = { push: jest.fn(), listen: jest.fn(), location: { pathname: '' } };
 
   const renderAppNav = (context) => {
-    const history = createMemoryHistory();
+    // const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <Router history={mockHistory}>
         <UserContext.Provider value={context}>
           <AppNav signOutUser={signOutUser} />
         </UserContext.Provider>
@@ -26,7 +27,8 @@ describe('AppNav', () => {
       const { getByTestId, getByText } = renderAppNav(null);
 
       expect(getByTestId('nav')).toMatchSnapshot();
-      expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
+      fireEvent.click(getByText('Groceries'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/users/sign_in');
     });
   });
 
@@ -40,9 +42,12 @@ describe('AppNav', () => {
 
     it('renders nav with brand linking to root, invite link and logout visible', () => {
       expect(getByTestId('nav')).toMatchSnapshot();
-      expect(getByText('Groceries')).toHaveAttribute('href', '/');
-      expect(getByText('Invite')).toHaveAttribute('href', '/users/invitation/new');
-      expect(getByText('Log out')).toHaveAttribute('href', '#');
+      fireEvent.click(getByText('Groceries'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/');
+      fireEvent.click(getByText('Invite'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/users/invitation/new');
+      fireEvent.click(getByText('Log out'));
+      expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
     });
 
     it('logs the user out when Log out is clicked', async () => {

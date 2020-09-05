@@ -99,12 +99,12 @@ exports[`EditList displays EditList 1`] = `
     >
       Update List
     </button>
-    <a
+    <button
       class="btn btn-link btn-block"
-      href="/lists"
+      type="button"
     >
       Cancel
-    </a>
+    </button>
   </form>
 </div>
 `;

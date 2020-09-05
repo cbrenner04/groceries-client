@@ -32,7 +32,6 @@ export default function AppRouter() {
   };
 
   useEffect(() => {
-    console.log('APP ROUTER USE EFFECT!!!'); //eslint-disable-line
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
       const { 'access-token': accessToken, client, uid } = storedUser;
