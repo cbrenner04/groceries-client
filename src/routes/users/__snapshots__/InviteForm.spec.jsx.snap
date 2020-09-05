@@ -32,12 +32,12 @@ exports[`InviteForm invites new user 1`] = `
     >
       Invite User
     </button>
-    <a
+    <button
       class="btn btn-link btn-block"
-      href="/lists"
+      type="button"
     >
       Cancel
-    </a>
+    </button>
   </form>
 </div>
 `;

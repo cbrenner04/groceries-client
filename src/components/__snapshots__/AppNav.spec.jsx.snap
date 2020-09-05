@@ -5,12 +5,11 @@ exports[`AppNav when user is not signed in renders basic nav with brand linking 
   class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
   data-test-id="nav"
 >
-  <a
+  <span
     class="navbar-brand"
-    href="/users/sign_in"
   >
     Groceries
-  </a>
+  </span>
 </nav>
 `;
 
@@ -19,12 +18,11 @@ exports[`AppNav when user is signed in renders nav with brand linking to root, i
   class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
   data-test-id="nav"
 >
-  <a
+  <span
     class="navbar-brand"
-    href="/"
   >
     Groceries
-  </a>
+  </span>
   <button
     aria-controls="navbar"
     aria-label="Toggle navigation"
@@ -47,9 +45,9 @@ exports[`AppNav when user is signed in renders nav with brand linking to root, i
       >
         <a
           class="nav-link"
-          data-rb-event-key="/users/invitation/new"
           data-test-id="invite-link"
-          href="/users/invitation/new"
+          href="#"
+          role="button"
         >
           Invite
         </a>
@@ -59,7 +57,6 @@ exports[`AppNav when user is signed in renders nav with brand linking to root, i
       >
         <a
           class="nav-link"
-          data-rb-event-key="#"
           data-test-id="log-out-link"
           href="#"
           role="button"

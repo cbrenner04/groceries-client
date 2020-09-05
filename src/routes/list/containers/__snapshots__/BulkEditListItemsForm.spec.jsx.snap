@@ -151,12 +151,12 @@ exports[`BulkEditListItemsForm renders 1`] = `
     >
       Update Items
     </button>
-    <a
+    <button
       class="btn btn-link btn-block"
-      href="/lists/id1"
+      type="button"
     >
       Cancel
-    </a>
+    </button>
   </form>
 </div>
 `;

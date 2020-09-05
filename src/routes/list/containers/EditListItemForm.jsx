@@ -91,7 +91,7 @@ function EditListItemForm(props) {
         <Button type="submit" variant="success" block>
           Update Item
         </Button>
-        <Button href={`/lists/${props.list.id}`} variant="link" block>
+        <Button onClick={() => props.history.push(`/lists/${props.list.id}`)} variant="link" block>
           Cancel
         </Button>
       </Form>

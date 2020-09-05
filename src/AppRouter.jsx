@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
 import CompletedLists from './routes/lists/CompletedLists';
@@ -15,13 +15,41 @@ import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
-import { UserContextProvider } from './context/UserContext';
+
+export const UserContext = createContext(null);
 
 export default function AppRouter() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(sessionStorage.getItem('user'));
+    if (storedUser) {
+      const { 'access-token': accessToken, client, uid } = storedUser;
+      setUser({ accessToken, client, uid });
+    }
+  }, []);
+
+  const signInUser = (accessToken, client, uid) => {
+    sessionStorage.setItem(
+      'user',
+      JSON.stringify({
+        'access-token': accessToken,
+        client,
+        uid,
+      }),
+    );
+    setUser({ accessToken, client, uid });
+  };
+
+  const signOutUser = () => {
+    setUser(null);
+    sessionStorage.removeItem('user');
+  };
+
   return (
     <Router>
-      <UserContextProvider>
-        <AppNav />
+      <UserContext.Provider value={user}>
+        <AppNav signOutUser={signOutUser} />
         <Switch>
           {/* routes/lists */}
           <Redirect exact path="/" to="/lists" />
@@ -35,7 +63,7 @@ export default function AppRouter() {
           {/* routes/share_list */}
           <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
           {/* routes/users */}
-          <Route exact path="/users/sign_in" component={NewSession} />
+          <Route exact path="/users/sign_in" render={(props) => <NewSession signInUser={signInUser} {...props} />} />
           <Route exact path="/users/password/new" component={NewPassword} />
           <Route exact path="/users/password/edit" component={EditPassword} />
           <Route exact path="/users/invitation/new" component={InviteForm} />
@@ -43,7 +71,7 @@ export default function AppRouter() {
           {/* routes/error_pages */}
           <Route component={PageNotFound} />
         </Switch>
-      </UserContextProvider>
+      </UserContext.Provider>
     </Router>
   );
 }
