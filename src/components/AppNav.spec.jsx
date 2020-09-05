@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
-// import { createMemoryHistory } from 'history';
 
 import AppNav from './AppNav';
 import instance from '../utils/api';
@@ -12,7 +11,6 @@ describe('AppNav', () => {
   const mockHistory = { push: jest.fn(), listen: jest.fn(), location: { pathname: '' } };
 
   const renderAppNav = (context) => {
-    // const history = createMemoryHistory();
     return render(
       <Router history={mockHistory}>
         <UserContext.Provider value={context}>
