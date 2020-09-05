@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 import NewSession from './NewSession';
 import axios from '../../utils/api';
-import { UserContext } from '../../context/UserContext';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -14,14 +13,11 @@ jest.mock('react-toastify', () => ({
 
 describe('NewSession', () => {
   let props;
-  const signInUser = jest.fn();
   const renderNewSession = (props) => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <UserContext.Provider value={{ signInUser }}>
-          <NewSession {...props} />
-        </UserContext.Provider>
+        <NewSession {...props} />
       </Router>,
     );
   };
@@ -31,6 +27,7 @@ describe('NewSession', () => {
       history: {
         push: jest.fn(),
       },
+      signInUser: jest.fn(),
     };
   });
 
@@ -80,7 +77,7 @@ describe('NewSession', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(signInUser).toHaveBeenCalledWith('foo', 'bar', 1);
+    expect(props.signInUser).toHaveBeenCalledWith('foo', 'bar', 1);
     expect(toast).toHaveBeenCalledWith('Welcome foo@example.com!', { type: 'info' });
     expect(props.history.push).toHaveBeenCalledWith('/lists');
   });

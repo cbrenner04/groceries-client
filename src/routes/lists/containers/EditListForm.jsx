@@ -60,7 +60,7 @@ function EditListForm(props) {
         <Button type="submit" variant="success" block>
           Update List
         </Button>
-        <Button href="/lists" variant="link" block>
+        <Button onClick={() => props.history.push('/lists')} variant="link" block>
           Cancel
         </Button>
       </Form>

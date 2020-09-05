@@ -102,12 +102,12 @@ exports[`EditListItemForm renders 1`] = `
     >
       Update Item
     </button>
-    <a
+    <button
       class="btn btn-link btn-block"
-      href="/lists/id1"
+      type="button"
     >
       Cancel
-    </a>
+    </button>
   </form>
 </div>
 `;

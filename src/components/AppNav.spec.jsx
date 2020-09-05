@@ -1,19 +1,20 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 
 import AppNav from './AppNav';
 import instance from '../utils/api';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../AppRouter';
 
 describe('AppNav', () => {
+  const signOutUser = jest.fn();
+  const mockHistory = { push: jest.fn(), listen: jest.fn(), location: { pathname: '' } };
+
   const renderAppNav = (context) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <Router history={mockHistory}>
         <UserContext.Provider value={context}>
-          <AppNav />
+          <AppNav signOutUser={signOutUser} />
         </UserContext.Provider>
       </Router>,
     );
@@ -21,37 +22,40 @@ describe('AppNav', () => {
 
   describe('when user is not signed in', () => {
     it('renders basic nav with brand linking to sign in', () => {
-      const { getByTestId, getByText } = renderAppNav({ user: null });
+      const { getByTestId, getByText } = renderAppNav(null);
 
       expect(getByTestId('nav')).toMatchSnapshot();
-      expect(getByText('Groceries')).toHaveAttribute('href', '/users/sign_in');
+      fireEvent.click(getByText('Groceries'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/users/sign_in');
     });
   });
 
   describe('when user is signed in', () => {
     let getByTestId;
     let getByText;
-    const userContext = {
-      user: { uid: 1, client: 2, accessToken: 3 },
-      signOutUser: jest.fn(),
-    };
 
     beforeEach(() => {
-      ({ getByTestId, getByText } = renderAppNav(userContext));
+      ({ getByTestId, getByText } = renderAppNav({ uid: 1, client: 2, accessToken: 3 }));
     });
 
     it('renders nav with brand linking to root, invite link and logout visible', () => {
       expect(getByTestId('nav')).toMatchSnapshot();
-      expect(getByText('Groceries')).toHaveAttribute('href', '/');
-      expect(getByText('Invite')).toHaveAttribute('href', '/users/invitation/new');
-      expect(getByText('Log out')).toHaveAttribute('href', '#');
+      fireEvent.click(getByText('Groceries'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/');
+      fireEvent.click(getByText('Invite'));
+      expect(mockHistory.push).toHaveBeenCalledWith('/users/invitation/new');
+      fireEvent.click(getByText('Log out'));
+      expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
     });
 
-    it('logs the user out when Log out is clicked', () => {
+    it('logs the user out when Log out is clicked', async () => {
       fireEvent.click(getByText('Log out'));
 
       expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
-      expect(userContext.signOutUser).toHaveBeenCalled();
+
+      await waitFor(() => expect(instance.delete).toHaveBeenCalledTimes(1));
+
+      expect(signOutUser).toHaveBeenCalled();
     });
   });
 });
