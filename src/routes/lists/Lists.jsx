@@ -9,28 +9,26 @@ import UnknownError from '../error_pages/UnknownError';
 
 function Lists(props) {
   return (
-    <>
-      <Async promiseFn={fetchLists} history={props.history}>
-        <Async.Pending>
-          <Loading />
-        </Async.Pending>
-        <Async.Fulfilled>
-          {(data) => (
-            <ListsContainer
-              history={props.history}
-              userId={data.userId}
-              pendingLists={data.pendingLists}
-              completedLists={data.completedLists}
-              incompleteLists={data.incompleteLists}
-              currentUserPermissions={data.currentUserPermissions}
-            />
-          )}
-        </Async.Fulfilled>
-        <Async.Rejected>
-          <UnknownError />
-        </Async.Rejected>
-      </Async>
-    </>
+    <Async promiseFn={fetchLists} history={props.history}>
+      <Async.Pending>
+        <Loading />
+      </Async.Pending>
+      <Async.Fulfilled>
+        {(data) => (
+          <ListsContainer
+            history={props.history}
+            userId={data.userId}
+            pendingLists={data.pendingLists}
+            completedLists={data.completedLists}
+            incompleteLists={data.incompleteLists}
+            currentUserPermissions={data.currentUserPermissions}
+          />
+        )}
+      </Async.Fulfilled>
+      <Async.Rejected>
+        <UnknownError />
+      </Async.Rejected>
+    </Async>
   );
 }
 
