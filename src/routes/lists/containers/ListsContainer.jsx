@@ -11,6 +11,8 @@ import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { list } from '../../../types';
+import { fetchLists } from '../utils';
+import { usePolling } from '../../../hooks';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -18,6 +20,32 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
+
+  usePolling(async () => {
+    const {
+      pendingLists: updatedPending,
+      completedLists: updatedCompleted,
+      incompleteLists: updatedIncomplete,
+      currentUserPermissions: updatedCurrentUserPermissions,
+    } = await fetchLists({ history: props.history });
+    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+    const pendingSame = isSameSet(updatedPending, pendingLists);
+    const completedSame = isSameSet(updatedCompleted, completedLists);
+    const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
+    const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
+    if (!pendingSame) {
+      setPendingLists(updatedPending);
+    }
+    if (!completedSame) {
+      setCompletedLists(updatedCompleted);
+    }
+    if (!incompleteSame) {
+      setIncompleteLists(updatedIncomplete);
+    }
+    if (!userPermsSame) {
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
+    }
+  }, 5000);
 
   const handleFormSubmit = async (list) => {
     setPending(true);

@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import CompletedListsContainer from './CompletedListsContainer';
+import axios from '../../../utils/api';
 
 describe('CompletedListsContainer', () => {
   let props;
@@ -17,6 +18,7 @@ describe('CompletedListsContainer', () => {
   };
 
   beforeEach(() => {
+    jest.useFakeTimers();
     props = {
       history: {
         push: jest.fn(),
@@ -69,5 +71,71 @@ describe('CompletedListsContainer', () => {
     const { container } = renderCompletedListsContainer(props);
 
     expect(container).toMatchSnapshot();
+  });
+
+  it('updates via polling', async () => {
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          completed_lists: [
+            {
+              id: 'id1',
+              users_list_id: 'id1',
+              name: 'foo',
+              user_id: 'id1',
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 'id1',
+            },
+          ],
+          current_list_permissions: { id1: 'write' },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          completed_lists: [
+            {
+              id: 'id1',
+              users_list_id: 'id1',
+              name: 'foo',
+              user_id: 'id1',
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 'id1',
+            },
+            {
+              id: 'id2',
+              users_list_id: 'id2',
+              name: 'bar',
+              user_id: 'id1',
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 'id1',
+            },
+          ],
+          current_list_permissions: { id1: 'write' },
+        },
+      });
+
+    const { getByTestId, queryByTestId } = renderCompletedListsContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByTestId('list-id1')).toBeVisible();
+    expect(queryByTestId('list-id2')).toBeNull();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('list-id1')).toBeVisible();
+    expect(getByTestId('list-id2')).toBeVisible();
   });
 });

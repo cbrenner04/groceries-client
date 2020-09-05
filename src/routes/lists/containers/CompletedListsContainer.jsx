@@ -5,10 +5,28 @@ import PropTypes from 'prop-types';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { list } from '../../../types';
+import { fetchCompletedLists } from '../utils';
+import { usePolling } from '../../../hooks';
 
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
+
+  usePolling(async () => {
+    const {
+      completedLists: updatedCompletedLists,
+      currentUserPermissions: updatedUserPerms,
+    } = await fetchCompletedLists({ history: props.history });
+    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+    const completedSame = isSameSet(updatedCompletedLists, completedLists);
+    const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
+    if (!completedSame) {
+      setCompletedLists(updatedCompletedLists);
+    }
+    if (!userPermsSame) {
+      setCurrentUserPermissions(updatedUserPerms);
+    }
+  }, 5000);
 
   return (
     <>

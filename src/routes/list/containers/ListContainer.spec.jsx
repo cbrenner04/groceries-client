@@ -30,6 +30,7 @@ describe('ListContainer', () => {
   };
 
   beforeEach(() => {
+    // jest.useFakeTimers(); // TODO: reinstate when skipped test is finished
     props = {
       history: {
         push: jest.fn(),
@@ -156,6 +157,60 @@ describe('ListContainer', () => {
       },
       permissions: 'write',
     };
+  });
+
+  // TODO: still WIP
+  it.skip('updates via polling', async () => {
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          not_purchased_items: [{ id: 'id1', product: 'new', quantity: 'item' }],
+          purchased_items: [],
+          list: {
+            id: 'id1',
+            name: 'foo',
+            type: 'GroceryList',
+            created_at: new Date('05/22/2020').toISOString(),
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          categories: [],
+          list_users: [{ id: 'id1', email: 'foo@example.com' }],
+          permissions: 'write',
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          not_purchased_items: [],
+          purchased_items: [{ id: 'id1', product: 'new', quantity: 'item' }],
+          list: {
+            id: 'id1',
+            name: 'foo',
+            type: 'GroceryList',
+            created_at: new Date('05/22/2020').toISOString(),
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          categories: [],
+          list_users: [{ id: 'id1', email: 'foo@example.com' }],
+          permissions: 'write',
+        },
+      });
+    props.permissions = 'write';
+    const { getByText } = renderListContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByText('item new').parentElement()).toHaveAttribute('data-test-class', 'non-purchased-item');
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByText('item new')).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('renders ListForm when user has write permissions', () => {
