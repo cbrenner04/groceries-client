@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
-import { UserContext } from '../../context/UserContext';
 
 async function fetchData({ history }) {
   try {
@@ -19,11 +18,10 @@ async function fetchData({ history }) {
   }
 }
 
-function NewSession(props) {
+function NewSession({ history, signInUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const { signInUser } = useContext(UserContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,14 +39,14 @@ function NewSession(props) {
       } = await axios.post(`/auth/sign_in`, user);
       signInUser(accessToken, client, uid);
       toast(`Welcome ${email}!`, { type: 'info' });
-      props.history.push('/lists');
+      history.push('/lists');
     } catch {
       toast('Something went wrong. Please check your credentials and try again.', { type: 'error' });
     }
   };
 
   return (
-    <Async promiseFn={fetchData} history={props.history}>
+    <Async promiseFn={fetchData} history={history}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -84,6 +82,7 @@ NewSession.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  signInUser: PropTypes.func.isRequired,
 };
 
 export default NewSession;

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import actioncable from 'actioncable';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
@@ -11,7 +12,7 @@ import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { list } from '../../../types';
-import { ActionCableConsumer } from '../../../context/ActionCableContext';
+import { ActionCableContext } from '../../../context/ActionCableContext';
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -19,6 +20,51 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
+  const { cable, setCableContext } = useContext(ActionCableContext);
+
+  useEffect(() => {
+    let isMounted = true;
+    cable.subscriptions.create(
+      { channel: 'ListsChannel' },
+      {
+        initialized() {
+          console.log('INITIALIZED!!'); //eslint-disable-line
+        },
+        connected() {
+          console.log('CONNECTED!!!!'); //eslint-disable-line
+        },
+        // TODO: somehow this is still updating unmounted components
+        received(data) {
+          console.log('RECEIVED!!'); //eslint-disable-line
+          if (isMounted) {
+            handleReceivedData(data);
+          } else {
+            console.log('COMPONENT IS NO LONGER MOUNTED, NOT HANDLING RECEIVED!!!'); //eslint-disable-line
+          }
+        },
+        disconnected() {
+          console.log('DISCONNECTED!!!!'); //eslint-disable-line
+          // TODO: this seems fucking stupid
+          const storedUser = JSON.parse(sessionStorage.getItem('user'));
+          if (storedUser) {
+            const { 'access-token': accessToken, client, uid } = storedUser;
+            const cable = actioncable.createConsumer(
+              `${process.env.REACT_APP_WS_BASE}/?access-token=${accessToken}&uid=${uid}&client=${client}`,
+            );
+            setCableContext({ cable, setCableContext });
+          }
+        },
+        rejected() {
+          console.log('REJECTED!!!!'); //eslint-disable-line
+        },
+      },
+    );
+
+    return () => {
+      isMounted = false;
+      cable.disconnect();
+    };
+  }, [cable, setCableContext]);
 
   const handleFormSubmit = async (list) => {
     setPending(true);
@@ -38,19 +84,23 @@ function ListsContainer(props) {
 
   const handleReceivedData = (data) => {
     console.log('HANDLING RECEIVED!!!'); //eslint-disable-line
-    const {
-      accepted_lists: { completed_lists, not_completed_lists },
-      pending_lists,
-      current_list_permissions,
-    } = data;
-    setCompletedLists(completed_lists);
-    setIncompleteLists(not_completed_lists);
-    setPendingLists(pending_lists);
-    setCurrentUserPermissions(current_list_permissions);
+    const { list, status, permissions } = data;
+    if (status === 'pending') {
+      const updatedPendingLists = update(pendingLists, { $unshift: [list] });
+      setPendingLists(updatedPendingLists);
+    } else if (status === 'incomplete') {
+      const updatedIncompleteLists = update(incompleteLists, { $push: [list] });
+      setIncompleteLists(sortLists(updatedIncompleteLists));
+    } else if (status === 'complete') {
+      const updatedCompleteLists = update(completedLists, { $push: [list] });
+      setCompletedLists(sortLists(updatedCompleteLists));
+    }
+    const updatedCurrentUserPermissions = update(currentUserPermissions, { [list.id]: { $set: permissions } });
+    setCurrentUserPermissions(updatedCurrentUserPermissions);
   };
 
   return (
-    <ActionCableConsumer channel="ListsChannel" onReceived={handleReceivedData}>
+    <>
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
@@ -109,7 +159,7 @@ function ListsContainer(props) {
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
       />
-    </ActionCableConsumer>
+    </>
   );
 }
 

@@ -41,7 +41,7 @@ function InviteForm(props) {
         <Button type="submit" variant="success" block>
           Invite User
         </Button>
-        <Button href="/lists" variant="link" block>
+        <Button onClick={() => props.history.push('/lists')} variant="link" block>
           Cancel
         </Button>
       </Form>

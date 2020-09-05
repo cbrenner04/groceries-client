@@ -6,11 +6,10 @@ import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import { ActionCableProvider } from '../../context/ActionCableContext';
 
 function Lists(props) {
   return (
-    <ActionCableProvider>
+    <>
       <Async promiseFn={fetchLists} history={props.history}>
         <Async.Pending>
           <Loading />
@@ -31,7 +30,7 @@ function Lists(props) {
           <UnknownError />
         </Async.Rejected>
       </Async>
-    </ActionCableProvider>
+    </>
   );
 }
 
