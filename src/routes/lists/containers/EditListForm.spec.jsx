@@ -147,4 +147,12 @@ describe('EditListForm', () => {
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
+
+  it('goes back to lists on Cancel', () => {
+    const { getAllByRole } = renderEditListForm();
+
+    fireEvent.click(getAllByRole('button')[1]);
+
+    expect(history.location.pathname).toBe('/lists');
+  });
 });

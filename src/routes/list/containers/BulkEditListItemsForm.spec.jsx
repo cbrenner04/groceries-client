@@ -419,4 +419,12 @@ describe('BulkEditListItemsForm', () => {
 
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
+
+  it('goes back to list on Cancel', () => {
+    const { getAllByRole } = render(<BulkEditListItemsForm {...props} />);
+
+    fireEvent.click(getAllByRole('button')[1]);
+
+    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+  });
 });

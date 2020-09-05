@@ -81,4 +81,12 @@ describe('InviteForm', () => {
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
+
+  it('goes back to lists on Cancel', () => {
+    const { getAllByRole } = renderInviteForm(props);
+
+    fireEvent.click(getAllByRole('button')[1]);
+
+    expect(props.history.push).toHaveBeenCalledWith(`/lists`);
+  });
 });

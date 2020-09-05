@@ -231,4 +231,12 @@ describe('EditListItemForm', () => {
       list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });
+
+  it('goes back to list on Cancel', () => {
+    const { getAllByRole } = render(<EditListItemForm {...props} />);
+
+    fireEvent.click(getAllByRole('button')[1]);
+
+    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+  });
 });
