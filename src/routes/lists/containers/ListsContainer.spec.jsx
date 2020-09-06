@@ -23,6 +23,7 @@ describe('ListsContainer', () => {
   };
 
   beforeEach(() => {
+    jest.useFakeTimers();
     props = {
       history: {
         push: jest.fn(),
@@ -102,6 +103,186 @@ describe('ListsContainer', () => {
     const { container } = renderListsContainer(props);
 
     expect(container).toMatchSnapshot();
+  });
+
+  it('updates via polling when different data is returned', async () => {
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          accepted_lists: {
+            completed_lists: [
+              {
+                id: 'id1',
+                users_list_id: 'id1',
+                name: 'foo',
+                user_id: 'id1',
+                type: 'GroceryList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: true,
+                refreshed: false,
+                owner_id: 'id1',
+              },
+            ],
+            not_completed_lists: [
+              {
+                id: 'id2',
+                users_list_id: 'id2',
+                name: 'bar',
+                user_id: 'id1',
+                type: 'BookList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: false,
+                refreshed: false,
+                owner_id: 'id1',
+              },
+            ],
+          },
+          pending_lists: [
+            {
+              id: 'id3',
+              users_list_id: 'id3',
+              name: 'foo',
+              user_id: 'id1',
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: false,
+              refreshed: false,
+              owner_id: 'id2',
+            },
+          ],
+          current_list_permissions: {
+            id1: 'write',
+            id2: 'write',
+            id3: 'write',
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          accepted_lists: {
+            completed_lists: [
+              {
+                id: 'id1',
+                users_list_id: 'id1',
+                name: 'foo',
+                user_id: 'id1',
+                type: 'GroceryList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: true,
+                refreshed: false,
+                owner_id: 'id1',
+              },
+              {
+                id: 'id3',
+                users_list_id: 'id3',
+                name: 'foo',
+                user_id: 'id1',
+                type: 'GroceryList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: false,
+                refreshed: false,
+                owner_id: 'id2',
+              },
+            ],
+            not_completed_lists: [
+              {
+                id: 'id2',
+                users_list_id: 'id2',
+                name: 'bar',
+                user_id: 'id1',
+                type: 'BookList',
+                created_at: new Date('05/31/2020').toISOString(),
+                completed: false,
+                refreshed: false,
+                owner_id: 'id1',
+              },
+            ],
+          },
+          pending_lists: [],
+          current_list_permissions: {
+            id1: 'write',
+            id2: 'write',
+            id3: 'write',
+          },
+        },
+      });
+
+    const { getByTestId } = renderListsContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'completed-list');
+  });
+
+  it('does not update via polling when different data is not returned', async () => {
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        current_user_id: 'id1',
+        accepted_lists: {
+          completed_lists: [
+            {
+              id: 'id1',
+              users_list_id: 'id1',
+              name: 'foo',
+              user_id: 'id1',
+              type: 'GroceryList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: true,
+              refreshed: false,
+              owner_id: 'id1',
+            },
+          ],
+          not_completed_lists: [
+            {
+              id: 'id2',
+              users_list_id: 'id2',
+              name: 'bar',
+              user_id: 'id1',
+              type: 'BookList',
+              created_at: new Date('05/31/2020').toISOString(),
+              completed: false,
+              refreshed: false,
+              owner_id: 'id1',
+            },
+          ],
+        },
+        pending_lists: [
+          {
+            id: 'id3',
+            users_list_id: 'id3',
+            name: 'foo',
+            user_id: 'id1',
+            type: 'GroceryList',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            refreshed: false,
+            owner_id: 'id2',
+          },
+        ],
+        current_list_permissions: {
+          id1: 'write',
+          id2: 'write',
+          id3: 'write',
+        },
+      },
+    });
+
+    const { getByTestId } = renderListsContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
   });
 
   it('does not render pending lists when they do not exist', () => {

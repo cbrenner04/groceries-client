@@ -10,6 +10,8 @@ import UsersList from '../components/UsersList';
 import RefusedUsersList from '../components/RefusedUsersList';
 import axios from '../../../utils/api';
 import { usersLists } from '../../../types';
+import { fetchData } from '../utils';
+import { usePolling } from '../../../hooks';
 
 function ShareListForm(props) {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
@@ -17,6 +19,35 @@ function ShareListForm(props) {
   const [pending, setPending] = useState(props.pending);
   const [accepted, setAccepted] = useState(props.accepted);
   const [refused, setRefused] = useState(props.refused);
+
+  usePolling(async () => {
+    const {
+      invitableUsers: updatedInvitableUsers,
+      pending: updatedPending,
+      accepted: updatedAccepted,
+      refused: updatedRefused,
+    } = await fetchData({
+      listId: props.listId,
+      history: props.history,
+    });
+    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+    const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
+    const pendingSame = isSameSet(updatedPending, pending);
+    const acceptedSame = isSameSet(updatedAccepted, accepted);
+    const refusedSame = isSameSet(updatedRefused, refused);
+    if (!invitableUsersSame) {
+      setInvitableUsers(updatedInvitableUsers);
+    }
+    if (!pendingSame) {
+      setPending(updatedPending);
+    }
+    if (!acceptedSame) {
+      setAccepted(updatedAccepted);
+    }
+    if (!refusedSame) {
+      setRefused(updatedRefused);
+    }
+  }, 5000);
 
   const failure = ({ response, request, message }) => {
     if (response) {

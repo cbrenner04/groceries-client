@@ -14,6 +14,8 @@ import ConfirmModal from '../../../components/ConfirmModal';
 import axios from '../../../utils/api';
 import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
+import { fetchList } from '../utils';
+import { usePolling } from '../../../hooks';
 
 function ListContainer(props) {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
@@ -28,6 +30,34 @@ function ListContainer(props) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [pending, setPending] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
+  const [listUsers, setListUsers] = useState(props.listUsers);
+
+  usePolling(async () => {
+    const {
+      purchasedItems: updatedPurchasedItems,
+      categories: updatedCategories,
+      listUsers: updatedListUsers,
+      includedCategories: updatedIncludedCategories,
+      notPurchasedItems: updatedNotPurchasedItems,
+    } = await fetchList({ id: props.list.id, history: props.history });
+    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+    const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
+    const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
+    if (!purchasedItemsSame) {
+      setPurchasedItems(updatedPurchasedItems);
+    }
+    if (!notPurchasedItemsSame) {
+      setNotPurchasedItems(updatedNotPurchasedItems);
+    }
+    if (!purchasedItemsSame || !notPurchasedItemsSame) {
+      setCategories(updatedCategories);
+      setIncludedCategories(updatedIncludedCategories);
+      if (!filter) {
+        setDisplayedCategories(updatedIncludedCategories);
+      }
+      setListUsers(updatedListUsers);
+    }
+  }, 3000);
 
   const handleAddItem = (data) => {
     // this is to deal the ListItemForm being passed this function
@@ -311,7 +341,7 @@ function ListContainer(props) {
         <ListItemForm
           listId={props.list.id}
           listType={props.list.type}
-          listUsers={props.listUsers}
+          listUsers={listUsers}
           userId={props.userId}
           handleItemAddition={handleAddItem}
           categories={categories}

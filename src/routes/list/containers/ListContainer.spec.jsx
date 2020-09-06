@@ -30,6 +30,7 @@ describe('ListContainer', () => {
   };
 
   beforeEach(() => {
+    jest.useFakeTimers();
     props = {
       history: {
         push: jest.fn(),
@@ -156,6 +157,109 @@ describe('ListContainer', () => {
       },
       permissions: 'write',
     };
+  });
+
+  it('does not update via polling when different data is not returned', async () => {
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        current_user_id: 'id1',
+        not_purchased_items: [{ id: 'id1', product: 'new', quantity: 'item', category: 'foo' }],
+        purchased_items: [],
+        list: {
+          id: 'id1',
+          name: 'foo',
+          type: 'GroceryList',
+          created_at: new Date('05/22/2020').toISOString(),
+          completed: false,
+          owner_id: 'id1',
+          refreshed: false,
+        },
+        categories: ['foo'],
+        list_users: [{ id: 'id1', email: 'foo@example.com' }],
+        permissions: 'write',
+      },
+    });
+    props.permissions = 'write';
+    const { getByText, getByTestId } = renderListContainer(props);
+
+    fireEvent.click(getByText('Filter by category'));
+
+    await waitFor(() => getByTestId('filter-by-foo'));
+
+    fireEvent.click(getByTestId('filter-by-foo'));
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+      'data-test-class',
+      'non-purchased-item',
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+      'data-test-class',
+      'non-purchased-item',
+    );
+  });
+
+  it('updates via polling when different data is returned', async () => {
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          not_purchased_items: [{ id: 'id1', product: 'new', quantity: 'item' }],
+          purchased_items: [],
+          list: {
+            id: 'id1',
+            name: 'foo',
+            type: 'GroceryList',
+            created_at: new Date('05/22/2020').toISOString(),
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          categories: [],
+          list_users: [{ id: 'id1', email: 'foo@example.com' }],
+          permissions: 'write',
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          current_user_id: 'id1',
+          not_purchased_items: [],
+          purchased_items: [{ id: 'id1', product: 'new', quantity: 'item' }],
+          list: {
+            id: 'id1',
+            name: 'foo',
+            type: 'GroceryList',
+            created_at: new Date('05/22/2020').toISOString(),
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          categories: [],
+          list_users: [{ id: 'id1', email: 'foo@example.com' }],
+          permissions: 'write',
+        },
+      });
+    props.permissions = 'write';
+    const { getByText } = renderListContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+      'data-test-class',
+      'non-purchased-item',
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+      'data-test-class',
+      'purchased-item',
+    );
   });
 
   it('renders ListForm when user has write permissions', () => {
@@ -331,8 +435,8 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(queryByTestId('confirm-delete')).toBeNull();
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
     expect(queryByText('Bar')).toBeNull();
     expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
@@ -352,8 +456,8 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(queryByTestId('confirm-delete')).toBeNull();
     expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
     expect(getByText('Foo')).toBeVisible();
     expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
@@ -372,15 +476,17 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(queryByTestId('confirm-delete')).toBeNull();
     expect(queryByText('purchased quantity foo purchased product')).toBeNull();
     expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
   });
 
   it('deletes all items when multiple are selected', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByText, getAllByText } = renderListContainer(props);
+    const { getAllByRole, getByText, getByTestId, queryByTestId, queryByText, getAllByText } = renderListContainer(
+      props,
+    );
 
     expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(getByText('Foo')).toBeVisible();
@@ -402,6 +508,7 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
     expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
     expect(getByText('Foo')).toBeVisible();
