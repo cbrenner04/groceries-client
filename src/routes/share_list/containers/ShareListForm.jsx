@@ -47,7 +47,7 @@ function ShareListForm(props) {
     if (!refusedSame) {
       setRefused(updatedRefused);
     }
-  }, 3000);
+  }, 5000);
 
   const failure = ({ response, request, message }) => {
     if (response) {

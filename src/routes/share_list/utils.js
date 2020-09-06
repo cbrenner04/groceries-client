@@ -21,9 +21,7 @@ export async function fetchData({ listId, history }) {
       refused: data.refused,
       userId: data.current_user_id,
     };
-  } catch (error) {
-    console.log(error); //eslint-disable-line
-    const { response } = error;
+  } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });

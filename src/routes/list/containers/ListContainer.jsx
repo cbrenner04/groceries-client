@@ -57,7 +57,7 @@ function ListContainer(props) {
       }
       setListUsers(updatedListUsers);
     }
-  }, 1000);
+  }, 3000);
 
   const handleAddItem = (data) => {
     // this is to deal the ListItemForm being passed this function

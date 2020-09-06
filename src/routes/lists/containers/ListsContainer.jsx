@@ -45,7 +45,7 @@ function ListsContainer(props) {
     if (!userPermsSame) {
       setCurrentUserPermissions(updatedCurrentUserPermissions);
     }
-  }, 5000);
+  }, 10000);
 
   const handleFormSubmit = async (list) => {
     setPending(true);

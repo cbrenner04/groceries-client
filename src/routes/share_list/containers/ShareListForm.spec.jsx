@@ -84,7 +84,7 @@ describe('ShareListForm', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('updates via polling', async () => {
+  it('updates via polling when different data is returned', async () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({
@@ -134,6 +134,35 @@ describe('ShareListForm', () => {
 
     expect(getByTestId('refused-user-id2')).toHaveTextContent('bar@example.com');
     expect(queryByTestId('pending-user-id2')).toBeNull();
+  });
+
+  it('does not update via polling when different data is not returned', async () => {
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        accepted: [
+          { user: { id: 'id1', email: 'foo@example.com' }, users_list: { id: 'id1', permissions: 'read' } },
+          { user: { id: 'id4', email: 'foobaz@example.com' }, users_list: { id: 'id4', permissions: 'write' } },
+        ],
+        pending: [{ user: { id: 'id2', email: 'bar@example.com' }, users_list: { id: 'id2', permissions: 'write' } }],
+        refused: [{ user: { id: 'id3', email: 'baz@example.com' }, users_list: { id: 'id3', permissions: 'read' } }],
+        current_user_id: 'id4',
+        user_is_owner: true,
+        invitable_users: [{ id: 'id5', email: 'foobar@example.com' }],
+        list: {
+          name: 'foo',
+          id: 'id1',
+        },
+      },
+    });
+    const { getByTestId } = renderShareListForm(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
   });
 
   it('creates new user on form submit', async () => {

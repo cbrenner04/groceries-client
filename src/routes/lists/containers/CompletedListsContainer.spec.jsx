@@ -73,7 +73,7 @@ describe('CompletedListsContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('updates via polling', async () => {
+  it('updates via polling when different data is returned', async () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({
@@ -137,5 +137,37 @@ describe('CompletedListsContainer', () => {
 
     expect(getByTestId('list-id1')).toBeVisible();
     expect(getByTestId('list-id2')).toBeVisible();
+  });
+
+  it('does not update via polling when different data is not returned', async () => {
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        current_user_id: 'id1',
+        completed_lists: [
+          {
+            id: 'id1',
+            users_list_id: 'id1',
+            name: 'foo',
+            user_id: 'id1',
+            type: 'GroceryList',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: true,
+            refreshed: false,
+            owner_id: 'id1',
+          },
+        ],
+        current_list_permissions: { id1: 'write' },
+      },
+    });
+
+    const { getByTestId } = renderCompletedListsContainer(props);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(getByTestId('list-id1')).toBeVisible();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    expect(getByTestId('list-id1')).toBeVisible();
   });
 });

@@ -23,6 +23,7 @@
     "react-async": "10.0.1",
     "react-bootstrap": "1.3.0",
     "react-dom": "16.13.1",
+    "react-idle-timer": "^4.3.6",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.3",
     "react-toastify": "6.0.8"
@@ -73,7 +74,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 98.56,
+        "branches": 98.65,
         "functions": 100,
         "lines": 100,
         "statements": 100

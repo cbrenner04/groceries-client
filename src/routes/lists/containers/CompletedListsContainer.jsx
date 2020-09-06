@@ -26,7 +26,7 @@ function CompletedListsContainer(props) {
     if (!userPermsSame) {
       setCurrentUserPermissions(updatedUserPerms);
     }
-  }, 5000);
+  }, 10000);
 
   return (
     <>
