@@ -1,9 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 
+const ONE_SECOND = 1000;
+const ONE_MINUTE = 60 * ONE_SECOND;
+const TEN_MINUTES = 10 * ONE_MINUTE;
+
 export default function usePolling(callback, delay) {
   const callbackRef = useRef();
-  const { isIdle } = useIdleTimer({ timeout: 2 * delay });
+  const { isIdle } = useIdleTimer({ timeout: TEN_MINUTES });
 
   useEffect(() => {
     callbackRef.current = callback;
