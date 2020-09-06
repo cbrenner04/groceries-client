@@ -3,7 +3,7 @@ import { useIdleTimer } from 'react-idle-timer';
 
 export default function usePolling(callback, delay) {
   const callbackRef = useRef();
-  const { isIdle } = useIdleTimer({ timeout: 1000 * 10 });
+  const { isIdle } = useIdleTimer({ timeout: 2 * delay });
 
   useEffect(() => {
     callbackRef.current = callback;
