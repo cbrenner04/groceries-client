@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { DndProvider } from 'react-dnd';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
@@ -28,8 +31,10 @@ function CompletedListsContainer(props) {
     }
   }, 10000);
 
+  const touchDevice = () => navigator.maxTouchPoints || 'ontouchstart' in document.documentElement;
+
   return (
-    <>
+    <DndProvider backend={touchDevice() ? TouchBackend : HTML5Backend}>
       <div className="clearfix mb-3">
         <Link to="/lists" className="float-right">
           Back to lists
@@ -51,7 +56,7 @@ function CompletedListsContainer(props) {
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
       />
-    </>
+    </DndProvider>
   );
 }
 

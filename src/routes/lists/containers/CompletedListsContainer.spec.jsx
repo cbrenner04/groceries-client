@@ -2,6 +2,8 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { DndProvider } from 'react-dnd';
+import { TestBackend } from 'react-dnd-test-backend';
 
 import CompletedListsContainer from './CompletedListsContainer';
 import axios from '../../../utils/api';
@@ -12,7 +14,9 @@ describe('CompletedListsContainer', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <CompletedListsContainer {...props} />
+        <DndProvider backend={TestBackend}>
+          <CompletedListsContainer {...props} />
+        </DndProvider>
       </Router>,
     );
   };

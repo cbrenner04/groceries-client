@@ -264,7 +264,7 @@ AcceptedLists.propTypes = {
   fullList: PropTypes.bool.isRequired,
   moveCompleteList: PropTypes.func,
   moveIncompleteList: PropTypes.func,
-  persistMoveList: PropTypes.func.isRequired,
+  persistMoveList: PropTypes.func,
 };
 
 /* istanbul ignore next */
@@ -273,6 +273,7 @@ AcceptedLists.defaultProps = {
   setIncompleteLists: () => undefined,
   moveCompleteList: () => undefined,
   moveIncompleteList: () => undefined,
+  persistMoveList: () => undefined,
 };
 
 export default AcceptedLists;

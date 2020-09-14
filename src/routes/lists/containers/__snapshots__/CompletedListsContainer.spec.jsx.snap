@@ -51,7 +51,7 @@ exports[`CompletedListsContainer renders 1`] = `
         class="accepted-list list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id1"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"
@@ -124,7 +124,7 @@ exports[`CompletedListsContainer renders 1`] = `
         class="accepted-list list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id2"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"
@@ -197,7 +197,7 @@ exports[`CompletedListsContainer renders 1`] = `
         class="accepted-list list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id3"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"
