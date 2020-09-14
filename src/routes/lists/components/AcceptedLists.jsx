@@ -153,8 +153,9 @@ function AcceptedLists(props) {
   };
 
   const lists = props.completed
-    ? props.completedLists.map((list) => (
+    ? props.completedLists.map((list, index) => (
         <List
+          index={index}
           list={list}
           key={list.id}
           multiSelect={multiSelect}
@@ -164,6 +165,9 @@ function AcceptedLists(props) {
           testClass="completed-list"
           includeLinkToList={true}
           listName={`${list.name}${list.refreshed ? '*' : ''}`}
+          moveList={props.moveCompleteList}
+          persistMoveList={props.persistMoveList}
+          complete
           listButtons={
             <CompleteListButtons
               userId={props.userId}
@@ -178,8 +182,9 @@ function AcceptedLists(props) {
           }
         />
       ))
-    : props.incompleteLists.map((list) => (
+    : props.incompleteLists.map((list, index) => (
         <List
+          index={index}
           list={list}
           key={list.id}
           multiSelect={multiSelect}
@@ -189,6 +194,8 @@ function AcceptedLists(props) {
           testClass="incomplete-list"
           includeLinkToList={true}
           listName={list.name}
+          moveList={props.moveIncompleteList}
+          persistMoveList={props.persistMoveList}
           listButtons={
             <IncompleteListButtons
               userId={props.userId}
@@ -255,12 +262,17 @@ AcceptedLists.propTypes = {
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
   fullList: PropTypes.bool.isRequired,
+  moveCompleteList: PropTypes.func,
+  moveIncompleteList: PropTypes.func,
+  persistMoveList: PropTypes.func.isRequired,
 };
 
 /* istanbul ignore next */
 AcceptedLists.defaultProps = {
   incompleteLists: [],
   setIncompleteLists: () => undefined,
+  moveCompleteList: () => undefined,
+  moveIncompleteList: () => undefined,
 };
 
 export default AcceptedLists;

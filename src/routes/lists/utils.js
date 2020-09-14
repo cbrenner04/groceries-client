@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
 
-export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+export const sortLists = (lists) => lists.sort((a, b) => b.rank - a.rank);
 
 function handleFailure({ response }, history) {
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError

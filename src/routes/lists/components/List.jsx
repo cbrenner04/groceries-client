@@ -1,14 +1,70 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
 import { list } from '../../../types';
 
 function List(props) {
+  const ref = useRef(null);
+  const [, drop] = useDrop({
+    accept: 'list',
+    drop() {
+      props.persistMoveList(props.list.id);
+    },
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = props.index;
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current && ref.current.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      // Time to actually perform the action
+      props.moveList(dragIndex, hoverIndex);
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
+    },
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: 'list', id: props.list.id, index: props.index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  const opacity = isDragging ? 0.5 : 1;
+  if (!props.pending) {
+    drag(drop(ref));
+  }
+
   const handleListSelect = (list) => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
@@ -37,8 +93,9 @@ function List(props) {
 
   return (
     <ListGroup.Item
+      ref={ref}
       className={props.listClass}
-      style={{ display: 'block' }}
+      style={{ display: 'block', opacity }}
       data-test-class={props.testClass}
       data-test-id={`list-${props.list.id}`}
     >
@@ -79,6 +136,19 @@ List.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
+  index: PropTypes.number,
+  moveList: PropTypes.func,
+  persistMoveList: PropTypes.func,
+  complete: PropTypes.bool,
+  pending: PropTypes.bool,
+};
+
+List.defaultProps = {
+  complete: false,
+  pending: false,
+  index: 0,
+  moveList: () => undefined,
+  persistMoveList: () => undefined,
 };
 
 export default List;

@@ -2,6 +2,8 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { DndProvider } from 'react-dnd';
+import { TestBackend } from 'react-dnd-test-backend';
 
 import List from './List';
 
@@ -11,7 +13,9 @@ describe('List', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <List {...p} />
+        <DndProvider backend={TestBackend}>
+          <List {...p} />
+        </DndProvider>
       </Router>,
     );
   };

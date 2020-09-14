@@ -107,6 +107,7 @@ function PendingLists(props) {
       <ListGroup>
         {props.pendingLists.map((list) => (
           <List
+            pending
             list={list}
             key={list.id}
             multiSelect={multiSelect}

@@ -3,6 +3,8 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
+import { DndProvider } from 'react-dnd';
+import { TestBackend } from 'react-dnd-test-backend';
 
 import ListsContainer from './ListsContainer';
 import axios from '../../../utils/api';
@@ -17,7 +19,9 @@ describe('ListsContainer', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <ListsContainer {...props} />
+        <DndProvider backend={TestBackend}>
+          <ListsContainer {...props} />
+        </DndProvider>
       </Router>,
     );
   };

@@ -3,6 +3,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
+import { DndProvider } from 'react-dnd';
+import { TestBackend } from 'react-dnd-test-backend';
 
 import PendingLists from './PendingLists';
 import axios from '../../../utils/api';
@@ -17,7 +19,9 @@ describe('PendingLists', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <PendingLists {...props} />
+        <DndProvider backend={TestBackend}>
+          <PendingLists {...props} />
+        </DndProvider>
       </Router>,
     );
   };

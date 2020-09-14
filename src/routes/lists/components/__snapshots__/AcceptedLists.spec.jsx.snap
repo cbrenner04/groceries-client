@@ -30,7 +30,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id3"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="list-item-row row"
@@ -123,7 +123,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id5"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="list-item-row row"
@@ -250,7 +250,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id3"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="list-item-row row"
@@ -343,7 +343,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id5"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="list-item-row row"

@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { DndProvider } from 'react-dnd';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
@@ -63,8 +66,61 @@ function ListsContainer(props) {
     }
   };
 
+  const persistMoveList = useCallback(async () => {
+    const allLists = pendingLists.concat(incompleteLists, completedLists).reverse();
+    const newRanks = allLists.map(({ users_list_id }, index) => ({
+      users_list_id,
+      rank: index + 1,
+    }));
+    try {
+      const {
+        data: {
+          pending_lists: updatedPendingLists,
+          accepted_lists: { completed_lists: updatedCompletedLists, not_completed_lists: updatedIncompleteLists },
+        },
+      } = await axios.post(`/update_list_ranks`, { updated_list_ranks: { new_ranks: newRanks } });
+      setPendingLists(sortLists(updatedPendingLists));
+      setCompletedLists(sortLists(updatedCompletedLists));
+      setIncompleteLists(sortLists(updatedIncompleteLists));
+    } catch (error) {
+      failure(error, props.history, setPending);
+    }
+  }, [completedLists, incompleteLists, pendingLists, props.history]);
+
+  const moveIncompleteList = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragList = incompleteLists[dragIndex];
+      setIncompleteLists(
+        update(incompleteLists, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragList],
+          ],
+        }),
+      );
+    },
+    [incompleteLists],
+  );
+
+  const moveCompleteList = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragList = completedLists[dragIndex];
+      setCompletedLists(
+        update(completedLists, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragList],
+          ],
+        }),
+      );
+    },
+    [completedLists],
+  );
+
+  const touchDevice = () => navigator.maxTouchPoints || 'ontouchstart' in document.documentElement;
+
   return (
-    <>
+    <DndProvider backend={touchDevice() ? TouchBackend : HTML5Backend}>
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
@@ -98,6 +154,8 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveIncompleteList={moveIncompleteList}
+        persistMoveList={persistMoveList}
       />
       <AcceptedLists
         title={
@@ -122,8 +180,10 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveCompleteList={moveCompleteList}
+        persistMoveList={persistMoveList}
       />
-    </>
+    </DndProvider>
   );
 }
 

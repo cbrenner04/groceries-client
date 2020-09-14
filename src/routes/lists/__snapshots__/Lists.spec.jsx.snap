@@ -135,7 +135,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="pending-list list-group-item"
         data-test-class="pending-list"
         data-test-id="list-id3"
-        style="display: block;"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"
@@ -239,7 +239,8 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="accepted-list list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id2"
-        style="display: block;"
+        draggable="true"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"
@@ -369,7 +370,8 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="accepted-list list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id1"
-        style="display: block;"
+        draggable="true"
+        style="display: block; opacity: 1;"
       >
         <div
           class="row"

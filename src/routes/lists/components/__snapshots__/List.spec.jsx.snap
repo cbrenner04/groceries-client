@@ -6,7 +6,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
     class="foo list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
+    style="display: block; opacity: 1;"
   >
     <div
       class="list-item-row row"
@@ -67,7 +67,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
     class="foo list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
+    style="display: block; opacity: 1;"
   >
     <div
       class="list-item-row row"
@@ -128,7 +128,7 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
     class="foo list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
+    style="display: block; opacity: 1;"
   >
     <div
       class="row"
@@ -178,7 +178,7 @@ exports[`List does render Link when includeLinkToList is true 1`] = `
     class="foo list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
+    style="display: block; opacity: 1;"
   >
     <div
       class="row"

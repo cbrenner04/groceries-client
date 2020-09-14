@@ -3,6 +3,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
+import { DndProvider } from 'react-dnd';
+import { TestBackend } from 'react-dnd-test-backend';
 
 import AcceptedLists from './AcceptedLists';
 import axios from '../../../utils/api';
@@ -17,7 +19,9 @@ describe('AcceptedLists', () => {
     const history = createMemoryHistory();
     return render(
       <Router history={history}>
-        <AcceptedLists {...props} />
+        <DndProvider backend={TestBackend}>
+          <AcceptedLists {...props} />
+        </DndProvider>
       </Router>,
     );
   };
@@ -64,6 +68,7 @@ describe('AcceptedLists', () => {
           users_list_id: 'id3',
           owner_id: 'id1',
           refreshed: false,
+          rank: 2,
         },
         {
           id: 'id5',
@@ -74,6 +79,7 @@ describe('AcceptedLists', () => {
           users_list_id: 'id5',
           owner_id: 'id2',
           refreshed: false,
+          rank: 1,
         },
       ],
       setIncompleteLists: jest.fn(),
@@ -84,6 +90,7 @@ describe('AcceptedLists', () => {
         id5: 'read',
       },
       setCurrentUserPermissions: jest.fn(),
+      persistMoveList: jest.fn(),
     };
   });
 
@@ -557,9 +564,9 @@ describe('AcceptedLists', () => {
       merge_lists: { list_ids: 'id3', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
-      newList,
       props.incompleteLists[0],
       props.incompleteLists[1],
+      newList,
     ]);
   });
 
