@@ -32,7 +32,7 @@ SelectField.propTypes = {
       label: PropTypes.string,
     }),
   ).isRequired,
-  blankOption: PropTypes.bool.isRequired,
+  blankOption: PropTypes.bool,
   child: PropTypes.node,
   disabled: PropTypes.bool,
 };
@@ -41,6 +41,7 @@ SelectField.defaultProps = {
   value: '',
   child: '',
   disabled: false,
+  blankOption: false,
 };
 
 export default SelectField;

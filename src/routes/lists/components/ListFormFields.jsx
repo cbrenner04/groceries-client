@@ -25,7 +25,6 @@ function ListFormFields(props) {
           { value: 'SimpleList', label: 'simple' },
           { value: 'ToDoList', label: 'to-do' },
         ]}
-        blankOption={false}
       />
       {props.editForm && (
         <CheckboxField
@@ -33,7 +32,6 @@ function ListFormFields(props) {
           label="Completed"
           value={props.completed}
           handleChange={props.handleCompletedChange}
-          blankOption={false}
           classes="mb-3"
         />
       )}

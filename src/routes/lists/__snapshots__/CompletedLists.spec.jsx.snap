@@ -51,7 +51,6 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
         class="accepted-list list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id1"
-        draggable="true"
         style="display: block; opacity: 1;"
       >
         <div

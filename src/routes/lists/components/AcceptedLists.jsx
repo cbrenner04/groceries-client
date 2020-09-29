@@ -163,7 +163,7 @@ function AcceptedLists(props) {
           setSelectedLists={setSelectedLists}
           listClass="accepted-list"
           testClass="completed-list"
-          includeLinkToList={true}
+          includeLinkToList
           listName={`${list.name}${list.refreshed ? '*' : ''}`}
           moveList={props.moveCompleteList}
           persistMoveList={props.persistMoveList}
@@ -192,7 +192,7 @@ function AcceptedLists(props) {
           setSelectedLists={setSelectedLists}
           listClass="accepted-list"
           testClass="incomplete-list"
-          includeLinkToList={true}
+          includeLinkToList
           listName={list.name}
           moveList={props.moveIncompleteList}
           persistMoveList={props.persistMoveList}
@@ -249,7 +249,7 @@ function AcceptedLists(props) {
 }
 
 AcceptedLists.propTypes = {
-  completed: PropTypes.bool.isRequired,
+  completed: PropTypes.bool,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -261,7 +261,7 @@ AcceptedLists.propTypes = {
   setCompletedLists: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
-  fullList: PropTypes.bool.isRequired,
+  fullList: PropTypes.bool,
   moveCompleteList: PropTypes.func,
   moveIncompleteList: PropTypes.func,
   persistMoveList: PropTypes.func,
@@ -269,6 +269,8 @@ AcceptedLists.propTypes = {
 
 /* istanbul ignore next */
 AcceptedLists.defaultProps = {
+  completed: false,
+  fullList: false,
   incompleteLists: [],
   setIncompleteLists: () => undefined,
   moveCompleteList: () => undefined,

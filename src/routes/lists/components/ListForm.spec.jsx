@@ -62,7 +62,7 @@ describe('ListForm', () => {
 
   it('disables submit when in pending state', () => {
     const onFormSubmit = jest.fn().mockResolvedValue({});
-    const { getAllByRole } = render(<ListForm pending={true} onFormSubmit={onFormSubmit} />);
+    const { getAllByRole } = render(<ListForm pending onFormSubmit={onFormSubmit} />);
 
     expect(getAllByRole('button')[1]).toBeDisabled();
   });

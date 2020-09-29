@@ -144,8 +144,6 @@ function ListsContainer(props) {
             message="These are lists you've created or you've accepted an invitation from someone else."
           />
         }
-        completed={false}
-        fullList={false}
         history={props.history}
         userId={props.userId}
         incompleteLists={incompleteLists}
@@ -170,8 +168,7 @@ function ListsContainer(props) {
             }
           />
         }
-        completed={true}
-        fullList={false}
+        completed
         history={props.history}
         userId={props.userId}
         incompleteLists={incompleteLists}

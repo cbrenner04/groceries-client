@@ -115,7 +115,7 @@ function PendingLists(props) {
             setSelectedLists={setSelectedLists}
             listClass="pending-list"
             testClass="pending-list"
-            includeLinkToList={false}
+            includeLinkToList
             listName={list.name}
             listButtons={
               <ButtonGroup className="float-right">

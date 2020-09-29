@@ -6,7 +6,7 @@ const TitlePopover = ({ message, title }) => (
   <OverlayTrigger
     trigger={['click']}
     placement="top"
-    rootClose={true}
+    rootClose
     overlay={
       <Popover>
         <Popover.Content data-test-id="popover-content">{message}</Popover.Content>

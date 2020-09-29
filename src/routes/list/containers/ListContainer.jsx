@@ -392,7 +392,6 @@ function ListContainer(props) {
               <ListItem
                 item={item}
                 key={item.id}
-                purchased={false}
                 handleItemDelete={handleDelete}
                 handlePurchaseOfItem={handleItemPurchase}
                 handleItemRefresh={handleRefresh}
@@ -432,7 +431,7 @@ function ListContainer(props) {
           <ListItem
             item={item}
             key={item.id}
-            purchased={true}
+            purchased
             handleItemDelete={handleDelete}
             handlePurchaseOfItem={handleItemPurchase}
             handleItemRefresh={handleRefresh}

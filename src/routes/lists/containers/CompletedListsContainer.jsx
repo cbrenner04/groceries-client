@@ -47,8 +47,8 @@ function CompletedListsContainer(props) {
             message={'Previously refreshed lists are marked with an asterisk (*).'}
           />
         }
-        completed={true}
-        fullList={true}
+        completed
+        fullList
         history={props.history}
         userId={props.userId}
         completedLists={completedLists}

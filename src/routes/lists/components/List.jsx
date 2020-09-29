@@ -61,7 +61,7 @@ function List(props) {
     }),
   });
   const opacity = isDragging ? 0.5 : 1;
-  if (!props.pending) {
+  if (!props.pending && !props.complete) {
     drag(drop(ref));
   }
 
@@ -131,7 +131,7 @@ List.propTypes = {
   listName: PropTypes.string.isRequired,
   listClass: PropTypes.string.isRequired,
   testClass: PropTypes.string.isRequired,
-  includeLinkToList: PropTypes.bool.isRequired,
+  includeLinkToList: PropTypes.bool,
   list: list.isRequired,
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(list).isRequired,
@@ -143,7 +143,9 @@ List.propTypes = {
   pending: PropTypes.bool,
 };
 
+/* istanbul ignore next */
 List.defaultProps = {
+  includeLinkToList: false,
   complete: false,
   pending: false,
   index: 0,
