@@ -4,15 +4,14 @@ import axios from '../../utils/api';
 
 export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-function handleFailure(error, history) {
-  const { response } = error;
+function handleFailure({ response, message }, history) {
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
   if (response && response.status === 401) {
     toast('You must sign in', { type: 'error' });
     history.push('/users/sign_in');
     return;
   }
-  throw error;
+  throw new Error({ response, message });
 }
 
 export async function fetchLists({ history }) {
