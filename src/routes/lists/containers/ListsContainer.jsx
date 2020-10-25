@@ -14,6 +14,9 @@ import { list } from '../../../types';
 import { fetchLists } from '../utils';
 import { usePolling } from '../../../hooks';
 
+// TODO: can we do better?
+const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
@@ -22,28 +25,40 @@ function ListsContainer(props) {
   const [pending, setPending] = useState(false);
 
   usePolling(async () => {
-    const {
-      pendingLists: updatedPending,
-      completedLists: updatedCompleted,
-      incompleteLists: updatedIncomplete,
-      currentUserPermissions: updatedCurrentUserPermissions,
-    } = await fetchLists({ history: props.history });
-    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-    const pendingSame = isSameSet(updatedPending, pendingLists);
-    const completedSame = isSameSet(updatedCompleted, completedLists);
-    const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
-    const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
-    if (!pendingSame) {
-      setPendingLists(updatedPending);
-    }
-    if (!completedSame) {
-      setCompletedLists(updatedCompleted);
-    }
-    if (!incompleteSame) {
-      setIncompleteLists(updatedIncomplete);
-    }
-    if (!userPermsSame) {
-      setCurrentUserPermissions(updatedCurrentUserPermissions);
+    try {
+      const {
+        pendingLists: updatedPending,
+        completedLists: updatedCompleted,
+        incompleteLists: updatedIncomplete,
+        currentUserPermissions: updatedCurrentUserPermissions,
+      } = await fetchLists({ history: props.history });
+      const pendingSame = isSameSet(updatedPending, pendingLists);
+      const completedSame = isSameSet(updatedCompleted, completedLists);
+      const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
+      const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
+      if (!pendingSame) {
+        setPendingLists(updatedPending);
+      }
+      if (!completedSame) {
+        setCompletedLists(updatedCompleted);
+      }
+      if (!incompleteSame) {
+        setIncompleteLists(updatedIncomplete);
+      }
+      if (!userPermsSame) {
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+      }
+    } catch ({ response }) {
+      // `response` will not be undefined if the response from the server comes back
+      // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
+      // if we aren't getting a response back we can assume there are network issues
+      const errorMessage = response
+        ? 'Something went wrong.'
+        : 'You may not be connected to the internet. Please check your connection.';
+      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+        type: 'error',
+        autoClose: 5000,
+      });
     }
   }, 10000);
 

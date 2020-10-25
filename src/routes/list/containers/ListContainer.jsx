@@ -33,29 +33,42 @@ function ListContainer(props) {
   const [listUsers, setListUsers] = useState(props.listUsers);
 
   usePolling(async () => {
-    const {
-      purchasedItems: updatedPurchasedItems,
-      categories: updatedCategories,
-      listUsers: updatedListUsers,
-      includedCategories: updatedIncludedCategories,
-      notPurchasedItems: updatedNotPurchasedItems,
-    } = await fetchList({ id: props.list.id, history: props.history });
-    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-    const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
-    const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
-    if (!purchasedItemsSame) {
-      setPurchasedItems(updatedPurchasedItems);
-    }
-    if (!notPurchasedItemsSame) {
-      setNotPurchasedItems(updatedNotPurchasedItems);
-    }
-    if (!purchasedItemsSame || !notPurchasedItemsSame) {
-      setCategories(updatedCategories);
-      setIncludedCategories(updatedIncludedCategories);
-      if (!filter) {
-        setDisplayedCategories(updatedIncludedCategories);
+    try {
+      const {
+        purchasedItems: updatedPurchasedItems,
+        categories: updatedCategories,
+        listUsers: updatedListUsers,
+        includedCategories: updatedIncludedCategories,
+        notPurchasedItems: updatedNotPurchasedItems,
+      } = await fetchList({ id: props.list.id, history: props.history });
+      const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+      const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
+      const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
+      if (!purchasedItemsSame) {
+        setPurchasedItems(updatedPurchasedItems);
       }
-      setListUsers(updatedListUsers);
+      if (!notPurchasedItemsSame) {
+        setNotPurchasedItems(updatedNotPurchasedItems);
+      }
+      if (!purchasedItemsSame || !notPurchasedItemsSame) {
+        setCategories(updatedCategories);
+        setIncludedCategories(updatedIncludedCategories);
+        if (!filter) {
+          setDisplayedCategories(updatedIncludedCategories);
+        }
+        setListUsers(updatedListUsers);
+      }
+    } catch ({ response }) {
+      // `response` will not be undefined if the response from the server comes back
+      // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
+      // if we aren't getting a response back we can assume there are network issues
+      const errorMessage = response
+        ? 'Something went wrong.'
+        : 'You may not be connected to the internet. Please check your connection.';
+      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+        type: 'error',
+        autoClose: 5000,
+      });
     }
   }, 3000);
 

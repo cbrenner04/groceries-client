@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
@@ -13,18 +14,31 @@ function CompletedListsContainer(props) {
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
 
   usePolling(async () => {
-    const {
-      completedLists: updatedCompletedLists,
-      currentUserPermissions: updatedUserPerms,
-    } = await fetchCompletedLists({ history: props.history });
-    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-    const completedSame = isSameSet(updatedCompletedLists, completedLists);
-    const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
-    if (!completedSame) {
-      setCompletedLists(updatedCompletedLists);
-    }
-    if (!userPermsSame) {
-      setCurrentUserPermissions(updatedUserPerms);
+    try {
+      const {
+        completedLists: updatedCompletedLists,
+        currentUserPermissions: updatedUserPerms,
+      } = await fetchCompletedLists({ history: props.history });
+      const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+      const completedSame = isSameSet(updatedCompletedLists, completedLists);
+      const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
+      if (!completedSame) {
+        setCompletedLists(updatedCompletedLists);
+      }
+      if (!userPermsSame) {
+        setCurrentUserPermissions(updatedUserPerms);
+      }
+    } catch ({ response }) {
+      // `response` will not be undefined if the response from the server comes back
+      // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
+      // if we aren't getting a response back we can assume there are network issues
+      const errorMessage = response
+        ? 'Something went wrong.'
+        : 'You may not be connected to the internet. Please check your connection.';
+      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+        type: 'error',
+        autoClose: 5000,
+      });
     }
   }, 10000);
 
