@@ -71,6 +71,7 @@ function AcceptedLists(props) {
     setShowMergeModal(true);
   };
 
+  // TODO: this does not get triggered if you hit enter when in modal
   const handleMergeConfirm = async () => {
     setShowMergeModal(false);
     setPending(true);
