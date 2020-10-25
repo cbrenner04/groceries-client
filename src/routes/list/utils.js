@@ -113,7 +113,8 @@ export async function fetchList({ id, history }) {
       notPurchasedItems,
       permissions,
     };
-  } catch ({ response }) {
+  } catch (error) {
+    const { response } = error;
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', {
@@ -130,7 +131,7 @@ export async function fetchList({ id, history }) {
       }
     }
     // any other errors we will catch and render generic UnknownError
-    throw new Error();
+    throw error;
   }
 }
 
