@@ -21,31 +21,44 @@ function ShareListForm(props) {
   const [refused, setRefused] = useState(props.refused);
 
   usePolling(async () => {
-    const {
-      invitableUsers: updatedInvitableUsers,
-      pending: updatedPending,
-      accepted: updatedAccepted,
-      refused: updatedRefused,
-    } = await fetchData({
-      listId: props.listId,
-      history: props.history,
-    });
-    const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-    const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
-    const pendingSame = isSameSet(updatedPending, pending);
-    const acceptedSame = isSameSet(updatedAccepted, accepted);
-    const refusedSame = isSameSet(updatedRefused, refused);
-    if (!invitableUsersSame) {
-      setInvitableUsers(updatedInvitableUsers);
-    }
-    if (!pendingSame) {
-      setPending(updatedPending);
-    }
-    if (!acceptedSame) {
-      setAccepted(updatedAccepted);
-    }
-    if (!refusedSame) {
-      setRefused(updatedRefused);
+    try {
+      const {
+        invitableUsers: updatedInvitableUsers,
+        pending: updatedPending,
+        accepted: updatedAccepted,
+        refused: updatedRefused,
+      } = await fetchData({
+        listId: props.listId,
+        history: props.history,
+      });
+      const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+      const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
+      const pendingSame = isSameSet(updatedPending, pending);
+      const acceptedSame = isSameSet(updatedAccepted, accepted);
+      const refusedSame = isSameSet(updatedRefused, refused);
+      if (!invitableUsersSame) {
+        setInvitableUsers(updatedInvitableUsers);
+      }
+      if (!pendingSame) {
+        setPending(updatedPending);
+      }
+      if (!acceptedSame) {
+        setAccepted(updatedAccepted);
+      }
+      if (!refusedSame) {
+        setRefused(updatedRefused);
+      }
+    } catch ({ response }) {
+      // `response` will not be undefined if the response from the server comes back
+      // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
+      // if we aren't getting a response back we can assume there are network issues
+      const errorMessage = response
+        ? 'Something went wrong.'
+        : 'You may not be connected to the internet. Please check your connection.';
+      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+        type: 'error',
+        autoClose: 5000,
+      });
     }
   }, 5000);
 
