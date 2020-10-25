@@ -4,14 +4,15 @@ import axios from '../../utils/api';
 
 export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-function handleFailure({ response }, history) {
+function handleFailure(error, history) {
+  const { response } = error;
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
   if (response && response.status === 401) {
     toast('You must sign in', { type: 'error' });
     history.push('/users/sign_in');
     return;
   }
-  throw new Error();
+  throw error;
 }
 
 export async function fetchLists({ history }) {
@@ -99,12 +100,10 @@ export function failure({ request, response, message }, history, setPending) {
       const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
       toast(responseErrors.join(' and '), { type: 'error' });
     }
-  } else if (request) {
-    setPending(false);
-    toast('Something went wrong', { type: 'error' });
   } else {
     setPending(false);
-    toast(message, { type: 'error' });
+    const toastMessage = request ? 'Something went wrong' : message;
+    toast(toastMessage, { type: 'error' });
   }
 }
 
