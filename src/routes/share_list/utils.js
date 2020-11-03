@@ -21,7 +21,7 @@ export async function fetchData({ listId, history }) {
       refused: data.refused,
       userId: data.current_user_id,
     };
-  } catch ({ response }) {
+  } catch ({ response, message }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
@@ -34,6 +34,6 @@ export async function fetchData({ listId, history }) {
       }
     }
     // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
+    throw new Error({ response, message });
   }
 }
