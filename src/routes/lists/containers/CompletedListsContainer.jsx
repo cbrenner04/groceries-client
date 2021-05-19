@@ -15,10 +15,8 @@ function CompletedListsContainer(props) {
 
   usePolling(async () => {
     try {
-      const {
-        completedLists: updatedCompletedLists,
-        currentUserPermissions: updatedUserPerms,
-      } = await fetchCompletedLists({ history: props.history });
+      const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } =
+        await fetchCompletedLists({ history: props.history });
       const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
       const completedSame = isSameSet(updatedCompletedLists, completedLists);
       const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);

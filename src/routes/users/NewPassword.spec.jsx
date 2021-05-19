@@ -40,9 +40,7 @@ describe('NewPassword', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(
-      toast,
-    ).toHaveBeenCalledWith(
+    expect(toast).toHaveBeenCalledWith(
       'If foo@example.com is in our system, you will receive an email shortly with reset instructions.',
       { type: 'info' },
     );
@@ -57,9 +55,7 @@ describe('NewPassword', () => {
     fireEvent.click(getByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(
-      toast,
-    ).toHaveBeenCalledWith(
+    expect(toast).toHaveBeenCalledWith(
       'If foo@example.com is in our system, you will receive an email shortly with reset instructions.',
       { type: 'info' },
     );

@@ -497,9 +497,8 @@ describe('AcceptedLists', () => {
   });
 
   it('shows modal to set the new list name for merging and clears', async () => {
-    const { container, getAllByRole, getByTestId, getAllByTestId, queryByTestId, getByText } = renderAcceptedLists(
-      props,
-    );
+    const { container, getAllByRole, getByTestId, getAllByTestId, queryByTestId, getByText } =
+      renderAcceptedLists(props);
 
     fireEvent.click(getByText('Select'));
     await waitFor(() => getByText('Hide Select'));
