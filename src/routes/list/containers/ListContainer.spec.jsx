@@ -484,9 +484,8 @@ describe('ListContainer', () => {
 
   it('deletes all items when multiple are selected', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByTestId, queryByText, getAllByText } = renderListContainer(
-      props,
-    );
+    const { getAllByRole, getByText, getByTestId, queryByTestId, queryByText, getAllByText } =
+      renderListContainer(props);
 
     expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(getByText('Foo')).toBeVisible();
