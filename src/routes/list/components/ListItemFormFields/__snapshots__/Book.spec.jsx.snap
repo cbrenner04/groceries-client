@@ -2,9 +2,7 @@
 
 exports[`Book renders base form when props.editForm is false 1`] = `
 <div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="author"
@@ -21,9 +19,7 @@ exports[`Book renders base form when props.editForm is false 1`] = `
     />
     
   </div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="title"
@@ -40,9 +36,7 @@ exports[`Book renders base form when props.editForm is false 1`] = `
     />
     
   </div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="numberInSeries"
@@ -57,9 +51,7 @@ exports[`Book renders base form when props.editForm is false 1`] = `
       value="1"
     />
   </div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="category"

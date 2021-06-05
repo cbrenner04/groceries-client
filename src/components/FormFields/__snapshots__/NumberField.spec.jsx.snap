@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NumberField when no value provided renders input with value of empty string 1`] = `
-<div
-  class="form-group"
->
+<div>
   <label
     class="form-label"
     for="testName"
@@ -21,9 +19,7 @@ exports[`NumberField when no value provided renders input with value of empty st
 `;
 
 exports[`NumberField when value provided renders input with value 1`] = `
-<div
-  class="form-group"
->
+<div>
   <label
     class="form-label"
     for="testName"

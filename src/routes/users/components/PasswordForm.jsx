@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import { PasswordField } from '../../../components/FormFields';
+import FormSubmission from '../../../components/FormSubmission';
 
 const PasswordForm = (props) => (
   <Form onSubmit={props.submissionHandler} autoComplete="off" data-test-id="password-form">
@@ -20,9 +21,7 @@ const PasswordForm = (props) => (
       handleChange={props.passwordConfirmationChangeHandler}
       placeholder="Confirm new password"
     />
-    <Button type="submit" variant="success" block>
-      Set my password
-    </Button>
+    <FormSubmission submitText="Set my password" displayCancelButton={false} />
   </Form>
 );
 

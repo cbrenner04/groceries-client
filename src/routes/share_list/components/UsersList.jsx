@@ -31,21 +31,17 @@ const UsersList = (props) => (
                 </Col>
                 <Col md="2">
                   <ButtonGroup className="float-right">
-                    <>
-                      <Button
-                        variant="link"
-                        className="p-0 mr-4"
-                        onClick={() => props.togglePermission(id, permissions, props.status)}
-                        data-test-id="toggle-permissions"
-                      >
-                        <i
-                          className={`fas fa-angle-double-${
-                            permissions === 'write' ? 'down' : 'up'
-                          } fa-2x text-warning`}
-                        />
-                      </Button>
-                      <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
-                    </>
+                    <Button
+                      variant="link"
+                      className="p-0 mr-4"
+                      onClick={() => props.togglePermission(id, permissions, props.status)}
+                      data-test-id="toggle-permissions"
+                    >
+                      <i
+                        className={`fas fa-angle-double-${permissions === 'write' ? 'down' : 'up'} fa-2x text-warning`}
+                      />
+                    </Button>
+                    <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
                   </ButtonGroup>
                 </Col>
               </Row>

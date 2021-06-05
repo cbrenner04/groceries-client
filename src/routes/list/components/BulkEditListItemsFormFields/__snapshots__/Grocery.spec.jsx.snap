@@ -2,9 +2,7 @@
 
 exports[`Grocery renders quantity input disabled when clearQuantity is true 1`] = `
 <div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="quantity"
@@ -21,7 +19,7 @@ exports[`Grocery renders quantity input disabled when clearQuantity is true 1`] 
       value="foo"
     />
     <div
-      class="ml-1 mt-1 form-group"
+      class="ml-1 mt-1"
     >
       <div
         class="form-check"
@@ -48,9 +46,7 @@ exports[`Grocery renders quantity input disabled when clearQuantity is true 1`] 
 
 exports[`Grocery renders quantity input enabled when clearQuantity is false 1`] = `
 <div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="quantity"
@@ -66,7 +62,7 @@ exports[`Grocery renders quantity input enabled when clearQuantity is false 1`] 
       value="foo"
     />
     <div
-      class="ml-1 mt-1 form-group"
+      class="ml-1 mt-1"
     >
       <div
         class="form-check"

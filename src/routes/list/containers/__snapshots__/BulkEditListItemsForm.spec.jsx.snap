@@ -16,7 +16,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
     </div>
     <br />
     <div
-      class="form-check-inline form-group"
+      class="form-check-inline"
     >
       <div
         class="form-check"
@@ -60,9 +60,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
       Update attributes for all items.
     </div>
     <br />
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -78,7 +76,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         value="foo"
       />
       <div
-        class="ml-1 mt-1 form-group"
+        class="ml-1 mt-1"
       >
         <div
           class="form-check"
@@ -99,9 +97,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -124,7 +120,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         />
       </datalist>
       <div
-        class="ml-1 mt-1 form-group"
+        class="ml-1 mt-1"
       >
         <div
           class="form-check"
@@ -145,18 +141,22 @@ exports[`BulkEditListItemsForm renders 1`] = `
         </div>
       </div>
     </div>
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Update Items
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Cancel
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Update Items
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
   </form>
 </div>
 `;

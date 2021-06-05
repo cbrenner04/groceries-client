@@ -2,9 +2,7 @@
 
 exports[`ListFormFields renders edit form 1`] = `
 <div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="name"
@@ -21,9 +19,7 @@ exports[`ListFormFields renders edit form 1`] = `
     />
     
   </div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="type"
@@ -64,7 +60,7 @@ exports[`ListFormFields renders edit form 1`] = `
     
   </div>
   <div
-    class="mb-3 form-group"
+    class="mb-3"
   >
     <div
       class="form-check"
@@ -89,9 +85,7 @@ exports[`ListFormFields renders edit form 1`] = `
 
 exports[`ListFormFields renders new form 1`] = `
 <div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="name"
@@ -108,9 +102,7 @@ exports[`ListFormFields renders new form 1`] = `
     />
     
   </div>
-  <div
-    class="form-group"
-  >
+  <div>
     <label
       class="form-label"
       for="type"

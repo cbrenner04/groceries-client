@@ -9,7 +9,7 @@ const TitlePopover = ({ message, title }) => (
     rootClose={true}
     overlay={
       <Popover>
-        <Popover.Content data-test-id="popover-content">{message}</Popover.Content>
+        <Popover.Body data-test-id="popover-content">{message}</Popover.Body>
       </Popover>
     }
   >

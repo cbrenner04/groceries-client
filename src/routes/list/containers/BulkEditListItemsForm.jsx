@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
@@ -9,6 +9,7 @@ import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
+import FormSubmission from '../../../components/FormSubmission';
 
 function BulkEditListItemsForm(props) {
   // if no existing list options, new list form should be displayed by default
@@ -192,12 +193,11 @@ function BulkEditListItemsForm(props) {
           clearNewListForm={clearNewListForm}
           categories={props.categories}
         />
-        <Button type="submit" variant="success" block>
-          Update Items
-        </Button>
-        <Button onClick={() => props.history.push(`/lists/${props.list.id}`)} variant="link" block>
-          Cancel
-        </Button>
+        <FormSubmission
+          submitText="Update Items"
+          cancelAction={() => props.history.push(`/lists/${props.list.id}`)}
+          cancelText="Cancel"
+        />
       </Form>
     </>
   );

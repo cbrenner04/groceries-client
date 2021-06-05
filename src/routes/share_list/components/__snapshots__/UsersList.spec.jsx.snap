@@ -79,8 +79,9 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="pt-1 col-md-4"
         >
           <span
-            class="badge badge-success"
+            class="badge"
             data-test-id="perm-write"
+            variant="success"
           >
             write
           </span>
@@ -131,8 +132,9 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="pt-1 col-md-4"
         >
           <span
-            class="badge badge-primary"
+            class="badge"
             data-test-id="perm-read"
+            variant="primary"
           >
             read
           </span>

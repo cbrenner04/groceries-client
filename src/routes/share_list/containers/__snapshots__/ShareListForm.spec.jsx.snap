@@ -16,9 +16,7 @@ exports[`ShareListForm renders 1`] = `
     <form
       class="pt-3 pb-3"
     >
-      <div
-        class="form-group"
-      >
+      <div>
         <label
           class="form-label"
           for="new-email"
@@ -34,12 +32,16 @@ exports[`ShareListForm renders 1`] = `
           value=""
         />
       </div>
-      <button
-        class="btn btn-success btn-block"
-        type="submit"
+      <div
+        class="d-grid gap-2 mt-3"
       >
-        Share List
-      </button>
+        <button
+          class="btn btn-success"
+          type="submit"
+        >
+          Share List
+        </button>
+      </div>
     </form>
     <p
       class="text-lead"
@@ -93,8 +95,9 @@ exports[`ShareListForm renders 1`] = `
             class="pt-1 col-md-4"
           >
             <span
-              class="badge badge-primary"
+              class="badge"
               data-test-id="perm-read"
+              variant="primary"
             >
               read
             </span>
@@ -163,8 +166,9 @@ exports[`ShareListForm renders 1`] = `
             class="pt-1 col-md-4"
           >
             <span
-              class="badge badge-success"
+              class="badge"
               data-test-id="perm-write"
+              variant="success"
             >
               write
             </span>

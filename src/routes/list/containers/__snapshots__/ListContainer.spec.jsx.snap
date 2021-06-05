@@ -195,9 +195,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="product"
@@ -214,9 +212,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -233,9 +229,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -265,19 +259,22 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -589,9 +586,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="task"
@@ -608,9 +603,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="assigneeId"
@@ -636,9 +629,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       </select>
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="dueBy"
@@ -655,9 +646,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -687,19 +676,22 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -850,9 +842,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="product"
@@ -869,9 +859,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -888,9 +876,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -920,19 +906,22 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -1299,9 +1288,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="product"
@@ -1318,9 +1305,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -1337,9 +1322,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -1369,19 +1352,22 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -1746,9 +1732,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="product"
@@ -1765,9 +1749,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -1784,9 +1766,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -1816,19 +1796,22 @@ exports[`ListContainer renders filtered items without category buckets when filt
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -2080,9 +2063,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="product"
@@ -2099,9 +2080,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="quantity"
@@ -2118,9 +2097,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="category"
@@ -2150,19 +2127,22 @@ exports[`ListContainer renders items with category buckets when includedCategori
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div

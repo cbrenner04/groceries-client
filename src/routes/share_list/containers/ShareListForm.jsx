@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import { Button, Form, ListGroup } from 'react-bootstrap';
+import { Form, ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { EmailField } from '../../../components/FormFields';
@@ -12,6 +12,7 @@ import axios from '../../../utils/api';
 import { usersLists } from '../../../types';
 import { fetchData } from '../utils';
 import { usePolling } from '../../../hooks';
+import FormSubmission from '../../../components/FormSubmission';
 
 function ShareListForm(props) {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
@@ -233,9 +234,7 @@ function ShareListForm(props) {
           value={newEmail}
           handleChange={({ target: { value } }) => setNewEmail(value)}
         />
-        <Button type="submit" variant="success" block>
-          Share List
-        </Button>
+        <FormSubmission submitText="Share List" displayCancelButton={false} />
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup className="mb-5">

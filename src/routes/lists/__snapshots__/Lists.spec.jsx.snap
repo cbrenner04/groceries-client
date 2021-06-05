@@ -19,9 +19,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
     id="form-collapse"
     style="padding: 6px;"
   >
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="name"
@@ -38,9 +36,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       />
       
     </div>
-    <div
-      class="form-group"
-    >
+    <div>
       <label
         class="form-label"
         for="type"
@@ -80,18 +76,22 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       </select>
       
     </div>
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Create List
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr
     class="mb-4"

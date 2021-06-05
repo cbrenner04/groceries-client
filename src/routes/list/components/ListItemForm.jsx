@@ -7,6 +7,7 @@ import update from 'immutability-helper';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 import { listUsers } from '../../../types';
+import FormSubmission from '../../../components/FormSubmission';
 
 const defaultFormState = {
   product: '',
@@ -119,13 +120,12 @@ function ListItemForm(props) {
             listType={props.listType}
             listUsers={props.listUsers}
           />
-          <br />
-          <Button type="submit" variant="success" disabled={pending} block>
-            Add New Item
-          </Button>
-          <Button variant="link" onClick={() => setShowForm(false)} block>
-            Collapse Form
-          </Button>
+          <FormSubmission
+            disabled={pending}
+            submitText="Add New Item"
+            cancelAction={() => setShowForm(false)}
+            cancelText="Collapse Form"
+          />
         </Form>
       </Collapse>
     </>
