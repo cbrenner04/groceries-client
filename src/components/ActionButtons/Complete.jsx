@@ -6,7 +6,7 @@ const Complete = ({ handleClick, testID, disabled, style }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className="p-0 mr-3"
+    className="p-0 me-3"
     data-test-id={testID}
     disabled={disabled}
     style={style}

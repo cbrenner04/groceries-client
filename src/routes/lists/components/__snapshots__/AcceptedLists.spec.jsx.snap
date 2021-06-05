@@ -9,14 +9,14 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div>
           Foo
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         Hide
@@ -63,7 +63,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-music text-info mr-3"
+                      class="fa fa-music text-secondary me-3"
                     />
                     baz
                   </h5>
@@ -82,11 +82,11 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     style="pointer-events: auto; opacity: 1;"
                     type="button"
@@ -96,7 +96,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -156,7 +156,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-list text-info mr-3"
+                      class="fa fa-list text-secondary me-3"
                     />
                     foobar
                   </h5>
@@ -175,11 +175,11 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     style="pointer-events: none; opacity: 0.3;"
@@ -190,7 +190,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -229,14 +229,14 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div>
           Foo
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         Hide
@@ -283,7 +283,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-music text-info mr-3"
+                      class="fa fa-music text-secondary me-3"
                     />
                     baz
                   </h5>
@@ -302,11 +302,11 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     style="pointer-events: auto; opacity: 1;"
                     type="button"
@@ -316,7 +316,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -376,7 +376,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-list text-info mr-3"
+                      class="fa fa-list text-secondary me-3"
                     />
                     foobar
                   </h5>
@@ -395,11 +395,11 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     style="pointer-events: none; opacity: 0.3;"
@@ -410,7 +410,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                     />
                   </button>
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >

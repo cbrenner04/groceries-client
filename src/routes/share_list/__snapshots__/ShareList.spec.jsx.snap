@@ -4,7 +4,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
 <div>
   <div>
     <a
-      class="float-right"
+      class="float-end"
       href="/lists"
     >
       Back to lists
@@ -62,16 +62,15 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="m-0 row"
     >
       <h2
-        class="text-capitalize"
+        class="text-capitalize pe-0 w-auto"
       >
         pending
       </h2>
       <i
-        class="far fa-question-circle float-right text-secondary"
+        class="far fa-question-circle float-end text-secondary ps-0 w-auto"
         data-test-id="pending-popover"
       />
     </div>
@@ -106,11 +105,11 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
             class="col-md-2"
           >
             <div
-              class="float-right btn-group"
+              class="float-end btn-group"
               role="group"
             >
               <button
-                class="p-0 mr-4 btn btn-link"
+                class="p-0 me-4 btn btn-link"
                 data-test-id="toggle-permissions"
                 type="button"
               >
@@ -133,16 +132,15 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="m-0 row"
     >
       <h2
-        class="text-capitalize"
+        class="text-capitalize pe-0 w-auto"
       >
         accepted
       </h2>
       <i
-        class="far fa-question-circle float-right text-secondary"
+        class="far fa-question-circle float-end text-secondary ps-0 w-auto"
         data-test-id="accepted-popover"
       />
     </div>
@@ -177,11 +175,11 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
             class="col-md-2"
           >
             <div
-              class="float-right btn-group"
+              class="float-end btn-group"
               role="group"
             >
               <button
-                class="p-0 mr-4 btn btn-link"
+                class="p-0 me-4 btn btn-link"
                 data-test-id="toggle-permissions"
                 type="button"
               >
@@ -230,11 +228,11 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
             class="col-md-2"
           >
             <div
-              class="float-right btn-group"
+              class="float-end btn-group"
               role="group"
             >
               <button
-                class="p-0 mr-3 btn btn-link"
+                class="p-0 me-3 btn btn-link"
                 data-test-id="refresh-share"
                 type="button"
               >

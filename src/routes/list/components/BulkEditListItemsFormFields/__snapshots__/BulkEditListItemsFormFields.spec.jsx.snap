@@ -117,7 +117,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       value=""
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -161,7 +161,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       />
     </datalist>
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -252,7 +252,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       value=""
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -296,7 +296,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       />
     </datalist>
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -387,7 +387,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       value=""
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -424,7 +424,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       value=""
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -468,7 +468,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       />
     </datalist>
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -566,7 +566,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       />
     </select>
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -603,7 +603,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       value=""
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -647,7 +647,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       />
     </datalist>
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"

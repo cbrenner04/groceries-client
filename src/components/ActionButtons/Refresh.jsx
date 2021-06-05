@@ -6,7 +6,7 @@ const Refresh = ({ handleClick, testID, style, disabled }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className="p-0 mr-3"
+    className="p-0 me-3"
     data-test-id={testID}
     style={style}
     disabled={disabled}

@@ -3,7 +3,7 @@
 exports[`ListContainer does not render ListForm when user has read permissions 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -171,7 +171,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
 exports[`ListContainer does not render complete items when none exist 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -304,7 +304,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -332,11 +332,11 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -345,7 +345,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id2"
               type="button"
             >
@@ -392,11 +392,11 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -405,7 +405,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id5"
               type="button"
             >
@@ -452,11 +452,11 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -465,7 +465,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id3"
               type="button"
             >
@@ -503,11 +503,11 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -516,7 +516,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id4"
               type="button"
             >
@@ -546,7 +546,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -562,7 +562,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
 exports[`ListContainer does not render incomplete items when none exist 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -715,7 +715,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -735,7 +735,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -776,11 +776,11 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
             </small>
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -789,7 +789,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-edit-id1"
               disabled=""
               type="button"
@@ -818,7 +818,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
 exports[`ListContainer renders ListForm when user has write permissions 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -951,7 +951,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -979,11 +979,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -992,7 +992,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id2"
               type="button"
             >
@@ -1039,11 +1039,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1052,7 +1052,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id5"
               type="button"
             >
@@ -1099,11 +1099,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1112,7 +1112,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id3"
               type="button"
             >
@@ -1150,11 +1150,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1163,7 +1163,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id4"
               type="button"
             >
@@ -1193,7 +1193,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -1220,11 +1220,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -1233,7 +1233,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-edit-id1"
               disabled=""
               type="button"
@@ -1264,7 +1264,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   aria-hidden="true"
 >
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -1397,7 +1397,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -1425,11 +1425,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -1438,7 +1438,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id2"
               type="button"
             >
@@ -1485,11 +1485,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1498,7 +1498,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id5"
               type="button"
             >
@@ -1545,11 +1545,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1558,7 +1558,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id3"
               type="button"
             >
@@ -1596,11 +1596,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1609,7 +1609,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id4"
               type="button"
             >
@@ -1639,7 +1639,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -1666,11 +1666,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -1679,7 +1679,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-edit-id1"
               disabled=""
               type="button"
@@ -1708,7 +1708,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
 exports[`ListContainer renders filtered items without category buckets when filter exists 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -1844,7 +1844,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -1876,11 +1876,11 @@ exports[`ListContainer renders filtered items without category buckets when filt
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1889,7 +1889,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id3"
               type="button"
             >
@@ -1927,11 +1927,11 @@ exports[`ListContainer renders filtered items without category buckets when filt
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1940,7 +1940,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id4"
               type="button"
             >
@@ -1970,7 +1970,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -1997,11 +1997,11 @@ exports[`ListContainer renders filtered items without category buckets when filt
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -2010,7 +2010,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-edit-id1"
               disabled=""
               type="button"
@@ -2039,7 +2039,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
 exports[`ListContainer renders items with category buckets when includedCategories is not empty and no filter is applied 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -2172,7 +2172,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -2200,11 +2200,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -2213,7 +2213,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id2"
               type="button"
             >
@@ -2260,11 +2260,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -2273,7 +2273,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id5"
               type="button"
             >
@@ -2320,11 +2320,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -2333,7 +2333,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id3"
               type="button"
             >
@@ -2371,11 +2371,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -2384,7 +2384,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="not-purchased-item-edit-id4"
               type="button"
             >
@@ -2414,7 +2414,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -2441,11 +2441,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -2454,7 +2454,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
               />
             </button>
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 me-3 btn btn-link"
               data-test-id="purchased-item-edit-id1"
               disabled=""
               type="button"

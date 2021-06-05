@@ -35,7 +35,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
               class="mb-1"
             >
               <i
-                class="fa fa-shopping-bag text-info mr-3"
+                class="fa fa-shopping-bag text-secondary me-3"
               />
               foo
             </h5>
@@ -96,7 +96,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
               class="mb-1"
             >
               <i
-                class="fa fa-shopping-bag text-info mr-3"
+                class="fa fa-shopping-bag text-secondary me-3"
               />
               foo
             </h5>
@@ -146,7 +146,7 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
               class="mb-1"
             >
               <i
-                class="fa fa-shopping-bag text-info mr-3"
+                class="fa fa-shopping-bag text-secondary me-3"
               />
               foo
             </h5>
@@ -200,7 +200,7 @@ exports[`List does render Link when includeLinkToList is true 1`] = `
                 class="mb-1"
               >
                 <i
-                  class="fa fa-shopping-bag text-info mr-3"
+                  class="fa fa-shopping-bag text-secondary me-3"
                 />
                 foo
               </h5>

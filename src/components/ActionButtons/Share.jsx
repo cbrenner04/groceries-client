@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const Share = ({ to, testID, disabled, style }) => (
-  <Link className="p-0 mr-3" to={to} data-test-id={testID} disabled={disabled} style={style}>
+  <Link className="p-0 me-3" to={to} data-test-id={testID} disabled={disabled} style={style}>
     <i className="fa fa-users fa-2x text-primary" />
   </Link>
 );

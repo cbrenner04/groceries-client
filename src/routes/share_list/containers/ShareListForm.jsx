@@ -223,7 +223,7 @@ function ShareListForm(props) {
 
   return (
     <div>
-      <Link to="/lists" className="float-right">
+      <Link to="/lists" className="float-end">
         Back to lists
       </Link>
       <h1>Share {props.name}</h1>

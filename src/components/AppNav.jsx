@@ -34,7 +34,7 @@ function AppNav({ signOutUser }) {
         <>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
-            <Nav className="mr-auto">
+            <Nav className="me-auto">
               <Nav.Item>
                 <Nav.Link onClick={() => history.push('/users/invitation/new')} data-test-id="invite-link">
                   Invite

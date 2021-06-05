@@ -34,7 +34,7 @@ const BookFormFields = (props) => (
           label="Purchased"
           value={props.purchased}
           handleChange={props.inputChangeHandler}
-          classes="form-check-inline ml-1"
+          classes="form-check-inline ms-1"
         />
         <CheckboxField
           name="read"

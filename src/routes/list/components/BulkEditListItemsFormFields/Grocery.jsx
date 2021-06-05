@@ -17,7 +17,7 @@ const Grocery = ({ quantity, clearQuantity, handleClearQuantity, handleInput }) 
         label="Clear quantity"
         handleChange={handleClearQuantity}
         value={clearQuantity}
-        classes="ml-1 mt-1"
+        classes="ms-1 mt-1"
       />
     }
   />

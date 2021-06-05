@@ -22,7 +22,7 @@ function List(props) {
 
   const listName = (
     <h5 className="mb-1">
-      <i className={`fa ${listIconClass(props.list.type)} text-info mr-3`} />
+      <i className={`fa ${listIconClass(props.list.type)} text-secondary me-3`} />
       {props.listName}
     </h5>
   );

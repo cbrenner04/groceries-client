@@ -76,7 +76,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         value="foo"
       />
       <div
-        class="ml-1 mt-1"
+        class="ms-1 mt-1"
       >
         <div
           class="form-check"
@@ -120,7 +120,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         />
       </datalist>
       <div
-        class="ml-1 mt-1"
+        class="ms-1 mt-1"
       >
         <div
           class="form-check"

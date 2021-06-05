@@ -2,24 +2,24 @@
 
 exports[`Bookmark when read is false renders the bookmark outline 1`] = `
 <button
-  class="p-0 mr-3 btn btn-link"
+  class="p-0 me-3 btn btn-link"
   data-test-id="foo"
   type="button"
 >
   <i
-    class="far fa-bookmark fa-2x text-info"
+    class="far fa-bookmark fa-2x text-secondary"
   />
 </button>
 `;
 
 exports[`Bookmark when read is true renders the filled in bookmark 1`] = `
 <button
-  class="p-0 mr-3 btn btn-link"
+  class="p-0 me-3 btn btn-link"
   data-test-id="foo"
   type="button"
 >
   <i
-    class="fas fa-bookmark fa-2x text-info"
+    class="fas fa-bookmark fa-2x text-secondary"
   />
 </button>
 `;

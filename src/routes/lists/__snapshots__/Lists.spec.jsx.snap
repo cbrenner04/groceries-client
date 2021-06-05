@@ -103,25 +103,24 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Pending
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Pending-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -153,7 +152,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   class="mb-1"
                 >
                   <i
-                    class="fa fa-shopping-bag text-info mr-3"
+                    class="fa fa-shopping-bag text-secondary me-3"
                   />
                   foo
                 </h5>
@@ -171,11 +170,11 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -207,25 +206,24 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Incomplete
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Incomplete-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -261,7 +259,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-book text-secondary me-3"
                     />
                     bar
                   </h5>
@@ -280,11 +278,11 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     style="pointer-events: auto; opacity: 1;"
                     type="button"
@@ -294,7 +292,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 me-3"
                     data-test-id="incomplete-list-share"
                     href="/lists/id2/users_lists"
                     style="pointer-events: auto; opacity: 1;"
@@ -304,7 +302,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 me-3"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id2/edit"
                     style="pointer-events: auto; opacity: 1;"
@@ -337,25 +335,24 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Completed
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Completed-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -391,7 +388,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-shopping-bag text-info mr-3"
+                      class="fa fa-shopping-bag text-secondary me-3"
                     />
                     foo
                   </h5>
@@ -410,11 +407,11 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                 class="col-md-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="complete-list-refresh"
                     style="pointer-events: auto; opacity: 1;"
                     type="button"

@@ -18,7 +18,7 @@ const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, hand
           label="Clear artist"
           handleChange={handleClearArtist}
           value={clearArtist}
-          classes="ml-1 mt-1"
+          classes="ms-1 mt-1"
         />
       }
     />
@@ -35,7 +35,7 @@ const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, hand
           label="Clear album"
           handleChange={handleClearAlbum}
           value={clearAlbum}
-          classes="ml-1 mt-1"
+          classes="ms-1 mt-1"
         />
       }
     />

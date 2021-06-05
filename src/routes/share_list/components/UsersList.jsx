@@ -30,10 +30,10 @@ const UsersList = (props) => (
                   </Badge>
                 </Col>
                 <Col md="2">
-                  <ButtonGroup className="float-right">
+                  <ButtonGroup className="float-end">
                     <Button
                       variant="link"
-                      className="p-0 mr-4"
+                      className="p-0 me-4"
                       onClick={() => props.togglePermission(id, permissions, props.status)}
                       data-test-id="toggle-permissions"
                     >

@@ -7,7 +7,7 @@ import { listItem } from '../../../../types';
 
 function NotPurchasedItemButtons(props) {
   return (
-    <ButtonGroup className="float-right">
+    <ButtonGroup className="float-end">
       {props.listType === 'BookList' && (
         <Bookmark
           handleClick={() => props.toggleItemRead(props.item)}

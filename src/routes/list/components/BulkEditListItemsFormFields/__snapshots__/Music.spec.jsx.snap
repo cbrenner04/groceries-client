@@ -19,7 +19,7 @@ exports[`Music renders album input disabled when clearAlbum is true 1`] = `
       value="foo"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -58,7 +58,7 @@ exports[`Music renders album input disabled when clearAlbum is true 1`] = `
       value="bar"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -102,7 +102,7 @@ exports[`Music renders album input enabled when clearAlbum is false 1`] = `
       value="foo"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -140,7 +140,7 @@ exports[`Music renders album input enabled when clearAlbum is false 1`] = `
       value="bar"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -183,7 +183,7 @@ exports[`Music renders artist input disabled when clearArtist is true 1`] = `
       value="foo"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -221,7 +221,7 @@ exports[`Music renders artist input disabled when clearArtist is true 1`] = `
       value="bar"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -263,7 +263,7 @@ exports[`Music renders artist input enabled when clearArtist is false 1`] = `
       value="foo"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"
@@ -300,7 +300,7 @@ exports[`Music renders artist input enabled when clearArtist is false 1`] = `
       value="bar"
     />
     <div
-      class="ml-1 mt-1"
+      class="ms-1 mt-1"
     >
       <div
         class="form-check"

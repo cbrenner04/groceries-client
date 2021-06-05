@@ -3,16 +3,15 @@
 exports[`TitlePopover renders 1`] = `
 <div>
   <div
-    class="row"
-    style="margin: 0px;"
+    class="m-0 row"
   >
     <h2
-      class="text-capitalize"
+      class="text-capitalize pe-0 w-auto"
     >
       foo
     </h2>
     <i
-      class="far fa-question-circle float-right text-secondary"
+      class="far fa-question-circle float-end text-secondary ps-0 w-auto"
       data-test-id="foo-popover"
     />
   </div>

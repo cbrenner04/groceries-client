@@ -76,7 +76,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         value=""
       />
       <div
-        class="ml-1 mt-1"
+        class="ms-1 mt-1"
       >
         <div
           class="form-check"
@@ -116,7 +116,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         id="categories"
       />
       <div
-        class="ml-1 mt-1"
+        class="ms-1 mt-1"
       >
         <div
           class="form-check"

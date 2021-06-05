@@ -3,7 +3,7 @@
 exports[`List displays List 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -120,7 +120,7 @@ exports[`List displays List 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -140,7 +140,7 @@ exports[`List displays List 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
