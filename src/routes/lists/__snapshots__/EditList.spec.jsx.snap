@@ -11,7 +11,9 @@ exports[`EditList displays EditList 1`] = `
     autocomplete="off"
     class=""
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="name"
@@ -28,7 +30,9 @@ exports[`EditList displays EditList 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="type"
@@ -69,7 +73,7 @@ exports[`EditList displays EditList 1`] = `
       
     </div>
     <div
-      class="mb-3"
+      class="mb-3 mb-3"
     >
       <div
         class="form-check"

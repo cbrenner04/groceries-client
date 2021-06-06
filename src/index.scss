@@ -57,9 +57,44 @@ body {
   height: 100%;
 }
 
-.list-multi-created {
-  @include media-breakpoint-up(md) {
-    margin-right: 45px;
-    margin-left: -45px;
+.list-item-title {
+  @include media-breakpoint-down(xs) {
+    margin-left: 1rem;
+  }
+}
+
+.list-item-buttons {
+  @include media-breakpoint-up(sm) {
+    margin-right: 33px;
+  }
+  @include media-breakpoint-up(xs) {
+    margin-right: 2px;
+  }
+}
+
+.list-multi-created-at {
+  @include media-breakpoint-up(lg) {
+    margin-right: 31px;
+    margin-left: -64px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-right: 38px;
+    margin-left: -71px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-right: 47px;
+    margin-left: -80px;
+  }
+}
+
+.list-multi-buttons {
+  @include media-breakpoint-down(lg) {
+    margin-left: -33px;
+  }
+
+  @include media-breakpoint-down(sm) {
+    margin-left: -2px;
   }
 }

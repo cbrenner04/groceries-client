@@ -8,7 +8,9 @@ exports[`InviteForm invites new user 1`] = `
   <form
     class="mt-3"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="email"

@@ -3,7 +3,7 @@
 exports[`NotPurchased does not render Bookmark when listType is not BookList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
@@ -40,7 +40,7 @@ exports[`NotPurchased does not render Bookmark when listType is not BookList 1`]
 exports[`NotPurchased renders Bookmark when listType is BookList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button

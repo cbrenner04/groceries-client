@@ -14,12 +14,12 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -35,7 +35,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -86,12 +86,12 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -105,7 +105,7 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -156,12 +156,12 @@ exports[`ListItem does not render ListItemButtons when the user has read permiss
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -194,12 +194,12 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -215,7 +215,7 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -266,12 +266,12 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -287,7 +287,7 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -338,12 +338,12 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -357,7 +357,7 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -405,10 +405,10 @@ exports[`ListItem sets selected items when multi select checkbox is selected 1`]
       class="list-item-row row"
     >
       <div
-        class="mx-sm-auto col-1"
+        class="col-1"
       >
         <input
-          style="position: absolute; top: 40%; left: 40%;"
+          style="position: absolute; top: 40%; left: 4%;"
           type="checkbox"
         />
         <div
@@ -419,12 +419,12 @@ exports[`ListItem sets selected items when multi select checkbox is selected 1`]
         class="col-sm-11 col-10"
       >
         <div
-          class="pt-1"
+          class="ms-3 ms-sm-2 pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class="ms-3 ms-sm-2 pt-1"
         >
           <small
             class="text-muted"
@@ -457,12 +457,12 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo foo
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -513,12 +513,12 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo foo
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button
@@ -570,12 +570,12 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
         class="col-sm-12 col-12"
       >
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           foo
         </div>
         <div
-          class="pt-1"
+          class=" pt-1"
         >
           <small
             class="text-muted"
@@ -593,7 +593,7 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
           </small>
         </div>
         <div
-          class="float-end btn-group"
+          class=" float-end btn-group"
           role="group"
         >
           <button

@@ -3,7 +3,7 @@
 exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
@@ -40,7 +40,7 @@ exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`]
 exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button

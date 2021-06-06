@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 const CheckboxField = ({ name, label, value, handleChange, classes, type }) => (
-  <Form.Group controlId={name} className={classes}>
+  <Form.Group controlId={name} className={`${classes} mb-3`}>
     <Form.Check type={type} checked={value} onChange={handleChange} label={label} name={name} />
   </Form.Group>
 );

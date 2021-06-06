@@ -39,7 +39,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
             class="mx-sm-auto col-1"
           >
             <input
-              style="position: absolute; top: 40%; left: 40%;"
+              style="position: absolute; top: 40%; left: 4%;"
               type="checkbox"
             />
             <div
@@ -50,10 +50,10 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
             class="col-sm-11 col-10"
           >
             <div
-              class="row"
+              class="ms-1 pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -70,7 +70,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="list-multi-created-at col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -79,7 +79,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class="list-multi-buttons pe-lg-3 col-lg-2"
               >
                 <div
                   class="float-end btn-group"
@@ -132,7 +132,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
             class="mx-sm-auto col-1"
           >
             <input
-              style="position: absolute; top: 40%; left: 40%;"
+              style="position: absolute; top: 40%; left: 4%;"
               type="checkbox"
             />
             <div
@@ -143,10 +143,10 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
             class="col-sm-11 col-10"
           >
             <div
-              class="row"
+              class="ms-1 pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -163,7 +163,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="list-multi-created-at col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -172,7 +172,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class="list-multi-buttons pe-lg-3 col-lg-2"
               >
                 <div
                   class="float-end btn-group"
@@ -259,7 +259,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             class="mx-sm-auto col-1"
           >
             <input
-              style="position: absolute; top: 40%; left: 40%;"
+              style="position: absolute; top: 40%; left: 4%;"
               type="checkbox"
             />
             <div
@@ -270,10 +270,10 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             class="col-sm-11 col-10"
           >
             <div
-              class="row"
+              class="ms-1 pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -290,7 +290,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="list-multi-created-at col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -299,7 +299,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class="list-multi-buttons pe-lg-3 col-lg-2"
               >
                 <div
                   class="float-end btn-group"
@@ -352,7 +352,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             class="mx-sm-auto col-1"
           >
             <input
-              style="position: absolute; top: 40%; left: 40%;"
+              style="position: absolute; top: 40%; left: 4%;"
               type="checkbox"
             />
             <div
@@ -363,10 +363,10 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             class="col-sm-11 col-10"
           >
             <div
-              class="row"
+              class="ms-1 pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -383,7 +383,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 </a>
               </div>
               <div
-                class="list-multi-created pt-1 col-md-4"
+                class="list-multi-created-at col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -392,7 +392,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class="list-multi-buttons pe-lg-3 col-lg-2"
               >
                 <div
                   class="float-end btn-group"

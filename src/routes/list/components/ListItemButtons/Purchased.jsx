@@ -6,7 +6,7 @@ import { Bookmark, Refresh, EditButton, Trash } from '../../../../components/Act
 import { listItem } from '../../../../types';
 
 const PurchasedItemButtons = (props) => (
-  <ButtonGroup className="float-end">
+  <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>
     {['GroceryList', 'SimpleList', 'ToDoList'].includes(props.listType) && (
       <Refresh
         handleClick={() => props.handleItemRefresh(props.item)}

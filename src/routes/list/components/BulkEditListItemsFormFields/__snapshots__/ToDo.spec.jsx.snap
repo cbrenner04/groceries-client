@@ -2,7 +2,9 @@
 
 exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -27,7 +29,7 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
       </option>
     </select>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -49,7 +51,9 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -65,7 +69,7 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
       value="bar"
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -91,7 +95,9 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
 
 exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -115,7 +121,7 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
       </option>
     </select>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -136,7 +142,9 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -152,7 +160,7 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
       value="bar"
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -178,7 +186,9 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
 
 exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -203,7 +213,7 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
       </option>
     </select>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -225,7 +235,9 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -242,7 +254,7 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
       value="bar"
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -269,7 +281,9 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
 
 exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -294,7 +308,7 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
       </option>
     </select>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -316,7 +330,9 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -332,7 +348,7 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
       value="bar"
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"

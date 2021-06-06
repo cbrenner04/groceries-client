@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 const PasswordField = ({ name, label, value, handleChange, placeholder }) => (
-  <Form.Group controlId={name}>
+  <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control
       type="password"

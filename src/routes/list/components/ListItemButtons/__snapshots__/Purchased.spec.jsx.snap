@@ -3,7 +3,7 @@
 exports[`Purchased does not render Refresh and does render Bookmark when listType is BookList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
@@ -41,7 +41,7 @@ exports[`Purchased does not render Refresh and does render Bookmark when listTyp
 exports[`Purchased does not render Refresh or Bookmark when listType is MusicList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
@@ -70,7 +70,7 @@ exports[`Purchased does not render Refresh or Bookmark when listType is MusicLis
 exports[`Purchased renders Refresh and does not render Bookmark when listType is GroceryList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
@@ -108,7 +108,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
 exports[`Purchased renders Refresh and does not render Bookmark when listType is ToDoList 1`] = `
 <div>
   <div
-    class="float-end btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button

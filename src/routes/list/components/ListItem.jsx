@@ -24,19 +24,21 @@ const ListItem = (props) => {
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
-          <Col xs="1" className="mx-sm-auto">
+          <Col xs="1">
             <input
               type="checkbox"
-              style={{ position: 'absolute', top: '40%', left: '40%' }}
+              style={{ position: 'absolute', top: '40%', left: '4%' }}
               onClick={() => props.handleItemSelect(props.item)}
             />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <div className="pt-1">{itemName(props.item, props.listType)}</div>
+          <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
+            {itemName(props.item, props.listType)}
+          </div>
           {props.listType === 'ToDoList' && (
-            <div className="pt-1">
+            <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
               <small className="text-muted">
                 <div data-test-id="assignee-email">{assignee}</div>
                 <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>

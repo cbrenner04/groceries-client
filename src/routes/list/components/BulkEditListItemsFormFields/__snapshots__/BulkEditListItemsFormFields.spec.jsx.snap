@@ -7,7 +7,7 @@ exports[`BulkEditListItemsFormFields does not render list item attribute fields 
   </div>
   <br />
   <div
-    class="form-check-inline"
+    class="form-check-inline mb-3"
   >
     <div
       class="form-check"
@@ -57,7 +57,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
   </div>
   <br />
   <div
-    class="form-check-inline"
+    class="form-check-inline mb-3"
   >
     <div
       class="form-check"
@@ -101,7 +101,9 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
     Update attributes for all items.
   </div>
   <br />
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="author"
@@ -117,7 +119,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       value=""
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -138,7 +140,9 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -161,7 +165,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       />
     </datalist>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -192,7 +196,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
   </div>
   <br />
   <div
-    class="form-check-inline"
+    class="form-check-inline mb-3"
   >
     <div
       class="form-check"
@@ -236,7 +240,9 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
     Update attributes for all items.
   </div>
   <br />
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="quantity"
@@ -252,7 +258,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       value=""
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -273,7 +279,9 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -296,7 +304,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       />
     </datalist>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -327,7 +335,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
   </div>
   <br />
   <div
-    class="form-check-inline"
+    class="form-check-inline mb-3"
   >
     <div
       class="form-check"
@@ -371,7 +379,9 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
     Update attributes for all items.
   </div>
   <br />
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="artist"
@@ -387,7 +397,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       value=""
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -408,7 +418,9 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="album"
@@ -424,7 +436,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       value=""
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -445,7 +457,9 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -468,7 +482,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       />
     </datalist>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -499,7 +513,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
   </div>
   <br />
   <div
-    class="form-check-inline"
+    class="form-check-inline mb-3"
   >
     <div
       class="form-check"
@@ -543,7 +557,9 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
     Update attributes for all items.
   </div>
   <br />
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -566,7 +582,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       />
     </select>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -587,7 +603,9 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -603,7 +621,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       value=""
     />
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"
@@ -624,7 +642,9 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       </div>
     </div>
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -647,7 +667,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       />
     </datalist>
     <div
-      class="ms-1 mt-1"
+      class="ms-1 mt-1 mb-3"
     >
       <div
         class="form-check"

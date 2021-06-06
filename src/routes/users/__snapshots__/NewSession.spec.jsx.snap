@@ -28,7 +28,9 @@ exports[`NewSession renders session form when fetch errors 1`] = `
   <form
     class=""
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="email"
@@ -44,7 +46,9 @@ exports[`NewSession renders session form when fetch errors 1`] = `
         value=""
       />
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="password"
@@ -62,7 +66,7 @@ exports[`NewSession renders session form when fetch errors 1`] = `
       />
     </div>
     <div
-      class="mb-3"
+      class="mb-3 mb-3"
     >
       <div
         class="form-check"

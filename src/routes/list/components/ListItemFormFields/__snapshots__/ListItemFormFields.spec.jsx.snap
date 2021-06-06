@@ -2,7 +2,9 @@
 
 exports[`ListItemFormFields render Book fields when listType is BookList and calls setFormData when input is changed 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="author"
@@ -19,7 +21,9 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="title"
@@ -36,7 +40,9 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="numberInSeries"
@@ -51,7 +57,9 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
       value=""
     />
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -76,7 +84,9 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
 
 exports[`ListItemFormFields render Grocery fields when listType is GroceryList and calls setFormData when input is changed 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="product"
@@ -93,7 +103,9 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="quantity"
@@ -110,7 +122,9 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -135,7 +149,9 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
 
 exports[`ListItemFormFields render Music fields when listType is MusicList and calls setFormData when input is changed 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="title"
@@ -152,7 +168,9 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="artist"
@@ -169,7 +187,9 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="album"
@@ -186,7 +206,9 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -211,7 +233,9 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
 
 exports[`ListItemFormFields render ToDo fields when listType is ToDoList and calls setFormData when input is changed 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="task"
@@ -228,7 +252,9 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="assigneeId"
@@ -249,7 +275,9 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
     </select>
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="dueBy"
@@ -266,7 +294,9 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"

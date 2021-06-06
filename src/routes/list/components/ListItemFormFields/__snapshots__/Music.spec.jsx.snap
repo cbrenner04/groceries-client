@@ -2,7 +2,9 @@
 
 exports[`Music renders base form when props.editForm is false 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="title"
@@ -19,7 +21,9 @@ exports[`Music renders base form when props.editForm is false 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="artist"
@@ -36,7 +40,9 @@ exports[`Music renders base form when props.editForm is false 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="album"
@@ -53,7 +59,9 @@ exports[`Music renders base form when props.editForm is false 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -85,7 +93,9 @@ exports[`Music renders base form when props.editForm is false 1`] = `
 
 exports[`Music renders edit form when props.editForm is true 1`] = `
 <div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="title"
@@ -102,7 +112,9 @@ exports[`Music renders edit form when props.editForm is true 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="artist"
@@ -119,7 +131,9 @@ exports[`Music renders edit form when props.editForm is true 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="album"
@@ -136,7 +150,9 @@ exports[`Music renders edit form when props.editForm is true 1`] = `
     />
     
   </div>
-  <div>
+  <div
+    class="mb-3"
+  >
     <label
       class="form-label"
       for="category"
@@ -164,7 +180,7 @@ exports[`Music renders edit form when props.editForm is true 1`] = `
     
   </div>
   <div
-    class="mb-3"
+    class="mb-3 mb-3"
   >
     <div
       class="form-check"

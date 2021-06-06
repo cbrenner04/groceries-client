@@ -17,7 +17,9 @@ exports[`ListItemForm renders 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -34,7 +36,9 @@ exports[`ListItemForm renders 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -51,7 +55,9 @@ exports[`ListItemForm renders 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"

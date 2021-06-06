@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EmailField renders input 1`] = `
-<div>
+<div
+  class="mb-3"
+>
   <label
     class="form-label"
     for="email"

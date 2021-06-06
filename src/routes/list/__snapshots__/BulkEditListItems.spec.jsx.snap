@@ -16,7 +16,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
     </div>
     <br />
     <div
-      class="form-check-inline"
+      class="form-check-inline mb-3"
     >
       <div
         class="form-check"
@@ -60,7 +60,9 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
       Update attributes for all items.
     </div>
     <br />
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -76,7 +78,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         value=""
       />
       <div
-        class="ms-1 mt-1"
+        class="ms-1 mt-1 mb-3"
       >
         <div
           class="form-check"
@@ -97,7 +99,9 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         </div>
       </div>
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -116,7 +120,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         id="categories"
       />
       <div
-        class="ms-1 mt-1"
+        class="ms-1 mt-1 mb-3"
       >
         <div
           class="form-check"

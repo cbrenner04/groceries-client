@@ -47,21 +47,21 @@ function List(props) {
           <Col xs="1" className="mx-sm-auto">
             <input
               type="checkbox"
-              style={{ position: 'absolute', top: '40%', left: '40%' }}
+              style={{ position: 'absolute', top: '40%', left: '4%' }}
               onClick={() => handleListSelect(props.list)}
             />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <Row>
-            <Col md="6" className="pt-1">
-              {listNameElement}
-            </Col>
-            <Col md="4" className={props.multiSelect ? 'list-multi-created pt-1' : 'pt-1'}>
+          <Row className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}>
+            <Col lg="6">{listNameElement}</Col>
+            <Col lg="4" className={props.multiSelect ? 'list-multi-created-at' : ''}>
               <small className="text-muted">{formatDate(props.list.created_at)}</small>
             </Col>
-            <Col md="2">{props.listButtons}</Col>
+            <Col lg="2" className={`${props.multiSelect ? 'list-multi-buttons' : ''} pe-lg-3`}>
+              {props.listButtons}
+            </Col>
           </Row>
         </Col>
       </Row>

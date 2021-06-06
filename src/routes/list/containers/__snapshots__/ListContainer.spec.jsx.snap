@@ -55,7 +55,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity no category not purchased product
           </div>
@@ -83,7 +83,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity bar not purchased product
           </div>
@@ -111,7 +111,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
@@ -130,7 +130,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
@@ -157,7 +157,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             purchased quantity foo purchased product
           </div>
@@ -195,7 +195,9 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -212,7 +214,9 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -229,7 +233,9 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -327,12 +333,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -387,12 +393,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -447,12 +453,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -498,12 +504,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -586,7 +592,9 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="task"
@@ -603,7 +611,9 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="assigneeId"
@@ -629,7 +639,9 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       </select>
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="dueBy"
@@ -646,7 +658,9 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -757,10 +771,10 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           />
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             <small
               class="text-muted"
@@ -776,7 +790,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
             </small>
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -842,7 +856,9 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -859,7 +875,9 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -876,7 +894,9 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -974,12 +994,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1034,12 +1054,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1094,12 +1114,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1145,12 +1165,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1215,12 +1235,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1288,7 +1308,9 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -1305,7 +1327,9 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -1322,7 +1346,9 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -1420,12 +1446,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1480,12 +1506,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1540,12 +1566,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1591,12 +1617,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1661,12 +1687,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1732,7 +1758,9 @@ exports[`ListContainer renders filtered items without category buckets when filt
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -1749,7 +1777,9 @@ exports[`ListContainer renders filtered items without category buckets when filt
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -1766,7 +1796,9 @@ exports[`ListContainer renders filtered items without category buckets when filt
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -1871,12 +1903,12 @@ exports[`ListContainer renders filtered items without category buckets when filt
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1922,12 +1954,12 @@ exports[`ListContainer renders filtered items without category buckets when filt
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -1992,12 +2024,12 @@ exports[`ListContainer renders filtered items without category buckets when filt
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -2063,7 +2095,9 @@ exports[`ListContainer renders items with category buckets when includedCategori
     id="form-collapse"
     style="padding: 7px;"
   >
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="product"
@@ -2080,7 +2114,9 @@ exports[`ListContainer renders items with category buckets when includedCategori
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="quantity"
@@ -2097,7 +2133,9 @@ exports[`ListContainer renders items with category buckets when includedCategori
       />
       
     </div>
-    <div>
+    <div
+      class="mb-3"
+    >
       <label
         class="form-label"
         for="category"
@@ -2195,12 +2233,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity no category not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -2255,12 +2293,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity bar not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -2315,12 +2353,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -2366,12 +2404,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             not purchased quantity foo not purchased product 2
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button
@@ -2436,12 +2474,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
           class="col-sm-12 col-12"
         >
           <div
-            class="pt-1"
+            class=" pt-1"
           >
             purchased quantity foo purchased product
           </div>
           <div
-            class="float-end btn-group"
+            class=" float-end btn-group"
             role="group"
           >
             <button

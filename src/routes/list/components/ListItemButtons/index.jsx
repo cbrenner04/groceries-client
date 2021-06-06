@@ -27,6 +27,7 @@ const ListItemButtons = (props) =>
       toggleItemRead={props.toggleItemRead}
       handleItemEdit={props.handleItemEdit}
       pending={props.pending}
+      multiSelect={props.multiSelect}
     />
   );
 

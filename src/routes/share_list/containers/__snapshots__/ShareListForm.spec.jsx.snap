@@ -16,7 +16,9 @@ exports[`ShareListForm renders 1`] = `
     <form
       class="pt-3 pb-3"
     >
-      <div>
+      <div
+        class="mb-3"
+      >
         <label
           class="form-label"
           for="new-email"
