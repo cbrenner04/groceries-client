@@ -37,19 +37,14 @@ function List(props) {
 
   return (
     <ListGroup.Item
-      className={props.listClass}
-      style={{ display: 'block' }}
+      className={`${props.listClass} list-list-group-item`}
       data-test-class={props.testClass}
       data-test-id={`list-${props.list.id}`}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
           <Col xs="1" className="mx-sm-auto">
-            <input
-              type="checkbox"
-              style={{ position: 'absolute', top: '40%', left: '40%' }}
-              onClick={() => handleListSelect(props.list)}
-            />
+            <input type="checkbox" className="multi-select-check" onClick={() => handleListSelect(props.list)} />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}

@@ -3,8 +3,8 @@
 exports[`Loading renders the spinner 1`] = `
 <div
   class="spinner-border"
+  id="spinner"
   role="status"
-  style="width: 100px; height: 100px; position: absolute; top: 50%;"
 >
   <span
     class="sr-only"

@@ -19,17 +19,13 @@ const ListItem = (props) => {
   return (
     <ListGroup.Item
       key={props.item.id}
-      style={{ display: 'block' }}
+      className="list-item-list-group-item"
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
           <Col xs="1" className="mx-sm-auto">
-            <input
-              type="checkbox"
-              style={{ position: 'absolute', top: '40%', left: '40%' }}
-              onClick={() => props.handleItemSelect(props.item)}
-            />
+            <input type="checkbox" className="multi-select-check" onClick={() => props.handleItemSelect(props.item)} />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}

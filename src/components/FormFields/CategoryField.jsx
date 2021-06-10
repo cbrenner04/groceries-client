@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 const CategoryField = ({ category, categories, handleInput, name, child, disabled }) => (
-  <Form.Group controlId="category">
+  <Form.Group controlId={name}>
     <Form.Label>Category</Form.Label>
     <Form.Control
       type="text"

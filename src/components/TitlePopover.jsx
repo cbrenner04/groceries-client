@@ -14,7 +14,7 @@ const TitlePopover = ({ message, title }) => (
     }
   >
     {({ ref, ...triggerHandler }) => (
-      <Row style={{ margin: '0px' }}>
+      <Row className="title-popover-row">
         <h2 className="text-capitalize">{title}</h2>
         <i
           ref={ref}

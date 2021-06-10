@@ -44,9 +44,8 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
   >
     
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -72,9 +71,8 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       Bar
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -100,9 +98,8 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -119,9 +116,8 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -146,9 +142,8 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -193,7 +188,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -319,9 +313,8 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
   >
     
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -339,7 +332,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -379,9 +372,8 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       Bar
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -399,7 +391,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -439,9 +431,8 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -459,7 +450,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -490,9 +481,8 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -510,7 +500,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -587,7 +577,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -712,7 +701,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       <button
         class="btn btn-light"
         disabled=""
-        style="cursor: not-allowed;"
+        id="no-filter"
         type="button"
       >
         Filter by category
@@ -754,9 +743,8 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -788,7 +776,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -848,7 +836,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -974,9 +961,8 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
   >
     
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -994,7 +980,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -1034,9 +1020,8 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       Bar
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1054,7 +1039,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1094,9 +1079,8 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1114,7 +1098,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1145,9 +1129,8 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1165,7 +1148,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1215,9 +1198,8 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1235,7 +1217,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -1297,7 +1279,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -1423,9 +1404,8 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   >
     
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1443,7 +1423,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -1483,9 +1463,8 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       Bar
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1503,7 +1482,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1543,9 +1522,8 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1563,7 +1541,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1594,9 +1572,8 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1614,7 +1591,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1664,9 +1641,8 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1684,7 +1660,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -1744,7 +1720,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -1839,14 +1814,14 @@ exports[`ListContainer renders filtered items without category buckets when filt
     </h2>
     <div>
       <span
-        style="line-height: 2.5rem; margin-right: 1rem;"
+        id="filter-title"
       >
         Filtering by:
       </span>
       <button
         class="btn btn-outline-primary"
         data-test-id="clear-filter"
-        style="margin-right: 1rem;"
+        id="filter-button"
         type="button"
       >
         foo
@@ -1877,9 +1852,8 @@ exports[`ListContainer renders filtered items without category buckets when filt
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1897,7 +1871,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1928,9 +1902,8 @@ exports[`ListContainer renders filtered items without category buckets when filt
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -1948,7 +1921,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1998,9 +1971,8 @@ exports[`ListContainer renders filtered items without category buckets when filt
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2018,7 +1990,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >
@@ -2078,7 +2050,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"
@@ -2204,9 +2175,8 @@ exports[`ListContainer renders items with category buckets when includedCategori
   >
     
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2224,7 +2194,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -2264,9 +2234,8 @@ exports[`ListContainer renders items with category buckets when includedCategori
       Bar
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2284,7 +2253,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -2324,9 +2293,8 @@ exports[`ListContainer renders items with category buckets when includedCategori
       Foo
     </h5>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2344,7 +2312,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -2375,9 +2343,8 @@ exports[`ListContainer renders items with category buckets when includedCategori
       </div>
     </div>
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2395,7 +2362,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -2445,9 +2412,8 @@ exports[`ListContainer renders items with category buckets when includedCategori
     class="mb-3 list-group"
   >
     <div
-      class="list-group-item"
+      class="list-item-list-group-item list-group-item"
       data-test-class="purchased-item"
-      style="display: block;"
     >
       <div
         class="row"
@@ -2465,7 +2431,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 mr-3 btn btn-link"
+              class="p-0 mr-3  btn btn-link"
               data-test-id="purchased-item-refresh-id1"
               type="button"
             >

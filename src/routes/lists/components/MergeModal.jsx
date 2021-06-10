@@ -30,7 +30,7 @@ function MergeModal({ showModal, clearModal, listNames, mergeName, handleMergeCo
           onClick={handleMergeConfirm}
           data-test-id={`confirm-merge`}
           disabled={!mergeName}
-          style={{ pointerEvents: mergeName ? 'auto' : 'none' }}
+          className={mergeName ? 'merge-modal-confirm-enabled' : 'merge-modal-confirm-disabled'}
         >
           Merge lists
         </Button>

@@ -3,8 +3,7 @@
 exports[`TitlePopover renders 1`] = `
 <div>
   <div
-    class="row"
-    style="margin: 0px;"
+    class="title-popover-row row"
   >
     <h2
       class="text-capitalize"

@@ -60,8 +60,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="title-popover-row row"
     >
       <h2
         class="text-capitalize"
@@ -77,9 +76,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="pending-user-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -130,8 +128,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="title-popover-row row"
     >
       <h2
         class="text-capitalize"
@@ -147,9 +144,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="accepted-user-id1"
-        style="display: block;"
       >
         <div
           class="row"
@@ -207,9 +203,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="list-group"
     >
       <div
-        class="list-group-item"
+        class="refused-list-list-group-item list-group-item"
         data-test-id="refused-user-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -230,7 +225,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
               role="group"
             >
               <button
-                class="p-0 mr-3 btn btn-link"
+                class="p-0 mr-3  btn btn-link"
                 data-test-id="refresh-share"
                 type="button"
               >
@@ -250,12 +245,12 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
 exports[`ShareList renders loading when data fetch is not complete 1`] = `
 <div>
   <div
-    style="display: flex; justify-content: center; align-items: center;"
+    id="loader"
   >
     <div
       class="spinner-border"
+      id="spinner"
       role="status"
-      style="width: 100px; height: 100px; position: absolute; top: 50%;"
     >
       <span
         class="sr-only"

@@ -22,14 +22,14 @@ exports[`CategoryFilter renders Filter when categories exist but filter does not
 exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = `
 <div>
   <span
-    style="line-height: 2.5rem; margin-right: 1rem;"
+    id="filter-title"
   >
     Filtering by:
   </span>
   <button
     class="btn btn-outline-primary"
     data-test-id="clear-filter"
-    style="margin-right: 1rem;"
+    id="filter-button"
     type="button"
   >
     foo
@@ -46,7 +46,7 @@ exports[`CategoryFilter renders NoFilter when categories do not exist 1`] = `
   <button
     class="btn btn-light"
     disabled=""
-    style="cursor: not-allowed;"
+    id="no-filter"
     type="button"
   >
     Filter by category
