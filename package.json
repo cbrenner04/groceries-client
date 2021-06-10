@@ -31,10 +31,10 @@
     "sass-loader": "12.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build:production": "rm -rf build && react-scripts build",
+    "start": "REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts start",
+    "build:production": "REACT_APP_VERSION=$(git rev-parse --short HEAD) rm -rf build && react-scripts build",
     "deploy:production": "sh scripts/deploy-prod.sh",
-    "build:staging": "rm -rf build && env-cmd -f .env.staging react-scripts build",
+    "build:staging": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging react-scripts build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "lint": "eslint --ext .js,.jsx src/",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",

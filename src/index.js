@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 const app = (
   <>
+    <div hidden>{process.env.REACT_APP_VERSION}</div>
     <ToastContainer limit={3} hideProgressBar autoClose={2000} />
     <AppRouter />
   </>
