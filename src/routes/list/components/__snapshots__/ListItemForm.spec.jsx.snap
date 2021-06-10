@@ -15,7 +15,6 @@ exports[`ListItemForm renders 1`] = `
     class="collapse"
     data-test-id="list-item-form"
     id="form-collapse"
-    style="padding: 7px;"
   >
     <div
       class="form-group"

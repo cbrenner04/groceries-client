@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 
 const NoFilter = () => (
-  <Button variant="light" disabled style={{ cursor: 'not-allowed' }}>
+  <Button variant="light" id="no-filter" disabled>
     Filter by category
   </Button>
 );

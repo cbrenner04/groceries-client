@@ -45,9 +45,9 @@ describe('IncompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('incomplete-list-complete')).toBeDisabled();
-    expect(getByTestId('incomplete-list-complete')).toHaveStyle({ opacity: 0.3 });
+    expect(getByTestId('incomplete-list-complete')).toHaveClass('list-button-disabled');
     expect(getByTestId('incomplete-list-edit')).toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
+    expect(getByTestId('incomplete-list-edit')).toHaveClass('list-button-disabled');
   });
 
   it('complete and edit are enabled when user is owner', () => {
@@ -57,9 +57,9 @@ describe('IncompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('incomplete-list-complete')).toBeEnabled();
-    expect(getByTestId('incomplete-list-complete')).toHaveStyle({ opacity: 1 });
+    expect(getByTestId('incomplete-list-complete')).toHaveClass('list-button-enabled');
     expect(getByTestId('incomplete-list-edit')).not.toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-edit')).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
+    expect(getByTestId('incomplete-list-edit')).toHaveClass('list-button-enabled');
   });
 
   it('edit is hidden when multiSelect and selectedLists > 1', () => {
@@ -124,7 +124,7 @@ describe('IncompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 0.3, pointerEvents: 'none' });
+    expect(getByTestId('incomplete-list-share')).toHaveClass('list-button-disabled');
   });
 
   it('share is hidden when multiSelect and selectedLists > 1', () => {
@@ -162,7 +162,7 @@ describe('IncompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('incomplete-list-share')).not.toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-share')).toHaveStyle({ opacity: 1, pointerEvents: 'auto' });
+    expect(getByTestId('incomplete-list-share')).toHaveClass('list-button-enabled');
   });
 
   it('calls props.onListCompletion when complete is clicked', () => {

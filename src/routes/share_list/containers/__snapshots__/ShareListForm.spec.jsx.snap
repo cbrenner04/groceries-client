@@ -60,8 +60,7 @@ exports[`ShareListForm renders 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="title-popover-row row"
     >
       <h2
         class="text-capitalize"
@@ -77,9 +76,8 @@ exports[`ShareListForm renders 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="pending-user-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -130,8 +128,7 @@ exports[`ShareListForm renders 1`] = `
       </div>
     </div>
     <div
-      class="row"
-      style="margin: 0px;"
+      class="title-popover-row row"
     >
       <h2
         class="text-capitalize"
@@ -147,9 +144,8 @@ exports[`ShareListForm renders 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="accepted-user-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -206,9 +202,8 @@ exports[`ShareListForm renders 1`] = `
       class="list-group"
     >
       <div
-        class="list-group-item"
+        class="refused-list-list-group-item list-group-item"
         data-test-id="refused-user-id4"
-        style="display: block;"
       >
         <div
           class="row"
@@ -229,7 +224,7 @@ exports[`ShareListForm renders 1`] = `
               role="group"
             >
               <button
-                class="p-0 mr-3 btn btn-link"
+                class="p-0 mr-3  btn btn-link"
                 data-test-id="refresh-share"
                 type="button"
               >

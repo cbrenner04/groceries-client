@@ -17,7 +17,6 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
     autocomplete="off"
     class="collapse"
     id="form-collapse"
-    style="padding: 6px;"
   >
     <div
       class="form-group"
@@ -106,8 +105,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -132,10 +130,9 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="list-group"
     >
       <div
-        class="pending-list list-group-item"
+        class="pending-list list-list-group-item list-group-item"
         data-test-class="pending-list"
         data-test-id="list-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -175,7 +172,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3  btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -210,8 +207,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -236,10 +232,9 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -284,9 +279,8 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -294,20 +288,18 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id2/users_lists"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id2/edit"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -340,8 +332,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -366,10 +357,9 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id1"
-        style="display: block;"
       >
         <div
           class="row"
@@ -414,9 +404,8 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -446,12 +435,12 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
 exports[`Lists renders loading component when data is being fetched 1`] = `
 <div>
   <div
-    style="display: flex; justify-content: center; align-items: center;"
+    id="loader"
   >
     <div
       class="spinner-border"
+      id="spinner"
       role="status"
-      style="width: 100px; height: 100px; position: absolute; top: 50%;"
     >
       <span
         class="sr-only"

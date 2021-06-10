@@ -13,10 +13,7 @@ function CompletedListButtons(props) {
       <Refresh
         handleClick={() => props.onListRefresh(props.list)}
         disabled={!userIsOwner || props.pending}
-        style={{
-          pointerEvents: userIsOwner && !props.pending ? 'auto' : 'none',
-          opacity: userIsOwner && !props.pending ? 1 : 0.3,
-        }}
+        classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
         testID="complete-list-refresh"
       />
       {props.multiSelect && props.selectedLists.length > 1 && (

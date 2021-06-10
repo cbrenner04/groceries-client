@@ -7,10 +7,9 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-disabled btn btn-link"
       data-test-id="incomplete-list-complete"
       disabled=""
-      style="pointer-events: none; opacity: 0.3;"
       type="button"
     >
       <i
@@ -18,21 +17,19 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </button>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
     </a>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-disabled"
       data-test-id="incomplete-list-edit"
       disabled=""
       href="/lists/id1/edit"
-      style="pointer-events: none; opacity: 0.3;"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -58,9 +55,8 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -68,20 +64,18 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </button>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
     </a>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -107,9 +101,8 @@ exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -145,9 +138,8 @@ exports[`IncompleteListButtons merge is displayed when multiSelect and selectedL
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -183,9 +175,8 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -193,21 +184,19 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </button>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-disabled"
       data-test-id="incomplete-list-share"
       disabled=""
       href="/lists/id1/users_lists"
-      style="pointer-events: none; opacity: 0.3;"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
     </a>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -233,9 +222,8 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i
@@ -243,20 +231,18 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </button>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-users fa-2x text-primary"
       />
     </a>
     <a
-      class="p-0 mr-3"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
-      style="pointer-events: auto; opacity: 1;"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -282,9 +268,8 @@ exports[`IncompleteListButtons share is hidden when multiSelect and selectedList
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 mr-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
-      style="pointer-events: auto; opacity: 1;"
       type="button"
     >
       <i

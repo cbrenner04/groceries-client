@@ -63,3 +63,79 @@ body {
     margin-left: -45px;
   }
 }
+
+#loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#spinner {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+}
+
+.title-popover-row {
+  margin: 0px;
+}
+
+// TODO: can these be combined?
+.list-item-list-group-item {
+  display: block;
+}
+
+.list-list-group-item {
+  display: block;
+}
+
+.refused-list-list-group-item {
+  display: block;
+}
+
+.users-list-list-group-item {
+  display: block;
+}
+
+.multi-select-check {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+
+// TODO: compare ListForm and ListItemForm, any others?
+#form-collapse {
+  padding: 7;
+}
+
+#filter-title {
+  line-height: 2.5rem;
+  margin-right: 1rem;
+}
+
+#filter-button {
+  margin-right: 1rem;
+}
+
+#no-filter {
+  cursor: not-allowed;
+}
+
+.list-button-disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.list-button-enabled {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.merge-modal-confirm-enabled {
+  pointer-events: auto;
+}
+
+.merge-modal-confirm-disabled {
+  pointer-events: none;
+}

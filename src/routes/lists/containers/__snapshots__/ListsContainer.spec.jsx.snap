@@ -17,7 +17,6 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
     autocomplete="off"
     class="collapse"
     id="form-collapse"
-    style="padding: 6px;"
   >
     <div
       class="form-group"
@@ -106,8 +105,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -132,10 +130,9 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -180,9 +177,8 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -190,20 +186,18 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -225,10 +219,9 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         </div>
       </div>
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id5"
-        style="display: block;"
       >
         <div
           class="row"
@@ -273,9 +266,8 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -283,21 +275,19 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
-                    style="pointer-events: none; opacity: 0.3;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -330,8 +320,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -356,10 +345,9 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -404,9 +392,8 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -429,10 +416,9 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         </div>
       </div>
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id4"
-        style="display: block;"
       >
         <div
           class="row"
@@ -477,10 +463,9 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
-                    style="pointer-events: none; opacity: 0.3;"
                     type="button"
                   >
                     <i
@@ -524,7 +509,6 @@ exports[`ListsContainer renders 1`] = `
     autocomplete="off"
     class="collapse"
     id="form-collapse"
-    style="padding: 6px;"
   >
     <div
       class="form-group"
@@ -613,8 +597,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -639,10 +622,9 @@ exports[`ListsContainer renders 1`] = `
       class="list-group"
     >
       <div
-        class="pending-list list-group-item"
+        class="pending-list list-list-group-item list-group-item"
         data-test-class="pending-list"
         data-test-id="list-id1"
-        style="display: block;"
       >
         <div
           class="row"
@@ -682,7 +664,7 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3  btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -717,8 +699,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -743,10 +724,9 @@ exports[`ListsContainer renders 1`] = `
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -791,9 +771,8 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -801,20 +780,18 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -836,10 +813,9 @@ exports[`ListsContainer renders 1`] = `
         </div>
       </div>
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
         data-test-id="list-id5"
-        style="display: block;"
       >
         <div
           class="row"
@@ -884,9 +860,8 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -894,21 +869,19 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
-                    style="pointer-events: none; opacity: 0.3;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
                     />
                   </a>
                   <a
-                    class="p-0 mr-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
-                    style="pointer-events: auto; opacity: 1;"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -941,8 +914,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-left"
       >
         <div
-          class="row"
-          style="margin: 0px;"
+          class="title-popover-row row"
         >
           <h2
             class="text-capitalize"
@@ -967,10 +939,9 @@ exports[`ListsContainer renders 1`] = `
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -1015,9 +986,8 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -1040,10 +1010,9 @@ exports[`ListsContainer renders 1`] = `
         </div>
       </div>
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id4"
-        style="display: block;"
       >
         <div
           class="row"
@@ -1088,10 +1057,9 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 btn btn-link"
+                    class="p-0 mr-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
-                    style="pointer-events: none; opacity: 0.3;"
                     type="button"
                   >
                     <i

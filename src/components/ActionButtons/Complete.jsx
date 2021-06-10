@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Complete = ({ handleClick, testID, disabled, style }) => (
+const Complete = ({ handleClick, testID, disabled, style, classes }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className="p-0 mr-3"
+    className={`p-0 mr-3 ${classes}`}
     data-test-id={testID}
     disabled={disabled}
     style={style}
@@ -23,11 +23,13 @@ Complete.propTypes = {
     pointerEvents: PropTypes.string,
     opacity: PropTypes.number,
   }),
+  classes: PropTypes.string,
 };
 
 Complete.defaultProps = {
   disabled: false,
   style: {},
+  classes: '',
 };
 
 export default Complete;

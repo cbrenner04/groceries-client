@@ -3,10 +3,9 @@
 exports[`List calls setSelectedLists with empty array when deselecting list 1`] = `
 <div>
   <div
-    class="foo list-group-item"
+    class="foo list-list-group-item list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
   >
     <div
       class="list-item-row row"
@@ -15,7 +14,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
         class="mx-sm-auto col-1"
       >
         <input
-          style="position: absolute; top: 40%; left: 40%;"
+          class="multi-select-check"
           type="checkbox"
         />
         <div
@@ -64,10 +63,9 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
 exports[`List calls setSelectedLists with list when selecting list 1`] = `
 <div>
   <div
-    class="foo list-group-item"
+    class="foo list-list-group-item list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
   >
     <div
       class="list-item-row row"
@@ -76,7 +74,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
         class="mx-sm-auto col-1"
       >
         <input
-          style="position: absolute; top: 40%; left: 40%;"
+          class="multi-select-check"
           type="checkbox"
         />
         <div
@@ -125,10 +123,9 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
 exports[`List does not render Link when includeLinkToList is false 1`] = `
 <div>
   <div
-    class="foo list-group-item"
+    class="foo list-list-group-item list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
   >
     <div
       class="row"
@@ -175,10 +172,9 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
 exports[`List does render Link when includeLinkToList is true 1`] = `
 <div>
   <div
-    class="foo list-group-item"
+    class="foo list-list-group-item list-group-item"
     data-test-class="foo"
     data-test-id="list-id1"
-    style="display: block;"
   >
     <div
       class="row"
