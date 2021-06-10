@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts start",
-    "build:production": "REACT_APP_VERSION=$(git rev-parse --short HEAD) rm -rf build && react-scripts build",
+    "build:production": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts build",
     "deploy:production": "sh scripts/deploy-prod.sh",
     "build:staging": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging react-scripts build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
