@@ -33,7 +33,7 @@ describe('CompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('complete-list-refresh')).toBeDisabled();
-    expect(getByTestId('complete-list-refresh')).toHaveStyle({ opacity: 0.3 });
+    expect(getByTestId('complete-list-refresh')).toHaveClass('list-button-disabled');
   });
 
   it('renders refresh enabled when user is owner', () => {
@@ -43,7 +43,7 @@ describe('CompleteListButtons', () => {
 
     expect(container).toMatchSnapshot();
     expect(getByTestId('complete-list-refresh')).toBeEnabled();
-    expect(getByTestId('complete-list-refresh')).toHaveStyle({ opacity: 1 });
+    expect(getByTestId('complete-list-refresh')).toHaveClass('list-button-enabled');
   });
 
   it('calls props.onListRefresh when refresh button is clicked', () => {

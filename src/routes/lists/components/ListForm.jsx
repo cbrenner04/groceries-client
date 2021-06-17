@@ -26,7 +26,7 @@ function ListForm({ onFormSubmit, pending }) {
         </Button>
       )}
       <Collapse in={showForm}>
-        <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" style={{ padding: 6 }}>
+        <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off">
           <ListFormFields
             name={name}
             type={type}

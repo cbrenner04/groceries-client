@@ -14,7 +14,6 @@ exports[`ListForm renders 1`] = `
     autocomplete="off"
     class="collapse"
     id="form-collapse"
-    style="padding: 6px;"
   >
     <div
       class="mb-3"

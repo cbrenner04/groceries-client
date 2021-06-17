@@ -15,20 +15,14 @@ function IncompleteListButtons(props) {
       <Complete
         handleClick={() => props.onListCompletion(props.list)}
         disabled={!userIsOwner || props.pending}
-        style={{
-          pointerEvents: userIsOwner && !props.pending ? 'auto' : 'none',
-          opacity: userIsOwner && !props.pending ? 1 : 0.3,
-        }}
+        classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
         testID="incomplete-list-complete"
       />
       {!multipleListsSelected && (
         <Share
           to={`lists/${props.list.id}/users_lists`}
           disabled={!userCanShare || props.pending}
-          style={{
-            pointerEvents: userCanShare && !props.pending ? 'auto' : 'none',
-            opacity: userCanShare && !props.pending ? 1 : 0.3,
-          }}
+          classes={userCanShare && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
           testID="incomplete-list-share"
         />
       )}
@@ -39,10 +33,7 @@ function IncompleteListButtons(props) {
         <EditLink
           to={`/lists/${props.list.id}/edit`}
           disabled={!userIsOwner || props.pending}
-          style={{
-            pointerEvents: userIsOwner && !props.pending ? 'auto' : 'none',
-            opacity: userIsOwner && !props.pending ? 1 : 0.3,
-          }}
+          classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
           testID="incomplete-list-edit"
         />
       )}

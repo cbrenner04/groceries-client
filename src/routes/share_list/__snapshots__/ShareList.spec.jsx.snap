@@ -10,7 +10,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       Back to lists
     </a>
     <h1>
-      Share 
+      Share
       foo
     </h1>
     <form
@@ -80,9 +80,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="pending-user-id2"
-        style="display: block;"
       >
         <div
           class="row"
@@ -150,9 +149,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="mb-4 list-group"
     >
       <div
-        class="list-group-item"
+        class="users-list-list-group-item list-group-item"
         data-test-id="accepted-user-id1"
-        style="display: block;"
       >
         <div
           class="row"
@@ -202,7 +200,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
           </div>
         </div>
       </div>
-      
+
     </div>
     <h2>
       Refused
@@ -211,9 +209,8 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       class="list-group"
     >
       <div
-        class="list-group-item"
+        class="refused-list-list-group-item list-group-item"
         data-test-id="refused-user-id3"
-        style="display: block;"
       >
         <div
           class="row"
@@ -254,12 +251,12 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
 exports[`ShareList renders loading when data fetch is not complete 1`] = `
 <div>
   <div
-    style="display: flex; justify-content: center; align-items: center;"
+    id="loader"
   >
     <div
       class="spinner-border"
+      id="spinner"
       role="status"
-      style="width: 100px; height: 100px; position: absolute; top: 50%;"
     >
       <span
         class="sr-only"

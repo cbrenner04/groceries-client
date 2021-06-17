@@ -19,7 +19,11 @@ const UsersList = (props) => (
         }
         if (props.userIsOwner) {
           return (
-            <ListGroup.Item key={id} data-test-id={`${props.status}-user-${user.id}`} style={{ display: 'block' }}>
+            <ListGroup.Item
+              key={id}
+              data-test-id={`${props.status}-user-${user.id}`}
+              className="users-list-list-group-item"
+            >
               <Row>
                 <Col md="6" className="pt-1">
                   {user.email}

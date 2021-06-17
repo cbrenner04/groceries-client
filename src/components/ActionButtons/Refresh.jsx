@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Refresh = ({ handleClick, testID, style, disabled }) => (
+const Refresh = ({ handleClick, testID, style, disabled, classes }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className="p-0 me-3"
+    className={`p-0 me-3 ${classes}`}
     data-test-id={testID}
     style={style}
     disabled={disabled}
@@ -23,11 +23,13 @@ Refresh.propTypes = {
     opacity: PropTypes.number,
   }),
   disabled: PropTypes.bool,
+  classes: PropTypes.string,
 };
 
 Refresh.defaultProps = {
   style: {},
   disabled: false,
+  classes: '',
 };
 
 export default Refresh;

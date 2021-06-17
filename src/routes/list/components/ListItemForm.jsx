@@ -106,13 +106,7 @@ function ListItemForm(props) {
         </>
       )}
       <Collapse in={showForm}>
-        <Form
-          id="form-collapse"
-          onSubmit={handleSubmit}
-          autoComplete="off"
-          data-test-id="list-item-form"
-          style={{ padding: 7 }}
-        >
+        <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
           <ListItemFormFields
             formData={formData}
             setFormData={setData}

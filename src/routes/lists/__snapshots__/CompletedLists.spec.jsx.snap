@@ -22,7 +22,11 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
         class="mx-auto float-start"
       >
         <div
+<<<<<<< HEAD
           class="m-0 row"
+=======
+          class="title-popover-row row"
+>>>>>>> origin/master
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -47,10 +51,9 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
       class="list-group"
     >
       <div
-        class="accepted-list list-group-item"
+        class="accepted-list list-list-group-item list-group-item"
         data-test-class="completed-list"
         data-test-id="list-id1"
-        style="display: block;"
       >
         <div
           class="row"
@@ -95,9 +98,12 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
                   role="group"
                 >
                   <button
+<<<<<<< HEAD
                     class="p-0 me-3 btn btn-link"
+=======
+                    class="p-0 mr-3 list-button-enabled btn btn-link"
+>>>>>>> origin/master
                     data-test-id="complete-list-refresh"
-                    style="pointer-events: auto; opacity: 1;"
                     type="button"
                   >
                     <i
@@ -127,12 +133,12 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
 exports[`CompletedLists renders loading component when data is being fetched 1`] = `
 <div>
   <div
-    style="display: flex; justify-content: center; align-items: center;"
+    id="loader"
   >
     <div
       class="spinner-border"
+      id="spinner"
       role="status"
-      style="width: 100px; height: 100px; position: absolute; top: 50%;"
     >
       <span
         class="sr-only"

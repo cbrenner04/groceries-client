@@ -134,12 +134,12 @@ exports[`EditListItem displays UnknownError when an error occurs 1`] = `
 exports[`EditListItem renders the Loading component when fetch request is pending 1`] = `
 <div>
   <div
-    style="display: flex; justify-content: center; align-items: center;"
+    id="loader"
   >
     <div
       class="spinner-border"
+      id="spinner"
       role="status"
-      style="width: 100px; height: 100px; position: absolute; top: 50%;"
     >
       <span
         class="sr-only"

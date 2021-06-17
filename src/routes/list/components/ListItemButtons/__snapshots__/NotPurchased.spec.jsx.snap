@@ -7,7 +7,11 @@ exports[`NotPurchased does not render Bookmark when listType is not BookList 1`]
     role="group"
   >
     <button
+<<<<<<< HEAD
       class="p-0 me-3 btn btn-link"
+=======
+      class="p-0 mr-3  btn btn-link"
+>>>>>>> origin/master
       data-test-id="not-purchased-item-complete-id1"
       type="button"
     >
@@ -53,7 +57,11 @@ exports[`NotPurchased renders Bookmark when listType is BookList 1`] = `
       />
     </button>
     <button
+<<<<<<< HEAD
       class="p-0 me-3 btn btn-link"
+=======
+      class="p-0 mr-3  btn btn-link"
+>>>>>>> origin/master
       data-test-id="not-purchased-item-complete-id1"
       type="button"
     >
