@@ -89,7 +89,7 @@ exports[`Book renders base form when props.editForm is false 1`] = `
 exports[`Book renders edit form when props.editForm is true 1`] = `
 <div>
   <div
-    class="form-group"
+    class="mb-3"
   >
     <label
       class="form-label"
@@ -105,10 +105,10 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       type="text"
       value="asdf"
     />
-
+    
   </div>
   <div
-    class="form-group"
+    class="mb-3"
   >
     <label
       class="form-label"
@@ -124,10 +124,10 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       type="text"
       value="asdf"
     />
-
+    
   </div>
   <div
-    class="form-group"
+    class="mb-3"
   >
     <label
       class="form-label"
@@ -144,7 +144,7 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
     />
   </div>
   <div
-    class="form-group"
+    class="mb-3"
   >
     <label
       class="form-label"
@@ -167,13 +167,13 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
         value="asdf"
       />
     </datalist>
-
+    
   </div>
   <div
-    class="mb-3 form-row"
+    class="mb-3 row"
   >
     <div
-      class="form-check-inline ms-1 form-group"
+      class="form-check-inline ms-1 mb-3"
     >
       <div
         class="form-check"
@@ -194,7 +194,7 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       </div>
     </div>
     <div
-      class="form-check-inline form-group"
+      class="form-check-inline mb-3"
     >
       <div
         class="form-check"

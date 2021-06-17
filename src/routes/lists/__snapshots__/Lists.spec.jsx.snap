@@ -176,7 +176,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3  btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -283,7 +283,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -301,7 +301,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id2/edit"
                   >

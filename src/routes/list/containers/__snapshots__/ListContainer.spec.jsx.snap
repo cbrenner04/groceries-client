@@ -335,7 +335,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -394,7 +394,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -453,7 +453,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -503,7 +503,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -989,7 +989,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -1048,7 +1048,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1107,7 +1107,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1157,7 +1157,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1435,7 +1435,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -1494,7 +1494,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -1553,7 +1553,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1603,7 +1603,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -1886,7 +1886,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -1936,7 +1936,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >
@@ -2212,7 +2212,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id2"
               type="button"
             >
@@ -2271,7 +2271,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id5"
               type="button"
             >
@@ -2330,7 +2330,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id3"
               type="button"
             >
@@ -2380,7 +2380,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
             role="group"
           >
             <button
-              class="p-0 me-3 btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="not-purchased-item-complete-id4"
               type="button"
             >

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 
 import { CategoryField, TextField, NumberField, CheckboxField } from '../../../../components/FormFields';
 
@@ -28,7 +28,7 @@ const BookFormFields = (props) => (
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
     {props.editForm && (
-      <Form.Row className="mb-3">
+      <Row className="mb-3">
         <CheckboxField
           name="purchased"
           label="Purchased"
@@ -43,7 +43,7 @@ const BookFormFields = (props) => (
           handleChange={props.inputChangeHandler}
           classes="form-check-inline"
         />
-      </Form.Row>
+      </Row>
     )}
   </>
 );
