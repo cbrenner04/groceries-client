@@ -35,7 +35,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         type="text"
         value=""
       />
-
+      
     </div>
     <div
       class="mb-3"
@@ -77,7 +77,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
           to-do
         </option>
       </select>
-
+      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -126,7 +126,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-
+        
          Select
       </button>
     </div>
@@ -190,7 +190,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
                   >
@@ -199,7 +199,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
                   >
@@ -279,7 +279,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
@@ -289,7 +289,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
                   >
@@ -341,7 +341,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-
+        
          Select
       </button>
     </div>
@@ -396,7 +396,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -467,7 +467,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"
@@ -531,7 +531,7 @@ exports[`ListsContainer renders 1`] = `
         type="text"
         value=""
       />
-
+      
     </div>
     <div
       class="mb-3"
@@ -573,7 +573,7 @@ exports[`ListsContainer renders 1`] = `
           to-do
         </option>
       </select>
-
+      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -622,7 +622,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-
+        
          Select
       </button>
     </div>
@@ -724,7 +724,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-
+        
          Select
       </button>
     </div>
@@ -788,7 +788,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
                   >
@@ -797,7 +797,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
                   >
@@ -877,7 +877,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
@@ -887,7 +887,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 me-3"
+                    class="p-0 mr-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
                   >
@@ -939,7 +939,7 @@ exports[`ListsContainer renders 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-
+        
          Select
       </button>
     </div>
@@ -994,7 +994,7 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -1065,7 +1065,7 @@ exports[`ListsContainer renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 btn btn-link"
+                    class="p-0 me-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"

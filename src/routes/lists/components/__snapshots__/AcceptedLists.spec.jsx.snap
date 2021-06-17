@@ -85,7 +85,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -176,7 +176,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     type="button"
@@ -301,7 +301,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -345,7 +345,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             class="mx-sm-auto col-1"
           >
             <input
-              style="position: absolute; top: 40%; left: 4%;"
+              class="multi-select-check"
               type="checkbox"
             />
             <div
@@ -392,7 +392,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
+                    class="p-0 me-3 btn btn-link"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     type="button"

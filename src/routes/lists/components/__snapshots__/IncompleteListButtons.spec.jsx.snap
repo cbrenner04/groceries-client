@@ -7,7 +7,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-disabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       disabled=""
       type="button"
@@ -26,7 +26,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </a>
     <a
-      class="p-0 me-3 list-button-disabled"
+      class="p-0 mr-3 list-button-disabled"
       data-test-id="incomplete-list-edit"
       disabled=""
       href="/lists/id1/edit"
@@ -55,7 +55,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -73,7 +73,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </a>
     <a
-      class="p-0 me-3 list-button-enabled"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -101,7 +101,7 @@ exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -138,7 +138,7 @@ exports[`IncompleteListButtons merge is displayed when multiSelect and selectedL
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -175,7 +175,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -194,7 +194,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </a>
     <a
-      class="p-0 me-3 list-button-enabled"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -222,7 +222,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -240,7 +240,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </a>
     <a
-      class="p-0 me-3 list-button-enabled"
+      class="p-0 mr-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -268,7 +268,7 @@ exports[`IncompleteListButtons share is hidden when multiSelect and selectedList
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >

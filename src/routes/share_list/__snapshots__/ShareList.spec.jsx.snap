@@ -10,7 +10,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
       Back to lists
     </a>
     <h1>
-      Share
+      Share 
       foo
     </h1>
     <form
@@ -200,7 +200,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
           </div>
         </div>
       </div>
-
+      
     </div>
     <h2>
       Refused
@@ -231,7 +231,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
               role="group"
             >
               <button
-                class="p-0 me-3 btn btn-link"
+                class="p-0 me-3  btn btn-link"
                 data-test-id="refresh-share"
                 type="button"
               >
