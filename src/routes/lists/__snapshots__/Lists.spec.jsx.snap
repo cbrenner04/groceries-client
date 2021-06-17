@@ -35,7 +35,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         type="text"
         value=""
       />
-      
+
     </div>
     <div
       class="mb-3"
@@ -77,7 +77,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
           to-do
         </option>
       </select>
-      
+
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -109,11 +109,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-<<<<<<< HEAD
           class="m-0 row"
-=======
-          class="title-popover-row row"
->>>>>>> origin/master
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -130,7 +126,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-        
+
          Select
       </button>
     </div>
@@ -180,11 +176,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-<<<<<<< HEAD
-                    class="p-0 me-3 btn btn-link"
-=======
-                    class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+                    class="p-0 me-3  btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -219,11 +211,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-<<<<<<< HEAD
           class="m-0 row"
-=======
-          class="title-popover-row row"
->>>>>>> origin/master
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -240,7 +228,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-        
+
          Select
       </button>
     </div>
@@ -295,11 +283,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-<<<<<<< HEAD
-                    class="p-0 me-3 btn btn-link"
-=======
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
->>>>>>> origin/master
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -308,11 +292,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </button>
                   <a
-<<<<<<< HEAD
-                    class="p-0 me-3"
-=======
-                    class="p-0 mr-3 list-button-enabled"
->>>>>>> origin/master
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id2/users_lists"
                   >
@@ -321,11 +301,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     />
                   </a>
                   <a
-<<<<<<< HEAD
-                    class="p-0 me-3"
-=======
-                    class="p-0 mr-3 list-button-enabled"
->>>>>>> origin/master
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id2/edit"
                   >
@@ -360,11 +336,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-<<<<<<< HEAD
           class="m-0 row"
-=======
-          class="title-popover-row row"
->>>>>>> origin/master
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -381,7 +353,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-        
+
          Select
       </button>
     </div>
@@ -436,11 +408,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-<<<<<<< HEAD
-                    class="p-0 me-3 btn btn-link"
-=======
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
->>>>>>> origin/master
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >

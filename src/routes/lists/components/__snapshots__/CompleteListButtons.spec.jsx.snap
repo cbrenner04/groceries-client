@@ -7,11 +7,7 @@ exports[`CompleteListButtons calls handleMerge when Merge is selected 1`] = `
     role="group"
   >
     <button
-<<<<<<< HEAD
-      class="p-0 me-3 btn btn-link"
-=======
-      class="p-0 mr-3 list-button-enabled btn btn-link"
->>>>>>> origin/master
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="complete-list-refresh"
       type="button"
     >
@@ -48,11 +44,7 @@ exports[`CompleteListButtons renders refresh disabled when user is not owner 1`]
     role="group"
   >
     <button
-<<<<<<< HEAD
-      class="p-0 me-3 btn btn-link"
-=======
-      class="p-0 mr-3 list-button-disabled btn btn-link"
->>>>>>> origin/master
+      class="p-0 me-3 list-button-disabled btn btn-link"
       data-test-id="complete-list-refresh"
       disabled=""
       type="button"
@@ -81,11 +73,7 @@ exports[`CompleteListButtons renders refresh enabled when user is owner 1`] = `
     role="group"
   >
     <button
-<<<<<<< HEAD
-      class="p-0 me-3 btn btn-link"
-=======
-      class="p-0 mr-3 list-button-enabled btn btn-link"
->>>>>>> origin/master
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="complete-list-refresh"
       type="button"
     >

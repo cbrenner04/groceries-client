@@ -8,7 +8,7 @@ exports[`RefusedUsersList does not render refresh share button 1`] = `
   <div
     class="list-group"
   >
-    
+
     <div
       data-test-id="refused-user-id2"
     >
@@ -30,7 +30,7 @@ exports[`RefusedUsersList renders refresh share button 1`] = `
   <div
     class="list-group"
   >
-    
+
     <div
       class="refused-list-list-group-item list-group-item"
       data-test-id="refused-user-id2"
@@ -54,11 +54,7 @@ exports[`RefusedUsersList renders refresh share button 1`] = `
             role="group"
           >
             <button
-<<<<<<< HEAD
-              class="p-0 me-3 btn btn-link"
-=======
-              class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+              class="p-0 me-3  btn btn-link"
               data-test-id="refresh-share"
               type="button"
             >

@@ -3,11 +3,7 @@
 exports[`UsersList does not render read and write badges when user is not owner 1`] = `
 <div>
   <div
-<<<<<<< HEAD
-    class="m-0 row"
-=======
     class="title-popover-row row"
->>>>>>> origin/master
   >
     <h2
       class="text-capitalize pe-0 w-auto"
@@ -22,7 +18,7 @@ exports[`UsersList does not render read and write badges when user is not owner 
   <div
     class="mb-4 list-group"
   >
-    
+
     <div
       data-test-id="accepted-user-id2"
     >
@@ -48,11 +44,7 @@ exports[`UsersList does not render read and write badges when user is not owner 
 exports[`UsersList renders read and write badges when user is owner 1`] = `
 <div>
   <div
-<<<<<<< HEAD
     class="m-0 row"
-=======
-    class="title-popover-row row"
->>>>>>> origin/master
   >
     <h2
       class="text-capitalize pe-0 w-auto"
@@ -67,7 +59,7 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
   <div
     class="mb-4 list-group"
   >
-    
+
     <div
       class="users-list-list-group-item list-group-item"
       data-test-id="accepted-user-id2"

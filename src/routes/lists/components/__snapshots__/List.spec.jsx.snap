@@ -14,11 +14,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
         class="mx-sm-auto col-1"
       >
         <input
-<<<<<<< HEAD
-          style="position: absolute; top: 40%; left: 4%;"
-=======
           class="multi-select-check"
->>>>>>> origin/master
           type="checkbox"
         />
         <div
@@ -78,11 +74,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
         class="mx-sm-auto col-1"
       >
         <input
-<<<<<<< HEAD
-          style="position: absolute; top: 40%; left: 4%;"
-=======
           class="multi-select-check"
->>>>>>> origin/master
           type="checkbox"
         />
         <div

@@ -38,11 +38,7 @@ exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`]
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -111,11 +107,7 @@ exports[`ListItem does not display due by when listType is ToDoList and dueBy do
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -223,11 +215,7 @@ exports[`ListItem does not show assignee when listType is ToDoList and the item 
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -298,11 +286,7 @@ exports[`ListItem does not show assignee when listType is ToDoList, the item is 
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -371,11 +355,7 @@ exports[`ListItem renders ListItemButtons when the user has write permission 1`]
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -421,11 +401,7 @@ exports[`ListItem sets selected items when multi select checkbox is selected 1`]
         class="col-1"
       >
         <input
-<<<<<<< HEAD
-          style="position: absolute; top: 40%; left: 4%;"
-=======
           class="multi-select-check"
->>>>>>> origin/master
           type="checkbox"
         />
         <div
@@ -482,11 +458,7 @@ exports[`ListItem sets the data-test-class to not-purchased-item when item is no
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >
@@ -541,11 +513,7 @@ exports[`ListItem sets the data-test-class to purchased-item when item is purcha
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="purchased-item-refresh-id1"
             type="button"
           >
@@ -619,11 +587,7 @@ exports[`ListItem shows assignee when listType is ToDoList and the item is assig
           role="group"
         >
           <button
-<<<<<<< HEAD
-            class="p-0 me-3 btn btn-link"
-=======
-            class="p-0 mr-3  btn btn-link"
->>>>>>> origin/master
+            class="p-0 me-3  btn btn-link"
             data-test-id="not-purchased-item-complete-id1"
             type="button"
           >

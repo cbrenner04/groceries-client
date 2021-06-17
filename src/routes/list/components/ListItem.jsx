@@ -24,17 +24,8 @@ const ListItem = (props) => {
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
-<<<<<<< HEAD
           <Col xs="1">
-            <input
-              type="checkbox"
-              style={{ position: 'absolute', top: '40%', left: '4%' }}
-              onClick={() => props.handleItemSelect(props.item)}
-            />
-=======
-          <Col xs="1" className="mx-sm-auto">
             <input type="checkbox" className="multi-select-check" onClick={() => props.handleItemSelect(props.item)} />
->>>>>>> origin/master
             <div className="list-item-multi-divider"></div>
           </Col>
         )}
