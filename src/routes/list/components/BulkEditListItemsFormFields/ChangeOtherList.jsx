@@ -20,7 +20,7 @@ const ChangeOtherList = (props) => {
 
   return (
     <>
-      <Form.Group className="form-check-inline">
+      <Form.Group className="form-check-inline mb-3">
         <Form.Check
           name="copy"
           label="Copy"

@@ -17,7 +17,7 @@ exports[`ListItemForm renders 1`] = `
     id="form-collapse"
   >
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -36,7 +36,7 @@ exports[`ListItemForm renders 1`] = `
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -55,7 +55,7 @@ exports[`ListItemForm renders 1`] = `
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -80,19 +80,22 @@ exports[`ListItemForm renders 1`] = `
       </datalist>
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
 </div>
 `;

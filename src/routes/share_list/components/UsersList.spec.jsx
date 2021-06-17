@@ -58,12 +58,12 @@ describe('UsersList', () => {
       'data-test-id',
       'perm-write',
     );
-    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveClass('badge-success');
+    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveClass('badge');
     expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-read',
     );
-    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveClass('badge-primary');
+    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveClass('badge');
   });
 
   it('does not render read and write badges when user is not owner', () => {

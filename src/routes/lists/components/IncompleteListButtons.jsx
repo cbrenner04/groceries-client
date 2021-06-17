@@ -11,7 +11,7 @@ function IncompleteListButtons(props) {
   const userCanShare = props.currentUserPermissions === 'write';
 
   return (
-    <ButtonGroup className="float-right">
+    <ButtonGroup className="float-end">
       <Complete
         handleClick={() => props.onListCompletion(props.list)}
         disabled={!userIsOwner || props.pending}

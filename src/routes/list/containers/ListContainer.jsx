@@ -345,7 +345,7 @@ function ListContainer(props) {
 
   return (
     <>
-      <Link to="/lists" className="float-right">
+      <Link to="/lists" className="float-end">
         Back to lists
       </Link>
       <h1>{props.list.name}</h1>
@@ -385,7 +385,7 @@ function ListContainer(props) {
         <div className="clearfix">
           <Button
             variant="link"
-            className="mx-auto float-right"
+            className="mx-auto float-end"
             onClick={() => {
               if (incompleteMultiSelect && selectedItems.length > 0) {
                 setSelectedItems([]);
@@ -428,7 +428,7 @@ function ListContainer(props) {
         <div className="clearfix">
           <Button
             variant="link"
-            className="mx-auto float-right"
+            className="mx-auto float-end"
             onClick={() => {
               if (completeMultiSelect && selectedItems.length > 0) {
                 setSelectedItems([]);

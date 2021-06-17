@@ -50,11 +50,11 @@ exports[`RefusedUsersList renders refresh share button 1`] = `
           class="col-md-2"
         >
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-3  btn btn-link"
+              class="p-0 me-3  btn btn-link"
               data-test-id="refresh-share"
               type="button"
             >

@@ -9,7 +9,7 @@ function CompletedListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;
 
   return (
-    <ButtonGroup className="float-right">
+    <ButtonGroup className="float-end">
       <Refresh
         handleClick={() => props.onListRefresh(props.list)}
         disabled={!userIsOwner || props.pending}

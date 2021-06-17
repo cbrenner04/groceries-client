@@ -9,12 +9,12 @@ exports[`Lists sets multiSelect to false and clears selectedLists when Hide Sele
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div />
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         Hide
@@ -35,12 +35,12 @@ exports[`Lists sets multiSelect to true when select is clicked 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div />
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         

@@ -90,7 +90,7 @@ const BulkEditListItemsFormFields = (props) => {
                 label="Clear category"
                 handleChange={() => props.clearAttribute('category', 'clearCategory')}
                 value={props.formData.clearCategory}
-                classes="ml-1 mt-1"
+                classes="ms-1 mt-1"
               />
             }
           />

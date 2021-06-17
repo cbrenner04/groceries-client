@@ -3,15 +3,15 @@
 exports[`UsersList does not render read and write badges when user is not owner 1`] = `
 <div>
   <div
-    class="title-popover-row row"
+    class="m-0 row"
   >
     <h2
-      class="text-capitalize"
+      class="text-capitalize pe-0 w-auto"
     >
       accepted
     </h2>
     <i
-      class="far fa-question-circle float-right text-secondary"
+      class="far fa-question-circle float-end text-secondary ps-0 w-auto"
       data-test-id="accepted-popover"
     />
   </div>
@@ -44,15 +44,15 @@ exports[`UsersList does not render read and write badges when user is not owner 
 exports[`UsersList renders read and write badges when user is owner 1`] = `
 <div>
   <div
-    class="title-popover-row row"
+    class="m-0 row"
   >
     <h2
-      class="text-capitalize"
+      class="text-capitalize pe-0 w-auto"
     >
       accepted
     </h2>
     <i
-      class="far fa-question-circle float-right text-secondary"
+      class="far fa-question-circle float-end text-secondary ps-0 w-auto"
       data-test-id="accepted-popover"
     />
   </div>
@@ -76,8 +76,9 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="pt-1 col-md-4"
         >
           <span
-            class="badge badge-success"
+            class="badge"
             data-test-id="perm-write"
+            variant="success"
           >
             write
           </span>
@@ -86,11 +87,11 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="col-md-2"
         >
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-4 btn btn-link"
+              class="p-0 me-4 btn btn-link"
               data-test-id="toggle-permissions"
               type="button"
             >
@@ -127,8 +128,9 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="pt-1 col-md-4"
         >
           <span
-            class="badge badge-primary"
+            class="badge"
             data-test-id="perm-read"
+            variant="primary"
           >
             read
           </span>
@@ -137,11 +139,11 @@ exports[`UsersList renders read and write badges when user is owner 1`] = `
           class="col-md-2"
         >
           <div
-            class="float-right btn-group"
+            class="float-end btn-group"
             role="group"
           >
             <button
-              class="p-0 mr-4 btn btn-link"
+              class="p-0 me-4 btn btn-link"
               data-test-id="toggle-permissions"
               type="button"
             >

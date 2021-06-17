@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 const EmailField = ({ name, label, value, handleChange }) => (
-  <Form.Group controlId={name}>
+  <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control type="email" value={value} onChange={handleChange} placeholder="jane.smith@example.com" name={name} />
   </Form.Group>

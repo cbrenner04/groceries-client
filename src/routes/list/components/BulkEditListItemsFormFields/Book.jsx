@@ -17,7 +17,7 @@ const Book = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
         label="Clear author"
         handleChange={handleClearAuthor}
         value={clearAuthor}
-        classes="ml-1 mt-1"
+        classes="ms-1 mt-1"
       />
     }
   />

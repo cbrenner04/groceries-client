@@ -7,7 +7,7 @@ import { listItem } from '../../../../types';
 
 function NotPurchasedItemButtons(props) {
   return (
-    <ButtonGroup className="float-right">
+    <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>
       {props.listType === 'BookList' && (
         <Bookmark
           handleClick={() => props.toggleItemRead(props.item)}
@@ -43,6 +43,11 @@ NotPurchasedItemButtons.propTypes = {
   toggleItemRead: PropTypes.func.isRequired,
   handleItemEdit: PropTypes.func.isRequired,
   pending: PropTypes.bool.isRequired,
+  multiSelect: PropTypes.bool,
+};
+
+NotPurchasedItemButtons.defaultProps = {
+  multiSelect: false,
 };
 
 export default NotPurchasedItemButtons;

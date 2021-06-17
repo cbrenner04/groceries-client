@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { EmailField } from '../../components/FormFields';
 import axios from '../../utils/api';
+import FormSubmission from '../../components/FormSubmission';
 
 function InviteForm(props) {
   const [email, setEmail] = useState('');
@@ -38,12 +39,11 @@ function InviteForm(props) {
       <h1>Send Invitation</h1>
       <Form onSubmit={handleSubmit} className="mt-3">
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
-        <Button type="submit" variant="success" block>
-          Invite User
-        </Button>
-        <Button onClick={() => props.history.push('/lists')} variant="link" block>
-          Cancel
-        </Button>
+        <FormSubmission
+          submitText="Invite User"
+          cancelAction={() => props.history.push('/lists')}
+          cancelText="Cancel"
+        />
       </Form>
     </>
   );

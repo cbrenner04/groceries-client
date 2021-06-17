@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Async from 'react-async';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
+import FormSubmission from '../../components/FormSubmission';
 
 async function fetchData({ history }) {
   try {
@@ -68,9 +69,7 @@ function NewSession({ history, signInUser }) {
             value={rememberMe}
             handleChange={() => setRememberMe(!rememberMe)}
           />
-          <Button type="submit" variant="success" block>
-            Log in
-          </Button>
+          <FormSubmission submitText="Log In" displayCancelButton={false} />
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>

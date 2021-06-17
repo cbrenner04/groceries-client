@@ -2,7 +2,7 @@
 
 exports[`DateField renders input 1`] = `
 <div
-  class="form-group"
+  class="mb-3"
 >
   <label
     class="form-label"

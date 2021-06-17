@@ -9,17 +9,17 @@ const TitlePopover = ({ message, title }) => (
     rootClose={true}
     overlay={
       <Popover>
-        <Popover.Content data-test-id="popover-content">{message}</Popover.Content>
+        <Popover.Body data-test-id="popover-content">{message}</Popover.Body>
       </Popover>
     }
   >
     {({ ref, ...triggerHandler }) => (
-      <Row className="title-popover-row">
-        <h2 className="text-capitalize">{title}</h2>
+      <Row className="m-0">
+        <h2 className="text-capitalize pe-0 w-auto">{title}</h2>
         <i
           ref={ref}
           {...triggerHandler}
-          className="far fa-question-circle float-right text-secondary"
+          className="far fa-question-circle float-end text-secondary ps-0 w-auto"
           data-test-id={`${title}-popover`}
         />
       </Row>

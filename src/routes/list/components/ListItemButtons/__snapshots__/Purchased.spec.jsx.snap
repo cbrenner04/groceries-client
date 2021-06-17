@@ -3,20 +3,20 @@
 exports[`Purchased does not render Refresh and does render Bookmark when listType is BookList 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-unread-id1"
       type="button"
     >
       <i
-        class="fas fa-bookmark fa-2x text-info"
+        class="fas fa-bookmark fa-2x text-secondary"
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-edit-id1"
       disabled=""
       type="button"
@@ -41,11 +41,11 @@ exports[`Purchased does not render Refresh and does render Bookmark when listTyp
 exports[`Purchased does not render Refresh or Bookmark when listType is MusicList 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-edit-id1"
       disabled=""
       type="button"
@@ -70,11 +70,11 @@ exports[`Purchased does not render Refresh or Bookmark when listType is MusicLis
 exports[`Purchased renders Refresh and does not render Bookmark when listType is GroceryList 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3  btn btn-link"
+      class="p-0 me-3  btn btn-link"
       data-test-id="purchased-item-refresh-id1"
       type="button"
     >
@@ -83,7 +83,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-edit-id1"
       disabled=""
       type="button"
@@ -108,11 +108,11 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
 exports[`Purchased renders Refresh and does not render Bookmark when listType is ToDoList 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3  btn btn-link"
+      class="p-0 me-3  btn btn-link"
       data-test-id="purchased-item-refresh-id1"
       type="button"
     >
@@ -121,7 +121,7 @@ exports[`Purchased renders Refresh and does not render Bookmark when listType is
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-edit-id1"
       disabled=""
       type="button"

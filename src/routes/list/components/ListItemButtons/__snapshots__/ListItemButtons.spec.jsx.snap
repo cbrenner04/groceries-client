@@ -3,11 +3,11 @@
 exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3  btn btn-link"
+      class="p-0 me-3  btn btn-link"
       data-test-id="not-purchased-item-complete-id1"
       type="button"
     >
@@ -16,7 +16,7 @@ exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`]
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="not-purchased-item-edit-id1"
       type="button"
     >
@@ -40,11 +40,11 @@ exports[`ListItemButtons renders NotPurchased when the item is not purchased 1`]
 exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class=" float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3  btn btn-link"
+      class="p-0 me-3  btn btn-link"
       data-test-id="purchased-item-refresh-id1"
       type="button"
     >
@@ -53,7 +53,7 @@ exports[`ListItemButtons renders Purchased when the item is purchased 1`] = `
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="purchased-item-edit-id1"
       disabled=""
       type="button"

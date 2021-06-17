@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
@@ -8,6 +8,7 @@ import { list, listItem, listUsers } from '../../../types';
 import axios from '../../../utils/api';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
+import FormSubmission from '../../../components/FormSubmission';
 
 function EditListItemForm(props) {
   const [item, setItem] = useState(props.item);
@@ -88,12 +89,11 @@ function EditListItemForm(props) {
           listUsers={props.listUsers}
           editForm
         />
-        <Button type="submit" variant="success" block>
-          Update Item
-        </Button>
-        <Button onClick={() => props.history.push(`/lists/${props.list.id}`)} variant="link" block>
-          Cancel
-        </Button>
+        <FormSubmission
+          submitText="Update Item"
+          cancelAction={() => props.history.push(`/lists/${props.list.id}`)}
+          cancelText="Cancel"
+        />
       </Form>
     </>
   );

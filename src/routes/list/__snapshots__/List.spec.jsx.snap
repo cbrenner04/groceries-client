@@ -3,7 +3,7 @@
 exports[`List displays List 1`] = `
 <div>
   <a
-    class="float-right"
+    class="float-end"
     href="/lists"
   >
     Back to lists
@@ -27,7 +27,7 @@ exports[`List displays List 1`] = `
     id="form-collapse"
   >
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -46,7 +46,7 @@ exports[`List displays List 1`] = `
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -65,7 +65,7 @@ exports[`List displays List 1`] = `
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -86,19 +86,22 @@ exports[`List displays List 1`] = `
       />
       
     </div>
-    <br />
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Add New Item
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr />
   <div
@@ -122,7 +125,7 @@ exports[`List displays List 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       
@@ -142,7 +145,7 @@ exports[`List displays List 1`] = `
     class="clearfix"
   >
     <button
-      class="mx-auto float-right btn btn-link"
+      class="mx-auto float-end btn btn-link"
       type="button"
     >
       

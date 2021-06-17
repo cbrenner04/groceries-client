@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
 const Bookmark = ({ handleClick, read, testID }) => (
-  <Button variant="link" onClick={handleClick} className="p-0 mr-3" data-test-id={testID}>
-    <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-info`} />
+  <Button variant="link" onClick={handleClick} className="p-0 me-3" data-test-id={testID}>
+    <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-secondary`} />
   </Button>
 );
 

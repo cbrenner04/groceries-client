@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import ListFormFields from '../components/ListFormFields';
 import axios from '../../../utils/api';
+import FormSubmission from '../../../components/FormSubmission';
 
 function EditListForm(props) {
   const [name, setName] = useState(props.name);
@@ -57,12 +58,11 @@ function EditListForm(props) {
           handleCompletedChange={() => setCompleted(!completed)}
           editForm
         />
-        <Button type="submit" variant="success" block>
-          Update List
-        </Button>
-        <Button onClick={() => props.history.push('/lists')} variant="link" block>
-          Cancel
-        </Button>
+        <FormSubmission
+          submitText="Update List"
+          cancelAction={() => props.history.push('/lists')}
+          cancelText="Cancel"
+        />
       </Form>
     </>
   );

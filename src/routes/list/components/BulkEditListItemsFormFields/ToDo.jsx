@@ -29,7 +29,7 @@ const ToDo = ({
           label="Clear assignee"
           handleChange={handleClearAssignee}
           value={clearAssignee}
-          classes="ml-1 mt-1"
+          classes="ms-1 mt-1"
         />
       }
     />
@@ -46,7 +46,7 @@ const ToDo = ({
           label="Clear due by"
           handleChange={handleClearDueBy}
           value={clearDueBy}
-          classes="ml-1 mt-1"
+          classes="ms-1 mt-1"
         />
       }
     />

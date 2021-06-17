@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Collapse, Form } from 'react-bootstrap';
 
 import ListFormFields from '../components/ListFormFields';
+import FormSubmission from '../../../components/FormSubmission';
 
 function ListForm({ onFormSubmit, pending }) {
   const defaultListType = 'GroceryList';
@@ -32,12 +33,12 @@ function ListForm({ onFormSubmit, pending }) {
             handleNameChange={({ target: { value } }) => setName(value)}
             handleTypeChange={({ target: { value } }) => setType(value)}
           />
-          <Button type="submit" variant="success" disabled={pending} block>
-            Create List
-          </Button>
-          <Button variant="link" onClick={() => setShowForm(false)} block>
-            Collapse Form
-          </Button>
+          <FormSubmission
+            disabled={pending}
+            submitText="Create List"
+            cancelAction={() => setShowForm(false)}
+            cancelText="Collapse Form"
+          />
         </Form>
       </Collapse>
     </>

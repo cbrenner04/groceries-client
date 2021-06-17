@@ -3,11 +3,11 @@
 exports[`IncompleteListButtons complete and edit are disabled when user is not owner 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-disabled btn btn-link"
+      class="p-0 me-3 list-button-disabled btn btn-link"
       data-test-id="incomplete-list-complete"
       disabled=""
       type="button"
@@ -17,7 +17,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </button>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
     >
@@ -26,7 +26,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </a>
     <a
-      class="p-0 mr-3 list-button-disabled"
+      class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-edit"
       disabled=""
       href="/lists/id1/edit"
@@ -51,11 +51,11 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
 exports[`IncompleteListButtons complete and edit are enabled when user is owner 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -64,7 +64,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </button>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
     >
@@ -73,7 +73,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </a>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -97,11 +97,11 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
 exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists > 1 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -110,7 +110,7 @@ exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-merge"
       type="button"
     >
@@ -134,11 +134,11 @@ exports[`IncompleteListButtons edit is hidden when multiSelect and selectedLists
 exports[`IncompleteListButtons merge is displayed when multiSelect and selectedLists > 1 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -147,7 +147,7 @@ exports[`IncompleteListButtons merge is displayed when multiSelect and selectedL
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-merge"
       type="button"
     >
@@ -171,11 +171,11 @@ exports[`IncompleteListButtons merge is displayed when multiSelect and selectedL
 exports[`IncompleteListButtons share is disabled when user does not have write permissions 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -184,7 +184,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </button>
     <a
-      class="p-0 mr-3 list-button-disabled"
+      class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-share"
       disabled=""
       href="/lists/id1/users_lists"
@@ -194,7 +194,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </a>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -218,11 +218,11 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
 exports[`IncompleteListButtons share is enabled when user has write permissions and not multiSelect 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -231,7 +231,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </button>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/lists/id1/users_lists"
     >
@@ -240,7 +240,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </a>
     <a
-      class="p-0 mr-3 list-button-enabled"
+      class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/lists/id1/edit"
     >
@@ -264,11 +264,11 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
 exports[`IncompleteListButtons share is hidden when multiSelect and selectedLists > 1 1`] = `
 <div>
   <div
-    class="float-right btn-group"
+    class="float-end btn-group"
     role="group"
   >
     <button
-      class="p-0 mr-3 list-button-enabled btn btn-link"
+      class="p-0 me-3 list-button-enabled btn btn-link"
       data-test-id="incomplete-list-complete"
       type="button"
     >
@@ -277,7 +277,7 @@ exports[`IncompleteListButtons share is hidden when multiSelect and selectedList
       />
     </button>
     <button
-      class="p-0 mr-3 btn btn-link"
+      class="p-0 me-3 btn btn-link"
       data-test-id="incomplete-list-merge"
       type="button"
     >

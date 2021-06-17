@@ -43,7 +43,7 @@ function CompletedListsContainer(props) {
   return (
     <>
       <div className="clearfix mb-3">
-        <Link to="/lists" className="float-right">
+        <Link to="/lists" className="float-end">
           Back to lists
         </Link>
       </div>

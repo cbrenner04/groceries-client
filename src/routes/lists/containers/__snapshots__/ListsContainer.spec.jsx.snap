@@ -19,7 +19,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
     id="form-collapse"
   >
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -38,7 +38,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -79,18 +79,22 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       </select>
       
     </div>
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Create List
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr
     class="mb-4"
@@ -102,24 +106,24 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="title-popover-row row"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Incomplete
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Incomplete-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -141,10 +145,10 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -154,14 +158,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-music text-info mr-3"
+                      class="fa fa-music text-secondary me-3"
                     />
                     baz
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -170,14 +174,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -186,7 +190,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
                   >
@@ -195,7 +199,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
                   >
@@ -230,10 +234,10 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -243,14 +247,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-list text-info mr-3"
+                      class="fa fa-list text-secondary me-3"
                     />
                     foobar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -259,14 +263,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -275,7 +279,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
-                    class="p-0 mr-3 list-button-disabled"
+                    class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
@@ -285,7 +289,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
                   >
@@ -317,24 +321,24 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="title-popover-row row"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Completed
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Completed-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -356,10 +360,10 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -369,14 +373,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-book text-secondary me-3"
                     />
                     bar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -385,14 +389,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -427,10 +431,10 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -440,14 +444,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-book text-secondary me-3"
                     />
                     bar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -456,14 +460,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-disabled btn btn-link"
+                    class="p-0 me-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"
@@ -511,7 +515,7 @@ exports[`ListsContainer renders 1`] = `
     id="form-collapse"
   >
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -530,7 +534,7 @@ exports[`ListsContainer renders 1`] = `
       
     </div>
     <div
-      class="form-group"
+      class="mb-3"
     >
       <label
         class="form-label"
@@ -571,18 +575,22 @@ exports[`ListsContainer renders 1`] = `
       </select>
       
     </div>
-    <button
-      class="btn btn-success btn-block"
-      type="submit"
+    <div
+      class="d-grid gap-2 mt-3"
     >
-      Create List
-    </button>
-    <button
-      class="btn btn-link btn-block"
-      type="button"
-    >
-      Collapse Form
-    </button>
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
   </form>
   <hr
     class="mb-4"
@@ -594,24 +602,24 @@ exports[`ListsContainer renders 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="title-popover-row row"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Pending
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Pending-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -633,22 +641,22 @@ exports[`ListsContainer renders 1`] = `
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <h5
                   class="mb-1"
                 >
                   <i
-                    class="fa fa-shopping-bag text-info mr-3"
+                    class="fa fa-shopping-bag text-secondary me-3"
                   />
                   foo
                 </h5>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -657,14 +665,14 @@ exports[`ListsContainer renders 1`] = `
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3  btn btn-link"
+                    class="p-0 me-3  btn btn-link"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -696,24 +704,24 @@ exports[`ListsContainer renders 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="title-popover-row row"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Incomplete
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Incomplete-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -735,10 +743,10 @@ exports[`ListsContainer renders 1`] = `
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -748,14 +756,14 @@ exports[`ListsContainer renders 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-music text-info mr-3"
+                      class="fa fa-music text-secondary me-3"
                     />
                     baz
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -764,14 +772,14 @@ exports[`ListsContainer renders 1`] = `
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -780,7 +788,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/lists/id3/users_lists"
                   >
@@ -789,7 +797,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id3/edit"
                   >
@@ -824,10 +832,10 @@ exports[`ListsContainer renders 1`] = `
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -837,14 +845,14 @@ exports[`ListsContainer renders 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-list text-info mr-3"
+                      class="fa fa-list text-secondary me-3"
                     />
                     foobar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -853,14 +861,14 @@ exports[`ListsContainer renders 1`] = `
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -869,7 +877,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
-                    class="p-0 mr-3 list-button-disabled"
+                    class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
                     href="/lists/id5/users_lists"
@@ -879,7 +887,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
-                    class="p-0 mr-3 list-button-enabled"
+                    class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/lists/id5/edit"
                   >
@@ -911,24 +919,24 @@ exports[`ListsContainer renders 1`] = `
       class="clearfix"
     >
       <div
-        class="mx-auto float-left"
+        class="mx-auto float-start"
       >
         <div
-          class="title-popover-row row"
+          class="m-0 row"
         >
           <h2
-            class="text-capitalize"
+            class="text-capitalize pe-0 w-auto"
           >
             Completed
           </h2>
           <i
-            class="far fa-question-circle float-right text-secondary"
+            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
             data-test-id="Completed-popover"
           />
         </div>
       </div>
       <button
-        class="mx-auto float-right btn btn-link"
+        class="mx-auto float-end btn btn-link"
         type="button"
       >
         
@@ -950,10 +958,10 @@ exports[`ListsContainer renders 1`] = `
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -963,14 +971,14 @@ exports[`ListsContainer renders 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-book text-secondary me-3"
                     />
                     bar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -979,14 +987,14 @@ exports[`ListsContainer renders 1`] = `
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-enabled btn btn-link"
+                    class="p-0 me-3 list-button-enabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -1021,10 +1029,10 @@ exports[`ListsContainer renders 1`] = `
             class="col-sm-12 col-12"
           >
             <div
-              class="row"
+              class=" pt-1 row"
             >
               <div
-                class="pt-1 col-md-6"
+                class="col-lg-6"
               >
                 <a
                   class="router-link"
@@ -1034,14 +1042,14 @@ exports[`ListsContainer renders 1`] = `
                     class="mb-1"
                   >
                     <i
-                      class="fa fa-book text-info mr-3"
+                      class="fa fa-book text-secondary me-3"
                     />
                     bar
                   </h5>
                 </a>
               </div>
               <div
-                class="pt-1 col-md-4"
+                class="col-lg-4"
               >
                 <small
                   class="text-muted"
@@ -1050,14 +1058,14 @@ exports[`ListsContainer renders 1`] = `
                 </small>
               </div>
               <div
-                class="col-md-2"
+                class=" pe-lg-3 col-lg-2"
               >
                 <div
-                  class="float-right btn-group"
+                  class="float-end btn-group"
                   role="group"
                 >
                   <button
-                    class="p-0 mr-3 list-button-disabled btn btn-link"
+                    class="p-0 me-3 list-button-disabled btn btn-link"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"

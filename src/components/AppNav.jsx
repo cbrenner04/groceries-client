@@ -28,13 +28,13 @@ function AppNav({ signOutUser }) {
   };
 
   return (
-    <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav">
+    <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav" className="container-fluid">
       <Navbar.Brand onClick={handleBrandClick}>Groceries</Navbar.Brand>
       {user && (
         <>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
-            <Nav className="mr-auto">
+            <Nav className="me-auto">
               <Nav.Item>
                 <Nav.Link onClick={() => history.push('/users/invitation/new')} data-test-id="invite-link">
                   Invite

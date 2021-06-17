@@ -22,7 +22,7 @@ function List(props) {
 
   const listName = (
     <h5 className="mb-1">
-      <i className={`fa ${listIconClass(props.list.type)} text-info mr-3`} />
+      <i className={`fa ${listIconClass(props.list.type)} text-secondary me-3`} />
       {props.listName}
     </h5>
   );
@@ -49,14 +49,14 @@ function List(props) {
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <Row>
-            <Col md="6" className="pt-1">
-              {listNameElement}
-            </Col>
-            <Col md="4" className={props.multiSelect ? 'list-multi-created pt-1' : 'pt-1'}>
+          <Row className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}>
+            <Col lg="6">{listNameElement}</Col>
+            <Col lg="4" className={props.multiSelect ? 'list-multi-created-at' : ''}>
               <small className="text-muted">{formatDate(props.list.created_at)}</small>
             </Col>
-            <Col md="2">{props.listButtons}</Col>
+            <Col lg="2" className={`${props.multiSelect ? 'list-multi-buttons' : ''} pe-lg-3`}>
+              {props.listButtons}
+            </Col>
           </Row>
         </Col>
       </Row>

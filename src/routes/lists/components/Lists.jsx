@@ -8,10 +8,10 @@ function Lists(props) {
   return (
     <div className="mb-4">
       <div className="clearfix">
-        <div className="mx-auto float-left">{props.title}</div>
+        <div className="mx-auto float-start">{props.title}</div>
         <Button
           variant="link"
-          className="mx-auto float-right"
+          className="mx-auto float-end"
           onClick={() => {
             if (props.multiSelect && props.selectedLists.length > 0) {
               props.setSelectedLists([]);
