@@ -188,12 +188,16 @@ describe('ListContainer', () => {
 
     fireEvent.click(getByTestId('filter-by-foo'));
 
+    jest.runOnlyPendingTimers();
+
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
+
+    jest.runOnlyPendingTimers();
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
@@ -247,12 +251,16 @@ describe('ListContainer', () => {
     props.permissions = 'write';
     const { getByText } = renderListContainer(props);
 
+    jest.runOnlyPendingTimers();
+
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
+
+    jest.runOnlyPendingTimers();
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 

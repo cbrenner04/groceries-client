@@ -7,7 +7,6 @@ exports[`Filter renders filter dropdown 1`] = `
 >
   <button
     aria-expanded="false"
-    aria-haspopup="true"
     class="dropdown-toggle btn btn-light"
     id="filter-by-category-button"
     type="button"
@@ -24,7 +23,6 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
 >
   <button
     aria-expanded="true"
-    aria-haspopup="true"
     class="dropdown-toggle btn btn-light"
     id="filter-by-category-button"
     type="button"
@@ -43,6 +41,7 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
     
     <button
       class="dropdown-item"
+      data-rr-ui-dropdown-item=""
       data-test-id="filter-by-bar"
       name="bar"
     >
@@ -50,6 +49,7 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
     </button>
     <button
       class="dropdown-item"
+      data-rr-ui-dropdown-item=""
       data-test-id="filter-by-foo"
       name="foo"
     >
