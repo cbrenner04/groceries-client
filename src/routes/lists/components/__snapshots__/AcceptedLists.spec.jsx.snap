@@ -215,9 +215,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
 `;
 
 exports[`AcceptedLists shows modal to set the new list name for merging and clears 1`] = `
-<div
-  aria-hidden="true"
->
+<div>
   <div
     class="mb-4"
   >
