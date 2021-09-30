@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MergeModal renders 1`] = `
-<div
-  aria-hidden="true"
-/>
-`;
+exports[`MergeModal renders 1`] = `<div />`;

@@ -128,10 +128,14 @@ describe('CompletedListsContainer', () => {
 
     const { getByTestId, queryByTestId } = renderCompletedListsContainer(props);
 
+    jest.runOnlyPendingTimers();
+
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('list-id1')).toBeVisible();
     expect(queryByTestId('list-id2')).toBeNull();
+
+    jest.runOnlyPendingTimers();
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
@@ -162,9 +166,13 @@ describe('CompletedListsContainer', () => {
 
     const { getByTestId } = renderCompletedListsContainer(props);
 
+    jest.runOnlyPendingTimers();
+
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('list-id1')).toBeVisible();
+
+    jest.runOnlyPendingTimers();
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 

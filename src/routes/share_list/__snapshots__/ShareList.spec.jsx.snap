@@ -95,7 +95,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
             class="pt-1 col-md-4"
           >
             <span
-              class="badge"
+              class="badge bg-primary"
               data-test-id="perm-write"
               variant="success"
             >
@@ -164,7 +164,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
             class="pt-1 col-md-4"
           >
             <span
-              class="badge"
+              class="badge bg-primary"
               data-test-id="perm-read"
               variant="primary"
             >

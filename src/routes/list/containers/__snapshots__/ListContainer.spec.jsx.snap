@@ -29,7 +29,6 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
       >
         <button
           aria-expanded="false"
-          aria-haspopup="true"
           class="dropdown-toggle btn btn-light"
           id="filter-by-category-button"
           type="button"
@@ -290,7 +289,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       >
         <button
           aria-expanded="false"
-          aria-haspopup="true"
           class="dropdown-toggle btn btn-light"
           id="filter-by-category-button"
           type="button"
@@ -944,7 +942,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       >
         <button
           aria-expanded="false"
-          aria-haspopup="true"
           class="dropdown-toggle btn btn-light"
           id="filter-by-category-button"
           type="button"
@@ -1262,9 +1259,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
 `;
 
 exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
-<div
-  aria-hidden="true"
->
+<div>
   <a
     class="float-end"
     href="/lists"
@@ -1390,7 +1385,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       >
         <button
           aria-expanded="false"
-          aria-haspopup="true"
           class="dropdown-toggle btn btn-light"
           id="filter-by-category-button"
           type="button"
@@ -2167,7 +2161,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
       >
         <button
           aria-expanded="false"
-          aria-haspopup="true"
           class="dropdown-toggle btn btn-light"
           id="filter-by-category-button"
           type="button"
