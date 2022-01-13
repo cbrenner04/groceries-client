@@ -12,21 +12,21 @@
     "env-cmd": "10.1.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.26.1",
+    "eslint-plugin-react": "7.28.0",
     "immutability-helper": "3.1.1",
-    "jest-environment-jsdom-sixteen": "2.0.0",
     "moment": "2.29.1",
-    "node-sass": "6.0.1",
+    "node-sass": "7.0.1",
     "popper.js": "1.16.1",
-    "postcss": "8.3.11",
-    "prettier": "2.4.1",
+    "postcss": "8.4.5",
+    "prettier": "2.5.1",
+    "query-string": "7.1.0",
     "react": "17.0.2",
     "react-async": "10.0.1",
     "react-bootstrap": "2.0.4",
     "react-dom": "17.0.2",
     "react-idle-timer": "4.6.4",
     "react-router-dom": "6.2.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.0",
     "react-toastify": "8.1.0",
     "sass-loader": "12.4.0"
   },
@@ -37,7 +37,7 @@
     "build:staging": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging react-scripts build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "lint": "eslint --ext .js,.jsx src/",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test": "react-scripts test",
     "test:ci": "npm run lint && CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "format": "prettier --write 'src/**/*.{js,jsx,json,css,md}'"
@@ -78,8 +78,8 @@
       "global": {
         "branches": 97.32,
         "functions": 99.7,
-        "lines": 99.31,
-        "statements": 99.34
+        "lines": 99.3,
+        "statements": 99.33
       }
     },
     "resetMocks": true,
