@@ -30,6 +30,7 @@ describe('ListContainer', () => {
   };
 
   beforeEach(() => {
+    jest.clearAllTimers();
     jest.useFakeTimers();
     props = {
       history: {
@@ -188,7 +189,7 @@ describe('ListContainer', () => {
 
     fireEvent.click(getByTestId('filter-by-foo'));
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(3000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -197,7 +198,7 @@ describe('ListContainer', () => {
       'non-purchased-item',
     );
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(3000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
@@ -251,7 +252,7 @@ describe('ListContainer', () => {
     props.permissions = 'write';
     const { getByText } = renderListContainer(props);
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(3000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -260,7 +261,7 @@ describe('ListContainer', () => {
       'non-purchased-item',
     );
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(3000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
