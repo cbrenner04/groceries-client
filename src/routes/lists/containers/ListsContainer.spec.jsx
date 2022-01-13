@@ -212,13 +212,13 @@ describe('ListsContainer', () => {
 
     const { getByTestId } = renderListsContainer(props);
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(10000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(10000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
@@ -280,13 +280,13 @@ describe('ListsContainer', () => {
 
     const { getByTestId } = renderListsContainer(props);
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(10000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(10000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
