@@ -126,13 +126,13 @@ describe('ShareListForm', () => {
       });
     const { getByTestId, queryByTestId } = renderShareListForm(props);
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(5000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(5000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
@@ -160,13 +160,13 @@ describe('ShareListForm', () => {
     });
     const { getByTestId } = renderShareListForm(props);
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(5000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
-    jest.runOnlyPendingTimers();
+    jest.advanceTimersByTime(5000);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
