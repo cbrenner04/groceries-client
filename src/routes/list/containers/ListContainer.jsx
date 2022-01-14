@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -31,6 +31,7 @@ function ListContainer(props) {
   const [pending, setPending] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
   const [listUsers, setListUsers] = useState(props.listUsers);
+  const navigate = useNavigate();
 
   usePolling(async () => {
     try {
@@ -40,7 +41,7 @@ function ListContainer(props) {
         listUsers: updatedListUsers,
         includedCategories: updatedIncludedCategories,
         notPurchasedItems: updatedNotPurchasedItems,
-      } = await fetchList({ id: props.list.id, history: props.history });
+      } = await fetchList({ id: props.list.id, navigate });
       const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
       const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
       const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
@@ -153,7 +154,7 @@ function ListContainer(props) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        props.history.push('/users/sign_in');
+        navigate('/users/sign_in');
       } else if ([403, 404].includes(response.status)) {
         toast('Item not found', { type: 'error' });
       } else {
@@ -337,9 +338,9 @@ function ListContainer(props) {
   const handleItemEdit = async (item) => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
-      props.history.push(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
+      navigate(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
     } else {
-      props.history.push(`${listItemPath()}/${item.id}/edit`);
+      navigate(`${listItemPath()}/${item.id}/edit`);
     }
   };
 
@@ -358,7 +359,7 @@ function ListContainer(props) {
           userId={props.userId}
           handleItemAddition={handleAddItem}
           categories={categories}
-          history={props.history}
+          navigate={navigate}
         />
       ) : (
         <p>You only have permission to read this list</p>
@@ -475,9 +476,6 @@ function ListContainer(props) {
 }
 
 ListContainer.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   userId: PropTypes.string.isRequired,
   list: list.isRequired,
   purchasedItems: PropTypes.arrayOf(listItem).isRequired,

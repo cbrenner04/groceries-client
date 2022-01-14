@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import PasswordForm from './components/PasswordForm';
 import axios from '../../utils/api';
 
-function EditInvite(props) {
+export default function EditInvite() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const user = {
       password,
       password_confirmation: passwordConfirmation,
-      invitation_token: queryString.parse(props.location.search).invitation_token,
+      invitation_token: queryString.parse(location.search).invitation_token,
     };
     try {
       await axios.put(`/auth/invitation`, user);
       toast('Password successfully updated', { type: 'info' });
-      props.history.push('/users/sign_in');
+      navigate('/users/sign_in');
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
@@ -47,14 +49,3 @@ function EditInvite(props) {
     </>
   );
 }
-
-EditInvite.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default EditInvite;

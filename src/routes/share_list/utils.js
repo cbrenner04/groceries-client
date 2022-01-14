@@ -2,13 +2,13 @@ import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
 
-export async function fetchData({ listId, history }) {
+export async function fetchData({ listId, navigate }) {
   try {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
     const userInAccepted = data.accepted.find((acceptedList) => acceptedList.user.id === data.current_user_id);
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       toast('List not found', { type: 'error' });
-      history.push('/lists');
+      navigate('/lists');
       return;
     }
     return {
@@ -25,11 +25,11 @@ export async function fetchData({ listId, history }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('List not found', { type: 'error' });
-        history.push('/lists');
+        navigate('/lists');
         return;
       }
     }

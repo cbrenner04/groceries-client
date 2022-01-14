@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import ListItem from './ListItem';
 import { prettyDueBy } from '../../../utils/format';
@@ -39,11 +38,10 @@ describe('ListItem', () => {
   };
 
   const renderListItem = (localProps) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <ListItem {...localProps} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 

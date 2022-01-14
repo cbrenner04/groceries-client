@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
+import { useNavigate } from 'react-router-dom';
 
 import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
@@ -23,6 +24,7 @@ function AcceptedLists(props) {
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [mergeName, setMergeName] = useState('');
   const [pending, setPending] = useState(false);
+  const navigate = useNavigate();
 
   const resetMultiSelect = () => {
     setSelectedLists([]);
@@ -59,7 +61,7 @@ function AcceptedLists(props) {
       setPending(false);
       toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -93,7 +95,7 @@ function AcceptedLists(props) {
       setPending(false);
       toast('Lists successfully merged.', { type: 'info' });
     } catch (err) {
-      failure(err, props.history, setPending);
+      failure(err, navigate, setPending);
     }
   };
 
@@ -119,7 +121,7 @@ function AcceptedLists(props) {
       setPending(false);
       toast(`${pluralize(filteredLists.length)} successfully completed.`, { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -149,7 +151,7 @@ function AcceptedLists(props) {
       setPending(false);
       toast(`${pluralize(ownedLists.length)} successfully refreshed.`, { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -244,9 +246,6 @@ function AcceptedLists(props) {
 
 AcceptedLists.propTypes = {
   completed: PropTypes.bool.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   title: PropTypes.element.isRequired,
   userId: PropTypes.string.isRequired,
   incompleteLists: PropTypes.arrayOf(list),

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
@@ -50,27 +50,27 @@ export default function AppRouter() {
     <Router>
       <UserContext.Provider value={user}>
         <AppNav signOutUser={signOutUser} />
-        <Switch>
+        <Routes>
           {/* routes/lists */}
-          <Redirect exact path="/" to="/lists" />
-          <Route exact path="/lists" component={Lists} />
-          <Route exact path="/completed_lists" component={CompletedLists} />
+          <Route exact path="/" element={<Navigate to="/lists" />} />
+          <Route exact path="/lists" element={<Lists />} />
+          <Route exact path="/completed_lists" element={<CompletedLists />} />
           {/* routes/list */}
-          <Route exact path="/lists/:id" component={List} />
-          <Route exact path="/lists/:id/edit" component={EditList} />
-          <Route exact path="/lists/:list_id/list_items/:id/edit" component={EditListItem} />
-          <Route exact path="/lists/:list_id/list_items/bulk-edit" component={BulkEditListItems} />
+          <Route exact path="/lists/:id" element={<List />} />
+          <Route exact path="/lists/:id/edit" element={<EditList />} />
+          <Route exact path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+          <Route exact path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
           {/* routes/share_list */}
-          <Route exact path="/lists/:list_id/users_lists" component={ShareList} />
+          <Route exact path="/lists/:list_id/users_lists" element={<ShareList />} />
           {/* routes/users */}
-          <Route exact path="/users/sign_in" render={(props) => <NewSession signInUser={signInUser} {...props} />} />
-          <Route exact path="/users/password/new" component={NewPassword} />
-          <Route exact path="/users/password/edit" component={EditPassword} />
-          <Route exact path="/users/invitation/new" component={InviteForm} />
-          <Route exact path="/users/invitation/accept" component={EditInvite} />
+          <Route exact path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
+          <Route exact path="/users/password/new" element={<NewPassword />} />
+          <Route exact path="/users/password/edit" element={<EditPassword />} />
+          <Route exact path="/users/invitation/new" element={<InviteForm />} />
+          <Route exact path="/users/invitation/accept" element={<EditInvite />} />
           {/* routes/error_pages */}
           <Route component={PageNotFound} />
-        </Switch>
+        </Routes>
       </UserContext.Provider>
     </Router>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import AcceptedLists from './AcceptedLists';
@@ -11,22 +10,24 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('AcceptedLists', () => {
   let props;
   const renderAcceptedLists = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <AcceptedLists {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     props = {
-      history: {
-        push: jest.fn(),
-      },
       completed: false,
       userId: 'id1',
       title: <div>Foo</div>,
@@ -166,7 +167,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows errors when delete fails with 403', async () => {
@@ -279,7 +280,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows error on 403 from list completion', async () => {
@@ -425,7 +426,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows error on 403 from list refresh', async () => {
@@ -583,7 +584,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('merges on completed lists page', async () => {

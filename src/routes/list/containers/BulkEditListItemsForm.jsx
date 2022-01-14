@@ -94,15 +94,15 @@ function BulkEditListItemsForm(props) {
         list_items: putData,
       });
       toast('Items successfully updated', { type: 'info' });
-      props.history.push(`/lists/${props.list.id}`);
+      props.navigate(`/lists/${props.list.id}`);
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          props.history.push('/users/sign_in');
+          props.navigate('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
           toast('Some items not found', { type: 'error' });
-          props.history.push(`/lists/${props.list.id}`);
+          props.navigate(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
@@ -195,7 +195,7 @@ function BulkEditListItemsForm(props) {
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={() => props.history.push(`/lists/${props.list.id}`)}
+          cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
         />
       </Form>
@@ -204,9 +204,7 @@ function BulkEditListItemsForm(props) {
 }
 
 BulkEditListItemsForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  navigate: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(listItem).isRequired,
   list: list.isRequired,
   lists: PropTypes.arrayOf(list).isRequired,

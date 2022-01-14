@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import PendingLists from './PendingLists';
@@ -11,22 +10,24 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('PendingLists', () => {
   let props;
   const renderPendingLists = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <PendingLists {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     props = {
-      history: {
-        push: jest.fn(),
-      },
       userId: 'id1',
       pendingLists: [
         {
@@ -155,7 +156,7 @@ describe('PendingLists', () => {
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows error on 403 from list accept', async () => {
@@ -267,7 +268,7 @@ describe('PendingLists', () => {
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows errors when reject fails with 403', async () => {

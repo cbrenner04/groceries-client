@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import NewSession from './NewSession';
@@ -11,22 +10,24 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('NewSession', () => {
   let props;
   const renderNewSession = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <NewSession {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     props = {
-      history: {
-        push: jest.fn(),
-      },
       signInUser: jest.fn(),
     };
   });
@@ -57,7 +58,7 @@ describe('NewSession', () => {
     renderNewSession(props);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(props.history.push).toHaveBeenCalledWith('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('creates a new session on successful submission', async () => {
@@ -79,7 +80,7 @@ describe('NewSession', () => {
 
     expect(props.signInUser).toHaveBeenCalledWith('foo', 'bar', 1);
     expect(toast).toHaveBeenCalledWith('Welcome foo@example.com!', { type: 'info' });
-    expect(props.history.push).toHaveBeenCalledWith('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('displays error on failed submission', async () => {
@@ -99,7 +100,7 @@ describe('NewSession', () => {
     expect(toast).toHaveBeenCalledWith('Something went wrong. Please check your credentials and try again.', {
       type: 'error',
     });
-    expect(props.history.push).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
     expect(spy).not.toHaveBeenCalled();
   });
 });

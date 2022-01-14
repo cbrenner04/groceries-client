@@ -1,26 +1,24 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import ShareList from './ShareList';
 import axios from '../../utils/api';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+  useParams: () => ({
+    list_id: '1',
+  }),
+}));
+
 describe('ShareList', () => {
   const renderShareList = () => {
-    const history = createMemoryHistory();
-    const props = {
-      history,
-      match: {
-        params: {
-          list_id: '1',
-        },
-      },
-    };
     return render(
-      <Router history={history}>
-        <ShareList {...props} />
-      </Router>,
+      <MemoryRouter>
+        <ShareList />
+      </MemoryRouter>,
     );
   };
 

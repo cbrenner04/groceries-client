@@ -12,6 +12,7 @@ import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
 import Lists from './Lists';
 import { list } from '../../../types';
+import { useNavigate } from 'react-router-dom';
 
 function PendingLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -19,6 +20,7 @@ function PendingLists(props) {
   const [listsToReject, setListsToReject] = useState([]);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [pending, setPending] = useState(false);
+  const navigate = useNavigate();
 
   const resetMultiSelect = () => {
     setSelectedLists([]);
@@ -54,7 +56,7 @@ function PendingLists(props) {
       }
       toast(`${pluralize(listsToReject.length)} successfully accepted.`, { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -87,7 +89,7 @@ function PendingLists(props) {
       }
       toast(`${pluralize(listsToReject.length)} successfully rejected.`, { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -139,9 +141,6 @@ function PendingLists(props) {
 }
 
 PendingLists.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   userId: PropTypes.string.isRequired,
   pendingLists: PropTypes.arrayOf(list).isRequired,
   setPendingLists: PropTypes.func.isRequired,

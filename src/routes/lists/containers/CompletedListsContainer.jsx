@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
@@ -12,11 +12,12 @@ import { usePolling } from '../../../hooks';
 function CompletedListsContainer(props) {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
+  const navigate = useNavigate();
 
   usePolling(async () => {
     try {
       const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } =
-        await fetchCompletedLists({ history: props.history });
+        await fetchCompletedLists({ navigate });
       const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
       const completedSame = isSameSet(updatedCompletedLists, completedLists);
       const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
@@ -56,7 +57,6 @@ function CompletedListsContainer(props) {
         }
         completed={true}
         fullList={true}
-        history={props.history}
         userId={props.userId}
         completedLists={completedLists}
         setCompletedLists={setCompletedLists}
@@ -68,9 +68,6 @@ function CompletedListsContainer(props) {
 }
 
 CompletedListsContainer.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   userId: PropTypes.string.isRequired,
   completedLists: PropTypes.arrayOf(list).isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,

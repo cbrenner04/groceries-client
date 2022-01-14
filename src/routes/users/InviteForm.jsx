@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import { EmailField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import FormSubmission from '../../components/FormSubmission';
 
-function InviteForm(props) {
+export default function InviteForm() {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       await axios.post(`/auth/invitation`, { email });
       toast(`${email} successfully invited`, { type: 'info' });
-      props.history.push('/lists');
+      navigate('/lists');
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          props.history.push('/users/sign_in');
+          navigate('/users/sign_in');
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
@@ -39,20 +40,8 @@ function InviteForm(props) {
       <h1>Send Invitation</h1>
       <Form onSubmit={handleSubmit} className="mt-3">
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
-        <FormSubmission
-          submitText="Invite User"
-          cancelAction={() => props.history.push('/lists')}
-          cancelText="Cancel"
-        />
+        <FormSubmission submitText="Invite User" cancelAction={() => navigate('/lists')} cancelText="Cancel" />
       </Form>
     </>
   );
 }
-
-InviteForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default InviteForm;

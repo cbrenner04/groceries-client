@@ -294,7 +294,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
-                    href="/lists/id2/users_lists"
+                    href="/id2/users_lists"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -303,7 +303,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id2/edit"
+                    href="/id2/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"

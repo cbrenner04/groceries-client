@@ -1,15 +1,11 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import EditLink from './EditLink';
 
 describe('EditLink', () => {
-  let history;
-
   const renderEditLink = () => {
-    history = createMemoryHistory();
     const defaultProps = {
       to: '/fake/route',
       disabled: false,
@@ -17,9 +13,9 @@ describe('EditLink', () => {
       testID: 'foo',
     };
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <EditLink {...defaultProps} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
@@ -28,15 +24,5 @@ describe('EditLink', () => {
 
     expect(getByRole('link')).toMatchSnapshot();
     expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
-  });
-
-  describe('when link is clicked', () => {
-    it('calls handleClick', () => {
-      const { getByRole } = renderEditLink();
-
-      fireEvent.click(getByRole('link'));
-
-      expect(history.location.pathname).toBe('/fake/route');
-    });
   });
 });

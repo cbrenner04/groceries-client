@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Async from 'react-async';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
 import UnknownError from './UnknownError';
 
-async function fetchData({ history }) {
+async function fetchData({ navigate }) {
   try {
     await axios.get('/auth/validate_token');
   } catch ({ response }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       }
     }
@@ -24,9 +24,10 @@ async function fetchData({ history }) {
   }
 }
 
-function PageNotFound(props) {
+export default function PageNotFound() {
+  const navigate = useNavigate();
   return (
-    <Async promiseFn={fetchData} history={props.history}>
+    <Async promiseFn={fetchData} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -41,11 +42,3 @@ function PageNotFound(props) {
     </Async>
   );
 }
-
-PageNotFound.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default PageNotFound;

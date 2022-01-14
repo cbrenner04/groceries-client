@@ -1,18 +1,16 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import IncompleteListButtons from './IncompleteListButtons';
 
 describe('IncompleteListButtons', () => {
   let props;
   const renderIncompleteListButtons = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <IncompleteListButtons {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 

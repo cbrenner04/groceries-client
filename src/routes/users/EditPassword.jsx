@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 import PasswordForm from './components/PasswordForm';
 
-function EditPassword(props) {
+export default function EditPassword() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,11 +23,11 @@ function EditPassword(props) {
           password_confirmation: passwordConfirmation,
         },
         {
-          headers: queryString.parse(props.location.search),
+          headers: queryString.parse(location.search),
         },
       );
       toast('Password successfully updated', { type: 'info' });
-      props.history.push('/users/sign_in');
+      navigate('/users/sign_in');
     } catch ({ response, request, message }) {
       if (response) {
         const responseTextKeys = Object.keys(response.data);
@@ -54,14 +55,3 @@ function EditPassword(props) {
     </>
   );
 }
-
-EditPassword.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default EditPassword;

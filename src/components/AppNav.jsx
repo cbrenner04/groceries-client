@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,7 @@ import axios from '../utils/api';
 import { UserContext } from '../AppRouter';
 
 function AppNav({ signOutUser }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const user = useContext(UserContext);
 
   const handleLogout = async () => {
@@ -19,12 +19,12 @@ function AppNav({ signOutUser }) {
     }
     signOutUser();
     toast('Log out successful', { type: 'info' });
-    history.push('/users/sign_in');
+    navigate('/users/sign_in');
   };
 
   const handleBrandClick = () => {
     const path = user ? '/' : '/users/sign_in';
-    history.push(path);
+    navigate(path);
   };
 
   return (
@@ -36,7 +36,7 @@ function AppNav({ signOutUser }) {
           <Navbar.Collapse id="navbar">
             <Nav className="me-auto">
               <Nav.Item>
-                <Nav.Link onClick={() => history.push('/users/invitation/new')} data-test-id="invite-link">
+                <Nav.Link onClick={() => navigate('/users/invitation/new')} data-test-id="invite-link">
                   Invite
                 </Nav.Link>
               </Nav.Item>

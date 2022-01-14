@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import ListFormFields from '../components/ListFormFields';
 import axios from '../../../utils/api';
@@ -11,6 +12,7 @@ function EditListForm(props) {
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
   const [type, setType] = useState(props.type);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,15 +24,15 @@ function EditListForm(props) {
     try {
       await axios.put(`/lists/${props.listId}`, { list });
       toast('List successfully updated', { type: 'info' });
-      props.history.push('/lists');
+      navigate('/lists');
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          props.history.push('/users/sign_in');
+          navigate('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
           toast('List not found', { type: 'error' });
-          props.history.push('/lists');
+          navigate('/lists');
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
@@ -58,20 +60,13 @@ function EditListForm(props) {
           handleCompletedChange={() => setCompleted(!completed)}
           editForm
         />
-        <FormSubmission
-          submitText="Update List"
-          cancelAction={() => props.history.push('/lists')}
-          cancelText="Cancel"
-        />
+        <FormSubmission submitText="Update List" cancelAction={() => navigate('/lists')} cancelText="Cancel" />
       </Form>
     </>
   );
 }
 
 EditListForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   listId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
