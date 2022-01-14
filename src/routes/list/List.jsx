@@ -7,7 +7,7 @@ import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
-function List() {
+export default function List() {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -36,5 +36,3 @@ function List() {
     </Async>
   );
 }
-
-export default List;

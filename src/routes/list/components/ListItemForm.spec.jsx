@@ -9,18 +9,12 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
-
 describe('ListItemForm', () => {
   let props;
 
   beforeEach(() => {
     props = {
-      navigate: mockNavigate,
+      navigate: jest.fn(),
       userId: 'id1',
       listId: 'id1',
       listType: 'GroceryList',
@@ -95,7 +89,7 @@ describe('ListItemForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+    expect(props.navigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('redirects to lists page when 403', async () => {
@@ -106,7 +100,7 @@ describe('ListItemForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    expect(props.navigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to lists page when 404', async () => {
@@ -117,7 +111,7 @@ describe('ListItemForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    expect(props.navigate).toHaveBeenCalledWith('/lists');
   });
 
   it('displays appropriate error message when listType is BookList', async () => {

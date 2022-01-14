@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import Share from './Share';
@@ -24,16 +24,5 @@ describe('Share', () => {
 
     expect(getByRole('link')).toMatchSnapshot();
     expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
-  });
-
-  // TODO: figure this out
-  describe.skip('when link is clicked', () => {
-    it('calls handleClick', () => {
-      const { getByRole } = renderShare();
-
-      fireEvent.click(getByRole('link'));
-
-      expect(window.location.pathname).toBe('/fake/route');
-    });
   });
 });

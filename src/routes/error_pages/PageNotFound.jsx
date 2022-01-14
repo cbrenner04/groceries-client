@@ -24,7 +24,7 @@ async function fetchData({ navigate }) {
   }
 }
 
-function PageNotFound() {
+export default function PageNotFound() {
   const navigate = useNavigate();
   return (
     <Async promiseFn={fetchData} navigate={navigate}>
@@ -42,5 +42,3 @@ function PageNotFound() {
     </Async>
   );
 }
-
-export default PageNotFound;
