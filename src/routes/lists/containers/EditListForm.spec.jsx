@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import { toast } from 'react-toastify';
 
 import EditListForm from './EditListForm';
@@ -10,12 +9,15 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('EditListForm', () => {
-  let history;
   const renderEditListForm = () => {
-    history = createMemoryHistory();
     const props = {
-      history,
       listId: 'id1',
       name: 'foo',
       type: 'GroceryList',
@@ -67,7 +69,7 @@ describe('EditListForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
-    expect(history.location.pathname).toBe('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to user login when 401', async () => {
@@ -78,7 +80,7 @@ describe('EditListForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.location.pathname).toBe('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('redirects to lists page when 403', async () => {
@@ -89,7 +91,7 @@ describe('EditListForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-    expect(history.location.pathname).toBe('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to lists page when 404', async () => {
@@ -100,7 +102,7 @@ describe('EditListForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-    expect(history.location.pathname).toBe('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('displays appropriate error message', async () => {
@@ -153,6 +155,6 @@ describe('EditListForm', () => {
 
     fireEvent.click(getAllByRole('button')[1]);
 
-    expect(history.location.pathname).toBe('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 });

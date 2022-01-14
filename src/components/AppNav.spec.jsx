@@ -1,22 +1,26 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import AppNav from './AppNav';
 import instance from '../utils/api';
 import { UserContext } from '../AppRouter';
 
-describe('AppNav', () => {
-  const signOutUser = jest.fn();
-  const mockHistory = { push: jest.fn(), listen: jest.fn(), location: { pathname: '' } };
+const signOutUser = jest.fn();
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
 
+describe('AppNav', () => {
   const renderAppNav = (context) => {
     return render(
-      <Router history={mockHistory}>
+      <MemoryRouter>
         <UserContext.Provider value={context}>
           <AppNav signOutUser={signOutUser} />
         </UserContext.Provider>
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
@@ -26,7 +30,7 @@ describe('AppNav', () => {
 
       expect(getByTestId('nav')).toMatchSnapshot();
       fireEvent.click(getByText('Groceries'));
-      expect(mockHistory.push).toHaveBeenCalledWith('/users/sign_in');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
   });
 
@@ -41,9 +45,9 @@ describe('AppNav', () => {
     it('renders nav with brand linking to root, invite link and logout visible', () => {
       expect(getByTestId('nav')).toMatchSnapshot();
       fireEvent.click(getByText('Groceries'));
-      expect(mockHistory.push).toHaveBeenCalledWith('/');
+      expect(mockNavigate).toHaveBeenCalledWith('/');
       fireEvent.click(getByText('Invite'));
-      expect(mockHistory.push).toHaveBeenCalledWith('/users/invitation/new');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/invitation/new');
       fireEvent.click(getByText('Log out'));
       expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
     });

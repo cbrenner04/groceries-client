@@ -87,7 +87,7 @@ export function sortItems(listType, items) {
   return sorted;
 }
 
-export async function fetchList({ id, history }) {
+export async function fetchList({ id, navigate }) {
   try {
     const {
       data: {
@@ -119,13 +119,13 @@ export async function fetchList({ id, history }) {
         toast('You must sign in', {
           type: 'error',
         });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('List not found', {
           type: 'error',
         });
-        history.push('/lists');
+        navigate('/lists');
         return;
       }
     }
@@ -134,7 +134,7 @@ export async function fetchList({ id, history }) {
   }
 }
 
-export async function fetchItemToEdit({ itemId, listId, history }) {
+export async function fetchItemToEdit({ itemId, listId, navigate }) {
   try {
     const {
       data: { item, list, categories, list_users },
@@ -187,13 +187,13 @@ export async function fetchItemToEdit({ itemId, listId, history }) {
         toast('You must sign in', {
           type: 'error',
         });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('Item not found', {
           type: 'error',
         });
-        history.push(`/lists/${listId}`);
+        navigate(`/lists/${listId}`);
         return;
       }
     }
@@ -202,7 +202,7 @@ export async function fetchItemToEdit({ itemId, listId, history }) {
   }
 }
 
-export async function fetchItemsToEdit({ listId, search, history }) {
+export async function fetchItemsToEdit({ listId, search, navigate }) {
   try {
     const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
     return data;
@@ -212,13 +212,13 @@ export async function fetchItemsToEdit({ listId, search, history }) {
         toast('You must sign in', {
           type: 'error',
         });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('One or more items not found', {
           type: 'error',
         });
-        history.push(`/lists/${listId}`);
+        navigate(`/lists/${listId}`);
         return;
       }
     }

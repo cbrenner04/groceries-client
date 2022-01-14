@@ -20,7 +20,7 @@ function IncompleteListButtons(props) {
       />
       {!multipleListsSelected && (
         <Share
-          to={`lists/${props.list.id}/users_lists`}
+          to={`${props.list.id}/users_lists`}
           disabled={!userCanShare || props.pending}
           classes={userCanShare && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
           testID="incomplete-list-share"
@@ -31,7 +31,7 @@ function IncompleteListButtons(props) {
       )}
       {!multipleListsSelected && (
         <EditLink
-          to={`/lists/${props.list.id}/edit`}
+          to={`${props.list.id}/edit`}
           disabled={!userIsOwner || props.pending}
           classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
           testID="incomplete-list-edit"

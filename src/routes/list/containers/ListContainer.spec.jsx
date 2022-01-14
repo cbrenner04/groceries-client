@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import ListContainer from './ListContainer';
@@ -10,22 +10,19 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('ListContainer', () => {
   let props;
-  const history = {
-    push: jest.fn(),
-    listen: jest.fn(),
-    location: {
-      pathname: '/',
-    },
-    createHref: ({ pathname }) => pathname,
-    replace: jest.fn(),
-  };
   const renderListContainer = (newProps) => {
     return render(
-      <Router history={history}>
-        <ListContainer {...newProps} history={history} />
-      </Router>,
+      <MemoryRouter>
+        <ListContainer {...newProps} />
+      </MemoryRouter>,
     );
   };
 
@@ -33,13 +30,6 @@ describe('ListContainer', () => {
     jest.clearAllTimers();
     jest.useFakeTimers();
     props = {
-      history: {
-        push: jest.fn(),
-        replace: jest.fn(),
-        location: {
-          pathname: 'foo',
-        },
-      },
       userId: 'id1',
       list: {
         id: 'id1',
@@ -349,10 +339,10 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('handles 403 on delete', async () => {
@@ -725,10 +715,10 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('handles 403 on purchase', async () => {
@@ -904,10 +894,10 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('handles 403 on refresh', async () => {
@@ -1072,10 +1062,10 @@ describe('ListContainer', () => {
     fireEvent.click(getByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('handles 403 on read', async () => {
@@ -1240,9 +1230,9 @@ describe('ListContainer', () => {
     const { getByTestId } = renderListContainer(props);
     fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
 
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/id1/list_items/id3/edit');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/id3/edit');
   });
 
   it('navigates to bulk edit form when multi select', async () => {
@@ -1259,9 +1249,9 @@ describe('ListContainer', () => {
     fireEvent.click(getAllByRole('checkbox')[1]);
     fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
 
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-    expect(history.push).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id5');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id5');
   });
 
   it('adds item while filter, stays filtered', async () => {

@@ -8,7 +8,9 @@ exports[`PageNotFound displays PageNotFound when the user is authenticated 1`] =
   <h2>
     Sorry but the page you are looking for was not found.
   </h2>
-  <a>
+  <a
+    href="/lists"
+  >
     Return to the home page
   </a>
 </div>

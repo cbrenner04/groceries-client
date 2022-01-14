@@ -4,17 +4,17 @@ import axios from '../../utils/api';
 
 export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-function handleFailure({ response, message }, history) {
+function handleFailure({ response, message }, navigate) {
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
   if (response && response.status === 401) {
     toast('You must sign in', { type: 'error' });
-    history.push('/users/sign_in');
+    navigate('/users/sign_in');
     return;
   }
   throw new Error({ response, message });
 }
 
-export async function fetchLists({ history }) {
+export async function fetchLists({ navigate }) {
   try {
     const {
       data: {
@@ -35,11 +35,11 @@ export async function fetchLists({ history }) {
       currentUserPermissions,
     };
   } catch (error) {
-    handleFailure(error, history);
+    handleFailure(error, navigate);
   }
 }
 
-export async function fetchCompletedLists({ history }) {
+export async function fetchCompletedLists({ navigate }) {
   try {
     const {
       data: {
@@ -54,11 +54,11 @@ export async function fetchCompletedLists({ history }) {
       currentUserPermissions,
     };
   } catch (error) {
-    handleFailure(error, history);
+    handleFailure(error, navigate);
   }
 }
 
-export async function fetchListToEdit({ id, history }) {
+export async function fetchListToEdit({ id, navigate }) {
   try {
     const {
       data: { id: listId, name, completed, type },
@@ -73,11 +73,11 @@ export async function fetchListToEdit({ id, history }) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        history.push('/users/sign_in');
+        navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(response.status)) {
         toast('List not found', { type: 'error' });
-        history.push('/lists');
+        navigate('/lists');
         return;
       }
     }
@@ -86,11 +86,11 @@ export async function fetchListToEdit({ id, history }) {
   }
 }
 
-export function failure({ request, response, message }, history, setPending) {
+export function failure({ request, response, message }, navigate, setPending) {
   if (response) {
     if (response.status === 401) {
       toast('You must sign in', { type: 'error' });
-      history.push('/users/sign_in');
+      navigate('/users/sign_in');
     } else if ([403, 404].includes(response.status)) {
       toast('List not found', { type: 'error' });
     } else {

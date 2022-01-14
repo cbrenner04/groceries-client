@@ -192,7 +192,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
-                    href="/lists/id3/users_lists"
+                    href="/id3/users_lists"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -201,7 +201,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id3/edit"
+                    href="/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -282,7 +282,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
-                    href="/lists/id5/users_lists"
+                    href="/id5/users_lists"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -291,7 +291,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
+                    href="/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -790,7 +790,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
-                    href="/lists/id3/users_lists"
+                    href="/id3/users_lists"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -799,7 +799,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id3/edit"
+                    href="/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -880,7 +880,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     disabled=""
-                    href="/lists/id5/users_lists"
+                    href="/id5/users_lists"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -889,7 +889,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
+                    href="/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"

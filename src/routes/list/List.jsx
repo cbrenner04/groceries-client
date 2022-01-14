@@ -1,15 +1,18 @@
 import React from 'react';
 import Async from 'react-async';
-import PropTypes from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
-function List(props) {
+export default function List() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   return (
-    <Async promiseFn={fetchList} id={props.match.params.id} history={props.history}>
+    <Async promiseFn={fetchList} id={id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -24,7 +27,6 @@ function List(props) {
             includedCategories={data.includedCategories}
             notPurchasedItems={data.notPurchasedItems}
             permissions={data.permissions}
-            history={props.history}
           />
         )}
       </Async.Fulfilled>
@@ -34,16 +36,3 @@ function List(props) {
     </Async>
   );
 }
-
-List.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-};
-
-export default List;

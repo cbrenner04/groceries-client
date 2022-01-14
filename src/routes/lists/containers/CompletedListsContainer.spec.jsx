@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import CompletedListsContainer from './CompletedListsContainer';
 import axios from '../../../utils/api';
@@ -9,20 +8,16 @@ import axios from '../../../utils/api';
 describe('CompletedListsContainer', () => {
   let props;
   const renderCompletedListsContainer = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <CompletedListsContainer {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     jest.useFakeTimers();
     props = {
-      history: {
-        push: jest.fn(),
-      },
       userId: 'id1',
       completedLists: [
         {

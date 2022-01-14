@@ -68,10 +68,10 @@ function ListItemForm(props) {
       if (response) {
         if (response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          props.history.push('/users/sign_in');
+          props.navigate('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
           toast('List not found', { type: 'error' });
-          props.history.push('/lists');
+          props.navigate('/lists');
         } else {
           const responseTextKeys = Object.keys(response.data);
           const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
@@ -127,9 +127,7 @@ function ListItemForm(props) {
 }
 
 ListItemForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  navigate: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   listId: PropTypes.string.isRequired,
   listType: PropTypes.string.isRequired,

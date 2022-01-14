@@ -1,18 +1,16 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import List from './List';
 
 describe('List', () => {
   let props;
   const renderList = (p) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <List {...p} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
