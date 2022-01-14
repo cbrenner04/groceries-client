@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
@@ -10,21 +10,18 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-const history = {
-  push: jest.fn(),
-  listen: jest.fn(),
-  location: {
-    pathname: 'fake',
-  },
-  createHref: jest.fn(),
-};
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
 
 describe('PageNotFound', () => {
   const renderPageNotFound = () => {
     return render(
-      <Router history={history}>
-        <PageNotFound history={history} />
-      </Router>,
+      <MemoryRouter>
+        <PageNotFound />
+      </MemoryRouter>,
     );
   };
 
@@ -40,11 +37,11 @@ describe('PageNotFound', () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
     renderPageNotFound();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(history.push).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
 
     axios.get.mockClear();
   });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ListForm from '../components/ListForm';
 import axios from '../../../utils/api';
@@ -23,6 +23,7 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
+  const navigate = useNavigate();
 
   usePolling(async () => {
     try {
@@ -31,7 +32,7 @@ function ListsContainer(props) {
         completedLists: updatedCompleted,
         incompleteLists: updatedIncomplete,
         currentUserPermissions: updatedCurrentUserPermissions,
-      } = await fetchLists({ history: props.history });
+      } = await fetchLists({ navigate });
       const pendingSame = isSameSet(updatedPending, pendingLists);
       const completedSame = isSameSet(updatedCompleted, completedLists);
       const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
@@ -74,7 +75,7 @@ function ListsContainer(props) {
       setPending(false);
       toast('List successfully added.', { type: 'info' });
     } catch (error) {
-      failure(error, props.history, setPending);
+      failure(error, navigate, setPending);
     }
   };
 
@@ -85,7 +86,6 @@ function ListsContainer(props) {
       <hr className="mb-4" />
       {pendingLists.length > 0 && ( // cannot just check length as it will render 0
         <PendingLists
-          history={props.history}
           userId={props.userId}
           currentUserPermissions={currentUserPermissions}
           pendingLists={pendingLists}
@@ -105,7 +105,6 @@ function ListsContainer(props) {
         }
         completed={false}
         fullList={false}
-        history={props.history}
         userId={props.userId}
         incompleteLists={incompleteLists}
         setIncompleteLists={setIncompleteLists}
@@ -129,7 +128,6 @@ function ListsContainer(props) {
         }
         completed={true}
         fullList={false}
-        history={props.history}
         userId={props.userId}
         incompleteLists={incompleteLists}
         setIncompleteLists={setIncompleteLists}
@@ -143,9 +141,6 @@ function ListsContainer(props) {
 }
 
 ListsContainer.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   userId: PropTypes.string.isRequired,
   pendingLists: PropTypes.arrayOf(list).isRequired,
   completedLists: PropTypes.arrayOf(list).isRequired,

@@ -11,9 +11,7 @@ jest.mock('react-toastify', () => ({
 
 describe('BulkEditListItemsForm', () => {
   const props = {
-    history: {
-      push: jest.fn(),
-    },
+    navigate: jest.fn(),
     items: [
       {
         id: 'id1',
@@ -223,7 +221,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('sets appropriate data when copy', async () => {
@@ -293,7 +291,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(props.navigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('displays toast and redirects to list on 403', async () => {
@@ -304,7 +302,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('displays toast and redirects to list on 403', async () => {
@@ -315,7 +313,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('displays appropriate error message when listType is BookList', async () => {
@@ -425,6 +423,6 @@ describe('BulkEditListItemsForm', () => {
 
     fireEvent.click(getAllByRole('button')[1]);
 
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 });

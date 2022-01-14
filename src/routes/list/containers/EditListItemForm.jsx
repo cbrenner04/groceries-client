@@ -48,15 +48,15 @@ function EditListItemForm(props) {
     try {
       await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, putData);
       toast('Item successfully updated', { type: 'info' });
-      props.history.push(`/lists/${props.list.id}`);
+      props.navigate(`/lists/${props.list.id}`);
     } catch ({ response, request, message }) {
       if (response) {
         if (response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          props.history.push('/users/sign_in');
+          props.navigate('/users/sign_in');
         } else if ([403, 404].includes(response.status)) {
           toast('Item not found', { type: 'error' });
-          props.history.push(`/lists/${props.list.id}`);
+          props.navigate(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(response.data);
           const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
@@ -91,7 +91,7 @@ function EditListItemForm(props) {
         />
         <FormSubmission
           submitText="Update Item"
-          cancelAction={() => props.history.push(`/lists/${props.list.id}`)}
+          cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
         />
       </Form>
@@ -100,9 +100,7 @@ function EditListItemForm(props) {
 }
 
 EditListItemForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  navigate: PropTypes.func.isRequired,
   listUsers: PropTypes.arrayOf(listUsers).isRequired,
   item: listItem.isRequired,
   list: list.isRequired,

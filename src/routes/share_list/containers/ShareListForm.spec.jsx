@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import ShareListForm from './ShareListForm';
@@ -11,23 +10,25 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('ShareListForm', () => {
   let props;
   const renderShareListForm = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <ShareListForm {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     jest.useFakeTimers();
     props = {
-      history: {
-        push: jest.fn(),
-      },
       name: 'foo',
       invitableUsers: [
         {
@@ -205,7 +206,7 @@ describe('ShareListForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('displays error on non-401 response from form submission', async () => {
@@ -275,7 +276,7 @@ describe('ShareListForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('redirects to lists on 403 response from selecting user', async () => {
@@ -287,7 +288,7 @@ describe('ShareListForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/lists');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('shows errors on 404 response from selecting user', async () => {
@@ -370,7 +371,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
@@ -382,7 +383,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/lists');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
     it('shows errors on 404 from toggling permissions', async () => {
@@ -453,7 +454,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
@@ -465,7 +466,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/lists');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
     it('shows errors on 404 from toggling permissions', async () => {
@@ -544,7 +545,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
@@ -556,7 +557,7 @@ describe('ShareListForm', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
-      expect(props.history.push).toHaveBeenCalledWith('/lists');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
     it('shows errors on 404 from toggling permissions', async () => {

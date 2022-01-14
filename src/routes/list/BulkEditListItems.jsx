@@ -1,27 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Async from 'react-async';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { fetchItemsToEdit } from './utils';
 import BulkEditListItemsForm from './containers/BulkEditListItemsForm';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
-function BulkEditListItems(props) {
+export default function BulkEditListItems() {
+  const navigate = useNavigate();
+  const { list_id } = useParams();
+  const location = useLocation();
+
   return (
-    <Async
-      promiseFn={fetchItemsToEdit}
-      listId={props.match.params.list_id}
-      search={props.location.search}
-      history={props.history}
-    >
+    <Async promiseFn={fetchItemsToEdit} listId={list_id} search={location.search} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
         {(data) => (
           <BulkEditListItemsForm
-            history={props.history}
+            navigate={navigate}
             list={data.list}
             lists={data.lists}
             items={data.items}
@@ -36,19 +35,3 @@ function BulkEditListItems(props) {
     </Async>
   );
 }
-
-BulkEditListItems.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      list_id: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  location: PropTypes.shape({
-    search: PropTypes.string.isRequired,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default BulkEditListItems;

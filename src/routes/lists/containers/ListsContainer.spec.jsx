@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import ListsContainer from './ListsContainer';
@@ -11,27 +10,25 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('ListsContainer', () => {
   let props;
   const renderListsContainer = (props) => {
-    const history = createMemoryHistory();
     return render(
-      <Router history={history}>
+      <MemoryRouter>
         <ListsContainer {...props} />
-      </Router>,
+      </MemoryRouter>,
     );
   };
 
   beforeEach(() => {
     jest.useFakeTimers();
     props = {
-      history: {
-        push: jest.fn(),
-        replace: jest.fn(),
-        location: {
-          pathname: '/lists',
-        },
-      },
       userId: 'id1',
       pendingLists: [
         {
@@ -335,7 +332,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('shows errors when submission fails', async () => {

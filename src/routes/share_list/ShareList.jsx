@@ -1,22 +1,24 @@
 import React from 'react';
 import Async from 'react-async';
-import PropTypes from 'prop-types';
 
 import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function ShareList(props) {
+export default function ShareList() {
+  const navigate = useNavigate();
+  const { list_id } = useParams();
+
   return (
-    <Async promiseFn={fetchData} listId={props.match.params.list_id} history={props.history}>
+    <Async promiseFn={fetchData} listId={list_id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
         {(data) => (
           <ShareListForm
-            history={props.history}
             name={data.name}
             invitableUsers={data.invitableUsers}
             listId={data.listId}
@@ -34,16 +36,3 @@ function ShareList(props) {
     </Async>
   );
 }
-
-ShareList.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      list_id: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default ShareList;

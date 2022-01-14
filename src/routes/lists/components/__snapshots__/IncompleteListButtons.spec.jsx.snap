@@ -19,7 +19,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
-      href="/lists/id1/users_lists"
+      href="/id1/users_lists"
     >
       <i
         class="fa fa-users fa-2x text-primary"
@@ -29,7 +29,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-edit"
       disabled=""
-      href="/lists/id1/edit"
+      href="/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -66,7 +66,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
-      href="/lists/id1/users_lists"
+      href="/id1/users_lists"
     >
       <i
         class="fa fa-users fa-2x text-primary"
@@ -75,7 +75,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
-      href="/lists/id1/edit"
+      href="/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -187,7 +187,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-share"
       disabled=""
-      href="/lists/id1/users_lists"
+      href="/id1/users_lists"
     >
       <i
         class="fa fa-users fa-2x text-primary"
@@ -196,7 +196,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
-      href="/lists/id1/edit"
+      href="/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -233,7 +233,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
-      href="/lists/id1/users_lists"
+      href="/id1/users_lists"
     >
       <i
         class="fa fa-users fa-2x text-primary"
@@ -242,7 +242,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
     <a
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
-      href="/lists/id1/edit"
+      href="/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"

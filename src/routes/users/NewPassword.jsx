@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -8,8 +7,9 @@ import { EmailField } from '../../components/FormFields';
 import axios from '../../utils/api';
 import FormSubmission from '../../components/FormSubmission';
 
-function NewPassword(props) {
+export default function NewPassword() {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,7 +24,7 @@ function NewPassword(props) {
       toast(`If ${email} is in our system, you will receive an email shortly with reset instructions.`, {
         type: 'info',
       });
-      props.history.push('/users/sign_in');
+      navigate('/users/sign_in');
     }
   };
 
@@ -39,11 +39,3 @@ function NewPassword(props) {
     </>
   );
 }
-
-NewPassword.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-};
-
-export default NewPassword;

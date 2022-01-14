@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
@@ -20,6 +20,7 @@ function ShareListForm(props) {
   const [pending, setPending] = useState(props.pending);
   const [accepted, setAccepted] = useState(props.accepted);
   const [refused, setRefused] = useState(props.refused);
+  const navigate = useNavigate();
 
   usePolling(async () => {
     try {
@@ -30,7 +31,7 @@ function ShareListForm(props) {
         refused: updatedRefused,
       } = await fetchData({
         listId: props.listId,
-        history: props.history,
+        navigate: navigate,
       });
       const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
       const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
@@ -67,10 +68,10 @@ function ShareListForm(props) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        props.history.push('/users/sign_in');
+        navigate('/users/sign_in');
       } else if (response.status === 403) {
         toast('You do not have permission to take that action', { type: 'error' });
-        props.history.push('/lists');
+        navigate('/lists');
       } else if (response.status === 404) {
         toast('User not found', { type: 'error' });
       } else {
@@ -273,9 +274,6 @@ function ShareListForm(props) {
 }
 
 ShareListForm.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   name: PropTypes.string.isRequired,
   invitableUsers: PropTypes.arrayOf(
     PropTypes.shape({

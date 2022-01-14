@@ -1,22 +1,23 @@
 import React from 'react';
 import Async from 'react-async';
-import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
-function Lists(props) {
+export default function Lists() {
+  const navigate = useNavigate();
+
   return (
-    <Async promiseFn={fetchLists} history={props.history}>
+    <Async promiseFn={fetchLists} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
         {(data) => (
           <ListsContainer
-            history={props.history}
             userId={data.userId}
             pendingLists={data.pendingLists}
             completedLists={data.completedLists}
@@ -31,11 +32,3 @@ function Lists(props) {
     </Async>
   );
 }
-
-Lists.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default Lists;

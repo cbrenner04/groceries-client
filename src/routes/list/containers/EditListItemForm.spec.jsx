@@ -14,9 +14,7 @@ describe('EditListItemForm', () => {
 
   beforeEach(() => {
     props = {
-      history: {
-        push: jest.fn(),
-      },
+      navigate: jest.fn(),
       listUsers: [
         {
           id: 'id1',
@@ -69,7 +67,7 @@ describe('EditListItemForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item successfully updated', { type: 'info' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('displays toast and redirects to login on 401', async () => {
@@ -80,7 +78,7 @@ describe('EditListItemForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith('/users/sign_in');
+    expect(props.navigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('displays toast and redirects to list on 403', async () => {
@@ -91,7 +89,7 @@ describe('EditListItemForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('displays toast and redirects to list on 403', async () => {
@@ -102,7 +100,7 @@ describe('EditListItemForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 
   it('displays appropriate error message when  and listType is BookList', async () => {
@@ -237,6 +235,6 @@ describe('EditListItemForm', () => {
 
     fireEvent.click(getAllByRole('button')[1]);
 
-    expect(props.history.push).toHaveBeenCalledWith(`/lists/${props.list.id}`);
+    expect(props.navigate).toHaveBeenCalledWith(`/lists/${props.list.id}`);
   });
 });

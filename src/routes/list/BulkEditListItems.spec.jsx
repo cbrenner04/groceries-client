@@ -1,34 +1,21 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import BulkEditListItems from './BulkEditListItems';
 import axios from '../../utils/api';
 
 describe('BulkEditListItems', () => {
-  const props = {
-    match: {
-      params: {
-        0: 'grocery_list_items',
-        list_id: 'id1',
-      },
-    },
-    location: {
-      search: '?item_ids=id1,id2',
-    },
-  };
-  const renderBulkEditListItems = (newProps) => {
-    const history = createMemoryHistory();
+  const renderBulkEditListItems = () => {
     return render(
-      <Router history={history}>
-        <BulkEditListItems {...newProps} history={history} />
-      </Router>,
+      <MemoryRouter>
+        <BulkEditListItems />
+      </MemoryRouter>,
     );
   };
 
   it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderBulkEditListItems(props);
+    const { container, getByText } = renderBulkEditListItems();
     const status = getByText('Loading...');
 
     expect(container).toMatchSnapshot();
@@ -37,7 +24,7 @@ describe('BulkEditListItems', () => {
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, getByRole } = renderBulkEditListItems(props);
+    const { container, getByRole } = renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
@@ -78,7 +65,7 @@ describe('BulkEditListItems', () => {
         ],
       },
     });
-    const { container, getByText } = renderBulkEditListItems(props);
+    const { container, getByText } = renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();

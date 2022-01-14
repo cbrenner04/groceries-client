@@ -1,21 +1,16 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import CompletedLists from './CompletedLists';
 import axios from '../../utils/api';
 
 describe('CompletedLists', () => {
   const renderCompletedLists = () => {
-    const history = createMemoryHistory();
-    const props = {
-      history,
-    };
     return render(
-      <Router history={history}>
-        <CompletedLists {...props} />
-      </Router>,
+      <MemoryRouter>
+        <CompletedLists />
+      </MemoryRouter>,
     );
   };
 

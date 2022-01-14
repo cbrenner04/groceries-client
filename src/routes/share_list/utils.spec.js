@@ -9,13 +9,8 @@ jest.mock('react-toastify', () => ({
 
 describe('utils', () => {
   describe('fetchData', () => {
-    let history;
+    const navigate = jest.fn();
 
-    beforeEach(() => {
-      history = {
-        push: jest.fn(),
-      };
-    });
     it('returns data on success when user is in accepted and has write permissions', async () => {
       axios.get = jest.fn().mockResolvedValue({
         data: {
@@ -35,7 +30,7 @@ describe('utils', () => {
         },
       });
 
-      expect(await fetchData({ listId: 1, history })).toStrictEqual({
+      expect(await fetchData({ listId: 1, navigate })).toStrictEqual({
         name: 'foo',
         invitableUsers: [{ id: 5, email: 'foobar@example.com' }],
         listId: 1,
@@ -66,10 +61,10 @@ describe('utils', () => {
         },
       });
 
-      await fetchData({ listId: 1, history });
+      await fetchData({ listId: 1, navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
+      expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
     it('redirects to lists on success when user does not have write permissions', async () => {
@@ -91,43 +86,43 @@ describe('utils', () => {
         },
       });
 
-      await fetchData({ listId: 1, history });
+      await fetchData({ listId: 1, navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
+      expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
     it('handles 401', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
 
-      await fetchData({ listId: 1, history });
+      await fetchData({ listId: 1, navigate });
 
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/users/sign_in');
+      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
     it('handles 403', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
 
-      await fetchData({ listId: 1, history });
+      await fetchData({ listId: 1, navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
+      expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
     it('handles 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
 
-      await fetchData({ listId: 1, history });
+      await fetchData({ listId: 1, navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(history.push).toHaveBeenCalledWith('/lists');
+      expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
     it('handles not 401, 403, 404', () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchData({ listId: 1, history })).rejects.toThrow();
+      expect(fetchData({ listId: 1, navigate })).rejects.toThrow();
     });
   });
 });
