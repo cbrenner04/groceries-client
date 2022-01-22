@@ -1,14 +1,27 @@
-import React, { createRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
+import { useDrag } from 'react-dnd';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
 import { list } from '../../../types';
 
 function List(props) {
+  const ref = useRef();
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'list',
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: { type: 'list', id: props.list.id },
+  }));
+  if (props.draggable) {
+    drag(ref);
+  }
+
   const handleListSelect = (list) => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
@@ -40,6 +53,8 @@ function List(props) {
       className={`${props.listClass} list-list-group-item`}
       data-test-class={props.testClass}
       data-test-id={`list-${props.list.id}`}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={ref}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
@@ -49,11 +64,7 @@ function List(props) {
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <Row
-            className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}
-            style={{ opacity: props.opacity }}
-            ref={props.innerRef}
-          >
+          <Row className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}>
             <Col lg="6">{listNameElement}</Col>
             <Col lg="4" className={props.multiSelect ? 'list-multi-created-at' : ''}>
               <small className="text-muted">{formatDate(props.list.created_at)}</small>
@@ -78,13 +89,7 @@ List.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
-  opacity: PropTypes.number,
-  innerRef: PropTypes.object,
-};
-
-List.defaultProps = {
-  opacity: 1,
-  innerRef: createRef(),
+  draggable: PropTypes.bool.isRequired,
 };
 
 export default List;

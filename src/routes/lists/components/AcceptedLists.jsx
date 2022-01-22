@@ -1,10 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { useNavigate } from 'react-router-dom';
-import { useDrag } from 'react-dnd';
 
 import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
@@ -14,7 +13,7 @@ import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
-import { dndTypes, list } from '../../../types';
+import { list } from '../../../types';
 
 function AcceptedLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);
@@ -26,14 +25,6 @@ function AcceptedLists(props) {
   const [mergeName, setMergeName] = useState('');
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
-  const ref = useRef();
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: dndTypes.LIST,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
-  drag(ref);
 
   const resetMultiSelect = () => {
     setSelectedLists([]);
@@ -167,8 +158,6 @@ function AcceptedLists(props) {
   const lists = props.completed
     ? props.completedLists.map((list) => (
         <List
-          innerRef={ref}
-          opacity={isDragging ? 0.5 : 1}
           list={list}
           key={list.id}
           multiSelect={multiSelect}
@@ -178,6 +167,7 @@ function AcceptedLists(props) {
           testClass="completed-list"
           includeLinkToList={true}
           listName={`${list.name}${list.refreshed ? '*' : ''}`}
+          draggable={false}
           listButtons={
             <CompleteListButtons
               userId={props.userId}
@@ -194,8 +184,6 @@ function AcceptedLists(props) {
       ))
     : props.incompleteLists.map((list) => (
         <List
-          innerRef={ref}
-          opacity={isDragging ? 0.5 : 1}
           list={list}
           key={list.id}
           multiSelect={multiSelect}
@@ -205,6 +193,7 @@ function AcceptedLists(props) {
           testClass="incomplete-list"
           includeLinkToList={true}
           listName={list.name}
+          draggable={true}
           listButtons={
             <IncompleteListButtons
               userId={props.userId}
