@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
+import { useDrag } from 'react-dnd';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
@@ -8,6 +9,18 @@ import { itemName } from '../utils';
 import { listItem, listUsers } from '../../../types';
 
 const ListItem = (props) => {
+  const ref = useRef();
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'list-item',
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: { type: 'list-item', id: props.item.id },
+  }));
+  if (!props.purchased && props.permission === 'write') {
+    drag(ref);
+  }
+
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
     const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);
@@ -21,6 +34,8 @@ const ListItem = (props) => {
       key={props.item.id}
       className="list-item-list-group-item"
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={ref}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
