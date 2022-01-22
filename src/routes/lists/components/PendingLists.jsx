@@ -107,8 +107,9 @@ function PendingLists(props) {
       setMultiSelect={setMultiSelect}
     >
       <ListGroup>
-        {props.pendingLists.map((list) => (
+        {props.pendingLists.map((list, index) => (
           <List
+            index={index}
             list={list}
             key={list.id}
             multiSelect={multiSelect}

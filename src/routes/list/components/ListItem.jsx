@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
@@ -9,16 +9,60 @@ import { itemName } from '../utils';
 import { listItem, listUsers } from '../../../types';
 
 const ListItem = (props) => {
+  const dndType = 'list-item';
   const ref = useRef();
+  const [{ handlerId }, drop] = useDrop(() => ({
+    accept: dndType,
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    // drop() {
+    //   // noop
+    // },
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = props.index;
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current && ref.current.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      // Time to actually perform the action
+      props.moveItem(dragIndex, hoverIndex, item.category);
+    },
+  }));
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: 'list-item',
+    type: dndType,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    item: { type: 'list-item', id: props.item.id },
+    item: () => ({ type: dndType, id: props.item.id, index: props.index, category: props.item.category }),
   }));
   if (!props.purchased && props.permission === 'write') {
-    drag(ref);
+    drag(drop(ref));
   }
 
   let assignee = '';
@@ -36,6 +80,7 @@ const ListItem = (props) => {
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       ref={ref}
+      data-handler-id={handlerId}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
@@ -92,11 +137,14 @@ ListItem.propTypes = {
   handleItemEdit: PropTypes.func.isRequired,
   selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  moveItem: PropTypes.func,
 };
 
 ListItem.defaultProps = {
   listUsers: [],
   purchased: false,
+  moveItem: () => undefined,
 };
 
 export default ListItem;

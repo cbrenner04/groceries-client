@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -79,6 +79,21 @@ function ListsContainer(props) {
     }
   };
 
+  const moveList = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragList = incompleteLists[dragIndex];
+      setIncompleteLists(
+        update(incompleteLists, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragList],
+          ],
+        }),
+      );
+    },
+    [incompleteLists, setIncompleteLists],
+  );
+
   return (
     <>
       <h1>Lists</h1>
@@ -112,6 +127,7 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveList={moveList}
       />
       <AcceptedLists
         title={
@@ -135,6 +151,7 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveList={moveList}
       />
     </>
   );

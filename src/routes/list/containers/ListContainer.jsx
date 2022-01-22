@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
@@ -344,6 +344,24 @@ function ListContainer(props) {
     }
   };
 
+  const moveItem = useCallback(
+    (dragIndex, hoverIndex, category) => {
+      const lCategory = category || '';
+      const dragList = notPurchasedItems[lCategory][dragIndex];
+      setNotPurchasedItems(
+        update(notPurchasedItems, {
+          [lCategory]: {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragList],
+            ],
+          },
+        }),
+      );
+    },
+    [notPurchasedItems, setNotPurchasedItems],
+  );
+
   return (
     <>
       <Link to="/lists" className="float-end">
@@ -402,9 +420,10 @@ function ListContainer(props) {
         <ListGroup className="mb-3" key={category}>
           {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
           {notPurchasedItems[category] &&
-            notPurchasedItems[category].map((item) => (
+            notPurchasedItems[category].map((item, index) => (
               <ListItem
                 item={item}
+                index={index}
                 key={item.id}
                 purchased={false}
                 handleItemDelete={handleDelete}
@@ -419,6 +438,7 @@ function ListContainer(props) {
                 handleItemEdit={handleItemEdit}
                 selectedItems={selectedItems}
                 pending={pending}
+                moveItem={moveItem}
               />
             ))}
         </ListGroup>
@@ -442,8 +462,9 @@ function ListContainer(props) {
         </div>
       )}
       <ListGroup className="mb-3">
-        {purchasedItems.map((item) => (
+        {purchasedItems.map((item, index) => (
           <ListItem
+            index={index}
             item={item}
             key={item.id}
             purchased={true}
