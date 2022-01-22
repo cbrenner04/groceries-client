@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
@@ -49,7 +49,11 @@ function List(props) {
           </Col>
         )}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <Row className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}>
+          <Row
+            className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}
+            style={{ opacity: props.opacity }}
+            ref={props.innerRef}
+          >
             <Col lg="6">{listNameElement}</Col>
             <Col lg="4" className={props.multiSelect ? 'list-multi-created-at' : ''}>
               <small className="text-muted">{formatDate(props.list.created_at)}</small>
@@ -74,6 +78,13 @@ List.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
+  opacity: PropTypes.number,
+  innerRef: PropTypes.object,
+};
+
+List.defaultProps = {
+  opacity: 1,
+  innerRef: createRef(),
 };
 
 export default List;
