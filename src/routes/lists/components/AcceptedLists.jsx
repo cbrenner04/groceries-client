@@ -188,6 +188,7 @@ function AcceptedLists(props) {
       index={index}
       list={list}
       moveList={props.moveList}
+      reorderLists={props.reorderLists}
       key={list.id}
       multiSelect={multiSelect}
       selectedLists={selectedLists}
@@ -265,6 +266,7 @@ AcceptedLists.propTypes = {
   setCurrentUserPermissions: PropTypes.func.isRequired,
   fullList: PropTypes.bool.isRequired,
   moveList: PropTypes.func.isRequired,
+  reorderLists: PropTypes.func.isRequired,
 };
 
 /* istanbul ignore next */

@@ -3,19 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 
 import { list, listItem, listUsers } from '../../../types';
 import { capitalize } from '../../../utils/format';
+import axios from '../../../utils/api';
+import { fetchList, itemName, sortItems } from '../utils';
+import { usePolling } from '../../../hooks';
+
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
-import axios from '../../../utils/api';
-import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
-import { fetchList } from '../utils';
-import { usePolling } from '../../../hooks';
 
 function ListContainer(props) {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
