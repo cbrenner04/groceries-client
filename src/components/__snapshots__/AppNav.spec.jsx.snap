@@ -46,6 +46,7 @@ exports[`AppNav when user is signed in renders nav with brand linking to root, i
         <a
           class="nav-link"
           data-test-id="invite-link"
+          href="#"
           role="button"
           tabindex="0"
         >
@@ -58,6 +59,7 @@ exports[`AppNav when user is signed in renders nav with brand linking to root, i
         <a
           class="nav-link"
           data-test-id="log-out-link"
+          href="#"
           role="button"
           tabindex="0"
         >
