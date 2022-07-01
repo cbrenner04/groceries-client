@@ -4,25 +4,28 @@ import { MemoryRouter } from 'react-router-dom';
 
 import Share from './Share';
 
-describe('Share', () => {
-  const renderShare = () => {
-    const defaultProps = {
-      to: '/fake/route',
-      testID: 'foo',
-      disabled: false,
-      style: {},
-    };
-    return render(
-      <MemoryRouter>
-        <Share {...defaultProps} />
-      </MemoryRouter>,
-    );
+async function setup() {
+  const props = {
+    to: '/fake/route',
+    testID: 'foo',
+    disabled: false,
+    style: {},
   };
+  const { findByRole } = render(
+    <MemoryRouter>
+      <Share {...props} />
+    </MemoryRouter>,
+  );
+  const shareButton = await findByRole('link');
 
-  it('renders a link', () => {
-    const { getByRole } = renderShare();
+  return { shareButton };
+}
 
-    expect(getByRole('link')).toMatchSnapshot();
-    expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
+describe('Share', () => {
+  it('renders a link', async () => {
+    const { shareButton } = await setup();
+
+    expect(shareButton).toMatchSnapshot();
+    expect(shareButton).toHaveAttribute('href', '/fake/route');
   });
 });

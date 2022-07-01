@@ -80,7 +80,6 @@ exports[`ChangeOtherList does not render update current items when all items are
         foobar
       </option>
     </select>
-    
   </div>
 </div>
 `;
@@ -150,7 +149,6 @@ exports[`ChangeOtherList does not show choose existing list link when not existi
       type="text"
       value=""
     />
-    
   </div>
 </div>
 `;
@@ -280,7 +278,6 @@ exports[`ChangeOtherList renders when copy and handle change when selected 1`] =
         foobar
       </option>
     </select>
-    
   </div>
   <div
     class="mt-3 mb-3"
@@ -386,7 +383,6 @@ exports[`ChangeOtherList renders when move and handle change when selected 1`] =
         foobar
       </option>
     </select>
-    
   </div>
 </div>
 `;
@@ -462,7 +458,6 @@ exports[`ChangeOtherList shows choose existing list link when existingListsOptio
       type="text"
       value=""
     />
-    
   </div>
   <div
     class="mt-3 mb-3"
@@ -559,7 +554,6 @@ exports[`ChangeOtherList shows choose existing list link when existingListsOptio
       type="text"
       value=""
     />
-    
   </div>
 </div>
 `;
@@ -644,7 +638,6 @@ exports[`ChangeOtherList shows create new list link when not showNewListForm 1`]
         foobar
       </option>
     </select>
-    
   </div>
   <div
     class="mt-3 mb-3"

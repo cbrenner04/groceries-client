@@ -1,35 +1,37 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import TextField from './TextField';
 
-const defaultProps = {
-  handleChange: jest.fn(),
-  name: 'testName',
-  label: 'testLabel',
-  value: 'testValue',
-};
+async function setup() {
+  const user = userEvent.setup();
+  const props = {
+    handleChange: jest.fn(),
+    name: 'testName',
+    label: 'testLabel',
+    value: 'testValue',
+  };
+  const { findByLabelText } = render(<TextField {...props} />);
+  const formInput = await findByLabelText(props.label);
+  return { formInput, props, user };
+}
 
 describe('TextField', () => {
-  let formInput;
-
-  beforeEach(() => {
-    const { getByLabelText } = render(<TextField {...defaultProps} />);
-    formInput = getByLabelText(defaultProps.label);
-  });
-
-  it('renders input', () => {
+  it('renders input', async () => {
+    const { formInput, props } = await setup();
     const formGroup = formInput.parentElement;
 
     expect(formGroup).toMatchSnapshot();
-    expect(formInput).toHaveValue(defaultProps.value);
+    expect(formInput).toHaveValue(props.value);
   });
 
   describe('when value changes', () => {
-    it('calls handleChange', () => {
-      fireEvent.change(formInput, { target: { value: 'a' } });
+    it('calls handleChange', async () => {
+      const { formInput, props, user } = await setup();
+      await user.type(formInput, 'a');
 
-      expect(defaultProps.handleChange).toHaveBeenCalled();
+      expect(props.handleChange).toHaveBeenCalled();
     });
   });
 });

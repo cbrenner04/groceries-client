@@ -2,159 +2,21 @@
 
 exports[`List displays List 1`] = `
 <div>
-  <a
-    class="float-end"
-    href="/lists"
-  >
-    Back to lists
-  </a>
-  <h1>
-    foo
-  </h1>
-  <br />
-  <button
-    aria-controls="form-collapse"
-    aria-expanded="false"
-    class="btn btn-link"
-    type="button"
-  >
-    Add Item
-  </button>
-  <form
-    autocomplete="off"
-    class="collapse"
-    data-test-id="list-item-form"
-    id="form-collapse"
+  <div
+    id="loader"
   >
     <div
-      class="mb-3"
+      class="spinner-border"
+      id="spinner"
+      role="status"
     >
-      <label
-        class="form-label"
-        for="product"
+      <span
+        class="sr-only"
       >
-        Product
-      </label>
-      <input
-        class="form-control"
-        id="product"
-        name="product"
-        placeholder="apples"
-        type="text"
-        value=""
-      />
-      
-    </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="quantity"
-      >
-        Quantity
-      </label>
-      <input
-        class="form-control"
-        id="quantity"
-        name="quantity"
-        placeholder="3 bags"
-        type="text"
-        value=""
-      />
-      
-    </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="category"
-      >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
-      <datalist
-        id="categories"
-      />
-      
-    </div>
-    <div
-      class="d-grid gap-2 mt-3"
-    >
-      <button
-        class="btn btn-success"
-        type="submit"
-      >
-        Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
-      </button>
-    </div>
-  </form>
-  <hr />
-  <div
-    class="d-flex justify-content-between"
-  >
-    <h2>
-      Items
-    </h2>
-    <div>
-      <button
-        class="btn btn-light"
-        disabled=""
-        id="no-filter"
-        type="button"
-      >
-        Filter by category
-      </button>
+        Loading...
+      </span>
     </div>
   </div>
-  <div
-    class="clearfix"
-  >
-    <button
-      class="mx-auto float-end btn btn-link"
-      type="button"
-    >
-      
-       Select
-    </button>
-  </div>
-  <div
-    class="mb-3 list-group"
-  >
-    
-  </div>
-  <br />
-  <h2>
-    Purchased
-  </h2>
-  <div
-    class="clearfix"
-  >
-    <button
-      class="mx-auto float-end btn btn-link"
-      type="button"
-    >
-      
-       Select
-    </button>
-  </div>
-  <div
-    class="mb-3 list-group"
-  />
 </div>
 `;
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { toast } from 'react-toastify';
 
 import EditListForm from './EditListForm';
@@ -25,6 +26,11 @@ describe('EditListForm', () => {
     };
     return render(<EditListForm {...props} />);
   };
+  let user;
+
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
 
   it('renders', () => {
     const { container } = renderEditListForm();
@@ -58,16 +64,16 @@ describe('EditListForm', () => {
     expect(getByLabelText('Completed')).toBeChecked();
   });
 
-  it('makes post, displays toast, and redirects to lists page on successful submission', async () => {
+  it('makes put, displays toast, and redirects to lists page on successful submission', async () => {
     const data = {
       foo: 'bar',
     };
     axios.put = jest.fn().mockResolvedValue({ data });
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
@@ -76,9 +82,9 @@ describe('EditListForm', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
@@ -87,9 +93,9 @@ describe('EditListForm', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
@@ -98,9 +104,9 @@ describe('EditListForm', () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
@@ -118,9 +124,9 @@ describe('EditListForm', () => {
 
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
   });
 
@@ -131,9 +137,9 @@ describe('EditListForm', () => {
 
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
   });
 
@@ -144,16 +150,16 @@ describe('EditListForm', () => {
 
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click(getAllByRole('button')[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
 
-  it('goes back to lists on Cancel', () => {
+  it('goes back to lists on Cancel', async () => {
     const { getAllByRole } = renderEditListForm();
 
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.click(getAllByRole('button')[1]);
 
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });

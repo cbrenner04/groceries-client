@@ -1,49 +1,53 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ConfirmModal from './ConfirmModal';
 
-const defaultProps = {
-  action: 'testAction',
-  body: 'testBody',
-  handleConfirm: jest.fn(),
-  handleClear: jest.fn(),
-};
+function setup(suppliedProps = {}) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    action: 'testAction',
+    body: 'testBody',
+    handleConfirm: jest.fn(),
+    handleClear: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { findByRole, findByText, queryByRole } = render(<ConfirmModal {...props} />);
+
+  return { findByRole, findByText, props, queryByRole, user };
+}
 
 describe('ConfirmModal', () => {
   describe('when show is false', () => {
     it('does not render dialog', () => {
-      defaultProps.show = false;
-      const { queryByRole } = render(<ConfirmModal {...defaultProps} />);
+      const { queryByRole } = setup({ show: false });
+
       expect(queryByRole('dialog')).toBeNull();
     });
   });
 
   describe('when show is true', () => {
-    let getByRole;
-    let getByText;
+    it('renders dialog', async () => {
+      const { findByRole, findByText, props } = setup({ show: true });
 
-    beforeEach(() => {
-      defaultProps.show = true;
-      ({ getByRole, getByText } = render(<ConfirmModal {...defaultProps} />));
+      expect(await findByRole('dialog')).toMatchSnapshot();
+      expect(await findByText(`Confirm ${props.action}`)).toBeVisible();
+      expect(await findByText(props.body)).toBeVisible();
     });
 
-    it('renders dialog', () => {
-      expect(getByRole('dialog')).toMatchSnapshot();
-      expect(getByText(`Confirm ${defaultProps.action}`)).toBeVisible();
-      expect(getByText(defaultProps.body)).toBeVisible();
+    it('calls handleClear when the close button is selected', async () => {
+      const { findByText, props, user } = setup({ show: true });
+      await user.click(await findByText('Close', { selector: 'button' }));
+
+      expect(props.handleClear).toHaveBeenCalled();
     });
 
-    it('calls handleClear when the close button is selected', () => {
-      fireEvent.click(getByText('Close', { selector: 'button' }));
+    it('calls handleConfirm when the close button is selected', async () => {
+      const { findByText, props, user } = setup({ show: true });
+      await user.click(await findByText("Yes, I'm sure."));
 
-      expect(defaultProps.handleClear).toHaveBeenCalled();
-    });
-
-    it('calls handleConfirm when the close button is selected', () => {
-      fireEvent.click(getByText("Yes, I'm sure."));
-
-      expect(defaultProps.handleConfirm).toHaveBeenCalled();
+      expect(props.handleConfirm).toHaveBeenCalled();
     });
   });
 });

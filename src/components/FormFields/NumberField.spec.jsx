@@ -1,35 +1,36 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import NumberField from './NumberField';
 
+async function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    handleChange: jest.fn(),
+    name: 'testName',
+    label: 'testLabel',
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { findByLabelText } = render(<NumberField {...props} />);
+  const formInput = await findByLabelText(props.label);
+  return { formInput, props, user };
+}
+
 describe('NumberField', () => {
-  let defaultProps;
-
-  beforeEach(() => {
-    defaultProps = {
-      handleChange: jest.fn(),
-      name: 'testName',
-      label: 'testLabel',
-    };
-  });
-
   describe('when value provided', () => {
-    it('renders input with value', () => {
-      defaultProps.value = 1;
-      const { getByLabelText } = render(<NumberField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
+    it('renders input with value', async () => {
+      const { formInput, props } = await setup({ value: 1 });
       const formGroup = formInput.parentElement;
 
       expect(formGroup).toMatchSnapshot();
-      expect(formInput).toHaveValue(defaultProps.value);
+      expect(formInput).toHaveValue(props.value);
     });
   });
 
   describe('when no value provided', () => {
-    it('renders input with value of empty string', () => {
-      const { getByLabelText } = render(<NumberField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
+    it('renders input with value of empty string', async () => {
+      const { formInput } = await setup();
       const formGroup = formInput.parentElement;
 
       expect(formGroup).toMatchSnapshot();
@@ -38,13 +39,11 @@ describe('NumberField', () => {
   });
 
   describe('when value changes', () => {
-    it('calls handleChange', () => {
-      defaultProps.value = 1;
-      const { getByLabelText } = render(<NumberField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
-      fireEvent.change(formInput, { target: { value: 'a' } });
+    it('calls handleChange', async () => {
+      const { formInput, props, user } = await setup({ value: 1 });
+      await user.type(formInput, '9');
 
-      expect(defaultProps.handleChange).toHaveBeenCalled();
+      expect(props.handleChange).toHaveBeenCalled();
     });
   });
 });

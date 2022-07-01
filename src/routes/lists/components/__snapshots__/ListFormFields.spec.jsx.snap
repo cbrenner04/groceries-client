@@ -19,7 +19,6 @@ exports[`ListFormFields renders edit form 1`] = `
       type="text"
       value="foo"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -61,7 +60,6 @@ exports[`ListFormFields renders edit form 1`] = `
         to-do
       </option>
     </select>
-    
   </div>
   <div
     class="mb-3 mb-3"
@@ -106,7 +104,6 @@ exports[`ListFormFields renders new form 1`] = `
       type="text"
       value="foo"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -148,7 +145,6 @@ exports[`ListFormFields renders new form 1`] = `
         to-do
       </option>
     </select>
-    
   </div>
 </div>
 `;

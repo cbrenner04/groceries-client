@@ -39,7 +39,6 @@ exports[`CompletedListsContainer renders 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-        
          Select
       </button>
     </div>

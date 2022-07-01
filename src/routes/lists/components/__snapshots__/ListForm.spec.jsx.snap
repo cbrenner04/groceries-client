@@ -32,7 +32,6 @@ exports[`ListForm renders 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -74,7 +73,6 @@ exports[`ListForm renders 1`] = `
           to-do
         </option>
       </select>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"

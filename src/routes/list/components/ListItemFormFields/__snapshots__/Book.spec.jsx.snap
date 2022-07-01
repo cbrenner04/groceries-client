@@ -19,7 +19,6 @@ exports[`Book renders base form when props.editForm is false 1`] = `
       type="text"
       value="asdf"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -38,7 +37,6 @@ exports[`Book renders base form when props.editForm is false 1`] = `
       type="text"
       value="asdf"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -81,7 +79,6 @@ exports[`Book renders base form when props.editForm is false 1`] = `
         value="asdf"
       />
     </datalist>
-    
   </div>
 </div>
 `;
@@ -105,7 +102,6 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       type="text"
       value="asdf"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -124,7 +120,6 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       type="text"
       value="asdf"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -167,7 +162,6 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
         value="asdf"
       />
     </datalist>
-    
   </div>
   <div
     class="mb-3 row"

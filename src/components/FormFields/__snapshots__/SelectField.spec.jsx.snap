@@ -26,7 +26,6 @@ exports[`SelectField when blankOption is false renders input with first option a
       testOption2Label
     </option>
   </select>
-  
 </div>
 `;
 
@@ -61,7 +60,6 @@ exports[`SelectField when blankOption is true when value is not blank renders in
       testOption2Label
     </option>
   </select>
-  
 </div>
 `;
 
@@ -97,6 +95,5 @@ exports[`SelectField when blankOption is true when value is not blank renders in
       testOption2Label
     </option>
   </select>
-  
 </div>
 `;

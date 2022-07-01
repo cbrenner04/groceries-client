@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import CompletedListsContainer from './CompletedListsContainer';
@@ -60,6 +60,10 @@ describe('CompletedListsContainer', () => {
         id3: 'read',
       },
     };
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('renders', () => {
@@ -123,17 +127,19 @@ describe('CompletedListsContainer', () => {
 
     const { getByTestId, queryByTestId } = renderCompletedListsContainer(props);
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(getByTestId('list-id1')).toBeVisible();
     expect(queryByTestId('list-id2')).toBeNull();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
-
+    expect(axios.get).toHaveBeenCalledTimes(2);
     expect(getByTestId('list-id1')).toBeVisible();
     expect(getByTestId('list-id2')).toBeVisible();
   });
@@ -161,16 +167,18 @@ describe('CompletedListsContainer', () => {
 
     const { getByTestId } = renderCompletedListsContainer(props);
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(getByTestId('list-id1')).toBeVisible();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
-
+    expect(axios.get).toHaveBeenCalledTimes(2);
     expect(getByTestId('list-id1')).toBeVisible();
   });
 });
