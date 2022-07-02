@@ -387,7 +387,7 @@ exports[`ChangeOtherList renders when move and handle change when selected 1`] =
 </div>
 `;
 
-exports[`ChangeOtherList shows choose existing list link when existingListsOptions and correct fields when showNewList and copy 1`] = `
+exports[`ChangeOtherList shows choose existing list link when existingListsOptions; correct fields when showNewList & copy 1`] = `
 <div>
   <div
     class="form-check-inline mb-3"
@@ -483,7 +483,7 @@ exports[`ChangeOtherList shows choose existing list link when existingListsOptio
 </div>
 `;
 
-exports[`ChangeOtherList shows choose existing list link when existingListsOptions and correct fields when showNewList and move 1`] = `
+exports[`ChangeOtherList shows choose existing list link when existingListsOptions; correct fields when showNewList & move 1`] = `
 <div>
   <div
     class="form-check-inline mb-3"

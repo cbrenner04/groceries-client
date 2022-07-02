@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -36,9 +36,11 @@ describe('PageNotFound', () => {
   it('redirects to /users/sign_in when the user is not authenticated', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
     renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -49,8 +51,10 @@ describe('PageNotFound', () => {
   it('displays UnknownError when an error occurs validating authentication', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
     const { container, getByRole } = renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(container).toMatchSnapshot();
     expect(getByRole('button')).toHaveTextContent('refresh the page');
@@ -61,8 +65,10 @@ describe('PageNotFound', () => {
   it('displays PageNotFound when the user is authenticated', async () => {
     axios.get = jest.fn().mockResolvedValue({});
     const { container, getByText } = renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(container).toMatchSnapshot();
     expect(getByText('Page not found!')).toBeTruthy();

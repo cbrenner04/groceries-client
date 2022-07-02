@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Simple from './Simple';
 
-describe('Simple', () => {
-  const props = {
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
     content: 'foo',
     completed: false,
     editForm: false,
@@ -18,37 +20,40 @@ describe('Simple', () => {
     categories: ['foo', 'bar'],
     inputChangeHandler: jest.fn(),
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, queryByLabelText } = render(<Simple {...props} />);
 
+  return { container, findByLabelText, queryByLabelText, props, user };
+}
+
+describe('Simple', () => {
   it('renders base form when props.editForm is false', () => {
-    props.editForm = false;
-    const { container, queryByLabelText } = render(<Simple {...props} />);
+    const { container, queryByLabelText } = setup({ editForm: false });
 
     expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Completed')).toBeFalsy();
+    expect(queryByLabelText('Completed')).toBeNull();
   });
 
-  it('renders edit form when props.editForm is true', () => {
-    props.editForm = true;
-    const { container, getByLabelText } = render(<Simple {...props} />);
+  it('renders edit form when props.editForm is true', async () => {
+    const { container, findByLabelText } = setup({ editForm: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Completed')).toBeTruthy();
+    expect(await findByLabelText('Completed')).toBeVisible();
   });
 
-  it('calls appropriate change handlers when changes occur', () => {
-    props.editForm = true;
-    const { getByLabelText } = render(<Simple {...props} />);
+  it('calls appropriate change handlers when changes occur', async () => {
+    const { findByLabelText, props, user } = setup({ editForm: true });
 
-    fireEvent.change(getByLabelText('Content'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Content'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Category'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(2);
 
-    fireEvent.click(getByLabelText('Completed'));
+    await user.click(await findByLabelText('Completed'));
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(3);
   });
 });

@@ -1,35 +1,38 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Purchased from './Purchased';
 
+async function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    item: {
+      grocery_list_id: 'id1',
+      id: 'id1',
+      read: true,
+    },
+    purchased: false,
+    handleItemDelete: jest.fn(),
+    handlePurchaseOfItem: jest.fn(),
+    toggleItemRead: jest.fn(),
+    handleItemRefresh: jest.fn(),
+    listType: 'GroceryList',
+    handleItemEdit: jest.fn(),
+    multiSelect: false,
+    selectedItems: [],
+    pending: false,
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findAllByRole } = render(<Purchased {...props} />);
+  const buttons = await findAllByRole('button');
+
+  return { container, buttons, props, user };
+}
+
 describe('Purchased', () => {
-  let props;
-
-  beforeEach(() => {
-    props = {
-      item: {
-        grocery_list_id: 'id1',
-        id: 'id1',
-        read: true,
-      },
-      purchased: false,
-      handleItemDelete: jest.fn(),
-      handlePurchaseOfItem: jest.fn(),
-      toggleItemRead: jest.fn(),
-      handleItemRefresh: jest.fn(),
-      listType: 'GroceryList',
-      handleItemEdit: jest.fn(),
-      multiSelect: false,
-      selectedItems: [],
-      pending: false,
-    };
-  });
-
-  it('renders Refresh and does not render Bookmark when listType is GroceryList', () => {
-    props.listType = 'GroceryList';
-    const { container, getAllByRole } = render(<Purchased {...props} />);
-    const buttons = getAllByRole('button');
+  it('renders Refresh and does not render Bookmark when listType is GroceryList', async () => {
+    const { container, buttons } = await setup({ listType: 'GroceryList' });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -38,10 +41,8 @@ describe('Purchased', () => {
     expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
-  it('renders Refresh and does not render Bookmark when listType is ToDoList', () => {
-    props.listType = 'ToDoList';
-    const { container, getAllByRole } = render(<Purchased {...props} />);
-    const buttons = getAllByRole('button');
+  it('renders Refresh and does not render Bookmark when listType is ToDoList', async () => {
+    const { container, buttons } = await setup({ listType: 'ToDoList' });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -50,10 +51,8 @@ describe('Purchased', () => {
     expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
-  it('does not render Refresh and does render Bookmark when listType is BookList', () => {
-    props.listType = 'BookList';
-    const { container, getAllByRole } = render(<Purchased {...props} />);
-    const buttons = getAllByRole('button');
+  it('does not render Refresh and does render Bookmark when listType is BookList', async () => {
+    const { container, buttons } = await setup({ listType: 'BookList' });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -62,10 +61,8 @@ describe('Purchased', () => {
     expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
-  it('does not render Refresh or Bookmark when listType is MusicList', () => {
-    props.listType = 'MusicList';
-    const { container, getAllByRole } = render(<Purchased {...props} />);
-    const buttons = getAllByRole('button');
+  it('does not render Refresh or Bookmark when listType is MusicList', async () => {
+    const { container, buttons } = await setup({ listType: 'MusicList' });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(2);
@@ -73,58 +70,67 @@ describe('Purchased', () => {
     expect(buttons[1].firstChild).toHaveClass('fa-trash');
   });
 
-  it('calls handleItemRefresh when listType is GroceryList and Refresh is clicked', () => {
-    props.listType = 'GroceryList';
-    const { getAllByRole } = render(<Purchased {...props} />);
+  it('calls handleItemRefresh when listType is GroceryList and Refresh is clicked', async () => {
+    const { buttons, props, user } = await setup({ listType: 'GroceryList' });
 
-    fireEvent.click(getAllByRole('button')[0]);
-
-    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
-  });
-
-  it('calls handleItemRefresh when listType is ToDoList and Refresh is clicked', () => {
-    props.listType = 'ToDoList';
-    const { getAllByRole } = render(<Purchased {...props} />);
-
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click(buttons[0]);
 
     expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', () => {
-    props.listType = 'BookList';
-    props.item.read = false;
-    const { getAllByRole } = render(<Purchased {...props} />);
+  it('calls handleItemRefresh when listType is ToDoList and Refresh is clicked', async () => {
+    const { buttons, props, user } = await setup({ listType: 'ToDoList' });
 
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click(buttons[0]);
+
+    expect(props.handleItemRefresh).toHaveBeenCalledWith(props.item);
+  });
+
+  it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', async () => {
+    const { buttons, props, user } = await setup({
+      listType: 'BookList',
+      item: {
+        book_list_id: 'id1',
+        id: 'id1',
+        read: false,
+      },
+    });
+
+    await user.click(buttons[0]);
 
     expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', () => {
-    props.listType = 'BookList';
-    props.item.read = true;
-    const { getAllByRole } = render(<Purchased {...props} />);
+  it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', async () => {
+    const { buttons, props, user } = await setup({
+      listType: 'BookList',
+      item: {
+        book_list_id: 'id1',
+        id: 'id1',
+        read: true,
+      },
+    });
 
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click(buttons[0]);
 
     expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemEdi when Edit is clicked', () => {
-    props.multiSelect = true;
-    props.selectedItems = [{ id: 'id1' }];
-    const { getAllByRole } = render(<Purchased {...props} />);
+  it('calls handleItemEdi when Edit is clicked', async () => {
+    const { buttons, props, user } = await setup({
+      multiSelect: true,
+      selectedItems: [{ id: 'id1' }],
+    });
 
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.click(buttons[1]);
 
     expect(props.handleItemEdit).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemDelete when Trash is clicked', () => {
-    const { getAllByRole } = render(<Purchased {...props} />);
+  it('calls handleItemDelete when Trash is clicked', async () => {
+    const { buttons, props, user } = await setup();
 
-    fireEvent.click(getAllByRole('button')[2]);
+    await user.click(buttons[2]);
 
     expect(props.handleItemDelete).toHaveBeenCalledWith(props.item);
   });
