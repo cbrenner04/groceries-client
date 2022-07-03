@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import ListContainer from './ListContainer';
 import axios from '../../../utils/api';
@@ -16,36 +17,73 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('ListContainer', () => {
-  let props;
-  const renderListContainer = (newProps) => {
-    return render(
-      <MemoryRouter>
-        <ListContainer {...newProps} />
-      </MemoryRouter>,
-    );
-  };
-
-  beforeEach(() => {
-    jest.clearAllTimers();
-    jest.useFakeTimers();
-    props = {
-      userId: 'id1',
-      list: {
+function setup(suppliedProps = {}, listType = 'GroceryList') {
+  const user = userEvent.setup();
+  const defaultProps = {
+    userId: 'id1',
+    list: {
+      id: 'id1',
+      name: 'foo',
+      type: listType,
+      created_at: new Date('05/24/2020').toISOString(),
+      completed: false,
+      owner_id: 'id1',
+      refreshed: false,
+    },
+    purchasedItems: [
+      {
         id: 'id1',
-        name: 'foo',
-        type: 'GroceryList',
-        created_at: new Date('05/24/2020').toISOString(),
+        product: 'foo purchased product',
+        task: '',
+        quantity: 'purchased quantity',
+        author: '',
+        title: 'whatever',
+        artist: '',
+        album: '',
+        assignee_id: 'id1',
+        due_by: '',
+        read: false,
+        number_in_series: 0,
+        category: 'foo',
+        purchased: true,
         completed: false,
-        owner_id: 'id1',
-        refreshed: false,
       },
-      purchasedItems: [
+    ],
+    categories: ['', 'foo', 'bar'],
+    listUsers: [
+      {
+        id: 'id1',
+        email: 'foo@example.com',
+      },
+    ],
+    includedCategories: ['', 'foo', 'bar'],
+    notPurchasedItems: {
+      '': [
         {
-          id: 'id1',
-          product: 'foo purchased product',
+          id: 'id2',
+          product: 'no category not purchased product',
+          task: 'whatever',
+          quantity: 'not purchased quantity',
+          author: '',
+          title: 'whatever',
+          artist: '',
+          album: '',
+          assignee_id: 'id1',
+          due_by: '',
+          read: false,
+          number_in_series: 0,
+          category: '',
+          purchased: false,
+          completed: false,
+          grocery_list_id: 'id1',
+        },
+      ],
+      foo: [
+        {
+          id: 'id3',
+          product: 'foo not purchased product',
           task: '',
-          quantity: 'purchased quantity',
+          quantity: 'not purchased quantity',
           author: '',
           title: '',
           artist: '',
@@ -55,102 +93,65 @@ describe('ListContainer', () => {
           read: false,
           number_in_series: 0,
           category: 'foo',
-          purchased: true,
+          purchased: false,
+          completed: false,
+          grocery_list_id: 'id1',
+        },
+        {
+          id: 'id4',
+          product: 'foo not purchased product 2',
+          task: '',
+          quantity: 'not purchased quantity',
+          author: '',
+          title: '',
+          artist: '',
+          album: '',
+          assignee_id: 'id1',
+          due_by: '',
+          read: false,
+          number_in_series: 0,
+          category: 'foo',
+          purchased: false,
+          completed: false,
+          grocery_list_id: 'id1',
+        },
+      ],
+      bar: [
+        {
+          id: 'id5',
+          product: 'bar not purchased product',
+          task: '',
+          quantity: 'not purchased quantity',
+          author: '',
+          title: '',
+          artist: '',
+          album: '',
+          assignee_id: 'id1',
+          due_by: '',
+          read: false,
+          number_in_series: 0,
+          category: 'bar',
+          purchased: false,
           completed: false,
         },
       ],
-      categories: ['', 'foo', 'bar'],
-      listUsers: [
-        {
-          id: 'id1',
-          email: 'foo@example.com',
-        },
-      ],
-      includedCategories: ['', 'foo', 'bar'],
-      notPurchasedItems: {
-        '': [
-          {
-            id: 'id2',
-            product: 'no category not purchased product',
-            task: '',
-            quantity: 'not purchased quantity',
-            author: '',
-            title: '',
-            artist: '',
-            album: '',
-            assignee_id: 'id1',
-            due_by: '',
-            read: false,
-            number_in_series: 0,
-            category: '',
-            purchased: false,
-            completed: false,
-            grocery_list_id: 'id1',
-          },
-        ],
-        foo: [
-          {
-            id: 'id3',
-            product: 'foo not purchased product',
-            task: '',
-            quantity: 'not purchased quantity',
-            author: '',
-            title: '',
-            artist: '',
-            album: '',
-            assignee_id: 'id1',
-            due_by: '',
-            read: false,
-            number_in_series: 0,
-            category: 'foo',
-            purchased: false,
-            completed: false,
-            grocery_list_id: 'id1',
-          },
-          {
-            id: 'id4',
-            product: 'foo not purchased product 2',
-            task: '',
-            quantity: 'not purchased quantity',
-            author: '',
-            title: '',
-            artist: '',
-            album: '',
-            assignee_id: 'id1',
-            due_by: '',
-            read: false,
-            number_in_series: 0,
-            category: 'foo',
-            purchased: false,
-            completed: false,
-            grocery_list_id: 'id1',
-          },
-        ],
-        bar: [
-          {
-            id: 'id5',
-            product: 'bar not purchased product',
-            task: '',
-            quantity: 'not purchased quantity',
-            author: '',
-            title: '',
-            artist: '',
-            album: '',
-            assignee_id: 'id1',
-            due_by: '',
-            read: false,
-            number_in_series: 0,
-            category: 'bar',
-            purchased: false,
-            completed: false,
-          },
-        ],
-      },
-      permissions: 'write',
-    };
-  });
+    },
+    permissions: 'write',
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(
+    <MemoryRouter>
+      <ListContainer {...props} />
+    </MemoryRouter>,
+  );
 
+  return { component, props, user };
+}
+
+describe('ListContainer', () => {
   it('does not update via polling when different data is not returned', async () => {
+    // having these in before/after blocks messed up user actions in other tests
+    jest.useFakeTimers();
     axios.get = jest.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
@@ -170,35 +171,37 @@ describe('ListContainer', () => {
         permissions: 'write',
       },
     });
-    props.permissions = 'write';
-    const { getByText, getByTestId } = renderListContainer(props);
+    const {
+      component: { findByText },
+    } = setup({ permissions: 'write' });
 
-    fireEvent.click(getByText('Filter by category'));
-
-    await waitFor(() => getByTestId('filter-by-foo'));
-
-    fireEvent.click(getByTestId('filter-by-foo'));
-
-    jest.advanceTimersByTime(3000);
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
 
-    jest.advanceTimersByTime(3000);
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
+    jest.useRealTimers();
   });
 
   it('updates via polling when different data is returned', async () => {
+    // having these in before/after blocks messed up user actions in other tests
+    jest.useFakeTimers();
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({
@@ -239,104 +242,123 @@ describe('ListContainer', () => {
           permissions: 'write',
         },
       });
-    props.permissions = 'write';
-    const { getByText } = renderListContainer(props);
+    const {
+      component: { findByText },
+    } = setup({ permissions: 'write' });
 
-    jest.advanceTimersByTime(3000);
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
 
-    jest.advanceTimersByTime(3000);
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect(getByText('item new').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
+    jest.useRealTimers();
   });
 
-  it('renders ListForm when user has write permissions', () => {
-    props.permissions = 'write';
-    const { container, getByTestId } = renderListContainer(props);
+  it('renders ListForm when user has write permissions', async () => {
+    const {
+      component: { container, findByTestId },
+    } = setup({ permissions: 'write' });
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-item-form')).toBeVisible();
+    expect(await findByTestId('list-item-form')).toBeVisible();
   });
 
   it('does not render ListForm when user has read permissions', () => {
-    props.permissions = 'read';
-    const { container, queryByTestId } = renderListContainer(props);
+    const {
+      component: { container, queryByTestId },
+    } = setup({ permissions: 'read' });
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('list-item-form')).toBeNull();
   });
 
   it('renders filtered items without category buckets when filter exists', async () => {
-    const { container, getByTestId, getByText, queryByText } = renderListContainer(props);
-    fireEvent.click(getByText('Filter by category'));
+    const {
+      component: { container, findByTestId, findByText, queryByText },
+      user,
+    } = setup();
+    await user.click(await findByText('Filter by category'));
 
-    await waitFor(() => getByTestId('filter-by-foo'));
+    await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
 
-    fireEvent.click(getByTestId('filter-by-foo'));
+    await user.click(await findByTestId('filter-by-foo'));
 
     expect(container).toMatchSnapshot();
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
   });
 
-  it('renders items with category buckets when includedCategories is not empty and no filter is applied', () => {
-    props.includedCategories = ['', 'foo', 'bar'];
-    const { container, getByText } = renderListContainer(props);
+  it('renders items with category buckets when includedCategories is not empty and no filter is applied', async () => {
+    const {
+      component: { container, findByText },
+    } = setup({ includedCategories: ['', 'foo', 'bar'] });
 
     expect(container).toMatchSnapshot();
-    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
-    expect(getByText('Bar')).toBeVisible();
+    expect(await findByText('not purchased quantity no category not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
+    expect(await findByText('Bar')).toBeVisible();
   });
 
   it('does not render incomplete items when none exist', () => {
-    props.list.type = 'ToDoList';
-    props.notPurchasedItems = {};
-    props.includedCategories = ['']; // includedCategories come back from the server. this is the default
-    const { container } = renderListContainer(props);
+    // includedCategories come back from the server. this is the default
+    const {
+      component: { container },
+    } = setup({ notPurchasedItems: {}, includedCategories: [''] }, 'ToDoList');
 
     expect(container).toMatchSnapshot();
   });
 
   it('does not render complete items when none exist', () => {
-    props.purchasedItems = [];
-    const { container } = renderListContainer(props);
+    const {
+      component: { container },
+    } = setup({ purchasedItems: [] });
 
     expect(container).toMatchSnapshot();
   });
 
-  it('renders confirmation modal when delete is clicked', () => {
-    const { container, getByTestId } = renderListContainer(props);
+  it('renders confirmation modal when delete is clicked', async () => {
+    const {
+      component: { container, findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
+    await user.click(await findByTestId('not-purchased-item-delete-id2'));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
   });
 
   it('handles 401 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -347,13 +369,16 @@ describe('ListContainer', () => {
 
   it('handles 403 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
@@ -362,13 +387,16 @@ describe('ListContainer', () => {
 
   it('handles 404 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
@@ -377,13 +405,16 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
@@ -392,13 +423,16 @@ describe('ListContainer', () => {
 
   it('handles failed request on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
@@ -407,13 +441,16 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
@@ -422,16 +459,19 @@ describe('ListContainer', () => {
 
   it('deletes item when delete is confirmed, hides modal, removes category when item is last of category', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId, queryByTestId, queryByText },
+      user,
+    } = setup();
 
-    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
-    expect(getByText('Bar')).toBeVisible();
+    expect(await findByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(await findByText('Bar')).toBeVisible();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id5'));
+    await user.click(await findByTestId('not-purchased-item-delete-id5'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
@@ -443,36 +483,42 @@ describe('ListContainer', () => {
 
   it('deletes item, hides modal, does not remove category when item is not last of category', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId, queryByTestId, queryByText },
+      user,
+    } = setup();
 
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id3'));
+    await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
     expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
-    expect(getByText('Foo')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
     expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
   });
 
   it('deletes item, hides modal, when item is in purchased', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId, queryByTestId, queryByText },
+      user,
+    } = setup();
 
-    expect(getByText('purchased quantity foo purchased product')).toBeVisible();
+    expect(await findByText('purchased quantity foo purchased product')).toBeVisible();
 
-    fireEvent.click(getByTestId('purchased-item-delete-id1'));
+    await user.click(await findByTestId('purchased-item-delete-id1'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
@@ -483,72 +529,79 @@ describe('ListContainer', () => {
 
   it('deletes all items when multiple are selected', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByTestId, queryByText, getAllByText } =
-      renderListContainer(props);
+    const {
+      component: { findAllByRole, findByText, findByTestId, queryByTestId, queryByText, findAllByText },
+      user,
+    } = setup();
 
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
-    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
-    expect(getByText('Bar')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
+    expect(await findByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(await findByText('Bar')).toBeVisible();
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
-    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
+    await user.click(checkboxes[1]);
+    await user.click(checkboxes[2]);
+    await user.click(await findByTestId('not-purchased-item-delete-id2'));
 
-    expect(getByTestId('confirm-delete')).toBeVisible();
+    expect(await findByTestId('confirm-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
 
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
     expect(queryByText('not purchased quantity foo not purchased product')).toBeNull();
-    expect(getByText('Foo')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
     expect(queryByText('Bar')).toBeNull();
   });
 
   it('does not delete item when delete is cleared, hides modal', async () => {
-    const { getByTestId, getByText, queryByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId, findByText, queryByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-delete-id2'));
+    await user.click(await findByTestId('not-purchased-item-delete-id2'));
 
-    expect(getByTestId('clear-delete')).toBeVisible();
+    expect(await findByTestId('clear-delete')).toBeVisible();
 
-    fireEvent.click(getByTestId('clear-delete'));
+    await user.click(await findByTestId('clear-delete'));
 
     await waitFor(() => expect(queryByTestId('clear-delete')).toBeNull());
 
-    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity no category not purchased product')).toBeVisible();
   });
 
   it('clears filter when filter is cleared', async () => {
-    props.includedCategories = ['', 'foo', 'bar'];
-    const { getByTestId, getByText, queryByText } = renderListContainer(props);
-    fireEvent.click(getByText('Filter by category'));
+    const {
+      component: { findByTestId, findByText, queryByText },
+      user,
+    } = setup({ includedCategories: ['', 'foo', 'bar'] });
+    await user.click(await findByText('Filter by category'));
 
-    await waitFor(() => getByTestId('filter-by-foo'));
+    await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
 
-    fireEvent.click(getByTestId('filter-by-foo'));
+    await user.click(await findByTestId('filter-by-foo'));
 
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
     expect(queryByText('Bar')).toBeNull();
     expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
 
-    fireEvent.click(getByTestId('clear-filter'));
+    await user.click(await findByTestId('clear-filter'));
 
-    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
-    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
-    expect(getByText('Foo')).toBeVisible();
-    expect(getByText('Bar')).toBeVisible();
+    expect(await findByText('not purchased quantity no category not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(await findByText('Foo')).toBeVisible();
+    expect(await findByText('Bar')).toBeVisible();
   });
 
   it('adds an item when category exists', async () => {
@@ -567,16 +620,19 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const { getByLabelText, getByText } = renderListContainer(props);
+    const {
+      component: { findByLabelText, findByText },
+      user,
+    } = setup();
 
-    fireEvent.change(getByLabelText('Product'), { target: { value: 'new product' } });
-    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'new quantity' } });
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'foo' } });
-    fireEvent.click(getByText('Add New Item'));
+    await user.type(await findByLabelText('Product'), 'new product');
+    await user.type(await findByLabelText('Quantity'), 'new quantity');
+    await user.type(await findByLabelText('Category'), 'foo');
+    await user.click(await findByText('Add New Item'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(getByText('new quantity new product')).toBeVisible();
+    expect(await findByText('new quantity new product')).toBeVisible();
   });
 
   it('adds an item when category does not exist', async () => {
@@ -595,37 +651,40 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const { getByLabelText, getByText } = renderListContainer(props);
+    const {
+      component: { findByLabelText, findByText },
+      user,
+    } = setup();
 
-    fireEvent.change(getByLabelText('Product'), { target: { value: 'new product' } });
-    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'new quantity' } });
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'new category' } });
-    fireEvent.click(getByText('Add New Item'));
+    await user.type(await findByLabelText('Product'), 'new product');
+    await user.type(await findByLabelText('Quantity'), 'new quantity');
+    await user.type(await findByLabelText('Category'), 'new category');
+    await user.click(await findByText('Add New Item'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(getByText('new quantity new product')).toBeVisible();
-    expect(getByText('New category')).toBeVisible();
+    expect(await findByText('new quantity new product')).toBeVisible();
+    expect(await findByText('New category')).toBeVisible();
   });
 
   // TODO: why is this different?
   it('moves item to purchased when ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'ToDoList';
-    props.notPurchasedItems[''][0].task = 'whatever';
-    props.notPurchasedItems[''][0].assignee_id = 'id1';
-    const { getByText, getByTestId } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId },
+      user,
+    } = setup({}, 'ToDoList');
 
-    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('whatever')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByText('whatever').parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('whatever')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
@@ -633,86 +692,102 @@ describe('ListContainer', () => {
 
   it('moves item to purchased when not ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId },
+      user,
+    } = setup();
 
     expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
+        .parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
+        .parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('moves item to purchased and clears filter when item is last of category', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getByText, getByTestId, queryByTestId, queryByText } = renderListContainer(props);
+    const {
+      component: { findByText, findByTestId, queryByTestId, queryByText },
+      user,
+    } = setup();
 
-    fireEvent.click(getByText('Filter by category'));
+    await user.click(await findByText('Filter by category'));
 
-    await waitFor(() => getByTestId('filter-by-bar'));
+    await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
 
-    fireEvent.click(getByTestId('filter-by-bar'));
+    await user.click(await findByTestId('filter-by-bar'));
 
     await waitFor(() => expect(queryByText('not purchased quantity foo not purchased product')).toBeNull());
 
-    expect(getByTestId('clear-filter')).toBeVisible();
+    expect(await findByTestId('clear-filter')).toBeVisible();
     expect(
-      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id5'));
+    await user.click(await findByTestId('not-purchased-item-complete-id5'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(queryByTestId('clear-filter')).toBeNull();
-    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(
-      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('moves items to purchased when multiple selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getAllByRole, getByText, getByTestId, queryByText, getAllByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findByText, findByTestId, queryByText, findAllByText },
+      user,
+    } = setup();
 
     expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
+        .parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
-      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
     expect(
-      getByText('not purchased quantity no category not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
+        .parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(
-      getByText('not purchased quantity bar not purchased product').parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(queryByText('Bar')).toBeNull();
   });
 
   it('handles 401 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -723,9 +798,12 @@ describe('ListContainer', () => {
 
   it('handles 403 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -734,9 +812,12 @@ describe('ListContainer', () => {
 
   it('handles 404 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -745,9 +826,12 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -756,9 +840,12 @@ describe('ListContainer', () => {
 
   it('handles failed request on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -767,9 +854,12 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('not-purchased-item-complete-id2'));
+    await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -793,40 +883,29 @@ describe('ListContainer', () => {
       },
     });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId, getByText } = renderListContainer(props);
+    const {
+      component: { findByTestId, findByText },
+      user,
+    } = setup();
 
     expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
+    // TODO: what am I not waiting for?
+    await act(async () => undefined);
+
     expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
   it('moves items to not purchased when refreshed with multiple selected', async () => {
-    props.purchasedItems.push({
-      id: 'id2',
-      product: 'bar purchased product',
-      task: '',
-      quantity: 'purchased quantity',
-      author: '',
-      title: '',
-      artist: '',
-      album: '',
-      assignee_id: 'id1',
-      due_by: '',
-      read: false,
-      number_in_series: 0,
-      category: 'bar',
-      purchased: true,
-      completed: false,
-    });
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({
@@ -859,38 +938,86 @@ describe('ListContainer', () => {
           user_id: 'id1',
         },
       });
-    const { getAllByRole, getByTestId, getByText, getAllByText } = renderListContainer(props);
+    axios.put = jest.fn().mockResolvedValue();
+    const {
+      component: { findAllByRole, findByTestId, findByText, findAllByText },
+      user,
+    } = setup({
+      purchasedItems: [
+        {
+          id: 'id1',
+          product: 'foo purchased product',
+          task: '',
+          quantity: 'purchased quantity',
+          author: '',
+          title: '',
+          artist: '',
+          album: '',
+          assignee_id: 'id1',
+          due_by: '',
+          read: false,
+          number_in_series: 0,
+          category: 'foo',
+          purchased: true,
+          completed: false,
+        },
+        {
+          id: 'id2',
+          product: 'bar purchased product',
+          task: '',
+          quantity: 'purchased quantity',
+          author: '',
+          title: '',
+          artist: '',
+          album: '',
+          assignee_id: 'id1',
+          due_by: '',
+          read: false,
+          number_in_series: 0,
+          category: 'bar',
+          purchased: true,
+          completed: false,
+        },
+      ],
+    });
 
     expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
-    fireEvent.click(getAllByText('Select')[1]);
+    await user.click((await findAllByText('Select'))[1]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
+
+    // TODO: what am I not waiting for?
+    await act(async () => undefined);
 
     expect(
-      getByText('purchased quantity foo purchased product').parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
-      getByText('purchased quantity bar purchased product').parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity bar purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
   it('handles 401 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -903,9 +1030,12 @@ describe('ListContainer', () => {
   it('handles 403 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -916,9 +1046,12 @@ describe('ListContainer', () => {
   it('handles 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -929,9 +1062,12 @@ describe('ListContainer', () => {
   it('handles not 401, 403, 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -942,9 +1078,12 @@ describe('ListContainer', () => {
   it('handles failed request on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -955,9 +1094,12 @@ describe('ListContainer', () => {
   it('handles unknown failure on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     axios.put = jest.fn().mockResolvedValue();
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup();
 
-    fireEvent.click(getByTestId('purchased-item-refresh-id1'));
+    await user.click(await findByTestId('purchased-item-refresh-id1'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -967,99 +1109,286 @@ describe('ListContainer', () => {
 
   it('toggles read when item not purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId, queryByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId, queryByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('not-purchased-item-unread-id2')).toBeVisible();
+    expect(await findByTestId('not-purchased-item-unread-id2')).toBeVisible();
     expect(queryByTestId('not-purchased-item-read-id2')).toBeNull();
   });
 
   it('toggles unread when item not purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = true;
-    const { getByTestId, queryByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId, queryByTestId },
+      user,
+    } = setup(
+      {
+        notPurchasedItems: {
+          '': [
+            {
+              id: 'id2',
+              product: 'no category not purchased product',
+              task: 'whatever',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: 'whatever',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: true,
+              number_in_series: 0,
+              category: '',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+          ],
+          foo: [
+            {
+              id: 'id3',
+              product: 'foo not purchased product',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: '',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: 'foo',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+            {
+              id: 'id4',
+              product: 'foo not purchased product 2',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: '',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: 'foo',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+          ],
+          bar: [
+            {
+              id: 'id5',
+              product: 'bar not purchased product',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: '',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: 'bar',
+              purchased: false,
+              completed: false,
+            },
+          ],
+        },
+      },
+      'BookList',
+    );
 
-    fireEvent.click(getByTestId('not-purchased-item-unread-id2'));
+    await user.click(await findByTestId('not-purchased-item-unread-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('not-purchased-item-read-id2')).toBeVisible();
+    expect(await findByTestId('not-purchased-item-read-id2')).toBeVisible();
     expect(queryByTestId('not-purchased-item-unread-id2')).toBeNull();
   });
 
   it('toggles read when item purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'BookList';
-    props.purchasedItems[0].title = 'whatever';
-    props.purchasedItems[0].read = false;
-    const { getByTestId, queryByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId, queryByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('purchased-item-read-id1'));
+    await user.click(await findByTestId('purchased-item-read-id1'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('purchased-item-unread-id1')).toBeVisible();
+    expect(await findByTestId('purchased-item-unread-id1')).toBeVisible();
     expect(queryByTestId('purchased-item-read-id1')).toBeNull();
   });
 
   it('toggles unread when item purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'BookList';
-    props.purchasedItems[0].title = 'whatever';
-    props.purchasedItems[0].read = true;
-    const { getByTestId, queryByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId, queryByTestId },
+      user,
+    } = setup(
+      {
+        purchasedItems: [
+          {
+            id: 'id1',
+            product: 'foo purchased product',
+            task: '',
+            quantity: 'purchased quantity',
+            author: '',
+            title: 'whatever',
+            artist: '',
+            album: '',
+            assignee_id: 'id1',
+            due_by: '',
+            read: true,
+            number_in_series: 0,
+            category: 'foo',
+            purchased: true,
+            completed: false,
+          },
+        ],
+      },
+      'BookList',
+    );
 
-    fireEvent.click(getByTestId('purchased-item-unread-id1'));
+    await user.click(await findByTestId('purchased-item-unread-id1'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('purchased-item-read-id1')).toBeVisible();
+    expect(await findByTestId('purchased-item-read-id1')).toBeVisible();
     expect(queryByTestId('purchased-item-unread-id1')).toBeNull();
   });
 
   it('toggles read on multiple items when selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    props.list.type = 'BookList';
-    props.notPurchasedItems.foo[0].title = 'whatever';
-    props.notPurchasedItems.foo[0].read = false;
-    props.notPurchasedItems.foo[1].title = 'asdf';
-    props.notPurchasedItems.foo[1].read = true;
-    const { getAllByRole, getByTestId, queryByTestId, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findByTestId, queryByTestId, findAllByText, findByText },
+      user,
+    } = setup(
+      {
+        notPurchasedItems: {
+          '': [
+            {
+              id: 'id2',
+              product: 'no category not purchased product',
+              task: 'whatever',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: 'whatever',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: '',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+          ],
+          foo: [
+            {
+              id: 'id3',
+              product: 'foo not purchased product',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: 'whatever',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: 'foo',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+            {
+              id: 'id4',
+              product: 'foo not purchased product 2',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: 'asdf',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: true,
+              number_in_series: 0,
+              category: 'foo',
+              purchased: false,
+              completed: false,
+              grocery_list_id: 'id1',
+            },
+          ],
+          bar: [
+            {
+              id: 'id5',
+              product: 'bar not purchased product',
+              task: '',
+              quantity: 'not purchased quantity',
+              author: '',
+              title: '',
+              artist: '',
+              album: '',
+              assignee_id: 'id1',
+              due_by: '',
+              read: false,
+              number_in_series: 0,
+              category: 'bar',
+              purchased: false,
+              completed: false,
+            },
+          ],
+        },
+      },
+      'BookList',
+    );
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[2]);
-    fireEvent.click(checkboxes[3]);
-    fireEvent.click(getByTestId('not-purchased-item-read-id3'));
+    await user.click(checkboxes[2]);
+    await user.click(checkboxes[3]);
+    await user.click(await findByTestId('not-purchased-item-read-id3'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
-    expect(getByTestId('not-purchased-item-unread-id3')).toBeVisible();
+    expect(await findByTestId('not-purchased-item-unread-id3')).toBeVisible();
     expect(queryByTestId('not-purchased-item-read-id3')).toBeNull();
     expect(queryByTestId('not-purchased-item-unread-id4')).toBeNull();
-    expect(getByTestId('not-purchased-item-read-id4')).toBeVisible();
+    expect(await findByTestId('not-purchased-item-read-id4')).toBeVisible();
   });
 
   it('handles 401 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -1070,12 +1399,12 @@ describe('ListContainer', () => {
 
   it('handles 403 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1084,12 +1413,12 @@ describe('ListContainer', () => {
 
   it('handles 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1098,12 +1427,12 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1112,12 +1441,12 @@ describe('ListContainer', () => {
 
   it('handles failed request on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1126,12 +1455,12 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    props.list.type = 'BookList';
-    props.notPurchasedItems[''][0].title = 'whatever';
-    props.notPurchasedItems[''][0].read = false;
-    const { getByTestId } = renderListContainer(props);
+    const {
+      component: { findByTestId },
+      user,
+    } = setup({}, 'BookList');
 
-    fireEvent.click(getByTestId('not-purchased-item-read-id2'));
+    await user.click(await findByTestId('not-purchased-item-read-id2'));
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
@@ -1139,96 +1468,110 @@ describe('ListContainer', () => {
   });
 
   it('cannot multi select if user does not have write access', () => {
-    props.permissions = 'read';
-    const { queryByText } = renderListContainer(props);
+    const {
+      component: { queryByText },
+    } = setup({ permissions: 'read' });
 
     expect(queryByText('Select')).toBeNull();
   });
 
   it('changes select to hide select when multi select is on', async () => {
-    props.permissions = 'write';
-    const { getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByText, findByText },
+      user,
+    } = setup({ permissions: 'write' });
 
-    expect(getAllByText('Select')[0]).toHaveTextContent('Select');
+    expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    expect(getByText('Hide Select')).toBeVisible();
+    expect(await findByText('Hide Select')).toBeVisible();
   });
 
   it('handles item select for multi select when item has not been selected', async () => {
-    props.permissions = 'write';
-    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findAllByText, findByText },
+      user,
+    } = setup({ permissions: 'write' });
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
-    expect(getAllByRole('checkbox')[0]).toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).toBeChecked();
   });
 
   it('handles item select for multi select when item has been selected', async () => {
-    props.permissions = 'write';
-    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findAllByText, findByText },
+      user,
+    } = setup({ permissions: 'write' });
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
-    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
   });
 
   it('clears selected items for mutli select is hidden for not purchased items', async () => {
-    props.permissions = 'write';
-    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findAllByText, findByText },
+      user,
+    } = setup({ permissions: 'write' });
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
-    expect(getAllByRole('checkbox')[0]).toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).toBeChecked();
 
-    fireEvent.click(getByText('Hide Select'));
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click(await findByText('Hide Select'));
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
   });
 
   it('clears selected items for mutli select is hidden for purchased items', async () => {
-    props.permissions = 'write';
-    const { getAllByRole, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findAllByText, findByText },
+      user,
+    } = setup({ permissions: 'write' });
 
-    fireEvent.click(getAllByText('Select')[1]);
+    await user.click((await findAllByText('Select'))[1]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
-    expect(getAllByRole('checkbox')[0]).toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).toBeChecked();
 
-    fireEvent.click(getByText('Hide Select'));
-    fireEvent.click(getAllByText('Select')[1]);
+    await user.click(await findByText('Hide Select'));
+    await user.click((await findAllByText('Select'))[1]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    expect(getAllByRole('checkbox')[0]).not.toBeChecked();
+    expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
   });
 
   it('navigates to single edit form when no multi select', async () => {
-    props.permissions = 'write';
-    const { getByTestId } = renderListContainer(props);
-    fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
+    const {
+      component: { findByTestId },
+      props,
+      user,
+    } = setup({ permissions: 'write' });
+    await user.click(await findByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
 
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
@@ -1236,18 +1579,21 @@ describe('ListContainer', () => {
   });
 
   it('navigates to bulk edit form when multi select', async () => {
-    props.permissions = 'write';
-    const { getAllByRole, getByTestId, getAllByText, getByText } = renderListContainer(props);
+    const {
+      component: { findAllByRole, findByTestId, findAllByText, findByText },
+      props,
+      user,
+    } = setup({ permissions: 'write' });
 
-    expect(getAllByText('Select')[0]).toHaveTextContent('Select');
+    expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
 
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
-    await waitFor(() => getByText('Hide Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[1]);
+    await user.click(await findByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
 
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
@@ -1270,17 +1616,20 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const { getByLabelText, getByText, getByTestId, queryByText } = renderListContainer(props);
+    const {
+      component: { findByLabelText, findByText, findByTestId, queryByText },
+      user,
+    } = setup();
 
-    fireEvent.click(getByText('Filter by category'));
+    await user.click(await findByText('Filter by category'));
 
-    await waitFor(() => getByTestId('filter-by-foo'));
+    await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
 
-    fireEvent.click(getByTestId('filter-by-foo'));
-    fireEvent.change(getByLabelText('Product'), { target: { value: 'new product' } });
-    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'new quantity' } });
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'bar' } });
-    fireEvent.click(getByText('Add New Item'));
+    await user.click(await findByTestId('filter-by-foo'));
+    await user.type(await findByLabelText('Product'), 'new product');
+    await user.type(await findByLabelText('Quantity'), 'new quantity');
+    await user.type(await findByLabelText('Category'), 'bar');
+    await user.click(await findByText('Add New Item'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
