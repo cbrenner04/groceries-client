@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import List from './List';
@@ -33,8 +33,10 @@ describe('List', () => {
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { getByRole } = renderList();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(getByRole('button')).toHaveTextContent('refresh the page');
   });
 
@@ -59,8 +61,10 @@ describe('List', () => {
       },
     });
     const { container, getByText } = renderList();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
     expect(getByText('foo')).toBeVisible();
   });
