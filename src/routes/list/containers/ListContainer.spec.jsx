@@ -145,7 +145,7 @@ function setup(suppliedProps = {}, listType = 'GroceryList') {
     </MemoryRouter>,
   );
 
-  return { component, props, user };
+  return { ...component, props, user };
 }
 
 describe('ListContainer', () => {
@@ -171,9 +171,7 @@ describe('ListContainer', () => {
         permissions: 'write',
       },
     });
-    const {
-      component: { findByText },
-    } = setup({ permissions: 'write' });
+    const { findByText } = setup({ permissions: 'write' });
 
     await act(async () => {
       jest.advanceTimersByTime(3000);
@@ -242,9 +240,7 @@ describe('ListContainer', () => {
           permissions: 'write',
         },
       });
-    const {
-      component: { findByText },
-    } = setup({ permissions: 'write' });
+    const { findByText } = setup({ permissions: 'write' });
 
     await act(async () => {
       jest.advanceTimersByTime(3000);
@@ -271,28 +267,21 @@ describe('ListContainer', () => {
   });
 
   it('renders ListForm when user has write permissions', async () => {
-    const {
-      component: { container, findByTestId },
-    } = setup({ permissions: 'write' });
+    const { container, findByTestId } = setup({ permissions: 'write' });
 
     expect(container).toMatchSnapshot();
     expect(await findByTestId('list-item-form')).toBeVisible();
   });
 
   it('does not render ListForm when user has read permissions', () => {
-    const {
-      component: { container, queryByTestId },
-    } = setup({ permissions: 'read' });
+    const { container, queryByTestId } = setup({ permissions: 'read' });
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('list-item-form')).toBeNull();
   });
 
   it('renders filtered items without category buckets when filter exists', async () => {
-    const {
-      component: { container, findByTestId, findByText, queryByText },
-      user,
-    } = setup();
+    const { container, findByTestId, findByText, queryByText, user } = setup();
     await user.click(await findByText('Filter by category'));
 
     await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
@@ -306,9 +295,7 @@ describe('ListContainer', () => {
   });
 
   it('renders items with category buckets when includedCategories is not empty and no filter is applied', async () => {
-    const {
-      component: { container, findByText },
-    } = setup({ includedCategories: ['', 'foo', 'bar'] });
+    const { container, findByText } = setup({ includedCategories: ['', 'foo', 'bar'] });
 
     expect(container).toMatchSnapshot();
     expect(await findByText('not purchased quantity no category not purchased product')).toBeVisible();
@@ -320,26 +307,19 @@ describe('ListContainer', () => {
 
   it('does not render incomplete items when none exist', () => {
     // includedCategories come back from the server. this is the default
-    const {
-      component: { container },
-    } = setup({ notPurchasedItems: {}, includedCategories: [''] }, 'ToDoList');
+    const { container } = setup({ notPurchasedItems: {}, includedCategories: [''] }, 'ToDoList');
 
     expect(container).toMatchSnapshot();
   });
 
   it('does not render complete items when none exist', () => {
-    const {
-      component: { container },
-    } = setup({ purchasedItems: [] });
+    const { container } = setup({ purchasedItems: [] });
 
     expect(container).toMatchSnapshot();
   });
 
   it('renders confirmation modal when delete is clicked', async () => {
-    const {
-      component: { container, findByTestId },
-      user,
-    } = setup();
+    const { container, findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id2'));
 
@@ -349,10 +329,7 @@ describe('ListContainer', () => {
 
   it('handles 401 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -369,10 +346,7 @@ describe('ListContainer', () => {
 
   it('handles 403 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -387,10 +361,7 @@ describe('ListContainer', () => {
 
   it('handles 404 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -405,10 +376,7 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -423,10 +391,7 @@ describe('ListContainer', () => {
 
   it('handles failed request on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -441,10 +406,7 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on delete', async () => {
     axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id3'));
 
@@ -459,10 +421,7 @@ describe('ListContainer', () => {
 
   it('deletes item when delete is confirmed, hides modal, removes category when item is last of category', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId, queryByTestId, queryByText },
-      user,
-    } = setup();
+    const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
     expect(await findByText('not purchased quantity bar not purchased product')).toBeVisible();
     expect(await findByText('Bar')).toBeVisible();
@@ -483,10 +442,7 @@ describe('ListContainer', () => {
 
   it('deletes item, hides modal, does not remove category when item is not last of category', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId, queryByTestId, queryByText },
-      user,
-    } = setup();
+    const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
     expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(await findByText('Foo')).toBeVisible();
@@ -507,10 +463,7 @@ describe('ListContainer', () => {
 
   it('deletes item, hides modal, when item is in purchased', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId, queryByTestId, queryByText },
-      user,
-    } = setup();
+    const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
     expect(await findByText('purchased quantity foo purchased product')).toBeVisible();
 
@@ -529,10 +482,7 @@ describe('ListContainer', () => {
 
   it('deletes all items when multiple are selected', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const {
-      component: { findAllByRole, findByText, findByTestId, queryByTestId, queryByText, findAllByText },
-      user,
-    } = setup();
+    const { findAllByRole, findByText, findByTestId, queryByTestId, queryByText, findAllByText, user } = setup();
 
     expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(await findByText('Foo')).toBeVisible();
@@ -563,10 +513,7 @@ describe('ListContainer', () => {
   });
 
   it('does not delete item when delete is cleared, hides modal', async () => {
-    const {
-      component: { findByTestId, findByText, queryByTestId },
-      user,
-    } = setup();
+    const { findByTestId, findByText, queryByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-delete-id2'));
 
@@ -580,10 +527,7 @@ describe('ListContainer', () => {
   });
 
   it('clears filter when filter is cleared', async () => {
-    const {
-      component: { findByTestId, findByText, queryByText },
-      user,
-    } = setup({ includedCategories: ['', 'foo', 'bar'] });
+    const { findByTestId, findByText, queryByText, user } = setup({ includedCategories: ['', 'foo', 'bar'] });
     await user.click(await findByText('Filter by category'));
 
     await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
@@ -620,10 +564,7 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const {
-      component: { findByLabelText, findByText },
-      user,
-    } = setup();
+    const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
@@ -651,10 +592,7 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const {
-      component: { findByLabelText, findByText },
-      user,
-    } = setup();
+    const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
@@ -670,10 +608,7 @@ describe('ListContainer', () => {
   // TODO: why is this different?
   it('moves item to purchased when ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId },
-      user,
-    } = setup({}, 'ToDoList');
+    const { findByText, findByTestId, user } = setup({}, 'ToDoList');
 
     expect((await findByText('whatever')).parentElement.parentElement.parentElement).toHaveAttribute(
       'data-test-class',
@@ -692,10 +627,7 @@ describe('ListContainer', () => {
 
   it('moves item to purchased when not ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId },
-      user,
-    } = setup();
+    const { findByText, findByTestId, user } = setup();
 
     expect(
       (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
@@ -714,10 +646,7 @@ describe('ListContainer', () => {
 
   it('moves item to purchased and clears filter when item is last of category', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByText, findByTestId, queryByTestId, queryByText },
-      user,
-    } = setup();
+    const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
     await user.click(await findByText('Filter by category'));
 
@@ -745,10 +674,7 @@ describe('ListContainer', () => {
 
   it('moves items to purchased when multiple selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findAllByRole, findByText, findByTestId, queryByText, findAllByText },
-      user,
-    } = setup();
+    const { findAllByRole, findByText, findByTestId, queryByText, findAllByText, user } = setup();
 
     expect(
       (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
@@ -782,10 +708,7 @@ describe('ListContainer', () => {
 
   it('handles 401 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -798,10 +721,7 @@ describe('ListContainer', () => {
 
   it('handles 403 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -812,10 +732,7 @@ describe('ListContainer', () => {
 
   it('handles 404 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -826,10 +743,7 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -840,10 +754,7 @@ describe('ListContainer', () => {
 
   it('handles failed request on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -854,10 +765,7 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on purchase', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
 
@@ -883,10 +791,7 @@ describe('ListContainer', () => {
       },
     });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId, findByText },
-      user,
-    } = setup();
+    const { findByTestId, findByText, user } = setup();
 
     expect(
       (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
@@ -939,10 +844,7 @@ describe('ListContainer', () => {
         },
       });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findAllByRole, findByTestId, findByText, findAllByText },
-      user,
-    } = setup({
+    const { findAllByRole, findByTestId, findByText, findAllByText, user } = setup({
       purchasedItems: [
         {
           id: 'id1',
@@ -1012,10 +914,7 @@ describe('ListContainer', () => {
   it('handles 401 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1030,10 +929,7 @@ describe('ListContainer', () => {
   it('handles 403 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1046,10 +942,7 @@ describe('ListContainer', () => {
   it('handles 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1062,10 +955,7 @@ describe('ListContainer', () => {
   it('handles not 401, 403, 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1078,10 +968,7 @@ describe('ListContainer', () => {
   it('handles failed request on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1094,10 +981,7 @@ describe('ListContainer', () => {
   it('handles unknown failure on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     axios.put = jest.fn().mockResolvedValue();
-    const {
-      component: { findByTestId },
-      user,
-    } = setup();
+    const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
 
@@ -1109,10 +993,7 @@ describe('ListContainer', () => {
 
   it('toggles read when item not purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByTestId, queryByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, queryByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1124,10 +1005,7 @@ describe('ListContainer', () => {
 
   it('toggles unread when item not purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByTestId, queryByTestId },
-      user,
-    } = setup(
+    const { findByTestId, queryByTestId, user } = setup(
       {
         notPurchasedItems: {
           '': [
@@ -1222,10 +1100,7 @@ describe('ListContainer', () => {
 
   it('toggles read when item purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByTestId, queryByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, queryByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('purchased-item-read-id1'));
 
@@ -1237,10 +1112,7 @@ describe('ListContainer', () => {
 
   it('toggles unread when item purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findByTestId, queryByTestId },
-      user,
-    } = setup(
+    const { findByTestId, queryByTestId, user } = setup(
       {
         purchasedItems: [
           {
@@ -1275,10 +1147,7 @@ describe('ListContainer', () => {
 
   it('toggles read on multiple items when selected', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const {
-      component: { findAllByRole, findByTestId, queryByTestId, findAllByText, findByText },
-      user,
-    } = setup(
+    const { findAllByRole, findByTestId, queryByTestId, findAllByText, findByText, user } = setup(
       {
         notPurchasedItems: {
           '': [
@@ -1383,10 +1252,7 @@ describe('ListContainer', () => {
 
   it('handles 401 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1399,10 +1265,7 @@ describe('ListContainer', () => {
 
   it('handles 403 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1413,10 +1276,7 @@ describe('ListContainer', () => {
 
   it('handles 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1427,10 +1287,7 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1441,10 +1298,7 @@ describe('ListContainer', () => {
 
   it('handles failed request on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1455,10 +1309,7 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const {
-      component: { findByTestId },
-      user,
-    } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, 'BookList');
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1468,18 +1319,13 @@ describe('ListContainer', () => {
   });
 
   it('cannot multi select if user does not have write access', () => {
-    const {
-      component: { queryByText },
-    } = setup({ permissions: 'read' });
+    const { queryByText } = setup({ permissions: 'read' });
 
     expect(queryByText('Select')).toBeNull();
   });
 
   it('changes select to hide select when multi select is on', async () => {
-    const {
-      component: { findAllByText, findByText },
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
 
@@ -1491,10 +1337,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item select for multi select when item has not been selected', async () => {
-    const {
-      component: { findAllByRole, findAllByText, findByText },
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[0]);
 
@@ -1506,10 +1349,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item select for multi select when item has been selected', async () => {
-    const {
-      component: { findAllByRole, findAllByText, findByText },
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[0]);
 
@@ -1522,10 +1362,7 @@ describe('ListContainer', () => {
   });
 
   it('clears selected items for mutli select is hidden for not purchased items', async () => {
-    const {
-      component: { findAllByRole, findAllByText, findByText },
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[0]);
 
@@ -1544,10 +1381,7 @@ describe('ListContainer', () => {
   });
 
   it('clears selected items for mutli select is hidden for purchased items', async () => {
-    const {
-      component: { findAllByRole, findAllByText, findByText },
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[1]);
 
@@ -1566,11 +1400,7 @@ describe('ListContainer', () => {
   });
 
   it('navigates to single edit form when no multi select', async () => {
-    const {
-      component: { findByTestId },
-      props,
-      user,
-    } = setup({ permissions: 'write' });
+    const { findByTestId, props, user } = setup({ permissions: 'write' });
     await user.click(await findByTestId(`not-purchased-item-edit-${props.notPurchasedItems.foo[0].id}`));
 
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -1579,11 +1409,7 @@ describe('ListContainer', () => {
   });
 
   it('navigates to bulk edit form when multi select', async () => {
-    const {
-      component: { findAllByRole, findByTestId, findAllByText, findByText },
-      props,
-      user,
-    } = setup({ permissions: 'write' });
+    const { findAllByRole, findByTestId, findAllByText, findByText, props, user } = setup({ permissions: 'write' });
 
     expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
 
@@ -1616,10 +1442,7 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    const {
-      component: { findByLabelText, findByText, findByTestId, queryByText },
-      user,
-    } = setup();
+    const { findByLabelText, findByText, findByTestId, queryByText, user } = setup();
 
     await user.click(await findByText('Filter by category'));
 

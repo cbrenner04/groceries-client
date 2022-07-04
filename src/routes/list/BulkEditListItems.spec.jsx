@@ -14,9 +14,9 @@ describe('BulkEditListItems', () => {
     );
   };
 
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderBulkEditListItems();
-    const status = getByText('Loading...');
+  it('renders the Loading component when fetch request is pending', async () => {
+    const { container, findByText } = renderBulkEditListItems();
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();

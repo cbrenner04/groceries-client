@@ -13,9 +13,9 @@ function setup(suppliedProps = {}) {
     handleClear: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { findByRole, findByText, queryByRole } = render(<ConfirmModal {...props} />);
+  const component = render(<ConfirmModal {...props} />);
 
-  return { findByRole, findByText, props, queryByRole, user };
+  return { ...component, props, user };
 }
 
 describe('ConfirmModal', () => {

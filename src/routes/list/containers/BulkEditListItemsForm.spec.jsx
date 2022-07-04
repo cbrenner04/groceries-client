@@ -81,24 +81,19 @@ function setup(listType = 'GroceryList', suppliedProps = {}) {
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<BulkEditListItemsForm {...props} />);
 
-  return { component, props, user };
+  return { ...component, props, user };
 }
 
 describe('BulkEditListItemsForm', () => {
   it('renders', () => {
-    const {
-      component: { container },
-    } = setup();
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
   it('clears new list form when switching from new to existing', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Copy'));
     await user.click(await findByText('Create new list'));
@@ -128,10 +123,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('clears new list form and hides existing and new list forms when copy is removed', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText, queryByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, queryByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Copy'));
 
@@ -159,10 +151,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('switches move to false when copy is selected after move', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Move'));
 
@@ -188,10 +177,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('clears attribute when the clear checkbox is selected and attribute has value', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Quantity'));
     await user.type(await findByLabelText('Quantity'), '3');
@@ -213,10 +199,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('sets attribute to initial value when clear is selected a second time', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Quantity'));
     await user.type(await findByLabelText('Quantity'), 'bar');
@@ -242,11 +225,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on successful submission', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -257,10 +236,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('sets appropriate data when copy', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Copy'));
     await user.selectOptions(await findByLabelText('Existing list'), 'id1');
@@ -280,10 +256,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('sets appropriate data when move', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup('GroceryList', { lists: [] });
+    const { findByText, findByLabelText, user } = setup('GroceryList', { lists: [] });
 
     await user.click(await findByLabelText('Move'));
     await user.type(await findByLabelText('New list name'), 'foo');
@@ -301,10 +274,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('renders error when not existing list and not new list and copy', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Copy'));
     await user.click(await findByText('Update Items'));
@@ -314,10 +284,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('renders error when not existing list and not new list and move', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const {
-      component: { findByText, findByLabelText },
-      user,
-    } = setup();
+    const { findByText, findByLabelText, user } = setup();
 
     await user.click(await findByLabelText('Move'));
     await user.click(await findByText('Update Items'));
@@ -327,11 +294,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to login on 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -342,11 +305,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -357,11 +316,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('displays toast and redirects to list on 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -380,10 +335,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('BookList');
+    const { findAllByRole, user } = setup('BookList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -401,10 +353,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('GroceryList');
+    const { findAllByRole, user } = setup('GroceryList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -422,10 +371,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('MusicList');
+    const { findAllByRole, user } = setup('MusicList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -443,10 +389,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('ToDoList');
+    const { findAllByRole, user } = setup('ToDoList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -458,10 +401,7 @@ describe('BulkEditListItemsForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       request: 'request failed',
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('ToDoList');
+    const { findAllByRole, user } = setup('ToDoList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -473,10 +413,7 @@ describe('BulkEditListItemsForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       message: 'request failed',
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup('ToDoList');
+    const { findAllByRole, user } = setup('ToDoList');
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -485,11 +422,7 @@ describe('BulkEditListItemsForm', () => {
   });
 
   it('goes back to list on Cancel', async () => {
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 

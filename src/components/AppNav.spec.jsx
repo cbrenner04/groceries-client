@@ -16,14 +16,14 @@ jest.mock('react-router-dom', () => ({
 function setup(context) {
   const user = userEvent.setup();
   const signOutUser = jest.fn();
-  const { findByTestId, findByText } = render(
+  const component = render(
     <MemoryRouter>
       <UserContext.Provider value={context}>
         <AppNav signOutUser={signOutUser} />
       </UserContext.Provider>
     </MemoryRouter>,
   );
-  return { findByTestId, findByText, signOutUser, user };
+  return { ...component, signOutUser, user };
 }
 
 describe('AppNav', () => {

@@ -22,9 +22,9 @@ describe('List', () => {
     );
   };
 
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderList();
-    const status = getByText('Loading...');
+  it('renders the Loading component when fetch request is pending', async () => {
+    const { container, findByText } = renderList();
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();
@@ -32,12 +32,12 @@ describe('List', () => {
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByRole } = renderList();
+    const { findByRole } = renderList();
 
     await act(async () => undefined);
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('displays List', async () => {
@@ -60,12 +60,12 @@ describe('List', () => {
         permissions: 'write',
       },
     });
-    const { container, getByText } = renderList();
+    const { container, findByText } = renderList();
 
     await act(async () => undefined);
 
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
-    expect(getByText('foo')).toBeVisible();
+    expect(await findByText('foo')).toBeVisible();
   });
 });

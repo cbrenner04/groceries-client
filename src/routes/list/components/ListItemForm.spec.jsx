@@ -29,23 +29,18 @@ function setup(suppliedProps = {}) {
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ListItemForm {...props} />);
 
-  return { component, props, user };
+  return { ...component, props, user };
 }
 
 describe('ListItemForm', () => {
   it('renders', () => {
-    const {
-      component: { container },
-    } = setup();
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
   it('expands form', async () => {
-    const {
-      component: { findByTestId, findByText },
-      user,
-    } = setup();
+    const { findByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Add Item'));
 
@@ -53,10 +48,7 @@ describe('ListItemForm', () => {
   });
 
   it('collapses form', async () => {
-    const {
-      component: { findByTestId, findByText },
-      user,
-    } = setup();
+    const { findByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Add Item'));
 
@@ -72,11 +64,7 @@ describe('ListItemForm', () => {
       foo: 'bar',
     };
     axios.post = jest.fn().mockResolvedValue({ data });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -88,10 +76,7 @@ describe('ListItemForm', () => {
   it('disables submit button when form has been submitted', async () => {
     // post is not resolved so that the pending state will remain after calling post
     axios.post = jest.fn();
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup();
+    const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -101,11 +86,7 @@ describe('ListItemForm', () => {
 
   it('redirects to user login when 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -116,11 +97,7 @@ describe('ListItemForm', () => {
 
   it('redirects to lists page when 403', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -131,11 +108,7 @@ describe('ListItemForm', () => {
 
   it('redirects to lists page when 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const {
-      component: { findAllByRole },
-      props,
-      user,
-    } = setup();
+    const { findAllByRole, props, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -154,10 +127,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'BookList' });
+    const { findAllByRole, user } = setup({ listType: 'BookList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -175,10 +145,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'GroceryList' });
+    const { findAllByRole, user } = setup({ listType: 'GroceryList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -196,10 +163,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'MusicList' });
+    const { findAllByRole, user } = setup({ listType: 'MusicList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -217,10 +181,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -232,10 +193,7 @@ describe('ListItemForm', () => {
     axios.post = jest.fn().mockRejectedValue({
       request: 'request failed',
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -247,10 +205,7 @@ describe('ListItemForm', () => {
     axios.post = jest.fn().mockRejectedValue({
       message: 'request failed',
     });
-    const {
-      component: { findAllByRole },
-      user,
-    } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -259,10 +214,7 @@ describe('ListItemForm', () => {
   });
 
   it('sets value for numberInSeries as a number when input', async () => {
-    const {
-      component: { findByLabelText, findAllByRole },
-      user,
-    } = setup({ listType: 'BookList' });
+    const { findByLabelText, findAllByRole, user } = setup({ listType: 'BookList' });
 
     await user.type(await findByLabelText('Number in series'), '2');
     await user.click((await findAllByRole('button'))[1]);

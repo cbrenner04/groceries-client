@@ -25,7 +25,7 @@ describe('EditListItem', () => {
 
   it('renders the Loading component when fetch request is pending', async () => {
     const { container, findByText } = renderEditListItem();
-    const status = findByText('Loading...');
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();

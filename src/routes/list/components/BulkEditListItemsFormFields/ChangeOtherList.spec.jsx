@@ -29,14 +29,12 @@ function setup(suppliedProps = {}) {
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ChangeOtherList {...props} />);
 
-  return { props, component, user };
+  return { ...component, props, user };
 }
 
 describe('ChangeOtherList', () => {
   it('renders appropriate change list instructions when existingListsOptions', async () => {
-    const {
-      component: { findByText, queryByText },
-    } = setup({ copy: true });
+    const { findByText, queryByText } = setup({ copy: true });
 
     expect(await findByText('Choose an existing list or create a new one.')).toBeVisible();
     expect(
@@ -45,9 +43,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('renders appropriate change list instructions when no existingListsOptions', async () => {
-    const {
-      component: { findByText, queryByText },
-    } = setup({ copy: true, existingListsOptions: [] });
+    const { findByText, queryByText } = setup({ copy: true, existingListsOptions: [] });
 
     expect(queryByText('Choose an existing list or create a new one.')).toBeNull();
     expect(
@@ -56,11 +52,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('renders when copy and handle change when selected', async () => {
-    const {
-      component: { container, findByLabelText },
-      props,
-      user,
-    } = setup({ copy: true });
+    const { container, findByLabelText, props, user } = setup({ copy: true });
 
     expect(container).toMatchSnapshot();
 
@@ -70,11 +62,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('renders when move and handle change when selected', async () => {
-    const {
-      component: { container, findByLabelText },
-      props,
-      user,
-    } = setup({ move: true });
+    const { container, findByLabelText, props, user } = setup({ move: true });
 
     expect(container).toMatchSnapshot();
 
@@ -84,9 +72,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('renders only radios when not copy and not move', async () => {
-    const {
-      component: { container, findByLabelText, queryByLabelText },
-    } = setup();
+    const { container, findByLabelText, queryByLabelText } = setup();
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Copy')).toBeVisible();
@@ -97,9 +83,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('shows choose existing list link when existingListsOptions; correct fields when showNewList & copy', async () => {
-    const {
-      component: { container, findByLabelText, findByRole, queryByLabelText },
-    } = setup({
+    const { container, findByLabelText, findByRole, queryByLabelText } = setup({
       copy: true,
       showNewListForm: true,
     });
@@ -114,9 +98,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('shows choose existing list link when existingListsOptions; correct fields when showNewList & move', async () => {
-    const {
-      component: { container, findByLabelText, queryByLabelText, findByRole },
-    } = setup({
+    const { container, findByLabelText, queryByLabelText, findByRole } = setup({
       move: true,
       showNewListForm: true,
     });
@@ -131,9 +113,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('does not show choose existing list link when not existingListsOptions and showNewList', async () => {
-    const {
-      component: { container, findByLabelText, queryByLabelText, queryByRole },
-    } = setup({
+    const { container, findByLabelText, queryByLabelText, queryByRole } = setup({
       move: true,
       showNewListForm: true,
       existingListsOptions: [],
@@ -149,9 +129,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('shows create new list link when not showNewListForm', async () => {
-    const {
-      component: { container, findByLabelText, queryByLabelText, findByRole },
-    } = setup({ copy: true, showNewListForm: false });
+    const { container, findByLabelText, queryByLabelText, findByRole } = setup({ copy: true, showNewListForm: false });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Copy')).toBeVisible();
@@ -163,9 +141,7 @@ describe('ChangeOtherList', () => {
   });
 
   it('does not render update current items when all items are complete', () => {
-    const {
-      component: { container, queryByLabelText },
-    } = setup({ copy: true, allComplete: true });
+    const { container, queryByLabelText } = setup({ copy: true, allComplete: true });
 
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Would you like to also update the current items?')).toBeNull();

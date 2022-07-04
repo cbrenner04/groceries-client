@@ -55,16 +55,12 @@ function setup(suppliedProps) {
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<BulkEditListItemsFormFields {...props} />);
 
-  return { component, props, user };
+  return { ...component, props, user };
 }
 
 describe('BulkEditListItemsFormFields', () => {
   it('render Book fields when listType is BookList and fires appropriate change handlers', async () => {
-    const {
-      component: { container, findByLabelText, findAllByRole },
-      props,
-      user,
-    } = setup({ listType: 'BookList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'BookList' });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Author')).toBeVisible();
@@ -87,11 +83,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render Grocery fields when listType is GroceryList and fires appropriate change handlers', async () => {
-    const {
-      component: { container, findByLabelText, findAllByRole },
-      props,
-      user,
-    } = setup({ listType: 'GroceryList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'GroceryList' });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Quantity')).toBeVisible();
@@ -114,11 +106,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render Music fields when listType is MusicList and fires appropriate change handlers', async () => {
-    const {
-      component: { container, findByLabelText, findAllByRole },
-      props,
-      user,
-    } = setup({ listType: 'MusicList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'MusicList' });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Album')).toBeVisible();
@@ -145,11 +133,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render ToDo fields when listType is ToDoList and fires appropriate change handlers', async () => {
-    const {
-      component: { container, findByLabelText, findAllByRole },
-      props,
-      user,
-    } = setup({ listType: 'ToDoList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'ToDoList' });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Assignee')).toBeVisible();
@@ -177,9 +161,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('does not render list item attribute fields when all items are completed', () => {
-    const {
-      component: { container, queryByLabelText },
-    } = setup({
+    const { container, queryByLabelText } = setup({
       listType: 'GroceryList',
       formData: { ...defaultFormData, allComplete: true },
     });
