@@ -578,7 +578,7 @@ describe('ShareListForm', () => {
 
       await act(async () => undefined);
 
-      expect(queryByTestId('pending-user-id2')).toBeNull();
+      await waitFor(() => expect(queryByTestId('pending-user-id2')).toBeNull());
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
