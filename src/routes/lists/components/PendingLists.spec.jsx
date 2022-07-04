@@ -1,7 +1,8 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import PendingLists from './PendingLists';
 import axios from '../../../utils/api';
@@ -16,104 +17,104 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('PendingLists', () => {
-  let props;
-  const renderPendingLists = (props) => {
-    return render(
-      <MemoryRouter>
-        <PendingLists {...props} />
-      </MemoryRouter>,
-    );
-  };
-
-  beforeEach(() => {
-    props = {
-      userId: 'id1',
-      pendingLists: [
-        {
-          id: 'id1',
-          name: 'foo',
-          type: 'GroceryList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id2',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-        {
-          id: 'id2',
-          name: 'foo',
-          type: 'GroceryList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id3',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      setPendingLists: jest.fn(),
-      incompleteLists: [
-        {
-          id: 'id3',
-          name: 'baz',
-          type: 'MusicList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id14',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id4',
-          name: 'foobar',
-          type: 'ToDoList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id6',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      setIncompleteLists: jest.fn(),
-      completedLists: [
-        {
-          id: 'id5',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id7',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id6',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id9',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      setCompletedLists: jest.fn(),
-      currentUserPermissions: {
-        id1: 'write',
-        id2: 'write',
-        id3: 'write',
-        id4: 'read',
-        id5: 'read',
-        id6: 'read',
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    userId: 'id1',
+    pendingLists: [
+      {
+        id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id2',
+        owner_id: 'id2',
+        refreshed: false,
       },
-    };
-  });
+      {
+        id: 'id2',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id3',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    setPendingLists: jest.fn(),
+    incompleteLists: [
+      {
+        id: 'id3',
+        name: 'baz',
+        type: 'MusicList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id14',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id4',
+        name: 'foobar',
+        type: 'ToDoList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id6',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    setIncompleteLists: jest.fn(),
+    completedLists: [
+      {
+        id: 'id5',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id7',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id6',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id9',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    setCompletedLists: jest.fn(),
+    currentUserPermissions: {
+      id1: 'write',
+      id2: 'write',
+      id3: 'write',
+      id4: 'read',
+      id5: 'read',
+      id6: 'read',
+    },
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(
+    <MemoryRouter>
+      <PendingLists {...props} />
+    </MemoryRouter>,
+  );
 
+  return { ...component, props, user };
+}
+
+describe('PendingLists', () => {
   it('accepts list', async () => {
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, props, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully accepted.', { type: 'info' });
@@ -126,13 +127,15 @@ describe('PendingLists', () => {
 
   it('accepts multiple lists', async () => {
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByText, getAllByRole } = renderPendingLists(props);
+    const { findAllByTestId, findByText, findAllByRole, props, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click(await findByText('Select'));
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    const checkboxes = await findAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(2));
 
     expect(toast).toHaveBeenCalledWith('List successfully accepted.', { type: 'info' });
@@ -150,9 +153,9 @@ describe('PendingLists', () => {
 
   it('redirects on 401 from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -161,9 +164,9 @@ describe('PendingLists', () => {
 
   it('shows error on 403 from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -171,9 +174,9 @@ describe('PendingLists', () => {
 
   it('shows errors on 404 from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -181,9 +184,9 @@ describe('PendingLists', () => {
 
   it('shows errors when error not 401, 403, 404 from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -191,9 +194,9 @@ describe('PendingLists', () => {
 
   it('shows errors when request fails from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -201,9 +204,9 @@ describe('PendingLists', () => {
 
   it('shows errors when known failure from list accept', async () => {
     axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getAllByTestId } = renderPendingLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-accept')[0]);
+    await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
@@ -211,12 +214,12 @@ describe('PendingLists', () => {
 
   it('does not reject list when confirm modal is cleared', async () => {
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('clear-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(() => findByTestId('clear-reject'));
 
-    fireEvent.click(getByTestId('clear-reject'));
+    await user.click(await findByTestId('clear-reject'));
     await waitFor(() => expect(queryByTestId('clear-reject')).toBeNull());
 
     expect(toast).not.toHaveBeenCalled();
@@ -225,12 +228,12 @@ describe('PendingLists', () => {
 
   it('rejects list', async () => {
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(() => findByTestId('confirm-reject'));
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(queryByTestId('confirm-reject')).toBeNull());
 
     expect(toast).toHaveBeenCalledWith('List successfully rejected.', { type: 'info' });
@@ -240,16 +243,18 @@ describe('PendingLists', () => {
 
   it('rejects multiple lists', async () => {
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId, getByText, getAllByRole } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, findByText, findAllByRole, props, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click(await findByText('Select'));
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    const checkboxes = await findAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
+
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(queryByTestId('confirm-reject')).toBeNull());
 
     expect(toast).toHaveBeenCalledWith('Lists successfully rejected.', { type: 'info' });
@@ -259,12 +264,12 @@ describe('PendingLists', () => {
 
   it('redirects to login when reject fails with 401', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -273,12 +278,12 @@ describe('PendingLists', () => {
 
   it('shows errors when reject fails with 403', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -286,12 +291,12 @@ describe('PendingLists', () => {
 
   it('shows errors when reject fails with 404', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -299,12 +304,12 @@ describe('PendingLists', () => {
 
   it('shows errors when reject fails with error other than 401, 403, 404', async () => {
     axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -312,12 +317,12 @@ describe('PendingLists', () => {
 
   it('shows errors when reject fails to send request', async () => {
     axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -325,12 +330,12 @@ describe('PendingLists', () => {
 
   it('shows errors when reject unknown error occurs', async () => {
     axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getAllByTestId, getByTestId } = renderPendingLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('pending-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-reject'));
+    await user.click((await findAllByTestId('pending-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-reject')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-reject'));
+    await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });

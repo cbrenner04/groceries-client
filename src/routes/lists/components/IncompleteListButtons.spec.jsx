@@ -1,180 +1,177 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 import IncompleteListButtons from './IncompleteListButtons';
 
-describe('IncompleteListButtons', () => {
-  let props;
-  const renderIncompleteListButtons = (props) => {
-    return render(
-      <MemoryRouter>
-        <IncompleteListButtons {...props} />
-      </MemoryRouter>,
-    );
+function setup(suppliedProps = {}, listOwnerId = 'id1') {
+  const user = userEvent.setup();
+  const defaultProps = {
+    userId: 'id1',
+    list: {
+      id: 'id1',
+      owner_id: listOwnerId,
+      name: 'foo',
+      type: 'GroceryList',
+      created_at: 'some date',
+      completed: false,
+      refreshed: false,
+    },
+    onListCompletion: jest.fn(),
+    onListDeletion: jest.fn(),
+    currentUserPermissions: 'write',
+    multiSelect: false,
+    handleMerge: jest.fn(),
+    selectedLists: [],
+    pending: false,
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(
+    <MemoryRouter>
+      <IncompleteListButtons {...props} />
+    </MemoryRouter>,
+  );
 
-  beforeEach(() => {
-    props = {
-      userId: 'id1',
-      list: {
-        id: 'id1',
-        owner_id: 'id1',
-        name: 'foo',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-      onListCompletion: jest.fn(),
-      onListDeletion: jest.fn(),
-      currentUserPermissions: 'write',
-      multiSelect: false,
-      handleMerge: jest.fn(),
-      selectedLists: [],
-      pending: false,
-    };
-  });
+  return { ...component, props, user };
+}
 
-  it('complete and edit are disabled when user is not owner', () => {
-    props.userId = 'id2';
-    props.list.owner_id = 'id3';
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+describe('IncompleteListButtons', () => {
+  it('complete and edit are disabled when user is not owner', async () => {
+    const { container, findByTestId } = setup({ userId: 'id2' }, 'id3');
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-complete')).toBeDisabled();
-    expect(getByTestId('incomplete-list-complete')).toHaveClass('list-button-disabled');
-    expect(getByTestId('incomplete-list-edit')).toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-edit')).toHaveClass('list-button-disabled');
+    expect(await findByTestId('incomplete-list-complete')).toBeDisabled();
+    expect(await findByTestId('incomplete-list-complete')).toHaveClass('list-button-disabled');
+    expect(await findByTestId('incomplete-list-edit')).toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-edit')).toHaveClass('list-button-disabled');
   });
 
-  it('complete and edit are enabled when user is owner', () => {
-    props.userId = 'id1';
-    props.list.owner_id = 'id1';
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+  it('complete and edit are enabled when user is owner', async () => {
+    const { container, findByTestId } = setup({ userId: 'id1' }, 'id1');
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-complete')).toBeEnabled();
-    expect(getByTestId('incomplete-list-complete')).toHaveClass('list-button-enabled');
-    expect(getByTestId('incomplete-list-edit')).not.toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-edit')).toHaveClass('list-button-enabled');
+    expect(await findByTestId('incomplete-list-complete')).toBeEnabled();
+    expect(await findByTestId('incomplete-list-complete')).toHaveClass('list-button-enabled');
+    expect(await findByTestId('incomplete-list-edit')).not.toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-edit')).toHaveClass('list-button-enabled');
   });
 
   it('edit is hidden when multiSelect and selectedLists > 1', () => {
-    props.multiSelect = true;
-    props.selectedLists = [
-      {
-        id: 'id1',
-        owner_id: 'id1',
-        name: 'foo',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-      {
-        id: 'id2',
-        owner_id: 'id1',
-        name: 'bar',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-    ];
-    const { container, queryByTestId } = renderIncompleteListButtons(props);
+    const { container, queryByTestId } = setup({
+      multiSelect: true,
+      selectedLists: [
+        {
+          id: 'id1',
+          owner_id: 'id1',
+          name: 'foo',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+        {
+          id: 'id2',
+          owner_id: 'id1',
+          name: 'bar',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+      ],
+    });
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('incomplete-list-edit')).toBeNull();
   });
 
-  it('merge is displayed when multiSelect and selectedLists > 1', () => {
-    props.multiSelect = true;
-    props.selectedLists = [
-      {
-        id: 'id1',
-        owner_id: 'id1',
-        name: 'foo',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-      {
-        id: 'id2',
-        owner_id: 'id1',
-        name: 'bar',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-    ];
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+  it('merge is displayed when multiSelect and selectedLists > 1', async () => {
+    const { container, findByTestId } = setup({
+      multiSelect: true,
+      selectedLists: [
+        {
+          id: 'id1',
+          owner_id: 'id1',
+          name: 'foo',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+        {
+          id: 'id2',
+          owner_id: 'id1',
+          name: 'bar',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+      ],
+    });
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-merge')).toBeVisible();
+    expect(await findByTestId('incomplete-list-merge')).toBeVisible();
   });
 
-  it('share is disabled when user does not have write permissions', () => {
-    props.currentUserPermissions = 'read';
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+  it('share is disabled when user does not have write permissions', async () => {
+    const { container, findByTestId } = setup({ currentUserPermissions: 'read' });
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-share')).toHaveClass('list-button-disabled');
+    expect(await findByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-share')).toHaveClass('list-button-disabled');
   });
 
   it('share is hidden when multiSelect and selectedLists > 1', () => {
-    props.multiSelect = true;
-    props.selectedLists = [
-      {
-        id: 'id1',
-        owner_id: 'id1',
-        name: 'foo',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-      {
-        id: 'id2',
-        owner_id: 'id1',
-        name: 'bar',
-        type: 'GroceryList',
-        created_at: 'some date',
-        completed: false,
-        refreshed: false,
-      },
-    ];
-    const { container, queryByTestId } = renderIncompleteListButtons(props);
+    const { container, queryByTestId } = setup({
+      multiSelect: true,
+      selectedLists: [
+        {
+          id: 'id1',
+          owner_id: 'id1',
+          name: 'foo',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+        {
+          id: 'id2',
+          owner_id: 'id1',
+          name: 'bar',
+          type: 'GroceryList',
+          created_at: 'some date',
+          completed: false,
+          refreshed: false,
+        },
+      ],
+    });
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('incomplete-list-share')).toBeNull();
   });
 
-  it('share is enabled when user has write permissions and not multiSelect', () => {
-    props.currentUserPermissions = 'write';
-    props.multiSelect = false;
-    const { container, getByTestId } = renderIncompleteListButtons(props);
+  it('share is enabled when user has write permissions and not multiSelect', async () => {
+    const { container, findByTestId } = setup({ currentUserPermissions: 'write', multiSelect: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('incomplete-list-share')).not.toHaveAttribute('disabled', '');
-    expect(getByTestId('incomplete-list-share')).toHaveClass('list-button-enabled');
+    expect(await findByTestId('incomplete-list-share')).not.toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-share')).toHaveClass('list-button-enabled');
   });
 
-  it('calls props.onListCompletion when complete is clicked', () => {
-    const { getByTestId } = renderIncompleteListButtons(props);
+  it('calls props.onListCompletion when complete is clicked', async () => {
+    const { findByTestId, props, user } = setup();
 
-    fireEvent.click(getByTestId('incomplete-list-complete'));
+    await user.click(await findByTestId('incomplete-list-complete'));
 
     expect(props.onListCompletion).toHaveBeenCalledWith(props.list);
   });
 
-  it('calls props.onListDeletion when delete is clicked', () => {
-    const { getByTestId } = renderIncompleteListButtons(props);
+  it('calls props.onListDeletion when delete is clicked', async () => {
+    const { findByTestId, props, user } = setup();
 
-    fireEvent.click(getByTestId('incomplete-list-trash'));
+    await user.click(await findByTestId('incomplete-list-trash'));
 
     expect(props.onListDeletion).toHaveBeenCalledWith(props.list);
   });

@@ -1,69 +1,82 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ListForm from './ListForm';
 
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    pending: false,
+    onFormSubmit: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(<ListForm {...props} />);
+
+  return { ...component, props, user };
+}
+
 describe('ListForm', () => {
   it('renders', () => {
-    const { container } = render(<ListForm pending={false} onFormSubmit={jest.fn()} />);
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
   it('expands form', async () => {
-    const { baseElement, getByText } = render(<ListForm pending={false} onFormSubmit={jest.fn()} />);
+    const { baseElement, findByText, user } = setup();
 
-    fireEvent.click(getByText('Add List'));
+    await user.click(await findByText('Add List'));
     await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
 
     expect(baseElement.children[0].children[0]).toHaveClass('show');
   });
 
   it('collapses form', async () => {
-    const { baseElement, getByText } = render(<ListForm pending={false} onFormSubmit={jest.fn()} />);
+    const { baseElement, findByText, user } = setup();
 
-    fireEvent.click(getByText('Add List'));
+    await user.click(await findByText('Add List'));
     await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
 
-    fireEvent.click(getByText('Collapse Form'));
+    await user.click(await findByText('Collapse Form'));
     await waitFor(() => expect(baseElement.children[0].children[0]).not.toHaveClass('show'));
 
     expect(baseElement.children[0].children[0]).not.toHaveClass('show');
   });
 
-  it('changes the value in the name field', () => {
-    const { getByLabelText } = render(<ListForm pending={false} onFormSubmit={jest.fn()} />);
+  it('changes the value in the name field', async () => {
+    const { findByLabelText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'foo' } });
+    await user.type(await findByLabelText('Name'), 'foo');
 
-    expect(getByLabelText('Name')).toHaveValue('foo');
+    expect(await findByLabelText('Name')).toHaveValue('foo');
   });
 
-  it('changes the value in the type field', () => {
-    const { getByLabelText } = render(<ListForm pending={false} onFormSubmit={jest.fn()} />);
+  it('changes the value in the type field', async () => {
+    const { findByLabelText, user } = setup();
 
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'MusicList' } });
+    await user.selectOptions(await findByLabelText('Type'), 'MusicList');
 
-    expect(getByLabelText('Type')).toHaveValue('MusicList');
+    expect(await findByLabelText('Type')).toHaveValue('MusicList');
   });
 
   it('calls props.onFormSubmit when form is submitted', async () => {
     const onFormSubmit = jest.fn().mockResolvedValue({});
-    const { getByLabelText, getAllByRole } = render(<ListForm pending={false} onFormSubmit={onFormSubmit} />);
+    const { findByLabelText, findAllByRole, props, user } = setup({ onFormSubmit });
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.type(await findByLabelText('Name'), 'foo');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click((await findAllByRole('button'))[1]);
 
-    await waitFor(() => expect(onFormSubmit).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(props.onFormSubmit).toHaveBeenCalledTimes(1));
 
     expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', type: 'BookList' });
   });
 
-  it('disables submit when in pending state', () => {
+  it('disables submit when in pending state', async () => {
     const onFormSubmit = jest.fn().mockResolvedValue({});
-    const { getAllByRole } = render(<ListForm pending={true} onFormSubmit={onFormSubmit} />);
+    const { findAllByRole } = setup({ pending: true, onFormSubmit });
 
-    expect(getAllByRole('button')[1]).toBeDisabled();
+    expect((await findAllByRole('button'))[1]).toBeDisabled();
   });
 });
