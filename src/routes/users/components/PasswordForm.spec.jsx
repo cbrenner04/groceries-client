@@ -1,45 +1,48 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import PasswordForm from './PasswordForm';
 
+function setup() {
+  const user = userEvent.setup();
+  const props = {
+    password: '',
+    passwordChangeHandler: jest.fn(),
+    passwordConfirmation: '',
+    passwordConfirmationChangeHandler: jest.fn(),
+    submissionHandler: jest.fn(),
+  };
+  const component = render(<PasswordForm {...props} />);
+
+  return { ...component, props, user };
+}
+
 describe('PasswordForm', () => {
-  let props;
-
-  beforeEach(() => {
-    props = {
-      password: '',
-      passwordChangeHandler: jest.fn(),
-      passwordConfirmation: '',
-      passwordConfirmationChangeHandler: jest.fn(),
-      submissionHandler: jest.fn(),
-    };
-  });
-
   it('renders', () => {
-    const { container } = render(<PasswordForm {...props} />);
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
-  it('changes values', () => {
-    const { getByLabelText } = render(<PasswordForm {...props} />);
+  it('changes values', async () => {
+    const { findByLabelText, props, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
+    await user.type(await findByLabelText('Password'), 'foo');
 
     expect(props.passwordChangeHandler).toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
 
     expect(props.passwordConfirmationChangeHandler).toHaveBeenCalled();
   });
 
-  it('submits', () => {
-    const { getByLabelText, getByTestId } = render(<PasswordForm {...props} />);
+  it('submits', async () => {
+    const { findByLabelText, findByText, props, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
-    fireEvent.submit(getByTestId('password-form'));
+    await user.type(await findByLabelText('Password'), 'foo');
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
+    await user.click(await findByText('Set my password'));
 
     expect(props.submissionHandler).toHaveBeenCalled();
   });

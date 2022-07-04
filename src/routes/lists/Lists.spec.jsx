@@ -14,20 +14,20 @@ describe('Lists', () => {
     );
   };
 
-  it('renders loading component when data is being fetched', () => {
-    const { container, getByText } = renderLists();
+  it('renders loading component when data is being fetched', async () => {
+    const { container, findByText } = renderLists();
 
     expect(container).toMatchSnapshot();
-    expect(getByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeVisible();
   });
 
   it('renders unknown error when error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
-    const { container, getByRole } = renderLists();
+    const { container, findByRole } = renderLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('renders Lists when data retrieval is complete', async () => {
@@ -83,12 +83,12 @@ describe('Lists', () => {
       },
     });
 
-    const { container, getByTestId } = renderLists();
+    const { container, findByTestId } = renderLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
-    expect(getByTestId('list-id2')).toHaveAttribute('data-test-class', 'incomplete-list');
-    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(await findByTestId('list-id2')).toHaveAttribute('data-test-class', 'incomplete-list');
+    expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
   });
 });

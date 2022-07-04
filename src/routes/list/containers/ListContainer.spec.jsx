@@ -805,6 +805,14 @@ describe('ListContainer', () => {
     // TODO: what am I not waiting for?
     await act(async () => undefined);
 
+    await waitFor(async () =>
+      expect(
+        (
+          await findByText('purchased quantity foo purchased product')
+        ).parentElement.parentElement.parentElement,
+      ).toHaveAttribute('data-test-class', 'non-purchased-item'),
+    );
+
     expect(
       (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
@@ -902,6 +910,14 @@ describe('ListContainer', () => {
 
     // TODO: what am I not waiting for?
     await act(async () => undefined);
+
+    await waitFor(async () =>
+      expect(
+        (
+          await findByText('purchased quantity foo purchased product')
+        ).parentElement.parentElement.parentElement,
+      ).toHaveAttribute('data-test-class', 'non-purchased-item'),
+    );
 
     expect(
       (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
