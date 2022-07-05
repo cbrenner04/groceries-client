@@ -1,36 +1,41 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Book from './Book';
 
-describe('Book', () => {
-  const props = { author: 'foo', clearAuthor: false, handleClearAuthor: jest.fn(), handleInput: jest.fn() };
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = { author: 'foo', clearAuthor: false, handleClearAuthor: jest.fn(), handleInput: jest.fn() };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, findByRole } = render(<Book {...props} />);
 
-  it('renders author input enabled when clearAuthor is false', () => {
-    props.clearAuthor = false;
-    const { container, getByLabelText } = render(<Book {...props} />);
+  return { container, findByLabelText, findByRole, props, user };
+}
+
+describe('Book', () => {
+  it('renders author input enabled when clearAuthor is false', async () => {
+    const { container, findByLabelText } = setup({ clearAuthor: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Author')).toBeEnabled();
+    expect(await findByLabelText('Author')).toBeEnabled();
   });
 
-  it('renders author input disabled when clearAuthor is true', () => {
-    props.clearAuthor = true;
-    const { container, getByLabelText } = render(<Book {...props} />);
+  it('renders author input disabled when clearAuthor is true', async () => {
+    const { container, findByLabelText } = setup({ clearAuthor: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Author')).toBeDisabled();
+    expect(await findByLabelText('Author')).toBeDisabled();
   });
 
   it('handles change in input and checkbox', async () => {
-    props.clearAuthor = false;
-    const { getByLabelText, getByRole } = render(<Book {...props} />);
+    const { findByLabelText, findByRole, props, user } = setup({ clearAuthor: false });
 
-    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Author'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getByRole('checkbox'));
+    await user.click(await findByRole('checkbox'));
 
     expect(props.handleClearAuthor).toHaveBeenCalled();
   });

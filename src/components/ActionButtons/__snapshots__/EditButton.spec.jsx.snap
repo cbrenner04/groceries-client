@@ -1,15 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EditButton renders 1`] = `
-<div>
-  <button
-    class="p-0 me-3 btn btn-link"
-    data-test-id="test-id"
-    type="button"
-  >
-    <i
-      class="fa fa-edit fa-2x text-warning"
-    />
-  </button>
-</div>
+<button
+  class="p-0 me-3 btn btn-link"
+  data-test-id="test-id"
+  type="button"
+>
+  <i
+    class="fa fa-edit fa-2x text-warning"
+  />
+</button>
 `;

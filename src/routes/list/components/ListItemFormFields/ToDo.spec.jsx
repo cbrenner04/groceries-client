@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ToDo from './ToDo';
 
-describe('ToDo', () => {
-  const props = {
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
     task: 'foo',
     assigneeId: '1',
     dueBy: '05/20/2020',
@@ -20,45 +22,48 @@ describe('ToDo', () => {
     categories: ['foo', 'bar'],
     inputChangeHandler: jest.fn(),
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, queryByLabelText } = render(<ToDo {...props} />);
 
+  return { container, findByLabelText, queryByLabelText, props, user };
+}
+
+describe('ToDo', () => {
   it('renders base form when props.editForm is false', () => {
-    props.editForm = false;
-    const { container, queryByLabelText } = render(<ToDo {...props} />);
+    const { container, queryByLabelText } = setup({ editForm: false });
 
     expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Completed')).toBeFalsy();
+    expect(queryByLabelText('Completed')).toBeNull();
   });
 
-  it('renders edit form when props.editForm is true', () => {
-    props.editForm = true;
-    const { container, getByLabelText } = render(<ToDo {...props} />);
+  it('renders edit form when props.editForm is true', async () => {
+    const { container, findByLabelText } = setup({ editForm: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Completed')).toBeTruthy();
+    expect(await findByLabelText('Completed')).toBeVisible();
   });
 
-  it('calls appropriate change handlers when changes occur', () => {
-    props.editForm = true;
-    const { getByLabelText } = render(<ToDo {...props} />);
+  it('calls appropriate change handlers when changes occur', async () => {
+    const { findByLabelText, props, user } = setup({ editForm: true });
 
-    fireEvent.change(getByLabelText('Task'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Task'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(getByLabelText('Assignee'), { target: { value: 'a' } });
+    fireEvent.change(await findByLabelText('Assignee'), { target: { value: 'a' } });
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(2);
 
-    fireEvent.change(getByLabelText('Due By'), { target: { value: 'a' } });
+    fireEvent.change(await findByLabelText('Due By'), { target: { value: 'a' } });
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(3);
 
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Category'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(4);
 
-    fireEvent.click(getByLabelText('Completed'));
+    await user.click(await findByLabelText('Completed'));
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(5);
   });
 });

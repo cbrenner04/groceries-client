@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { toast } from 'react-toastify';
 
 import EditListForm from './EditListForm';
@@ -15,92 +16,96 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('EditListForm', () => {
-  const renderEditListForm = () => {
-    const props = {
-      listId: 'id1',
-      name: 'foo',
-      type: 'GroceryList',
-      completed: false,
-    };
-    return render(<EditListForm {...props} />);
+function setup() {
+  const user = userEvent.setup();
+  const props = {
+    listId: 'id1',
+    name: 'foo',
+    type: 'GroceryList',
+    completed: false,
   };
+  const component = render(<EditListForm {...props} />);
 
+  return { ...component, props, user };
+}
+
+describe('EditListForm', () => {
   it('renders', () => {
-    const { container } = renderEditListForm();
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
   it('updates name when changed', async () => {
-    const { getByLabelText } = renderEditListForm();
+    const { findByLabelText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'a' } });
+    await user.clear(await findByLabelText('Name'));
+    await user.type(await findByLabelText('Name'), 'a');
 
-    expect(getByLabelText('Name')).toHaveValue('a');
+    expect(await findByLabelText('Name')).toHaveValue('a');
   });
 
   it('updates type when changed', async () => {
-    const { getByLabelText } = renderEditListForm();
+    const { findByLabelText, user } = setup();
 
-    expect(getByLabelText('Type')).toHaveValue('GroceryList');
+    expect(await findByLabelText('Type')).toHaveValue('GroceryList');
 
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
 
-    expect(getByLabelText('Type')).toHaveValue('BookList');
+    expect(await findByLabelText('Type')).toHaveValue('BookList');
   });
 
   it('updates completed when changed', async () => {
-    const { getByLabelText } = renderEditListForm();
+    const { findByLabelText, user } = setup();
 
-    fireEvent.click(getByLabelText('Completed'));
+    await user.click(await findByLabelText('Completed'));
 
-    expect(getByLabelText('Completed')).toBeChecked();
+    expect(await findByLabelText('Completed')).toBeChecked();
   });
 
-  it('makes post, displays toast, and redirects to lists page on successful submission', async () => {
+  it('makes put, displays toast, and redirects to lists page on successful submission', async () => {
     const data = {
       foo: 'bar',
     };
     axios.put = jest.fn().mockResolvedValue({ data });
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to user login when 401', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('redirects to lists page when 403', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to lists page when 404', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
@@ -116,11 +121,11 @@ describe('EditListForm', () => {
       },
     });
 
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
   });
 
@@ -129,11 +134,11 @@ describe('EditListForm', () => {
       request: 'request failed',
     });
 
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
   });
 
@@ -142,18 +147,18 @@ describe('EditListForm', () => {
       message: 'request failed',
     });
 
-    const { getAllByRole } = renderEditListForm();
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[0]);
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await user.click((await findAllByRole('button'))[0]);
 
+    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
 
-  it('goes back to lists on Cancel', () => {
-    const { getAllByRole } = renderEditListForm();
+  it('goes back to lists on Cancel', async () => {
+    const { findAllByRole, user } = setup();
 
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.click((await findAllByRole('button'))[1]);
 
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });

@@ -1,64 +1,62 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 import AppNav from './AppNav';
-import instance from '../utils/api';
+import mockAxios from '../utils/api';
 import { UserContext } from '../AppRouter';
 
-const signOutUser = jest.fn();
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
 }));
 
+function setup(context) {
+  const user = userEvent.setup();
+  const signOutUser = jest.fn();
+  const component = render(
+    <MemoryRouter>
+      <UserContext.Provider value={context}>
+        <AppNav signOutUser={signOutUser} />
+      </UserContext.Provider>
+    </MemoryRouter>,
+  );
+  return { ...component, signOutUser, user };
+}
+
 describe('AppNav', () => {
-  const renderAppNav = (context) => {
-    return render(
-      <MemoryRouter>
-        <UserContext.Provider value={context}>
-          <AppNav signOutUser={signOutUser} />
-        </UserContext.Provider>
-      </MemoryRouter>,
-    );
-  };
-
   describe('when user is not signed in', () => {
-    it('renders basic nav with brand linking to sign in', () => {
-      const { getByTestId, getByText } = renderAppNav(null);
+    it('renders basic nav with brand linking to sign in', async () => {
+      const { findByTestId, findByText, user } = setup(null);
 
-      expect(getByTestId('nav')).toMatchSnapshot();
-      fireEvent.click(getByText('Groceries'));
+      expect(await findByTestId('nav')).toMatchSnapshot();
+
+      await user.click(await findByText('Groceries'));
+
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
   });
 
   describe('when user is signed in', () => {
-    let getByTestId;
-    let getByText;
+    it('renders nav with brand linking to root, invite link and logout visible', async () => {
+      const { findByTestId, findByText, signOutUser, user } = setup({ uid: 1, client: 2, accessToken: 3 });
 
-    beforeEach(() => {
-      ({ getByTestId, getByText } = renderAppNav({ uid: 1, client: 2, accessToken: 3 }));
-    });
+      expect(await findByTestId('nav')).toMatchSnapshot();
 
-    it('renders nav with brand linking to root, invite link and logout visible', () => {
-      expect(getByTestId('nav')).toMatchSnapshot();
-      fireEvent.click(getByText('Groceries'));
+      await user.click(await findByText('Groceries'));
+
       expect(mockNavigate).toHaveBeenCalledWith('/');
-      fireEvent.click(getByText('Invite'));
+
+      await user.click(await findByText('Invite'));
+
       expect(mockNavigate).toHaveBeenCalledWith('/users/invitation/new');
-      fireEvent.click(getByText('Log out'));
-      expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
-    });
 
-    it('logs the user out when Log out is clicked', async () => {
-      fireEvent.click(getByText('Log out'));
+      await user.click(await findByText('Log out'));
 
-      expect(instance.delete).toHaveBeenCalledWith('/auth/sign_out');
-
-      await waitFor(() => expect(instance.delete).toHaveBeenCalledTimes(1));
-
+      expect(mockAxios.delete).toHaveBeenCalledWith('/auth/sign_out');
+      expect(mockAxios.delete).toHaveBeenCalledTimes(1);
       expect(signOutUser).toHaveBeenCalled();
     });
   });

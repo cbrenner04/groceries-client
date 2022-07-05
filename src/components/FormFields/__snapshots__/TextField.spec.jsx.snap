@@ -18,6 +18,5 @@ exports[`TextField renders input 1`] = `
     type="text"
     value="testValue"
   />
-  
 </div>
 `;

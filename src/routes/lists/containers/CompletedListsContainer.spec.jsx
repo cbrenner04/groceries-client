@@ -1,69 +1,74 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import CompletedListsContainer from './CompletedListsContainer';
 import axios from '../../../utils/api';
 
-describe('CompletedListsContainer', () => {
-  let props;
-  const renderCompletedListsContainer = (props) => {
-    return render(
-      <MemoryRouter>
-        <CompletedListsContainer {...props} />
-      </MemoryRouter>,
-    );
+function setup() {
+  const props = {
+    userId: 'id1',
+    completedLists: [
+      {
+        id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: new Date('05/28/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id1',
+        owner_id: 'id1',
+        user_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id2',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/28/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id2',
+        owner_id: 'id1',
+        user_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id3',
+        name: 'baz',
+        type: 'BookList',
+        created_at: new Date('05/28/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id3',
+        owner_id: 'id2',
+        user_id: 'id1',
+        refreshed: false,
+      },
+    ],
+    currentUserPermissions: {
+      id1: 'write',
+      id2: 'write',
+      id3: 'read',
+    },
   };
+  const component = render(
+    <MemoryRouter>
+      <CompletedListsContainer {...props} />
+    </MemoryRouter>,
+  );
 
+  return { ...component };
+}
+
+describe('CompletedListsContainer', () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    props = {
-      userId: 'id1',
-      completedLists: [
-        {
-          id: 'id1',
-          name: 'foo',
-          type: 'GroceryList',
-          created_at: new Date('05/28/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id1',
-          owner_id: 'id1',
-          user_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id2',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/28/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id2',
-          owner_id: 'id1',
-          user_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id3',
-          name: 'baz',
-          type: 'BookList',
-          created_at: new Date('05/28/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id3',
-          owner_id: 'id2',
-          user_id: 'id1',
-          refreshed: false,
-        },
-      ],
-      currentUserPermissions: {
-        id1: 'write',
-        id2: 'write',
-        id3: 'read',
-      },
-    };
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('renders', () => {
-    const { container } = renderCompletedListsContainer(props);
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
@@ -121,21 +126,23 @@ describe('CompletedListsContainer', () => {
         },
       });
 
-    const { getByTestId, queryByTestId } = renderCompletedListsContainer(props);
+    const { findByTestId, queryByTestId } = setup();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
-    expect(getByTestId('list-id1')).toBeVisible();
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(await findByTestId('list-id1')).toBeVisible();
     expect(queryByTestId('list-id2')).toBeNull();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
-
-    expect(getByTestId('list-id1')).toBeVisible();
-    expect(getByTestId('list-id2')).toBeVisible();
+    expect(axios.get).toHaveBeenCalledTimes(2);
+    expect(await findByTestId('list-id1')).toBeVisible();
+    expect(await findByTestId('list-id2')).toBeVisible();
   });
 
   it('does not update via polling when different data is not returned', async () => {
@@ -159,18 +166,20 @@ describe('CompletedListsContainer', () => {
       },
     });
 
-    const { getByTestId } = renderCompletedListsContainer(props);
+    const { findByTestId } = setup();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(await findByTestId('list-id1')).toBeVisible();
 
-    expect(getByTestId('list-id1')).toBeVisible();
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
-    jest.advanceTimersByTime(10000);
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
-
-    expect(getByTestId('list-id1')).toBeVisible();
+    expect(axios.get).toHaveBeenCalledTimes(2);
+    expect(await findByTestId('list-id1')).toBeVisible();
   });
 });

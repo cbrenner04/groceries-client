@@ -19,7 +19,6 @@ exports[`Simple renders base form when props.editForm is false 1`] = `
       type="text"
       value="foo"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -48,7 +47,6 @@ exports[`Simple renders base form when props.editForm is false 1`] = `
         value="bar"
       />
     </datalist>
-    
   </div>
 </div>
 `;
@@ -72,7 +70,6 @@ exports[`Simple renders edit form when props.editForm is true 1`] = `
       type="text"
       value="foo"
     />
-    
   </div>
   <div
     class="mb-3"
@@ -101,7 +98,6 @@ exports[`Simple renders edit form when props.editForm is true 1`] = `
         value="bar"
       />
     </datalist>
-    
   </div>
   <div
     class="mb-3 mb-3"

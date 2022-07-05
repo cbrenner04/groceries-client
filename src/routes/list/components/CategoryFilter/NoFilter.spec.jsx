@@ -4,10 +4,10 @@ import { render } from '@testing-library/react';
 import NoFilter from './NoFilter';
 
 describe('NoFilter', () => {
-  it('renders a disabled button', () => {
-    const { container, getByRole } = render(<NoFilter />);
+  it('renders a disabled button', async () => {
+    const { container, findByRole } = render(<NoFilter />);
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toBeDisabled();
+    expect(await findByRole('button')).toBeDisabled();
   });
 });
