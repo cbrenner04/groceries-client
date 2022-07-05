@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Music from './Music';
 
-describe('Music', () => {
-  const props = {
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
     title: 'foo',
     artist: 'bar',
     album: 'baz',
@@ -14,45 +16,48 @@ describe('Music', () => {
     categories: ['foo', 'bar'],
     inputChangeHandler: jest.fn(),
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, queryByLabelText } = render(<Music {...props} />);
 
+  return { container, findByLabelText, queryByLabelText, props, user };
+}
+
+describe('Music', () => {
   it('renders base form when props.editForm is false', () => {
-    props.editForm = false;
-    const { container, queryByLabelText } = render(<Music {...props} />);
+    const { container, queryByLabelText } = setup({ editForm: false });
 
     expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Purchased')).toBeFalsy();
+    expect(queryByLabelText('Purchased')).toBeNull();
   });
 
-  it('renders edit form when props.editForm is true', () => {
-    props.editForm = true;
-    const { container, getByLabelText } = render(<Music {...props} />);
+  it('renders edit form when props.editForm is true', async () => {
+    const { container, findByLabelText } = setup({ editForm: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Purchased')).toBeTruthy();
+    expect(await findByLabelText('Purchased')).toBeVisible();
   });
 
-  it('calls appropriate change handlers when changes occur', () => {
-    props.editForm = true;
-    const { getByLabelText } = render(<Music {...props} />);
+  it('calls appropriate change handlers when changes occur', async () => {
+    const { findByLabelText, props, user } = setup({ editForm: true });
 
-    fireEvent.change(getByLabelText('Title'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Title'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(getByLabelText('Artist'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Artist'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(2);
 
-    fireEvent.change(getByLabelText('Album'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Album'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(3);
 
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Category'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(4);
 
-    fireEvent.click(getByLabelText('Purchased'));
+    await user.click(await findByLabelText('Purchased'));
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(5);
   });
 });

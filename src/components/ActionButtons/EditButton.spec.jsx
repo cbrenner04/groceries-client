@@ -1,30 +1,33 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import EditButton from './EditButton';
 
+async function setup() {
+  const user = userEvent.setup();
+  const handleClick = jest.fn();
+  const props = {
+    handleClick,
+    testID: 'test-id',
+  };
+  const { findByTestId } = render(<EditButton {...props} />);
+  const editButton = await findByTestId('test-id');
+
+  return { editButton, handleClick, user };
+}
+
 describe('EditButton', () => {
-  let props;
+  it('renders', async () => {
+    const { editButton } = await setup();
 
-  beforeEach(() => {
-    props = {
-      handleClick: jest.fn(),
-      testID: 'test-id',
-    };
+    expect(editButton).toMatchSnapshot();
   });
 
-  it('renders', () => {
-    const { container, getByTestId } = render(<EditButton {...props} />);
+  it('calls handleClick on click', async () => {
+    const { editButton, handleClick, user } = await setup();
+    await user.click(editButton);
 
-    expect(container).toMatchSnapshot();
-    expect(getByTestId('test-id')).toBeVisible();
-  });
-
-  it('calls handleClick on click', () => {
-    const { getByTestId } = render(<EditButton {...props} />);
-
-    fireEvent.click(getByTestId('test-id'));
-
-    expect(props.handleClick).toHaveBeenCalled();
+    expect(handleClick).toHaveBeenCalled();
   });
 });

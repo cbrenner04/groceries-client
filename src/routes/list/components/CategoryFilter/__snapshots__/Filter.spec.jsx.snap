@@ -38,7 +38,6 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
     style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
     x-placement="bottom-start"
   >
-    
     <button
       class="dropdown-item"
       data-rr-ui-dropdown-item=""

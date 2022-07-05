@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -16,18 +16,20 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('PageNotFound', () => {
-  const renderPageNotFound = () => {
-    return render(
-      <MemoryRouter>
-        <PageNotFound />
-      </MemoryRouter>,
-    );
-  };
+function setup() {
+  const component = render(
+    <MemoryRouter>
+      <PageNotFound />
+    </MemoryRouter>,
+  );
 
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderPageNotFound();
-    const status = getByText('Loading...');
+  return { ...component };
+}
+
+describe('PageNotFound', () => {
+  it('renders the Loading component when fetch request is pending', async () => {
+    const { container, findByText } = setup();
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();
@@ -35,10 +37,12 @@ describe('PageNotFound', () => {
 
   it('redirects to /users/sign_in when the user is not authenticated', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
+    setup();
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -48,24 +52,28 @@ describe('PageNotFound', () => {
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
-    const { container, getByRole } = renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    const { container, findByRole } = setup();
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
 
     axios.get.mockClear();
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
     axios.get = jest.fn().mockResolvedValue({});
-    const { container, getByText } = renderPageNotFound();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    const { container, findByText } = setup();
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(container).toMatchSnapshot();
-    expect(getByText('Page not found!')).toBeTruthy();
+    expect(await findByText('Page not found!')).toBeTruthy();
 
     axios.get.mockClear();
   });

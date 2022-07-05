@@ -5,29 +5,31 @@ import { MemoryRouter } from 'react-router-dom';
 import CompletedLists from './CompletedLists';
 import axios from '../../utils/api';
 
-describe('CompletedLists', () => {
-  const renderCompletedLists = () => {
-    return render(
-      <MemoryRouter>
-        <CompletedLists />
-      </MemoryRouter>,
-    );
-  };
+function setup() {
+  const component = render(
+    <MemoryRouter>
+      <CompletedLists />
+    </MemoryRouter>,
+  );
 
-  it('renders loading component when data is being fetched', () => {
-    const { container, getByText } = renderCompletedLists();
+  return { ...component };
+}
+
+describe('CompletedLists', () => {
+  it('renders loading component when data is being fetched', async () => {
+    const { container, findByText } = setup();
 
     expect(container).toMatchSnapshot();
-    expect(getByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeVisible();
   });
 
   it('renders unknown error when error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
-    const { container, getByRole } = renderCompletedLists();
+    const { container, findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('renders CompletedLists when data retrieval is complete', async () => {
@@ -50,10 +52,10 @@ describe('CompletedLists', () => {
         current_list_permissions: { id1: 'write' },
       },
     });
-    const { container, getByTestId } = renderCompletedLists();
+    const { container, findByTestId } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
   });
 });

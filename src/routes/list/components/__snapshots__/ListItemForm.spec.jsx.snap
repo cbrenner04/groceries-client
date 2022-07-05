@@ -33,7 +33,6 @@ exports[`ListItemForm renders 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -52,7 +51,6 @@ exports[`ListItemForm renders 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -78,7 +76,6 @@ exports[`ListItemForm renders 1`] = `
           value="foo"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"

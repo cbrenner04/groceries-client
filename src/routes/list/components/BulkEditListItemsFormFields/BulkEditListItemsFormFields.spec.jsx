@@ -1,34 +1,38 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import BulkEditListItemsFormFields from './index';
 
-describe('BulkEditListItemsFormFields', () => {
-  const props = {
+const defaultFormData = {
+  copy: false,
+  move: false,
+  existingList: '',
+  newListName: '',
+  updateCurrentItems: false,
+  album: '',
+  clearAlbum: false,
+  artist: '',
+  clearArtist: false,
+  assigneeId: '',
+  clearAssignee: false,
+  author: '',
+  clearAuthor: false,
+  category: '',
+  clearCategory: false,
+  dueBy: '',
+  clearDueBy: false,
+  quantity: '',
+  clearQuantity: false,
+  showNewListForm: false,
+  allComplete: false,
+};
+
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
     listType: 'GroceryList',
-    formData: {
-      copy: false,
-      move: false,
-      existingList: '',
-      newListName: '',
-      updateCurrentItems: false,
-      album: '',
-      clearAlbum: false,
-      artist: '',
-      clearArtist: false,
-      assigneeId: '',
-      clearAssignee: false,
-      author: '',
-      clearAuthor: false,
-      category: '',
-      clearCategory: false,
-      dueBy: '',
-      clearDueBy: false,
-      quantity: '',
-      clearQuantity: false,
-      showNewListForm: false,
-      allComplete: false,
-    },
+    formData: defaultFormData,
     handleInput: jest.fn(),
     clearAttribute: jest.fn(),
     listUsers: [
@@ -48,115 +52,119 @@ describe('BulkEditListItemsFormFields', () => {
     clearNewListForm: jest.fn(),
     categories: ['foo'],
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(<BulkEditListItemsFormFields {...props} />);
 
-  it('render Book fields when listType is BookList and fires appropriate change handlers', () => {
-    props.listType = 'BookList';
-    const { container, getByLabelText, getAllByRole } = render(<BulkEditListItemsFormFields {...props} />);
+  return { ...component, props, user };
+}
+
+describe('BulkEditListItemsFormFields', () => {
+  it('render Book fields when listType is BookList and fires appropriate change handlers', async () => {
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'BookList' });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Author')).toBeTruthy();
+    expect(await findByLabelText('Author')).toBeVisible();
 
-    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
-
-    expect(props.handleInput).toHaveBeenCalled();
-
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Author'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.type(await findByLabelText('Category'), 'a');
+
+    expect(props.handleInput).toHaveBeenCalled();
+
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('author', 'clearAuthor');
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
   });
 
-  it('render Grocery fields when listType is GroceryList and fires appropriate change handlers', () => {
-    props.listType = 'GroceryList';
-    const { container, getByLabelText, getAllByRole } = render(<BulkEditListItemsFormFields {...props} />);
+  it('render Grocery fields when listType is GroceryList and fires appropriate change handlers', async () => {
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'GroceryList' });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Quantity')).toBeTruthy();
+    expect(await findByLabelText('Quantity')).toBeVisible();
 
-    fireEvent.change(getByLabelText('Quantity'), { target: { value: 'a' } });
-
-    expect(props.handleInput).toHaveBeenCalled();
-
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Quantity'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.type(await findByLabelText('Category'), 'a');
+
+    expect(props.handleInput).toHaveBeenCalled();
+
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('quantity', 'clearQuantity');
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
   });
 
-  it('render Music fields when listType is MusicList and fires appropriate change handlers', () => {
-    props.listType = 'MusicList';
-    const { container, getByLabelText, getAllByRole } = render(<BulkEditListItemsFormFields {...props} />);
+  it('render Music fields when listType is MusicList and fires appropriate change handlers', async () => {
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'MusicList' });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Album')).toBeTruthy();
+    expect(await findByLabelText('Album')).toBeVisible();
 
-    fireEvent.change(getByLabelText('Album'), { target: { value: 'a' } });
-
-    expect(props.handleInput).toHaveBeenCalled();
-
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Album'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.type(await findByLabelText('Category'), 'a');
+
+    expect(props.handleInput).toHaveBeenCalled();
+
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('artist', 'clearArtist');
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('album', 'clearAlbum');
 
-    fireEvent.click(getAllByRole('checkbox')[2]);
+    await user.click((await findAllByRole('checkbox'))[2]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
   });
 
-  it('render ToDo fields when listType is ToDoList and fires appropriate change handlers', () => {
-    props.listType = 'ToDoList';
-    const { container, getByLabelText, getAllByRole } = render(<BulkEditListItemsFormFields {...props} />);
+  it('render ToDo fields when listType is ToDoList and fires appropriate change handlers', async () => {
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'ToDoList' });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Assignee')).toBeTruthy();
+    expect(await findByLabelText('Assignee')).toBeVisible();
 
-    fireEvent.change(getByLabelText('Assignee'), { target: { value: 'a' } });
-
-    expect(props.handleInput).toHaveBeenCalled();
-
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    // couldn't get userEvent to work here
+    fireEvent.change(await findByLabelText('Assignee'), { target: { value: 'a' } });
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.type(await findByLabelText('Category'), 'a');
+
+    expect(props.handleInput).toHaveBeenCalled();
+
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('assigneeId', 'clearAssignee');
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('dueBy', 'clearDueBy');
 
-    fireEvent.click(getAllByRole('checkbox')[2]);
+    await user.click((await findAllByRole('checkbox'))[2]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
   });
 
   it('does not render list item attribute fields when all items are completed', () => {
-    props.listType = 'GroceryList';
-    props.formData.allComplete = true;
-    const { container, queryByLabelText } = render(<BulkEditListItemsFormFields {...props} />);
+    const { container, queryByLabelText } = setup({
+      listType: 'GroceryList',
+      formData: { ...defaultFormData, allComplete: true },
+    });
 
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Quantity')).toBeNull();

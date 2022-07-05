@@ -1,31 +1,35 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Merge from './Merge';
 
+async function setup() {
+  const user = userEvent.setup();
+  const handleClick = jest.fn();
+  const props = {
+    handleClick,
+    testID: 'test-id',
+    disabled: false,
+  };
+  const { findByTestId } = render(<Merge {...props} />);
+  const mergeButton = await findByTestId('test-id');
+
+  return { handleClick, mergeButton, user };
+}
+
 describe('Merge', () => {
-  let props;
+  it('renders', async () => {
+    const { mergeButton } = await setup();
 
-  beforeEach(() => {
-    props = {
-      handleClick: jest.fn(),
-      testID: 'test-id',
-      disabled: false,
-    };
+    expect(mergeButton).toBeVisible();
   });
 
-  it('renders', () => {
-    const { container, getByTestId } = render(<Merge {...props} />);
+  it('calls handleClick on click', async () => {
+    const { handleClick, mergeButton, user } = await setup();
 
-    expect(container).toMatchSnapshot();
-    expect(getByTestId('test-id')).toBeVisible();
-  });
+    await user.click(mergeButton);
 
-  it('calls handleClick on click', () => {
-    const { getByTestId } = render(<Merge {...props} />);
-
-    fireEvent.click(getByTestId('test-id'));
-
-    expect(props.handleClick).toHaveBeenCalled();
+    expect(handleClick).toHaveBeenCalled();
   });
 });

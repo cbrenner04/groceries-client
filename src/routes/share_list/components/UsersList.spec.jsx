@@ -1,88 +1,88 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import UsersList from './UsersList';
 
+function setup(userIsOwner = true) {
+  const user = userEvent.setup();
+  const props = {
+    togglePermission: jest.fn(),
+    removeShare: jest.fn(),
+    userIsOwner,
+    userId: 'id1',
+    status: 'accepted',
+    users: [
+      {
+        user: {
+          id: 'id1',
+          email: 'foo@example.com',
+        },
+        users_list: {
+          id: 'id1',
+          permissions: 'write',
+        },
+      },
+      {
+        user: {
+          id: 'id2',
+          email: 'bar@example.com',
+        },
+        users_list: {
+          id: 'id2',
+          permissions: 'write',
+        },
+      },
+      {
+        user: {
+          id: 'id3',
+          email: 'baz@example.com',
+        },
+        users_list: {
+          id: 'id4',
+          permissions: 'read',
+        },
+      },
+    ],
+  };
+  const component = render(<UsersList {...props} />);
+
+  return { ...component, props, user };
+}
+
 describe('UsersList', () => {
-  let props;
-
-  beforeEach(() => {
-    props = {
-      togglePermission: jest.fn(),
-      removeShare: jest.fn(),
-      userIsOwner: true,
-      userId: 'id1',
-      status: 'accepted',
-      users: [
-        {
-          user: {
-            id: 'id1',
-            email: 'foo@example.com',
-          },
-          users_list: {
-            id: 'id1',
-            permissions: 'write',
-          },
-        },
-        {
-          user: {
-            id: 'id2',
-            email: 'bar@example.com',
-          },
-          users_list: {
-            id: 'id2',
-            permissions: 'write',
-          },
-        },
-        {
-          user: {
-            id: 'id3',
-            email: 'baz@example.com',
-          },
-          users_list: {
-            id: 'id4',
-            permissions: 'read',
-          },
-        },
-      ],
-    };
-  });
-
-  it('renders read and write badges when user is owner', () => {
-    props.userIsOwner = true;
-    const { container, getByTestId, queryByTestId } = render(<UsersList {...props} />);
+  it('renders read and write badges when user is owner', async () => {
+    const { container, findByTestId, queryByTestId } = setup(true);
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('accepted-user-id1')).toBeNull();
-    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveAttribute(
+    expect((await findByTestId('accepted-user-id2')).firstChild.children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-write',
     );
-    expect(getByTestId('accepted-user-id2').firstChild.children[1].firstChild).toHaveClass('badge');
-    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveAttribute(
+    expect((await findByTestId('accepted-user-id2')).firstChild.children[1].firstChild).toHaveClass('badge');
+    expect((await findByTestId('accepted-user-id3')).firstChild.children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-read',
     );
-    expect(getByTestId('accepted-user-id3').firstChild.children[1].firstChild).toHaveClass('badge');
+    expect((await findByTestId('accepted-user-id3')).firstChild.children[1].firstChild).toHaveClass('badge');
   });
 
-  it('does not render read and write badges when user is not owner', () => {
-    props.userIsOwner = false;
-    const { container, getByTestId, queryByText } = render(<UsersList {...props} />);
+  it('does not render read and write badges when user is not owner', async () => {
+    const { container, findByTestId, queryByText } = setup(false);
 
     expect(container).toMatchSnapshot();
     expect(queryByText('foo@example.com')).toBeNull();
-    expect(getByTestId('accepted-user-id2')).toHaveTextContent('bar@example.com');
-    expect(getByTestId('accepted-user-id2')).not.toHaveTextContent('write');
-    expect(getByTestId('accepted-user-id3')).toHaveTextContent('baz@example.com');
-    expect(getByTestId('accepted-user-id3')).not.toHaveTextContent('read');
+    expect(await findByTestId('accepted-user-id2')).toHaveTextContent('bar@example.com');
+    expect(await findByTestId('accepted-user-id2')).not.toHaveTextContent('write');
+    expect(await findByTestId('accepted-user-id3')).toHaveTextContent('baz@example.com');
+    expect(await findByTestId('accepted-user-id3')).not.toHaveTextContent('read');
   });
 
   it('toggles user permissions', async () => {
-    props.userIsOwner = true;
-    const { getAllByRole } = render(<UsersList {...props} />);
+    const { findAllByRole, props, user } = setup(true);
 
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click((await findAllByRole('button'))[0]);
 
     // the first user in the list is the signed in user and is therefore not displayed
     const firstDisplayedUser = props.users[1];
@@ -94,10 +94,9 @@ describe('UsersList', () => {
   });
 
   it('toggles user permissions', async () => {
-    props.userIsOwner = true;
-    const { getAllByRole } = render(<UsersList {...props} />);
+    const { findAllByRole, props, user } = setup(true);
 
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.click((await findAllByRole('button'))[1]);
 
     // the first user in the list is the signed in user and is therefore not displayed
     const firstDisplayedUser = props.users[1];

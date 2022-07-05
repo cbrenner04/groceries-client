@@ -197,7 +197,6 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
     </label>
     <select
       class="form-control"
-      disabled=""
       id="assigneeId"
       name="assigneeId"
     >
@@ -219,7 +218,6 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
         class="form-check"
       >
         <input
-          checked=""
           class="form-check-input"
           id="clearAssignee"
           name="clearAssignee"
@@ -292,7 +290,6 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
     </label>
     <select
       class="form-control"
-      disabled=""
       id="assigneeId"
       name="assigneeId"
     >
@@ -314,7 +311,6 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
         class="form-check"
       >
         <input
-          checked=""
           class="form-check-input"
           id="clearAssignee"
           name="clearAssignee"

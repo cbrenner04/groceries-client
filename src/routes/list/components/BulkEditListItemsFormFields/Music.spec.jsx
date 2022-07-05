@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Music from './Music';
 
-describe('Music', () => {
-  const props = {
+function setup(suppliedProps = {}) {
+  const user = userEvent.setup();
+  const defaultProps = {
     artist: 'foo',
     clearArtist: false,
     handleClearArtist: jest.fn(),
@@ -13,56 +15,57 @@ describe('Music', () => {
     clearAlbum: false,
     handleClearAlbum: jest.fn(),
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, findAllByRole } = render(<Music {...props} />);
 
-  it('renders artist input enabled when clearArtist is false', () => {
-    props.clearArtist = false;
-    const { container, getByLabelText } = render(<Music {...props} />);
+  return { container, findByLabelText, findAllByRole, props, user };
+}
+
+describe('Music', () => {
+  it('renders artist input enabled when clearArtist is false', async () => {
+    const { container, findByLabelText } = setup({ clearArtist: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Artist')).toBeEnabled();
+    expect(await findByLabelText('Artist')).toBeEnabled();
   });
 
-  it('renders artist input disabled when clearArtist is true', () => {
-    props.clearArtist = true;
-    const { container, getByLabelText } = render(<Music {...props} />);
+  it('renders artist input disabled when clearArtist is true', async () => {
+    const { container, findByLabelText } = setup({ clearArtist: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Artist')).toBeDisabled();
+    expect(await findByLabelText('Artist')).toBeDisabled();
   });
 
-  it('renders album input enabled when clearAlbum is false', () => {
-    props.clearAlbum = false;
-    const { container, getByLabelText } = render(<Music {...props} />);
+  it('renders album input enabled when clearAlbum is false', async () => {
+    const { container, findByLabelText } = setup({ clearArtist: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Album')).toBeEnabled();
+    expect(await findByLabelText('Album')).toBeEnabled();
   });
 
-  it('renders album input disabled when clearAlbum is true', () => {
-    props.clearAlbum = true;
-    const { container, getByLabelText } = render(<Music {...props} />);
+  it('renders album input disabled when clearAlbum is true', async () => {
+    const { container, findByLabelText } = setup({ clearAlbum: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Album')).toBeDisabled();
+    expect(await findByLabelText('Album')).toBeDisabled();
   });
 
   it('handles change in input and checkbox', async () => {
-    props.clearArtist = false;
-    const { getByLabelText, getAllByRole } = render(<Music {...props} />);
+    const { findByLabelText, findAllByRole, props, user } = setup({ clearArtist: false });
 
-    fireEvent.change(getByLabelText('Artist'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Artist'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.handleClearArtist).toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('Album'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Album'), 'a');
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.handleClearAlbum).toHaveBeenCalled();
   });

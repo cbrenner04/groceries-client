@@ -41,7 +41,6 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
@@ -205,7 +204,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -224,7 +222,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -256,7 +253,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -305,14 +301,12 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
@@ -543,7 +537,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -596,7 +589,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -624,7 +616,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
           foo@example.com
         </option>
       </select>
-      
     </div>
     <div
       class="mb-3"
@@ -643,7 +634,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         type="date"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -675,7 +665,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -719,15 +708,12 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
   <div
     class="mb-3 list-group"
-  >
-    
-  </div>
+  />
   <br />
   <h2>
     Completed
@@ -739,7 +725,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -858,7 +843,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -877,7 +861,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -909,7 +892,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -958,14 +940,12 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
@@ -1196,7 +1176,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -1301,7 +1280,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -1320,7 +1298,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -1352,7 +1329,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -1401,14 +1377,12 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
@@ -1639,7 +1613,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -1744,7 +1717,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -1763,7 +1735,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -1795,7 +1766,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -1848,7 +1818,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -1972,7 +1941,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
@@ -2077,7 +2045,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -2096,7 +2063,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
         type="text"
         value=""
       />
-      
     </div>
     <div
       class="mb-3"
@@ -2128,7 +2094,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
           value="bar"
         />
       </datalist>
-      
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -2177,14 +2142,12 @@ exports[`ListContainer renders items with category buckets when includedCategori
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>
   <div
     class="mb-3 list-group"
   >
-    
     <div
       class="list-item-list-group-item list-group-item"
       data-test-class="non-purchased-item"
@@ -2415,7 +2378,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      
        Select
     </button>
   </div>

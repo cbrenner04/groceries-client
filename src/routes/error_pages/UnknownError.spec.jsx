@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import UnknownError from './UnknownError';
 
@@ -13,23 +14,24 @@ describe('UnknownError', () => {
     expect(button.style.textDecoration).toBe('none');
   });
 
-  it('updates styles on mouse hover', () => {
+  it('updates styles on mouse hover', async () => {
+    const user = userEvent.setup();
     const { container, getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
-    fireEvent.mouseEnter(button);
+    await user.hover(button);
 
     expect(container).toMatchSnapshot();
     expect(button.style.color).toBe('rgb(0, 86, 179)');
     expect(button.style.textDecoration).toBe('underline');
 
-    fireEvent.mouseLeave(button);
+    await user.unhover(button);
 
     expect(button.style.color).toBe('rgb(0, 123, 255)');
     expect(button.style.textDecoration).toBe('none');
   });
 
-  it('reloads the page on click', () => {
+  it('reloads the page on click', async () => {
     // get location to reset it later
     const { location } = window;
     // remove location in order to redefine reload
@@ -37,10 +39,11 @@ describe('UnknownError', () => {
     // define location with reload as mock
     window.location = { reload: jest.fn() };
 
+    const user = userEvent.setup();
     const { getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
-    fireEvent.click(button);
+    await user.click(button);
 
     expect(window.location.reload).toHaveBeenCalled();
 
