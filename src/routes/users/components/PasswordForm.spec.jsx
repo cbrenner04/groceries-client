@@ -11,7 +11,7 @@ function setup() {
     passwordChangeHandler: jest.fn(),
     passwordConfirmation: '',
     passwordConfirmationChangeHandler: jest.fn(),
-    submissionHandler: jest.fn(),
+    submissionHandler: jest.fn((e) => e.preventDefault()),
   };
   const component = render(<PasswordForm {...props} />);
 
