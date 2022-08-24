@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import BulkEditListItems from './BulkEditListItems';
@@ -14,9 +14,9 @@ describe('BulkEditListItems', () => {
     );
   };
 
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderBulkEditListItems();
-    const status = getByText('Loading...');
+  it('renders the Loading component when fetch request is pending', async () => {
+    const { container, findByText } = renderBulkEditListItems();
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();
@@ -24,11 +24,13 @@ describe('BulkEditListItems', () => {
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, getByRole } = renderBulkEditListItems();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    const { container, findByRole } = renderBulkEditListItems();
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('displays BulkEditListItems', async () => {
@@ -65,10 +67,12 @@ describe('BulkEditListItems', () => {
         ],
       },
     });
-    const { container, getByText } = renderBulkEditListItems();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    const { container, findByText } = renderBulkEditListItems();
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
-    expect(getByText('Update Items')).toBeVisible();
+    expect(await findByText('Update Items')).toBeVisible();
   });
 });

@@ -1,7 +1,8 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import AcceptedLists from './AcceptedLists';
 import axios from '../../../utils/api';
@@ -16,86 +17,86 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('AcceptedLists', () => {
-  let props;
-  const renderAcceptedLists = (props) => {
-    return render(
-      <MemoryRouter>
-        <AcceptedLists {...props} />
-      </MemoryRouter>,
-    );
-  };
-
-  beforeEach(() => {
-    props = {
-      completed: false,
-      userId: 'id1',
-      title: <div>Foo</div>,
-      fullList: false,
-      completedLists: [
-        {
-          id: 'id2',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id2',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id4',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id4',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      setCompletedLists: jest.fn(),
-      incompleteLists: [
-        {
-          id: 'id3',
-          name: 'baz',
-          type: 'MusicList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id3',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id5',
-          name: 'foobar',
-          type: 'ToDoList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id5',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      setIncompleteLists: jest.fn(),
-      currentUserPermissions: {
-        id2: 'write',
-        id3: 'write',
-        id4: 'read',
-        id5: 'read',
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    completed: false,
+    userId: 'id1',
+    title: <div>Foo</div>,
+    fullList: false,
+    completedLists: [
+      {
+        id: 'id2',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id2',
+        owner_id: 'id1',
+        refreshed: false,
       },
-      setCurrentUserPermissions: jest.fn(),
-    };
-  });
+      {
+        id: 'id4',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id4',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    setCompletedLists: jest.fn(),
+    incompleteLists: [
+      {
+        id: 'id3',
+        name: 'baz',
+        type: 'MusicList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id3',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id5',
+        name: 'foobar',
+        type: 'ToDoList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id5',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    setIncompleteLists: jest.fn(),
+    currentUserPermissions: {
+      id2: 'write',
+      id3: 'write',
+      id4: 'read',
+      id5: 'read',
+    },
+    setCurrentUserPermissions: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(
+    <MemoryRouter>
+      <AcceptedLists {...props} />
+    </MemoryRouter>,
+  );
 
+  return { ...component, props, user };
+}
+
+describe('AcceptedLists', () => {
   it('does not delete list when confirm modal is cleared', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('clear-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('clear-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('clear-delete'));
+    await user.click(await findByTestId('clear-delete'));
     await waitFor(() => expect(queryByTestId('clear-delete')).toBeNull());
 
     expect(toast).not.toHaveBeenCalled();
@@ -104,12 +105,12 @@ describe('AcceptedLists', () => {
 
   it('deletes incomplete list', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
     expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
@@ -118,14 +119,13 @@ describe('AcceptedLists', () => {
   });
 
   it('deletes complete list', async () => {
-    props.completed = true;
     axios.delete = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, queryByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('complete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
     expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
@@ -136,19 +136,19 @@ describe('AcceptedLists', () => {
   it('deletes multiple lists', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
     axios.patch = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getByTestId, getAllByRole, getByText } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, findAllByRole, findByText, props, user } = setup();
 
-    fireEvent.click(getByText('Select'));
+    await user.click(await findByText('Select'));
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
@@ -158,12 +158,12 @@ describe('AcceptedLists', () => {
 
   it('redirects to login when delete fails with 401', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -172,12 +172,12 @@ describe('AcceptedLists', () => {
 
   it('shows errors when delete fails with 403', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -185,12 +185,12 @@ describe('AcceptedLists', () => {
 
   it('shows errors when delete fails with 404', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -198,12 +198,12 @@ describe('AcceptedLists', () => {
 
   it('shows errors when delete fails with error other than 401, 403, 404', async () => {
     axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -211,12 +211,12 @@ describe('AcceptedLists', () => {
 
   it('shows errors when delete fails to send request', async () => {
     axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -224,12 +224,12 @@ describe('AcceptedLists', () => {
 
   it('shows errors when delete unknown error occurs', async () => {
     axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getAllByTestId, getByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, findByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-trash')[0]);
-    await waitFor(() => getByTestId('confirm-delete'));
+    await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
-    fireEvent.click(getByTestId('confirm-delete'));
+    await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
@@ -237,9 +237,9 @@ describe('AcceptedLists', () => {
 
   it('completes list', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, props, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
@@ -252,16 +252,16 @@ describe('AcceptedLists', () => {
 
   it('completes multiple lists', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getAllByTestId, getAllByRole, getByText } = renderAcceptedLists(props);
+    const { findAllByTestId, findAllByRole, findByText, props, user } = setup();
 
-    fireEvent.click(getByText('Select'));
+    await user.click(await findByText('Select'));
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1)); // 1 list user doesn't own
 
     expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
@@ -274,9 +274,9 @@ describe('AcceptedLists', () => {
 
   it('redirects on 401 from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -285,9 +285,9 @@ describe('AcceptedLists', () => {
 
   it('shows error on 403 from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -295,9 +295,9 @@ describe('AcceptedLists', () => {
 
   it('shows errors on 404 from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -305,9 +305,9 @@ describe('AcceptedLists', () => {
 
   it('shows errors when error not 401, 403, 404 from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -315,9 +315,9 @@ describe('AcceptedLists', () => {
 
   it('shows errors when request fails from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -325,17 +325,15 @@ describe('AcceptedLists', () => {
 
   it('shows errors when known failure from list completion', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup();
 
-    fireEvent.click(getAllByTestId('incomplete-list-complete')[0]);
+    await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
   it('refreshes list on lists page', async () => {
-    props.completed = true;
-    props.fullList = false;
     const newList = {
       id: 'id7',
       name: 'new list',
@@ -347,9 +345,9 @@ describe('AcceptedLists', () => {
       users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, props, user } = setup({ completed: true, fullList: false });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
@@ -361,9 +359,6 @@ describe('AcceptedLists', () => {
   });
 
   it('refreshes lists on completed lists page', async () => {
-    props.completed = true;
-    props.incompleteLists = [];
-    props.fullList = true;
     const newList = {
       id: 'id6',
       name: 'new list',
@@ -375,9 +370,9 @@ describe('AcceptedLists', () => {
       users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, props, user } = setup({ completed: true, incompleteLists: [], fullList: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
@@ -385,7 +380,6 @@ describe('AcceptedLists', () => {
   });
 
   it('refreshes multiple lists', async () => {
-    props.completed = true;
     const newList = {
       id: 'id6',
       name: 'new list',
@@ -397,16 +391,16 @@ describe('AcceptedLists', () => {
       users_list_id: 'id8',
     };
     axios.post = jest.fn().mockResolvedValueOnce({ data: newList });
-    const { getAllByTestId, getAllByRole, getByText } = renderAcceptedLists(props);
+    const { findAllByTestId, findAllByRole, findByText, props, user } = setup({ completed: true });
 
-    fireEvent.click(getByText('Select'));
+    await user.click(await findByText('Select'));
 
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = await findAllByRole('checkbox');
 
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1)); // only owns 1 list
 
     expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
@@ -418,11 +412,10 @@ describe('AcceptedLists', () => {
   });
 
   it('redirects on 401 from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -430,89 +423,87 @@ describe('AcceptedLists', () => {
   });
 
   it('shows error on 403 from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
   });
 
   it('shows errors on 404 from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
   });
 
   it('shows errors when error not 401, 403, 404 from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
   });
 
   it('shows errors when request fails from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
   });
 
   it('shows errors when known failure from list refresh', async () => {
-    props.completed = true;
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getAllByTestId } = renderAcceptedLists(props);
+    const { findAllByTestId, user } = setup({ completed: true });
 
-    fireEvent.click(getAllByTestId('complete-list-refresh')[0]);
+    await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
   });
 
   it('shows merge button when multi select and more than 1 list is selected', async () => {
-    const { container, getByText, getAllByTestId, getAllByRole } = renderAcceptedLists(props);
+    const { container, findByText, findAllByTestId, findAllByRole, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    const checkboxes = await findAllByRole('checkbox');
+
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
 
     expect(container).toMatchSnapshot();
-    expect(getAllByTestId('incomplete-list-merge')).toHaveLength(2);
+    expect(await findAllByTestId('incomplete-list-merge')).toHaveLength(2);
   });
 
   it('shows modal to set the new list name for merging and clears', async () => {
-    const { container, getAllByRole, getByTestId, getAllByTestId, queryByTestId, getByText } =
-      renderAcceptedLists(props);
+    const { container, findAllByRole, findByTestId, findAllByTestId, queryByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
+    const checkboxes = await findAllByRole('checkbox');
+
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('clear-merge')).toBeVisible();
-    expect(getByTestId('confirm-merge')).toBeVisible();
+    expect(await findByTestId('clear-merge')).toBeVisible();
+    expect(await findByTestId('confirm-merge')).toBeVisible();
 
-    fireEvent.click(getByTestId('clear-merge'));
+    await user.click(await findByTestId('clear-merge'));
 
     await waitFor(() => expect(queryByTestId('clear-merge')).toBeNull());
 
@@ -535,21 +526,23 @@ describe('AcceptedLists', () => {
       users_list_id: 'id29',
     };
     axios.post = jest.fn().mockResolvedValue({ data: newList });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, props, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -565,21 +558,23 @@ describe('AcceptedLists', () => {
 
   it('redirects to login when remove fails with 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -602,25 +597,28 @@ describe('AcceptedLists', () => {
       user_id: 'id1',
       users_list_id: 'id29',
     };
-    props.completed = true;
-    props.incompleteLists = [];
-    props.fullList = true;
     axios.post = jest.fn().mockResolvedValue({ data: newList });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, props, user } = setup({
+      completed: true,
+      incompleteLists: [],
+      fullList: true,
+    });
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('complete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('complete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -632,21 +630,23 @@ describe('AcceptedLists', () => {
 
   it('shows errors when merge fails with 403', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -655,21 +655,23 @@ describe('AcceptedLists', () => {
 
   it('shows errors when merge fails with 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -678,21 +680,23 @@ describe('AcceptedLists', () => {
 
   it('shows errors when merge fails with error other than 401, 403, 404', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -701,21 +705,23 @@ describe('AcceptedLists', () => {
 
   it('shows errors when merge fails to send request', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -724,21 +730,23 @@ describe('AcceptedLists', () => {
 
   it('shows errors when merge unknown error occurs', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByLabelText, getAllByRole, getByTestId, getAllByTestId, getByText } = renderAcceptedLists(props);
+    const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
-    fireEvent.click(getByText('Select'));
-    await waitFor(() => getByText('Hide Select'));
+    await user.click(await findByText('Select'));
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
-    fireEvent.click(getAllByRole('checkbox')[1]);
-    fireEvent.click(getAllByTestId('incomplete-list-merge')[0]);
-    fireEvent.change(getByLabelText('Name for the merged list'), { target: { value: 'a' } });
+    const checkboxes = await findAllByRole('checkbox');
 
-    expect(getByLabelText('Name for the merged list')).toHaveValue('a');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+    await user.click((await findAllByTestId('incomplete-list-merge'))[0]);
+    await user.type(await findByLabelText('Name for the merged list'), 'a');
 
-    await waitFor(() => expect(getByTestId('confirm-merge')).not.toBeDisabled());
+    expect(await findByLabelText('Name for the merged list')).toHaveValue('a');
 
-    fireEvent.click(getByTestId('confirm-merge'));
+    await waitFor(async () => expect(await findByTestId('confirm-merge')).not.toBeDisabled());
+
+    await user.click(await findByTestId('confirm-merge'));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 

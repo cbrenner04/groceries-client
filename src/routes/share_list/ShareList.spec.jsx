@@ -22,20 +22,20 @@ describe('ShareList', () => {
     );
   };
 
-  it('renders loading when data fetch is not complete', () => {
-    const { container, getByText } = renderShareList();
+  it('renders loading when data fetch is not complete', async () => {
+    const { container, findByText } = renderShareList();
 
     expect(container).toMatchSnapshot();
-    expect(getByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeVisible();
   });
 
   it('renders unknown error component when error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
-    const { container, getByRole } = renderShareList();
+    const { container, findByRole } = renderShareList();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
   it('renders ShareList when data fetch is successful', async () => {
@@ -56,14 +56,14 @@ describe('ShareList', () => {
         },
       },
     });
-    const { container, getByTestId, queryByTestId } = renderShareList();
+    const { container, findByTestId, queryByTestId } = renderShareList();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
-    expect(getByTestId('invite-user-id5')).toHaveTextContent('foobar@example.com');
-    expect(getByTestId('accepted-user-id1')).toHaveTextContent('foo@example.com');
+    expect(await findByTestId('invite-user-id5')).toHaveTextContent('foobar@example.com');
+    expect(await findByTestId('accepted-user-id1')).toHaveTextContent('foo@example.com');
     expect(queryByTestId('accepted-user-id4')).toBeNull();
-    expect(getByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
-    expect(getByTestId('refused-user-id3')).toHaveTextContent('baz@example.com');
+    expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
+    expect(await findByTestId('refused-user-id3')).toHaveTextContent('baz@example.com');
   });
 });

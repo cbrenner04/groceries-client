@@ -1,89 +1,103 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import NotPurchased from './NotPurchased';
 
+async function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    item: {
+      grocery_list_id: 'id1',
+      id: 'id1',
+      read: true,
+    },
+    purchased: false,
+    handleItemDelete: jest.fn(),
+    handlePurchaseOfItem: jest.fn(),
+    toggleItemRead: jest.fn(),
+    handleItemRefresh: jest.fn(),
+    handleItemEdit: jest.fn(),
+    listType: 'GroceryList',
+    pending: false,
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findAllByRole } = render(<NotPurchased {...props} />);
+  const buttons = await findAllByRole('button');
+
+  return { container, buttons, props, user };
+}
+
 describe('NotPurchased', () => {
-  let props;
-  const renderNotPurchased = (localProps) => render(<NotPurchased {...localProps} />);
-
-  beforeEach(() => {
-    props = {
-      item: {
-        grocery_list_id: 'id1',
-        id: 'id1',
-        read: true,
-      },
-      purchased: false,
-      handleItemDelete: jest.fn(),
-      handlePurchaseOfItem: jest.fn(),
-      toggleItemRead: jest.fn(),
-      handleItemRefresh: jest.fn(),
-      handleItemEdit: jest.fn(),
-      listType: 'GroceryList',
-      pending: false,
-    };
-  });
-
-  it('renders Bookmark when listType is BookList', () => {
-    props.listType = 'BookList';
-    props.item.book_list_id = 1;
-    const { container, getAllByRole } = renderNotPurchased(props);
+  it('renders Bookmark when listType is BookList', async () => {
+    const { container, buttons } = await setup({
+      listType: 'BookList',
+      item: { book_list_id: 1, id: 'id1', read: true },
+    });
 
     expect(container).toMatchSnapshot();
-    expect(getAllByRole('button')[0].firstChild).toHaveClass('fa-bookmark');
+    expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
   });
 
-  it('does not render Bookmark when listType is not BookList', () => {
-    props.listType = 'GroceryList';
-    const { container, getAllByRole } = renderNotPurchased(props);
+  it('does not render Bookmark when listType is not BookList', async () => {
+    const { container, buttons } = await setup({ listType: 'GroceryList' });
 
     expect(container).toMatchSnapshot();
-    getAllByRole('button').forEach((button) => {
+    buttons.forEach((button) => {
       expect(button).not.toHaveClass('fa-bookmark');
     });
   });
 
-  it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', () => {
-    props.listType = 'BookList';
-    props.item.read = false;
-    const { getAllByRole } = renderNotPurchased(props);
+  it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', async () => {
+    const { buttons, props, user } = await setup({
+      listType: 'BookList',
+      item: {
+        book_list_id: 'id1',
+        id: 'id1',
+        read: false,
+      },
+    });
 
-    fireEvent.click(getAllByRole('button')[0]);
-
-    expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
-  });
-
-  it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', () => {
-    props.listType = 'BookList';
-    props.item.read = true;
-    const { getAllByRole } = renderNotPurchased(props);
-
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click(buttons[0]);
 
     expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handlePurchaseOfItem when Complete is clicked', () => {
-    const { getAllByRole } = renderNotPurchased(props);
+  it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', async () => {
+    const { buttons, props, user } = await setup({
+      listType: 'BookList',
+      item: {
+        book_list_id: 'id1',
+        id: 'id1',
+        read: true,
+      },
+    });
 
-    fireEvent.click(getAllByRole('button')[0]);
+    await user.click(buttons[0]);
+
+    expect(props.toggleItemRead).toHaveBeenCalledWith(props.item);
+  });
+
+  it('calls handlePurchaseOfItem when Complete is clicked', async () => {
+    const { buttons, props, user } = await setup();
+
+    await user.click(buttons[0]);
 
     expect(props.handlePurchaseOfItem).toHaveBeenCalledWith(props.item);
   });
 
-  it('navigates to edit list item when Edit is clicked', () => {
-    const { getAllByRole } = renderNotPurchased(props);
+  it('navigates to edit list item when Edit is clicked', async () => {
+    const { buttons, props, user } = await setup();
 
-    fireEvent.click(getAllByRole('button')[1]);
+    await user.click(buttons[1]);
 
     expect(props.handleItemEdit).toHaveBeenCalledWith(props.item);
   });
 
-  it('calls handleItemDelete when Trash is clicked', () => {
-    const { getAllByRole } = renderNotPurchased(props);
+  it('calls handleItemDelete when Trash is clicked', async () => {
+    const { buttons, props, user } = await setup();
 
-    fireEvent.click(getAllByRole('button')[2]);
+    await user.click(buttons[2]);
 
     expect(props.handleItemDelete).toHaveBeenCalledWith(props.item);
   });

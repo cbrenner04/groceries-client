@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss';
 import AppRouter from './AppRouter';
@@ -16,4 +16,5 @@ const app = (
   </DndProvider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
+const root = createRoot(document.getElementById('root'));
+root.render(app);

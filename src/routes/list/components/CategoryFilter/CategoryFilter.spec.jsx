@@ -3,45 +3,43 @@ import { render } from '@testing-library/react';
 
 import CategoryFilter from './index';
 
+function setup(suppliedProps) {
+  const defaultProps = {
+    categories: [],
+    filter: '',
+    handleClearFilter: jest.fn(),
+    handleCategoryFilter: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByRole } = render(<CategoryFilter {...props} />);
+
+  return { container, findByRole };
+}
+
 describe('CategoryFilter', () => {
-  it('renders Filtered when categories and filter exist', () => {
-    const props = {
+  it('renders Filtered when categories and filter exist', async () => {
+    const { container, findByRole } = setup({
       categories: ['foo', 'bar'],
       filter: 'foo',
-      handleClearFilter: jest.fn(),
-      handleCategoryFilter: jest.fn(),
-    };
-    const { container, getByRole } = render(<CategoryFilter {...props} />);
+    });
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('foo');
+    expect(await findByRole('button')).toHaveTextContent('foo');
   });
 
-  it('renders Filter when categories exist but filter does not', () => {
-    const props = {
-      categories: ['foo', 'bar'],
-      filter: '',
-      handleClearFilter: jest.fn(),
-      handleCategoryFilter: jest.fn(),
-    };
-    const { container, getByRole } = render(<CategoryFilter {...props} />);
+  it('renders Filter when categories exist but filter does not', async () => {
+    const { container, findByRole } = setup({ categories: ['foo', 'bar'] });
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('Filter by category');
-    expect(getByRole('button')).not.toBeDisabled();
+    expect(await findByRole('button')).toHaveTextContent('Filter by category');
+    expect(await findByRole('button')).not.toBeDisabled();
   });
 
-  it('renders NoFilter when categories do not exist', () => {
-    const props = {
-      categories: [],
-      filter: '',
-      handleClearFilter: jest.fn(),
-      handleCategoryFilter: jest.fn(),
-    };
-    const { container, getByRole } = render(<CategoryFilter {...props} />);
+  it('renders NoFilter when categories do not exist', async () => {
+    const { container, findByRole } = setup();
 
     expect(container).toMatchSnapshot();
-    expect(getByRole('button')).toHaveTextContent('Filter by category');
-    expect(getByRole('button')).toBeDisabled();
+    expect(await findByRole('button')).toHaveTextContent('Filter by category');
+    expect(await findByRole('button')).toBeDisabled();
   });
 });

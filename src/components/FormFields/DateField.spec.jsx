@@ -3,33 +3,35 @@ import { render, fireEvent } from '@testing-library/react';
 
 import DateField from './DateField';
 
-const defaultProps = {
-  handleChange: jest.fn(),
-  name: 'testName',
-  label: 'testLabel',
-  value: '03/03/2020',
-};
+// TODO: couldn't get userEvent to work with this field. Tried `userEvent.type()` and `userEvent.selectOptions()`
+
+async function setup() {
+  const props = {
+    handleChange: jest.fn(),
+    name: 'testName',
+    label: 'testLabel',
+    value: '03/03/2020',
+  };
+  const { findByLabelText } = render(<DateField {...props} />);
+  const formInput = await findByLabelText(props.label);
+  return { formInput, props };
+}
 
 describe('DateField', () => {
-  let formInput;
-
-  beforeEach(() => {
-    const { getByLabelText } = render(<DateField {...defaultProps} />);
-    formInput = getByLabelText(defaultProps.label);
-  });
-
-  it('renders input', () => {
+  it('renders input', async () => {
+    const { formInput, props } = await setup();
     const formGroup = formInput.parentElement;
 
     expect(formGroup).toMatchSnapshot();
-    expect(formInput).toHaveAttribute('value', defaultProps.value);
+    expect(formInput).toHaveAttribute('value', props.value);
   });
 
   describe('when value changes', () => {
-    it('calls handleChange', () => {
-      fireEvent.change(formInput, { target: { value: 'a' } });
+    it('calls handleChange', async () => {
+      const { formInput, props } = await setup();
+      fireEvent.change(formInput, { target: { value: '06/30/2022' } });
 
-      expect(defaultProps.handleChange).toHaveBeenCalled();
+      expect(props.handleChange).toHaveBeenCalled();
     });
   });
 });

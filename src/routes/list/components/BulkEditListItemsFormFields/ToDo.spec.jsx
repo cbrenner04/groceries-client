@@ -1,10 +1,12 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ToDo from './ToDo';
 
-describe('ToDo', () => {
-  const props = {
+function setup(suppliedProps = {}) {
+  const user = userEvent.setup();
+  const defaultProps = {
     assigneeId: 'foo',
     clearAssignee: false,
     handleClearAssignee: jest.fn(),
@@ -14,56 +16,57 @@ describe('ToDo', () => {
     handleClearDueBy: jest.fn(),
     listUsers: [{ id: 'id1', email: 'foo@ex.co' }],
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findAllByRole, findByLabelText } = render(<ToDo {...props} />);
 
-  it('renders assigneeId input enabled when clearAssignee is false', () => {
-    props.clearAssignee = false;
-    const { container, getByLabelText } = render(<ToDo {...props} />);
+  return { container, findAllByRole, findByLabelText, props, user };
+}
+
+describe('ToDo', () => {
+  it('renders assigneeId input enabled when clearAssignee is false', async () => {
+    const { container, findByLabelText } = setup({ clearAssignee: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Assignee')).toBeEnabled();
+    expect(await findByLabelText('Assignee')).toBeEnabled();
   });
 
-  it('renders assigneeId input disabled when clearAssignee is true', () => {
-    props.clearAssignee = true;
-    const { container, getByLabelText } = render(<ToDo {...props} />);
+  it('renders assigneeId input disabled when clearAssignee is true', async () => {
+    const { container, findByLabelText } = setup({ clearAssignee: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Assignee')).toBeDisabled();
+    expect(await findByLabelText('Assignee')).toBeDisabled();
   });
 
-  it('renders dueBy input enabled when clearDueBy is false', () => {
-    props.clearDueBy = false;
-    const { container, getByLabelText } = render(<ToDo {...props} />);
+  it('renders dueBy input enabled when clearDueBy is false', async () => {
+    const { container, findByLabelText } = setup({ clearDueBy: false });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Due By')).toBeEnabled();
+    expect(await findByLabelText('Due By')).toBeEnabled();
   });
 
-  it('renders dueBy input disabled when clearDueBy is true', () => {
-    props.clearDueBy = true;
-    const { container, getByLabelText } = render(<ToDo {...props} />);
+  it('renders dueBy input disabled when clearDueBy is true', async () => {
+    const { container, findByLabelText } = setup({ clearDueBy: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Due By')).toBeDisabled();
+    expect(await findByLabelText('Due By')).toBeDisabled();
   });
 
   it('handles change in input and checkbox', async () => {
-    props.clearAssignee = false;
-    const { getByLabelText, getAllByRole } = render(<ToDo {...props} />);
+    const { findByLabelText, findAllByRole, props, user } = setup({ clearAssignee: false });
 
-    fireEvent.change(getByLabelText('Assignee'), { target: { value: 'a' } });
+    fireEvent.change(await findByLabelText('Assignee'), { target: { value: 'a' } });
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[0]);
+    await user.click((await findAllByRole('checkbox'))[0]);
 
     expect(props.handleClearAssignee).toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('Due By'), { target: { value: 'a' } });
+    fireEvent.change(await findByLabelText('Due By'), { target: { value: 'a' } });
 
     expect(props.handleInput).toHaveBeenCalled();
 
-    fireEvent.click(getAllByRole('checkbox')[1]);
+    await user.click((await findAllByRole('checkbox'))[1]);
 
     expect(props.handleClearDueBy).toHaveBeenCalled();
   });

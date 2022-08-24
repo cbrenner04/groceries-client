@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import ListsContainer from './ListsContainer';
 import axios from '../../../utils/api';
@@ -16,93 +17,94 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('ListsContainer', () => {
-  let props;
-  const renderListsContainer = (props) => {
-    return render(
-      <MemoryRouter>
-        <ListsContainer {...props} />
-      </MemoryRouter>,
-    );
-  };
-
-  beforeEach(() => {
-    jest.useFakeTimers();
-    props = {
-      userId: 'id1',
-      pendingLists: [
-        {
-          id: 'id1',
-          name: 'foo',
-          type: 'GroceryList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id1',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-      ],
-      completedLists: [
-        {
-          id: 'id2',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id2',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id4',
-          name: 'bar',
-          type: 'BookList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: true,
-          users_list_id: 'id4',
-          owner_id: 'id2',
-          refreshed: false,
-        },
-      ],
-      incompleteLists: [
-        {
-          id: 'id3',
-          name: 'baz',
-          type: 'MusicList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id3',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-        {
-          id: 'id5',
-          name: 'foobar',
-          type: 'ToDoList',
-          created_at: new Date('05/31/2020').toISOString(),
-          completed: false,
-          users_list_id: 'id5',
-          owner_id: 'id1',
-          refreshed: false,
-        },
-      ],
-      currentUserPermissions: {
-        id1: 'write',
-        id2: 'write',
-        id3: 'write',
-        id4: 'read',
-        id5: 'read',
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    userId: 'id1',
+    pendingLists: [
+      {
+        id: 'id1',
+        name: 'foo',
+        type: 'GroceryList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id1',
+        owner_id: 'id1',
+        refreshed: false,
       },
-    };
-  });
+    ],
+    completedLists: [
+      {
+        id: 'id2',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id2',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id4',
+        name: 'bar',
+        type: 'BookList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: true,
+        users_list_id: 'id4',
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
+    incompleteLists: [
+      {
+        id: 'id3',
+        name: 'baz',
+        type: 'MusicList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id3',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+      {
+        id: 'id5',
+        name: 'foobar',
+        type: 'ToDoList',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id5',
+        owner_id: 'id1',
+        refreshed: false,
+      },
+    ],
+    currentUserPermissions: {
+      id1: 'write',
+      id2: 'write',
+      id3: 'write',
+      id4: 'read',
+      id5: 'read',
+    },
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(
+    <MemoryRouter>
+      <ListsContainer {...props} />
+    </MemoryRouter>,
+  );
 
+  return { ...component, user };
+}
+
+describe('ListsContainer', () => {
   it('renders', () => {
-    const { container } = renderListsContainer(props);
+    const { container } = setup();
 
     expect(container).toMatchSnapshot();
   });
 
   it('updates via polling when different data is returned', async () => {
+    // messes with `userEvent` actions
+    jest.useFakeTimers();
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({
@@ -207,22 +209,29 @@ describe('ListsContainer', () => {
         },
       });
 
-    const { getByTestId } = renderListsContainer(props);
+    const { findByTestId } = setup();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'completed-list');
+    expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'completed-list');
+    jest.useRealTimers();
   });
 
   it('does not update via polling when different data is not returned', async () => {
+    // messes with `userEvent` actions
+    jest.useFakeTimers();
     axios.get = jest.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
@@ -275,24 +284,28 @@ describe('ListsContainer', () => {
       },
     });
 
-    const { getByTestId } = renderListsContainer(props);
+    const { findByTestId } = setup();
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
-    jest.advanceTimersByTime(10000);
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect(getByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    jest.useRealTimers();
   });
 
   it('does not render pending lists when they do not exist', () => {
-    props.pendingLists = [];
-    const { container, queryByText } = renderListsContainer(props);
+    const { container, queryByText } = setup({ pendingLists: [] });
 
     expect(container).toMatchSnapshot();
     expect(queryByText('Pending')).toBeNull();
@@ -311,24 +324,24 @@ describe('ListsContainer', () => {
         users_list_id: 'id9',
       },
     });
-    const { getByLabelText, getByTestId, getByText } = renderListsContainer(props);
+    const { findByLabelText, findByTestId, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'new list' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByText('Create List'));
+    await user.type(await findByLabelText('Name'), 'new list');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
-    expect(getByTestId('list-id6')).toHaveTextContent('new list');
+    expect(await findByTestId('list-id6')).toHaveTextContent('new list');
   });
 
   it('redirects to login when submit response is 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByLabelText, getByText } = renderListsContainer(props);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'new list' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByText('Create List'));
+    await user.type(await findByLabelText('Name'), 'new list');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -337,11 +350,11 @@ describe('ListsContainer', () => {
 
   it('shows errors when submission fails', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByLabelText, getByText } = renderListsContainer(props);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'new list' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByText('Create List'));
+    await user.type(await findByLabelText('Name'), 'new list');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -349,11 +362,11 @@ describe('ListsContainer', () => {
 
   it('shows errors when request fails', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByLabelText, getByText } = renderListsContainer(props);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'new list' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByText('Create List'));
+    await user.type(await findByLabelText('Name'), 'new list');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -361,11 +374,11 @@ describe('ListsContainer', () => {
 
   it('shows errors when unknown error occurs', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByLabelText, getByText } = renderListsContainer(props);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'new list' } });
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'BookList' } });
-    fireEvent.click(getByText('Create List'));
+    await user.type(await findByLabelText('Name'), 'new list');
+    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });

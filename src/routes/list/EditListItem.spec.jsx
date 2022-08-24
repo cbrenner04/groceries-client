@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EditListItem from './EditListItem';
@@ -23,9 +23,9 @@ describe('EditListItem', () => {
     );
   };
 
-  it('renders the Loading component when fetch request is pending', () => {
-    const { container, getByText } = renderEditListItem();
-    const status = getByText('Loading...');
+  it('renders the Loading component when fetch request is pending', async () => {
+    const { container, findByText } = renderEditListItem();
+    const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeTruthy();
@@ -34,8 +34,10 @@ describe('EditListItem', () => {
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, getByRole } = renderEditListItem();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
     expect(getByRole('button')).toHaveTextContent('refresh the page');
   });
@@ -62,8 +64,10 @@ describe('EditListItem', () => {
       },
     });
     const { container, getByText } = renderEditListItem();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    await act(async () => undefined);
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(container).toMatchSnapshot();
     expect(getByText('Update Item')).toBeVisible();
   });

@@ -4,41 +4,38 @@ import { MemoryRouter } from 'react-router-dom';
 
 import ListItemButtons from './index';
 
-describe('ListItemButtons', () => {
-  let props;
-
-  const renderListItemButtons = (localProps) => {
-    return render(
-      <MemoryRouter>
-        <ListItemButtons {...localProps} />
-      </MemoryRouter>,
-    );
+async function setup(suppliedProps) {
+  const defaultProps = {
+    item: {
+      grocery_list_id: 'id1',
+      id: 'id1',
+      read: true,
+    },
+    purchased: true,
+    handleItemDelete: jest.fn(),
+    handlePurchaseOfItem: jest.fn(),
+    toggleItemRead: jest.fn(),
+    handleItemRefresh: jest.fn(),
+    handleItemEdit: jest.fn(),
+    listType: 'GroceryList',
+    multiSelect: false,
+    selectedItems: [],
+    pending: false,
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findAllByRole } = render(
+    <MemoryRouter>
+      <ListItemButtons {...props} />
+    </MemoryRouter>,
+  );
+  const buttons = await findAllByRole('button');
 
-  beforeEach(() => {
-    props = {
-      item: {
-        grocery_list_id: 'id1',
-        id: 'id1',
-        read: true,
-      },
-      purchased: true,
-      handleItemDelete: jest.fn(),
-      handlePurchaseOfItem: jest.fn(),
-      toggleItemRead: jest.fn(),
-      handleItemRefresh: jest.fn(),
-      handleItemEdit: jest.fn(),
-      listType: 'GroceryList',
-      multiSelect: false,
-      selectedItems: [],
-      pending: false,
-    };
-  });
+  return { container, buttons };
+}
 
-  it('renders Purchased when the item is purchased', () => {
-    props.purchased = true;
-    const { container, getAllByRole } = renderListItemButtons(props);
-    const buttons = getAllByRole('button');
+describe('ListItemButtons', () => {
+  it('renders Purchased when the item is purchased', async () => {
+    const { container, buttons } = await setup({ purchased: true });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -47,10 +44,8 @@ describe('ListItemButtons', () => {
     expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });
 
-  it('renders NotPurchased when the item is not purchased', () => {
-    props.purchased = false;
-    const { container, getAllByRole } = renderListItemButtons(props);
-    const buttons = getAllByRole('button');
+  it('renders NotPurchased when the item is not purchased', async () => {
+    const { container, buttons } = await setup({ purchased: false });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);

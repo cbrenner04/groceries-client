@@ -4,25 +4,28 @@ import { MemoryRouter } from 'react-router-dom';
 
 import EditLink from './EditLink';
 
-describe('EditLink', () => {
-  const renderEditLink = () => {
-    const defaultProps = {
-      to: '/fake/route',
-      disabled: false,
-      style: {},
-      testID: 'foo',
-    };
-    return render(
-      <MemoryRouter>
-        <EditLink {...defaultProps} />
-      </MemoryRouter>,
-    );
+async function setup() {
+  const props = {
+    to: '/fake/route',
+    disabled: false,
+    style: {},
+    testID: 'foo',
   };
+  const { findByRole } = render(
+    <MemoryRouter>
+      <EditLink {...props} />
+    </MemoryRouter>,
+  );
+  const editLink = await findByRole('link');
 
-  it('renders a link', () => {
-    const { getByRole } = renderEditLink();
+  return { editLink };
+}
 
-    expect(getByRole('link')).toMatchSnapshot();
-    expect(getByRole('link')).toHaveAttribute('href', '/fake/route');
+describe('EditLink', () => {
+  it('renders a link', async () => {
+    const { editLink } = await setup();
+
+    expect(editLink).toMatchSnapshot();
+    expect(editLink).toHaveAttribute('href', '/fake/route');
   });
 });

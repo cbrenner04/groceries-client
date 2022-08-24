@@ -1,74 +1,74 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import SelectField from './SelectField';
 
-const defaultProps = {
-  handleChange: jest.fn(),
-  name: 'testName',
-  label: 'testLabel',
-  options: [
-    {
-      value: 'testOption1Value',
-      label: 'testOption1Label',
-    },
-    {
-      value: 'testOption2Value',
-      label: 'testOption2Label',
-    },
-  ],
-};
+async function setup(suppliedProps = {}) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    handleChange: jest.fn(),
+    name: 'testName',
+    label: 'testLabel',
+    options: [
+      {
+        value: 'testOption1Value',
+        label: 'testOption1Label',
+      },
+      {
+        value: 'testOption2Value',
+        label: 'testOption2Label',
+      },
+    ],
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { findByLabelText, findByText } = render(<SelectField {...props} />);
+  const formInput = await findByLabelText(props.label);
+
+  return { formInput, findByText, props, user };
+}
 
 describe('SelectField', () => {
   describe('when blankOption is true', () => {
     describe('when value is not blank', () => {
-      it('renders input with first option of empty string and clear input text', () => {
-        defaultProps.blankOption = true;
-        defaultProps.value = 'testValue';
-        const { getByLabelText, getByText } = render(<SelectField {...defaultProps} />);
-        const formInput = getByLabelText(defaultProps.label);
+      it('renders input with first option of empty string and clear input text', async () => {
+        const { formInput, findByText, props } = await setup({ blankOption: true, value: 'testValue' });
         const formGroup = formInput.parentElement;
 
         expect(formGroup).toMatchSnapshot();
         expect(formInput).toHaveValue('');
-        expect(getByText(`Clear ${defaultProps.label}`)).toBeVisible();
+        expect(await findByText(`Clear ${props.label}`)).toBeVisible();
       });
     });
 
     describe('when value is not blank', () => {
-      it('renders input with first option of empty string and select input text', () => {
-        defaultProps.blankOption = true;
-        defaultProps.value = '';
-        const { getByLabelText, getByText } = render(<SelectField {...defaultProps} />);
-        const formInput = getByLabelText(defaultProps.label);
+      it('renders input with first option of empty string and select input text', async () => {
+        const { formInput, findByText, props } = await setup({ blankOption: true, value: '' });
         const formGroup = formInput.parentElement;
 
         expect(formGroup).toMatchSnapshot();
         expect(formInput).toHaveValue('');
-        expect(getByText(`Select ${defaultProps.label}`)).toBeVisible();
+        expect(await findByText(`Select ${props.label}`)).toBeVisible();
       });
     });
   });
 
   describe('when blankOption is false', () => {
-    it('renders input with first option as first option provided', () => {
-      defaultProps.blankOption = false;
-      const { getByLabelText } = render(<SelectField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
+    it('renders input with first option as first option provided', async () => {
+      const { formInput, props } = await setup({ blankOption: false });
       const formGroup = formInput.parentElement;
 
       expect(formGroup).toMatchSnapshot();
-      expect(formInput).toHaveValue(defaultProps.options[0].value);
+      expect(formInput).toHaveValue(props.options[0].value);
     });
   });
 
   describe('when value changes', () => {
-    it('calls handleChange', () => {
-      const { getByLabelText } = render(<SelectField {...defaultProps} />);
-      const formInput = getByLabelText(defaultProps.label);
-      fireEvent.change(formInput, { target: { value: 'a' } });
+    it('calls handleChange', async () => {
+      const { formInput, props, user } = await setup({ blankOption: true });
+      await user.selectOptions(formInput, props.options[1].value);
 
-      expect(defaultProps.handleChange).toHaveBeenCalled();
+      expect(props.handleChange).toHaveBeenCalled();
     });
   });
 });
