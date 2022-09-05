@@ -28,11 +28,15 @@ function ListContainer(props) {
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [pending, setPending] = useState(false);
+  const [pausePolling, setPausePolling] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
   const [listUsers, setListUsers] = useState(props.listUsers);
   const navigate = useNavigate();
 
   usePolling(async () => {
+    if (pausePolling) {
+      return;
+    }
     try {
       const {
         purchasedItems: updatedPurchasedItems,
@@ -343,7 +347,7 @@ function ListContainer(props) {
     }
   };
 
-  const moveItem = useCallback(
+  const dragAndDropItem = useCallback(
     (dragIndex, hoverIndex, category) => {
       const lCategory = category || '';
       const dragList = notPurchasedItems[lCategory][dragIndex];
@@ -360,6 +364,26 @@ function ListContainer(props) {
     },
     [notPurchasedItems, setNotPurchasedItems],
   );
+
+  const persistDrop = useCallback((itemId, targetIndex, category) => {
+    // Sometimes this comes back with targetIndex === initial item index. Need to stop that shit when not true
+
+    // eslint-disable-next-line no-console
+    console.log(itemId, targetIndex, category);
+    // `targetIndex` will be T0 if the item is dropped at the end of the list
+    if (targetIndex === 'T0') {
+      // eslint-disable-next-line
+      console.log('Item dropped at end of list');
+      return;
+    }
+    // `targetIndex` looks like T(list index * 2) so T6 would be list index 3
+    // doesn't seem true always
+    let newIndex = Number(targetIndex.split('T')[1]) / 2;
+    // `targetIndex` is the index AFTER where the item has been dropped so T6 means the item was dropped in list index 2
+    newIndex = newIndex - 1;
+    // eslint-disable-next-line
+    console.log('New index is', newIndex);
+  }, []);
 
   return (
     <>
@@ -437,7 +461,9 @@ function ListContainer(props) {
                 handleItemEdit={handleItemEdit}
                 selectedItems={selectedItems}
                 pending={pending}
-                moveItem={moveItem}
+                setPausePolling={setPausePolling}
+                dragAndDropItem={dragAndDropItem}
+                persistDrop={persistDrop}
               />
             ))}
         </ListGroup>

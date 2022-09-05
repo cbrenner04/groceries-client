@@ -18,9 +18,13 @@ const ListItem = (props) => {
         handlerId: monitor.getHandlerId(),
       };
     },
-    // drop() {
-    //   // noop
-    // },
+    drop(item, monitor) {
+      // eslint-disable-next-line no-console
+      console.log(monitor);
+      // eslint-disable-next-line no-console
+      console.log(ref);
+      props.persistDrop(item.id, monitor.targetId, item.category);
+    },
     hover(item, monitor) {
       if (!ref.current) {
         return;
@@ -51,7 +55,7 @@ const ListItem = (props) => {
         return;
       }
       // Time to actually perform the action
-      props.moveItem(dragIndex, hoverIndex, item.category);
+      props.dragAndDropItem(dragIndex, hoverIndex, item.category);
     },
   }));
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -71,6 +75,12 @@ const ListItem = (props) => {
     if (assignedUser) {
       assignee = `Assigned To: ${assignedUser.email}`;
     }
+  }
+
+  // throws error... also looks like an anti-pattern
+  // need a way to pause polling while dragging
+  if (isDragging) {
+    props.setPausePolling(true);
   }
 
   return (
@@ -137,14 +147,15 @@ ListItem.propTypes = {
   handleItemEdit: PropTypes.func.isRequired,
   selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
+  setPausePolling: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  moveItem: PropTypes.func,
+  dragAndDropItem: PropTypes.func.isRequired,
+  persistDrop: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {
   listUsers: [],
   purchased: false,
-  moveItem: () => undefined,
 };
 
 export default ListItem;
