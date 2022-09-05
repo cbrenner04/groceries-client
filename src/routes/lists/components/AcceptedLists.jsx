@@ -155,58 +155,68 @@ function AcceptedLists(props) {
     }
   };
 
+  const renderCompletedList = (list, index) => (
+    <List
+      index={index}
+      list={list}
+      key={list.id}
+      multiSelect={multiSelect}
+      selectedLists={selectedLists}
+      setSelectedLists={setSelectedLists}
+      listClass="accepted-list"
+      testClass="completed-list"
+      includeLinkToList={true}
+      listName={`${list.name}${list.refreshed ? '*' : ''}`}
+      draggable={false}
+      listButtons={
+        <CompleteListButtons
+          userId={props.userId}
+          list={list}
+          onListDeletion={handleDelete}
+          onListRefresh={handleRefresh}
+          multiSelect={multiSelect}
+          selectedLists={selectedLists}
+          handleMerge={handleMerge}
+          pending={pending}
+        />
+      }
+    />
+  );
+
+  const renderIncompleteList = (list, index) => (
+    <List
+      index={index}
+      list={list}
+      moveList={props.moveList}
+      reorderLists={props.reorderLists}
+      key={list.id}
+      multiSelect={multiSelect}
+      selectedLists={selectedLists}
+      setSelectedLists={setSelectedLists}
+      listClass="accepted-list"
+      testClass="incomplete-list"
+      includeLinkToList={true}
+      listName={list.name}
+      draggable={true}
+      listButtons={
+        <IncompleteListButtons
+          userId={props.userId}
+          list={list}
+          onListDeletion={handleDelete}
+          onListCompletion={handleCompletion}
+          currentUserPermissions={props.currentUserPermissions[list.id]}
+          multiSelect={multiSelect}
+          selectedLists={selectedLists}
+          handleMerge={handleMerge}
+          pending={pending}
+        />
+      }
+    />
+  );
+
   const lists = props.completed
-    ? props.completedLists.map((list) => (
-        <List
-          list={list}
-          key={list.id}
-          multiSelect={multiSelect}
-          selectedLists={selectedLists}
-          setSelectedLists={setSelectedLists}
-          listClass="accepted-list"
-          testClass="completed-list"
-          includeLinkToList={true}
-          listName={`${list.name}${list.refreshed ? '*' : ''}`}
-          listButtons={
-            <CompleteListButtons
-              userId={props.userId}
-              list={list}
-              onListDeletion={handleDelete}
-              onListRefresh={handleRefresh}
-              multiSelect={multiSelect}
-              selectedLists={selectedLists}
-              handleMerge={handleMerge}
-              pending={pending}
-            />
-          }
-        />
-      ))
-    : props.incompleteLists.map((list) => (
-        <List
-          list={list}
-          key={list.id}
-          multiSelect={multiSelect}
-          selectedLists={selectedLists}
-          setSelectedLists={setSelectedLists}
-          listClass="accepted-list"
-          testClass="incomplete-list"
-          includeLinkToList={true}
-          listName={list.name}
-          listButtons={
-            <IncompleteListButtons
-              userId={props.userId}
-              list={list}
-              onListDeletion={handleDelete}
-              onListCompletion={handleCompletion}
-              currentUserPermissions={props.currentUserPermissions[list.id]}
-              multiSelect={multiSelect}
-              selectedLists={selectedLists}
-              handleMerge={handleMerge}
-              pending={pending}
-            />
-          }
-        />
-      ));
+    ? props.completedLists.map((list, index) => renderCompletedList(list, index))
+    : props.incompleteLists.map((list, index) => renderIncompleteList(list, index));
 
   return (
     <Lists
@@ -255,6 +265,8 @@ AcceptedLists.propTypes = {
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
   fullList: PropTypes.bool.isRequired,
+  moveList: PropTypes.func.isRequired,
+  reorderLists: PropTypes.func.isRequired,
 };
 
 /* istanbul ignore next */

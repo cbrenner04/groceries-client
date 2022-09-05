@@ -1,14 +1,76 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
 import { list } from '../../../types';
 
 function List(props) {
+  const { moveList, reorderLists } = props;
+  const dndType = 'list';
+  const ref = useRef();
+  const [{ handlerId }, drop] = useDrop(
+    () => ({
+      accept: dndType,
+      collect(monitor) {
+        return {
+          handlerId: monitor.getHandlerId(),
+        };
+      },
+      drop() {
+        reorderLists();
+      },
+      hover(item, monitor) {
+        if (!ref.current) {
+          return;
+        }
+        const dragIndex = item.index;
+        const hoverIndex = props.index;
+        // TODO: need a way to cancel then
+        // Don't replace items with themselves
+        if (dragIndex === hoverIndex) {
+          return;
+        }
+        // Determine rectangle on screen
+        const hoverBoundingRect = ref.current && ref.current.getBoundingClientRect();
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+        // Get pixels to the top
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+        // Dragging downwards
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+          return;
+        }
+        // Dragging upwards
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+          return;
+        }
+        // Time to actually perform the action
+        moveList(dragIndex, hoverIndex);
+      },
+    }),
+    [reorderLists, moveList, ref],
+  );
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: dndType,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: () => ({ type: dndType, id: props.list.id, index: props.index }),
+  }));
+  if (props.draggable) {
+    drag(drop(ref));
+  }
+
   const handleListSelect = (list) => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
@@ -40,6 +102,9 @@ function List(props) {
       className={`${props.listClass} list-list-group-item`}
       data-test-class={props.testClass}
       data-test-id={`list-${props.list.id}`}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={ref}
+      data-handler-id={handlerId}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
@@ -74,6 +139,15 @@ List.propTypes = {
   multiSelect: PropTypes.bool.isRequired,
   selectedLists: PropTypes.arrayOf(list).isRequired,
   setSelectedLists: PropTypes.func.isRequired,
+  draggable: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  moveList: PropTypes.func,
+  reorderLists: PropTypes.func,
+};
+
+List.defaultProps = {
+  moveList: () => undefined,
+  reorderLists: () => undefined,
 };
 
 export default List;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -16,6 +16,20 @@ import { usePolling } from '../../../hooks';
 
 // TODO: can we do better?
 const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+// TODO: move to utility file
+const updateListOrderIds = (lists, index) => {
+  lists[index].prev_id = (lists[index - 1] && lists[index - 1].id) || null;
+  lists[index].next_id = (lists[index + 1] && lists[index + 1].id) || null;
+  if (lists[index - 1]) {
+    lists[index - 1].next_id = lists[index].id;
+  }
+  if (lists[index + 1]) {
+    lists[index + 1].prev_id = lists[index].id;
+  }
+  return lists;
+};
+
+const initialListsToReorderState = { current: null, previous: null, next: null };
 
 function ListsContainer(props) {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -23,9 +37,14 @@ function ListsContainer(props) {
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [pending, setPending] = useState(false);
+  const [pausePolling, setPausePolling] = useState(false);
+  const [listsToReorder, setListsToReorder] = useState(initialListsToReorderState);
   const navigate = useNavigate();
 
   usePolling(async () => {
+    if (pausePolling) {
+      return;
+    }
     try {
       const {
         pendingLists: updatedPending,
@@ -65,19 +84,74 @@ function ListsContainer(props) {
 
   const handleFormSubmit = async (list) => {
     setPending(true);
+    setPausePolling(true);
     try {
-      const { data } = await axios.post(`/lists`, { list });
+      const { data } = await axios.post('/lists', { list });
       // must update currentUserPermissions prior to incompleteLists
       const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
       setCurrentUserPermissions(updatedCurrentUserPermissions);
       const updatedIncompleteLists = update(incompleteLists, { $push: [data] });
       setIncompleteLists(sortLists(updatedIncompleteLists));
       setPending(false);
+      setPausePolling(false);
       toast('List successfully added.', { type: 'info' });
     } catch (error) {
       failure(error, navigate, setPending);
     }
   };
+
+  const moveList = useCallback(
+    (dragIndex, hoverIndex) => {
+      setPausePolling(true);
+      const dragList = incompleteLists[dragIndex];
+      let updatedIncompleteLists = update(incompleteLists, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragList],
+        ],
+      });
+      updatedIncompleteLists = updateListOrderIds(updatedIncompleteLists, hoverIndex);
+      // eslint-disable-next-line no-console
+      console.log(updatedIncompleteLists);
+      setIncompleteLists(updatedIncompleteLists);
+      const updatedListsToReorder = update(listsToReorder, {
+        $merge: {
+          current: updatedIncompleteLists[hoverIndex],
+          previous: updatedIncompleteLists[hoverIndex - 1] || null,
+          next: updatedIncompleteLists[hoverIndex + 1] || null,
+        },
+      });
+      // eslint-disable-next-line no-console
+      console.log(updatedListsToReorder);
+      setListsToReorder(updatedListsToReorder);
+      setPausePolling(false);
+    },
+    [incompleteLists, listsToReorder],
+  );
+
+  const reorderLists = useCallback(async () => {
+    setPausePolling(true);
+    // eslint-disable-next-line no-console
+    console.log(listsToReorder);
+    const { current, previous, next } = listsToReorder;
+    if (!current && (!previous || !next)) {
+      setPausePolling(false);
+      return;
+    }
+    await Promise.all([
+      axios.patch(`/lists/${current.id}/users_lists/${current.users_list_id}`, {
+        users_list: { prev_id: previous.users_list_id, next_id: next.users_list_id },
+      }),
+      axios.patch(`/lists/${previous.id}/users_lists/${previous.users_list_id}`, {
+        users_list: { next_id: current.users_list_id },
+      }),
+      axios.patch(`/lists/${next.id}/users_lists/${next.users_list_id}`, {
+        users_list: { prev_id: current.users_list_id },
+      }),
+    ]);
+    setListsToReorder(initialListsToReorderState);
+    setPausePolling(false);
+  }, [listsToReorder]);
 
   return (
     <>
@@ -112,6 +186,8 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveList={moveList}
+        reorderLists={reorderLists}
       />
       <AcceptedLists
         title={
@@ -135,6 +211,8 @@ function ListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        moveList={moveList}
+        reorderLists={reorderLists}
       />
     </>
   );

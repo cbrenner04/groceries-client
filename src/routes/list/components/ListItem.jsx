@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
@@ -8,6 +9,66 @@ import { itemName } from '../utils';
 import { listItem, listUsers } from '../../../types';
 
 const ListItem = (props) => {
+  const dndType = 'list-item';
+  const ref = useRef();
+  const [{ handlerId }, drop] = useDrop(() => ({
+    accept: dndType,
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    drop(item, monitor) {
+      // eslint-disable-next-line no-console
+      console.log(monitor);
+      // eslint-disable-next-line no-console
+      console.log(ref);
+      props.persistDrop(item.id, monitor.targetId, item.category);
+    },
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = props.index;
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current && ref.current.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      // Time to actually perform the action
+      props.dragAndDropItem(dragIndex, hoverIndex, item.category);
+    },
+  }));
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: dndType,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: () => ({ type: dndType, id: props.item.id, index: props.index, category: props.item.category }),
+  }));
+  if (!props.purchased && props.permission === 'write') {
+    drag(drop(ref));
+  }
+
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
     const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);
@@ -16,11 +77,20 @@ const ListItem = (props) => {
     }
   }
 
+  // throws error... also looks like an anti-pattern
+  // need a way to pause polling while dragging
+  if (isDragging) {
+    props.setPausePolling(true);
+  }
+
   return (
     <ListGroup.Item
       key={props.item.id}
       className="list-item-list-group-item"
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      ref={ref}
+      data-handler-id={handlerId}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
@@ -77,6 +147,10 @@ ListItem.propTypes = {
   handleItemEdit: PropTypes.func.isRequired,
   selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
+  setPausePolling: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  dragAndDropItem: PropTypes.func.isRequired,
+  persistDrop: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {

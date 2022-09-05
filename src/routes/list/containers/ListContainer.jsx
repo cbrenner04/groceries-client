@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 
 import { list, listItem, listUsers } from '../../../types';
 import { capitalize } from '../../../utils/format';
+import axios from '../../../utils/api';
+import { fetchList, itemName, sortItems } from '../utils';
+import { usePolling } from '../../../hooks';
+
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
 import ConfirmModal from '../../../components/ConfirmModal';
-import axios from '../../../utils/api';
-import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
-import { fetchList } from '../utils';
-import { usePolling } from '../../../hooks';
 
 function ListContainer(props) {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
@@ -29,11 +28,15 @@ function ListContainer(props) {
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [pending, setPending] = useState(false);
+  const [pausePolling, setPausePolling] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
   const [listUsers, setListUsers] = useState(props.listUsers);
   const navigate = useNavigate();
 
   usePolling(async () => {
+    if (pausePolling) {
+      return;
+    }
     try {
       const {
         purchasedItems: updatedPurchasedItems,
@@ -344,6 +347,44 @@ function ListContainer(props) {
     }
   };
 
+  const dragAndDropItem = useCallback(
+    (dragIndex, hoverIndex, category) => {
+      const lCategory = category || '';
+      const dragList = notPurchasedItems[lCategory][dragIndex];
+      setNotPurchasedItems(
+        update(notPurchasedItems, {
+          [lCategory]: {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragList],
+            ],
+          },
+        }),
+      );
+    },
+    [notPurchasedItems, setNotPurchasedItems],
+  );
+
+  const persistDrop = useCallback((itemId, targetIndex, category) => {
+    // Sometimes this comes back with targetIndex === initial item index. Need to stop that shit when not true
+
+    // eslint-disable-next-line no-console
+    console.log(itemId, targetIndex, category);
+    // `targetIndex` will be T0 if the item is dropped at the end of the list
+    if (targetIndex === 'T0') {
+      // eslint-disable-next-line
+      console.log('Item dropped at end of list');
+      return;
+    }
+    // `targetIndex` looks like T(list index * 2) so T6 would be list index 3
+    // doesn't seem true always
+    let newIndex = Number(targetIndex.split('T')[1]) / 2;
+    // `targetIndex` is the index AFTER where the item has been dropped so T6 means the item was dropped in list index 2
+    newIndex = newIndex - 1;
+    // eslint-disable-next-line
+    console.log('New index is', newIndex);
+  }, []);
+
   return (
     <>
       <Link to="/lists" className="float-end">
@@ -402,9 +443,10 @@ function ListContainer(props) {
         <ListGroup className="mb-3" key={category}>
           {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
           {notPurchasedItems[category] &&
-            notPurchasedItems[category].map((item) => (
+            notPurchasedItems[category].map((item, index) => (
               <ListItem
                 item={item}
+                index={index}
                 key={item.id}
                 purchased={false}
                 handleItemDelete={handleDelete}
@@ -419,6 +461,9 @@ function ListContainer(props) {
                 handleItemEdit={handleItemEdit}
                 selectedItems={selectedItems}
                 pending={pending}
+                setPausePolling={setPausePolling}
+                dragAndDropItem={dragAndDropItem}
+                persistDrop={persistDrop}
               />
             ))}
         </ListGroup>
@@ -442,8 +487,9 @@ function ListContainer(props) {
         </div>
       )}
       <ListGroup className="mb-3">
-        {purchasedItems.map((item) => (
+        {purchasedItems.map((item, index) => (
           <ListItem
+            index={index}
             item={item}
             key={item.id}
             purchased={true}

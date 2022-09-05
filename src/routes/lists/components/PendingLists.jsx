@@ -107,8 +107,9 @@ function PendingLists(props) {
       setMultiSelect={setMultiSelect}
     >
       <ListGroup>
-        {props.pendingLists.map((list) => (
+        {props.pendingLists.map((list, index) => (
           <List
+            index={index}
             list={list}
             key={list.id}
             multiSelect={multiSelect}
@@ -118,6 +119,7 @@ function PendingLists(props) {
             testClass="pending-list"
             includeLinkToList={false}
             listName={list.name}
+            draggable={false}
             listButtons={
               <ButtonGroup className="float-end">
                 <Complete handleClick={() => handleAccept(list)} testID="pending-list-accept" disabled={pending} />
