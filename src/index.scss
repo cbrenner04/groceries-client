@@ -5,6 +5,11 @@ body {
   margin-bottom: 2rem;
 }
 
+.navbar {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .navbar-light .navbar-toggler-icon {
   background-image: url('./hamburger.svg')
 }
