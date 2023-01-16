@@ -23,7 +23,7 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
 >
   <button
     aria-expanded="true"
-    class="dropdown-toggle btn btn-light"
+    class="dropdown-toggle show btn btn-light"
     id="filter-by-category-button"
     type="button"
   >
