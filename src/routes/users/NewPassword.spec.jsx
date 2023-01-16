@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import NewPassword from './NewPassword';
 import axios from '../../utils/api';
@@ -16,23 +17,26 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe('NewPassword', () => {
-  const renderNewPassword = () => {
-    return render(
-      <MemoryRouter>
-        <NewPassword />
-      </MemoryRouter>,
-    );
-  };
+function setup() {
+  const user = userEvent.setup();
+  const component = render(
+    <MemoryRouter>
+      <NewPassword />
+    </MemoryRouter>,
+  );
 
+  return { ...component, user };
+}
+
+describe('NewPassword', () => {
   it('requests new password', async () => {
     axios.post = jest.fn().mockResolvedValue({});
-    const { container, getByLabelText, getByRole } = renderNewPassword();
+    const { container, findByLabelText, findByRole, user } = setup();
 
     expect(container).toMatchSnapshot();
 
-    fireEvent.change(getByLabelText('Email'), { target: { value: 'foo@example.com' } });
-    fireEvent.click(getByRole('button'));
+    await user.type(await findByLabelText('Email'), 'foo@example.com');
+    await user.click(await findByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith(
@@ -44,10 +48,10 @@ describe('NewPassword', () => {
 
   it('has same outcome when error occurs', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500 } });
-    const { getByLabelText, getByRole } = renderNewPassword();
+    const { findByLabelText, findByRole, user } = setup();
 
-    fireEvent.change(getByLabelText('Email'), { target: { value: 'foo@example.com' } });
-    fireEvent.click(getByRole('button'));
+    await user.type(await findByLabelText('Email'), 'foo@example.com');
+    await user.click(await findByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith(

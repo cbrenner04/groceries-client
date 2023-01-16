@@ -28,7 +28,7 @@ function AppNav({ signOutUser }) {
   };
 
   return (
-    <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav" className="container-fluid">
+    <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav">
       <Navbar.Brand onClick={handleBrandClick}>Groceries</Navbar.Brand>
       {user && (
         <>

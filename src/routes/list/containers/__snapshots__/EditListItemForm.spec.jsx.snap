@@ -28,7 +28,6 @@ exports[`EditListItemForm renders 1`] = `
         type="text"
         value="foo"
       />
-      
     </div>
     <div
       class="mb-3"
@@ -47,7 +46,6 @@ exports[`EditListItemForm renders 1`] = `
         type="text"
         value="foo"
       />
-      
     </div>
     <div
       class="mb-3"
@@ -73,7 +71,6 @@ exports[`EditListItemForm renders 1`] = `
           value=""
         />
       </datalist>
-      
     </div>
     <div
       class="mb-3 mb-3"

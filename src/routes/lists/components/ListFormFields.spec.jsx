@@ -1,53 +1,55 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ListFormFields from './ListFormFields';
 
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    name: 'foo',
+    type: 'GroceryList',
+    handleNameChange: jest.fn(),
+    handleTypeChange: jest.fn(),
+    handleCompletedChange: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(<ListFormFields {...props} />);
+
+  return { ...component, props, user };
+}
+
 describe('ListFormFields', () => {
-  let props;
-
-  beforeEach(() => {
-    props = {
-      name: 'foo',
-      type: 'GroceryList',
-      handleNameChange: jest.fn(),
-      handleTypeChange: jest.fn(),
-      handleCompletedChange: jest.fn(),
-    };
-  });
-
-  it('renders new form', () => {
-    const { container, getByLabelText, queryByLabelText } = render(<ListFormFields {...props} />);
+  it('renders new form', async () => {
+    const { container, findByLabelText, queryByLabelText } = setup();
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Name')).toBeVisible();
-    expect(getByLabelText('Type')).toBeVisible();
+    expect(await findByLabelText('Name')).toBeVisible();
+    expect(await findByLabelText('Type')).toBeVisible();
     expect(queryByLabelText('Completed')).toBeNull();
   });
 
-  it('renders edit form', () => {
-    props.editForm = true;
-    const { container, getByLabelText } = render(<ListFormFields {...props} />);
+  it('renders edit form', async () => {
+    const { container, findByLabelText } = setup({ editForm: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Name')).toBeVisible();
-    expect(getByLabelText('Type')).toBeVisible();
-    expect(getByLabelText('Completed')).toBeVisible();
+    expect(await findByLabelText('Name')).toBeVisible();
+    expect(await findByLabelText('Type')).toBeVisible();
+    expect(await findByLabelText('Completed')).toBeVisible();
   });
 
-  it('calls appropriate change handlers on change of inputs', () => {
-    props.editForm = true;
-    const { getByLabelText } = render(<ListFormFields {...props} />);
+  it('calls appropriate change handlers on change of inputs', async () => {
+    const { findByLabelText, props, user } = setup({ editForm: true });
 
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Name'), 'a');
 
     expect(props.handleNameChange).toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('Type'), { target: { value: 'a' } });
+    await user.selectOptions(await findByLabelText('Type'), 'MusicList');
 
     expect(props.handleTypeChange).toHaveBeenCalled();
 
-    fireEvent.click(getByLabelText('Completed'));
+    await user.click(await findByLabelText('Completed'));
 
     expect(props.handleCompletedChange).toHaveBeenCalled();
   });

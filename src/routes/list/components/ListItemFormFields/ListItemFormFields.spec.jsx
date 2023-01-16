@@ -1,11 +1,14 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ListItemFormFields from './index';
 
-describe('ListItemFormFields', () => {
+async function setup(listType, inputLabel) {
+  const user = userEvent.setup();
   const props = {
     setFormData: jest.fn(),
+    listType,
     formData: {
       product: '',
       task: '',
@@ -24,60 +27,61 @@ describe('ListItemFormFields', () => {
       completed: false,
     },
   };
+  const { container, findByLabelText } = render(<ListItemFormFields {...props} />);
+  const input = await findByLabelText(inputLabel);
 
-  it('render Book fields when listType is BookList and calls setFormData when input is changed', () => {
-    props.listType = 'BookList';
-    const { container, getByLabelText } = render(<ListItemFormFields {...props} />);
+  return { container, input, props, user };
+}
+
+describe('ListItemFormFields', () => {
+  it('render Book fields when listType is BookList and calls setFormData when input is changed', async () => {
+    const { container, input, props, user } = await setup('BookList', 'Author');
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Author')).toBeTruthy();
+    expect(input).toBeVisible();
 
-    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
+    await user.type(input, 'a');
 
     expect(props.setFormData).toHaveBeenCalled();
   });
 
-  it('render Grocery fields when listType is GroceryList and calls setFormData when input is changed', () => {
-    props.listType = 'GroceryList';
-    const { container, getByLabelText } = render(<ListItemFormFields {...props} />);
+  it('render Grocery fields when listType is GroceryList and calls setFormData when input is changed', async () => {
+    const { container, input, props, user } = await setup('GroceryList', 'Product');
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Product')).toBeTruthy();
+    expect(input).toBeVisible();
 
-    fireEvent.change(getByLabelText('Product'), { target: { value: 'a' } });
+    await user.type(input, 'a');
 
     expect(props.setFormData).toHaveBeenCalled();
   });
 
-  it('render Music fields when listType is MusicList and calls setFormData when input is changed', () => {
-    props.listType = 'MusicList';
-    const { container, getByLabelText } = render(<ListItemFormFields {...props} />);
+  it('render Music fields when listType is MusicList and calls setFormData when input is changed', async () => {
+    const { container, input, props, user } = await setup('MusicList', 'Album');
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Album')).toBeTruthy();
+    expect(input).toBeVisible();
 
-    fireEvent.change(getByLabelText('Album'), { target: { value: 'a' } });
+    await user.type(input, 'a');
 
     expect(props.setFormData).toHaveBeenCalled();
   });
 
-  it('render ToDo fields when listType is ToDoList and calls setFormData when input is changed', () => {
-    props.listType = 'ToDoList';
-    const { container, getByLabelText } = render(<ListItemFormFields {...props} />);
+  it('render ToDo fields when listType is ToDoList and calls setFormData when input is changed', async () => {
+    const { container, input, props, user } = await setup('ToDoList', 'Task');
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Task')).toBeTruthy();
+    expect(input).toBeVisible();
 
-    fireEvent.change(getByLabelText('Task'), { target: { value: 'a' } });
+    await user.type(input, 'a');
 
     expect(props.setFormData).toHaveBeenCalled();
   });
 
-  it('sets value for numberInSeries as a number when input', () => {
-    props.listType = 'BookList';
-    const { getByLabelText } = render(<ListItemFormFields {...props} />);
+  it('sets value for numberInSeries as a number when input', async () => {
+    const { input, props, user } = await setup('BookList', 'Number in series');
 
-    fireEvent.change(getByLabelText('Number in series'), { target: { value: '2' } });
+    await user.type(input, '2');
 
     expect(props.setFormData).toHaveBeenCalled();
   });

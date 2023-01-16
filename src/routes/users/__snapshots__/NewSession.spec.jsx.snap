@@ -22,85 +22,20 @@ exports[`NewSession renders loading when fetch has not completed 1`] = `
 
 exports[`NewSession renders session form when fetch errors 1`] = `
 <div>
-  <h2>
-    Log in
-  </h2>
-  <form
-    class=""
+  <div
+    id="loader"
   >
     <div
-      class="mb-3"
+      class="spinner-border"
+      id="spinner"
+      role="status"
     >
-      <label
-        class="form-label"
-        for="email"
+      <span
+        class="sr-only"
       >
-        Email
-      </label>
-      <input
-        class="form-control"
-        id="email"
-        name="email"
-        placeholder="jane.smith@example.com"
-        type="email"
-        value=""
-      />
+        Loading...
+      </span>
     </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="password"
-      >
-        Password
-      </label>
-      <input
-        autocomplete="off"
-        class="form-control"
-        id="password"
-        name="password"
-        placeholder="password"
-        type="password"
-        value=""
-      />
-    </div>
-    <div
-      class="mb-3 mb-3"
-    >
-      <div
-        class="form-check"
-      >
-        <input
-          class="form-check-input"
-          id="remember-me"
-          name="remember-me"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="remember-me"
-          title=""
-        >
-          Remember me
-        </label>
-      </div>
-    </div>
-    <div
-      class="d-grid gap-2 mt-3"
-    >
-      <button
-        class="btn btn-success"
-        type="submit"
-      >
-        Log In
-      </button>
-    </div>
-  </form>
-  <a
-    href="/users/password/new"
-  >
-    Forgot your password?
-  </a>
+  </div>
 </div>
 `;

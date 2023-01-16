@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
+import userEvent from '@testing-library/user-event';
 
 import EditInvite from './EditInvite';
 import axios from '../../utils/api';
@@ -18,14 +19,21 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
+function setup() {
+  const user = userEvent.setup();
+  const component = render(<EditInvite />);
+
+  return { ...component, user };
+}
+
 describe('EditInvite', () => {
   it('sets password', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { getByLabelText, getByTestId } = render(<EditInvite />);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
-    fireEvent.submit(getByTestId('password-form'));
+    await user.type(await findByLabelText('Password'), 'foo');
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
+    await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Password successfully updated', { type: 'info' });
@@ -34,11 +42,11 @@ describe('EditInvite', () => {
 
   it('shows errors on failure', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { getByLabelText, getByTestId } = render(<EditInvite />);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
-    fireEvent.submit(getByTestId('password-form'));
+    await user.type(await findByLabelText('Password'), 'foo');
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
+    await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
@@ -46,11 +54,11 @@ describe('EditInvite', () => {
 
   it('shows errors on failed request', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { getByLabelText, getByTestId } = render(<EditInvite />);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
-    fireEvent.submit(getByTestId('password-form'));
+    await user.type(await findByLabelText('Password'), 'foo');
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
+    await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -58,11 +66,11 @@ describe('EditInvite', () => {
 
   it('shows errors on unknown error', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { getByLabelText, getByTestId } = render(<EditInvite />);
+    const { findByLabelText, findByText, user } = setup();
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'foo' } });
-    fireEvent.change(getByLabelText('Password confirmation'), { target: { value: 'foo' } });
-    fireEvent.submit(getByTestId('password-form'));
+    await user.type(await findByLabelText('Password'), 'foo');
+    await user.type(await findByLabelText('Password confirmation'), 'foo');
+    await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });

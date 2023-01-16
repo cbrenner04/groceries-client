@@ -25,6 +25,5 @@ exports[`CategoryField renders input with datalist 1`] = `
       value="testCategory1"
     />
   </datalist>
-  
 </div>
 `;

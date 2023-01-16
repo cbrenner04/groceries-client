@@ -1,30 +1,35 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Refresh from './Refresh';
 
-const defaultProps = {
-  handleClick: jest.fn(),
-  testID: 'foo',
-};
+async function setup() {
+  const user = userEvent.setup();
+  const handleClick = jest.fn();
+  const props = {
+    handleClick,
+    testID: 'foo',
+  };
+  const { findByRole } = render(<Refresh {...props} />);
+  const refreshButton = await findByRole('button');
+
+  return { handleClick, refreshButton, user };
+}
 
 describe('Refresh', () => {
-  let refreshButton;
+  it('renders a button', async () => {
+    const { refreshButton } = await setup();
 
-  beforeEach(() => {
-    const { getByRole } = render(<Refresh {...defaultProps} />);
-    refreshButton = getByRole('button');
-  });
-
-  it('renders a button', () => {
     expect(refreshButton).toMatchSnapshot();
   });
 
   describe('when button is clicked', () => {
-    it('calls handleClick', () => {
-      fireEvent.click(refreshButton);
+    it('calls handleClick', async () => {
+      const { handleClick, refreshButton, user } = await setup();
+      await user.click(refreshButton);
 
-      expect(defaultProps.handleClick).toHaveBeenCalled();
+      expect(handleClick).toHaveBeenCalled();
     });
   });
 });

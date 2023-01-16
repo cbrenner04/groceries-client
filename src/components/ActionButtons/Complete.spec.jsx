@@ -1,30 +1,36 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Complete from './Complete';
 
-const defaultProps = {
-  handleClick: jest.fn(),
-  testID: 'foo',
-};
+async function setup() {
+  const handleClick = jest.fn();
+  const props = {
+    handleClick,
+    testID: 'foo',
+  };
+  const user = userEvent.setup();
+
+  const { findByRole } = render(<Complete {...props} />);
+  const completeButton = await findByRole('button');
+
+  return { completeButton, handleClick, user };
+}
 
 describe('Complete', () => {
-  let completeButton;
+  it('renders a button', async () => {
+    const { completeButton } = await setup();
 
-  beforeEach(() => {
-    const { getByRole } = render(<Complete {...defaultProps} />);
-    completeButton = getByRole('button');
-  });
-
-  it('renders a button', () => {
     expect(completeButton).toMatchSnapshot();
   });
 
   describe('when button is clicked', () => {
-    it('calls handleClick', () => {
-      fireEvent.click(completeButton);
+    it('calls handleClick', async () => {
+      const { completeButton, handleClick, user } = await setup();
+      await user.click(completeButton);
 
-      expect(defaultProps.handleClick).toHaveBeenCalled();
+      expect(handleClick).toHaveBeenCalled();
     });
   });
 });

@@ -1,53 +1,53 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Lists from './Lists';
 
+function setup(suppliedProps = {}) {
+  const user = userEvent.setup();
+  const defaultProps = {
+    title: <div />,
+    children: [<div key="1" />],
+    multiSelect: false,
+    selectedLists: [],
+    setSelectedLists: jest.fn(),
+    setMultiSelect: jest.fn(),
+  };
+  const props = { ...defaultProps, ...suppliedProps };
+  const component = render(<Lists {...props} />);
+
+  return { ...component, props, user };
+}
+
 describe('Lists', () => {
-  let props;
-  const renderLists = (p) => {
-    return render(<Lists {...p} />);
-  };
+  it('sets multiSelect to true when select is clicked', async () => {
+    const { container, findAllByText, props, user } = setup({ multiSelect: false, selectedLists: [] });
 
-  const list = {
-    id: 'id1',
-    name: 'foo',
-    type: 'GroceryList',
-    created_at: new Date('05/27/2020').toISOString(),
-    completed: true,
-    users_list_id: 'id1',
-    owner_id: 'id1',
-    refreshed: false,
-  };
-
-  beforeEach(() => {
-    props = {
-      title: <div />,
-      children: [<div key="1" />],
-      multiSelect: false,
-      selectedLists: [],
-      setSelectedLists: jest.fn(),
-      setMultiSelect: jest.fn(),
-    };
-  });
-
-  it('sets multiSelect to true when select is clicked', () => {
-    props.multiSelect = false;
-    props.selectedLists = [];
-    const { container, getAllByText } = renderLists(props);
-
-    fireEvent.click(getAllByText('Select')[0]);
+    await user.click((await findAllByText('Select'))[0]);
 
     expect(container).toMatchSnapshot();
     expect(props.setMultiSelect).toHaveBeenCalledWith(true);
   });
 
-  it('sets multiSelect to false and clears selectedLists when Hide Select is clicked', () => {
-    props.multiSelect = true;
-    props.selectedLists = [list];
-    const { container, getAllByText } = renderLists(props);
+  it('sets multiSelect to false and clears selectedLists when Hide Select is clicked', async () => {
+    const { container, findAllByText, props, user } = setup({
+      multiSelect: true,
+      selectedLists: [
+        {
+          id: 'id1',
+          name: 'foo',
+          type: 'GroceryList',
+          created_at: new Date('05/27/2020').toISOString(),
+          completed: true,
+          users_list_id: 'id1',
+          owner_id: 'id1',
+          refreshed: false,
+        },
+      ],
+    });
 
-    fireEvent.click(getAllByText('Hide Select')[0]);
+    await user.click((await findAllByText('Hide Select'))[0]);
 
     expect(container).toMatchSnapshot();
     expect(props.setMultiSelect).toHaveBeenCalledWith(false);

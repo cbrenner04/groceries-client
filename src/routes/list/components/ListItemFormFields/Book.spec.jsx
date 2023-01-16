@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Book from './Book';
 
-describe('Book', () => {
-  const props = {
+function setup(suppliedProps) {
+  const user = userEvent.setup();
+  const defaultProps = {
     author: 'asdf',
     inputChangeHandler: jest.fn(),
     title: 'asdf',
@@ -12,51 +14,54 @@ describe('Book', () => {
     category: 'asdf',
     categories: ['asdf'],
   };
+  const props = { ...defaultProps, ...suppliedProps };
+  const { container, findByLabelText, queryByLabelText } = render(<Book {...props} />);
 
+  return { container, findByLabelText, queryByLabelText, props, user };
+}
+
+describe('Book', () => {
   it('renders base form when props.editForm is false', () => {
-    props.editForm = false;
-    const { container, queryByLabelText } = render(<Book {...props} />);
+    const { container, queryByLabelText } = setup({ editForm: false });
 
     expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Purchased')).toBeFalsy();
-    expect(queryByLabelText('Read')).toBeFalsy();
+    expect(queryByLabelText('Purchased')).toBeNull();
+    expect(queryByLabelText('Read')).toBeNull();
   });
 
-  it('renders edit form when props.editForm is true', () => {
-    props.editForm = true;
-    const { container, getByLabelText } = render(<Book {...props} />);
+  it('renders edit form when props.editForm is true', async () => {
+    const { container, findByLabelText } = setup({ editForm: true });
 
     expect(container).toMatchSnapshot();
-    expect(getByLabelText('Purchased')).toBeTruthy();
-    expect(getByLabelText('Read')).toBeTruthy();
+    expect(await findByLabelText('Purchased')).toBeVisible();
+    expect(await findByLabelText('Read')).toBeVisible();
   });
 
-  it('calls appropriate change handlers when changes occur', () => {
-    props.editForm = true;
-    const { getByLabelText } = render(<Book {...props} />);
+  it('calls appropriate change handlers when changes occur', async () => {
+    const { findByLabelText, props, user } = setup({ editForm: true });
 
-    fireEvent.change(getByLabelText('Author'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Author'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(1);
 
-    fireEvent.change(getByLabelText('Title'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Title'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(2);
 
-    fireEvent.change(getByLabelText('Number in series'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Number in series'), '1');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(3);
 
-    fireEvent.change(getByLabelText('Category'), { target: { value: 'a' } });
+    await user.type(await findByLabelText('Category'), 'a');
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(4);
 
-    fireEvent.click(getByLabelText('Purchased'));
+    await user.click(await findByLabelText('Purchased'));
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(5);
 
-    fireEvent.click(getByLabelText('Read'));
+    await user.click(await findByLabelText('Read'));
 
-    expect(props.inputChangeHandler).toHaveBeenCalled();
+    expect(props.inputChangeHandler).toHaveBeenCalledTimes(6);
   });
 });

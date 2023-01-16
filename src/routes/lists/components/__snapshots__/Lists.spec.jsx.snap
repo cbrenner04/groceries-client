@@ -43,7 +43,6 @@ exports[`Lists sets multiSelect to true when select is clicked 1`] = `
         class="mx-auto float-end btn btn-link"
         type="button"
       >
-        
          Select
       </button>
     </div>
