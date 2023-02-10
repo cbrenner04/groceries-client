@@ -88,7 +88,10 @@
     },
     "resetMocks": true,
     "clearMocks": true,
-    "restoreMocks": true
+    "restoreMocks": true,
+    "transformIgnorePatterns": [
+      "/node_modules/(?!query-string|decode-uri-component|split-on-first|filter-obj)"
+    ]
   },
   "browserslist": {
     "production": [
