@@ -802,9 +802,6 @@ describe('ListContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    // TODO: what am I not waiting for?
-    await act(async () => undefined);
-
     await waitFor(async () =>
       expect(
         (
@@ -907,9 +904,6 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
-
-    // TODO: what am I not waiting for?
-    await act(async () => undefined);
 
     await waitFor(async () =>
       expect(

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import List from './List';
@@ -24,20 +24,18 @@ describe('List', () => {
 
   it('renders the Loading component when fetch request is pending', async () => {
     const { container, findByText } = renderList();
-    const status = await findByText('Loading...');
 
+    expect(await findByText('Loading...')).toBeTruthy();
     expect(container).toMatchSnapshot();
-    expect(status).toBeTruthy();
   });
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { findByRole } = renderList();
+    const { container, findByRole } = renderList();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => undefined);
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
   });
 
   it('displays List', async () => {
@@ -61,11 +59,9 @@ describe('List', () => {
       },
     });
     const { container, findByText } = renderList();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => undefined);
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(container).toMatchSnapshot();
     expect(await findByText('foo')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 });
