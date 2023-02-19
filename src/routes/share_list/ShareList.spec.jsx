@@ -25,8 +25,8 @@ describe('ShareList', () => {
   it('renders loading when data fetch is not complete', async () => {
     const { container, findByText } = renderShareList();
 
-    expect(container).toMatchSnapshot();
     expect(await findByText('Loading...')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 
   it('renders unknown error component when error occurs', async () => {
@@ -34,8 +34,8 @@ describe('ShareList', () => {
     const { container, findByRole } = renderShareList();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
   });
 
   it('renders ShareList when data fetch is successful', async () => {
@@ -59,11 +59,11 @@ describe('ShareList', () => {
     const { container, findByTestId, queryByTestId } = renderShareList();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(await findByTestId('invite-user-id5')).toHaveTextContent('foobar@example.com');
     expect(await findByTestId('accepted-user-id1')).toHaveTextContent('foo@example.com');
     expect(queryByTestId('accepted-user-id4')).toBeNull();
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
     expect(await findByTestId('refused-user-id3')).toHaveTextContent('baz@example.com');
+    expect(container).toMatchSnapshot();
   });
 });

@@ -575,9 +575,6 @@ describe('ShareListForm', () => {
 
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-
-      await act(async () => undefined);
-
       await waitFor(() => expect(queryByTestId('pending-user-id2')).toBeNull());
     });
 

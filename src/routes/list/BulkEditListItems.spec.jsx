@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import BulkEditListItems from './BulkEditListItems';
@@ -25,12 +25,10 @@ describe('BulkEditListItems', () => {
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, findByRole } = renderBulkEditListItems();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => undefined);
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
   });
 
   it('displays BulkEditListItems', async () => {
@@ -68,11 +66,9 @@ describe('BulkEditListItems', () => {
       },
     });
     const { container, findByText } = renderBulkEditListItems();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => undefined);
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(container).toMatchSnapshot();
     expect(await findByText('Update Items')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 });

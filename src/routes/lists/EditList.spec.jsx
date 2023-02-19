@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EditList from './EditList';
@@ -24,33 +24,20 @@ function setup() {
 }
 
 describe('EditList', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
   it('renders the Loading component when fetch request is pending', async () => {
     const { container, findByText } = setup();
-    const status = await findByText('Loading...');
 
+    expect(await findByText('Loading...')).toBeTruthy();
     expect(container).toMatchSnapshot();
-    expect(status).toBeTruthy();
   });
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, findByRole } = setup();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => {
-      jest.runAllTicks();
-    });
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
   });
 
   it('displays EditList', async () => {
@@ -58,13 +45,9 @@ describe('EditList', () => {
       data: { owner_id: 'id1', id: 'id1', name: 'foo', completed: false, type: 'GroceryList' },
     });
     const { container, findByText } = setup();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await act(async () => {
-      jest.runAllTicks();
-    });
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(container).toMatchSnapshot();
     expect(await findByText('Update List')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 });

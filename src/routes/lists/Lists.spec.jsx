@@ -17,8 +17,8 @@ describe('Lists', () => {
   it('renders loading component when data is being fetched', async () => {
     const { container, findByText } = renderLists();
 
-    expect(container).toMatchSnapshot();
     expect(await findByText('Loading...')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 
   it('renders unknown error when error occurs', async () => {
@@ -26,8 +26,8 @@ describe('Lists', () => {
     const { container, findByRole } = renderLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
   });
 
   it('renders Lists when data retrieval is complete', async () => {
@@ -86,9 +86,9 @@ describe('Lists', () => {
     const { container, findByTestId } = renderLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
     expect(await findByTestId('list-id2')).toHaveAttribute('data-test-class', 'incomplete-list');
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(container).toMatchSnapshot();
   });
 });

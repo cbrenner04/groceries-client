@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import userEvent from '@testing-library/user-event';
@@ -36,8 +36,8 @@ describe('NewSession', () => {
     axios.get = () => new Promise();
     const { container, findByText } = setup();
 
-    expect(container).toMatchSnapshot();
     expect(await findByText('Loading...')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 
   it('renders session form when fetch errors', async () => {
@@ -46,10 +46,10 @@ describe('NewSession', () => {
     const { container, findByLabelText } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
     expect(await findByLabelText('Email')).toBeVisible();
     expect(await findByLabelText('Password')).toBeVisible();
     expect(await findByLabelText('Remember me')).toBeVisible();
+    expect(container).toMatchSnapshot();
   });
 
   it('redirects to /lists when fetch is successful', async () => {
@@ -57,7 +57,6 @@ describe('NewSession', () => {
 
     setup();
 
-    await act(async () => undefined);
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
