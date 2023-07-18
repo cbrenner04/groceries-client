@@ -804,9 +804,7 @@ describe('ListContainer', () => {
 
     await waitFor(async () =>
       expect(
-        (
-          await findByText('purchased quantity foo purchased product')
-        ).parentElement.parentElement.parentElement,
+        (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
       ).toHaveAttribute('data-test-class', 'non-purchased-item'),
     );
 
@@ -907,9 +905,7 @@ describe('ListContainer', () => {
 
     await waitFor(async () =>
       expect(
-        (
-          await findByText('purchased quantity foo purchased product')
-        ).parentElement.parentElement.parentElement,
+        (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
       ).toHaveAttribute('data-test-class', 'non-purchased-item'),
     );
 
