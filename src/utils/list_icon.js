@@ -5,5 +5,5 @@ const listIconClass = (listType) =>
     MusicList: 'fa-music',
     SimpleList: 'fa-file',
     ToDoList: 'fa-list',
-  }[listType]);
+  })[listType];
 export default listIconClass;

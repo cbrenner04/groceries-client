@@ -69,7 +69,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         editForm={editForm}
       />
     ),
-  }[listType]);
+  })[listType];
 
 ListItemFormFields.propTypes = {
   listType: PropTypes.string.isRequired,
