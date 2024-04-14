@@ -23,7 +23,7 @@
     "popper.js": "1.16.1",
     "postcss": "8.4.33",
     "prettier": "3.2.5",
-    "query-string": "8.1.0",
+    "query-string": "8.2.0",
     "react": "18.2.0",
     "react-async": "10.0.1",
     "react-bootstrap": "2.10.2",
