@@ -32,7 +32,7 @@
     "react-router-dom": "6.24.0",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
-    "sass-loader": "14.2.0"
+    "sass-loader": "14.2.1"
   },
   "scripts": {
     "start": "REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts start",
