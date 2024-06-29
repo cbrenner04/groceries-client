@@ -3,19 +3,29 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
 // TODO: check react-bootstrap has some way of handling the grid
-const FormSubmission = (props) => (
-  <div className="d-grid gap-2 mt-3">
-    <Button type="submit" variant="success" disabled={props.disabled}>
-      {props.submitText}
-    </Button>
-    {props.displayCancelButton && (
-      <Button variant="link" onClick={props.cancelAction}>
-        {props.cancelText}
+const FormSubmission = (props) => {
+  const defaultProps = {
+    disabled: false,
+    displayCancelButton: true,
+    cancelAction: () => undefined,
+    cancelText: '',
+  };
+  const propsWithDefaults = { ...defaultProps, ...props };
+  return (
+    <div className="d-grid gap-2 mt-3">
+      <Button type="submit" variant="success" disabled={propsWithDefaults.disabled}>
+        {propsWithDefaults.submitText}
       </Button>
-    )}
-  </div>
-);
+      {propsWithDefaults.displayCancelButton && (
+        <Button variant="link" onClick={propsWithDefaults.cancelAction}>
+          {propsWithDefaults.cancelText}
+        </Button>
+      )}
+    </div>
+  );
+};
 
+/* eslint-disable react/require-default-props */
 FormSubmission.propTypes = {
   disabled: PropTypes.bool,
   submitText: PropTypes.string.isRequired,
@@ -23,12 +33,6 @@ FormSubmission.propTypes = {
   cancelAction: PropTypes.func,
   cancelText: PropTypes.string,
 };
-
-FormSubmission.defaultProps = {
-  disabled: false,
-  displayCancelButton: true,
-  cancelAction: () => undefined,
-  cancelText: '',
-};
+/* eslint-enable react/require-default-props */
 
 export default FormSubmission;
