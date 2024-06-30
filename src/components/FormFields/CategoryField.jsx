@@ -24,7 +24,7 @@ const CategoryField = ({
       disabled={disabled}
     />
     <datalist id="categories">
-      {(categories || []).map((category) => (
+      {categories.map((category) => (
         <option key={category} value={category} />
       ))}
     </datalist>
