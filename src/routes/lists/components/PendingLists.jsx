@@ -120,7 +120,12 @@ function PendingLists(props) {
             listName={list.name}
             listButtons={
               <ButtonGroup className="float-end">
-                <Complete handleClick={() => handleAccept(list)} testID="pending-list-accept" disabled={pending} />
+                <Complete
+                  handleClick={() => handleAccept(list)}
+                  testID="pending-list-accept"
+                  disabled={pending}
+                  classes=""
+                />
                 <Trash handleClick={() => handleReject(list)} testID="pending-list-trash" disabled={pending} />
               </ButtonGroup>
             }

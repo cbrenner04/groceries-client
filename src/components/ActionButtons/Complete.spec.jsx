@@ -9,6 +9,8 @@ async function setup() {
   const props = {
     handleClick,
     testID: 'foo',
+    disabled: false,
+    classes: '',
   };
   const user = userEvent.setup();
 

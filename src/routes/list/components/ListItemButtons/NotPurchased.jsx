@@ -20,6 +20,7 @@ function NotPurchasedItemButtons(props) {
         handleClick={() => props.handlePurchaseOfItem(props.item)}
         testID={`not-purchased-item-complete-${props.item.id}`}
         disabled={props.pending}
+        classes=""
       />
       <EditButton
         handleClick={() => props.handleItemEdit(props.item)}
