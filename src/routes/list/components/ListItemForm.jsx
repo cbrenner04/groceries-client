@@ -119,6 +119,7 @@ function ListItemForm(props) {
             submitText="Add New Item"
             cancelAction={() => setShowForm(false)}
             cancelText="Collapse Form"
+            displayCancelButton={true}
           />
         </Form>
       </Collapse>

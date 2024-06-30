@@ -60,7 +60,12 @@ function EditListForm(props) {
           handleCompletedChange={() => setCompleted(!completed)}
           editForm
         />
-        <FormSubmission submitText="Update List" cancelAction={() => navigate('/lists')} cancelText="Cancel" />
+        <FormSubmission
+          submitText="Update List"
+          cancelAction={() => navigate('/lists')}
+          cancelText="Cancel"
+          displayCancelButton={true}
+        />
       </Form>
     </>
   );

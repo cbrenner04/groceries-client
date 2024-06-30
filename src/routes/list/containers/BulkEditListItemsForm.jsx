@@ -197,6 +197,7 @@ function BulkEditListItemsForm(props) {
           submitText="Update Items"
           cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
+          displayCancelButton={true}
         />
       </Form>
     </>

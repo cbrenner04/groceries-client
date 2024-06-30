@@ -235,7 +235,7 @@ function ShareListForm(props) {
           value={newEmail}
           handleChange={({ target: { value } }) => setNewEmail(value)}
         />
-        <FormSubmission submitText="Share List" displayCancelButton={false} />
+        <FormSubmission submitText="Share List" displayCancelButton={false} cancelAction={() => undefined} />
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup className="mb-5">

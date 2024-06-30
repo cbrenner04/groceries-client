@@ -83,6 +83,12 @@ exports[`ListForm renders 1`] = `
       >
         Create List
       </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
     </div>
   </form>
 </div>

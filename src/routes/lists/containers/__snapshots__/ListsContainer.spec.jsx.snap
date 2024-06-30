@@ -86,6 +86,12 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
       >
         Create List
       </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
     </div>
   </form>
   <hr
@@ -571,6 +577,12 @@ exports[`ListsContainer renders 1`] = `
         type="submit"
       >
         Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
       </button>
     </div>
   </form>

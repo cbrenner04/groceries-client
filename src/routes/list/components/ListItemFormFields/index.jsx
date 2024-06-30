@@ -20,7 +20,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         categories={categories || []}
         inputChangeHandler={setFormData}
         read={formData.read || false}
-        purchased={formData.purchased || ''}
+        purchased={formData.purchased || false}
         editForm={editForm || false}
       />
     ),
@@ -31,7 +31,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         category={formData.category || ''}
         categories={categories || []}
         inputChangeHandler={setFormData}
-        purchased={formData.purchased || ''}
+        purchased={formData.purchased || false}
         editForm={editForm || false}
       />
     ),
@@ -43,7 +43,7 @@ const ListItemFormFields = ({ categories, listType, listUsers, formData, setForm
         category={formData.category || ''}
         categories={categories || []}
         inputChangeHandler={setFormData}
-        purchased={formData.purchased || ''}
+        purchased={formData.purchased || false}
         editForm={editForm || false}
       />
     ),

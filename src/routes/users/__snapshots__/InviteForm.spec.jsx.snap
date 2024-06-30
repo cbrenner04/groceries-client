@@ -13,11 +13,13 @@ exports[`InviteForm invites new user 1`] = `
     >
       <label
         class="form-label"
+        for="email"
       >
         Email
       </label>
       <input
         class="form-control"
+        id="email"
         name="email"
         placeholder="jane.smith@example.com"
         type="email"
@@ -32,6 +34,12 @@ exports[`InviteForm invites new user 1`] = `
         type="submit"
       >
         Invite User
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
       </button>
     </div>
   </form>

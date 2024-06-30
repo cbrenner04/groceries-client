@@ -43,11 +43,13 @@ exports[`Grocery renders base form when props.editForm is false 1`] = `
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"
@@ -110,11 +112,13 @@ exports[`Grocery renders edit form when props.editForm is true 1`] = `
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"

@@ -60,11 +60,13 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"
@@ -120,11 +122,13 @@ exports[`ListItemFormFields render Grocery fields when listType is GroceryList a
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"
@@ -198,11 +202,13 @@ exports[`ListItemFormFields render Music fields when listType is MusicList and c
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"
@@ -280,11 +286,13 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
   >
     <label
       class="form-label"
+      for="category"
     >
       Category
     </label>
     <input
       class="form-control"
+      id="category"
       list="categories"
       name="category"
       type="text"

@@ -52,11 +52,13 @@ exports[`EditListItemForm renders 1`] = `
     >
       <label
         class="form-label"
+        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
+        id="category"
         list="categories"
         name="category"
         type="text"
@@ -99,6 +101,12 @@ exports[`EditListItemForm renders 1`] = `
         type="submit"
       >
         Update Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
       </button>
     </div>
   </form>
