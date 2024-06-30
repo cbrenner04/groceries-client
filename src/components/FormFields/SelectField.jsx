@@ -32,8 +32,8 @@ const SelectField = ({
     </Form.Control>
     {showClear && (
       <CheckboxField
-        name={`clear${name[0].toUpperCase() + name.slice(1)}`}
-        label="Clear assignee"
+        name={`clear${(name[0].toUpperCase() + name.slice(1)).replace('Id', '')}`}
+        label={`Clear ${name.replace('Id', '')}`}
         handleChange={handleClear}
         value={clear}
         classes="ms-1 mt-1"
