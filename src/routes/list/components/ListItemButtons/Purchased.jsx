@@ -12,6 +12,7 @@ const PurchasedItemButtons = (props) => (
         handleClick={() => props.handleItemRefresh(props.item)}
         testID={`purchased-item-refresh-${props.item.id}`}
         disabled={props.pending}
+        classes=""
       />
     )}
     {props.listType === 'BookList' && (

@@ -45,7 +45,7 @@ const UsersList = (props) => (
                         className={`fas fa-angle-double-${permissions === 'write' ? 'down' : 'up'} fa-2x text-warning`}
                       />
                     </Button>
-                    <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
+                    <Trash testID="remove-share" handleClick={() => props.removeShare(id)} disabled={false} />
                   </ButtonGroup>
                 </Col>
               </Row>
