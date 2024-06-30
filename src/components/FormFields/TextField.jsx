@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const TextField = ({ name, label, value, handleChange, placeholder, child, disabled }) => (
+import { CheckboxField } from './';
+
+const TextField = ({ name, label, value, handleChange, placeholder, disabled, showClear, clear, handleClear }) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control
@@ -13,7 +15,15 @@ const TextField = ({ name, label, value, handleChange, placeholder, child, disab
       name={name}
       disabled={disabled}
     />
-    {child}
+    {showClear && (
+      <CheckboxField
+        name={`clear${name[0].toUpperCase() + name.slice(1)}`}
+        label={`Clear ${name}`}
+        handleChange={handleClear}
+        value={clear}
+        classes="ms-1 mt-1"
+      />
+    )}
   </Form.Group>
 );
 
@@ -22,15 +32,11 @@ TextField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
-};
-
-TextField.defaultProps = {
-  placeholder: '',
-  child: '',
-  disabled: false,
+  placeholder: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  showClear: PropTypes.bool.isRequired,
+  handleClear: PropTypes.func.isRequired,
+  clear: PropTypes.bool.isRequired,
 };
 
 export default TextField;

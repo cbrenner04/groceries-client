@@ -6,7 +6,7 @@ import Grocery from './Grocery';
 import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
-import { CategoryField, CheckboxField } from '../../../../components/FormFields';
+import { CategoryField } from '../../../../components/FormFields';
 import { listUsers } from '../../../../types';
 
 const BulkEditListItemsFormFields = (props) => {
@@ -84,15 +84,9 @@ const BulkEditListItemsFormFields = (props) => {
             categories={props.categories}
             handleInput={props.handleInput}
             disabled={props.formData.clearCategory}
-            child={
-              <CheckboxField
-                name="clearCategory"
-                label="Clear category"
-                handleChange={() => props.clearAttribute('category', 'clearCategory')}
-                value={props.formData.clearCategory}
-                classes="ms-1 mt-1"
-              />
-            }
+            showClearCategory={true}
+            clearCategory={props.formData.clearCategory}
+            handleClearCategory={() => props.clearAttribute('category', 'clearCategory')}
           />
         </>
       )}

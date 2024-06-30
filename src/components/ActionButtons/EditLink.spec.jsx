@@ -8,8 +8,8 @@ async function setup() {
   const props = {
     to: '/fake/route',
     disabled: false,
-    style: {},
     testID: 'foo',
+    classes: '',
   };
   const { findByRole } = render(
     <MemoryRouter>

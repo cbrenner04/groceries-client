@@ -22,15 +22,9 @@ DateField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
-};
-
-DateField.defaultProps = {
-  placeholder: '',
-  child: '',
-  disabled: false,
+  placeholder: PropTypes.string.isRequired,
+  child: PropTypes.node.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default DateField;

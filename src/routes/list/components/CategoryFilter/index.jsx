@@ -6,11 +6,12 @@ import Filtered from './Filtered';
 import NoFilter from './NoFilter';
 
 const CategoryFilter = (props) => {
-  if (props.categories.filter(Boolean).length) {
-    if (props.filter) {
-      return <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;
+  const cats = props.categories || [''];
+  if (cats.filter(Boolean).length) {
+    if (props.filter || '') {
+      return <Filtered filter={props.filter || ''} handleClearFilter={props.handleClearFilter} />;
     } else {
-      return <Filter categories={props.categories} handleCategoryFilter={props.handleCategoryFilter} />;
+      return <Filter categories={cats} handleCategoryFilter={props.handleCategoryFilter} />;
     }
   } else {
     return <NoFilter />;
@@ -22,11 +23,6 @@ CategoryFilter.propTypes = {
   filter: PropTypes.string,
   handleClearFilter: PropTypes.func.isRequired,
   handleCategoryFilter: PropTypes.func.isRequired,
-};
-
-CategoryFilter.defaultProps = {
-  filter: '',
-  categories: [''],
 };
 
 export default CategoryFilter;

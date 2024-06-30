@@ -12,6 +12,10 @@ const ToDoFormFields = (props) => (
       value={props.task}
       handleChange={props.inputChangeHandler}
       placeholder="Clean the toilets"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <SelectField
       name="assigneeId"
@@ -20,6 +24,10 @@ const ToDoFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       options={props.listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <DateField
       name="dueBy"
@@ -27,13 +35,23 @@ const ToDoFormFields = (props) => (
       value={props.dueBy}
       handleChange={props.inputChangeHandler}
       placeholder="mm/dd/yyyy"
+      disabled={false}
+      child=""
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
+    <CategoryField
+      category={props.category || ''}
+      categories={props.categories || []}
+      handleInput={props.inputChangeHandler}
+      showClearCategory={false}
+      clearCategory={false}
+      handleClearCategory={() => undefined}
+      disabled={false}
+    />
     {props.editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed}
+        value={props.completed || false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
@@ -51,13 +69,6 @@ ToDoFormFields.propTypes = {
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
   inputChangeHandler: PropTypes.func.isRequired,
-};
-
-ToDoFormFields.defaultProps = {
-  completed: false,
-  editForm: false,
-  category: '',
-  categories: [],
 };
 
 export default ToDoFormFields;

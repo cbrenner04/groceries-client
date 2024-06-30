@@ -5,19 +5,15 @@ import { Form } from 'react-bootstrap';
 const NumberField = ({ name, label, value, handleChange }) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
-    <Form.Control type="number" value={value || ''} onChange={handleChange} name={name} />
+    <Form.Control type="number" value={value} onChange={handleChange} name={name} />
   </Form.Group>
 );
 
 NumberField.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
-};
-
-NumberField.defaultProps = {
-  value: 0,
 };
 
 export default NumberField;

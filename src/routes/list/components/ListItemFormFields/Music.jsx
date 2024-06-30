@@ -11,6 +11,10 @@ const MusicFormFields = (props) => (
       value={props.title}
       handleChange={props.inputChangeHandler}
       placeholder="Baby Got Back"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <TextField
       name="artist"
@@ -18,6 +22,10 @@ const MusicFormFields = (props) => (
       value={props.artist}
       handleChange={props.inputChangeHandler}
       placeholder="Sir Mix-a-Lot"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <TextField
       name="album"
@@ -25,13 +33,25 @@ const MusicFormFields = (props) => (
       value={props.album}
       handleChange={props.inputChangeHandler}
       placeholder="Mack Daddy"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
+    <CategoryField
+      category={props.category || ''}
+      categories={props.categories || []}
+      handleInput={props.inputChangeHandler}
+      showClearCategory={false}
+      clearCategory={false}
+      handleClearCategory={() => undefined}
+      disabled={false}
+    />
     {props.editForm && (
       <CheckboxField
         name="purchased"
         label="Purchased"
-        value={props.purchased}
+        value={props.purchased || false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
@@ -48,13 +68,6 @@ MusicFormFields.propTypes = {
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
   inputChangeHandler: PropTypes.func.isRequired,
-};
-
-MusicFormFields.defaultProps = {
-  purchased: false,
-  editForm: false,
-  category: '',
-  categories: [],
 };
 
 export default MusicFormFields;

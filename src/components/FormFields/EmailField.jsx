@@ -10,15 +10,10 @@ const EmailField = ({ name, label, value, handleChange }) => (
 );
 
 EmailField.propTypes = {
-  name: PropTypes.string,
-  label: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-};
-
-EmailField.defaultProps = {
-  name: 'email',
-  label: 'Email',
 };
 
 export default EmailField;

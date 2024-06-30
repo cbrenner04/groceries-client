@@ -10,7 +10,7 @@ import { listItem, listUsers } from '../../../types';
 const ListItem = (props) => {
   let assignee = '';
   if (props.listType === 'ToDoList' && props.item.assignee_id) {
-    const assignedUser = props.listUsers.find((user) => user.id === props.item.assignee_id);
+    const assignedUser = (props.listUsers || []).find((user) => user.id === props.item.assignee_id);
     if (assignedUser) {
       assignee = `Assigned To: ${assignedUser.email}`;
     }
@@ -43,7 +43,7 @@ const ListItem = (props) => {
           )}
           {props.permission === 'write' && (
             <ListItemButtons
-              purchased={props.purchased}
+              purchased={props.purchased || false}
               listType={props.listType}
               item={props.item}
               handleItemRefresh={props.handleItemRefresh}
@@ -77,11 +77,6 @@ ListItem.propTypes = {
   handleItemEdit: PropTypes.func.isRequired,
   selectedItems: PropTypes.arrayOf(listItem).isRequired,
   pending: PropTypes.bool.isRequired,
-};
-
-ListItem.defaultProps = {
-  listUsers: [],
-  purchased: false,
 };
 
 export default ListItem;

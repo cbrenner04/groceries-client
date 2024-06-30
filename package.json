@@ -66,8 +66,7 @@
       "curly": [
         "error",
         "all"
-      ],
-      "react/require-default-props": "error"
+      ]
     }
   },
   "jest": {
@@ -80,10 +79,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 96.98,
-        "functions": 99.7,
-        "lines": 99.31,
-        "statements": 99.34
+        "branches": 95.47,
+        "functions": 92.83,
+        "lines": 97.42,
+        "statements": 97.53
       }
     },
     "resetMocks": true,

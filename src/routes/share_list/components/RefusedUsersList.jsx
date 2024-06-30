@@ -23,7 +23,12 @@ const RefusedUsersList = (props) => (
                 <Col md="4" className="pt-1"></Col>
                 <Col md="2">
                   <ButtonGroup className="float-end">
-                    <Refresh testID="refresh-share" handleClick={() => props.refreshShare(id, user.id)} />
+                    <Refresh
+                      testID="refresh-share"
+                      handleClick={() => props.refreshShare(id, user.id)}
+                      classes=""
+                      disabled={false}
+                    />
                   </ButtonGroup>
                 </Col>
               </Row>

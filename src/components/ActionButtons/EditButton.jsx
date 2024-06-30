@@ -11,11 +11,7 @@ const EditButton = ({ handleClick, testID, disabled }) => (
 EditButton.propTypes = {
   handleClick: PropTypes.func.isRequired,
   testID: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-};
-
-EditButton.defaultProps = {
-  disabled: false,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default EditButton;

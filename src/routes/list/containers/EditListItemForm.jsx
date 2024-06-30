@@ -93,6 +93,7 @@ function EditListItemForm(props) {
           submitText="Update Item"
           cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
+          displayCancelButton={true}
         />
       </Form>
     </>

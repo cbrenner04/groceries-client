@@ -10,6 +10,7 @@ async function setup(suppliedProps) {
     handleChange: jest.fn(),
     name: 'testName',
     label: 'testLabel',
+    value: 0,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const { findByLabelText } = render(<NumberField {...props} />);
@@ -34,7 +35,7 @@ describe('NumberField', () => {
       const formGroup = formInput.parentElement;
 
       expect(formGroup).toMatchSnapshot();
-      expect(formInput).toHaveAttribute('value', '');
+      expect(formInput).toHaveAttribute('value', '0');
     });
   });
 

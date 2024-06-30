@@ -11,6 +11,7 @@ async function setup() {
     name: 'testName',
     label: 'testLabel',
     value: 'testValue',
+    placeholder: '',
   };
   const { findByLabelText } = render(<PasswordField {...props} />);
   const formInput = await findByLabelText(props.label);

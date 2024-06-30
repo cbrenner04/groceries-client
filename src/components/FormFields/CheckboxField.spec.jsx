@@ -11,6 +11,7 @@ async function setup() {
     name: 'testName',
     label: 'testLabel',
     value: true,
+    classes: '',
   };
   const { findByLabelText } = render(<CheckboxField {...props} />);
   const formInput = await findByLabelText(props.label);

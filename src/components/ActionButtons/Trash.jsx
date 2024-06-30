@@ -11,11 +11,7 @@ const Trash = ({ handleClick, testID, disabled }) => (
 Trash.propTypes = {
   handleClick: PropTypes.func.isRequired,
   testID: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-};
-
-Trash.defaultProps = {
-  disabled: false,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default Trash;

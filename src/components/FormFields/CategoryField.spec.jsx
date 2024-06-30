@@ -10,6 +10,10 @@ async function setup() {
     handleInput: jest.fn(),
     category: 'testCategory',
     categories: ['testCategory1'],
+    showClearCategory: false,
+    clearCategory: false,
+    handleClearCategory: () => undefined,
+    disabled: false,
   };
   const { findByLabelText } = render(<CategoryField {...props} />);
   const formInput = await findByLabelText('Category');

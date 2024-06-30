@@ -10,6 +10,7 @@ async function setup() {
   const props = {
     handleClick,
     testID: 'test-id',
+    disabled: false,
   };
   const { findByTestId } = render(<EditButton {...props} />);
   const editButton = await findByTestId('test-id');

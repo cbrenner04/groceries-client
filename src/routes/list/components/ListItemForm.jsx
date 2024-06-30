@@ -110,15 +110,16 @@ function ListItemForm(props) {
           <ListItemFormFields
             formData={formData}
             setFormData={setData}
-            categories={props.categories}
+            categories={props.categories || []}
             listType={props.listType}
-            listUsers={props.listUsers}
+            listUsers={props.listUsers || []}
           />
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"
             cancelAction={() => setShowForm(false)}
             cancelText="Collapse Form"
+            displayCancelButton={true}
           />
         </Form>
       </Collapse>
@@ -134,11 +135,6 @@ ListItemForm.propTypes = {
   listUsers: PropTypes.arrayOf(listUsers),
   handleItemAddition: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.string),
-};
-
-ListItemForm.defaultProps = {
-  listUsers: [],
-  categories: [],
 };
 
 export default ListItemForm;

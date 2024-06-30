@@ -38,6 +38,7 @@ function ListForm({ onFormSubmit, pending }) {
             submitText="Create List"
             cancelAction={() => setShowForm(false)}
             cancelText="Collapse Form"
+            displayCancelButton={true}
           />
         </Form>
       </Collapse>

@@ -12,6 +12,10 @@ function ListFormFields(props) {
         value={props.name}
         handleChange={props.handleNameChange}
         placeholder="My super cool list"
+        disabled={false}
+        showClear={false}
+        clear={false}
+        handleClear={() => undefined}
       />
       <SelectField
         name="type"
@@ -26,14 +30,17 @@ function ListFormFields(props) {
           { value: 'ToDoList', label: 'to-do' },
         ]}
         blankOption={false}
+        disabled={false}
+        showClear={false}
+        clear={false}
+        handleClear={() => undefined}
       />
       {props.editForm && (
         <CheckboxField
           name="completed"
           label="Completed"
-          value={props.completed}
-          handleChange={props.handleCompletedChange}
-          blankOption={false}
+          value={props.completed || false}
+          handleChange={props.handleCompletedChange || (() => undefined)}
           classes="mb-3"
         />
       )}
@@ -49,13 +56,6 @@ ListFormFields.propTypes = {
   handleTypeChange: PropTypes.func.isRequired,
   handleCompletedChange: PropTypes.func,
   editForm: PropTypes.bool,
-};
-
-/* istanbul ignore next */
-ListFormFields.defaultProps = {
-  completed: false,
-  handleCompletedChange: () => undefined,
-  editForm: false,
 };
 
 export default ListFormFields;

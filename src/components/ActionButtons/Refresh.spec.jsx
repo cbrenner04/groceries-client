@@ -10,6 +10,8 @@ async function setup() {
   const props = {
     handleClick,
     testID: 'foo',
+    disabled: false,
+    classes: '',
   };
   const { findByRole } = render(<Refresh {...props} />);
   const refreshButton = await findByRole('button');

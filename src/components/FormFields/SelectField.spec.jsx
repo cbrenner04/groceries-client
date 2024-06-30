@@ -20,6 +20,11 @@ async function setup(suppliedProps = {}) {
         label: 'testOption2Label',
       },
     ],
+    disabled: false,
+    value: '',
+    handleClear: () => undefined,
+    showClear: false,
+    clear: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const { findByLabelText, findByText } = render(<SelectField {...props} />);

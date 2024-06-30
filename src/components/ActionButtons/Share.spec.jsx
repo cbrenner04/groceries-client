@@ -9,7 +9,7 @@ async function setup() {
     to: '/fake/route',
     testID: 'foo',
     disabled: false,
-    style: {},
+    classes: '',
   };
   const { findByRole } = render(
     <MemoryRouter>

@@ -11,13 +11,25 @@ const SimpleFormFields = (props) => (
       value={props.content}
       handleChange={props.inputChangeHandler}
       placeholder="Something cool"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
+    <CategoryField
+      category={props.category || ''}
+      categories={props.categories || []}
+      handleInput={props.inputChangeHandler}
+      showClearCategory={false}
+      clearCategory={false}
+      handleClearCategory={() => undefined}
+      disabled={false}
+    />
     {props.editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed}
+        value={props.completed || false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
@@ -32,13 +44,6 @@ SimpleFormFields.propTypes = {
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
   inputChangeHandler: PropTypes.func.isRequired,
-};
-
-SimpleFormFields.defaultProps = {
-  completed: false,
-  editForm: false,
-  category: '',
-  categories: [],
 };
 
 export default SimpleFormFields;

@@ -21,11 +21,7 @@ PasswordField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-};
-
-PasswordField.defaultProps = {
-  placeholder: '',
+  placeholder: PropTypes.string.isRequired,
 };
 
 export default PasswordField;

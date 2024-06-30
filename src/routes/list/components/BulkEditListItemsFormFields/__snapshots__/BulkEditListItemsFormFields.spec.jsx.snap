@@ -589,13 +589,13 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       >
         <input
           class="form-check-input"
-          id="clearAssignee"
-          name="clearAssignee"
+          id="clearAssigneeId"
+          name="clearAssigneeId"
           type="checkbox"
         />
         <label
           class="form-check-label"
-          for="clearAssignee"
+          for="clearAssigneeId"
           title=""
         >
           Clear assignee

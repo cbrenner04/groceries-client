@@ -12,6 +12,10 @@ const BookFormFields = (props) => (
       value={props.author}
       handleChange={props.inputChangeHandler}
       placeholder="Kurt Vonnagut"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <TextField
       name="title"
@@ -19,27 +23,39 @@ const BookFormFields = (props) => (
       value={props.title}
       handleChange={props.inputChangeHandler}
       placeholder="Slaughterhouse-Five"
+      disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <NumberField
       name="numberInSeries"
       label="Number in series"
-      value={props.numberInSeries}
+      value={props.numberInSeries || 0}
       handleChange={props.inputChangeHandler}
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
+    <CategoryField
+      category={props.category || ''}
+      categories={props.categories || []}
+      handleInput={props.inputChangeHandler}
+      showClearCategory={false}
+      clearCategory={false}
+      handleClearCategory={() => undefined}
+      disabled={false}
+    />
     {props.editForm && (
       <Row className="mb-3">
         <CheckboxField
           name="purchased"
           label="Purchased"
-          value={props.purchased}
+          value={props.purchased || false}
           handleChange={props.inputChangeHandler}
           classes="form-check-inline ms-1"
         />
         <CheckboxField
           name="read"
           label="Read"
-          value={props.read}
+          value={props.read || false}
           handleChange={props.inputChangeHandler}
           classes="form-check-inline"
         />
@@ -58,15 +74,6 @@ BookFormFields.propTypes = {
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
   inputChangeHandler: PropTypes.func.isRequired,
-};
-
-BookFormFields.defaultProps = {
-  purchased: false,
-  read: false,
-  editForm: false,
-  numberInSeries: 0,
-  category: '',
-  categories: [],
 };
 
 export default BookFormFields;
