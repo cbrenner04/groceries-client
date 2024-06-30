@@ -66,8 +66,7 @@
       "curly": [
         "error",
         "all"
-      ],
-      "react/require-default-props": "error"
+      ]
     }
   },
   "jest": {
