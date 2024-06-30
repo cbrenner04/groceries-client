@@ -30,6 +30,10 @@ const BookFormFields = (props) => (
       category={props.category || ''}
       categories={props.categories || []}
       handleInput={props.inputChangeHandler}
+      showClearCategory={false}
+      clearCategory={false}
+      handleClearCategory={() => undefined}
+      disabled={false}
     />
     {props.editForm && (
       <Row className="mb-3">
