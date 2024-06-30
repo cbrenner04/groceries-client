@@ -15,7 +15,7 @@ exports[`NumberField when no value provided renders input with value of empty st
     id="testName"
     name="testName"
     type="number"
-    value=""
+    value="0"
   />
 </div>
 `;

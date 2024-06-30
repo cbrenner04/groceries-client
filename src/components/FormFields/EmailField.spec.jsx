@@ -9,6 +9,8 @@ async function setup() {
   const props = {
     handleChange: jest.fn(),
     value: 'test@test',
+    name: 'email',
+    label: 'Email',
   };
   const { findByLabelText } = render(<EmailField {...props} />);
   const formInput = await findByLabelText('Email');

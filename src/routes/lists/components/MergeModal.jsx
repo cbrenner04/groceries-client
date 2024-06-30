@@ -18,6 +18,7 @@ function MergeModal({ showModal, clearModal, listNames, mergeName, handleMergeCo
             value={mergeName}
             handleChange={handleMergeNameChange}
             placeholder="My super cool list"
+            disabled={false}
           />
         </Form>
       </Modal.Body>

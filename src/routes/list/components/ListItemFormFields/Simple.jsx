@@ -11,6 +11,7 @@ const SimpleFormFields = (props) => (
       value={props.content}
       handleChange={props.inputChangeHandler}
       placeholder="Something cool"
+      disabled={false}
     />
     <CategoryField
       category={props.category || ''}

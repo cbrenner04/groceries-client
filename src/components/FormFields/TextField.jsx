@@ -9,9 +9,9 @@ const TextField = ({ name, label, value, handleChange, placeholder, child, disab
       type="text"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder || ''}
+      placeholder={placeholder}
       name={name}
-      disabled={disabled || false}
+      disabled={disabled}
     />
     {child || ''}
   </Form.Group>
@@ -22,9 +22,9 @@ TextField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
   child: PropTypes.node,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default TextField;

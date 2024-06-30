@@ -52,7 +52,7 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
       id="numberInSeries"
       name="numberInSeries"
       type="number"
-      value=""
+      value="0"
     />
   </div>
   <div

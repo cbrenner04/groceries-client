@@ -9,7 +9,7 @@ const PasswordField = ({ name, label, value, handleChange, placeholder }) => (
       type="password"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder || ''}
+      placeholder={placeholder}
       autoComplete="off"
       name={name}
     />
@@ -21,7 +21,7 @@ PasswordField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
 };
 
 export default PasswordField;

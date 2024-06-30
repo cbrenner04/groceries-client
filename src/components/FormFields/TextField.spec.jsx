@@ -11,6 +11,8 @@ async function setup() {
     name: 'testName',
     label: 'testLabel',
     value: 'testValue',
+    disabled: false,
+    placeholder: '',
   };
   const { findByLabelText } = render(<TextField {...props} />);
   const formInput = await findByLabelText(props.label);

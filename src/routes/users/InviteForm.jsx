@@ -39,7 +39,12 @@ export default function InviteForm() {
     <>
       <h1>Send Invitation</h1>
       <Form onSubmit={handleSubmit} className="mt-3">
-        <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
+        <EmailField
+          value={email}
+          handleChange={({ target: { value } }) => setEmail(value)}
+          name="email"
+          label="Email"
+        />
         <FormSubmission
           submitText="Invite User"
           cancelAction={() => navigate('/lists')}

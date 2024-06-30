@@ -62,6 +62,7 @@ const ChangeOtherList = (props) => {
                 options={props.existingListsOptions}
                 handleChange={props.handleInput}
                 blankOption
+                disabled={false}
               />
             </>
           )}
@@ -72,6 +73,7 @@ const ChangeOtherList = (props) => {
               value={props.newListName}
               handleChange={props.handleInput}
               placeholder="My super cool list"
+              disabled={false}
             />
           )}
           {props.copy && !props.allComplete && (

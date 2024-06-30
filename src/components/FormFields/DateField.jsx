@@ -9,11 +9,11 @@ const DateField = ({ name, label, value, handleChange, placeholder, child, disab
       type="date"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder || ''}
+      placeholder={placeholder}
       name={name}
-      disabled={disabled || ''}
+      disabled={disabled}
     />
-    {child || ''}
+    {child}
   </Form.Group>
 );
 
@@ -22,9 +22,9 @@ DateField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
+  placeholder: PropTypes.string.isRequired,
+  child: PropTypes.node.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default DateField;

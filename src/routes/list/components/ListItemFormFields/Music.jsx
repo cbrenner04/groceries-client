@@ -11,6 +11,7 @@ const MusicFormFields = (props) => (
       value={props.title}
       handleChange={props.inputChangeHandler}
       placeholder="Baby Got Back"
+      disabled={false}
     />
     <TextField
       name="artist"
@@ -18,6 +19,7 @@ const MusicFormFields = (props) => (
       value={props.artist}
       handleChange={props.inputChangeHandler}
       placeholder="Sir Mix-a-Lot"
+      disabled={false}
     />
     <TextField
       name="album"
@@ -25,6 +27,7 @@ const MusicFormFields = (props) => (
       value={props.album}
       handleChange={props.inputChangeHandler}
       placeholder="Mack Daddy"
+      disabled={false}
     />
     <CategoryField
       category={props.category || ''}

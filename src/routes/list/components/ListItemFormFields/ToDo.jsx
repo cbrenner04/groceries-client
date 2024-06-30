@@ -12,6 +12,7 @@ const ToDoFormFields = (props) => (
       value={props.task}
       handleChange={props.inputChangeHandler}
       placeholder="Clean the toilets"
+      disabled={false}
     />
     <SelectField
       name="assigneeId"
@@ -20,6 +21,7 @@ const ToDoFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       options={props.listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
+      disabled={false}
     />
     <DateField
       name="dueBy"
@@ -27,6 +29,8 @@ const ToDoFormFields = (props) => (
       value={props.dueBy}
       handleChange={props.inputChangeHandler}
       placeholder="mm/dd/yyyy"
+      disabled={false}
+      child=""
     />
     <CategoryField
       category={props.category || ''}

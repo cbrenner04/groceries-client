@@ -11,6 +11,7 @@ const GroceryFormFields = (props) => (
       value={props.product}
       handleChange={props.inputChangeHandler}
       placeholder="apples"
+      disabled={false}
     />
     <TextField
       name="quantity"
@@ -18,6 +19,7 @@ const GroceryFormFields = (props) => (
       value={props.quantity}
       handleChange={props.inputChangeHandler}
       placeholder="3 bags"
+      disabled={false}
     />
     <CategoryField
       category={props.category || ''}

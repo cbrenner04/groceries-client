@@ -12,6 +12,7 @@ function ListFormFields(props) {
         value={props.name}
         handleChange={props.handleNameChange}
         placeholder="My super cool list"
+        disabled={false}
       />
       <SelectField
         name="type"
@@ -26,6 +27,7 @@ function ListFormFields(props) {
           { value: 'ToDoList', label: 'to-do' },
         ]}
         blankOption={false}
+        disabled={false}
       />
       {props.editForm && (
         <CheckboxField
@@ -33,7 +35,6 @@ function ListFormFields(props) {
           label="Completed"
           value={props.completed || false}
           handleChange={props.handleCompletedChange || (() => undefined)}
-          blankOption={false}
           classes="mb-3"
         />
       )}

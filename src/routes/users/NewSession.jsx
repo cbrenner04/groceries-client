@@ -55,7 +55,12 @@ function NewSession({ signInUser }) {
       <Async.Fulfilled>
         <h2>Log in</h2>
         <Form onSubmit={handleSubmit}>
-          <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
+          <EmailField
+            value={email}
+            handleChange={({ target: { value } }) => setEmail(value)}
+            name="email"
+            label="Email"
+          />
           <PasswordField
             name="password"
             label="Password"
