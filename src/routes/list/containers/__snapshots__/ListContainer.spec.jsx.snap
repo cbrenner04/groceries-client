@@ -228,13 +228,11 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -262,12 +260,6 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>
@@ -640,13 +632,11 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -674,12 +664,6 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>
@@ -867,13 +851,11 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -901,12 +883,6 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>
@@ -1304,13 +1280,11 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -1338,12 +1312,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>
@@ -1741,13 +1709,11 @@ exports[`ListContainer renders filtered items without category buckets when filt
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -1775,12 +1741,6 @@ exports[`ListContainer renders filtered items without category buckets when filt
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>
@@ -2069,13 +2029,11 @@ exports[`ListContainer renders items with category buckets when includedCategori
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -2103,12 +2061,6 @@ exports[`ListContainer renders items with category buckets when includedCategori
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>

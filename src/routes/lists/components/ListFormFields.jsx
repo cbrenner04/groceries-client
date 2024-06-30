@@ -31,8 +31,8 @@ function ListFormFields(props) {
         <CheckboxField
           name="completed"
           label="Completed"
-          value={props.completed}
-          handleChange={props.handleCompletedChange}
+          value={props.completed || false}
+          handleChange={props.handleCompletedChange || (() => undefined)}
           blankOption={false}
           classes="mb-3"
         />
@@ -49,13 +49,6 @@ ListFormFields.propTypes = {
   handleTypeChange: PropTypes.func.isRequired,
   handleCompletedChange: PropTypes.func,
   editForm: PropTypes.bool,
-};
-
-/* istanbul ignore next */
-ListFormFields.defaultProps = {
-  completed: false,
-  handleCompletedChange: () => undefined,
-  editForm: false,
 };
 
 export default ListFormFields;

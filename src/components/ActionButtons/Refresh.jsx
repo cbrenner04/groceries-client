@@ -6,10 +6,10 @@ const Refresh = ({ handleClick, testID, style, disabled, classes }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className={`p-0 me-3 ${classes}`}
+    className={`p-0 me-3 ${classes || ''}`}
     data-test-id={testID}
-    style={style}
-    disabled={disabled}
+    style={style || {}}
+    disabled={disabled || false}
   >
     <i className="fa fa-redo fa-2x text-primary" />
   </Button>
@@ -24,12 +24,6 @@ Refresh.propTypes = {
   }),
   disabled: PropTypes.bool,
   classes: PropTypes.string,
-};
-
-Refresh.defaultProps = {
-  style: {},
-  disabled: false,
-  classes: '',
 };
 
 export default Refresh;

@@ -7,18 +7,18 @@ const CategoryField = ({ category, categories, handleInput, name, child, disable
     <Form.Label>Category</Form.Label>
     <Form.Control
       type="text"
-      value={category}
+      value={category || ''}
       onChange={handleInput}
       list="categories"
-      name={name}
-      disabled={disabled}
+      name={name || 'category'}
+      disabled={disabled || false}
     />
     <datalist id="categories">
-      {categories.map((category) => (
+      {(categories || []).map((category) => (
         <option key={category} value={category} />
       ))}
     </datalist>
-    {child}
+    {child || ''}
   </Form.Group>
 );
 
@@ -29,14 +29,6 @@ CategoryField.propTypes = {
   name: PropTypes.string,
   child: PropTypes.node,
   disabled: PropTypes.bool,
-};
-
-CategoryField.defaultProps = {
-  category: '',
-  categories: [],
-  name: 'category',
-  child: '',
-  disabled: false,
 };
 
 export default CategoryField;

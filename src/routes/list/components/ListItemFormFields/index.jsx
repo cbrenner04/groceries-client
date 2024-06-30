@@ -8,65 +8,66 @@ import Simple from './Simple';
 import ToDo from './ToDo';
 import { listUsers } from '../../../../types';
 
+// TODO: reduce redundancy
 const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) =>
   ({
     BookList: (
       <Book
-        author={formData.author}
-        title={formData.title}
-        numberInSeries={formData.numberInSeries}
-        category={formData.category}
-        categories={categories}
+        author={formData.author || ''}
+        title={formData.title || ''}
+        numberInSeries={formData.numberInSeries || 0}
+        category={formData.category || ''}
+        categories={categories || []}
         inputChangeHandler={setFormData}
-        read={formData.read}
-        purchased={formData.purchased}
-        editForm={editForm}
+        read={formData.read || false}
+        purchased={formData.purchased || ''}
+        editForm={editForm || false}
       />
     ),
     GroceryList: (
       <Grocery
-        quantity={formData.quantity}
-        product={formData.product}
-        category={formData.category}
-        categories={categories}
+        quantity={formData.quantity || ''}
+        product={formData.product || ''}
+        category={formData.category || ''}
+        categories={categories || []}
         inputChangeHandler={setFormData}
-        purchased={formData.purchased}
-        editForm={editForm}
+        purchased={formData.purchased || ''}
+        editForm={editForm || false}
       />
     ),
     MusicList: (
       <Music
-        title={formData.title}
-        artist={formData.artist}
-        album={formData.album}
-        category={formData.category}
-        categories={categories}
+        title={formData.title || ''}
+        artist={formData.artist || ''}
+        album={formData.album || ''}
+        category={formData.category || ''}
+        categories={categories || []}
         inputChangeHandler={setFormData}
-        purchased={formData.purchased}
-        editForm={editForm}
+        purchased={formData.purchased || ''}
+        editForm={editForm || false}
       />
     ),
     SimpleList: (
       <Simple
-        content={formData.content}
-        category={formData.category}
-        categories={categories}
+        content={formData.content || ''}
+        category={formData.category || ''}
+        categories={categories || []}
         inputChangeHandler={setFormData}
-        completed={formData.completed}
-        editForm={editForm}
+        completed={formData.completed || false}
+        editForm={editForm || false}
       />
     ),
     ToDoList: (
       <ToDo
-        task={formData.task}
-        assigneeId={formData.assigneeId}
-        listUsers={listUsers}
-        dueBy={formData.dueBy}
-        category={formData.category}
-        categories={categories}
+        task={formData.task || ''}
+        assigneeId={formData.assigneeId || ''}
+        listUsers={listUsers || []}
+        dueBy={formData.dueBy || ''}
+        category={formData.category || ''}
+        categories={categories || []}
         inputChangeHandler={setFormData}
-        completed={formData.completed}
-        editForm={editForm}
+        completed={formData.completed || false}
+        editForm={editForm || false}
       />
     ),
   })[listType];
@@ -94,29 +95,6 @@ ListItemFormFields.propTypes = {
   }),
   setFormData: PropTypes.func.isRequired,
   editForm: PropTypes.bool,
-};
-
-ListItemFormFields.defaultProps = {
-  listUsers: [],
-  categories: [],
-  formData: {
-    product: '',
-    task: '',
-    content: '',
-    quantity: '',
-    author: '',
-    title: '',
-    artist: '',
-    album: '',
-    assigneeId: '',
-    dueBy: '',
-    numberInSeries: 0,
-    category: '',
-    read: false,
-    purchased: false,
-    completed: false,
-  },
-  editForm: false,
 };
 
 export default ListItemFormFields;

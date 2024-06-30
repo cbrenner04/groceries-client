@@ -150,12 +150,6 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
       >
         Update Items
       </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Cancel
-      </button>
     </div>
   </form>
 </div>

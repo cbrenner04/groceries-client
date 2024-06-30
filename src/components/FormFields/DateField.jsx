@@ -9,11 +9,11 @@ const DateField = ({ name, label, value, handleChange, placeholder, child, disab
       type="date"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder}
+      placeholder={placeholder || ''}
       name={name}
-      disabled={disabled}
+      disabled={disabled || ''}
     />
-    {child}
+    {child || ''}
   </Form.Group>
 );
 
@@ -25,12 +25,6 @@ DateField.propTypes = {
   placeholder: PropTypes.string,
   child: PropTypes.node,
   disabled: PropTypes.bool,
-};
-
-DateField.defaultProps = {
-  placeholder: '',
-  child: '',
-  disabled: false,
 };
 
 export default DateField;

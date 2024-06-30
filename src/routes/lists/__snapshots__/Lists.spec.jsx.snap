@@ -86,12 +86,6 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
       >
         Create List
       </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
-      </button>
     </div>
   </form>
   <hr

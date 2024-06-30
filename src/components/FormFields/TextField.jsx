@@ -9,11 +9,11 @@ const TextField = ({ name, label, value, handleChange, placeholder, child, disab
       type="text"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder}
+      placeholder={placeholder || ''}
       name={name}
-      disabled={disabled}
+      disabled={disabled || false}
     />
-    {child}
+    {child || ''}
   </Form.Group>
 );
 
@@ -25,12 +25,6 @@ TextField.propTypes = {
   placeholder: PropTypes.string,
   child: PropTypes.node,
   disabled: PropTypes.bool,
-};
-
-TextField.defaultProps = {
-  placeholder: '',
-  child: '',
-  disabled: false,
 };
 
 export default TextField;

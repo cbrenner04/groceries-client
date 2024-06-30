@@ -67,13 +67,11 @@ exports[`List displays List 1`] = `
     >
       <label
         class="form-label"
-        for="category"
       >
         Category
       </label>
       <input
         class="form-control"
-        id="category"
         list="categories"
         name="category"
         type="text"
@@ -91,12 +89,6 @@ exports[`List displays List 1`] = `
         type="submit"
       >
         Add New Item
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
       </button>
     </div>
   </form>

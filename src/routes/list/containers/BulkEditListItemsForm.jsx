@@ -185,7 +185,7 @@ function BulkEditListItemsForm(props) {
           formData={formData}
           handleInput={handleInput}
           clearAttribute={clearAttribute}
-          listUsers={props.listUsers}
+          listUsers={props.listUsers || []}
           listType={props.list.type}
           handleOtherListChange={handleOtherListChange}
           existingListsOptions={existingListsOptions}
@@ -210,10 +210,6 @@ BulkEditListItemsForm.propTypes = {
   lists: PropTypes.arrayOf(list).isRequired,
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   listUsers: PropTypes.arrayOf(listUsers),
-};
-
-BulkEditListItemsForm.defaultProps = {
-  listUsers: [],
 };
 
 export default BulkEditListItemsForm;

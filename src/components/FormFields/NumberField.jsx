@@ -16,8 +16,4 @@ NumberField.propTypes = {
   handleChange: PropTypes.func.isRequired,
 };
 
-NumberField.defaultProps = {
-  value: 0,
-};
-
 export default NumberField;
