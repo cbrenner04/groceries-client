@@ -2,7 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-const SelectField = ({ name, label, value, handleChange, options, blankOption, child, disabled }) => (
+import { CheckboxField } from './';
+
+const SelectField = ({
+  name,
+  label,
+  value,
+  handleChange,
+  options,
+  blankOption,
+  showClear,
+  handleClear,
+  clear,
+  disabled,
+}) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control as="select" value={value} onChange={handleChange} name={name} disabled={disabled}>
@@ -17,7 +30,15 @@ const SelectField = ({ name, label, value, handleChange, options, blankOption, c
         </option>
       ))}
     </Form.Control>
-    {child || ''}
+    {showClear && (
+      <CheckboxField
+        name={`clear${name[0].toUpperCase() + name.slice(1)}`}
+        label="Clear assignee"
+        handleChange={handleClear}
+        value={clear}
+        classes="ms-1 mt-1"
+      />
+    )}
   </Form.Group>
 );
 
@@ -33,8 +54,10 @@ SelectField.propTypes = {
     }),
   ).isRequired,
   blankOption: PropTypes.bool.isRequired,
-  child: PropTypes.node,
   disabled: PropTypes.bool.isRequired,
+  showClear: PropTypes.bool.isRequired,
+  clear: PropTypes.bool.isRequired,
+  handleClear: PropTypes.func.isRequired,
 };
 
 export default SelectField;

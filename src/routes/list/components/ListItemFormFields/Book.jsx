@@ -13,6 +13,9 @@ const BookFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       placeholder="Kurt Vonnagut"
       disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <TextField
       name="title"
@@ -21,6 +24,9 @@ const BookFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       placeholder="Slaughterhouse-Five"
       disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <NumberField
       name="numberInSeries"

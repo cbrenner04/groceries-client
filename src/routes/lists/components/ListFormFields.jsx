@@ -13,6 +13,9 @@ function ListFormFields(props) {
         handleChange={props.handleNameChange}
         placeholder="My super cool list"
         disabled={false}
+        showClear={false}
+        clear={false}
+        handleClear={() => undefined}
       />
       <SelectField
         name="type"
@@ -28,6 +31,9 @@ function ListFormFields(props) {
         ]}
         blankOption={false}
         disabled={false}
+        showClear={false}
+        clear={false}
+        handleClear={() => undefined}
       />
       {props.editForm && (
         <CheckboxField

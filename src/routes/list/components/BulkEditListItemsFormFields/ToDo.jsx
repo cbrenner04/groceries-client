@@ -23,15 +23,9 @@ const ToDo = ({
       options={listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
       disabled={clearAssignee}
-      child={
-        <CheckboxField
-          name="clearAssignee"
-          label="Clear assignee"
-          handleChange={handleClearAssignee}
-          value={clearAssignee}
-          classes="ms-1 mt-1"
-        />
-      }
+      showClear={true}
+      handleClear={handleClearAssignee}
+      clear={clearAssignee}
     />
     <DateField
       name="dueBy"

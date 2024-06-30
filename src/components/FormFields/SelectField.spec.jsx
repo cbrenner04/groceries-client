@@ -22,6 +22,9 @@ async function setup(suppliedProps = {}) {
     ],
     disabled: false,
     value: '',
+    handleClear: () => undefined,
+    showClear: false,
+    clear: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const { findByLabelText, findByText } = render(<SelectField {...props} />);

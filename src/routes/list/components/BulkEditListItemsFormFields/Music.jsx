@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CheckboxField, TextField } from '../../../../components/FormFields';
+import { TextField } from '../../../../components/FormFields';
 
 const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, handleClearAlbum, handleInput }) => (
   <>
@@ -12,15 +12,9 @@ const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, hand
       handleChange={handleInput}
       placeholder="Sir Mix-a-Lot"
       disabled={clearArtist}
-      child={
-        <CheckboxField
-          name="clearArtist"
-          label="Clear artist"
-          handleChange={handleClearArtist}
-          value={clearArtist}
-          classes="ms-1 mt-1"
-        />
-      }
+      showClear={true}
+      handleClear={handleClearArtist}
+      clear={clearArtist}
     />
     <TextField
       name="album"
@@ -29,15 +23,9 @@ const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, hand
       handleChange={handleInput}
       placeholder="Mack Daddy"
       disabled={clearAlbum}
-      child={
-        <CheckboxField
-          name="clearAlbum"
-          label="Clear album"
-          handleChange={handleClearAlbum}
-          value={clearAlbum}
-          classes="ms-1 mt-1"
-        />
-      }
+      showClear={true}
+      handleClear={handleClearAlbum}
+      clear={clearAlbum}
     />
   </>
 );

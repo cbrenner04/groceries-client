@@ -13,6 +13,9 @@ const ToDoFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       placeholder="Clean the toilets"
       disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <SelectField
       name="assigneeId"
@@ -22,6 +25,9 @@ const ToDoFormFields = (props) => (
       options={props.listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
       disabled={false}
+      showClear={false}
+      clear={false}
+      handleClear={() => undefined}
     />
     <DateField
       name="dueBy"

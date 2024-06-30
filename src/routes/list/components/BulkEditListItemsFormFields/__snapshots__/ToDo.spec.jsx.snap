@@ -37,13 +37,13 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
         <input
           checked=""
           class="form-check-input"
-          id="clearAssignee"
-          name="clearAssignee"
+          id="clearAssigneeId"
+          name="clearAssigneeId"
           type="checkbox"
         />
         <label
           class="form-check-label"
-          for="clearAssignee"
+          for="clearAssigneeId"
           title=""
         >
           Clear assignee
@@ -128,13 +128,13 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
       >
         <input
           class="form-check-input"
-          id="clearAssignee"
-          name="clearAssignee"
+          id="clearAssigneeId"
+          name="clearAssigneeId"
           type="checkbox"
         />
         <label
           class="form-check-label"
-          for="clearAssignee"
+          for="clearAssigneeId"
           title=""
         >
           Clear assignee
@@ -219,13 +219,13 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
       >
         <input
           class="form-check-input"
-          id="clearAssignee"
-          name="clearAssignee"
+          id="clearAssigneeId"
+          name="clearAssigneeId"
           type="checkbox"
         />
         <label
           class="form-check-label"
-          for="clearAssignee"
+          for="clearAssigneeId"
           title=""
         >
           Clear assignee
@@ -312,13 +312,13 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
       >
         <input
           class="form-check-input"
-          id="clearAssignee"
-          name="clearAssignee"
+          id="clearAssigneeId"
+          name="clearAssigneeId"
           type="checkbox"
         />
         <label
           class="form-check-label"
-          for="clearAssignee"
+          for="clearAssigneeId"
           title=""
         >
           Clear assignee

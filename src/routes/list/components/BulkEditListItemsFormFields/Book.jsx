@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CheckboxField, TextField } from '../../../../components/FormFields';
+import { TextField } from '../../../../components/FormFields';
 
 const Book = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
   <TextField
@@ -11,15 +11,9 @@ const Book = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
     handleChange={handleInput}
     placeholder="Kurt Vonnagut"
     disabled={clearAuthor}
-    child={
-      <CheckboxField
-        name="clearAuthor"
-        label="Clear author"
-        handleChange={handleClearAuthor}
-        value={clearAuthor}
-        classes="ms-1 mt-1"
-      />
-    }
+    showClear={true}
+    clear={clearAuthor}
+    handleClear={handleClearAuthor}
   />
 );
 
