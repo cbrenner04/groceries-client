@@ -42,6 +42,7 @@ export default function NewPassword() {
           submitText="Send me reset password instructions"
           displayCancelButton={false}
           cancelAction={() => undefined}
+          cancelText=""
         />
       </Form>
       <Link to="/users/sign_in">Log in</Link>

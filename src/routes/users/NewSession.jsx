@@ -75,7 +75,12 @@ function NewSession({ signInUser }) {
             value={rememberMe}
             handleChange={() => setRememberMe(!rememberMe)}
           />
-          <FormSubmission submitText="Log In" displayCancelButton={false} cancelAction={() => undefined} />
+          <FormSubmission
+            submitText="Log In"
+            displayCancelButton={false}
+            cancelAction={() => undefined}
+            cancelText=""
+          />
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>

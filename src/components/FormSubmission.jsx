@@ -10,7 +10,7 @@ const FormSubmission = (props) => (
     </Button>
     {props.displayCancelButton && (
       <Button variant="link" onClick={props.cancelAction}>
-        {props.cancelText || ''}
+        {props.cancelText}
       </Button>
     )}
   </div>
@@ -21,7 +21,7 @@ FormSubmission.propTypes = {
   submitText: PropTypes.string.isRequired,
   displayCancelButton: PropTypes.bool.isRequired,
   cancelAction: PropTypes.func.isRequired,
-  cancelText: PropTypes.string,
+  cancelText: PropTypes.string.isRequired,
 };
 
 export default FormSubmission;
