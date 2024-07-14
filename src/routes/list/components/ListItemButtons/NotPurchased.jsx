@@ -46,8 +46,4 @@ NotPurchasedItemButtons.propTypes = {
   multiSelect: PropTypes.bool,
 };
 
-NotPurchasedItemButtons.defaultProps = {
-  multiSelect: false,
-};
-
 export default NotPurchasedItemButtons;

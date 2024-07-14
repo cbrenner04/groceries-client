@@ -62,6 +62,8 @@ function CompletedListsContainer(props) {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
+        setIncompleteLists={() => undefined}
+        incompleteLists={[]}
       />
     </>
   );

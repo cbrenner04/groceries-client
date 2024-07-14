@@ -248,19 +248,13 @@ AcceptedLists.propTypes = {
   completed: PropTypes.bool.isRequired,
   title: PropTypes.element.isRequired,
   userId: PropTypes.string.isRequired,
-  incompleteLists: PropTypes.arrayOf(list),
-  setIncompleteLists: PropTypes.func,
+  incompleteLists: PropTypes.arrayOf(list).isRequired,
+  setIncompleteLists: PropTypes.func.isRequired,
   completedLists: PropTypes.arrayOf(list).isRequired,
   setCompletedLists: PropTypes.func.isRequired,
   currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
   setCurrentUserPermissions: PropTypes.func.isRequired,
   fullList: PropTypes.bool.isRequired,
-};
-
-/* istanbul ignore next */
-AcceptedLists.defaultProps = {
-  incompleteLists: [],
-  setIncompleteLists: () => undefined,
 };
 
 export default AcceptedLists;

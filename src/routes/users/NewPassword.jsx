@@ -33,7 +33,11 @@ export default function NewPassword() {
       <h2>Forgot your password?</h2>
       <Form onSubmit={handleSubmit} autoComplete="off">
         <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
-        <FormSubmission submitText="Send me reset password instructions" displayCancelButton={false} />
+        <FormSubmission
+          submitText="Send me reset password instructions"
+          displayCancelButton={false}
+          cancelAction={() => undefined}
+        />
       </Form>
       <Link to="/users/sign_in">Log in</Link>
     </>

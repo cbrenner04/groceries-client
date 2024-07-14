@@ -28,12 +28,16 @@ const ToDoFormFields = (props) => (
       handleChange={props.inputChangeHandler}
       placeholder="mm/dd/yyyy"
     />
-    <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
+    <CategoryField
+      category={props.category || ''}
+      categories={props.categories || []}
+      handleInput={props.inputChangeHandler}
+    />
     {props.editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed}
+        value={props.completed || false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
@@ -51,13 +55,6 @@ ToDoFormFields.propTypes = {
   category: PropTypes.string,
   categories: PropTypes.arrayOf(PropTypes.string),
   inputChangeHandler: PropTypes.func.isRequired,
-};
-
-ToDoFormFields.defaultProps = {
-  completed: false,
-  editForm: false,
-  category: '',
-  categories: [],
 };
 
 export default ToDoFormFields;

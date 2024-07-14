@@ -21,7 +21,7 @@ const PasswordForm = (props) => (
       handleChange={props.passwordConfirmationChangeHandler}
       placeholder="Confirm new password"
     />
-    <FormSubmission submitText="Set my password" displayCancelButton={false} />
+    <FormSubmission submitText="Set my password" displayCancelButton={false} cancelAction={() => undefined} />
   </Form>
 );
 

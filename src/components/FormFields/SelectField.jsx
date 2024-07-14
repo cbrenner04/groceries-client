@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 const SelectField = ({ name, label, value, handleChange, options, blankOption, child, disabled }) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
-    <Form.Control as="select" value={value} onChange={handleChange} name={name} disabled={disabled}>
+    <Form.Control as="select" value={value || ''} onChange={handleChange} name={name} disabled={disabled}>
       {blankOption && (
         <option value="" disabled={!value}>
           {value ? `Clear ${label}` : `Select ${label}`}
@@ -17,7 +17,7 @@ const SelectField = ({ name, label, value, handleChange, options, blankOption, c
         </option>
       ))}
     </Form.Control>
-    {child}
+    {child || ''}
   </Form.Group>
 );
 
@@ -35,12 +35,6 @@ SelectField.propTypes = {
   blankOption: PropTypes.bool.isRequired,
   child: PropTypes.node,
   disabled: PropTypes.bool,
-};
-
-SelectField.defaultProps = {
-  value: '',
-  child: '',
-  disabled: false,
 };
 
 export default SelectField;
