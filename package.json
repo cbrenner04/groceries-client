@@ -40,11 +40,11 @@
     "deploy:production": "sh scripts/deploy-prod.sh",
     "build:staging": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging react-scripts build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
-    "lint": "eslint --ext .js,.jsx src/",
+    "lint": "eslint --ext .ts,.tsx src/",
     "test": "react-scripts test",
-    "test:ci": "npm run lint && CI=true npm test -- --coverage",
+    "test:ci": "CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
-    "format": "prettier --write 'src/**/*.{js,jsx,json,css,md}'"
+    "format": "prettier --write 'src/**/*.{ts,tsx,json,css,md}'"
   },
   "eslintConfig": {
     "extends": [
@@ -71,11 +71,10 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
+      "src/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/",
-      "!<rootDir>/src/serviceWorker.js",
-      "!<rootDir>/src/AppRouter.jsx",
-      "!<rootDir>/src/index.js"
+      "!<rootDir>/src/AppRouter.tsx",
+      "!<rootDir>/src/index.ts"
     ],
     "coverageThreshold": {
       "global": {
