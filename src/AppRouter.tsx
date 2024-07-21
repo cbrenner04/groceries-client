@@ -16,20 +16,27 @@ import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
 
-export const UserContext = createContext(null);
+interface IUser {
+  accessToken: string;
+  client: string;
+  uid: string;
+}
+
+export const UserContext = createContext<IUser | null>(null);
 
 export default function AppRouter() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(sessionStorage.getItem('user'));
-    if (storedUser) {
+    const sessionUser = sessionStorage.getItem('user');
+    if (sessionUser) {
+      const storedUser: { 'access-token': string; client: string; uid: string } = JSON.parse(sessionUser);
       const { 'access-token': accessToken, client, uid } = storedUser;
       setUser({ accessToken, client, uid });
     }
   }, []);
 
-  const signInUser = (accessToken, client, uid) => {
+  const signInUser = (accessToken: string, client: string, uid: string) => {
     sessionStorage.setItem(
       'user',
       JSON.stringify({
@@ -52,24 +59,24 @@ export default function AppRouter() {
         <AppNav signOutUser={signOutUser} />
         <Routes>
           {/* routes/lists */}
-          <Route exact path="/" element={<Navigate to="/lists" />} />
-          <Route exact path="/lists" element={<Lists />} />
-          <Route exact path="/completed_lists" element={<CompletedLists />} />
+          <Route path="/" element={<Navigate to="/lists" />} />
+          <Route path="/lists" element={<Lists />} />
+          <Route path="/completed_lists" element={<CompletedLists />} />
           {/* routes/list */}
-          <Route exact path="/lists/:id" element={<List />} />
-          <Route exact path="/lists/:id/edit" element={<EditList />} />
-          <Route exact path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
-          <Route exact path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+          <Route path="/lists/:id" element={<List />} />
+          <Route path="/lists/:id/edit" element={<EditList />} />
+          <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+          <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
           {/* routes/share_list */}
-          <Route exact path="/lists/:list_id/users_lists" element={<ShareList />} />
+          <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
           {/* routes/users */}
-          <Route exact path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
-          <Route exact path="/users/password/new" element={<NewPassword />} />
-          <Route exact path="/users/password/edit" element={<EditPassword />} />
-          <Route exact path="/users/invitation/new" element={<InviteForm />} />
-          <Route exact path="/users/invitation/accept" element={<EditInvite />} />
+          <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
+          <Route path="/users/password/new" element={<NewPassword />} />
+          <Route path="/users/password/edit" element={<EditPassword />} />
+          <Route path="/users/invitation/new" element={<InviteForm />} />
+          <Route path="/users/invitation/accept" element={<EditInvite />} />
           {/* routes/error_pages */}
-          <Route component={PageNotFound} />
+          <Route errorElement={<PageNotFound />} />
         </Routes>
       </UserContext.Provider>
     </Router>

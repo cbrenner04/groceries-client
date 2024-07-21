@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "6.4.6",
     "@testing-library/react": "16.0.0",
     "@testing-library/user-event": "14.5.2",
+    "@types/jest": "^29.5.12",
     "autoprefixer": "10.4.19",
     "axios": "^1.6.5",
     "bootstrap": "5.3.3",
@@ -32,7 +33,9 @@
     "react-router-dom": "6.25.1",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
-    "sass-loader": "14.2.1"
+    "sass-loader": "14.2.1",
+    "ts-jest": "^29.2.3",
+    "typescript-eslint": "^7.16.1"
   },
   "scripts": {
     "start": "REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts start",
@@ -50,9 +53,17 @@
     "extends": [
       "react-app",
       "eslint:recommended",
+      "plugin:@typescript-eslint/strict",
       "plugin:react/recommended",
       "plugin:prettier/recommended"
     ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "parserOptions": {
+      "project": ["./tsconfig.json"]
+    },
     "rules": {
       "prettier/prettier": "error",
       "no-console": "error",
@@ -74,7 +85,7 @@
       "src/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/",
       "!<rootDir>/src/AppRouter.tsx",
-      "!<rootDir>/src/index.ts"
+      "!<rootDir>/src/index.tsx"
     ],
     "coverageThreshold": {
       "global": {
