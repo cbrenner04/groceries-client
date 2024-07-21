@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UnknownError() {
+const UnknownError: React.FC = () => {
   const [hover, setHover] = useState(false);
 
   const buttonStyles = {
@@ -31,4 +31,6 @@ export default function UnknownError() {
       </p>
     </>
   );
-}
+};
+
+export default UnknownError;

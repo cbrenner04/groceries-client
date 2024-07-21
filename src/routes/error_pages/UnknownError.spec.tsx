@@ -31,13 +31,16 @@ describe('UnknownError', () => {
     expect(button.style.textDecoration).toBe('none');
   });
 
+  // TODO: figure out the location mock
   it('reloads the page on click', async () => {
     // get location to reset it later
     const { location } = window;
-    // remove location in order to redefine reload
-    delete window.location;
-    // define location with reload as mock
-    window.location = { reload: jest.fn() };
+
+    Object.defineProperty(window, 'location', {
+      value: {
+        reload: jest.fn(),
+      },
+    });
 
     const user = userEvent.setup();
     const { getByRole } = render(<UnknownError />);
@@ -48,6 +51,8 @@ describe('UnknownError', () => {
     expect(window.location.reload).toHaveBeenCalled();
 
     // return location back to original
-    window.location = location;
+    Object.defineProperty(window, 'location', {
+      value: location,
+    });
   });
 });

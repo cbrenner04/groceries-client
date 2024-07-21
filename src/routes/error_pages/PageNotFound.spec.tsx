@@ -45,7 +45,7 @@ describe('PageNotFound', () => {
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
 
-    axios.get.mockClear();
+    (axios.get as jest.Mock).mockClear();
   });
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
@@ -57,7 +57,7 @@ describe('PageNotFound', () => {
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
 
-    axios.get.mockClear();
+    (axios.get as jest.Mock).mockClear();
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
@@ -69,6 +69,6 @@ describe('PageNotFound', () => {
     expect(await findByText('Page not found!')).toBeTruthy();
     expect(container).toMatchSnapshot();
 
-    axios.get.mockClear();
+    (axios.get as jest.Mock).mockClear();
   });
 });

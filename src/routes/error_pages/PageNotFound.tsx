@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Async from 'react-async';
+import { Link, NavigateFunction } from 'react-router-dom';
+import Async, { PromiseFn } from 'react-async';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,26 +8,26 @@ import axios from '../../utils/api';
 import Loading from '../../components/Loading';
 import UnknownError from './UnknownError';
 
-async function fetchData({ navigate }) {
+const fetchData = async ({ navigate }: { navigate: NavigateFunction }) => {
   try {
     await axios.get('/auth/validate_token');
-  } catch ({ response }) {
+  } catch ({ response }: any) {
     if (response) {
       if (response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-        return;
       }
     }
     // any other errors will just be caught and render the generic UnknownError
     throw new Error();
   }
-}
+};
 
-export default function PageNotFound() {
+const PageNotFound: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Async promiseFn={fetchData} navigate={navigate}>
+    // TODO: figure out typing here
+    <Async promiseFn={fetchData as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -41,4 +41,6 @@ export default function PageNotFound() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default PageNotFound;

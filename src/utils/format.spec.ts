@@ -16,7 +16,7 @@ describe('format', () => {
 
     describe('when date not supplied', () => {
       it('returns empty string', () => {
-        expect(formatDueBy()).toBe('');
+        expect(formatDueBy(undefined)).toBe('');
       });
     });
   });

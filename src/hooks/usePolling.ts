@@ -5,8 +5,8 @@ const ONE_SECOND = 1000;
 const ONE_MINUTE = 60 * ONE_SECOND;
 const TEN_MINUTES = 10 * ONE_MINUTE;
 
-export default function usePolling(callback, delay) {
-  const callbackRef = useRef();
+export default function usePolling(callback: () => void, delay: number | null) {
+  const callbackRef = useRef<() => void>();
   const { isIdle } = useIdleTimer({ timeout: TEN_MINUTES });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function usePolling(callback, delay) {
       if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && isIdle()) {
         return;
       }
-      callbackRef.current();
+      callbackRef.current?.();
     }
 
     /* istanbul ignore else */

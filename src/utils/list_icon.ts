@@ -1,4 +1,4 @@
-const listIconClass = (listType) =>
+const listIconClass = (listType: 'BookList' | 'GroceryList' | 'MusicList' | 'SimpleList' | 'ToDoList') =>
   ({
     BookList: 'fa-book',
     GroceryList: 'fa-shopping-bag',
@@ -6,4 +6,5 @@ const listIconClass = (listType) =>
     SimpleList: 'fa-file',
     ToDoList: 'fa-list',
   })[listType];
+
 export default listIconClass;
