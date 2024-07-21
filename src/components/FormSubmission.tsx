@@ -1,27 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
+interface IFormSubmissionProps {
+  disabled?: boolean;
+  submitText: string;
+  displayCancelButton: boolean;
+  cancelAction: MouseEventHandler;
+  cancelText?: string;
+}
+
 // TODO: check react-bootstrap has some way of handling the grid
-const FormSubmission = (props) => (
+const FormSubmission: React.FC<IFormSubmissionProps> = ({
+  disabled = false,
+  submitText,
+  displayCancelButton,
+  cancelAction,
+  cancelText = '',
+}) => (
   <div className="d-grid gap-2 mt-3">
-    <Button type="submit" variant="success" disabled={props.disabled || false}>
-      {props.submitText}
+    <Button type="submit" variant="success" disabled={disabled}>
+      {submitText}
     </Button>
-    {props.displayCancelButton && (
-      <Button variant="link" onClick={props.cancelAction}>
-        {props.cancelText || ''}
+    {displayCancelButton && (
+      <Button variant="link" onClick={cancelAction}>
+        {cancelText}
       </Button>
     )}
   </div>
 );
-
-FormSubmission.propTypes = {
-  disabled: PropTypes.bool,
-  submitText: PropTypes.string.isRequired,
-  displayCancelButton: PropTypes.bool.isRequired,
-  cancelAction: PropTypes.func.isRequired,
-  cancelText: PropTypes.string,
-};
 
 export default FormSubmission;

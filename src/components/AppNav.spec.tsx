@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-function setup(context) {
+function setup(context: { uid: string; client: string; accessToken: string } | null) {
   const user = userEvent.setup();
   const signOutUser = jest.fn();
   const component = render(
@@ -41,7 +41,7 @@ describe('AppNav', () => {
 
   describe('when user is signed in', () => {
     it('renders nav with brand linking to root, invite link and logout visible', async () => {
-      const { findByTestId, findByText, signOutUser, user } = setup({ uid: 1, client: 2, accessToken: 3 });
+      const { findByTestId, findByText, signOutUser, user } = setup({ uid: '1', client: '2', accessToken: '3' });
 
       expect(await findByTestId('nav')).toMatchSnapshot();
 

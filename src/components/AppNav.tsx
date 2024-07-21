@@ -2,12 +2,15 @@ import React, { useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 
 import axios from '../utils/api';
 import { UserContext } from '../AppRouter';
 
-function AppNav({ signOutUser }) {
+interface IAppNavProps {
+  signOutUser: Function;
+}
+
+const AppNav: React.FC<IAppNavProps> = ({ signOutUser }) => {
   const navigate = useNavigate();
   const user = useContext(UserContext);
 
@@ -51,10 +54,6 @@ function AppNav({ signOutUser }) {
       )}
     </Navbar>
   );
-}
-
-AppNav.propTypes = {
-  signOutUser: PropTypes.func.isRequired,
 };
 
 export default AppNav;

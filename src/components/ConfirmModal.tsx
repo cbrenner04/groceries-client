@@ -1,32 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { MouseEventHandler, ReactNode } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-function ConfirmModal(props) {
-  return (
-    <Modal show={props.show} onHide={props.handleClear}>
-      <Modal.Header closeButton>
-        <Modal.Title>Confirm {props.action}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>{props.body}</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={props.handleConfirm} data-test-id={`confirm-${props.action}`}>
-          Yes, I&apos;m sure.
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
+interface IConfirmModalProps {
+  action: string;
+  body: ReactNode;
+  show: boolean;
+  handleConfirm: MouseEventHandler;
+  handleClear: () => void;
 }
 
-ConfirmModal.propTypes = {
-  action: PropTypes.string.isRequired,
-  body: PropTypes.node.isRequired,
-  show: PropTypes.bool.isRequired,
-  handleConfirm: PropTypes.func.isRequired,
-  handleClear: PropTypes.func.isRequired,
-};
+const ConfirmModal: React.FC<IConfirmModalProps> = ({ action, body, show, handleConfirm, handleClear }) => (
+  <Modal show={show} onHide={handleClear}>
+    <Modal.Header closeButton>
+      <Modal.Title>Confirm {action}</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>{body}</Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClear} data-test-id={`clear-${action}`}>
+        Close
+      </Button>
+      <Button variant="primary" onClick={handleConfirm} data-test-id={`confirm-${action}`}>
+        Yes, I&apos;m sure.
+      </Button>
+    </Modal.Footer>
+  </Modal>
+);
 
 export default ConfirmModal;

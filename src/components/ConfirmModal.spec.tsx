@@ -11,6 +11,7 @@ function setup(suppliedProps = {}) {
     body: 'testBody',
     handleConfirm: jest.fn(),
     handleClear: jest.fn(),
+    show: true,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ConfirmModal {...props} />);

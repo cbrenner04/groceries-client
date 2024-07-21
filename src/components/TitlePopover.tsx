@@ -1,8 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import { OverlayTrigger, Popover, Row } from 'react-bootstrap';
 
-const TitlePopover = ({ message, title }) => (
+interface ITitlePopoverProps {
+  message: ReactNode;
+  title: string;
+}
+
+const TitlePopover: React.FC<ITitlePopoverProps> = ({ message, title }) => (
   <OverlayTrigger
     trigger={['click']}
     placement="top"
@@ -26,10 +30,5 @@ const TitlePopover = ({ message, title }) => (
     )}
   </OverlayTrigger>
 );
-
-TitlePopover.propTypes = {
-  message: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-};
 
 export default TitlePopover;
