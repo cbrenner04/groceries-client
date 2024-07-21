@@ -278,8 +278,8 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
-                    disabled=""
                     href="/id5/users_lists"
+                    style="pointer-events: none;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"
@@ -871,8 +871,8 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
-                    disabled=""
                     href="/id5/users_lists"
+                    style="pointer-events: none;"
                   >
                     <i
                       class="fa fa-users fa-2x text-primary"

@@ -1,29 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { CSSProperties, MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
-const Complete = ({ handleClick, testID, disabled, style, classes }) => (
+interface ICompleteProps {
+  handleClick: MouseEventHandler;
+  testID: string;
+  disabled?: boolean;
+  style?: CSSProperties;
+  classes?: string;
+}
+
+const Complete: React.FC<ICompleteProps> = ({ handleClick, testID, disabled = false, style = {}, classes = '' }) => (
   <Button
     variant="link"
     onClick={handleClick}
-    className={`p-0 me-3 ${classes || ''}`}
+    className={`p-0 me-3 ${classes}`}
     data-test-id={testID}
-    disabled={disabled || false}
-    style={style || {}}
+    disabled={disabled}
+    style={style}
   >
     <i className="fa fa-check fa-2x text-success" />
   </Button>
 );
-
-Complete.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-  testID: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  style: PropTypes.shape({
-    pointerEvents: PropTypes.string,
-    opacity: PropTypes.number,
-  }),
-  classes: PropTypes.string,
-};
 
 export default Complete;

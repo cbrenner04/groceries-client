@@ -1,30 +1,37 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-const DateField = ({ name, label, value, handleChange, placeholder, child, disabled }) => (
+interface IDateFieldProps {
+  name: string;
+  label: string;
+  value: string;
+  handleChange: ChangeEventHandler;
+  placeholder?: string;
+  child?: ReactNode;
+  disabled?: boolean;
+}
+
+const DateField: React.FC<IDateFieldProps> = ({
+  name,
+  label,
+  value,
+  handleChange,
+  placeholder = '',
+  child = '',
+  disabled = false,
+}) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control
       type="date"
       value={value}
       onChange={handleChange}
-      placeholder={placeholder || ''}
+      placeholder={placeholder}
       name={name}
-      disabled={disabled || ''}
+      disabled={disabled}
     />
-    {child || ''}
+    {child}
   </Form.Group>
 );
-
-DateField.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
-};
 
 export default DateField;

@@ -2,16 +2,16 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import NumberField from './NumberField';
+import NumberField, { INumberFieldProps } from './NumberField';
 
-async function setup(suppliedProps) {
+async function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     handleChange: jest.fn(),
     name: 'testName',
     label: 'testLabel',
   };
-  const props = { ...defaultProps, ...suppliedProps };
+  const props: INumberFieldProps = { ...defaultProps, ...suppliedProps };
   const { findByLabelText } = render(<NumberField {...props} />);
   const formInput = await findByLabelText(props.label);
   return { formInput, props, user };

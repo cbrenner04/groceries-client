@@ -7,7 +7,6 @@ import EditLink from './EditLink';
 async function setup() {
   const props = {
     to: '/fake/route',
-    disabled: false,
     style: {},
     testID: 'foo',
   };

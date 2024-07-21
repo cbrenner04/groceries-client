@@ -1,22 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 
-const Share = ({ to, testID, disabled, style, classes }) => (
-  <Link className={`p-0 me-3 ${classes || ''}`} to={to} data-test-id={testID} disabled={disabled} style={style || {}}>
-    <i className="fa fa-users fa-2x text-primary" />
-  </Link>
-);
+interface IShareProps {
+  to: string;
+  testID: string;
+  disabled: boolean;
+  style?: CSSProperties;
+  classes?: string;
+}
 
-Share.propTypes = {
-  to: PropTypes.string.isRequired,
-  testID: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  style: PropTypes.shape({
-    pointerEvents: PropTypes.string,
-    opacity: PropTypes.number,
-  }),
-  classes: PropTypes.string,
+const Share: React.FC<IShareProps> = ({ to, testID, disabled, style = {}, classes = '' }) => {
+  const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
+  return (
+    <Link className={`p-0 me-3 ${classes || ''}`} to={to} data-test-id={testID} style={updatedStyles}>
+      <i className="fa fa-users fa-2x text-primary" />
+    </Link>
+  );
 };
 
 export default Share;

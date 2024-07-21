@@ -1,11 +1,33 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-const SelectField = ({ name, label, value, handleChange, options, blankOption, child, disabled }) => (
+interface ISelectFieldProps {
+  name: string;
+  label: string;
+  value?: string;
+  handleChange: ChangeEventHandler;
+  options: {
+    value: string;
+    label: string;
+  }[];
+  blankOption: boolean;
+  child?: ReactNode;
+  disabled: false;
+}
+
+const SelectField: React.FC<ISelectFieldProps> = ({
+  name,
+  label,
+  value = '',
+  handleChange,
+  options,
+  blankOption,
+  child = '',
+  disabled,
+}) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
-    <Form.Control as="select" value={value || ''} onChange={handleChange} name={name} disabled={disabled}>
+    <Form.Control as="select" value={value} onChange={handleChange} name={name} disabled={disabled}>
       {blankOption && (
         <option value="" disabled={!value}>
           {value ? `Clear ${label}` : `Select ${label}`}
@@ -17,24 +39,8 @@ const SelectField = ({ name, label, value, handleChange, options, blankOption, c
         </option>
       ))}
     </Form.Control>
-    {child || ''}
+    {child}
   </Form.Group>
 );
-
-SelectField.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  handleChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
-    }),
-  ).isRequired,
-  blankOption: PropTypes.bool.isRequired,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
-};
 
 export default SelectField;

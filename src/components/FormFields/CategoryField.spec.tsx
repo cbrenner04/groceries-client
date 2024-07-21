@@ -24,7 +24,7 @@ describe('CategoryField', () => {
 
     expect(formGroup).toMatchSnapshot();
     expect(formInput).toHaveValue(props.category);
-    expect(formGroup.children[2].firstChild).toHaveAttribute('value', props.categories[0]);
+    expect(formGroup?.children[2].firstChild).toHaveAttribute('value', props.categories[0]);
   });
 
   describe('when value changes', () => {

@@ -43,7 +43,7 @@ describe('IncompleteListButtons', () => {
     expect(container).toMatchSnapshot();
     expect(await findByTestId('incomplete-list-complete')).toBeDisabled();
     expect(await findByTestId('incomplete-list-complete')).toHaveClass('list-button-disabled');
-    expect(await findByTestId('incomplete-list-edit')).toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-edit')).toHaveStyle('pointer-events: none');
     expect(await findByTestId('incomplete-list-edit')).toHaveClass('list-button-disabled');
   });
 
@@ -53,7 +53,7 @@ describe('IncompleteListButtons', () => {
     expect(container).toMatchSnapshot();
     expect(await findByTestId('incomplete-list-complete')).toBeEnabled();
     expect(await findByTestId('incomplete-list-complete')).toHaveClass('list-button-enabled');
-    expect(await findByTestId('incomplete-list-edit')).not.toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-edit')).not.toHaveStyle('pointer-events: none');
     expect(await findByTestId('incomplete-list-edit')).toHaveClass('list-button-enabled');
   });
 
@@ -119,7 +119,7 @@ describe('IncompleteListButtons', () => {
     const { container, findByTestId } = setup({ currentUserPermissions: 'read' });
 
     expect(container).toMatchSnapshot();
-    expect(await findByTestId('incomplete-list-share')).toHaveAttribute('disabled', '');
+    expect(await findByTestId('incomplete-list-share')).toHaveStyle('pointer-events: none');
     expect(await findByTestId('incomplete-list-share')).toHaveClass('list-button-disabled');
   });
 

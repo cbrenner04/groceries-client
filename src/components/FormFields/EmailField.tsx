@@ -1,25 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 import { Form } from 'react-bootstrap';
 
-const EmailField = ({ name, label, value, handleChange }) => (
+interface IEmailFieldProps {
+  name?: string;
+  label?: string;
+  value: string;
+  handleChange: ChangeEventHandler;
+}
+
+const EmailField: React.FC<IEmailFieldProps> = ({ name = 'email', label = 'Email', value, handleChange }) => (
   <Form.Group controlId={name || 'email'} className="mb-3">
-    <Form.Label>{label || 'Email'}</Form.Label>
-    <Form.Control
-      type="email"
-      value={value}
-      onChange={handleChange}
-      placeholder="jane.smith@example.com"
-      name={name || 'email'}
-    />
+    <Form.Label>{label}</Form.Label>
+    <Form.Control type="email" value={value} onChange={handleChange} placeholder="jane.smith@example.com" name={name} />
   </Form.Group>
 );
-
-EmailField.propTypes = {
-  name: PropTypes.string,
-  label: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-};
 
 export default EmailField;

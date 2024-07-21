@@ -1,34 +1,40 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-const CategoryField = ({ category, categories, handleInput, name, child, disabled }) => (
-  <Form.Group controlId={name || 'category'} className="mb-3">
+interface ICategoryFieldProps {
+  handleInput: ChangeEventHandler;
+  category?: string;
+  categories?: string[];
+  name?: string;
+  child?: ReactNode;
+  disabled?: boolean;
+}
+
+const CategoryField: React.FC<ICategoryFieldProps> = ({
+  category = '',
+  categories = [],
+  handleInput,
+  name = 'category',
+  child = '',
+  disabled = false,
+}) => (
+  <Form.Group controlId={name} className="mb-3">
     <Form.Label>Category</Form.Label>
     <Form.Control
       type="text"
-      value={category || ''}
+      value={category}
       onChange={handleInput}
       list="categories"
-      name={name || 'category'}
-      disabled={disabled || false}
+      name={name}
+      disabled={disabled}
     />
     <datalist id="categories">
-      {(categories || []).map((category) => (
+      {categories.map((category) => (
         <option key={category} value={category} />
       ))}
     </datalist>
-    {child || ''}
+    {child}
   </Form.Group>
 );
-
-CategoryField.propTypes = {
-  handleInput: PropTypes.func.isRequired,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  name: PropTypes.string,
-  child: PropTypes.node,
-  disabled: PropTypes.bool,
-};
 
 export default CategoryField;

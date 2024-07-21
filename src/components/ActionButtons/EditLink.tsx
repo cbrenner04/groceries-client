@@ -1,22 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 
-const EditLink = ({ to, disabled, style, testID, classes }) => (
-  <Link className={`p-0 me-3 ${classes || ''}`} to={to} disabled={disabled} style={style || {}} data-test-id={testID}>
-    <i className="fa fa-edit fa-2x text-warning" />
-  </Link>
-);
+interface IEditLinkProps {
+  to: string;
+  style?: CSSProperties;
+  testID: string;
+  classes?: string;
+  disabled?: boolean;
+}
 
-EditLink.propTypes = {
-  to: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  style: PropTypes.shape({
-    pointerEvents: PropTypes.string,
-    opacity: PropTypes.number,
-  }),
-  testID: PropTypes.string.isRequired,
-  classes: PropTypes.string,
+const EditLink: React.FC<IEditLinkProps> = ({ to, style = {}, testID, classes = '', disabled = false }) => {
+  const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
+  return (
+    <Link className={`p-0 me-3 ${classes}`} to={to} style={updatedStyles} data-test-id={testID}>
+      <i className="fa fa-edit fa-2x text-warning" />
+    </Link>
+  );
 };
 
 export default EditLink;
