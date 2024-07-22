@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash, Merge } from '../../../components/ActionButtons';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 
 function CompleteListButtons(props) {
   const userIsOwner = props.userId === props.list.owner_id;

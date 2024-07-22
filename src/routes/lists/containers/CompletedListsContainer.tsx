@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 import { fetchCompletedLists } from '../utils';
 import { usePolling } from '../../../hooks';
 

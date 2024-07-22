@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 
 function List(props) {
   const handleListSelect = (list) => {

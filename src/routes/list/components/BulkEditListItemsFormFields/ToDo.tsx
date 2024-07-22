@@ -1,10 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, DateField, SelectField } from '../../../../components/FormFields';
-import { listUsers } from '../../../../types';
+import IListUsers from '../../../../typings/IListUsers';
 
-const ToDo = ({
+interface IToDoProps {
+  assigneeId: string;
+  clearAssignee: boolean;
+  handleClearAssignee: ChangeEventHandler;
+  dueBy: string;
+  clearDueBy: boolean;
+  handleClearDueBy: ChangeEventHandler;
+  handleInput: ChangeEventHandler;
+  listUsers: IListUsers[];
+}
+
+const ToDo: React.FC<IToDoProps> = ({
   assigneeId,
   clearAssignee,
   handleClearAssignee,
@@ -52,16 +62,5 @@ const ToDo = ({
     />
   </>
 );
-
-ToDo.propTypes = {
-  assigneeId: PropTypes.string.isRequired,
-  clearAssignee: PropTypes.bool.isRequired,
-  handleClearAssignee: PropTypes.func.isRequired,
-  dueBy: PropTypes.string.isRequired,
-  clearDueBy: PropTypes.bool.isRequired,
-  handleClearDueBy: PropTypes.func.isRequired,
-  handleInput: PropTypes.func.isRequired,
-  listUsers: PropTypes.arrayOf(listUsers).isRequired,
-};
 
 export default ToDo;

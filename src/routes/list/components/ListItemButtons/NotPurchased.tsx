@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Bookmark, Complete, EditButton, Trash } from '../../../../components/ActionButtons';
-import { listItem } from '../../../../types';
+import { listItem } from '../../../../prop-types';
 
 function NotPurchasedItemButtons(props) {
   return (

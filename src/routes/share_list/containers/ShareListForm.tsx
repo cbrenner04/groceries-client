@@ -9,7 +9,7 @@ import { EmailField } from '../../../components/FormFields';
 import UsersList from '../components/UsersList';
 import RefusedUsersList from '../components/RefusedUsersList';
 import axios from '../../../utils/api';
-import { usersLists } from '../../../types';
+import { usersLists } from '../../../prop-types';
 import { fetchData } from '../utils';
 import { usePolling } from '../../../hooks';
 import FormSubmission from '../../../components/FormSubmission';

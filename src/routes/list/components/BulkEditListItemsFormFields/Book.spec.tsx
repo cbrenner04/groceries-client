@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Book from './Book';
 
-function setup(suppliedProps) {
+function setup(
+  suppliedProps: {
+    author?: string;
+    clearAuthor?: boolean;
+    handleClearAuthor?: ChangeEventHandler;
+    handleInput?: ChangeEventHandler;
+  } = {},
+) {
   const user = userEvent.setup();
   const defaultProps = { author: 'foo', clearAuthor: false, handleClearAuthor: jest.fn(), handleInput: jest.fn() };
   const props = { ...defaultProps, ...suppliedProps };

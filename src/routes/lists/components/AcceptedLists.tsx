@@ -13,7 +13,7 @@ import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 
 function AcceptedLists(props) {
   const [multiSelect, setMultiSelect] = useState(false);

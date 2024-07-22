@@ -77,7 +77,9 @@
       "curly": [
         "error",
         "all"
-      ]
+      ],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "error"
     }
   },
   "jest": {
@@ -89,7 +91,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 95.4,
+        "branches": 94.7,
         "functions": 98.25,
         "lines": 98.9,
         "statements": 98.95

@@ -1,11 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import { CheckboxField, SelectField, TextField } from '../../../../components/FormFields';
 import { prettyListType } from '../../../../utils/format';
 
-const ChangeOtherList = (props) => {
+interface IChangeOtherListProps {
+  handleOtherListChange: (isCopy: boolean) => void;
+  copy: boolean;
+  move: boolean;
+  showNewListForm: boolean;
+  existingListsOptions: {
+    value: string;
+    label: string;
+  }[];
+  listType: string;
+  handleInput: ChangeEventHandler;
+  handleShowNewListForm: () => void;
+  clearNewListForm: () => void;
+  existingList: string;
+  newListName: string;
+  updateCurrentItems: boolean;
+  allComplete: boolean;
+}
+
+const ChangeOtherList: React.FC<IChangeOtherListProps> = (props) => {
   const handleMove = () => {
     props.handleOtherListChange(false);
   };
@@ -27,7 +45,7 @@ const ChangeOtherList = (props) => {
           type="radio"
           onChange={handleCopy}
           onClick={handleCopy}
-          value={props.copy}
+          value={String(props.copy)}
           id="move-action-copy"
           checked={props.copy}
         />
@@ -35,7 +53,7 @@ const ChangeOtherList = (props) => {
           name="move"
           label="Move"
           type="radio"
-          value={props.move}
+          value={String(props.move)}
           id="move-action-move"
           onChange={handleMove}
           onClick={handleMove}
@@ -87,27 +105,6 @@ const ChangeOtherList = (props) => {
       )}
     </>
   );
-};
-
-ChangeOtherList.propTypes = {
-  handleOtherListChange: PropTypes.func.isRequired,
-  copy: PropTypes.bool.isRequired,
-  move: PropTypes.bool.isRequired,
-  showNewListForm: PropTypes.bool.isRequired,
-  existingListsOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
-    }),
-  ).isRequired,
-  listType: PropTypes.string.isRequired,
-  handleInput: PropTypes.func.isRequired,
-  handleShowNewListForm: PropTypes.func.isRequired,
-  clearNewListForm: PropTypes.func.isRequired,
-  existingList: PropTypes.string.isRequired,
-  newListName: PropTypes.string.isRequired,
-  updateCurrentItems: PropTypes.bool.isRequired,
-  allComplete: PropTypes.bool.isRequired,
 };
 
 export default ChangeOtherList;

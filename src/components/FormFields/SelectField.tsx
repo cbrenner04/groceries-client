@@ -12,7 +12,7 @@ interface ISelectFieldProps {
   }[];
   blankOption: boolean;
   child?: ReactNode;
-  disabled: false;
+  disabled?: boolean;
 }
 
 const SelectField: React.FC<ISelectFieldProps> = ({
@@ -23,7 +23,7 @@ const SelectField: React.FC<ISelectFieldProps> = ({
   options,
   blankOption,
   child = '',
-  disabled,
+  disabled = false,
 }) => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>

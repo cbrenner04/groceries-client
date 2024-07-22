@@ -6,7 +6,7 @@ import Grocery from './Grocery';
 import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
-import { listUsers } from '../../../../types';
+import { listUsers } from '../../../../prop-types';
 
 // TODO: reduce redundancy
 const ListItemFormFields = ({ categories, listType, listUsers, formData, setFormData, editForm }) =>

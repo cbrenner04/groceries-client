@@ -4,7 +4,7 @@ import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap
 
 import { Trash } from '../../../components/ActionButtons';
 import TitlePopover from '../../../components/TitlePopover';
-import { usersLists } from '../../../types';
+import { usersLists } from '../../../prop-types';
 
 const UsersList = (props) => (
   <>

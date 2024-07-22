@@ -1,9 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-const Grocery = ({ quantity, clearQuantity, handleClearQuantity, handleInput }) => (
+interface IGroceryProps {
+  quantity: string;
+  clearQuantity: boolean;
+  handleClearQuantity: ChangeEventHandler;
+  handleInput: ChangeEventHandler;
+}
+
+const Grocery: React.FC<IGroceryProps> = ({ quantity, clearQuantity, handleClearQuantity, handleInput }) => (
   <TextField
     name="quantity"
     label="Quantity"
@@ -22,12 +28,5 @@ const Grocery = ({ quantity, clearQuantity, handleClearQuantity, handleInput }) 
     }
   />
 );
-
-Grocery.propTypes = {
-  quantity: PropTypes.string.isRequired,
-  clearQuantity: PropTypes.bool.isRequired,
-  handleClearQuantity: PropTypes.func.isRequired,
-  handleInput: PropTypes.func.isRequired,
-};
 
 export default Grocery;

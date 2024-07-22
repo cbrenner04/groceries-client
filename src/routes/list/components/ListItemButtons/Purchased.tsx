@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Bookmark, Refresh, EditButton, Trash } from '../../../../components/ActionButtons';
-import { listItem } from '../../../../types';
+import { listItem } from '../../../../prop-types';
 
 const PurchasedItemButtons = (props) => (
   <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>

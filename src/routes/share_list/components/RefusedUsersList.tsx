@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Refresh } from '../../../components/ActionButtons';
-import { usersLists } from '../../../types';
+import { usersLists } from '../../../prop-types';
 
 const RefusedUsersList = (props) => (
   <>

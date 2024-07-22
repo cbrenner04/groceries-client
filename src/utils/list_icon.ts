@@ -1,4 +1,6 @@
-const listIconClass = (listType: 'BookList' | 'GroceryList' | 'MusicList' | 'SimpleList' | 'ToDoList') =>
+import { EListType } from '../typings/ListTypeEnum';
+
+const listIconClass = (listType: EListType) =>
   ({
     BookList: 'fa-book',
     GroceryList: 'fa-shopping-bag',

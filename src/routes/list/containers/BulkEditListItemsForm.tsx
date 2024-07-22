@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { list, listItem, listUsers } from '../../../types';
+import { list, listItem, listUsers } from '../../../prop-types';
 import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';

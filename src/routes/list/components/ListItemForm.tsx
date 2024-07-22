@@ -6,7 +6,7 @@ import update from 'immutability-helper';
 
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
-import { listUsers } from '../../../types';
+import { listUsers } from '../../../prop-types';
 import FormSubmission from '../../../components/FormSubmission';
 
 const defaultFormState = {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import NotPurchased from './NotPurchased';
 import Purchased from './Purchased';
-import { listItem } from '../../../../types';
+import { listItem } from '../../../../prop-types';
 
 const ListItemButtons = (props) =>
   props.purchased ? (

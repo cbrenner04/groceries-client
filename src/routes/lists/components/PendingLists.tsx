@@ -11,7 +11,7 @@ import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
 import Lists from './Lists';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 import { useNavigate } from 'react-router-dom';
 
 function PendingLists(props) {

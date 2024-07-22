@@ -5,7 +5,7 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
-import { listItem, listUsers } from '../../../types';
+import { listItem, listUsers } from '../../../prop-types';
 
 const ListItem = (props) => {
   let assignee = '';

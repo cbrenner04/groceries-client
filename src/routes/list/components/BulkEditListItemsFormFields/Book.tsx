@@ -1,9 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-const Book = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
+interface IBookProps {
+  author: string;
+  clearAuthor: boolean;
+  handleClearAuthor: ChangeEventHandler;
+  handleInput: ChangeEventHandler;
+}
+
+const Book: React.FC<IBookProps> = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
   <TextField
     name="author"
     label="Author"
@@ -22,12 +28,5 @@ const Book = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
     }
   />
 );
-
-Book.propTypes = {
-  author: PropTypes.string.isRequired,
-  clearAuthor: PropTypes.bool.isRequired,
-  handleClearAuthor: PropTypes.func.isRequired,
-  handleInput: PropTypes.func.isRequired,
-};
 
 export default Book;

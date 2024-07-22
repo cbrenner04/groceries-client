@@ -10,7 +10,7 @@ import { sortLists, failure } from '../utils';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
-import { list } from '../../../types';
+import { list } from '../../../prop-types';
 import { fetchLists } from '../utils';
 import { usePolling } from '../../../hooks';
 

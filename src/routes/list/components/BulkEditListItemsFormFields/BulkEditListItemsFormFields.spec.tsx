@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BulkEditListItemsFormFields from './index';
+import { EListType } from '../../../../typings/ListTypeEnum';
 
 const defaultFormData = {
   copy: false,
@@ -28,7 +29,7 @@ const defaultFormData = {
   allComplete: false,
 };
 
-function setup(suppliedProps) {
+function setup(suppliedProps: { listType?: EListType; formData?: typeof defaultFormData }) {
   const user = userEvent.setup();
   const defaultProps = {
     listType: 'GroceryList',
@@ -60,7 +61,7 @@ function setup(suppliedProps) {
 
 describe('BulkEditListItemsFormFields', () => {
   it('render Book fields when listType is BookList and fires appropriate change handlers', async () => {
-    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'BookList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: EListType.BOOK_LIST });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Author')).toBeVisible();
@@ -83,7 +84,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render Grocery fields when listType is GroceryList and fires appropriate change handlers', async () => {
-    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'GroceryList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: EListType.GROCERY_LIST });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Quantity')).toBeVisible();
@@ -106,7 +107,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render Music fields when listType is MusicList and fires appropriate change handlers', async () => {
-    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'MusicList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: EListType.MUSIC_LIST });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Album')).toBeVisible();
@@ -133,7 +134,7 @@ describe('BulkEditListItemsFormFields', () => {
   });
 
   it('render ToDo fields when listType is ToDoList and fires appropriate change handlers', async () => {
-    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: 'ToDoList' });
+    const { container, findByLabelText, findAllByRole, props, user } = setup({ listType: EListType.TO_DO_LIST });
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Assignee')).toBeVisible();
@@ -162,7 +163,7 @@ describe('BulkEditListItemsFormFields', () => {
 
   it('does not render list item attribute fields when all items are completed', () => {
     const { container, queryByLabelText } = setup({
-      listType: 'GroceryList',
+      listType: EListType.GROCERY_LIST,
       formData: { ...defaultFormData, allComplete: true },
     });
 

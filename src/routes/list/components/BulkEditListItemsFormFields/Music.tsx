@@ -1,9 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, handleClearAlbum, handleInput }) => (
+interface IMusicProps {
+  artist: string;
+  clearArtist: boolean;
+  handleClearArtist: ChangeEventHandler;
+  album: string;
+  clearAlbum: boolean;
+  handleClearAlbum: ChangeEventHandler;
+  handleInput: ChangeEventHandler;
+}
+
+const Music: React.FC<IMusicProps> = ({
+  artist,
+  clearArtist,
+  handleClearArtist,
+  album,
+  clearAlbum,
+  handleClearAlbum,
+  handleInput,
+}) => (
   <>
     <TextField
       name="artist"
@@ -41,15 +58,5 @@ const Music = ({ artist, clearArtist, handleClearArtist, album, clearAlbum, hand
     />
   </>
 );
-
-Music.propTypes = {
-  artist: PropTypes.string.isRequired,
-  clearArtist: PropTypes.bool.isRequired,
-  handleClearArtist: PropTypes.func.isRequired,
-  album: PropTypes.string.isRequired,
-  clearAlbum: PropTypes.bool.isRequired,
-  handleClearAlbum: PropTypes.func.isRequired,
-  handleInput: PropTypes.func.isRequired,
-};
 
 export default Music;

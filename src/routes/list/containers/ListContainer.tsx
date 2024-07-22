@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
 
-import { list, listItem, listUsers } from '../../../types';
+import { list, listItem, listUsers } from '../../../prop-types';
 import { capitalize } from '../../../utils/format';
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
