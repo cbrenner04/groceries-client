@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { list, listItem, listUsers } from '../../../prop-types';
 import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
 import FormSubmission from '../../../components/FormSubmission';
+import { EListType, IList, IListItem, IListUsers } from '../../../typings';
 
-function BulkEditListItemsForm(props) {
+interface IBulkEditListItemsFormProps {
+  navigate: (url: string) => void;
+  items: IListItem[];
+  list: IList;
+  lists: IList[];
+  categories: string[];
+  listUsers?: IListUsers[];
+}
+
+const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => {
   // if no existing list options, new list form should be displayed by default
   const existingListsOptions = props.lists.map((list) => ({ value: String(list.id), label: list.name }));
 
@@ -19,9 +27,12 @@ function BulkEditListItemsForm(props) {
   // set attributes to initial value if all items have the same value for the attribute
   // the value of these attributes can be cleared for all items with their respective clear state attributes
   // read, purchased, completed not included as they add complexity and they can be updated in bulk on the list itself
-  const initialAttr = (attribute) => {
+  const initialAttr = (attribute: keyof IListItem): string | Date | number | undefined => {
     const uniqValues = [...new Set(props.items.map(({ [attribute]: value }) => value))];
-    return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : '';
+    // TODO: I have no idea why this says it will return a boolean value
+    //eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore
+    return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : undefined;
   };
   const initialValues = {
     copy: false,
@@ -29,27 +40,27 @@ function BulkEditListItemsForm(props) {
     existingList: '',
     newListName: '',
     updateCurrentItems: false,
-    album: initialAttr('album'),
+    album: initialAttr('album') as string | undefined,
     clearAlbum: false,
-    artist: initialAttr('artist'),
+    artist: initialAttr('artist') as string | undefined,
     clearArtist: false,
-    assigneeId: String(initialAttr('assignee_id')),
+    assigneeId: initialAttr('assignee_id') as string | undefined,
     clearAssignee: false,
-    author: initialAttr('author'),
+    author: initialAttr('author') as string | undefined,
     clearAuthor: false,
-    category: initialAttr('category'),
+    category: initialAttr('category') as string | undefined,
     clearCategory: false,
     dueBy: formatDueBy(initialAttr('due_by')),
     clearDueBy: false,
-    quantity: initialAttr('quantity'),
+    quantity: initialAttr('quantity') as string | undefined,
     clearQuantity: false,
     showNewListForm: !existingListsOptions.length,
-    allComplete: initialAttr('purchased') || initialAttr('completed') || false,
+    allComplete: (initialAttr('purchased') ?? initialAttr('completed') ?? false) as boolean,
   };
 
   const [formData, setFormData] = useState(initialValues);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     // must have existing list or new list identified to copy or move
     if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
@@ -57,13 +68,13 @@ function BulkEditListItemsForm(props) {
       return;
     }
     const putData = {
-      category: formData.category || null,
-      author: formData.author || null,
-      quantity: formData.quantity || null,
-      artist: formData.artist || null,
-      album: formData.album || null,
-      assignee_id: formData.assigneeId || null,
-      due_by: formData.dueBy || null,
+      category: formData.category ?? null,
+      author: formData.author ?? null,
+      quantity: formData.quantity ?? null,
+      artist: formData.artist ?? null,
+      album: formData.album ?? null,
+      assignee_id: formData.assigneeId ?? null,
+      due_by: formData.dueBy ?? null,
       clear_category: formData.clearCategory,
       clear_author: formData.clearAuthor,
       clear_quantity: formData.clearQuantity,
@@ -71,6 +82,10 @@ function BulkEditListItemsForm(props) {
       clear_album: formData.clearAlbum,
       clear_assignee: formData.clearAssignee,
       clear_due_by: formData.clearDueBy,
+      copy: false,
+      move: false,
+      existing_list_id: formData.existingList,
+      new_list_name: formData.newListName,
       // if copying, the user will set whether or not to update current items
       // if moving, the current items will not be updated
       // if not doing either, updating the current items is the only action being take
@@ -95,29 +110,29 @@ function BulkEditListItemsForm(props) {
       });
       toast('Items successfully updated', { type: 'info' });
       props.navigate(`/lists/${props.list.id}`);
-    } catch ({ response, request, message }) {
-      if (response) {
-        if (response.status === 401) {
+    } catch (err: any) {
+      if (err?.response) {
+        if (err?.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(response.status)) {
+        } else if ([403, 404].includes(err?.response.status)) {
           toast('Some items not found', { type: 'error' });
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(response.data);
-          const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
+          const keys = Object.keys(err?.response.data);
+          const responseErrors = keys.map((key) => `${key} ${err?.response.data[key]}`);
           let joinString;
-          if (props.list.type === 'BookList' || props.list.type === 'MusicList') {
+          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
             joinString = ' or ';
           } else {
             joinString = ' and ';
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (request) {
+      } else if (err?.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(message, { type: 'error' });
+        toast(err?.message, { type: 'error' });
       }
     }
   };
@@ -130,9 +145,11 @@ function BulkEditListItemsForm(props) {
     setFormData(updatedFormData);
   };
 
-  const handleOtherListChange = (isCopy) => {
-    const [action, oppositeAction] = isCopy ? ['copy', 'move'] : ['move', 'copy'];
-    const updates = {};
+  const handleOtherListChange = (isCopy: boolean) => {
+    const [action, oppositeAction]: [keyof typeof formData, keyof typeof formData] = isCopy
+      ? ['copy', 'move']
+      : ['move', 'copy'];
+    const updates: Record<string, { $set: boolean | string }> = {};
     if (!formData[action] && formData[oppositeAction]) {
       updates[oppositeAction] = { $set: false };
     }
@@ -146,7 +163,11 @@ function BulkEditListItemsForm(props) {
     setFormData(updatedFormData);
   };
 
-  const handleInput = ({ target: { name, value, checked } }) => {
+  const handleInput = ({
+    target: { name, value, checked },
+  }: {
+    target: { name: string; value: string | boolean; checked: boolean };
+  }) => {
     let newValue = value;
     if (name === 'updateCurrentItems') {
       newValue = checked;
@@ -155,8 +176,8 @@ function BulkEditListItemsForm(props) {
     setFormData(updatedFormData);
   };
 
-  const clearAttribute = (attribute, clearAttribute) => {
-    const updates = {};
+  const clearAttribute = (attribute: keyof typeof formData, clearAttribute: keyof typeof formData) => {
+    const updates: Record<string, { $set: number | boolean | string | undefined }> = {};
     if (!formData[clearAttribute] && formData[attribute]) {
       updates[attribute] = { $set: '' };
     }
@@ -183,9 +204,10 @@ function BulkEditListItemsForm(props) {
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           formData={formData}
-          handleInput={handleInput}
+          // TODO: is this what we want?
+          handleInput={handleInput as unknown as ChangeEventHandler}
           clearAttribute={clearAttribute}
-          listUsers={props.listUsers || []}
+          listUsers={props.listUsers ?? []}
           listType={props.list.type}
           handleOtherListChange={handleOtherListChange}
           existingListsOptions={existingListsOptions}
@@ -202,15 +224,6 @@ function BulkEditListItemsForm(props) {
       </Form>
     </>
   );
-}
-
-BulkEditListItemsForm.propTypes = {
-  navigate: PropTypes.func.isRequired,
-  items: PropTypes.arrayOf(listItem).isRequired,
-  list: list.isRequired,
-  lists: PropTypes.arrayOf(list).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  listUsers: PropTypes.arrayOf(listUsers),
 };
 
 export default BulkEditListItemsForm;

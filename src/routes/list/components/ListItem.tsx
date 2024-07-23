@@ -1,16 +1,32 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
-import { listItem, listUsers } from '../../../prop-types';
+import { EListType, IListItem, IListUsers } from '../../../typings';
 
-const ListItem = (props) => {
+interface IListItemProps {
+  item: IListItem;
+  purchased?: boolean;
+  listType: EListType;
+  listUsers?: IListUsers[];
+  permission: string;
+  multiSelect: boolean;
+  handleItemDelete: (item: IListItem) => void;
+  handlePurchaseOfItem: (item: IListItem) => void;
+  handleItemRefresh: (item: IListItem) => void;
+  handleItemSelect: (item: IListItem) => void;
+  toggleItemRead: (item: IListItem) => void;
+  handleItemEdit: (item: IListItem) => void;
+  selectedItems: IListItem[];
+  pending: boolean;
+}
+
+const ListItem: React.FC<IListItemProps> = (props) => {
   let assignee = '';
-  if (props.listType === 'ToDoList' && props.item.assignee_id) {
-    const assignedUser = (props.listUsers || []).find((user) => user.id === props.item.assignee_id);
+  if (props.listType === EListType.TO_DO_LIST && props.item.assignee_id) {
+    const assignedUser = (props.listUsers ?? []).find((user) => user.id === props.item.assignee_id);
     if (assignedUser) {
       assignee = `Assigned To: ${assignedUser.email}`;
     }
@@ -33,7 +49,7 @@ const ListItem = (props) => {
           <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
             {itemName(props.item, props.listType)}
           </div>
-          {props.listType === 'ToDoList' && (
+          {props.listType === EListType.TO_DO_LIST && (
             <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
               <small className="text-muted">
                 <div data-test-id="assignee-email">{assignee}</div>
@@ -43,7 +59,7 @@ const ListItem = (props) => {
           )}
           {props.permission === 'write' && (
             <ListItemButtons
-              purchased={props.purchased || false}
+              purchased={props.purchased ?? false}
               listType={props.listType}
               item={props.item}
               handleItemRefresh={props.handleItemRefresh}
@@ -60,23 +76,6 @@ const ListItem = (props) => {
       </Row>
     </ListGroup.Item>
   );
-};
-
-ListItem.propTypes = {
-  item: listItem.isRequired,
-  purchased: PropTypes.bool,
-  handleItemDelete: PropTypes.func.isRequired,
-  handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleItemRefresh: PropTypes.func.isRequired,
-  listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(listUsers),
-  permission: PropTypes.string.isRequired,
-  multiSelect: PropTypes.bool.isRequired,
-  handleItemSelect: PropTypes.func.isRequired,
-  toggleItemRead: PropTypes.func.isRequired,
-  handleItemEdit: PropTypes.func.isRequired,
-  selectedItems: PropTypes.arrayOf(listItem).isRequired,
-  pending: PropTypes.bool.isRequired,
 };
 
 export default ListItem;

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import Grocery from './Grocery';
 
-function setup(suppliedProps) {
+function setup(suppliedProps: { editForm: boolean }) {
   const user = userEvent.setup();
   const defaultProps = {
     product: 'foo',

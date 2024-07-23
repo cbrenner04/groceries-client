@@ -3,8 +3,9 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import ListItemButtons from './index';
+import { EListType } from '../../../../typings';
 
-async function setup(suppliedProps) {
+async function setup(suppliedProps: { purchased: boolean }) {
   const defaultProps = {
     item: {
       grocery_list_id: 'id1',
@@ -17,7 +18,7 @@ async function setup(suppliedProps) {
     toggleItemRead: jest.fn(),
     handleItemRefresh: jest.fn(),
     handleItemEdit: jest.fn(),
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     multiSelect: false,
     selectedItems: [],
     pending: false,

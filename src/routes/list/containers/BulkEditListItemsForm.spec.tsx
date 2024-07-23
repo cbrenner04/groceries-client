@@ -5,12 +5,13 @@ import userEvent from '@testing-library/user-event';
 
 import BulkEditListItemsForm from './BulkEditListItemsForm';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-function setup(listType = 'GroceryList', suppliedProps = {}) {
+function setup(listType = EListType.GROCERY_LIST, suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     navigate: jest.fn(),
@@ -26,7 +27,7 @@ function setup(listType = 'GroceryList', suppliedProps = {}) {
         title: '',
         read: false,
         artist: '',
-        dueBy: '',
+        dueBy: undefined,
         assigneeId: '',
         album: '',
         numberInSeries: 1,
@@ -43,7 +44,7 @@ function setup(listType = 'GroceryList', suppliedProps = {}) {
         title: '',
         read: false,
         artist: '',
-        dueBy: '',
+        dueBy: undefined,
         assigneeId: '',
         album: '',
         numberInSeries: 1,
@@ -62,7 +63,7 @@ function setup(listType = 'GroceryList', suppliedProps = {}) {
     lists: [
       {
         id: 'id1',
-        type: 'GroceryList',
+        type: EListType.GROCERY_LIST,
         name: 'foo',
         completed: false,
         refreshed: false,
@@ -168,10 +169,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
-      list_items: expect.not.objectContaining({ move: expect.any(Boolean) }),
-    });
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
-      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1' }),
+      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1', move: false }),
     });
   });
 
@@ -193,7 +191,7 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
-      list_items: expect.objectContaining({ quantity: null, clear_quantity: true }),
+      list_items: expect.objectContaining({ quantity: '', clear_quantity: true }),
     });
   });
 
@@ -256,7 +254,7 @@ describe('BulkEditListItemsForm', () => {
 
   it('sets appropriate data when move', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
-    const { findByText, findByLabelText, user } = setup('GroceryList', { lists: [] });
+    const { findByText, findByLabelText, user } = setup(EListType.GROCERY_LIST, { lists: [] });
 
     await user.click(await findByLabelText('Move'));
     await user.type(await findByLabelText('New list name'), 'foo');
@@ -335,7 +333,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup('BookList');
+    const { findAllByRole, user } = setup(EListType.BOOK_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -353,7 +351,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup('GroceryList');
+    const { findAllByRole, user } = setup(EListType.GROCERY_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -371,7 +369,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup('MusicList');
+    const { findAllByRole, user } = setup(EListType.MUSIC_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -389,7 +387,7 @@ describe('BulkEditListItemsForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup('ToDoList');
+    const { findAllByRole, user } = setup(EListType.TO_DO_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -401,7 +399,7 @@ describe('BulkEditListItemsForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       request: 'request failed',
     });
-    const { findAllByRole, user } = setup('ToDoList');
+    const { findAllByRole, user } = setup(EListType.TO_DO_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -413,7 +411,7 @@ describe('BulkEditListItemsForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       message: 'request failed',
     });
-    const { findAllByRole, user } = setup('ToDoList');
+    const { findAllByRole, user } = setup(EListType.TO_DO_LIST);
 
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));

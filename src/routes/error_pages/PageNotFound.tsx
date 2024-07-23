@@ -11,12 +11,10 @@ import UnknownError from './UnknownError';
 const fetchData = async ({ navigate }: { navigate: NavigateFunction }) => {
   try {
     await axios.get('/auth/validate_token');
-  } catch ({ response }: any) {
-    if (response) {
-      if (response.status === 401) {
-        toast('You must sign in', { type: 'error' });
-        navigate('/users/sign_in');
-      }
+  } catch (err: any) {
+    if (err?.response?.status === 401) {
+      toast('You must sign in', { type: 'error' });
+      navigate('/users/sign_in');
     }
     // any other errors will just be caught and render the generic UnknownError
     throw new Error();

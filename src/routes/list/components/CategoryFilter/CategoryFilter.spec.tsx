@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 import CategoryFilter from './index';
 
-function setup(suppliedProps) {
+function setup(suppliedProps: { categories?: string[]; filter?: string } = {}) {
   const defaultProps = {
     categories: [],
     filter: '',

@@ -1,19 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Bookmark, Complete, EditButton, Trash } from '../../../../components/ActionButtons';
-import { listItem } from '../../../../prop-types';
+import { IListItem } from '../../../../typings';
 
-function NotPurchasedItemButtons(props) {
+interface INotPurchasedItemButtonsProps {
+  listType: string;
+  item: IListItem;
+  handlePurchaseOfItem: (item: IListItem) => void;
+  handleItemDelete: (item: IListItem) => void;
+  toggleItemRead: (item: IListItem) => void;
+  handleItemEdit: (item: IListItem) => void;
+  pending: boolean;
+  multiSelect?: boolean;
+}
+
+const NotPurchasedItemButtons: React.FC<INotPurchasedItemButtonsProps> = (props) => {
   return (
     <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>
       {props.listType === 'BookList' && (
         <Bookmark
           handleClick={() => props.toggleItemRead(props.item)}
-          read={props.item.read}
+          read={props.item.read ?? false}
           testID={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
-          disabled={props.pending}
         />
       )}
       <Complete
@@ -33,17 +42,6 @@ function NotPurchasedItemButtons(props) {
       />
     </ButtonGroup>
   );
-}
-
-NotPurchasedItemButtons.propTypes = {
-  listType: PropTypes.string.isRequired,
-  item: listItem.isRequired,
-  handlePurchaseOfItem: PropTypes.func.isRequired,
-  handleItemDelete: PropTypes.func.isRequired,
-  toggleItemRead: PropTypes.func.isRequired,
-  handleItemEdit: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
-  multiSelect: PropTypes.bool,
 };
 
 export default NotPurchasedItemButtons;

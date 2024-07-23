@@ -1,8 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { MouseEventHandler } from 'react';
 import { Dropdown } from 'react-bootstrap';
 
-const Filter = ({ categories, handleCategoryFilter }) => (
+interface IFilterProps {
+  categories: string[];
+  handleCategoryFilter: MouseEventHandler;
+}
+
+const Filter: React.FC<IFilterProps> = ({ categories, handleCategoryFilter }) => (
   <Dropdown data-test-id="filter-dropdown">
     <Dropdown.Toggle variant="light" id="filter-by-category-button">
       Filter by category
@@ -27,10 +31,5 @@ const Filter = ({ categories, handleCategoryFilter }) => (
     </Dropdown.Menu>
   </Dropdown>
 );
-
-Filter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleCategoryFilter: PropTypes.func.isRequired,
-};
 
 export default Filter;

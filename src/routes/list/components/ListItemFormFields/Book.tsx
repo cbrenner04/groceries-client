@@ -1,10 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 import { Row } from 'react-bootstrap';
 
 import { CategoryField, TextField, NumberField, CheckboxField } from '../../../../components/FormFields';
 
-const BookFormFields = (props) => (
+interface IBookFormFieldsProps {
+  author: string;
+  title: string;
+  purchased?: boolean;
+  read?: boolean;
+  editForm?: boolean;
+  numberInSeries?: number;
+  category?: string;
+  categories?: string[];
+  inputChangeHandler: ChangeEventHandler;
+}
+
+const BookFormFields: React.FC<IBookFormFieldsProps> = (props) => (
   <>
     <TextField
       name="author"
@@ -23,12 +34,12 @@ const BookFormFields = (props) => (
     <NumberField
       name="numberInSeries"
       label="Number in series"
-      value={props.numberInSeries || 0}
+      value={props.numberInSeries ?? 0}
       handleChange={props.inputChangeHandler}
     />
     <CategoryField
-      category={props.category || ''}
-      categories={props.categories || []}
+      category={props.category ?? ''}
+      categories={props.categories ?? []}
       handleInput={props.inputChangeHandler}
     />
     {props.editForm && (
@@ -36,14 +47,14 @@ const BookFormFields = (props) => (
         <CheckboxField
           name="purchased"
           label="Purchased"
-          value={props.purchased || false}
+          value={props.purchased ?? false}
           handleChange={props.inputChangeHandler}
           classes="form-check-inline ms-1"
         />
         <CheckboxField
           name="read"
           label="Read"
-          value={props.read || false}
+          value={props.read ?? false}
           handleChange={props.inputChangeHandler}
           classes="form-check-inline"
         />
@@ -51,17 +62,5 @@ const BookFormFields = (props) => (
     )}
   </>
 );
-
-BookFormFields.propTypes = {
-  author: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  purchased: PropTypes.bool,
-  read: PropTypes.bool,
-  editForm: PropTypes.bool,
-  numberInSeries: PropTypes.number,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  inputChangeHandler: PropTypes.func.isRequired,
-};
 
 export default BookFormFields;

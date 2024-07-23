@@ -15,10 +15,10 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditListItem', () => {
-  const renderEditListItem = (newProps) => {
+  const renderEditListItem = () => {
     return render(
       <MemoryRouter>
-        <EditListItem {...newProps} />
+        <EditListItem />
       </MemoryRouter>,
     );
   };

@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListItem from './ListItem';
 import { prettyDueBy } from '../../../utils/format';
+import { EListType } from '../../../typings';
 
 function setup(suppliedProps = {}, suppliedItem = {}) {
   const user = userEvent.setup();
@@ -33,7 +34,7 @@ function setup(suppliedProps = {}, suppliedItem = {}) {
     handleItemEdit: jest.fn(),
     multiSelect: false,
     toggleItemRead: jest.fn(),
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     listUsers: [],
     permission: 'write',
     selectedItems: [],
@@ -54,14 +55,14 @@ describe('ListItem', () => {
     const { container } = setup({ purchased: true });
 
     expect(container).toMatchSnapshot();
-    expect(container.firstChild.getAttribute('data-test-class')).toBe('purchased-item');
+    expect(container.firstChild).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('sets the data-test-class to not-purchased-item when item is not purchased', () => {
     const { container } = setup({ purchased: false });
 
     expect(container).toMatchSnapshot();
-    expect(container.firstChild.getAttribute('data-test-class')).toBe('non-purchased-item');
+    expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
   it('shows assignee when listType is ToDoList, the item is assigned, the assignee is in the listUsers', async () => {

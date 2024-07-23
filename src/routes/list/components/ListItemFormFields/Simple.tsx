@@ -1,9 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
 
-const SimpleFormFields = (props) => (
+interface ISimpleFormFieldsProps {
+  content: string;
+  completed?: boolean;
+  editForm?: boolean;
+  category?: string;
+  categories?: string[];
+  inputChangeHandler: ChangeEventHandler;
+}
+
+const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props) => (
   <>
     <TextField
       name="content"
@@ -13,29 +21,20 @@ const SimpleFormFields = (props) => (
       placeholder="Something cool"
     />
     <CategoryField
-      category={props.category || ''}
-      categories={props.categories || []}
+      category={props.category ?? ''}
+      categories={props.categories ?? []}
       handleInput={props.inputChangeHandler}
     />
     {props.editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed || false}
+        value={props.completed ?? false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
     )}
   </>
 );
-
-SimpleFormFields.propTypes = {
-  content: PropTypes.string.isRequired,
-  completed: PropTypes.bool,
-  editForm: PropTypes.bool,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  inputChangeHandler: PropTypes.func.isRequired,
-};
 
 export default SimpleFormFields;

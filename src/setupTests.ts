@@ -22,7 +22,10 @@ jest.mock('axios', () => ({
 }));
 
 // make sure when `moment()` is called without a date, the same date is always returned
-jest.mock('moment', () => (date) => jest.requireActual('moment')(date || '2020-05-24T10:00:00.000Z'));
+jest.mock(
+  'moment',
+  () => (date: Date | string | number | undefined) => jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
+);
 
 afterEach(() => {
   cleanup();

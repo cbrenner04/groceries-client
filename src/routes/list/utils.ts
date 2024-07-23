@@ -2,20 +2,22 @@ import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
 import { formatDueBy } from '../../utils/format';
+import { EListType, IListItem } from '../../typings';
+import { IListITemsFormFieldsFormDataProps } from './components/ListItemFormFields';
 
-export function itemName(item, listType) {
+export function itemName(item: IListItem | IListITemsFormFieldsFormDataProps, listType: EListType) {
   return {
-    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author || ''}`,
-    GroceryList: `${item.quantity || ''} ${item.product || ''}`,
+    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author ?? ''}`,
+    GroceryList: `${item.quantity ?? ''} ${item.product ?? ''}`,
     MusicList:
-      `${item.title ? `"${item.title}"` : ''} ${item.artist || ''}` +
-      `${item.artist && item.album ? ' - ' : ''}${item.album || ''}`,
+      `${item.title ? `"${item.title}"` : ''} ${item.artist ?? ''}` +
+      `${item.artist && item.album ? ' - ' : ''}${item.album ?? ''}`,
     SimpleList: item.content,
     ToDoList: item.task,
-  }[listType].trim();
+  }[listType]?.trim();
 }
 
-export function mapIncludedCategories(items) {
+export function mapIncludedCategories(items: IListItem[]) {
   const cats = [''];
   items.forEach((item) => {
     if (!item.category) {
@@ -29,8 +31,8 @@ export function mapIncludedCategories(items) {
   return cats;
 }
 
-export function categorizeNotPurchasedItems(items, categories) {
-  const obj = {};
+export function categorizeNotPurchasedItems(items: IListItem[], categories: string[]) {
+  const obj: Record<string, IListItem[]> = {};
   categories.forEach((cat) => {
     obj[cat] = [];
   });
@@ -40,6 +42,8 @@ export function categorizeNotPurchasedItems(items, categories) {
       return;
     }
     const cat = item.category.toLowerCase();
+    // TODO: why is this setting off this rule?
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!obj[cat]) {
       obj[cat] = [];
     }
@@ -48,19 +52,19 @@ export function categorizeNotPurchasedItems(items, categories) {
   return obj;
 }
 
-function performSort(items, sortAttrs) {
+function performSort(items: IListItem[], sortAttrs: (keyof IListItem)[]) {
   // return when all items are sorted
   if (sortAttrs.length === 0) {
     return items;
   }
-  const sortAttr = sortAttrs.pop();
+  const sortAttr = sortAttrs.pop()!;
   const sorted = items.sort((a, b) => {
     // the sort from the server comes back with items with number_in_series: `null` at the end of the list
     // without the next two lines this would put those items at the front of the list
-    if (a[sortAttr] === null) {
+    if (!a[sortAttr]) {
       return 1;
     }
-    if (b[sortAttr] === null) {
+    if (!b[sortAttr]) {
       return -1;
     }
     const positiveBranch = a[sortAttr] > b[sortAttr] ? 1 : 0;
@@ -69,25 +73,24 @@ function performSort(items, sortAttrs) {
   return performSort(sorted, sortAttrs);
 }
 
-export function sortItems(listType, items) {
-  let sortAttrs = [];
-  /* istanbul ignore else */
-  if (listType === 'BookList') {
+export function sortItems(listType: EListType, items: IListItem[]) {
+  let sortAttrs: (keyof IListItem)[] = [];
+  if (listType === EListType.BOOK_LIST) {
     sortAttrs = ['author', 'number_in_series', 'title'];
-  } else if (listType === 'GroceryList') {
+  } else if (listType === EListType.GROCERY_LIST) {
     sortAttrs = ['product'];
-  } else if (listType === 'MusicList') {
+  } else if (listType === EListType.MUSIC_LIST) {
     sortAttrs = ['artist', 'album', 'title'];
-  } else if (listType === 'SimpleList') {
+  } else if (listType === EListType.SIMPLE_LIST) {
     sortAttrs = ['created_at', 'content'];
-  } else if (listType === 'ToDoList') {
+  } else {
     sortAttrs = ['due_by', 'assignee_id', 'task'];
   }
   const sorted = performSort(items, sortAttrs);
   return sorted;
 }
 
-export async function fetchList({ id, navigate }) {
+export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }) {
   try {
     const {
       data: {
@@ -113,15 +116,15 @@ export async function fetchList({ id, navigate }) {
       notPurchasedItems,
       permissions,
     };
-  } catch ({ response, message }) {
-    if (response) {
-      if (response.status === 401) {
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('List not found', {
           type: 'error',
         });
@@ -130,11 +133,19 @@ export async function fetchList({ id, navigate }) {
       }
     }
     // any other errors we will catch and render generic UnknownError
-    throw new Error({ response, message });
+    throw new Error(err);
   }
 }
 
-export async function fetchItemToEdit({ itemId, listId, navigate }) {
+export async function fetchItemToEdit({
+  itemId,
+  listId,
+  navigate,
+}: {
+  itemId: string;
+  listId: string;
+  navigate: (url: string) => void;
+}) {
   try {
     const {
       data: { item, list, categories, list_users },
@@ -154,7 +165,7 @@ export async function fetchItemToEdit({ itemId, listId, navigate }) {
     const read = item.read || false;
     const artist = item.artist || '';
     const album = item.album || '';
-    const dueBy = item.due_by ? formatDueBy(item.due_by) : '';
+    const dueBy = formatDueBy(item.due_by);
     const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
@@ -181,15 +192,15 @@ export async function fetchItemToEdit({ itemId, listId, navigate }) {
         category,
       },
     };
-  } catch ({ response }) {
-    if (response) {
-      if (response.status === 401) {
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('Item not found', {
           type: 'error',
         });
@@ -202,19 +213,27 @@ export async function fetchItemToEdit({ itemId, listId, navigate }) {
   }
 }
 
-export async function fetchItemsToEdit({ listId, search, navigate }) {
+export async function fetchItemsToEdit({
+  listId,
+  search,
+  navigate,
+}: {
+  listId: string;
+  search: string;
+  navigate: (url: string) => void;
+}) {
   try {
     const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
     return data;
-  } catch ({ response }) {
-    if (response) {
-      if (response.status === 401) {
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('One or more items not found', {
           type: 'error',
         });

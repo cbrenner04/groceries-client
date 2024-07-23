@@ -3,8 +3,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import NotPurchased from './NotPurchased';
+import { EListType } from '../../../../typings';
 
-async function setup(suppliedProps) {
+async function setup(
+  suppliedProps: { listType?: EListType; item?: { id: string; book_list_id?: string; read?: boolean } } = {},
+) {
   const user = userEvent.setup();
   const defaultProps = {
     item: {
@@ -18,7 +21,7 @@ async function setup(suppliedProps) {
     toggleItemRead: jest.fn(),
     handleItemRefresh: jest.fn(),
     handleItemEdit: jest.fn(),
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     pending: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -31,8 +34,8 @@ async function setup(suppliedProps) {
 describe('NotPurchased', () => {
   it('renders Bookmark when listType is BookList', async () => {
     const { container, buttons } = await setup({
-      listType: 'BookList',
-      item: { book_list_id: 1, id: 'id1', read: true },
+      listType: EListType.BOOK_LIST,
+      item: { book_list_id: 'id1', id: 'id1', read: true },
     });
 
     expect(container).toMatchSnapshot();
@@ -40,7 +43,7 @@ describe('NotPurchased', () => {
   });
 
   it('does not render Bookmark when listType is not BookList', async () => {
-    const { container, buttons } = await setup({ listType: 'GroceryList' });
+    const { container, buttons } = await setup({ listType: EListType.GROCERY_LIST });
 
     expect(container).toMatchSnapshot();
     buttons.forEach((button) => {
@@ -50,7 +53,7 @@ describe('NotPurchased', () => {
 
   it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', async () => {
     const { buttons, props, user } = await setup({
-      listType: 'BookList',
+      listType: EListType.BOOK_LIST,
       item: {
         book_list_id: 'id1',
         id: 'id1',
@@ -65,7 +68,7 @@ describe('NotPurchased', () => {
 
   it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', async () => {
     const { buttons, props, user } = await setup({
-      listType: 'BookList',
+      listType: EListType.BOOK_LIST,
       item: {
         book_list_id: 'id1',
         id: 'id1',

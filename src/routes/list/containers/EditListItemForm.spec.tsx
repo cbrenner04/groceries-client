@@ -5,12 +5,13 @@ import userEvent from '@testing-library/user-event';
 
 import EditListItemForm from './EditListItemForm';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-async function setup(listType = 'GroceryList') {
+async function setup(listType = EListType.GROCERY_LIST) {
   const user = userEvent.setup();
   const props = {
     navigate: jest.fn(),
@@ -117,7 +118,7 @@ describe('EditListItemForm', () => {
         },
       },
     });
-    const { buttons, user } = await setup('BookList');
+    const { buttons, user } = await setup(EListType.BOOK_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -135,7 +136,7 @@ describe('EditListItemForm', () => {
         },
       },
     });
-    const { buttons, user } = await setup('GroceryList');
+    const { buttons, user } = await setup(EListType.GROCERY_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -153,7 +154,7 @@ describe('EditListItemForm', () => {
         },
       },
     });
-    const { buttons, user } = await setup('MusicList');
+    const { buttons, user } = await setup(EListType.MUSIC_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -171,7 +172,7 @@ describe('EditListItemForm', () => {
         },
       },
     });
-    const { buttons, user } = await setup('ToDoList');
+    const { buttons, user } = await setup(EListType.TO_DO_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -183,7 +184,7 @@ describe('EditListItemForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       request: 'request failed',
     });
-    const { buttons, user } = await setup('ToDoList');
+    const { buttons, user } = await setup(EListType.TO_DO_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -195,7 +196,7 @@ describe('EditListItemForm', () => {
     axios.put = jest.fn().mockRejectedValue({
       message: 'request failed',
     });
-    const { buttons, user } = await setup('ToDoList');
+    const { buttons, user } = await setup(EListType.TO_DO_LIST);
 
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
@@ -218,7 +219,7 @@ describe('EditListItemForm', () => {
   });
 
   it('sets value for numberInSeries as a number when input', async () => {
-    const { findByLabelText, buttons, user } = await setup('BookList');
+    const { findByLabelText, buttons, user } = await setup(EListType.BOOK_LIST);
 
     await user.type(await findByLabelText('Number in series'), '2');
     await user.click(buttons[0]);

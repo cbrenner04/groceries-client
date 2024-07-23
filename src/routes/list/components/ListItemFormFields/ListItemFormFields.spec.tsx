@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListItemFormFields from './index';
 
-async function setup(listType, inputLabel) {
+async function setup(listType: string, inputLabel: string) {
   const user = userEvent.setup();
   const props = {
     setFormData: jest.fn(),

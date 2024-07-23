@@ -1,9 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { CategoryField, TextField, CheckboxField } from '../../../../components/FormFields';
 
-const GroceryFormFields = (props) => (
+interface IGroceryFormFieldsProps {
+  product: string;
+  quantity: string;
+  purchased?: boolean;
+  editForm?: boolean;
+  category?: string;
+  categories?: string[];
+  inputChangeHandler: ChangeEventHandler;
+}
+const GroceryFormFields: React.FC<IGroceryFormFieldsProps> = (props) => (
   <>
     <TextField
       name="product"
@@ -20,30 +28,20 @@ const GroceryFormFields = (props) => (
       placeholder="3 bags"
     />
     <CategoryField
-      category={props.category || ''}
-      categories={props.categories || []}
+      category={props.category ?? ''}
+      categories={props.categories ?? []}
       handleInput={props.inputChangeHandler}
     />
     {props.editForm && (
       <CheckboxField
         name="purchased"
         label="Purchased"
-        value={props.purchased || false}
+        value={props.purchased ?? false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
     )}
   </>
 );
-
-GroceryFormFields.propTypes = {
-  product: PropTypes.string.isRequired,
-  quantity: PropTypes.string.isRequired,
-  purchased: PropTypes.bool,
-  editForm: PropTypes.bool,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  inputChangeHandler: PropTypes.func.isRequired,
-};
 
 export default GroceryFormFields;

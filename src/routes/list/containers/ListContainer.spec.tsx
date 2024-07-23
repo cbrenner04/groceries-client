@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListContainer from './ListContainer';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -17,7 +18,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-function setup(suppliedProps = {}, listType = 'GroceryList') {
+function setup(suppliedProps = {}, listType = EListType.GROCERY_LIST) {
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',
@@ -160,7 +161,7 @@ describe('ListContainer', () => {
         list: {
           id: 'id1',
           name: 'foo',
-          type: 'GroceryList',
+          type: EListType.GROCERY_LIST,
           created_at: new Date('05/22/2020').toISOString(),
           completed: false,
           owner_id: 'id1',
@@ -179,7 +180,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -190,7 +191,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -210,7 +211,7 @@ describe('ListContainer', () => {
           list: {
             id: 'id1',
             name: 'foo',
-            type: 'GroceryList',
+            type: EListType.GROCERY_LIST,
             created_at: new Date('05/22/2020').toISOString(),
             completed: false,
             owner_id: 'id1',
@@ -229,7 +230,7 @@ describe('ListContainer', () => {
           list: {
             id: 'id1',
             name: 'foo',
-            type: 'GroceryList',
+            type: EListType.GROCERY_LIST,
             created_at: new Date('05/22/2020').toISOString(),
             completed: false,
             owner_id: 'id1',
@@ -248,7 +249,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -259,7 +260,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-    expect((await findByText('item new')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
@@ -307,7 +308,7 @@ describe('ListContainer', () => {
 
   it('does not render incomplete items when none exist', () => {
     // includedCategories come back from the server. this is the default
-    const { container } = setup({ notPurchasedItems: {}, includedCategories: [''] }, 'ToDoList');
+    const { container } = setup({ notPurchasedItems: {}, includedCategories: [''] }, EListType.TO_DO_LIST);
 
     expect(container).toMatchSnapshot();
   });
@@ -608,9 +609,9 @@ describe('ListContainer', () => {
   // TODO: why is this different?
   it('moves item to purchased when ToDo', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { findByText, findByTestId, user } = setup({}, 'ToDoList');
+    const { findByText, findByTestId, user } = setup({}, EListType.TO_DO_LIST);
 
-    expect((await findByText('whatever')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('whatever')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'non-purchased-item',
     );
@@ -619,7 +620,7 @@ describe('ListContainer', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect((await findByText('whatever')).parentElement.parentElement.parentElement).toHaveAttribute(
+    expect((await findByText('whatever')).parentElement?.parentElement?.parentElement).toHaveAttribute(
       'data-test-class',
       'purchased-item',
     );
@@ -630,8 +631,8 @@ describe('ListContainer', () => {
     const { findByText, findByTestId, user } = setup();
 
     expect(
-      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
-        .parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
     await user.click(await findByTestId('not-purchased-item-complete-id2'));
@@ -639,8 +640,8 @@ describe('ListContainer', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(
-      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
-        .parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
@@ -658,7 +659,8 @@ describe('ListContainer', () => {
 
     expect(await findByTestId('clear-filter')).toBeVisible();
     expect(
-      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
     await user.click(await findByTestId('not-purchased-item-complete-id5'));
@@ -668,7 +670,8 @@ describe('ListContainer', () => {
     expect(queryByTestId('clear-filter')).toBeNull();
     expect(await findByText('not purchased quantity foo not purchased product')).toBeVisible();
     expect(
-      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
@@ -677,11 +680,12 @@ describe('ListContainer', () => {
     const { findAllByRole, findByText, findByTestId, queryByText, findAllByText, user } = setup();
 
     expect(
-      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
-        .parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
-      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
 
     await user.click((await findAllByText('Select'))[0]);
@@ -697,11 +701,12 @@ describe('ListContainer', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
     expect(
-      (await findByText('not purchased quantity no category not purchased product')).parentElement.parentElement
-        .parentElement,
+      (await findByText('not purchased quantity no category not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(
-      (await findByText('not purchased quantity bar not purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('not purchased quantity bar not purchased product')).parentElement?.parentElement
+        ?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
     expect(queryByText('Bar')).toBeNull();
   });
@@ -790,11 +795,11 @@ describe('ListContainer', () => {
         user_id: 'id1',
       },
     });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, findByText, user } = setup();
 
     expect(
-      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -804,12 +809,12 @@ describe('ListContainer', () => {
 
     await waitFor(async () =>
       expect(
-        (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+        (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-purchased-item'),
     );
 
     expect(
-      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
@@ -846,7 +851,7 @@ describe('ListContainer', () => {
           user_id: 'id1',
         },
       });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findAllByRole, findByTestId, findByText, findAllByText, user } = setup({
       purchasedItems: [
         {
@@ -887,7 +892,7 @@ describe('ListContainer', () => {
     });
 
     expect(
-      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
     ).toHaveAttribute('data-test-class', 'purchased-item');
 
     await user.click((await findAllByText('Select'))[1]);
@@ -905,21 +910,21 @@ describe('ListContainer', () => {
 
     await waitFor(async () =>
       expect(
-        (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+        (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-purchased-item'),
     );
 
     expect(
-      (await findByText('purchased quantity foo purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity foo purchased product')).parentElement?.parentElement?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
     expect(
-      (await findByText('purchased quantity bar purchased product')).parentElement.parentElement.parentElement,
+      (await findByText('purchased quantity bar purchased product')).parentElement?.parentElement?.parentElement,
     ).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
   it('handles 401 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -934,7 +939,7 @@ describe('ListContainer', () => {
 
   it('handles 403 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -947,7 +952,7 @@ describe('ListContainer', () => {
 
   it('handles 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -960,7 +965,7 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -973,7 +978,7 @@ describe('ListContainer', () => {
 
   it('handles failed request on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -986,7 +991,7 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on refresh', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    axios.put = jest.fn().mockResolvedValue();
+    axios.put = jest.fn().mockResolvedValue(undefined);
     const { findByTestId, user } = setup();
 
     await user.click(await findByTestId('purchased-item-refresh-id1'));
@@ -999,7 +1004,7 @@ describe('ListContainer', () => {
 
   it('toggles read when item not purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { findByTestId, queryByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, queryByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1093,7 +1098,7 @@ describe('ListContainer', () => {
           ],
         },
       },
-      'BookList',
+      EListType.BOOK_LIST,
     );
 
     await user.click(await findByTestId('not-purchased-item-unread-id2'));
@@ -1106,7 +1111,7 @@ describe('ListContainer', () => {
 
   it('toggles read when item purchased', async () => {
     axios.put = jest.fn().mockResolvedValue({});
-    const { findByTestId, queryByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, queryByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('purchased-item-read-id1'));
 
@@ -1140,7 +1145,7 @@ describe('ListContainer', () => {
           },
         ],
       },
-      'BookList',
+      EListType.BOOK_LIST,
     );
 
     await user.click(await findByTestId('purchased-item-unread-id1'));
@@ -1235,7 +1240,7 @@ describe('ListContainer', () => {
           ],
         },
       },
-      'BookList',
+      EListType.BOOK_LIST,
     );
 
     await user.click((await findAllByText('Select'))[0]);
@@ -1258,7 +1263,7 @@ describe('ListContainer', () => {
 
   it('handles 401 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1271,7 +1276,7 @@ describe('ListContainer', () => {
 
   it('handles 403 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1282,7 +1287,7 @@ describe('ListContainer', () => {
 
   it('handles 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1293,7 +1298,7 @@ describe('ListContainer', () => {
 
   it('handles not 401, 403, 404 on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1304,7 +1309,7 @@ describe('ListContainer', () => {
 
   it('handles failed request on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 
@@ -1315,7 +1320,7 @@ describe('ListContainer', () => {
 
   it('handles unknown failure on read', async () => {
     axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { findByTestId, user } = setup({}, 'BookList');
+    const { findByTestId, user } = setup({}, EListType.BOOK_LIST);
 
     await user.click(await findByTestId('not-purchased-item-read-id2'));
 

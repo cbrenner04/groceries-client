@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
-import { listUsers } from '../../../prop-types';
 import FormSubmission from '../../../components/FormSubmission';
+import { EListType, IListUsers } from '../../../typings';
 
-const defaultFormState = {
+interface IListItemFormProps {
+  navigate: (path: string) => void;
+  userId: string;
+  listId: string;
+  listType: EListType;
+  listUsers?: IListUsers[];
+  handleItemAddition: (data: any) => void;
+  categories?: string[];
+}
+
+export const defaultFormState = {
   product: '',
   task: '',
   content: '',
@@ -24,12 +33,12 @@ const defaultFormState = {
   category: '',
 };
 
-function ListItemForm(props) {
+const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [formData, setFormData] = useState(defaultFormState);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const setData = ({ target: { name, value } }) => {
+  const setData = ({ target: { name, value } }: { target: { name: string; value: string | number } }) => {
     let newValue = value;
     if (name === 'numberInSeries') {
       newValue = Number(value);
@@ -38,7 +47,7 @@ function ListItemForm(props) {
     setFormData(data);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
     setPending(true);
     const postData = {
@@ -54,7 +63,7 @@ function ListItemForm(props) {
         album: formData.album,
         assignee_id: formData.assigneeId,
         due_by: formData.dueBy,
-        number_in_series: formData.numberInSeries || null,
+        number_in_series: formData.numberInSeries,
         category: formData.category.trim().toLowerCase(),
       },
     };
@@ -64,29 +73,29 @@ function ListItemForm(props) {
       setFormData(defaultFormState);
       setPending(false);
       toast('Item successfully added.', { type: 'info' });
-    } catch ({ response, request, message }) {
-      if (response) {
-        if (response.status === 401) {
+    } catch (err: any) {
+      if (err?.response) {
+        if (err?.response?.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(response.status)) {
+        } else if ([403, 404].includes(err?.response?.status)) {
           toast('List not found', { type: 'error' });
           props.navigate('/lists');
         } else {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+          const responseTextKeys = Object.keys(err?.response.data);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${err?.response.data[key]}`);
           let joinString;
-          if (props.listType === 'BookList' || props.listType === 'MusicList') {
+          if (props.listType === EListType.BOOK_LIST || props.listType === EListType.MUSIC_LIST) {
             joinString = ' or ';
           } else {
             joinString = ' and ';
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (request) {
+      } else if (err?.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(message, { type: 'error' });
+        toast(err?.message, { type: 'error' });
       }
     }
   };
@@ -109,10 +118,11 @@ function ListItemForm(props) {
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
           <ListItemFormFields
             formData={formData}
-            setFormData={setData}
-            categories={props.categories || []}
+            // TODO: pretty sure this is not what we want
+            setFormData={setData as unknown as ChangeEventHandler}
+            categories={props.categories ?? []}
             listType={props.listType}
-            listUsers={props.listUsers || []}
+            listUsers={props.listUsers ?? []}
           />
           <FormSubmission
             disabled={pending}
@@ -125,16 +135,6 @@ function ListItemForm(props) {
       </Collapse>
     </>
   );
-}
-
-ListItemForm.propTypes = {
-  navigate: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
-  listId: PropTypes.string.isRequired,
-  listType: PropTypes.string.isRequired,
-  listUsers: PropTypes.arrayOf(listUsers),
-  handleItemAddition: PropTypes.func.isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ListItemForm;

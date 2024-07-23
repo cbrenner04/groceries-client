@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import ToDo from './ToDo';
 
-function setup(suppliedProps) {
+function setup(suppliedProps: { editForm: boolean }) {
   const user = userEvent.setup();
   const defaultProps = {
     task: 'foo',

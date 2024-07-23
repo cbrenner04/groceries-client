@@ -6,18 +6,29 @@ import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
+import { IList, IListItem, IListUsers } from '../../typings';
 
 export default function List() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // TODO: figure out `promiseFn` typings
   return (
-    <Async promiseFn={fetchList} id={id} navigate={navigate}>
+    <Async promiseFn={fetchList as any} id={id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data) => (
+        {(data: {
+          currentUserId: string;
+          list: IList;
+          purchasedItems: IListItem[];
+          categories: string[];
+          listUsers: IListUsers[];
+          includedCategories: string[];
+          notPurchasedItems: Record<string, IListItem[]>;
+          permissions: string;
+        }) => (
           <ListContainer
             userId={data.currentUserId}
             list={data.list}

@@ -14,10 +14,10 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('List', () => {
-  const renderList = (newProps) => {
+  const renderList = () => {
     return render(
       <MemoryRouter>
-        <List {...newProps} />
+        <List />
       </MemoryRouter>,
     );
   };

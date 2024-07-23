@@ -6,19 +6,27 @@ import { fetchItemsToEdit } from './utils';
 import BulkEditListItemsForm from './containers/BulkEditListItemsForm';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
+import { IList, IListItem, IListUsers } from '../../typings';
 
-export default function BulkEditListItems() {
+const BulkEditListItems: React.FC = () => {
   const navigate = useNavigate();
   const { list_id } = useParams();
   const location = useLocation();
 
+  // TODO: figure out the `promiseFn` typings
   return (
-    <Async promiseFn={fetchItemsToEdit} listId={list_id} search={location.search} navigate={navigate}>
+    <Async promiseFn={fetchItemsToEdit as any} listId={list_id} search={location.search} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data) => (
+        {(data: {
+          list: IList;
+          lists: IList[];
+          items: IListItem[];
+          categories: string[];
+          list_users: IListUsers[];
+        }) => (
           <BulkEditListItemsForm
             navigate={navigate}
             list={data.list}
@@ -34,4 +42,6 @@ export default function BulkEditListItems() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default BulkEditListItems;

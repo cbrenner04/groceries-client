@@ -8,33 +8,43 @@ import ChangeOtherList from './ChangeOtherList';
 import { CategoryField, CheckboxField } from '../../../../components/FormFields';
 import IListUsers from '../../../../typings/IListUsers';
 
+interface IBulkEditListItemsFormFieldsFormDataProps {
+  copy: boolean;
+  move: boolean;
+  existingList: string;
+  newListName: string;
+  updateCurrentItems: boolean;
+  album?: string;
+  clearAlbum: boolean;
+  artist?: string;
+  clearArtist: boolean;
+  assigneeId?: string;
+  clearAssignee: boolean;
+  author?: string;
+  clearAuthor: boolean;
+  category?: string;
+  clearCategory: boolean;
+  dueBy?: string;
+  clearDueBy: boolean;
+  quantity?: string;
+  clearQuantity: boolean;
+  showNewListForm: boolean;
+  allComplete: boolean;
+}
+
 interface IBulkEditListItemsFormFieldsProps {
   listType: string;
-  formData: {
-    copy: boolean;
-    move: boolean;
-    existingList: string;
-    newListName: string;
-    updateCurrentItems: boolean;
-    album?: string;
-    clearAlbum: boolean;
-    artist?: string;
-    clearArtist: boolean;
-    assigneeId?: string;
-    clearAssignee: boolean;
-    author?: string;
-    clearAuthor: boolean;
-    category?: string;
-    clearCategory: boolean;
-    dueBy?: string;
-    clearDueBy: boolean;
-    quantity?: string;
-    clearQuantity: boolean;
-    showNewListForm: boolean;
-    allComplete: boolean;
-  };
+  formData: IBulkEditListItemsFormFieldsFormDataProps;
+  // handleInput: ({
+  //   target: { name, value, checked },
+  // }: {
+  //   target: { name: string; value: string | boolean; checked: boolean };
+  // }) => void;
   handleInput: ChangeEventHandler;
-  clearAttribute: (attribute: string, clearAttribute: string) => void;
+  clearAttribute: (
+    attribute: keyof IBulkEditListItemsFormFieldsFormDataProps,
+    clearAttribute: keyof IBulkEditListItemsFormFieldsFormDataProps,
+  ) => void;
   listUsers: IListUsers[];
   handleOtherListChange: (isCopy: boolean) => void;
   existingListsOptions: {

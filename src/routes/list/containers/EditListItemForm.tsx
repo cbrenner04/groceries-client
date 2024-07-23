@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 
-import { list, listItem, listUsers } from '../../../prop-types';
 import axios from '../../../utils/api';
-import ListItemFormFields from '../components/ListItemFormFields';
+import ListItemFormFields, { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
 import { itemName } from '../utils';
 import FormSubmission from '../../../components/FormSubmission';
+import { EListType, IList, IListUsers } from '../../../typings';
 
-function EditListItemForm(props) {
+interface IEditListItemFormProps {
+  navigate: (url: string) => void;
+  listUsers: IListUsers[];
+  item: IListITemsFormFieldsFormDataProps;
+  list: IList;
+  userId: string;
+}
+
+const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
   const [item, setItem] = useState(props.item);
-  const setData = ({ target: { name, value } }) => {
+  const setData = ({ target: { name, value } }: { target: { name: string; value: number | string } }) => {
     let newValue = value;
     /* istanbul ignore else */
     if (name === 'numberInSeries') {
@@ -22,7 +29,7 @@ function EditListItemForm(props) {
     setItem(data);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const putData = {
       list_item: {
@@ -41,7 +48,7 @@ function EditListItemForm(props) {
         due_by: item.dueBy,
         assignee_id: item.assigneeId,
         number_in_series: item.numberInSeries,
-        category: item.category.trim().toLowerCase(),
+        category: item.category?.trim().toLowerCase(),
         list_id: props.list.id,
       },
     };
@@ -49,29 +56,29 @@ function EditListItemForm(props) {
       await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, putData);
       toast('Item successfully updated', { type: 'info' });
       props.navigate(`/lists/${props.list.id}`);
-    } catch ({ response, request, message }) {
-      if (response) {
-        if (response.status === 401) {
+    } catch (err: any) {
+      if (err.response) {
+        if (err.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(response.status)) {
+        } else if ([403, 404].includes(err.response.status)) {
           toast('Item not found', { type: 'error' });
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(response.data);
-          const responseErrors = keys.map((key) => `${key} ${response.data[key]}`);
+          const keys = Object.keys(err.response.data);
+          const responseErrors = keys.map((key) => `${key} ${err.response.data[key]}`);
           let joinString;
-          if (props.list.type === 'BookList' || props.list.type === 'MusicList') {
+          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
             joinString = ' or ';
           } else {
             joinString = ' and ';
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (request) {
+      } else if (err.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(message, { type: 'error' });
+        toast(err.message, { type: 'error' });
       }
     }
   };
@@ -83,7 +90,8 @@ function EditListItemForm(props) {
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           formData={item}
-          setFormData={setData}
+          // TODO: i don't think this is what we want
+          setFormData={setData as unknown as ChangeEventHandler}
           categories={props.list.categories}
           listType={props.list.type}
           listUsers={props.listUsers}
@@ -98,14 +106,6 @@ function EditListItemForm(props) {
       </Form>
     </>
   );
-}
-
-EditListItemForm.propTypes = {
-  navigate: PropTypes.func.isRequired,
-  listUsers: PropTypes.arrayOf(listUsers).isRequired,
-  item: listItem.isRequired,
-  list: list.isRequired,
-  userId: PropTypes.string.isRequired,
 };
 
 export default EditListItemForm;

@@ -6,18 +6,20 @@ import { fetchItemToEdit } from './utils';
 import EditListItemForm from './containers/EditListItemForm';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
+import { IList, IListItem, IListUsers } from '../../typings';
 
-function EditListItem() {
+const EditListItem: React.FC = () => {
   const navigate = useNavigate();
   const { id, list_id } = useParams();
 
+  // TODO: figure out `promiseFn` typings
   return (
-    <Async promiseFn={fetchItemToEdit} itemId={id} listId={list_id} navigate={navigate}>
+    <Async promiseFn={fetchItemToEdit as any} itemId={id} listId={list_id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data) => (
+        {(data: { list: IList; item: IListItem; listUsers: IListUsers[]; userId: string }) => (
           <EditListItemForm
             navigate={navigate}
             listUsers={data.listUsers}
@@ -32,6 +34,6 @@ function EditListItem() {
       </Async.Rejected>
     </Async>
   );
-}
+};
 
 export default EditListItem;

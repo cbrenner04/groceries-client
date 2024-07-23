@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListItemForm from './ListItemForm';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -16,7 +17,7 @@ function setup(suppliedProps = {}) {
     navigate: jest.fn(),
     userId: 'id1',
     listId: 'id1',
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     listUsers: [
       {
         id: 'id1',
@@ -145,7 +146,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup({ listType: 'GroceryList' });
+    const { findAllByRole, user } = setup({ listType: EListType.GROCERY_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 

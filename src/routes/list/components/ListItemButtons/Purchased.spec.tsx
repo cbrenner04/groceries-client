@@ -3,8 +3,16 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Purchased from './Purchased';
+import { EListType } from '../../../../typings';
 
-async function setup(suppliedProps) {
+async function setup(
+  suppliedProps: {
+    listType?: EListType;
+    multiSelect?: boolean;
+    item?: { id: string; book_list_id?: string; read?: boolean };
+    selectedItems?: { id: string }[];
+  } = {},
+) {
   const user = userEvent.setup();
   const defaultProps = {
     item: {
@@ -17,10 +25,10 @@ async function setup(suppliedProps) {
     handlePurchaseOfItem: jest.fn(),
     toggleItemRead: jest.fn(),
     handleItemRefresh: jest.fn(),
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     handleItemEdit: jest.fn(),
     multiSelect: false,
-    selectedItems: [],
+    selectedItems: [{ id: 'foo' }],
     pending: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -32,7 +40,7 @@ async function setup(suppliedProps) {
 
 describe('Purchased', () => {
   it('renders Refresh and does not render Bookmark when listType is GroceryList', async () => {
-    const { container, buttons } = await setup({ listType: 'GroceryList' });
+    const { container, buttons } = await setup({ listType: EListType.GROCERY_LIST });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -42,7 +50,7 @@ describe('Purchased', () => {
   });
 
   it('renders Refresh and does not render Bookmark when listType is ToDoList', async () => {
-    const { container, buttons } = await setup({ listType: 'ToDoList' });
+    const { container, buttons } = await setup({ listType: EListType.TO_DO_LIST });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -52,7 +60,7 @@ describe('Purchased', () => {
   });
 
   it('does not render Refresh and does render Bookmark when listType is BookList', async () => {
-    const { container, buttons } = await setup({ listType: 'BookList' });
+    const { container, buttons } = await setup({ listType: EListType.BOOK_LIST });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
@@ -62,7 +70,7 @@ describe('Purchased', () => {
   });
 
   it('does not render Refresh or Bookmark when listType is MusicList', async () => {
-    const { container, buttons } = await setup({ listType: 'MusicList' });
+    const { container, buttons } = await setup({ listType: EListType.MUSIC_LIST });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(2);
@@ -71,7 +79,7 @@ describe('Purchased', () => {
   });
 
   it('calls handleItemRefresh when listType is GroceryList and Refresh is clicked', async () => {
-    const { buttons, props, user } = await setup({ listType: 'GroceryList' });
+    const { buttons, props, user } = await setup({ listType: EListType.GROCERY_LIST });
 
     await user.click(buttons[0]);
 
@@ -79,7 +87,7 @@ describe('Purchased', () => {
   });
 
   it('calls handleItemRefresh when listType is ToDoList and Refresh is clicked', async () => {
-    const { buttons, props, user } = await setup({ listType: 'ToDoList' });
+    const { buttons, props, user } = await setup({ listType: EListType.TO_DO_LIST });
 
     await user.click(buttons[0]);
 
@@ -88,7 +96,7 @@ describe('Purchased', () => {
 
   it('calls toggleItemRead when listType is BookList and read is false and Bookmark is clicked', async () => {
     const { buttons, props, user } = await setup({
-      listType: 'BookList',
+      listType: EListType.BOOK_LIST,
       item: {
         book_list_id: 'id1',
         id: 'id1',
@@ -103,7 +111,7 @@ describe('Purchased', () => {
 
   it('calls toggleItemRead when listType is BookList and read is true and Bookmark is clicked', async () => {
     const { buttons, props, user } = await setup({
-      listType: 'BookList',
+      listType: EListType.BOOK_LIST,
       item: {
         book_list_id: 'id1',
         id: 'id1',

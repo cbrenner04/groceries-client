@@ -1,8 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
-const Filtered = ({ filter, handleClearFilter }) => (
+interface IFilteredProps {
+  filter: string;
+  handleClearFilter: MouseEventHandler;
+}
+
+const Filtered: React.FC<IFilteredProps> = ({ filter, handleClearFilter }) => (
   <>
     <span id="filter-title">Filtering by:</span>
     <Button data-test-id="clear-filter" variant="outline-primary" id="filter-button" onClick={handleClearFilter}>
@@ -10,10 +14,5 @@ const Filtered = ({ filter, handleClearFilter }) => (
     </Button>
   </>
 );
-
-Filtered.propTypes = {
-  filter: PropTypes.string.isRequired,
-  handleClearFilter: PropTypes.func.isRequired,
-};
 
 export default Filtered;

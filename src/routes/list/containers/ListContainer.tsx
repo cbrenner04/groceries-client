@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Button } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
 
-import { list, listItem, listUsers } from '../../../prop-types';
 import { capitalize } from '../../../utils/format';
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
@@ -16,18 +14,31 @@ import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList } from '../utils';
 import { usePolling } from '../../../hooks';
+import { IList, IListItem, IListUsers } from '../../../typings';
+import { AxiosResponse } from 'axios';
 
-function ListContainer(props) {
+interface IListContainerProps {
+  userId: string;
+  list: IList;
+  purchasedItems: IListItem[];
+  categories: string[];
+  listUsers: IListUsers[];
+  includedCategories: string[];
+  notPurchasedItems: Record<string, IListItem[]>;
+  permissions: string;
+}
+
+const ListContainer: React.FC<IListContainerProps> = (props) => {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
   const [purchasedItems, setPurchasedItems] = useState(props.purchasedItems);
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
-  const [itemsToDelete, setItemsToDelete] = useState([]);
+  const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([] as IListItem[]);
   const [pending, setPending] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
   const [listUsers, setListUsers] = useState(props.listUsers);
@@ -35,35 +46,39 @@ function ListContainer(props) {
 
   usePolling(async () => {
     try {
-      const {
-        purchasedItems: updatedPurchasedItems,
-        categories: updatedCategories,
-        listUsers: updatedListUsers,
-        includedCategories: updatedIncludedCategories,
-        notPurchasedItems: updatedNotPurchasedItems,
-      } = await fetchList({ id: props.list.id, navigate });
-      const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-      const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
-      const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
-      if (!purchasedItemsSame) {
-        setPurchasedItems(updatedPurchasedItems);
-      }
-      if (!notPurchasedItemsSame) {
-        setNotPurchasedItems(updatedNotPurchasedItems);
-      }
-      if (!purchasedItemsSame || !notPurchasedItemsSame) {
-        setCategories(updatedCategories);
-        setIncludedCategories(updatedIncludedCategories);
-        if (!filter) {
-          setDisplayedCategories(updatedIncludedCategories);
+      const fetchResponse = await fetchList({ id: props.list.id, navigate });
+      if (fetchResponse) {
+        const {
+          purchasedItems: updatedPurchasedItems,
+          categories: updatedCategories,
+          listUsers: updatedListUsers,
+          includedCategories: updatedIncludedCategories,
+          notPurchasedItems: updatedNotPurchasedItems,
+        } = fetchResponse;
+        const isSameSet = (newSet: Record<string, IListItem[]>, oldSet: IListItem[] | Record<string, IListItem[]>) =>
+          JSON.stringify(newSet) === JSON.stringify(oldSet);
+        const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
+        const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
+        if (!purchasedItemsSame) {
+          setPurchasedItems(updatedPurchasedItems);
         }
-        setListUsers(updatedListUsers);
+        if (!notPurchasedItemsSame) {
+          setNotPurchasedItems(updatedNotPurchasedItems);
+        }
+        if (!purchasedItemsSame || !notPurchasedItemsSame) {
+          setCategories(updatedCategories);
+          setIncludedCategories(updatedIncludedCategories);
+          if (!filter) {
+            setDisplayedCategories(updatedIncludedCategories);
+          }
+          setListUsers(updatedListUsers);
+        }
       }
-    } catch ({ response }) {
+    } catch (err: any) {
       // `response` will not be undefined if the response from the server comes back
       // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = response
+      const errorMessage = err.response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -73,14 +88,16 @@ function ListContainer(props) {
     }
   }, 3000);
 
-  const handleAddItem = (data) => {
+  const handleAddItem = (data: IListItem[]) => {
     // this is to deal the ListItemForm being passed this function
     const items = Array.isArray(data) ? data : [data];
     let updatedNotPurchasedItems = notPurchasedItems;
-    const itemCategories = [];
+    const itemCategories: string[] = [];
     items.forEach((item) => {
-      const category = item.category || '';
+      const category = item.category ?? '';
       itemCategories.push(category);
+      // TODO: why????
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!updatedNotPurchasedItems[category]) {
         updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $set: [item] } });
       } else {
@@ -108,11 +125,11 @@ function ListContainer(props) {
 
   const listItemPath = () => `/lists/${props.list.id}/list_items`;
 
-  const removeItemsFromNotPurchased = (items) => {
+  const removeItemsFromNotPurchased = (items: IListItem[]) => {
     let updatedNotPurchasedItems = notPurchasedItems;
-    const itemCategories = [];
+    const itemCategories: string[] = [];
     items.forEach((item) => {
-      const category = item.category || '';
+      const category = item.category ?? '';
       itemCategories.push(category);
       const itemIndex = updatedNotPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
       updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
@@ -131,12 +148,14 @@ function ListContainer(props) {
       }
     });
     setIncludedCategories(updateIncludedCats);
+    // TODO: why???? this is so stupid. it is definitely not always falsy
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (updateDisplayedCategories) {
       setDisplayedCategories(updateIncludedCats);
     }
   };
 
-  const moveItemsToPurchased = (items) => {
+  const moveItemsToPurchased = (items: IListItem[]) => {
     removeItemsFromNotPurchased(items);
     const updatedItems = items.map((item) => {
       if (['ToDoList', 'SimpleList'].includes(props.list.type)) {
@@ -150,30 +169,30 @@ function ListContainer(props) {
     setPurchasedItems(sortItems(props.list.type, updatedPurchasedItems));
   };
 
-  const failure = ({ response, request, message }) => {
-    if (response) {
-      if (response.status === 401) {
+  const failure = (err: any) => {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('Item not found', { type: 'error' });
       } else {
-        const responseTextKeys = Object.keys(response.data);
-        const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+        const responseTextKeys = Object.keys(err.response.data);
+        const responseErrors = responseTextKeys.map((key) => `${key} ${err.response.data[key]}`);
         toast(responseErrors.join(' and '), { type: 'error' });
       }
-    } else if (request) {
+    } else if (err.request) {
       toast('Something went wrong', { type: 'error' });
     } else {
-      toast(message, { type: 'error' });
+      toast(err.message, { type: 'error' });
     }
   };
 
-  const pluralize = (items) => {
+  const pluralize = (items: IListItem[]) => {
     return items.length > 1 ? 'Items' : 'Item';
   };
 
-  const handleItemPurchase = async (item) => {
+  const handleItemPurchase = async (item: IListItem) => {
     const items = selectedItems.length ? selectedItems : [item];
     const filteredItems = items.filter((i) => !i.purchased && !i.completed);
     const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
@@ -195,7 +214,7 @@ function ListContainer(props) {
     }
   };
 
-  const toggleRead = async (item) => {
+  const toggleRead = async (item: IListItem) => {
     const items = selectedItems.length ? selectedItems : [item];
     const updateRequests = items.map((item) => {
       const isRead = !item.read;
@@ -217,14 +236,11 @@ function ListContainer(props) {
           newItems[itemIndex] = item;
           newPurchasedItems = update(newPurchasedItems, { $set: newItems });
         } else {
-          const itemsInCat = newNotPurchasedItems[item.category];
-          /* istanbul ignore else */
-          if (itemsInCat) {
-            const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
-            const newItemsInCat = [...itemsInCat];
-            newItemsInCat[itemIndex] = item;
-            newNotPurchasedItems = update(newNotPurchasedItems, { [item.category]: { $set: newItemsInCat } });
-          }
+          const itemsInCat = newNotPurchasedItems[item.category ?? ''];
+          const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
+          const newItemsInCat = [...itemsInCat];
+          newItemsInCat[itemIndex] = item;
+          newNotPurchasedItems = update(newNotPurchasedItems, { [item.category ?? '']: { $set: newItemsInCat } });
         }
       });
       setPurchasedItems(newPurchasedItems);
@@ -238,7 +254,7 @@ function ListContainer(props) {
     }
   };
 
-  const removeItemsFromPurchased = (items) => {
+  const removeItemsFromPurchased = (items: IListItem[]) => {
     let updatePurchasedItems = purchasedItems;
     items.forEach((item) => {
       const itemIndex = updatePurchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
@@ -247,12 +263,12 @@ function ListContainer(props) {
     setPurchasedItems(updatePurchasedItems);
   };
 
-  const handleRefresh = async (item) => {
+  const handleRefresh = async (item: IListItem) => {
     setPending(true);
     const items = selectedItems.length ? selectedItems : [item];
-    const filteredItems = items.filter((item) => item.purchased || item.completed);
-    const createNewItemRequests = [];
-    const updateOldItemRequests = [];
+    const filteredItems = items.filter((item) => item.purchased ?? item.completed);
+    const createNewItemRequests: Promise<AxiosResponse>[] = [];
+    const updateOldItemRequests: Promise<AxiosResponse>[] = [];
     filteredItems.forEach((item) => {
       const newItem = {
         user_id: item.user_id,
@@ -264,10 +280,9 @@ function ListContainer(props) {
         completed: false,
         assignee_id: item.assignee_id,
         due_by: item.due_by,
-        category: item.category || '',
+        category: item.category ?? '',
       };
-      const postData = {};
-      postData.list_item = newItem;
+      const postData: Record<'list_item', typeof newItem> = { list_item: newItem };
       createNewItemRequests.push(axios.post(listItemPath(), postData));
       updateOldItemRequests.push(
         axios.put(`${listItemPath()}/${item.id}`, {
@@ -292,7 +307,7 @@ function ListContainer(props) {
     }
   };
 
-  const handleDelete = (item) => {
+  const handleDelete = (item: IListItem) => {
     const items = selectedItems.length ? selectedItems : [item];
     setItemsToDelete(items);
     setShowDeleteConfirm(true);
@@ -303,8 +318,8 @@ function ListContainer(props) {
     const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath()}/${item.id}`));
     try {
       await Promise.all(deleteRequests);
-      const notPurchasedDeletedItems = [];
-      const purchasedDeletedItems = [];
+      const notPurchasedDeletedItems: IListItem[] = [];
+      const purchasedDeletedItems: IListItem[] = [];
       itemsToDelete.forEach((item) => {
         if (item.completed || item.purchased) {
           purchasedDeletedItems.push(item);
@@ -324,7 +339,7 @@ function ListContainer(props) {
     }
   };
 
-  const handleItemSelect = (item) => {
+  const handleItemSelect = (item: IListItem) => {
     const itemIds = selectedItems.map((i) => i.id);
     let updatedItems;
     if (itemIds.includes(item.id)) {
@@ -335,7 +350,7 @@ function ListContainer(props) {
     setSelectedItems(updatedItems);
   };
 
-  const handleItemEdit = async (item) => {
+  const handleItemEdit = async (item: IListItem) => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
       navigate(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
@@ -371,10 +386,13 @@ function ListContainer(props) {
           <CategoryFilter
             categories={includedCategories}
             filter={filter}
-            handleCategoryFilter={({ target: { name } }) => {
-              setFilter(name);
-              setDisplayedCategories([name]);
-            }}
+            // TODO: figure out typing
+            handleCategoryFilter={
+              (({ target: { name } }: { target: { name: string } }) => {
+                setFilter(name);
+                setDisplayedCategories([name]);
+              }) as unknown as MouseEventHandler
+            }
             handleClearFilter={() => {
               setFilter('');
               setDisplayedCategories(includedCategories);
@@ -401,26 +419,27 @@ function ListContainer(props) {
       {displayedCategories.sort().map((category) => (
         <ListGroup className="mb-3" key={category}>
           {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
-          {notPurchasedItems[category] &&
-            notPurchasedItems[category].map((item) => (
-              <ListItem
-                item={item}
-                key={item.id}
-                purchased={false}
-                handleItemDelete={handleDelete}
-                handlePurchaseOfItem={handleItemPurchase}
-                handleItemRefresh={handleRefresh}
-                listType={props.list.type}
-                listUsers={props.listUsers}
-                permission={props.permissions}
-                multiSelect={incompleteMultiSelect}
-                handleItemSelect={handleItemSelect}
-                toggleItemRead={toggleRead}
-                handleItemEdit={handleItemEdit}
-                selectedItems={selectedItems}
-                pending={pending}
-              />
-            ))}
+          {// TODO: again, why?
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          notPurchasedItems[category]?.map((item) => (
+            <ListItem
+              item={item}
+              key={item.id}
+              purchased={false}
+              handleItemDelete={handleDelete}
+              handlePurchaseOfItem={handleItemPurchase}
+              handleItemRefresh={handleRefresh}
+              listType={props.list.type}
+              listUsers={props.listUsers}
+              permission={props.permissions}
+              multiSelect={incompleteMultiSelect}
+              handleItemSelect={handleItemSelect}
+              toggleItemRead={toggleRead}
+              handleItemEdit={handleItemEdit}
+              selectedItems={selectedItems}
+              pending={pending}
+            />
+          ))}
         </ListGroup>
       ))}
       <br />
@@ -473,17 +492,6 @@ function ListContainer(props) {
       />
     </>
   );
-}
-
-ListContainer.propTypes = {
-  userId: PropTypes.string.isRequired,
-  list: list.isRequired,
-  purchasedItems: PropTypes.arrayOf(listItem).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  listUsers: PropTypes.arrayOf(listUsers).isRequired,
-  includedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  notPurchasedItems: PropTypes.objectOf(PropTypes.arrayOf(listItem)).isRequired,
-  permissions: PropTypes.string.isRequired,
 };
 
 export default ListContainer;

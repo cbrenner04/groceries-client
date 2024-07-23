@@ -1,9 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
 
-const MusicFormFields = (props) => (
+interface IMusicFormFieldsProps {
+  title: string;
+  artist: string;
+  album: string;
+  purchased?: boolean;
+  editForm?: boolean;
+  category?: string;
+  categories?: string[];
+  inputChangeHandler: ChangeEventHandler;
+}
+
+const MusicFormFields: React.FC<IMusicFormFieldsProps> = (props) => (
   <>
     <TextField
       name="title"
@@ -27,31 +37,20 @@ const MusicFormFields = (props) => (
       placeholder="Mack Daddy"
     />
     <CategoryField
-      category={props.category || ''}
-      categories={props.categories || []}
+      category={props.category ?? ''}
+      categories={props.categories ?? []}
       handleInput={props.inputChangeHandler}
     />
     {props.editForm && (
       <CheckboxField
         name="purchased"
         label="Purchased"
-        value={props.purchased || false}
+        value={props.purchased ?? false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
     )}
   </>
 );
-
-MusicFormFields.propTypes = {
-  title: PropTypes.string.isRequired,
-  artist: PropTypes.string.isRequired,
-  album: PropTypes.string.isRequired,
-  purchased: PropTypes.bool,
-  editForm: PropTypes.bool,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  inputChangeHandler: PropTypes.func.isRequired,
-};
 
 export default MusicFormFields;

@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BulkEditListItemsFormFields from './index';
-import { EListType } from '../../../../typings/ListTypeEnum';
+import { EListType } from '../../../../typings';
 
 const defaultFormData = {
   copy: false,

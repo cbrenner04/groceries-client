@@ -1,10 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler } from 'react';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
-import { listUsers } from '../../../../prop-types';
+import { IListUsers } from '../../../../typings';
 
-const ToDoFormFields = (props) => (
+interface IToDoFormFieldsProps {
+  task: string;
+  assigneeId: string;
+  dueBy: string;
+  completed?: boolean;
+  listUsers: IListUsers[];
+  editForm?: boolean;
+  category?: string;
+  categories?: string[];
+  inputChangeHandler: ChangeEventHandler;
+}
+
+const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props) => (
   <>
     <TextField
       name="task"
@@ -29,32 +40,20 @@ const ToDoFormFields = (props) => (
       placeholder="mm/dd/yyyy"
     />
     <CategoryField
-      category={props.category || ''}
-      categories={props.categories || []}
+      category={props.category ?? ''}
+      categories={props.categories ?? []}
       handleInput={props.inputChangeHandler}
     />
     {props.editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed || false}
+        value={props.completed ?? false}
         handleChange={props.inputChangeHandler}
         classes="mb-3"
       />
     )}
   </>
 );
-
-ToDoFormFields.propTypes = {
-  task: PropTypes.string.isRequired,
-  assigneeId: PropTypes.string.isRequired,
-  dueBy: PropTypes.string.isRequired,
-  completed: PropTypes.bool,
-  listUsers: PropTypes.arrayOf(listUsers).isRequired,
-  editForm: PropTypes.bool,
-  category: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.string),
-  inputChangeHandler: PropTypes.func.isRequired,
-};
 
 export default ToDoFormFields;

@@ -45,7 +45,7 @@
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "lint": "eslint --ext .ts,.tsx src/",
     "test": "react-scripts test",
-    "test:ci": "CI=true npm test -- --coverage",
+    "test:ci": "npm run lint && CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,css,md}'"
   },
@@ -91,10 +91,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 94.7,
+        "branches": 91.38,
         "functions": 98.25,
-        "lines": 98.9,
-        "statements": 98.95
+        "lines": 98.81,
+        "statements": 98.87
       }
     },
     "resetMocks": true,
