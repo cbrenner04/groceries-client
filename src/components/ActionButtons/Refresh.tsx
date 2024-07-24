@@ -6,7 +6,7 @@ interface IRefreshProps {
   testID: string;
   style?: CSSProperties;
   disabled?: boolean;
-  classes?: '';
+  classes?: string;
 }
 
 const Refresh: React.FC<IRefreshProps> = ({ handleClick, testID, style = {}, disabled = false, classes = '' }) => (

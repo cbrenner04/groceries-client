@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import React, { ChangeEventHandler, FormEventHandler, ChangeEvent, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -6,14 +6,14 @@ import update from 'immutability-helper';
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IListUsers } from '../../../typings';
+import { EListType, IListUser } from '../../../typings';
 
 interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;
   listType: EListType;
-  listUsers?: IListUsers[];
+  listUsers?: IListUser[];
   handleItemAddition: (data: any) => void;
   categories?: string[];
 }
@@ -38,8 +38,8 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const setData = ({ target: { name, value } }: { target: { name: string; value: string | number } }) => {
-    let newValue = value;
+  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+    let newValue: string | number = value;
     if (name === 'numberInSeries') {
       newValue = Number(value);
     }

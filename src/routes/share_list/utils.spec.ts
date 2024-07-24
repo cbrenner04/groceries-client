@@ -30,7 +30,7 @@ describe('utils', () => {
         },
       });
 
-      expect(await fetchData({ listId: 1, navigate })).toStrictEqual({
+      expect(await fetchData({ listId: '1', navigate })).toStrictEqual({
         name: 'foo',
         invitableUsers: [{ id: 5, email: 'foobar@example.com' }],
         listId: 1,
@@ -61,7 +61,7 @@ describe('utils', () => {
         },
       });
 
-      await fetchData({ listId: 1, navigate });
+      await fetchData({ listId: '1', navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');
@@ -86,7 +86,7 @@ describe('utils', () => {
         },
       });
 
-      await fetchData({ listId: 1, navigate });
+      await fetchData({ listId: '1', navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');
@@ -95,7 +95,7 @@ describe('utils', () => {
     it('handles 401', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
 
-      await fetchData({ listId: 1, navigate });
+      await fetchData({ listId: '1', navigate });
 
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
@@ -104,7 +104,7 @@ describe('utils', () => {
     it('handles 403', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
 
-      await fetchData({ listId: 1, navigate });
+      await fetchData({ listId: '1', navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');
@@ -113,7 +113,7 @@ describe('utils', () => {
     it('handles 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
 
-      await fetchData({ listId: 1, navigate });
+      await fetchData({ listId: '1', navigate });
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');
@@ -122,7 +122,7 @@ describe('utils', () => {
     it('handles not 401, 403, 404', () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchData({ listId: 1, navigate })).rejects.toThrow();
+      expect(fetchData({ listId: '1', navigate })).rejects.toThrow();
     });
   });
 });

@@ -1,10 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, MouseEventHandler } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
 import { TextField } from '../../../components/FormFields';
 
-function MergeModal({ showModal, clearModal, listNames, mergeName, handleMergeConfirm, handleMergeNameChange }) {
+interface IMergeModalProps {
+  showModal: boolean;
+  clearModal: () => void;
+  listNames: string;
+  mergeName: string;
+  handleMergeConfirm: MouseEventHandler;
+  handleMergeNameChange: ChangeEventHandler;
+}
+
+const MergeModal: React.FC<IMergeModalProps> = ({
+  showModal,
+  clearModal,
+  listNames,
+  mergeName,
+  handleMergeConfirm,
+  handleMergeNameChange,
+}) => {
   return (
     <Modal show={showModal} onHide={clearModal}>
       <Modal.Header closeButton>
@@ -37,15 +52,6 @@ function MergeModal({ showModal, clearModal, listNames, mergeName, handleMergeCo
       </Modal.Footer>
     </Modal>
   );
-}
-
-MergeModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
-  clearModal: PropTypes.func.isRequired,
-  listNames: PropTypes.string.isRequired,
-  mergeName: PropTypes.string.isRequired,
-  handleMergeConfirm: PropTypes.func.isRequired,
-  handleMergeNameChange: PropTypes.func.isRequired,
 };
 
 export default MergeModal;

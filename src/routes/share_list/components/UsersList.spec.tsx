@@ -56,16 +56,16 @@ describe('UsersList', () => {
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('accepted-user-id1')).toBeNull();
-    expect((await findByTestId('accepted-user-id2')).firstChild.children[1].firstChild).toHaveAttribute(
+    expect((await findByTestId('accepted-user-id2')).children[0].children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-write',
     );
-    expect((await findByTestId('accepted-user-id2')).firstChild.children[1].firstChild).toHaveClass('badge');
-    expect((await findByTestId('accepted-user-id3')).firstChild.children[1].firstChild).toHaveAttribute(
+    expect((await findByTestId('accepted-user-id2')).children[0].children[1].firstChild).toHaveClass('badge');
+    expect((await findByTestId('accepted-user-id3')).children[0].children[1].firstChild).toHaveAttribute(
       'data-test-id',
       'perm-read',
     );
-    expect((await findByTestId('accepted-user-id3')).firstChild.children[1].firstChild).toHaveClass('badge');
+    expect((await findByTestId('accepted-user-id3')).children[0].children[1].firstChild).toHaveClass('badge');
   });
 
   it('does not render read and write badges when user is not owner', async () => {

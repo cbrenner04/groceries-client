@@ -1,11 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, FormEventHandler } from 'react';
 import { Form } from 'react-bootstrap';
 
 import { PasswordField } from '../../../components/FormFields';
 import FormSubmission from '../../../components/FormSubmission';
 
-const PasswordForm = (props) => (
+interface IPasswordFormProps {
+  password: string;
+  passwordChangeHandler: ChangeEventHandler;
+  passwordConfirmation: string;
+  passwordConfirmationChangeHandler: ChangeEventHandler;
+  submissionHandler: FormEventHandler;
+}
+
+const PasswordForm: React.FC<IPasswordFormProps> = (props) => (
   <Form onSubmit={props.submissionHandler} autoComplete="off" data-test-id="password-form">
     <PasswordField
       name="password"
@@ -24,13 +31,5 @@ const PasswordForm = (props) => (
     <FormSubmission submitText="Set my password" displayCancelButton={false} cancelAction={() => undefined} />
   </Form>
 );
-
-PasswordForm.propTypes = {
-  password: PropTypes.string.isRequired,
-  passwordChangeHandler: PropTypes.func.isRequired,
-  passwordConfirmation: PropTypes.string.isRequired,
-  passwordConfirmationChangeHandler: PropTypes.func.isRequired,
-  submissionHandler: PropTypes.func.isRequired,
-};
 
 export default PasswordForm;

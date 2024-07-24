@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 
 import ListFormFields from '../components/ListFormFields';
 import FormSubmission from '../../../components/FormSubmission';
+import { EListType, IList } from '../../../typings';
 
-function ListForm({ onFormSubmit, pending }) {
-  const defaultListType = 'GroceryList';
+interface IListFormProps {
+  onFormSubmit: (list: IList) => Promise<void>;
+  pending: boolean;
+}
+
+const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }) => {
+  const defaultListType = EListType.GROCERY_LIST;
   const [name, setName] = useState('');
-  const [type, setType] = useState(defaultListType);
+  const [type, setType] = useState(defaultListType as EListType);
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onFormSubmit({ name, type });
+    // TODO: figure this out.
+    await onFormSubmit({ name, type } as IList);
     setName('');
     setType(defaultListType);
   };
@@ -30,8 +36,8 @@ function ListForm({ onFormSubmit, pending }) {
           <ListFormFields
             name={name}
             type={type}
-            handleNameChange={({ target: { value } }) => setName(value)}
-            handleTypeChange={({ target: { value } }) => setType(value)}
+            handleNameChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setName(value)}
+            handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setType(value as EListType)}
           />
           <FormSubmission
             disabled={pending}
@@ -44,11 +50,6 @@ function ListForm({ onFormSubmit, pending }) {
       </Collapse>
     </>
   );
-}
-
-ListForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
 };
 
 export default ListForm;

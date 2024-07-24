@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useState } from 'react';
+import React, { ChangeEventHandler, ChangeEvent, FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -7,11 +7,11 @@ import axios from '../../../utils/api';
 import ListItemFormFields, { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
 import { itemName } from '../utils';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IList, IListUsers } from '../../../typings';
+import { EListType, IList, IListUser } from '../../../typings';
 
 interface IEditListItemFormProps {
   navigate: (url: string) => void;
-  listUsers: IListUsers[];
+  listUsers: IListUser[];
   item: IListITemsFormFieldsFormDataProps;
   list: IList;
   userId: string;
@@ -19,8 +19,8 @@ interface IEditListItemFormProps {
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
   const [item, setItem] = useState(props.item);
-  const setData = ({ target: { name, value } }: { target: { name: string; value: number | string } }) => {
-    let newValue = value;
+  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+    let newValue: string | number = value;
     /* istanbul ignore else */
     if (name === 'numberInSeries') {
       newValue = Number(value);
@@ -29,7 +29,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
     setItem(data);
   };
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const putData = {
       list_item: {

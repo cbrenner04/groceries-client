@@ -97,7 +97,6 @@ exports[`ShareListForm renders 1`] = `
             <span
               class="badge bg-primary"
               data-test-id="perm-read"
-              variant="primary"
             >
               read
             </span>
@@ -164,9 +163,8 @@ exports[`ShareListForm renders 1`] = `
             class="pt-1 col-md-4"
           >
             <span
-              class="badge bg-primary"
+              class="badge bg-success"
               data-test-id="perm-write"
-              variant="success"
             >
               write
             </span>

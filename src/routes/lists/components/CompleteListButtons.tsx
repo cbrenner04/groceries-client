@@ -1,11 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash, Merge } from '../../../components/ActionButtons';
-import { list } from '../../../prop-types';
+import { IList } from '../../../typings';
 
-function CompleteListButtons(props) {
+interface ICompleteListButtonsProps {
+  userId: string;
+  list: IList;
+  onListRefresh: (list: IList) => void;
+  onListDeletion: (list: IList) => void;
+  multiSelect: boolean;
+  selectedLists: IList[];
+  handleMerge: () => void;
+  pending: boolean;
+}
+
+const CompleteListButtons: React.FC<ICompleteListButtonsProps> = (props) => {
   const userIsOwner = props.userId === props.list.owner_id;
 
   return (
@@ -26,17 +36,6 @@ function CompleteListButtons(props) {
       />
     </ButtonGroup>
   );
-}
-
-CompleteListButtons.propTypes = {
-  userId: PropTypes.string.isRequired,
-  list: list.isRequired,
-  onListRefresh: PropTypes.func.isRequired,
-  onListDeletion: PropTypes.func.isRequired,
-  multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(list).isRequired,
-  handleMerge: PropTypes.func.isRequired,
-  pending: PropTypes.bool.isRequired,
 };
 
 export default CompleteListButtons;

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEventHandler, ChangeEvent, ReactElement, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -13,14 +12,27 @@ import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
-import { list } from '../../../prop-types';
+import { IList, TUserPermissions } from '../../../typings';
 
-function AcceptedLists(props) {
+interface IAcceptedListsProps {
+  completed: boolean;
+  title: ReactElement;
+  userId: string;
+  incompleteLists: IList[];
+  setIncompleteLists: (lists: IList[]) => void;
+  completedLists: IList[];
+  setCompletedLists: (lists: IList[]) => void;
+  currentUserPermissions: TUserPermissions;
+  setCurrentUserPermissions: (permissions: TUserPermissions) => void;
+  fullList: boolean;
+}
+
+const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
   const [multiSelect, setMultiSelect] = useState(false);
-  const [selectedLists, setSelectedLists] = useState([]);
-  const [listsToDelete, setListsToDelete] = useState([]);
+  const [selectedLists, setSelectedLists] = useState([] as IList[]);
+  const [listsToDelete, setListsToDelete] = useState([] as IList[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [listsToMerge, setListsToMerge] = useState([]);
+  const [listsToMerge, setListsToMerge] = useState([] as IList[]);
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [mergeName, setMergeName] = useState('');
   const [pending, setPending] = useState(false);
@@ -31,7 +43,7 @@ function AcceptedLists(props) {
     setMultiSelect(false);
   };
 
-  const handleDelete = (list) => {
+  const handleDelete = (list: IList) => {
     const lists = selectedLists.length ? selectedLists : [list];
     setListsToDelete(lists);
     setShowDeleteConfirm(true);
@@ -60,7 +72,7 @@ function AcceptedLists(props) {
       setListsToDelete([]);
       setPending(false);
       toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
-    } catch (error) {
+    } catch (error: any) {
       failure(error, navigate, setPending);
     }
   };
@@ -99,7 +111,7 @@ function AcceptedLists(props) {
     }
   };
 
-  const handleCompletion = async (list) => {
+  const handleCompletion = async (list: IList) => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
     // can only complete lists you own
@@ -125,12 +137,13 @@ function AcceptedLists(props) {
     }
   };
 
-  const handleRefresh = async (list) => {
+  const handleRefresh = async (list: IList) => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
-    const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean);
-    ownedLists.forEach((l) => {
-      l.refreshed = true;
+    // TODO: can i do anything to not have to cast to IList[]?
+    const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean) as IList[];
+    ownedLists.forEach((lList) => {
+      lList.refreshed = true;
     });
     const refreshRequests = ownedLists.map((l) => axios.post(`/lists/${l.id}/refresh_list`, {}));
     try {
@@ -237,24 +250,15 @@ function AcceptedLists(props) {
         clearModal={() => setShowMergeModal(false)}
         listNames={listsToMerge.map((l) => l.name).join('", "')}
         mergeName={mergeName}
-        handleMergeNameChange={({ target: { value } }) => setMergeName(value)}
+        // TODO: figure out typings
+        handleMergeNameChange={
+          (({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+            setMergeName(value)) as unknown as ChangeEventHandler
+        }
         handleMergeConfirm={handleMergeConfirm}
       />
     </Lists>
   );
-}
-
-AcceptedLists.propTypes = {
-  completed: PropTypes.bool.isRequired,
-  title: PropTypes.element.isRequired,
-  userId: PropTypes.string.isRequired,
-  incompleteLists: PropTypes.arrayOf(list).isRequired,
-  setIncompleteLists: PropTypes.func.isRequired,
-  completedLists: PropTypes.arrayOf(list).isRequired,
-  setCompletedLists: PropTypes.func.isRequired,
-  currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
-  setCurrentUserPermissions: PropTypes.func.isRequired,
-  fullList: PropTypes.bool.isRequired,
 };
 
 export default AcceptedLists;

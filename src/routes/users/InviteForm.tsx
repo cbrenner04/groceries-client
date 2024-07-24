@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -11,26 +11,26 @@ export default function InviteForm() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await axios.post(`/auth/invitation`, { email });
       toast(`${email} successfully invited`, { type: 'info' });
       navigate('/lists');
-    } catch ({ response, request, message }) {
-      if (response) {
-        if (response.status === 401) {
+    } catch (err: any) {
+      if (err.response) {
+        if (err.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           navigate('/users/sign_in');
         } else {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+          const responseTextKeys = Object.keys(err.response.data);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${err.response.data[key]}`);
           toast(responseErrors.join(' and '), { type: 'error' });
         }
-      } else if (request) {
+      } else if (err.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(message, { type: 'error' });
+        toast(err.message, { type: 'error' });
       }
     }
   };
@@ -39,7 +39,10 @@ export default function InviteForm() {
     <>
       <h1>Send Invitation</h1>
       <Form onSubmit={handleSubmit} className="mt-3">
-        <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
+        <EmailField
+          value={email}
+          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setEmail(value)}
+        />
         <FormSubmission
           submitText="Invite User"
           cancelAction={() => navigate('/lists')}

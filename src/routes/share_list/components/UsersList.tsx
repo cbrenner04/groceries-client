@@ -1,12 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Trash } from '../../../components/ActionButtons';
 import TitlePopover from '../../../components/TitlePopover';
-import { usersLists } from '../../../prop-types';
+import { IUsersList } from '../../../typings';
 
-const UsersList = (props) => (
+interface IUsersListProps {
+  togglePermission: (id: string, permissions: string, status: string) => void;
+  removeShare: (id: string) => void;
+  userIsOwner: boolean;
+  userId: string;
+  status: string;
+  users: IUsersList[];
+}
+
+const UsersList: React.FC<IUsersListProps> = (props) => (
   <>
     <TitlePopover
       title={props.status}
@@ -29,7 +37,7 @@ const UsersList = (props) => (
                   {user.email}
                 </Col>
                 <Col md="4" className="pt-1">
-                  <Badge data-test-id={`perm-${permissions}`} variant={permissions === 'write' ? 'success' : 'primary'}>
+                  <Badge data-test-id={`perm-${permissions}`} bg={permissions === 'write' ? 'success' : 'primary'}>
                     {permissions}
                   </Badge>
                 </Col>
@@ -61,14 +69,5 @@ const UsersList = (props) => (
     </ListGroup>
   </>
 );
-
-UsersList.propTypes = {
-  togglePermission: PropTypes.func.isRequired,
-  removeShare: PropTypes.func.isRequired,
-  userIsOwner: PropTypes.bool.isRequired,
-  userId: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(usersLists).isRequired,
-};
 
 export default UsersList;

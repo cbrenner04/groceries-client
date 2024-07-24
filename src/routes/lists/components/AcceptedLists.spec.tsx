@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import userEvent from '@testing-library/user-event';
 
-import AcceptedLists from './AcceptedLists';
+import AcceptedLists, { UserPermissions } from './AcceptedLists';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -17,8 +18,15 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
+  // not sure what the problem is trying to set `currentUserPermissions` in the `defaultProps` object with this object
+  const perms: UserPermissions = {
+    id2: 'write',
+    id3: 'write',
+    id4: 'read',
+    id5: 'read',
+  };
   const defaultProps = {
     completed: false,
     userId: 'id1',
@@ -28,7 +36,7 @@ function setup(suppliedProps) {
       {
         id: 'id2',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id2',
@@ -38,7 +46,7 @@ function setup(suppliedProps) {
       {
         id: 'id4',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id4',
@@ -51,7 +59,7 @@ function setup(suppliedProps) {
       {
         id: 'id3',
         name: 'baz',
-        type: 'MusicList',
+        type: EListType.MUSIC_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id3',
@@ -61,7 +69,7 @@ function setup(suppliedProps) {
       {
         id: 'id5',
         name: 'foobar',
-        type: 'ToDoList',
+        type: EListType.TO_DO_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id5',
@@ -70,12 +78,7 @@ function setup(suppliedProps) {
       },
     ],
     setIncompleteLists: jest.fn(),
-    currentUserPermissions: {
-      id2: 'write',
-      id3: 'write',
-      id4: 'read',
-      id5: 'read',
-    },
+    currentUserPermissions: perms,
     setCurrentUserPermissions: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -337,7 +340,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id7',
       name: 'new list',
-      type: 'BookList',
+      type: EListType.BOOK_LIST,
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -362,7 +365,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id6',
       name: 'new list',
-      type: 'BookList',
+      type: EListType.BOOK_LIST,
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -383,7 +386,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id6',
       name: 'new list',
-      type: 'BookList',
+      type: EListType.BOOK_LIST,
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -520,7 +523,7 @@ describe('AcceptedLists', () => {
       name: 'a',
       owner_id: 'id1',
       refreshed: false,
-      type: 'MusicList',
+      type: EListType.MUSIC_LIST,
       updated_at: '2020-08-03T08:42:13.331-05:00',
       user_id: 'id1',
       users_list_id: 'id29',
@@ -592,7 +595,7 @@ describe('AcceptedLists', () => {
       name: 'a',
       owner_id: 'id1',
       refreshed: false,
-      type: 'BookList',
+      type: EListType.BOOK_LIST,
       updated_at: '2020-08-03T08:42:13.331-05:00',
       user_id: 'id1',
       users_list_id: 'id29',

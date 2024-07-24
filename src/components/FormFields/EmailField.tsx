@@ -1,11 +1,11 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { ChangeEvent } from 'react';
 import { Form } from 'react-bootstrap';
 
 interface IEmailFieldProps {
   name?: string;
   label?: string;
   value: string;
-  handleChange: ChangeEventHandler;
+  handleChange: ({ target: { value } }: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const EmailField: React.FC<IEmailFieldProps> = ({ name = 'email', label = 'Email', value, handleChange }) => (

@@ -1,15 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
-import { list } from '../../../prop-types';
+import { IList } from '../../../typings';
 
-function List(props) {
-  const handleListSelect = (list) => {
+interface IListProps {
+  listButtons: ReactElement;
+  listName: string;
+  listClass: string;
+  testClass: string;
+  includeLinkToList: boolean;
+  list: IList;
+  multiSelect: boolean;
+  selectedLists: IList[];
+  setSelectedLists: (lists: IList[]) => void;
+}
+
+const List: React.FC<IListProps> = (props) => {
+  const handleListSelect = (list: IList) => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
     if (listIds.includes(list.id)) {
@@ -62,18 +73,6 @@ function List(props) {
       </Row>
     </ListGroup.Item>
   );
-}
-
-List.propTypes = {
-  listButtons: PropTypes.element.isRequired,
-  listName: PropTypes.string.isRequired,
-  listClass: PropTypes.string.isRequired,
-  testClass: PropTypes.string.isRequired,
-  includeLinkToList: PropTypes.bool.isRequired,
-  list: list.isRequired,
-  multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(list).isRequired,
-  setSelectedLists: PropTypes.func.isRequired,
 };
 
 export default List;

@@ -1,12 +1,12 @@
 import React from 'react';
-import Async from 'react-async';
+import Async, { PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import { IList, IListItem, IListUsers } from '../../typings';
+import { IList, IListItem, IListUser } from '../../typings';
 
 export default function List() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function List() {
 
   // TODO: figure out `promiseFn` typings
   return (
-    <Async promiseFn={fetchList as any} id={id} navigate={navigate}>
+    <Async promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -24,7 +24,7 @@ export default function List() {
           list: IList;
           purchasedItems: IListItem[];
           categories: string[];
-          listUsers: IListUsers[];
+          listUsers: IListUser[];
           includedCategories: string[];
           notPurchasedItems: Record<string, IListItem[]>;
           permissions: string;

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -9,12 +8,23 @@ import { EmailField } from '../../../components/FormFields';
 import UsersList from '../components/UsersList';
 import RefusedUsersList from '../components/RefusedUsersList';
 import axios from '../../../utils/api';
-import { usersLists } from '../../../prop-types';
 import { fetchData } from '../utils';
 import { usePolling } from '../../../hooks';
 import FormSubmission from '../../../components/FormSubmission';
+import { IListUser, IUsersList } from '../../../typings';
 
-function ShareListForm(props) {
+interface IShareListFormProps {
+  name: string;
+  invitableUsers: IListUser[];
+  listId: string;
+  userIsOwner: boolean;
+  pending: IUsersList[];
+  accepted: IUsersList[];
+  refused: IUsersList[];
+  userId: string;
+}
+
+const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
   const [newEmail, setNewEmail] = useState('');
   const [pending, setPending] = useState(props.pending);
@@ -24,37 +34,40 @@ function ShareListForm(props) {
 
   usePolling(async () => {
     try {
-      const {
-        invitableUsers: updatedInvitableUsers,
-        pending: updatedPending,
-        accepted: updatedAccepted,
-        refused: updatedRefused,
-      } = await fetchData({
+      const list = await fetchData({
         listId: props.listId,
         navigate: navigate,
       });
-      const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
-      const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
-      const pendingSame = isSameSet(updatedPending, pending);
-      const acceptedSame = isSameSet(updatedAccepted, accepted);
-      const refusedSame = isSameSet(updatedRefused, refused);
-      if (!invitableUsersSame) {
-        setInvitableUsers(updatedInvitableUsers);
+      if (list) {
+        const {
+          invitableUsers: updatedInvitableUsers,
+          pending: updatedPending,
+          accepted: updatedAccepted,
+          refused: updatedRefused,
+        } = list;
+        const isSameSet = (newSet: any, oldSet: any) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+        const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
+        const pendingSame = isSameSet(updatedPending, pending);
+        const acceptedSame = isSameSet(updatedAccepted, accepted);
+        const refusedSame = isSameSet(updatedRefused, refused);
+        if (!invitableUsersSame) {
+          setInvitableUsers(updatedInvitableUsers);
+        }
+        if (!pendingSame) {
+          setPending(updatedPending);
+        }
+        if (!acceptedSame) {
+          setAccepted(updatedAccepted);
+        }
+        if (!refusedSame) {
+          setRefused(updatedRefused);
+        }
       }
-      if (!pendingSame) {
-        setPending(updatedPending);
-      }
-      if (!acceptedSame) {
-        setAccepted(updatedAccepted);
-      }
-      if (!refusedSame) {
-        setRefused(updatedRefused);
-      }
-    } catch ({ response }) {
+    } catch (err: any) {
       // `response` will not be undefined if the response from the server comes back
       // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = response
+      const errorMessage = err.response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -64,33 +77,33 @@ function ShareListForm(props) {
     }
   }, 5000);
 
-  const failure = ({ response, request, message }) => {
-    if (response) {
-      if (response.status === 401) {
+  const failure = (err: any) => {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-      } else if (response.status === 403) {
+      } else if (err.response.status === 403) {
         toast('You do not have permission to take that action', { type: 'error' });
         navigate('/lists');
-      } else if (response.status === 404) {
+      } else if (err.response.status === 404) {
         toast('User not found', { type: 'error' });
       } else {
-        if (response.data.responseText) {
-          toast(response.data.responseText, { type: 'error' });
+        if (err.response.data.responseText) {
+          toast(err.response.data.responseText, { type: 'error' });
         } else {
-          const responseTextKeys = Object.keys(response.data);
-          const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+          const responseTextKeys = Object.keys(err.response.data);
+          const responseErrors = responseTextKeys.map((key) => `${key} ${err.response.data[key]}`);
           toast(responseErrors.join(' and '), { type: 'error' });
         }
       }
-    } else if (request) {
+    } else if (err.request) {
       toast('Something went wrong', { type: 'error' });
     } else {
-      toast(message, { type: 'error' });
+      toast(err.message, { type: 'error' });
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const {
@@ -121,14 +134,14 @@ function ShareListForm(props) {
     }
   };
 
-  const handleSelectUser = async (user) => {
+  const handleSelectUser = async (user: IListUser) => {
     const usersList = {
       user_id: user.id,
       list_id: props.listId,
     };
     try {
       const { data } = await axios.post(`/lists/${props.listId}/users_lists`, { users_list: usersList });
-      const newUsers = invitableUsers.filter((tmpUser) => tmpUser.id !== user.id);
+      const newUsers = invitableUsers.filter((tmpUser: IListUser) => tmpUser.id !== user.id);
       setInvitableUsers(newUsers);
       const newPending = update(pending, {
         $push: [
@@ -151,15 +164,7 @@ function ShareListForm(props) {
     }
   };
 
-  const getUsers = (status) => {
-    if (status === 'pending') {
-      return [pending, setPending];
-    } else {
-      return [accepted, setAccepted];
-    }
-  };
-
-  const togglePermission = async (id, currentPermission, status) => {
+  const togglePermission = async (id: string, currentPermission: string, status: string) => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
       await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
@@ -167,7 +172,7 @@ function ShareListForm(props) {
           permissions,
         },
       });
-      const [users, stateFunc] = getUsers(status);
+      const [users, stateFunc] = status === 'pending' ? [pending, setPending] : [accepted, setAccepted];
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
         const tmpUsersList = newList.users_list;
@@ -182,32 +187,35 @@ function ShareListForm(props) {
     }
   };
 
-  const refreshShare = async (id, userId) => {
-    const { user } = refused.find(({ user }) => user.id === userId);
-    try {
-      const { data } = await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
-        users_list: {
-          has_accepted: null,
-          permissions: 'write',
-        },
-      });
-      const updatedPending = update(pending, {
-        $push: [
-          {
-            user,
-            users_list: data,
+  const refreshShare = async (id: string, userId: string) => {
+    const usersList = refused.find(({ user }) => user.id === userId);
+    if (usersList) {
+      const { user } = usersList;
+      try {
+        const { data } = await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
+          users_list: {
+            has_accepted: null,
+            permissions: 'write',
           },
-        ],
-      });
-      setPending(updatedPending);
-      const updatedRefused = refused.filter(({ user }) => user.id !== userId);
-      setRefused(updatedRefused);
-    } catch (error) {
-      failure(error);
+        });
+        const updatedPending = update(pending, {
+          $push: [
+            {
+              user,
+              users_list: data,
+            },
+          ],
+        });
+        setPending(updatedPending);
+        const updatedRefused = refused.filter(({ user }) => user.id !== userId);
+        setRefused(updatedRefused);
+      } catch (error) {
+        failure(error);
+      }
     }
   };
 
-  const removeShare = async (id) => {
+  const removeShare = async (id: string) => {
     try {
       await axios.delete(`/lists/${props.listId}/users_lists/${id}`);
       const {
@@ -233,7 +241,7 @@ function ShareListForm(props) {
           name="new-email"
           label="Enter an email to invite someone to share this list:"
           value={newEmail}
-          handleChange={({ target: { value } }) => setNewEmail(value)}
+          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setNewEmail(value)}
         />
         <FormSubmission submitText="Share List" displayCancelButton={false} cancelAction={() => undefined} />
       </Form>
@@ -271,22 +279,6 @@ function ShareListForm(props) {
       />
     </div>
   );
-}
-
-ShareListForm.propTypes = {
-  name: PropTypes.string.isRequired,
-  invitableUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      email: PropTypes.string,
-    }),
-  ).isRequired,
-  listId: PropTypes.string.isRequired,
-  userIsOwner: PropTypes.bool.isRequired,
-  pending: PropTypes.arrayOf(usersLists).isRequired,
-  accepted: PropTypes.arrayOf(usersLists).isRequired,
-  refused: PropTypes.arrayOf(usersLists).isRequired,
-  userId: PropTypes.string.isRequired,
 };
 
 export default ShareListForm;

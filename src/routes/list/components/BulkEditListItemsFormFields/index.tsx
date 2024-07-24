@@ -6,7 +6,7 @@ import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
 import { CategoryField, CheckboxField } from '../../../../components/FormFields';
-import IListUsers from '../../../../typings/IListUsers';
+import { IListUser } from '../../../../typings';
 
 interface IBulkEditListItemsFormFieldsFormDataProps {
   copy: boolean;
@@ -35,17 +35,12 @@ interface IBulkEditListItemsFormFieldsFormDataProps {
 interface IBulkEditListItemsFormFieldsProps {
   listType: string;
   formData: IBulkEditListItemsFormFieldsFormDataProps;
-  // handleInput: ({
-  //   target: { name, value, checked },
-  // }: {
-  //   target: { name: string; value: string | boolean; checked: boolean };
-  // }) => void;
   handleInput: ChangeEventHandler;
   clearAttribute: (
     attribute: keyof IBulkEditListItemsFormFieldsFormDataProps,
     clearAttribute: keyof IBulkEditListItemsFormFieldsFormDataProps,
   ) => void;
-  listUsers: IListUsers[];
+  listUsers: IListUser[];
   handleOtherListChange: (isCopy: boolean) => void;
   existingListsOptions: {
     value: string;

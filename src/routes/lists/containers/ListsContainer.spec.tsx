@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListsContainer from './ListsContainer';
 import axios from '../../../utils/api';
+import { EListType, TUserPermissions } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -25,7 +26,7 @@ function setup(suppliedProps = {}) {
       {
         id: 'id1',
         name: 'foo',
-        type: 'GroceryList',
+        type: EListType.GROCERY_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id1',
@@ -37,7 +38,7 @@ function setup(suppliedProps = {}) {
       {
         id: 'id2',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id2',
@@ -47,7 +48,7 @@ function setup(suppliedProps = {}) {
       {
         id: 'id4',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id4',
@@ -59,7 +60,7 @@ function setup(suppliedProps = {}) {
       {
         id: 'id3',
         name: 'baz',
-        type: 'MusicList',
+        type: EListType.MUSIC_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id3',
@@ -69,7 +70,7 @@ function setup(suppliedProps = {}) {
       {
         id: 'id5',
         name: 'foobar',
-        type: 'ToDoList',
+        type: EListType.TO_DO_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id5',
@@ -83,7 +84,7 @@ function setup(suppliedProps = {}) {
       id3: 'write',
       id4: 'read',
       id5: 'read',
-    },
+    } as TUserPermissions,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -117,7 +118,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id1',
                 name: 'foo',
                 user_id: 'id1',
-                type: 'GroceryList',
+                type: EListType.GROCERY_LIST,
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: true,
                 refreshed: false,
@@ -130,7 +131,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id2',
                 name: 'bar',
                 user_id: 'id1',
-                type: 'BookList',
+                type: EListType.BOOK_LIST,
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -144,7 +145,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id3',
               name: 'foo',
               user_id: 'id1',
-              type: 'GroceryList',
+              type: EListType.GROCERY_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -168,7 +169,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id1',
                 name: 'foo',
                 user_id: 'id1',
-                type: 'GroceryList',
+                type: EListType.GROCERY_LIST,
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: true,
                 refreshed: false,
@@ -179,7 +180,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id3',
                 name: 'foo',
                 user_id: 'id1',
-                type: 'GroceryList',
+                type: EListType.GROCERY_LIST,
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -192,7 +193,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id2',
                 name: 'bar',
                 user_id: 'id1',
-                type: 'BookList',
+                type: EListType.BOOK_LIST,
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -242,7 +243,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id1',
               name: 'foo',
               user_id: 'id1',
-              type: 'GroceryList',
+              type: EListType.GROCERY_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -255,7 +256,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id2',
               name: 'bar',
               user_id: 'id1',
-              type: 'BookList',
+              type: EListType.BOOK_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -269,7 +270,7 @@ describe('ListsContainer', () => {
             users_list_id: 'id3',
             name: 'foo',
             user_id: 'id1',
-            type: 'GroceryList',
+            type: EListType.GROCERY_LIST,
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -316,7 +317,7 @@ describe('ListsContainer', () => {
       data: {
         id: 'id6',
         name: 'new list',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
@@ -327,7 +328,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByTestId, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -340,7 +341,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -353,7 +354,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -365,7 +366,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
@@ -377,7 +378,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
+    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 

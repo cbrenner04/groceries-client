@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, DateField, SelectField } from '../../../../components/FormFields';
-import IListUsers from '../../../../typings/IListUsers';
+import IListUsers from '../../../../typings/IListUser';
 
 interface IToDoProps {
   assigneeId: string;

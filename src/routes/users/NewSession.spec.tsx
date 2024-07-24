@@ -33,7 +33,7 @@ function setup() {
 
 describe('NewSession', () => {
   it('renders loading when fetch has not completed', async () => {
-    axios.get = () => new Promise();
+    axios.get = () => new Promise(jest.fn());
     const { container, findByText } = setup();
 
     expect(await findByText('Loading...')).toBeVisible();

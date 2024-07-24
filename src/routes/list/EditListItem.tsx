@@ -1,12 +1,12 @@
 import React from 'react';
-import Async from 'react-async';
+import Async, { PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchItemToEdit } from './utils';
 import EditListItemForm from './containers/EditListItemForm';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import { IList, IListItem, IListUsers } from '../../typings';
+import { IList, IListItem, IListUser } from '../../typings';
 
 const EditListItem: React.FC = () => {
   const navigate = useNavigate();
@@ -14,12 +14,12 @@ const EditListItem: React.FC = () => {
 
   // TODO: figure out `promiseFn` typings
   return (
-    <Async promiseFn={fetchItemToEdit as any} itemId={id} listId={list_id} navigate={navigate}>
+    <Async promiseFn={fetchItemToEdit as unknown as PromiseFn<void>} itemId={id} listId={list_id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { list: IList; item: IListItem; listUsers: IListUsers[]; userId: string }) => (
+        {(data: { list: IList; item: IListItem; listUsers: IListUser[]; userId: string }) => (
           <EditListItemForm
             navigate={navigate}
             listUsers={data.listUsers}

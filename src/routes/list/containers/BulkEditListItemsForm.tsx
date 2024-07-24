@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useState } from 'react';
+import React, { ChangeEventHandler, ChangeEvent, FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -8,7 +8,7 @@ import axios from '../../../utils/api';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IList, IListItem, IListUsers } from '../../../typings';
+import { EListType, IList, IListItem, IListUser } from '../../../typings';
 
 interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
@@ -16,7 +16,7 @@ interface IBulkEditListItemsFormProps {
   list: IList;
   lists: IList[];
   categories: string[];
-  listUsers?: IListUsers[];
+  listUsers?: IListUser[];
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => {
@@ -60,7 +60,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
 
   const [formData, setFormData] = useState(initialValues);
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // must have existing list or new list identified to copy or move
     if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
@@ -163,12 +163,8 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
     setFormData(updatedFormData);
   };
 
-  const handleInput = ({
-    target: { name, value, checked },
-  }: {
-    target: { name: string; value: string | boolean; checked: boolean };
-  }) => {
-    let newValue = value;
+  const handleInput = ({ target: { name, value, checked } }: ChangeEvent<HTMLInputElement>) => {
+    let newValue: string | boolean = value;
     if (name === 'updateCurrentItems') {
       newValue = checked;
     }

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import Async from 'react-async';
+import Async, { PromiseFn } from 'react-async';
 import { toast } from 'react-toastify';
 
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
@@ -10,7 +9,7 @@ import axios from '../../utils/api';
 import Loading from '../../components/Loading';
 import FormSubmission from '../../components/FormSubmission';
 
-async function fetchData({ navigate }) {
+async function fetchData({ navigate }: { navigate: (url: string) => void }) {
   try {
     await axios.get(`/auth/validate_token`);
     navigate('/lists');
@@ -19,13 +18,17 @@ async function fetchData({ navigate }) {
   }
 }
 
-function NewSession({ signInUser }) {
+interface INewSessionProps {
+  signInUser: (accessToken: string, client: string, uid: string) => void;
+}
+
+const NewSession: React.FC<INewSessionProps> = ({ signInUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user = {
       email,
@@ -48,19 +51,23 @@ function NewSession({ signInUser }) {
   };
 
   return (
-    <Async promiseFn={fetchData} navigate={navigate}>
+    // TODO: figure out typings for promiseFn
+    <Async promiseFn={fetchData as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
         <h2>Log in</h2>
         <Form onSubmit={handleSubmit}>
-          <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
+          <EmailField
+            value={email}
+            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setEmail(value)}
+          />
           <PasswordField
             name="password"
             label="Password"
             value={password}
-            handleChange={({ target: { value } }) => setPassword(value)}
+            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPassword(value)}
             placeholder="password"
           />
           <CheckboxField
@@ -76,10 +83,6 @@ function NewSession({ signInUser }) {
       </Async.Fulfilled>
     </Async>
   );
-}
-
-NewSession.propTypes = {
-  signInUser: PropTypes.func.isRequired,
 };
 
 export default NewSession;

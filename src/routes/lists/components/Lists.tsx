@@ -1,10 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 
-import { list } from '../../../prop-types';
+import { IList } from '../../../typings';
 
-function Lists(props) {
+interface IListsProps {
+  title: ReactElement;
+  multiSelect: boolean;
+  selectedLists: IList[];
+  setSelectedLists: (lists: IList[]) => void;
+  setMultiSelect: (select: boolean) => void;
+  children: ReactNode[];
+}
+
+const Lists: React.FC<IListsProps> = (props) => {
   return (
     <div className="mb-4">
       <div className="clearfix">
@@ -25,15 +33,6 @@ function Lists(props) {
       {props.children}
     </div>
   );
-}
-
-Lists.propTypes = {
-  title: PropTypes.element.isRequired,
-  multiSelect: PropTypes.bool.isRequired,
-  selectedLists: PropTypes.arrayOf(list).isRequired,
-  setSelectedLists: PropTypes.func.isRequired,
-  setMultiSelect: PropTypes.func.isRequired,
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
 export default Lists;

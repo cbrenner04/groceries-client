@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import ListForm from './ListForm';
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     pending: false,

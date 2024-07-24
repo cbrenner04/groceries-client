@@ -273,7 +273,7 @@ describe('ShareListForm', () => {
       .mockResolvedValue({ data: { user_id: 'id1', email: 'foo@example.com', id: 'id6', permissions: 'write' } });
     const { findByTestId, props, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('pending-user-id1')).toHaveTextContent('foo@example.com');
@@ -288,7 +288,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -300,7 +300,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
@@ -312,7 +312,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
@@ -323,7 +323,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('foo', { type: 'error' });
@@ -334,7 +334,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -345,7 +345,7 @@ describe('ShareListForm', () => {
 
     const { findByTestId, user } = setup();
 
-    await user.click((await findByTestId('invite-user-id1')).firstChild);
+    await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });

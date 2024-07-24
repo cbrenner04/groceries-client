@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import update from 'immutability-helper';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -10,14 +9,22 @@ import { sortLists, failure } from '../utils';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
-import { list } from '../../../prop-types';
 import { fetchLists } from '../utils';
 import { usePolling } from '../../../hooks';
+import { IList, TUserPermissions } from '../../../typings';
 
 // TODO: can we do better?
-const isSameSet = (newSet, oldSet) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+const isSameSet = (newSet: any, oldSet: any) => JSON.stringify(newSet) === JSON.stringify(oldSet);
 
-function ListsContainer(props) {
+interface IListsContainerProps {
+  userId: string;
+  pendingLists: IList[];
+  completedLists: IList[];
+  incompleteLists: IList[];
+  currentUserPermissions: TUserPermissions;
+}
+
+const ListsContainer: React.FC<IListsContainerProps> = (props) => {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
@@ -27,33 +34,36 @@ function ListsContainer(props) {
 
   usePolling(async () => {
     try {
-      const {
-        pendingLists: updatedPending,
-        completedLists: updatedCompleted,
-        incompleteLists: updatedIncomplete,
-        currentUserPermissions: updatedCurrentUserPermissions,
-      } = await fetchLists({ navigate });
-      const pendingSame = isSameSet(updatedPending, pendingLists);
-      const completedSame = isSameSet(updatedCompleted, completedLists);
-      const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
-      const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
-      if (!pendingSame) {
-        setPendingLists(updatedPending);
+      const lists = await fetchLists({ navigate });
+      if (lists) {
+        const {
+          pendingLists: updatedPending,
+          completedLists: updatedCompleted,
+          incompleteLists: updatedIncomplete,
+          currentUserPermissions: updatedCurrentUserPermissions,
+        } = lists;
+        const pendingSame = isSameSet(updatedPending, pendingLists);
+        const completedSame = isSameSet(updatedCompleted, completedLists);
+        const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
+        const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
+        if (!pendingSame) {
+          setPendingLists(updatedPending);
+        }
+        if (!completedSame) {
+          setCompletedLists(updatedCompleted);
+        }
+        if (!incompleteSame) {
+          setIncompleteLists(updatedIncomplete);
+        }
+        if (!userPermsSame) {
+          setCurrentUserPermissions(updatedCurrentUserPermissions);
+        }
       }
-      if (!completedSame) {
-        setCompletedLists(updatedCompleted);
-      }
-      if (!incompleteSame) {
-        setIncompleteLists(updatedIncomplete);
-      }
-      if (!userPermsSame) {
-        setCurrentUserPermissions(updatedCurrentUserPermissions);
-      }
-    } catch ({ response }) {
+    } catch (err: any) {
       // `response` will not be undefined if the response from the server comes back
       // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = response
+      const errorMessage = err.response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -63,7 +73,7 @@ function ListsContainer(props) {
     }
   }, 10000);
 
-  const handleFormSubmit = async (list) => {
+  const handleFormSubmit = async (list: IList) => {
     setPending(true);
     try {
       const { data } = await axios.post(`/lists`, { list });
@@ -138,14 +148,6 @@ function ListsContainer(props) {
       />
     </>
   );
-}
-
-ListsContainer.propTypes = {
-  userId: PropTypes.string.isRequired,
-  pendingLists: PropTypes.arrayOf(list).isRequired,
-  completedLists: PropTypes.arrayOf(list).isRequired,
-  incompleteLists: PropTypes.arrayOf(list).isRequired,
-  currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ListsContainer;

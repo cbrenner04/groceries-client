@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
 import List from './List';
+import { EListType } from '../../../typings';
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     listButtons: <div />,
@@ -16,7 +17,7 @@ function setup(suppliedProps) {
     list: {
       id: 'id1',
       name: 'foo',
-      type: 'GroceryList',
+      type: EListType.GROCERY_LIST,
       created_at: new Date('05/27/2020').toISOString(),
       completed: true,
       users_list_id: 'id1',
@@ -69,7 +70,7 @@ describe('List', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: 'GroceryList',
+          type: EListType.GROCERY_LIST,
           created_at: new Date('05/27/2020').toISOString(),
           completed: true,
           users_list_id: 'id1',

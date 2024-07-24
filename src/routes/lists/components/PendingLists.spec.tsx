@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 
 import PendingLists from './PendingLists';
 import axios from '../../../utils/api';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -17,7 +18,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',
@@ -25,7 +26,7 @@ function setup(suppliedProps) {
       {
         id: 'id1',
         name: 'foo',
-        type: 'GroceryList',
+        type: EListType.GROCERY_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id2',
@@ -35,7 +36,7 @@ function setup(suppliedProps) {
       {
         id: 'id2',
         name: 'foo',
-        type: 'GroceryList',
+        type: EListType.GROCERY_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id3',
@@ -48,7 +49,7 @@ function setup(suppliedProps) {
       {
         id: 'id3',
         name: 'baz',
-        type: 'MusicList',
+        type: EListType.MUSIC_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id14',
@@ -58,7 +59,7 @@ function setup(suppliedProps) {
       {
         id: 'id4',
         name: 'foobar',
-        type: 'ToDoList',
+        type: EListType.TO_DO_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id6',
@@ -71,7 +72,7 @@ function setup(suppliedProps) {
       {
         id: 'id5',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id7',
@@ -81,7 +82,7 @@ function setup(suppliedProps) {
       {
         id: 'id6',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id9',

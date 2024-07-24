@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import CompleteListButtons from './CompleteListButtons';
+import { EListType } from '../../../typings';
 
 function setup(suppliedProps = {}, listOwnerId = 'id1') {
   const user = userEvent.setup();
@@ -14,7 +15,7 @@ function setup(suppliedProps = {}, listOwnerId = 'id1') {
       id: 'id1',
       owner_id: listOwnerId,
       name: 'foo',
-      type: 'GroceryList',
+      type: EListType.GROCERY_LIST,
       created_at: 'some date',
       completed: false,
       refreshed: false,
@@ -70,7 +71,7 @@ describe('CompleteListButtons', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: 'GroceryList',
+          type: EListType.GROCERY_LIST,
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -79,7 +80,7 @@ describe('CompleteListButtons', () => {
         {
           id: 'id12',
           name: 'bar',
-          type: 'GroceryList',
+          type: EListType.GROCERY_LIST,
           created_at: 'some date',
           completed: false,
           refreshed: false,

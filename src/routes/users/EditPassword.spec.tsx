@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
 import EditPassword from './EditPassword';
+import axios from '../../utils/api';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),

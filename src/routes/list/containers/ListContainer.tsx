@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from 'react';
+import React, { ChangeEvent, MouseEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList } from '../utils';
 import { usePolling } from '../../../hooks';
-import { IList, IListItem, IListUsers } from '../../../typings';
+import { IList, IListItem, IListUser } from '../../../typings';
 import { AxiosResponse } from 'axios';
 
 interface IListContainerProps {
@@ -22,7 +22,7 @@ interface IListContainerProps {
   list: IList;
   purchasedItems: IListItem[];
   categories: string[];
-  listUsers: IListUsers[];
+  listUsers: IListUser[];
   includedCategories: string[];
   notPurchasedItems: Record<string, IListItem[]>;
   permissions: string;
@@ -388,7 +388,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
             filter={filter}
             // TODO: figure out typing
             handleCategoryFilter={
-              (({ target: { name } }: { target: { name: string } }) => {
+              (({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
                 setFilter(name);
                 setDisplayedCategories([name]);
               }) as unknown as MouseEventHandler

@@ -1,11 +1,14 @@
 import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
+import IUserList from '../../typings/IUsersList';
 
-export async function fetchData({ listId, navigate }) {
+export async function fetchData({ listId, navigate }: { listId: string; navigate: (url: string) => void }) {
   try {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
-    const userInAccepted = data.accepted.find((acceptedList) => acceptedList.user.id === data.current_user_id);
+    const userInAccepted = data.accepted.find(
+      (acceptedList: IUserList) => acceptedList.user.id === data.current_user_id,
+    );
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       toast('List not found', { type: 'error' });
       navigate('/lists');
@@ -21,19 +24,19 @@ export async function fetchData({ listId, navigate }) {
       refused: data.refused,
       userId: data.current_user_id,
     };
-  } catch ({ response, message }) {
-    if (response) {
-      if (response.status === 401) {
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('List not found', { type: 'error' });
         navigate('/lists');
         return;
       }
     }
     // any other errors will just be caught and render the generic UnknownError
-    throw new Error({ response, message });
+    throw new Error(err);
   }
 }

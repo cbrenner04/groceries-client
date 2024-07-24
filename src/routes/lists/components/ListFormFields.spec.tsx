@@ -3,12 +3,13 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ListFormFields from './ListFormFields';
+import { EListType } from '../../../typings';
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     name: 'foo',
-    type: 'GroceryList',
+    type: EListType.GROCERY_LIST,
     handleNameChange: jest.fn(),
     handleTypeChange: jest.fn(),
     handleCompletedChange: jest.fn(),

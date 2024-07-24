@@ -1,11 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Refresh } from '../../../components/ActionButtons';
-import { usersLists } from '../../../prop-types';
+import { IUsersList } from '../../../typings';
 
-const RefusedUsersList = (props) => (
+interface IRefusedUsersListProps {
+  refreshShare: (id: string, userId: string) => void;
+  userIsOwner: boolean;
+  userId: string;
+  users: IUsersList[];
+}
+
+const RefusedUsersList: React.FC<IRefusedUsersListProps> = (props) => (
   <>
     <h2>Refused</h2>
     <ListGroup>
@@ -39,12 +45,5 @@ const RefusedUsersList = (props) => (
     </ListGroup>
   </>
 );
-
-RefusedUsersList.propTypes = {
-  refreshShare: PropTypes.func.isRequired,
-  userIsOwner: PropTypes.bool.isRequired,
-  userId: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(usersLists).isRequired,
-};
 
 export default RefusedUsersList;

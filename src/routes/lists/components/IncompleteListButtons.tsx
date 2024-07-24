@@ -1,11 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Complete, EditLink, Merge, Share, Trash } from '../../../components/ActionButtons';
-import { list } from '../../../prop-types';
+import { IList } from '../../../typings';
 
-function IncompleteListButtons(props) {
+interface IIncompleteListButtons {
+  userId: string;
+  list: IList;
+  onListCompletion: (list: IList) => void;
+  onListDeletion: (list: IList) => void;
+  currentUserPermissions: string;
+  multiSelect: boolean;
+  handleMerge: () => void;
+  selectedLists: IList[];
+  pending: boolean;
+}
+
+const IncompleteListButtons: React.FC<IIncompleteListButtons> = (props) => {
   const userIsOwner = props.userId === props.list.owner_id;
   const multipleListsSelected = props.multiSelect && props.selectedLists.length > 1;
   const userCanShare = props.currentUserPermissions === 'write';
@@ -44,18 +55,6 @@ function IncompleteListButtons(props) {
       />
     </ButtonGroup>
   );
-}
-
-IncompleteListButtons.propTypes = {
-  userId: PropTypes.string.isRequired,
-  list: list.isRequired,
-  onListCompletion: PropTypes.func.isRequired,
-  onListDeletion: PropTypes.func.isRequired,
-  currentUserPermissions: PropTypes.string.isRequired,
-  multiSelect: PropTypes.bool.isRequired,
-  handleMerge: PropTypes.func.isRequired,
-  selectedLists: PropTypes.arrayOf(list).isRequired,
-  pending: PropTypes.bool.isRequired,
 };
 
 export default IncompleteListButtons;

@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 
 import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './utils';
 import axios from '../../utils/api';
+import { EListType } from '../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -14,14 +15,62 @@ describe('utils', () => {
     it('returns sorted lists', () => {
       expect(
         sortLists([
-          { created_at: new Date('05/31/2020').toISOString() },
-          { created_at: new Date('05/29/2020').toISOString() },
-          { created_at: new Date('05/30/2020').toISOString() },
+          {
+            id: 'id1',
+            name: 'foo',
+            type: EListType.GROCERY_LIST,
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+            created_at: new Date('05/31/2020').toISOString(),
+          },
+          {
+            id: 'id1',
+            name: 'foo',
+            type: EListType.GROCERY_LIST,
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+            created_at: new Date('05/29/2020').toISOString(),
+          },
+          {
+            id: 'id1',
+            name: 'foo',
+            type: EListType.GROCERY_LIST,
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+            created_at: new Date('05/30/2020').toISOString(),
+          },
         ]),
       ).toStrictEqual([
-        { created_at: new Date('05/31/2020').toISOString() },
-        { created_at: new Date('05/30/2020').toISOString() },
-        { created_at: new Date('05/29/2020').toISOString() },
+        {
+          id: 'id1',
+          name: 'foo',
+          type: EListType.GROCERY_LIST,
+          completed: false,
+          owner_id: 'id1',
+          refreshed: false,
+          created_at: new Date('05/31/2020').toISOString(),
+        },
+        {
+          id: 'id1',
+          name: 'foo',
+          type: EListType.GROCERY_LIST,
+          completed: false,
+          owner_id: 'id1',
+          refreshed: false,
+          created_at: new Date('05/30/2020').toISOString(),
+        },
+        {
+          id: 'id1',
+          name: 'foo',
+          type: EListType.GROCERY_LIST,
+          completed: false,
+          owner_id: 'id1',
+          refreshed: false,
+          created_at: new Date('05/29/2020').toISOString(),
+        },
       ]);
     });
   });
@@ -249,7 +298,7 @@ describe('utils', () => {
   });
 
   describe('fetchListToEdit', () => {
-    const id = 1;
+    const id = '1';
     const navigate = jest.fn();
 
     it('returns correct body on success', async () => {

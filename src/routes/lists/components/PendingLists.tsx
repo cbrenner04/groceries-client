@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { ListGroup, ButtonGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -11,13 +10,24 @@ import axios from '../../../utils/api';
 import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
 import Lists from './Lists';
-import { list } from '../../../prop-types';
 import { useNavigate } from 'react-router-dom';
+import { IList } from '../../../typings';
 
-function PendingLists(props) {
+interface IPendingListsProps {
+  userId: string;
+  pendingLists: IList[];
+  setPendingLists: (lists: IList[]) => void;
+  incompleteLists: IList[];
+  setIncompleteLists: (lists: IList[]) => void;
+  completedLists: IList[];
+  setCompletedLists: (lists: IList[]) => void;
+  currentUserPermissions: Record<string, string>;
+}
+
+const PendingLists: React.FC<IPendingListsProps> = (props) => {
   const [multiSelect, setMultiSelect] = useState(false);
-  const [selectedLists, setSelectedLists] = useState([]);
-  const [listsToReject, setListsToReject] = useState([]);
+  const [selectedLists, setSelectedLists] = useState([] as IList[]);
+  const [listsToReject, setListsToReject] = useState([] as IList[]);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
@@ -27,7 +37,7 @@ function PendingLists(props) {
     setMultiSelect(false);
   };
 
-  const handleAccept = async (list) => {
+  const handleAccept = async (list: IList) => {
     setPending(true);
     const listsToAccept = selectedLists.length ? selectedLists : [list];
     const requests = listsToAccept.map((l) =>
@@ -60,7 +70,7 @@ function PendingLists(props) {
     }
   };
 
-  const handleReject = (list) => {
+  const handleReject = (list: IList) => {
     const rejectLists = selectedLists.length ? selectedLists : [list];
     setListsToReject(rejectLists);
     setShowRejectConfirm(true);
@@ -138,17 +148,6 @@ function PendingLists(props) {
       />
     </Lists>
   );
-}
-
-PendingLists.propTypes = {
-  userId: PropTypes.string.isRequired,
-  pendingLists: PropTypes.arrayOf(list).isRequired,
-  setPendingLists: PropTypes.func.isRequired,
-  incompleteLists: PropTypes.arrayOf(list).isRequired,
-  setIncompleteLists: PropTypes.func.isRequired,
-  completedLists: PropTypes.arrayOf(list).isRequired,
-  setCompletedLists: PropTypes.func.isRequired,
-  currentUserPermissions: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default PendingLists;

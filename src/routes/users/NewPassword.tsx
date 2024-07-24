@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -11,7 +11,7 @@ export default function NewPassword() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await axios.post(`/auth/password`, {
@@ -32,7 +32,10 @@ export default function NewPassword() {
     <>
       <h2>Forgot your password?</h2>
       <Form onSubmit={handleSubmit} autoComplete="off">
-        <EmailField value={email} handleChange={({ target: { value } }) => setEmail(value)} />
+        <EmailField
+          value={email}
+          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setEmail(value)}
+        />
         <FormSubmission
           submitText="Send me reset password instructions"
           displayCancelButton={false}

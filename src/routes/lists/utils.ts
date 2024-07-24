@@ -1,20 +1,31 @@
 import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
+import { IList, TUserPermissions } from '../../typings';
 
-export const sortLists = (lists) => lists.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+export const sortLists = (lists: IList[]) =>
+  lists.sort((a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)));
 
-function handleFailure({ response, message }, navigate) {
+function handleFailure(error: any, navigate: (url: string) => void) {
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
-  if (response && response.status === 401) {
+  if (error.response && error.response.status === 401) {
     toast('You must sign in', { type: 'error' });
     navigate('/users/sign_in');
     return;
   }
-  throw new Error({ response, message });
+  throw new Error(error);
 }
 
-export async function fetchLists({ navigate }) {
+export async function fetchLists({ navigate }: { navigate: (url: string) => void }): Promise<
+  | {
+      userId: string;
+      completedLists: IList[];
+      currentUserPermissions: TUserPermissions;
+      pendingLists: IList[];
+      incompleteLists: IList[];
+    }
+  | undefined
+> {
   try {
     const {
       data: {
@@ -39,7 +50,11 @@ export async function fetchLists({ navigate }) {
   }
 }
 
-export async function fetchCompletedLists({ navigate }) {
+export async function fetchCompletedLists({
+  navigate,
+}: {
+  navigate: (url: string) => void;
+}): Promise<{ userId: string; completedLists: IList[]; currentUserPermissions: TUserPermissions } | undefined> {
   try {
     const {
       data: {
@@ -58,7 +73,7 @@ export async function fetchCompletedLists({ navigate }) {
   }
 }
 
-export async function fetchListToEdit({ id, navigate }) {
+export async function fetchListToEdit({ id, navigate }: { id: string; navigate: (url: string) => void }) {
   try {
     const {
       data: { id: listId, name, completed, type },
@@ -69,13 +84,13 @@ export async function fetchListToEdit({ id, navigate }) {
       completed,
       type,
     };
-  } catch ({ response }) {
-    if (response) {
-      if (response.status === 401) {
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('List not found', { type: 'error' });
         navigate('/lists');
         return;
@@ -86,26 +101,26 @@ export async function fetchListToEdit({ id, navigate }) {
   }
 }
 
-export function failure({ request, response, message }, navigate, setPending) {
-  if (response) {
-    if (response.status === 401) {
+export function failure(error: any, navigate: (url: string) => void, setPending: (arg: boolean) => void) {
+  if (error.response) {
+    if (error.response.status === 401) {
       toast('You must sign in', { type: 'error' });
       navigate('/users/sign_in');
-    } else if ([403, 404].includes(response.status)) {
+    } else if ([403, 404].includes(error.response.status)) {
       toast('List not found', { type: 'error' });
     } else {
       setPending(false);
-      const responseTextKeys = Object.keys(response.data);
-      const responseErrors = responseTextKeys.map((key) => `${key} ${response.data[key]}`);
+      const responseTextKeys = Object.keys(error.response.data);
+      const responseErrors = responseTextKeys.map((key) => `${key} ${error.response.data[key]}`);
       toast(responseErrors.join(' and '), { type: 'error' });
     }
   } else {
     setPending(false);
-    const toastMessage = request ? 'Something went wrong' : message;
+    const toastMessage = error.request ? 'Something went wrong' : error.message;
     toast(toastMessage, { type: 'error' });
   }
 }
 
-export function pluralize(listCount) {
+export function pluralize(listCount: number) {
   return listCount > 1 ? 'Lists' : 'List';
 }

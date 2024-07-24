@@ -1,22 +1,24 @@
 import React from 'react';
-import Async from 'react-async';
+import Async, { PromiseFn } from 'react-async';
 import { useNavigate } from 'react-router-dom';
 
 import UnknownError from '../error_pages/UnknownError';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
 import Loading from '../../components/Loading';
+import { IList, TUserPermissions } from '../../typings';
 
-export default function CompletedLists() {
+const CompletedLists: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Async promiseFn={fetchCompletedLists} navigate={navigate}>
+    // TODO: figure out typings for promiseFn
+    <Async promiseFn={fetchCompletedLists as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data) => (
+        {(data: { completedLists: IList[]; currentUserPermissions: TUserPermissions; userId: string }) => (
           <CompletedListsContainer
             completedLists={data.completedLists}
             currentUserPermissions={data.currentUserPermissions}
@@ -29,4 +31,6 @@ export default function CompletedLists() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default CompletedLists;
