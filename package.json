@@ -93,8 +93,8 @@
       "global": {
         "branches": 90.96,
         "functions": 98.24,
-        "lines": 98.5,
-        "statements": 98.57
+        "lines": 98.81,
+        "statements": 98.86
       }
     },
     "resetMocks": true,
