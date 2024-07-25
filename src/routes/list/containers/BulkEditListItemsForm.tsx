@@ -19,6 +19,28 @@ interface IBulkEditListItemsFormProps {
   listUsers?: IListUser[];
 }
 
+interface IPutData {
+  category: string | null;
+  author: string | null;
+  quantity: string | null;
+  artist: string | null;
+  album: string | null;
+  assignee_id: string | null;
+  due_by: string | null;
+  clear_category: boolean;
+  clear_author: boolean;
+  clear_quantity: boolean;
+  clear_artist: boolean;
+  clear_album: boolean;
+  clear_assignee: boolean;
+  clear_due_by: boolean;
+  copy: boolean | undefined;
+  move: boolean | undefined;
+  existing_list_id: string | undefined;
+  new_list_name: string | undefined;
+  update_current_items: boolean;
+}
+
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => {
   // if no existing list options, new list form should be displayed by default
   const existingListsOptions = props.lists.map((list) => ({ value: String(list.id), label: list.name }));
@@ -67,7 +89,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
       toast(`You must specify a list to ${formData.copy ? 'copy' : 'move'} items`, { type: 'error' });
       return;
     }
-    const putData = {
+    const putData: IPutData = {
       category: formData.category ?? null,
       author: formData.author ?? null,
       quantity: formData.quantity ?? null,
@@ -82,10 +104,10 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
       clear_album: formData.clearAlbum,
       clear_assignee: formData.clearAssignee,
       clear_due_by: formData.clearDueBy,
-      copy: false,
-      move: false,
-      existing_list_id: formData.existingList,
-      new_list_name: formData.newListName,
+      copy: undefined,
+      move: undefined,
+      existing_list_id: undefined,
+      new_list_name: undefined,
       // if copying, the user will set whether or not to update current items
       // if moving, the current items will not be updated
       // if not doing either, updating the current items is the only action being take

@@ -12,7 +12,13 @@ interface IEditLinkProps {
 const EditLink: React.FC<IEditLinkProps> = ({ to, style = {}, testID, classes = '', disabled = false }) => {
   const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
   return (
-    <Link className={`p-0 me-3 ${classes}`} to={to} style={updatedStyles} data-test-id={testID}>
+    <Link
+      className={`p-0 me-3 ${classes}`}
+      to={to}
+      style={updatedStyles}
+      data-test-id={testID}
+      aria-disabled={disabled}
+    >
       <i className="fa fa-edit fa-2x text-warning" />
     </Link>
   );
