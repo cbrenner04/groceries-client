@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import MergeModal from './MergeModal';
 
-function setup(suppliedProps) {
+function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   const defaultProps = {
     showModal: true,

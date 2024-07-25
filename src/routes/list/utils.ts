@@ -52,23 +52,25 @@ export function categorizeNotPurchasedItems(items: IListItem[], categories: stri
   return obj;
 }
 
-function performSort(items: IListItem[], sortAttrs: (keyof IListItem)[]) {
+function performSort(items: IListItem[], sortAttrs: (keyof IListItem)[]): IListItem[] {
   // return when all items are sorted
   if (sortAttrs.length === 0) {
     return items;
   }
   const sortAttr = sortAttrs.pop()!;
   const sorted = items.sort((a, b) => {
+    const aSorter = a[sortAttr];
+    const bSorter = b[sortAttr];
     // the sort from the server comes back with items with number_in_series: `null` at the end of the list
     // without the next two lines this would put those items at the front of the list
-    if (!a[sortAttr]) {
+    if (!aSorter) {
       return 1;
     }
-    if (!b[sortAttr]) {
+    if (!bSorter) {
       return -1;
     }
-    const positiveBranch = a[sortAttr] > b[sortAttr] ? 1 : 0;
-    return a[sortAttr] < b[sortAttr] ? -1 : positiveBranch;
+    const positiveBranch = aSorter > bSorter ? 1 : 0;
+    return aSorter < bSorter ? -1 : positiveBranch;
   });
   return performSort(sorted, sortAttrs);
 }

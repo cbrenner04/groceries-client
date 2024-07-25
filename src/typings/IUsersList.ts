@@ -1,4 +1,4 @@
-interface IUserList {
+export default interface IUserList {
   user: {
     id: string;
     email: string;
@@ -8,5 +8,3 @@ interface IUserList {
     permissions: string;
   };
 }
-
-export default IUserList;

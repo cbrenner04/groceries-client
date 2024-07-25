@@ -4,13 +4,13 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
-import { EListType, IListItem, IListUsers } from '../../../typings';
+import { EListType, IListItem, IListUser } from '../../../typings';
 
 interface IListItemProps {
   item: IListItem;
   purchased?: boolean;
   listType: EListType;
-  listUsers?: IListUsers[];
+  listUsers?: IListUser[];
   permission: string;
   multiSelect: boolean;
   handleItemDelete: (item: IListItem) => void;

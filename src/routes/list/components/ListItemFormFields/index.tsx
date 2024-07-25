@@ -5,7 +5,7 @@ import Grocery from './Grocery';
 import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
-import { IListUsers } from '../../../../typings';
+import { IListUser } from '../../../../typings';
 
 // TODO: can this just be IListItem - I think this is confusing shit around the app
 export interface IListITemsFormFieldsFormDataProps {
@@ -29,7 +29,7 @@ export interface IListITemsFormFieldsFormDataProps {
 
 interface IListItemFormFieldsProps {
   listType: string;
-  listUsers?: IListUsers[];
+  listUsers?: IListUser[];
   categories?: string[];
   formData: IListITemsFormFieldsFormDataProps;
   setFormData: ChangeEventHandler;
@@ -105,6 +105,6 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
         editForm={editForm ?? false}
       />
     ),
-  })[listType];
+  })[listType] ?? null;
 
 export default ListItemFormFields;

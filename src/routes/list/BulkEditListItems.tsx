@@ -13,9 +13,9 @@ const BulkEditListItems: React.FC = () => {
   const { list_id } = useParams();
   const location = useLocation();
 
-  // TODO: figure out the `promiseFn` typings
   return (
     <Async
+      // TODO: figure out the `promiseFn` typings
       promiseFn={fetchItemsToEdit as unknown as PromiseFn<void>}
       listId={list_id}
       search={location.search}

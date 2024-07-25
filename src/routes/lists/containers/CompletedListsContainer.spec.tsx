@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import CompletedListsContainer from './CompletedListsContainer';
 import axios from '../../../utils/api';
+import { EListType, TUserPermissions } from '../../../typings';
 
 function setup() {
   const props = {
@@ -12,7 +13,7 @@ function setup() {
       {
         id: 'id1',
         name: 'foo',
-        type: 'GroceryList',
+        type: EListType.GROCERY_LIST,
         created_at: new Date('05/28/2020').toISOString(),
         completed: true,
         users_list_id: 'id1',
@@ -23,7 +24,7 @@ function setup() {
       {
         id: 'id2',
         name: 'bar',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/28/2020').toISOString(),
         completed: true,
         users_list_id: 'id2',
@@ -34,7 +35,7 @@ function setup() {
       {
         id: 'id3',
         name: 'baz',
-        type: 'BookList',
+        type: EListType.BOOK_LIST,
         created_at: new Date('05/28/2020').toISOString(),
         completed: true,
         users_list_id: 'id3',
@@ -47,7 +48,7 @@ function setup() {
       id1: 'write',
       id2: 'write',
       id3: 'read',
-    },
+    } as TUserPermissions,
   };
   const component = render(
     <MemoryRouter>
@@ -85,7 +86,7 @@ describe('CompletedListsContainer', () => {
               users_list_id: 'id1',
               name: 'foo',
               user_id: 'id1',
-              type: 'GroceryList',
+              type: EListType.GROCERY_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -104,7 +105,7 @@ describe('CompletedListsContainer', () => {
               users_list_id: 'id1',
               name: 'foo',
               user_id: 'id1',
-              type: 'GroceryList',
+              type: EListType.GROCERY_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -115,7 +116,7 @@ describe('CompletedListsContainer', () => {
               users_list_id: 'id2',
               name: 'bar',
               user_id: 'id1',
-              type: 'GroceryList',
+              type: EListType.GROCERY_LIST,
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -155,7 +156,7 @@ describe('CompletedListsContainer', () => {
             users_list_id: 'id1',
             name: 'foo',
             user_id: 'id1',
-            type: 'GroceryList',
+            type: EListType.GROCERY_LIST,
             created_at: new Date('05/31/2020').toISOString(),
             completed: true,
             refreshed: false,

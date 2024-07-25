@@ -1,14 +1,14 @@
 import React, { ChangeEventHandler } from 'react';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
-import { IListUsers } from '../../../../typings';
+import { IListUser } from '../../../../typings';
 
 interface IToDoFormFieldsProps {
   task: string;
   assigneeId: string;
   dueBy: string;
   completed?: boolean;
-  listUsers: IListUsers[];
+  listUsers: IListUser[];
   editForm?: boolean;
   category?: string;
   categories?: string[];

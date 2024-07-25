@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler } from 'react';
 
 import { CheckboxField, DateField, SelectField } from '../../../../components/FormFields';
-import IListUsers from '../../../../typings/IListUser';
+import { IListUser } from '../../../../typings';
 
 interface IToDoProps {
   assigneeId: string;
@@ -11,7 +11,7 @@ interface IToDoProps {
   clearDueBy: boolean;
   handleClearDueBy: ChangeEventHandler;
   handleInput: ChangeEventHandler;
-  listUsers: IListUsers[];
+  listUsers: IListUser[];
 }
 
 const ToDo: React.FC<IToDoProps> = ({

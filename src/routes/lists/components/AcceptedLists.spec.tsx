@@ -4,9 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import userEvent from '@testing-library/user-event';
 
-import AcceptedLists, { UserPermissions } from './AcceptedLists';
+import AcceptedLists from './AcceptedLists';
 import axios from '../../../utils/api';
-import { EListType } from '../../../typings';
+import { EListType, TUserPermissions } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => ({
 function setup(suppliedProps = {}) {
   const user = userEvent.setup();
   // not sure what the problem is trying to set `currentUserPermissions` in the `defaultProps` object with this object
-  const perms: UserPermissions = {
+  const perms: TUserPermissions = {
     id2: 'write',
     id3: 'write',
     id4: 'read',
