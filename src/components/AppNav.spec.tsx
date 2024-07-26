@@ -1,19 +1,24 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import AppNav from './AppNav';
 import mockAxios from '../utils/api';
 import { UserContext } from '../AppRouter';
 
+interface ISetupReturn extends RenderResult {
+  signOutUser: jest.Mock;
+  user: UserEvent;
+}
+
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup(context: { uid: string; client: string; accessToken: string } | null) {
+function setup(context: { uid: string; client: string; accessToken: string } | null): ISetupReturn {
   const user = userEvent.setup();
   const signOutUser = jest.fn();
   const component = render(

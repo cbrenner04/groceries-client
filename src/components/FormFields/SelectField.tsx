@@ -1,7 +1,7 @@
-import React, { ChangeEventHandler, ReactNode } from 'react';
+import React, { type ChangeEventHandler, type ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface ISelectFieldProps {
+export interface ISelectFieldProps {
   name: string;
   label: string;
   value?: string;
@@ -24,7 +24,7 @@ const SelectField: React.FC<ISelectFieldProps> = ({
   blankOption,
   child = '',
   disabled = false,
-}) => (
+}): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control as="select" value={value} onChange={handleChange} name={name} disabled={disabled}>

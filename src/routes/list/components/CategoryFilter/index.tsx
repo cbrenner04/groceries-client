@@ -1,10 +1,10 @@
-import React, { MouseEventHandler } from 'react';
+import React, { type MouseEventHandler } from 'react';
 
 import Filter from './Filter';
 import Filtered from './Filtered';
 import NoFilter from './NoFilter';
 
-interface ICategoryFilterProps {
+export interface ICategoryFilterProps {
   categories?: string[];
   filter?: string;
   handleClearFilter: MouseEventHandler;
@@ -16,7 +16,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = ({
   filter = '',
   handleClearFilter,
   handleCategoryFilter,
-}) => {
+}): React.JSX.Element => {
   return categories.filter(Boolean).length ? (
     filter ? (
       <Filtered filter={filter} handleClearFilter={handleClearFilter} />

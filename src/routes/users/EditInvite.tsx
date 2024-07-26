@@ -1,4 +1,5 @@
-import React, { FormEvent, ChangeEvent, useState } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -20,7 +21,7 @@ export default function EditInvite() {
       invitation_token: queryString.parse(location.search).invitation_token,
     };
     try {
-      await axios.put(`/auth/invitation`, user);
+      await axios.put('/auth/invitation', user);
       toast('Password successfully updated', { type: 'info' });
       navigate('/users/sign_in');
     } catch (err: any) {

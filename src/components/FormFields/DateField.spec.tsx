@@ -1,11 +1,14 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import DateField from './DateField';
+import DateField, { type IDateFieldProps } from './DateField';
 
 // TODO: couldn't get userEvent to work with this field. Tried `userEvent.type()` and `userEvent.selectOptions()`
 
-async function setup() {
+async function setup(): Promise<{
+  formInput: HTMLElement;
+  props: IDateFieldProps;
+}> {
   const props = {
     handleChange: jest.fn(),
     name: 'testName',

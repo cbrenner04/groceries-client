@@ -1,7 +1,7 @@
-import React, { ChangeEventHandler, ReactNode } from 'react';
+import React, { type ChangeEventHandler, type ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface ITextFieldProps {
+export interface ITextFieldProps {
   name: string;
   label: string;
   value: string;

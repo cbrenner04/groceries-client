@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Grocery from './Grocery';
+import Grocery, { type IGroceryProps } from './Grocery';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IGroceryProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IGroceryProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     quantity: 'foo',
@@ -13,9 +18,9 @@ function setup(suppliedProps = {}) {
     handleInput: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, findByRole } = render(<Grocery {...props} />);
+  const component = render(<Grocery {...props} />);
 
-  return { container, findByLabelText, findByRole, props, user };
+  return { ...component, props, user };
 }
 
 describe('Grocery', () => {

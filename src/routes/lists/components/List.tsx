@@ -1,11 +1,12 @@
-import React, { ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
 
 import { formatDate } from '../../../utils/format';
 import listIconClass from '../../../utils/list_icon';
-import { IList } from '../../../typings';
+import type { IList } from '../../../typings';
 
 interface IListProps {
   listButtons: ReactElement;

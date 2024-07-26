@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import Share from './Share';
 
-async function setup() {
+async function setup(): Promise<{ shareButton: HTMLElement }> {
   const props = {
     to: '/fake/route',
     testID: 'foo',

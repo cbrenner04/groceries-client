@@ -1,10 +1,15 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, fireEvent, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ToDo from './ToDo';
+import ToDo, { type IToDoProps } from './ToDo';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IToDoProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IToDoProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     assigneeId: 'foo',
@@ -17,9 +22,9 @@ function setup(suppliedProps = {}) {
     listUsers: [{ id: 'id1', email: 'foo@ex.co' }],
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findAllByRole, findByLabelText } = render(<ToDo {...props} />);
+  const component = render(<ToDo {...props} />);
 
-  return { container, findAllByRole, findByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('ToDo', () => {

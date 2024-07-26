@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
-import IUserList from '../../typings/IUsersList';
+import type IUserList from '../../typings/IUsersList';
 
 export async function fetchData({ listId, navigate }: { listId: string; navigate: (url: string) => void }) {
   try {

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React, { type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
 interface IFormSubmissionProps {
@@ -16,7 +16,7 @@ const FormSubmission: React.FC<IFormSubmissionProps> = ({
   displayCancelButton,
   cancelAction,
   cancelText = '',
-}) => (
+}): React.JSX.Element => (
   <div className="d-grid gap-2 mt-3">
     <Button type="submit" variant="success" disabled={disabled}>
       {submitText}

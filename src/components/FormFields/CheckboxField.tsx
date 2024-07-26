@@ -1,8 +1,8 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 import { Form } from 'react-bootstrap';
-import { FormCheckType } from 'react-bootstrap/esm/FormCheck';
+import type { FormCheckType } from 'react-bootstrap/esm/FormCheck';
 
-interface ICheckboxFieldProps {
+export interface ICheckboxFieldProps {
   name: string;
   label: string;
   value?: boolean;
@@ -18,7 +18,7 @@ const CheckboxField: React.FC<ICheckboxFieldProps> = ({
   handleChange,
   classes = '',
   type = 'checkbox',
-}) => (
+}): React.JSX.Element => (
   <Form.Group controlId={name} className={`${classes} mb-3`}>
     <Form.Check type={type} checked={value} onChange={handleChange} label={label} name={name} />
   </Form.Group>

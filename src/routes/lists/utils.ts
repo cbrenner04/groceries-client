@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
 import axios from '../../utils/api';
-import { IList, TUserPermissions } from '../../typings';
+import type { IList, TUserPermissions } from '../../typings';
 
 export const sortLists = (lists: IList[]) =>
   lists.sort((a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)));
@@ -34,7 +34,7 @@ export async function fetchLists({ navigate }: { navigate: (url: string) => void
         pending_lists,
         current_list_permissions: currentUserPermissions,
       },
-    } = await axios.get(`/lists/`);
+    } = await axios.get('/lists/');
     const pendingLists = sortLists(pending_lists);
     const completedLists = sortLists(completed_lists);
     const incompleteLists = sortLists(not_completed_lists);
@@ -62,7 +62,7 @@ export async function fetchCompletedLists({
         completed_lists: completedLists,
         current_list_permissions: currentUserPermissions,
       },
-    } = await axios.get(`/completed_lists/`);
+    } = await axios.get('/completed_lists/');
     return {
       userId,
       completedLists,

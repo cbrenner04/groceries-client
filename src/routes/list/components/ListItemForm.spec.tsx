@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListItemForm from './ListItemForm';
+import ListItemForm, { type IListItemFormProps } from './ListItemForm';
 import axios from '../../../utils/api';
 import { EListType } from '../../../typings';
 
@@ -11,7 +11,12 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IListItemFormProps;
+}
+
+function setup(suppliedProps?: Partial<IListItemFormProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     navigate: jest.fn(),
@@ -128,7 +133,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup({ listType: 'BookList' });
+    const { findAllByRole, user } = setup({ listType: EListType.BOOK_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -164,7 +169,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup({ listType: 'MusicList' });
+    const { findAllByRole, user } = setup({ listType: EListType.MUSIC_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -182,7 +187,7 @@ describe('ListItemForm', () => {
         },
       },
     });
-    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: EListType.TO_DO_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -194,7 +199,7 @@ describe('ListItemForm', () => {
     axios.post = jest.fn().mockRejectedValue({
       request: 'request failed',
     });
-    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: EListType.TO_DO_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -206,7 +211,7 @@ describe('ListItemForm', () => {
     axios.post = jest.fn().mockRejectedValue({
       message: 'request failed',
     });
-    const { findAllByRole, user } = setup({ listType: 'ToDoList' });
+    const { findAllByRole, user } = setup({ listType: EListType.TO_DO_LIST });
 
     await user.click((await findAllByRole('button'))[1]);
 
@@ -215,7 +220,7 @@ describe('ListItemForm', () => {
   });
 
   it('sets value for numberInSeries as a number when input', async () => {
-    const { findByLabelText, findAllByRole, user } = setup({ listType: 'BookList' });
+    const { findByLabelText, findAllByRole, user } = setup({ listType: EListType.BOOK_LIST });
 
     await user.type(await findByLabelText('Number in series'), '2');
     await user.click((await findAllByRole('button'))[1]);

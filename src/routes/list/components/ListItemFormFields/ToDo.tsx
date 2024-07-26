@@ -1,7 +1,8 @@
-import React, { ChangeEventHandler } from 'react';
+import type { ChangeEventHandler } from 'react';
+import React from 'react';
 
 import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
-import { IListUser } from '../../../../typings';
+import type { IListUser } from '../../../../typings';
 
 interface IToDoFormFieldsProps {
   task: string;

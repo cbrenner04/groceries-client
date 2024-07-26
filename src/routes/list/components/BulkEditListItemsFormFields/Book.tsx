@@ -1,15 +1,15 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-interface IBookProps {
+export interface IBookProps {
   author: string;
   clearAuthor: boolean;
   handleClearAuthor: ChangeEventHandler;
   handleInput: ChangeEventHandler;
 }
 
-const Book: React.FC<IBookProps> = ({ author, clearAuthor, handleClearAuthor, handleInput }) => (
+const Book: React.FC<IBookProps> = ({ author, clearAuthor, handleClearAuthor, handleInput }): React.JSX.Element => (
   <TextField
     name="author"
     label="Author"

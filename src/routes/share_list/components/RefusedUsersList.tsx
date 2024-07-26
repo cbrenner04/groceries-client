@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Refresh } from '../../../components/ActionButtons';
-import { IUsersList } from '../../../typings';
+import type { IUsersList } from '../../../typings';
 
 interface IRefusedUsersListProps {
   refreshShare: (id: string, userId: string) => void;

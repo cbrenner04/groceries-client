@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, FormEventHandler } from 'react';
+import type { ChangeEventHandler, FormEventHandler } from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
 
 import { PasswordField } from '../../../components/FormFields';

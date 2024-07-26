@@ -3,7 +3,7 @@ import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap
 
 import { Trash } from '../../../components/ActionButtons';
 import TitlePopover from '../../../components/TitlePopover';
-import { IUsersList } from '../../../typings';
+import type { IUsersList } from '../../../typings';
 
 interface IUsersListProps {
   togglePermission: (id: string, permissions: string, status: string) => void;

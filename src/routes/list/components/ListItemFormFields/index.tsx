@@ -1,11 +1,12 @@
-import React, { ChangeEventHandler } from 'react';
+import type { ChangeEventHandler } from 'react';
+import React from 'react';
 
 import Book from './Book';
 import Grocery from './Grocery';
 import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
-import { IListUser } from '../../../../typings';
+import type { IListUser } from '../../../../typings';
 
 // TODO: can this just be IListItem - I think this is confusing shit around the app
 export interface IListITemsFormFieldsFormDataProps {

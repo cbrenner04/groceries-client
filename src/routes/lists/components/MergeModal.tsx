@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, MouseEventHandler } from 'react';
+import type { ChangeEventHandler, MouseEventHandler } from 'react';
+import React from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
 import { TextField } from '../../../components/FormFields';
@@ -37,13 +38,13 @@ const MergeModal: React.FC<IMergeModalProps> = ({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={clearModal} data-test-id={`clear-merge`}>
+        <Button variant="secondary" onClick={clearModal} data-test-id={'clear-merge'}>
           Close
         </Button>
         <Button
           variant="primary"
           onClick={handleMergeConfirm}
-          data-test-id={`confirm-merge`}
+          data-test-id={'confirm-merge'}
           disabled={!mergeName}
           className={mergeName ? 'merge-modal-confirm-enabled' : 'merge-modal-confirm-disabled'}
         >

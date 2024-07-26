@@ -1,11 +1,14 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import BulkEditListItemsFormFields from './index';
+import BulkEditListItemsFormFields, {
+  type IBulkEditListItemsFormFieldsProps,
+  type IBulkEditListItemsFormFieldsFormDataProps,
+} from './index';
 import { EListType } from '../../../../typings';
 
-const defaultFormData = {
+const defaultFormData: IBulkEditListItemsFormFieldsFormDataProps = {
   copy: false,
   move: false,
   existingList: '',
@@ -29,10 +32,15 @@ const defaultFormData = {
   allComplete: false,
 };
 
-function setup(suppliedProps: { listType?: EListType; formData?: typeof defaultFormData }) {
+interface ISetupReturn extends RenderResult {
+  props: IBulkEditListItemsFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IBulkEditListItemsFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     formData: defaultFormData,
     handleInput: jest.fn(),
     clearAttribute: jest.fn(),

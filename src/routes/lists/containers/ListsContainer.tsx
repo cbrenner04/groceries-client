@@ -11,7 +11,7 @@ import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { fetchLists } from '../utils';
 import { usePolling } from '../../../hooks';
-import { IList, TUserPermissions } from '../../../typings';
+import type { IList, TUserPermissions } from '../../../typings';
 
 // TODO: can we do better?
 const isSameSet = (newSet: any, oldSet: any) => JSON.stringify(newSet) === JSON.stringify(oldSet);
@@ -76,7 +76,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props) => {
   const handleFormSubmit = async (list: IList) => {
     setPending(true);
     try {
-      const { data } = await axios.post(`/lists`, { list });
+      const { data } = await axios.post('/lists', { list });
       // must update currentUserPermissions prior to incompleteLists
       const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
       setCurrentUserPermissions(updatedCurrentUserPermissions);

@@ -17,4 +17,9 @@ export default interface IListItem {
   purchased?: boolean;
   created_at?: string;
   user_id?: string;
+  book_list_id?: string;
+  grocery_list_id?: string;
+  music_list_id?: string;
+  simple_list_id?: string;
+  to_do_list_id?: string;
 }

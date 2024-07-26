@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EditListItem from './EditListItem';
@@ -7,15 +7,15 @@ import axios from '../../utils/api';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({
+  useNavigate: (): jest.Mock => jest.fn(),
+  useParams: (): { id: string; list_id: string } => ({
     id: '1',
     list_id: '1',
   }),
 }));
 
 describe('EditListItem', () => {
-  const renderEditListItem = () => {
+  const renderEditListItem = (): RenderResult => {
     return render(
       <MemoryRouter>
         <EditListItem />

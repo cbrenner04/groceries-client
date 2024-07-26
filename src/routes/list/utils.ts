@@ -1,11 +1,12 @@
 import { toast } from 'react-toastify';
+import { type AxiosError } from 'axios';
 
 import axios from '../../utils/api';
 import { formatDueBy } from '../../utils/format';
-import { EListType, IListItem } from '../../typings';
-import { IListITemsFormFieldsFormDataProps } from './components/ListItemFormFields';
+import { EListType, type IList, type IListItem, type IListUser } from '../../typings';
+import type { IListITemsFormFieldsFormDataProps } from './components/ListItemFormFields';
 
-export function itemName(item: IListItem | IListITemsFormFieldsFormDataProps, listType: EListType) {
+export function itemName(item: IListItem | IListITemsFormFieldsFormDataProps, listType: EListType): string | undefined {
   return {
     BookList: `${item.title ? `"${item.title}"` : ''} ${item.author ?? ''}`,
     GroceryList: `${item.quantity ?? ''} ${item.product ?? ''}`,
@@ -17,7 +18,7 @@ export function itemName(item: IListItem | IListITemsFormFieldsFormDataProps, li
   }[listType]?.trim();
 }
 
-export function mapIncludedCategories(items: IListItem[]) {
+export function mapIncludedCategories(items: IListItem[]): string[] {
   const cats = [''];
   items.forEach((item) => {
     if (!item.category) {
@@ -31,7 +32,7 @@ export function mapIncludedCategories(items: IListItem[]) {
   return cats;
 }
 
-export function categorizeNotPurchasedItems(items: IListItem[], categories: string[]) {
+export function categorizeNotPurchasedItems(items: IListItem[], categories: string[]): Record<string, IListItem[]> {
   const obj: Record<string, IListItem[]> = {};
   categories.forEach((cat) => {
     obj[cat] = [];
@@ -75,7 +76,7 @@ function performSort(items: IListItem[], sortAttrs: (keyof IListItem)[]): IListI
   return performSort(sorted, sortAttrs);
 }
 
-export function sortItems(listType: EListType, items: IListItem[]) {
+export function sortItems(listType: EListType, items: IListItem[]): IListItem[] {
   let sortAttrs: (keyof IListItem)[] = [];
   if (listType === EListType.BOOK_LIST) {
     sortAttrs = ['author', 'number_in_series', 'title'];
@@ -92,7 +93,19 @@ export function sortItems(listType: EListType, items: IListItem[]) {
   return sorted;
 }
 
-export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }) {
+export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<
+  | {
+      currentUserId: string;
+      list: IList;
+      purchasedItems: IListItem[];
+      categories: string[];
+      listUsers: IListUser;
+      includedCategories: string[];
+      notPurchasedItems: Record<string, IListItem[]>;
+      permissions: string;
+    }
+  | undefined
+> {
   try {
     const {
       data: {
@@ -118,15 +131,16 @@ export async function fetchList({ id, navigate }: { id: string; navigate: (url: 
       notPurchasedItems,
       permissions,
     };
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 401) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(err.response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('List not found', {
           type: 'error',
         });
@@ -135,7 +149,7 @@ export async function fetchList({ id, navigate }: { id: string; navigate: (url: 
       }
     }
     // any other errors we will catch and render generic UnknownError
-    throw new Error(err);
+    throw new Error(JSON.stringify(error));
   }
 }
 
@@ -147,10 +161,10 @@ export async function fetchItemToEdit({
   itemId: string;
   listId: string;
   navigate: (url: string) => void;
-}) {
+}): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem }> {
   try {
     const {
-      data: { item, list, categories, list_users },
+      data: { item, list, categories, list_users: listUsers },
     } = await axios.get(`/lists/${listId}/list_items/${itemId}/edit`);
     list.categories = categories;
     // TODO: why? can these just be optional?
@@ -172,7 +186,7 @@ export async function fetchItemToEdit({
     const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
     const category = item.category || '';
     return {
-      listUsers: list_users || [],
+      listUsers: listUsers || [],
       userId,
       list,
       item: {
@@ -187,27 +201,26 @@ export async function fetchItemToEdit({
         title,
         read,
         artist,
-        dueBy,
-        assigneeId,
+        due_by: dueBy,
+        assignee_id: assigneeId,
         album,
-        numberInSeries,
+        number_in_series: numberInSeries,
         category,
       },
     };
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 401) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
-        return;
-      } else if ([403, 404].includes(err.response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('Item not found', {
           type: 'error',
         });
         navigate(`/lists/${listId}`);
-        return;
       }
     }
     // any other errors will just be caught and render the generic UnknownError
@@ -223,24 +236,23 @@ export async function fetchItemsToEdit({
   listId: string;
   search: string;
   navigate: (url: string) => void;
-}) {
+}): Promise<{ list: IList; lists: IList[]; items: IListItem[]; categories: string[]; list_users: IListUser[] }> {
   try {
     const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
     return data;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 401) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', {
           type: 'error',
         });
         navigate('/users/sign_in');
-        return;
-      } else if ([403, 404].includes(err.response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('One or more items not found', {
           type: 'error',
         });
         navigate(`/lists/${listId}`);
-        return;
       }
     }
     // any other errors will just be caught and render the generic UnknownError

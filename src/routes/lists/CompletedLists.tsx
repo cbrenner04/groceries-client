@@ -1,12 +1,13 @@
 import React from 'react';
-import Async, { PromiseFn } from 'react-async';
+import type { PromiseFn } from 'react-async';
+import Async from 'react-async';
 import { useNavigate } from 'react-router-dom';
 
 import UnknownError from '../error_pages/UnknownError';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
 import Loading from '../../components/Loading';
-import { IList, TUserPermissions } from '../../typings';
+import type { IList, TUserPermissions } from '../../typings';
 
 const CompletedLists: React.FC = () => {
   const navigate = useNavigate();

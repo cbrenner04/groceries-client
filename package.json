@@ -79,7 +79,40 @@
         "all"
       ],
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "error"
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-inferrable-types": "error",
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "variableLike",
+          "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+        }
+      ],
+      "@typescript-eslint/member-delimiter-style": [
+        "error",
+        {
+          "multiline": {
+            "delimiter": "semi",
+            "requireLast": true
+          },
+          "singleline": {
+            "delimiter": "semi",
+            "requireLast": false
+          }
+        }
+      ],
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/prefer-optional-chain": "error",
+      "@typescript-eslint/indent": ["error", 2],
+      "@typescript-eslint/quotes": ["error", "single"],
+      "@typescript-eslint/semi": ["error", "always"],
+      "@typescript-eslint/type-annotation-spacing": "error",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-empty-function": "error",
+      "@typescript-eslint/explicit-module-boundary-types": "error"
     }
   },
   "jest": {

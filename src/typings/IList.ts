@@ -1,4 +1,4 @@
-import EListType from './EListType';
+import type EListType from './EListType';
 
 export default interface IList {
   id: string;

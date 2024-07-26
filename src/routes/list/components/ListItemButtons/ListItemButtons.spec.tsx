@@ -2,10 +2,12 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import ListItemButtons from './index';
+import ListItemButtons, { type IListItemButtonsProps } from './index';
 import { EListType } from '../../../../typings';
 
-async function setup(suppliedProps: { purchased: boolean }) {
+async function setup(
+  suppliedProps: Partial<IListItemButtonsProps>,
+): Promise<{ container: HTMLElement; buttons: HTMLElement[] }> {
   const defaultProps = {
     item: {
       grocery_list_id: 'id1',

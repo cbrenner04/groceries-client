@@ -1,7 +1,9 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import Async, { PromiseFn } from 'react-async';
+import type { PromiseFn } from 'react-async';
+import Async from 'react-async';
 import { toast } from 'react-toastify';
 
 import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
@@ -11,7 +13,7 @@ import FormSubmission from '../../components/FormSubmission';
 
 async function fetchData({ navigate }: { navigate: (url: string) => void }) {
   try {
-    await axios.get(`/auth/validate_token`);
+    await axios.get('/auth/validate_token');
     navigate('/lists');
   } catch {
     // noop. all errors require login
@@ -41,7 +43,7 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }) => {
           data: { uid },
         },
         headers: { 'access-token': accessToken, client },
-      } = await axios.post(`/auth/sign_in`, user);
+      } = await axios.post('/auth/sign_in', user);
       signInUser(accessToken, client, uid);
       toast(`Welcome ${email}!`, { type: 'info' });
       navigate('/lists');

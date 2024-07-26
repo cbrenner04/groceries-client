@@ -1,7 +1,7 @@
-import React, { ChangeEventHandler, ReactNode } from 'react';
+import React, { type ChangeEventHandler, type ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface ICategoryFieldProps {
+export interface ICategoryFieldProps {
   handleInput: ChangeEventHandler;
   category?: string;
   categories?: string[];
@@ -17,7 +17,7 @@ const CategoryField: React.FC<ICategoryFieldProps> = ({
   name = 'category',
   child = '',
   disabled = false,
-}) => (
+}): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>Category</Form.Label>
     <Form.Control

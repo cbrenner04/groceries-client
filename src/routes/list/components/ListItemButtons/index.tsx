@@ -2,9 +2,9 @@ import React from 'react';
 
 import NotPurchased from './NotPurchased';
 import Purchased from './Purchased';
-import { IListItem, EListType } from '../../../../typings';
+import type { IListItem, EListType } from '../../../../typings';
 
-interface IListItemButtonsProps {
+export interface IListItemButtonsProps {
   item: IListItem;
   purchased: boolean;
   handleItemDelete: (item: IListItem) => void;
@@ -18,7 +18,7 @@ interface IListItemButtonsProps {
   pending: boolean;
 }
 
-const ListItemButtons: React.FC<IListItemButtonsProps> = (props) =>
+const ListItemButtons: React.FC<IListItemButtonsProps> = (props): React.JSX.Element =>
   props.purchased ? (
     <Purchased
       listType={props.listType}

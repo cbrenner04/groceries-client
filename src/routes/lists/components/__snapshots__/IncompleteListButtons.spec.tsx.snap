@@ -17,6 +17,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </button>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/id1/users_lists"
@@ -26,6 +27,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       />
     </a>
     <a
+      aria-disabled="true"
       class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-edit"
       href="/id1/edit"
@@ -64,6 +66,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </button>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/id1/users_lists"
@@ -73,6 +76,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       />
     </a>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/id1/edit"
@@ -184,6 +188,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </button>
     <a
+      aria-disabled="true"
       class="p-0 me-3 list-button-disabled"
       data-test-id="incomplete-list-share"
       href="/id1/users_lists"
@@ -194,6 +199,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       />
     </a>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/id1/edit"
@@ -231,6 +237,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </button>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-share"
       href="/id1/users_lists"
@@ -240,6 +247,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       />
     </a>
     <a
+      aria-disabled="false"
       class="p-0 me-3 list-button-enabled"
       data-test-id="incomplete-list-edit"
       href="/id1/edit"

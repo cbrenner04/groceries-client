@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -14,7 +15,7 @@ export default function NewPassword() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.post(`/auth/password`, {
+      await axios.post('/auth/password', {
         email,
         redirect_url: `${process.env.REACT_APP_PUBLIC_URL}/users/password/edit`,
       });

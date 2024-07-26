@@ -10,11 +10,11 @@ interface IAppNavProps {
   signOutUser: Function;
 }
 
-const AppNav: React.FC<IAppNavProps> = ({ signOutUser }) => {
+const AppNav: React.FC<IAppNavProps> = ({ signOutUser }): React.JSX.Element => {
   const navigate = useNavigate();
   const user = useContext(UserContext);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await axios.delete('/auth/sign_out');
     } catch {
@@ -25,7 +25,7 @@ const AppNav: React.FC<IAppNavProps> = ({ signOutUser }) => {
     navigate('/users/sign_in');
   };
 
-  const handleBrandClick = () => {
+  const handleBrandClick = (): void => {
     const path = user ? '/' : '/users/sign_in';
     navigate(path);
   };
@@ -34,12 +34,12 @@ const AppNav: React.FC<IAppNavProps> = ({ signOutUser }) => {
     <Navbar expand="lg" variant="light" bg="light" fixed="top" data-test-id="nav">
       <Navbar.Brand onClick={handleBrandClick}>Groceries</Navbar.Brand>
       {user && (
-        <>
+        <React.Fragment>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
             <Nav className="me-auto">
               <Nav.Item>
-                <Nav.Link onClick={() => navigate('/users/invitation/new')} data-test-id="invite-link">
+                <Nav.Link onClick={(): void => navigate('/users/invitation/new')} data-test-id="invite-link">
                   Invite
                 </Nav.Link>
               </Nav.Item>
@@ -50,7 +50,7 @@ const AppNav: React.FC<IAppNavProps> = ({ signOutUser }) => {
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
-        </>
+        </React.Fragment>
       )}
     </Navbar>
   );

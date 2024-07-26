@@ -1,15 +1,21 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import CategoryField from './CategoryField';
+import CategoryField, { type ICategoryFieldProps } from './CategoryField';
 
-async function setup() {
+const categories = ['testCategory1'];
+
+async function setup(): Promise<{
+  formInput: HTMLElement;
+  props: ICategoryFieldProps;
+  user: UserEvent;
+}> {
   const user = userEvent.setup();
   const props = {
     handleInput: jest.fn(),
     category: 'testCategory',
-    categories: ['testCategory1'],
+    categories,
   };
   const { findByLabelText } = render(<CategoryField {...props} />);
   const formInput = await findByLabelText('Category');
@@ -24,7 +30,7 @@ describe('CategoryField', () => {
 
     expect(formGroup).toMatchSnapshot();
     expect(formInput).toHaveValue(props.category);
-    expect(formGroup?.children[2].firstChild).toHaveAttribute('value', props.categories[0]);
+    expect(formGroup?.children[2].firstChild).toHaveAttribute('value', categories[0]);
   });
 
   describe('when value changes', () => {

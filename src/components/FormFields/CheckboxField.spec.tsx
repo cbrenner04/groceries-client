@@ -1,10 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import CheckboxField from './CheckboxField';
+import CheckboxField, { type ICheckboxFieldProps } from './CheckboxField';
 
-async function setup() {
+async function setup(): Promise<{
+  formInput: HTMLElement;
+  props: ICheckboxFieldProps;
+  user: UserEvent;
+}> {
   const user = userEvent.setup();
   const props = {
     handleChange: jest.fn(),

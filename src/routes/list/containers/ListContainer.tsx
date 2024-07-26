@@ -1,9 +1,11 @@
-import React, { ChangeEvent, MouseEventHandler, useState } from 'react';
+import type { ChangeEvent, MouseEventHandler } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
 import { Button } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
+import { type AxiosError } from 'axios';
 
 import { capitalize } from '../../../utils/format';
 import ListItem from '../components/ListItem';
@@ -14,8 +16,8 @@ import { itemName, sortItems } from '../utils';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList } from '../utils';
 import { usePolling } from '../../../hooks';
-import { IList, IListItem, IListUser } from '../../../typings';
-import { AxiosResponse } from 'axios';
+import type { IList, IListItem, IListUser } from '../../../typings';
+import type { AxiosResponse } from 'axios';
 
 interface IListContainerProps {
   userId: string;
@@ -28,7 +30,7 @@ interface IListContainerProps {
   permissions: string;
 }
 
-const ListContainer: React.FC<IListContainerProps> = (props) => {
+const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
   const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
   const [purchasedItems, setPurchasedItems] = useState(props.purchasedItems);
   const [categories, setCategories] = useState(props.categories);
@@ -55,8 +57,10 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
           includedCategories: updatedIncludedCategories,
           notPurchasedItems: updatedNotPurchasedItems,
         } = fetchResponse;
-        const isSameSet = (newSet: Record<string, IListItem[]>, oldSet: IListItem[] | Record<string, IListItem[]>) =>
-          JSON.stringify(newSet) === JSON.stringify(oldSet);
+        const isSameSet = (
+          newSet: Record<string, IListItem[]>,
+          oldSet: IListItem[] | Record<string, IListItem[]>,
+        ): boolean => JSON.stringify(newSet) === JSON.stringify(oldSet);
         const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
         const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
         if (!purchasedItemsSame) {
@@ -74,11 +78,11 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
           setListUsers(updatedListUsers);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // `response` will not be undefined if the response from the server comes back
       // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = err.response
+      const errorMessage = (err as AxiosError).response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -88,7 +92,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   }, 3000);
 
-  const handleAddItem = (data: IListItem[]) => {
+  const handleAddItem = (data: IListItem[]): void => {
     // this is to deal the ListItemForm being passed this function
     const items = Array.isArray(data) ? data : [data];
     let updatedNotPurchasedItems = notPurchasedItems;
@@ -123,9 +127,9 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const listItemPath = () => `/lists/${props.list.id}/list_items`;
+  const listItemPath = (): string => `/lists/${props.list.id}/list_items`;
 
-  const removeItemsFromNotPurchased = (items: IListItem[]) => {
+  const removeItemsFromNotPurchased = (items: IListItem[]): void => {
     let updatedNotPurchasedItems = notPurchasedItems;
     const itemCategories: string[] = [];
     items.forEach((item) => {
@@ -155,7 +159,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const moveItemsToPurchased = (items: IListItem[]) => {
+  const moveItemsToPurchased = (items: IListItem[]): void => {
     removeItemsFromNotPurchased(items);
     const updatedItems = items.map((item) => {
       if (['ToDoList', 'SimpleList'].includes(props.list.type)) {
@@ -169,30 +173,33 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     setPurchasedItems(sortItems(props.list.type, updatedPurchasedItems));
   };
 
-  const failure = (err: any) => {
-    if (err.response) {
-      if (err.response.status === 401) {
+  const failure = (err: unknown): void => {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-      } else if ([403, 404].includes(err.response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('Item not found', { type: 'error' });
       } else {
-        const responseTextKeys = Object.keys(err.response.data);
-        const responseErrors = responseTextKeys.map((key) => `${key} ${err.response.data[key]}`);
+        const responseTextKeys = Object.keys(error.response?.data!);
+        const responseErrors = responseTextKeys.map(
+          (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
+        );
         toast(responseErrors.join(' and '), { type: 'error' });
       }
-    } else if (err.request) {
+    } else if (error.request) {
       toast('Something went wrong', { type: 'error' });
     } else {
-      toast(err.message, { type: 'error' });
+      toast(error.message, { type: 'error' });
     }
   };
 
-  const pluralize = (items: IListItem[]) => {
+  const pluralize = (items: IListItem[]): string => {
     return items.length > 1 ? 'Items' : 'Item';
   };
 
-  const handleItemPurchase = async (item: IListItem) => {
+  const handleItemPurchase = async (item: IListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
     const filteredItems = items.filter((i) => !i.purchased && !i.completed);
     const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
@@ -214,7 +221,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const toggleRead = async (item: IListItem) => {
+  const toggleRead = async (item: IListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
     const updateRequests = items.map((item) => {
       const isRead = !item.read;
@@ -254,7 +261,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const removeItemsFromPurchased = (items: IListItem[]) => {
+  const removeItemsFromPurchased = (items: IListItem[]): void => {
     let updatePurchasedItems = purchasedItems;
     items.forEach((item) => {
       const itemIndex = updatePurchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
@@ -263,7 +270,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     setPurchasedItems(updatePurchasedItems);
   };
 
-  const handleRefresh = async (item: IListItem) => {
+  const handleRefresh = async (item: IListItem): Promise<void> => {
     setPending(true);
     const items = selectedItems.length ? selectedItems : [item];
     const filteredItems = items.filter((item) => item.purchased ?? item.completed);
@@ -307,13 +314,13 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const handleDelete = (item: IListItem) => {
+  const handleDelete = (item: IListItem): void => {
     const items = selectedItems.length ? selectedItems : [item];
     setItemsToDelete(items);
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
     const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath()}/${item.id}`));
     try {
@@ -339,7 +346,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     }
   };
 
-  const handleItemSelect = (item: IListItem) => {
+  const handleItemSelect = (item: IListItem): void => {
     const itemIds = selectedItems.map((i) => i.id);
     let updatedItems;
     if (itemIds.includes(item.id)) {
@@ -350,7 +357,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
     setSelectedItems(updatedItems);
   };
 
-  const handleItemEdit = async (item: IListItem) => {
+  const handleItemEdit = async (item: IListItem): Promise<void> => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
       navigate(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
@@ -393,7 +400,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
                 setDisplayedCategories([name]);
               }) as unknown as MouseEventHandler
             }
-            handleClearFilter={() => {
+            handleClearFilter={(): void => {
               setFilter('');
               setDisplayedCategories(includedCategories);
             }}
@@ -405,7 +412,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
           <Button
             variant="link"
             className="mx-auto float-end"
-            onClick={() => {
+            onClick={(): void => {
               if (incompleteMultiSelect && selectedItems.length > 0) {
                 setSelectedItems([]);
               }
@@ -449,7 +456,7 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
           <Button
             variant="link"
             className="mx-auto float-end"
-            onClick={() => {
+            onClick={(): void => {
               if (completeMultiSelect && selectedItems.length > 0) {
                 setSelectedItems([]);
               }
@@ -487,8 +494,8 @@ const ListContainer: React.FC<IListContainerProps> = (props) => {
           .map((item) => itemName(item, props.list.type))
           .join(', ')}`}
         show={showDeleteConfirm}
-        handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => setShowDeleteConfirm(false)}
+        handleConfirm={(): Promise<void> => handleDeleteConfirm()}
+        handleClear={(): void => setShowDeleteConfirm(false)}
       />
     </>
   );

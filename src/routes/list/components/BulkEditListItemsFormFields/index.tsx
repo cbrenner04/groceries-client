@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import Book from './Book';
 import Grocery from './Grocery';
@@ -6,9 +6,9 @@ import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
 import { CategoryField, CheckboxField } from '../../../../components/FormFields';
-import { IListUser } from '../../../../typings';
+import { type IListUser } from '../../../../typings';
 
-interface IBulkEditListItemsFormFieldsFormDataProps {
+export interface IBulkEditListItemsFormFieldsFormDataProps {
   copy: boolean;
   move: boolean;
   existingList: string;
@@ -32,7 +32,7 @@ interface IBulkEditListItemsFormFieldsFormDataProps {
   allComplete: boolean;
 }
 
-interface IBulkEditListItemsFormFieldsProps {
+export interface IBulkEditListItemsFormFieldsProps {
   listType: string;
   formData: IBulkEditListItemsFormFieldsFormDataProps;
   handleInput: ChangeEventHandler;
@@ -51,7 +51,7 @@ interface IBulkEditListItemsFormFieldsProps {
   categories: string[];
 }
 
-const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> = (props) => {
+const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> = (props): React.JSX.Element => {
   return (
     <>
       <div>Move or copy these items to another list.</div>
@@ -82,7 +82,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
                 <Book
                   author={props.formData.author ?? ''}
                   clearAuthor={props.formData.clearAuthor}
-                  handleClearAuthor={() => props.clearAttribute('author', 'clearAuthor')}
+                  handleClearAuthor={(): void => props.clearAttribute('author', 'clearAuthor')}
                   handleInput={props.handleInput}
                 />
               ),
@@ -90,7 +90,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
                 <Grocery
                   quantity={props.formData.quantity ?? ''}
                   clearQuantity={props.formData.clearQuantity}
-                  handleClearQuantity={() => props.clearAttribute('quantity', 'clearQuantity')}
+                  handleClearQuantity={(): void => props.clearAttribute('quantity', 'clearQuantity')}
                   handleInput={props.handleInput}
                 />
               ),
@@ -98,10 +98,10 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
                 <Music
                   artist={props.formData.artist ?? ''}
                   clearArtist={props.formData.clearArtist}
-                  handleClearArtist={() => props.clearAttribute('artist', 'clearArtist')}
+                  handleClearArtist={(): void => props.clearAttribute('artist', 'clearArtist')}
                   album={props.formData.album ?? ''}
                   clearAlbum={props.formData.clearAlbum}
-                  handleClearAlbum={() => props.clearAttribute('album', 'clearAlbum')}
+                  handleClearAlbum={(): void => props.clearAttribute('album', 'clearAlbum')}
                   handleInput={props.handleInput}
                 />
               ),
@@ -110,10 +110,10 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
                 <ToDo
                   dueBy={props.formData.dueBy ?? ''}
                   clearDueBy={props.formData.clearDueBy}
-                  handleClearDueBy={() => props.clearAttribute('dueBy', 'clearDueBy')}
+                  handleClearDueBy={(): void => props.clearAttribute('dueBy', 'clearDueBy')}
                   assigneeId={props.formData.assigneeId ?? ''}
                   clearAssignee={props.formData.clearAssignee}
-                  handleClearAssignee={() => props.clearAttribute('assigneeId', 'clearAssignee')}
+                  handleClearAssignee={(): void => props.clearAttribute('assigneeId', 'clearAssignee')}
                   handleInput={props.handleInput}
                   listUsers={props.listUsers}
                 />
@@ -130,7 +130,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
               <CheckboxField
                 name="clearCategory"
                 label="Clear category"
-                handleChange={() => props.clearAttribute('category', 'clearCategory')}
+                handleChange={(): void => props.clearAttribute('category', 'clearCategory')}
                 value={props.formData.clearCategory}
                 classes="ms-1 mt-1"
               />

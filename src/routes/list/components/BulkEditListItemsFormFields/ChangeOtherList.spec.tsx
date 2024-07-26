@@ -1,10 +1,16 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ChangeOtherList from './ChangeOtherList';
+import ChangeOtherList, { type IChangeOtherListProps } from './ChangeOtherList';
+import { EListType } from '../../../../typings';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IChangeOtherListProps;
+}
+
+function setup(suppliedProps?: Partial<IChangeOtherListProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     handleOtherListChange: jest.fn(),
@@ -17,7 +23,7 @@ function setup(suppliedProps = {}) {
         label: 'foobar',
       },
     ],
-    listType: 'GroceryList',
+    listType: EListType.GROCERY_LIST,
     handleInput: jest.fn(),
     handleShowNewListForm: jest.fn(),
     clearNewListForm: jest.fn(),

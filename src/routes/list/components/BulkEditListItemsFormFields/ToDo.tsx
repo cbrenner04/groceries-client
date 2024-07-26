@@ -1,9 +1,9 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, DateField, SelectField } from '../../../../components/FormFields';
-import { IListUser } from '../../../../typings';
+import type { IListUser } from '../../../../typings';
 
-interface IToDoProps {
+export interface IToDoProps {
   assigneeId: string;
   clearAssignee: boolean;
   handleClearAssignee: ChangeEventHandler;
@@ -23,7 +23,7 @@ const ToDo: React.FC<IToDoProps> = ({
   handleClearDueBy,
   handleInput,
   listUsers,
-}) => (
+}): React.JSX.Element => (
   <>
     <SelectField
       name="assigneeId"

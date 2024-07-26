@@ -1,18 +1,19 @@
 import React from 'react';
-import { Link, NavigateFunction } from 'react-router-dom';
-import Async, { PromiseFn } from 'react-async';
+import { Link, type NavigateFunction } from 'react-router-dom';
+import Async, { type PromiseFn } from 'react-async';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import type { AxiosError } from 'axios';
 
 import axios from '../../utils/api';
 import Loading from '../../components/Loading';
 import UnknownError from './UnknownError';
 
-const fetchData = async ({ navigate }: { navigate: NavigateFunction }) => {
+const fetchData = async ({ navigate }: { navigate: NavigateFunction }): Promise<void> => {
   try {
     await axios.get('/auth/validate_token');
-  } catch (err: any) {
-    if (err?.response?.status === 401) {
+  } catch (err: unknown) {
+    if ((err as AxiosError).response?.status === 401) {
       toast('You must sign in', { type: 'error' });
       navigate('/users/sign_in');
     }
@@ -21,7 +22,7 @@ const fetchData = async ({ navigate }: { navigate: NavigateFunction }) => {
   }
 };
 
-const PageNotFound: React.FC = () => {
+const PageNotFound: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   return (
     // TODO: figure out typing here

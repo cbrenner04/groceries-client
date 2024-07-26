@@ -24,7 +24,7 @@ interface IUser {
 
 export const UserContext = createContext<IUser | null>(null);
 
-export default function AppRouter() {
+export default function AppRouter(): React.JSX.Element {
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function AppRouter() {
     }
   }, []);
 
-  const signInUser = (accessToken: string, client: string, uid: string) => {
+  const signInUser = (accessToken: string, client: string, uid: string): void => {
     sessionStorage.setItem(
       'user',
       JSON.stringify({
@@ -48,7 +48,7 @@ export default function AppRouter() {
     setUser({ accessToken, client, uid });
   };
 
-  const signOutUser = () => {
+  const signOutUser = (): void => {
     setUser(null);
     sessionStorage.removeItem('user');
   };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { createRoot, Root } from 'react-dom/client';
+import type { Root } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss';
 import AppRouter from './AppRouter';

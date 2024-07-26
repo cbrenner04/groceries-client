@@ -1,10 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import NumberField, { INumberFieldProps } from './NumberField';
+import NumberField, { type INumberFieldProps } from './NumberField';
 
-async function setup(suppliedProps = {}) {
+async function setup(suppliedProps?: Partial<INumberFieldProps>): Promise<{
+  formInput: HTMLElement;
+  props: INumberFieldProps;
+  user: UserEvent;
+}> {
   const user = userEvent.setup();
   const defaultProps = {
     handleChange: jest.fn(),

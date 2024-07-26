@@ -1,15 +1,21 @@
-import React, { MouseEventHandler, ReactNode } from 'react';
+import React, { type MouseEventHandler } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-interface IConfirmModalProps {
+export interface IConfirmModalProps {
   action: string;
-  body: ReactNode;
+  body: string;
   show: boolean;
   handleConfirm: MouseEventHandler;
   handleClear: () => void;
 }
 
-const ConfirmModal: React.FC<IConfirmModalProps> = ({ action, body, show, handleConfirm, handleClear }) => (
+const ConfirmModal: React.FC<IConfirmModalProps> = ({
+  action,
+  body,
+  show,
+  handleConfirm,
+  handleClear,
+}): React.JSX.Element => (
   <Modal show={show} onHide={handleClear}>
     <Modal.Header closeButton>
       <Modal.Title>Confirm {action}</Modal.Title>

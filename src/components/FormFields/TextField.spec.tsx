@@ -1,10 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import TextField from './TextField';
+import TextField, { type ITextFieldProps } from './TextField';
 
-async function setup() {
+async function setup(): Promise<{
+  formInput: HTMLElement;
+  props: ITextFieldProps;
+  user: UserEvent;
+}> {
   const user = userEvent.setup();
   const props = {
     handleChange: jest.fn(),

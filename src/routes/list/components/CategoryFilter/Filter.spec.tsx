@@ -1,19 +1,24 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Filter from './Filter';
+import Filter, { type IFilterProps } from './Filter';
 
-function setup() {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IFilterProps;
+}
+
+function setup(): ISetupReturn {
   const user = userEvent.setup();
   const props = {
     categories: ['foo', 'bar', ''],
     handleCategoryFilter: jest.fn(),
   };
 
-  const { findByRole, findByTestId, findByText } = render(<Filter {...props} />);
+  const component = render(<Filter {...props} />);
 
-  return { findByRole, findByTestId, findByText, props, user };
+  return { ...component, props, user };
 }
 
 describe('Filter', () => {

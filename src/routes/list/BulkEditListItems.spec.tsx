@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import BulkEditListItems from './BulkEditListItems';
 import axios from '../../utils/api';
 
 describe('BulkEditListItems', () => {
-  const renderBulkEditListItems = () => {
+  const renderBulkEditListItems = (): RenderResult => {
     return render(
       <MemoryRouter>
         <BulkEditListItems />

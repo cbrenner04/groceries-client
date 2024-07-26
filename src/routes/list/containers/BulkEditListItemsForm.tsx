@@ -1,16 +1,17 @@
-import React, { ChangeEventHandler, ChangeEvent, FormEvent, useState } from 'react';
+import React, { useState, type ChangeEventHandler, type ChangeEvent, type FormEvent } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
+import { type AxiosError } from 'axios';
 
 import { formatDueBy } from '../../../utils/format';
 import axios from '../../../utils/api';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IList, IListItem, IListUser } from '../../../typings';
+import { EListType, type IList, type IListItem, type IListUser } from '../../../typings';
 
-interface IBulkEditListItemsFormProps {
+export interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
   items: IListItem[];
   list: IList;
@@ -41,7 +42,7 @@ interface IPutData {
   update_current_items: boolean;
 }
 
-const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => {
+const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
   // if no existing list options, new list form should be displayed by default
   const existingListsOptions = props.lists.map((list) => ({ value: String(list.id), label: list.name }));
 
@@ -52,7 +53,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
   const initialAttr = (attribute: keyof IListItem): string | Date | number | undefined => {
     const uniqValues = [...new Set(props.items.map(({ [attribute]: value }) => value))];
     // TODO: I have no idea why this says it will return a boolean value
-    //eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
     return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : undefined;
   };
@@ -82,7 +83,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
 
   const [formData, setFormData] = useState(initialValues);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     // must have existing list or new list identified to copy or move
     if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
@@ -132,17 +133,21 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
       });
       toast('Items successfully updated', { type: 'info' });
       props.navigate(`/lists/${props.list.id}`);
-    } catch (err: any) {
-      if (err?.response) {
-        if (err?.response.status === 401) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      if (error.response) {
+        if (error.response?.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(err?.response.status)) {
+        } else if ([403, 404].includes(error.response?.status!)) {
           toast('Some items not found', { type: 'error' });
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(err?.response.data);
-          const responseErrors = keys.map((key) => `${key} ${err?.response.data[key]}`);
+          const keys = Object.keys(error.response?.data!);
+          // TODO: sort out typings
+          const responseErrors = keys.map(
+            (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
+          );
           let joinString;
           if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
             joinString = ' or ';
@@ -151,15 +156,15 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (err?.request) {
+      } else if (error.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(err?.message, { type: 'error' });
+        toast(error.message, { type: 'error' });
       }
     }
   };
 
-  const clearNewListForm = () => {
+  const clearNewListForm = (): void => {
     const updatedFormData = update(formData, {
       newListName: { $set: '' },
       showNewListForm: { $set: initialValues.showNewListForm },
@@ -167,7 +172,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
     setFormData(updatedFormData);
   };
 
-  const handleOtherListChange = (isCopy: boolean) => {
+  const handleOtherListChange = (isCopy: boolean): void => {
     const [action, oppositeAction]: [keyof typeof formData, keyof typeof formData] = isCopy
       ? ['copy', 'move']
       : ['move', 'copy'];
@@ -185,7 +190,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
     setFormData(updatedFormData);
   };
 
-  const handleInput = ({ target: { name, value, checked } }: ChangeEvent<HTMLInputElement>) => {
+  const handleInput = ({ target: { name, value, checked } }: ChangeEvent<HTMLInputElement>): void => {
     let newValue: string | boolean = value;
     if (name === 'updateCurrentItems') {
       newValue = checked;
@@ -194,7 +199,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
     setFormData(updatedFormData);
   };
 
-  const clearAttribute = (attribute: keyof typeof formData, clearAttribute: keyof typeof formData) => {
+  const clearAttribute = (attribute: keyof typeof formData, clearAttribute: keyof typeof formData): void => {
     const updates: Record<string, { $set: number | boolean | string | undefined }> = {};
     if (!formData[clearAttribute] && formData[attribute]) {
       updates[attribute] = { $set: '' };
@@ -207,7 +212,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
     setFormData(updatedFormData);
   };
 
-  const handleShowNewListForm = () => {
+  const handleShowNewListForm = (): void => {
     const updatedFormData = update(formData, {
       existingList: { $set: '' },
       showNewListForm: { $set: true },
@@ -235,7 +240,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props) => 
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
+          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
           displayCancelButton={true}
         />

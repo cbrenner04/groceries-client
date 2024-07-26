@@ -1,14 +1,14 @@
 import React from 'react';
-import Async, { PromiseFn } from 'react-async';
+import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import { IList, IListItem, IListUser } from '../../typings';
+import type { IList, IListItem, IListUser } from '../../typings';
 
-export default function List() {
+const List = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -28,7 +28,7 @@ export default function List() {
           includedCategories: string[];
           notPurchasedItems: Record<string, IListItem[]>;
           permissions: string;
-        }) => (
+        }): React.JSX.Element => (
           <ListContainer
             userId={data.currentUserId}
             list={data.list}
@@ -46,4 +46,6 @@ export default function List() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default List;

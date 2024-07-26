@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 import { Form } from 'react-bootstrap';
 
 export interface INumberFieldProps {
@@ -8,7 +8,7 @@ export interface INumberFieldProps {
   handleChange: ChangeEventHandler;
 }
 
-const NumberField: React.FC<INumberFieldProps> = ({ name, label, value = '', handleChange }) => (
+const NumberField: React.FC<INumberFieldProps> = ({ name, label, value = '', handleChange }): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control type="number" value={value} onChange={handleChange} name={name} />

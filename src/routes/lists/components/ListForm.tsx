@@ -1,9 +1,11 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 
 import ListFormFields from '../components/ListFormFields';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IList } from '../../../typings';
+import type { IList } from '../../../typings';
+import { EListType } from '../../../typings';
 
 interface IListFormProps {
   onFormSubmit: (list: IList) => Promise<void>;

@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, ChangeEvent, ReactElement, useState } from 'react';
+import type { ChangeEventHandler, ChangeEvent, ReactElement } from 'react';
+import React, { useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -12,7 +13,7 @@ import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
-import { IList, TUserPermissions } from '../../../typings';
+import type { IList, TUserPermissions } from '../../../typings';
 
 interface IAcceptedListsProps {
   completed: boolean;

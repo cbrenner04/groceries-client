@@ -1,19 +1,16 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 
-import CategoryFilter from './index';
+import CategoryFilter, { type ICategoryFilterProps } from './index';
 
-function setup(suppliedProps: { categories?: string[]; filter?: string } = {}) {
-  const defaultProps = {
-    categories: [],
-    filter: '',
+function setup(suppliedProps: Partial<ICategoryFilterProps>): RenderResult {
+  const defaultProps: ICategoryFilterProps = {
     handleClearFilter: jest.fn(),
     handleCategoryFilter: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByRole } = render(<CategoryFilter {...props} />);
 
-  return { container, findByRole };
+  return render(<CategoryFilter {...props} />);
 }
 
 describe('CategoryFilter', () => {
@@ -28,7 +25,7 @@ describe('CategoryFilter', () => {
   });
 
   it('renders Filter when categories exist but filter does not', async () => {
-    const { container, findByRole } = setup({ categories: ['foo', 'bar'] });
+    const { container, findByRole } = setup({ categories: ['foo', 'bar'], filter: '' });
 
     expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('Filter by category');
@@ -36,7 +33,7 @@ describe('CategoryFilter', () => {
   });
 
   it('renders NoFilter when categories do not exist', async () => {
-    const { container, findByRole } = setup();
+    const { container, findByRole } = setup({ categories: [], filter: '' });
 
     expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('Filter by category');

@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import EditLink from './EditLink';
 
-async function setup() {
+async function setup(): Promise<{ editLink: HTMLElement }> {
   const props = {
     to: '/fake/route',
     style: {},

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import List from './List';
@@ -7,14 +7,14 @@ import axios from '../../utils/api';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({
+  useNavigate: (): jest.Mock => jest.fn(),
+  useParams: (): { id: string } => ({
     id: '1',
   }),
 }));
 
 describe('List', () => {
-  const renderList = () => {
+  const renderList = (): RenderResult => {
     return render(
       <MemoryRouter>
         <List />

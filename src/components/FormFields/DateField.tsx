@@ -1,7 +1,7 @@
-import React, { ChangeEventHandler, ReactNode } from 'react';
+import React, { type ChangeEventHandler, type ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface IDateFieldProps {
+export interface IDateFieldProps {
   name: string;
   label: string;
   value: string;
@@ -19,7 +19,7 @@ const DateField: React.FC<IDateFieldProps> = ({
   placeholder = '',
   child = '',
   disabled = false,
-}) => (
+}): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control

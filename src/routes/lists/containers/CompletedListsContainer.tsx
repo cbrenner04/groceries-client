@@ -6,7 +6,7 @@ import AcceptedLists from '../components/AcceptedLists';
 import TitlePopover from '../../../components/TitlePopover';
 import { fetchCompletedLists } from '../utils';
 import { usePolling } from '../../../hooks';
-import { IList, TUserPermissions } from '../../../typings';
+import type { IList, TUserPermissions } from '../../../typings';
 
 interface ICompletedListContainer {
   userId: string;

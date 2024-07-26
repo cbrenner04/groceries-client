@@ -6,7 +6,8 @@ import userEvent from '@testing-library/user-event';
 
 import ListsContainer from './ListsContainer';
 import axios from '../../../utils/api';
-import { EListType, TUserPermissions } from '../../../typings';
+import type { TUserPermissions } from '../../../typings';
+import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),

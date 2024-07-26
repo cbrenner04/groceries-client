@@ -11,7 +11,7 @@ import { sortLists, failure, pluralize } from '../utils';
 import { Complete, Trash } from '../../../components/ActionButtons';
 import Lists from './Lists';
 import { useNavigate } from 'react-router-dom';
-import { IList } from '../../../typings';
+import type { IList } from '../../../typings';
 
 interface IPendingListsProps {
   userId: string;

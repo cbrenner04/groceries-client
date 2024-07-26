@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, ChangeEvent } from 'react';
+import type { ChangeEventHandler, ChangeEvent } from 'react';
+import React from 'react';
 
 import { CheckboxField, SelectField, TextField } from '../../../components/FormFields';
 import { EListType } from '../../../typings';

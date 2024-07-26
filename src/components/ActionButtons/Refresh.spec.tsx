@@ -1,10 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import Refresh from './Refresh';
 
-async function setup() {
+async function setup(): Promise<{
+  handleClick: jest.Mock;
+  refreshButton: HTMLElement;
+  user: UserEvent;
+}> {
   const user = userEvent.setup();
   const handleClick = jest.fn();
   const props = {

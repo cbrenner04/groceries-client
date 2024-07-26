@@ -1,4 +1,4 @@
-import { EListType } from '../typings';
+import type { EListType } from '../typings';
 
 const listIconClass = (listType: EListType) =>
   ({

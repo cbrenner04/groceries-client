@@ -1,10 +1,16 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import SelectField from './SelectField';
+import SelectField, { type ISelectFieldProps } from './SelectField';
 
-async function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  formInput: HTMLElement;
+  props: ISelectFieldProps;
+  user: UserEvent;
+}
+
+async function setup(suppliedProps: Partial<ISelectFieldProps>): Promise<ISetupReturn> {
   const user = userEvent.setup();
   const defaultProps = {
     handleChange: jest.fn(),
@@ -23,10 +29,10 @@ async function setup(suppliedProps = {}) {
     blankOption: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { findByLabelText, findByText } = render(<SelectField {...props} />);
-  const formInput = await findByLabelText(props.label);
+  const component = render(<SelectField {...props} />);
+  const formInput = await component.findByLabelText(props.label);
 
-  return { formInput, findByText, props, user };
+  return { formInput, ...component, props, user };
 }
 
 describe('SelectField', () => {

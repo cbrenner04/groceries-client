@@ -1,10 +1,10 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import { CheckboxField, SelectField, TextField } from '../../../../components/FormFields';
 import { prettyListType } from '../../../../utils/format';
 
-interface IChangeOtherListProps {
+export interface IChangeOtherListProps {
   handleOtherListChange: (isCopy: boolean) => void;
   copy: boolean;
   move: boolean;
@@ -23,12 +23,12 @@ interface IChangeOtherListProps {
   allComplete: boolean;
 }
 
-const ChangeOtherList: React.FC<IChangeOtherListProps> = (props) => {
-  const handleMove = () => {
+const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Element => {
+  const handleMove = (): void => {
     props.handleOtherListChange(false);
   };
 
-  const handleCopy = () => {
+  const handleCopy = (): void => {
     props.handleOtherListChange(true);
   };
 

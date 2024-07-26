@@ -1,23 +1,21 @@
-import React, { ChangeEventHandler } from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import React from 'react';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Book from './Book';
+import Book, { type IBookProps } from './Book';
 
-function setup(
-  suppliedProps: {
-    author?: string;
-    clearAuthor?: boolean;
-    handleClearAuthor?: ChangeEventHandler;
-    handleInput?: ChangeEventHandler;
-  } = {},
-) {
+interface ISetupReturn extends RenderResult {
+  props: IBookProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IBookProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = { author: 'foo', clearAuthor: false, handleClearAuthor: jest.fn(), handleInput: jest.fn() };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, findByRole } = render(<Book {...props} />);
+  const component = render(<Book {...props} />);
 
-  return { container, findByLabelText, findByRole, props, user };
+  return { ...component, props, user };
 }
 
 describe('Book', () => {

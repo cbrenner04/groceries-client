@@ -187,6 +187,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/id3/users_lists"
@@ -196,6 +197,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/id3/edit"
@@ -276,6 +278,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </button>
                   <a
+                    aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     href="/id5/users_lists"
@@ -286,6 +289,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     />
                   </a>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/id5/edit"
@@ -780,6 +784,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-share"
                     href="/id3/users_lists"
@@ -789,6 +794,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/id3/edit"
@@ -869,6 +875,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </button>
                   <a
+                    aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
                     data-test-id="incomplete-list-share"
                     href="/id5/users_lists"
@@ -879,6 +886,7 @@ exports[`ListsContainer renders 1`] = `
                     />
                   </a>
                   <a
+                    aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-edit"
                     href="/id5/edit"

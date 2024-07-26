@@ -1,12 +1,13 @@
 import React from 'react';
-import Async, { PromiseFn } from 'react-async';
+import type { PromiseFn } from 'react-async';
+import Async from 'react-async';
 
 import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
 import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IListUser, IUsersList } from '../../typings';
+import type { IListUser, IUsersList } from '../../typings';
 
 export default function ShareList() {
   const navigate = useNavigate();

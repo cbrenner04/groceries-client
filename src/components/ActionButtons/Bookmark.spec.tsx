@@ -1,10 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Bookmark from './Bookmark';
+import Bookmark, { type IBookmarkProps } from './Bookmark';
 
-async function setup(suppliedProps = {}) {
+async function setup(suppliedProps?: Partial<IBookmarkProps>): Promise<{
+  bookmark: HTMLElement;
+  handleClick: jest.Mock;
+  user: UserEvent;
+}> {
   const handleClick = jest.fn();
   const user = userEvent.setup();
   const defaultProps = {

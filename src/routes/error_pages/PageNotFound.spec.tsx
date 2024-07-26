@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -13,10 +13,10 @@ jest.mock('react-toastify', () => ({
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup() {
+function setup(): RenderResult {
   const component = render(
     <MemoryRouter>
       <PageNotFound />

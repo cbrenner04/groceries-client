@@ -1,7 +1,7 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface IPasswordFieldProps {
+export interface IPasswordFieldProps {
   name: string;
   label: string;
   value: string;
@@ -9,7 +9,13 @@ interface IPasswordFieldProps {
   placeholder?: string;
 }
 
-const PasswordField: React.FC<IPasswordFieldProps> = ({ name, label, value, handleChange, placeholder = '' }) => (
+const PasswordField: React.FC<IPasswordFieldProps> = ({
+  name,
+  label,
+  value,
+  handleChange,
+  placeholder = '',
+}): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control

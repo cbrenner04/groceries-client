@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 
 import { Refresh, Trash, Merge } from '../../../components/ActionButtons';
-import { IList } from '../../../typings';
+import type { IList } from '../../../typings';
 
 interface ICompleteListButtonsProps {
   userId: string;

@@ -1,15 +1,17 @@
-import React, { ChangeEventHandler, ChangeEvent, FormEvent, useState } from 'react';
+import React, { useState, type ChangeEventHandler, type ChangeEvent, type FormEvent } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
+import { type AxiosError } from 'axios';
 
 import axios from '../../../utils/api';
-import ListItemFormFields, { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
+import type { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
+import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IList, IListUser } from '../../../typings';
+import { EListType, type IList, type IListUser } from '../../../typings';
 
-interface IEditListItemFormProps {
+export interface IEditListItemFormProps {
   navigate: (url: string) => void;
   listUsers: IListUser[];
   item: IListITemsFormFieldsFormDataProps;
@@ -17,9 +19,9 @@ interface IEditListItemFormProps {
   userId: string;
 }
 
-const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
+const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
   const [item, setItem] = useState(props.item);
-  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => {
     let newValue: string | number = value;
     /* istanbul ignore else */
     if (name === 'numberInSeries') {
@@ -29,7 +31,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
     setItem(data);
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     const putData = {
       list_item: {
@@ -56,17 +58,18 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
       await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, putData);
       toast('Item successfully updated', { type: 'info' });
       props.navigate(`/lists/${props.list.id}`);
-    } catch (err: any) {
-      if (err.response) {
-        if (err.response.status === 401) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      if (error.response) {
+        if (error.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(err.response.status)) {
+        } else if ([403, 404].includes(error.response.status)) {
           toast('Item not found', { type: 'error' });
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(err.response.data);
-          const responseErrors = keys.map((key) => `${key} ${err.response.data[key]}`);
+          const keys = Object.keys(error.response.data!);
+          const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
           let joinString;
           if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
             joinString = ' or ';
@@ -75,10 +78,10 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (err.request) {
+      } else if (error.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(err.message, { type: 'error' });
+        toast(error.message, { type: 'error' });
       }
     }
   };
@@ -99,7 +102,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props) => {
         />
         <FormSubmission
           submitText="Update Item"
-          cancelAction={() => props.navigate(`/lists/${props.list.id}`)}
+          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
           displayCancelButton={true}
         />

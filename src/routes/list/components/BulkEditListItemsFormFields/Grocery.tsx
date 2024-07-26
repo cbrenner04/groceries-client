@@ -1,15 +1,20 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-interface IGroceryProps {
+export interface IGroceryProps {
   quantity: string;
   clearQuantity: boolean;
   handleClearQuantity: ChangeEventHandler;
   handleInput: ChangeEventHandler;
 }
 
-const Grocery: React.FC<IGroceryProps> = ({ quantity, clearQuantity, handleClearQuantity, handleInput }) => (
+const Grocery: React.FC<IGroceryProps> = ({
+  quantity,
+  clearQuantity,
+  handleClearQuantity,
+  handleInput,
+}): React.JSX.Element => (
   <TextField
     name="quantity"
     label="Quantity"

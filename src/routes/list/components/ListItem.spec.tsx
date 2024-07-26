@@ -1,13 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListItem from './ListItem';
+import ListItem, { type IListItemProps } from './ListItem';
 import { prettyDueBy } from '../../../utils/format';
-import { EListType } from '../../../typings';
+import { EListType, type IListItem } from '../../../typings';
 
-function setup(suppliedProps = {}, suppliedItem = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IListItemProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IListItemProps>, suppliedItem: Partial<IListItem>): ISetupReturn {
   const user = userEvent.setup();
   const defaultItem = {
     id: 'id1',
@@ -41,25 +46,25 @@ function setup(suppliedProps = {}, suppliedItem = {}) {
     pending: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findAllByRole, findByRole, findByTestId, queryAllByRole } = render(
+  const component = render(
     <MemoryRouter>
       <ListItem {...props} />
     </MemoryRouter>,
   );
 
-  return { container, findAllByRole, findByRole, findByTestId, queryAllByRole, props, user };
+  return { ...component, props, user };
 }
 
 describe('ListItem', () => {
   it('sets the data-test-class to purchased-item when item is purchased', () => {
-    const { container } = setup({ purchased: true });
+    const { container } = setup({ purchased: true }, {});
 
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('data-test-class', 'purchased-item');
   });
 
   it('sets the data-test-class to not-purchased-item when item is not purchased', () => {
-    const { container } = setup({ purchased: false });
+    const { container } = setup({ purchased: false }, {});
 
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
@@ -69,7 +74,7 @@ describe('ListItem', () => {
     const email = 'foo@example.com';
     const { container, findByTestId } = setup(
       {
-        listType: 'ToDoList',
+        listType: EListType.TO_DO_LIST,
         listUsers: [
           {
             id: 'id1',
@@ -89,7 +94,7 @@ describe('ListItem', () => {
   it('does not show assignee when listType is ToDoList, item is assigned & assignee is not in listUsers', async () => {
     const { container, findByTestId } = setup(
       {
-        listType: 'ToDoList',
+        listType: EListType.TO_DO_LIST,
         listUsers: [
           {
             id: 'id2',
@@ -109,7 +114,7 @@ describe('ListItem', () => {
   it('does not show assignee when listType is ToDoList and the item is not assigned', async () => {
     const { container, findByTestId } = setup(
       {
-        listType: 'ToDoList',
+        listType: EListType.TO_DO_LIST,
         listUsers: [
           {
             id: 'id1',
@@ -130,7 +135,7 @@ describe('ListItem', () => {
     const dueBy = new Date('05/21/2020').toISOString();
     const { container, findByTestId } = setup(
       {
-        listType: 'ToDoList',
+        listType: EListType.TO_DO_LIST,
       },
       {
         due_by: dueBy,
@@ -144,7 +149,7 @@ describe('ListItem', () => {
   it('does not display due by when listType is ToDoList and dueBy does not exist', async () => {
     const { container, findByTestId } = setup(
       {
-        listType: 'ToDoList',
+        listType: EListType.TO_DO_LIST,
       },
       {
         due_by: null,
@@ -156,21 +161,20 @@ describe('ListItem', () => {
   });
 
   it('renders ListItemButtons when the user has write permission', async () => {
-    const { container, findAllByRole } = setup({ permission: 'write' });
+    const { container, findAllByRole } = setup({ permission: 'write' }, {});
 
     expect(container).toMatchSnapshot();
     expect((await findAllByRole('button')).length).toBeTruthy();
   });
 
   it('does not render ListItemButtons when the user has read permission', () => {
-    const { container, queryAllByRole } = setup({ permission: 'read' });
-
+    const { container, queryAllByRole } = setup({ permission: 'read' }, {});
     expect(container).toMatchSnapshot();
     expect(queryAllByRole('button').length).toBeFalsy();
   });
 
   it('sets selected items when multi select checkbox is selected', async () => {
-    const { container, findByRole, props, user } = setup({ multiSelect: true });
+    const { container, findByRole, props, user } = setup({ multiSelect: true }, {});
 
     expect(container).toMatchSnapshot();
 

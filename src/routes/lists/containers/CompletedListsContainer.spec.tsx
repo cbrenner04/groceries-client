@@ -4,7 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 import CompletedListsContainer from './CompletedListsContainer';
 import axios from '../../../utils/api';
-import { EListType, TUserPermissions } from '../../../typings';
+import type { TUserPermissions } from '../../../typings';
+import { EListType } from '../../../typings';
 
 function setup() {
   const props = {

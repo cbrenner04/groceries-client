@@ -24,7 +24,7 @@ describe('MergeModal', () => {
   it('does not render modal when showModal is false', () => {
     const { container, queryByTestId } = setup({ showModal: false });
 
-    expect(container).toMatchInlineSnapshot(`<div />`);
+    expect(container).toMatchInlineSnapshot('<div />');
     expect(queryByTestId('confirm-merge')).toBeNull();
   });
 

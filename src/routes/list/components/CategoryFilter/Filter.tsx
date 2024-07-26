@@ -1,12 +1,12 @@
-import React, { MouseEventHandler } from 'react';
+import React, { type MouseEventHandler } from 'react';
 import { Dropdown } from 'react-bootstrap';
 
-interface IFilterProps {
+export interface IFilterProps {
   categories: string[];
   handleCategoryFilter: MouseEventHandler;
 }
 
-const Filter: React.FC<IFilterProps> = ({ categories, handleCategoryFilter }) => (
+const Filter: React.FC<IFilterProps> = ({ categories, handleCategoryFilter }): React.JSX.Element => (
   <Dropdown data-test-id="filter-dropdown">
     <Dropdown.Toggle variant="light" id="filter-by-category-button">
       Filter by category

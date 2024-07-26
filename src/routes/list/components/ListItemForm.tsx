@@ -1,20 +1,21 @@
-import React, { ChangeEventHandler, FormEventHandler, ChangeEvent, useState } from 'react';
+import React, { useState, type ChangeEventHandler, type FormEventHandler, type ChangeEvent } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
+import { type AxiosError } from 'axios';
 
 import ListItemFormFields from './ListItemFormFields';
 import axios from '../../../utils/api';
 import FormSubmission from '../../../components/FormSubmission';
-import { EListType, IListUser } from '../../../typings';
+import { EListType, type IListItem, type IListUser } from '../../../typings';
 
-interface IListItemFormProps {
+export interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;
   listType: EListType;
   listUsers?: IListUser[];
-  handleItemAddition: (data: any) => void;
+  handleItemAddition: (data: IListItem[]) => void;
   categories?: string[];
 }
 
@@ -38,7 +39,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => {
     let newValue: string | number = value;
     if (name === 'numberInSeries') {
       newValue = Number(value);
@@ -73,17 +74,21 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       setFormData(defaultFormState);
       setPending(false);
       toast('Item successfully added.', { type: 'info' });
-    } catch (err: any) {
-      if (err?.response) {
-        if (err?.response?.status === 401) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      if (error.response) {
+        if (error.response?.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(err?.response?.status)) {
+        } else if ([403, 404].includes(error.response?.status!)) {
           toast('List not found', { type: 'error' });
           props.navigate('/lists');
         } else {
-          const responseTextKeys = Object.keys(err?.response.data);
-          const responseErrors = responseTextKeys.map((key) => `${key} ${err?.response.data[key]}`);
+          const responseTextKeys = Object.keys(error.response?.data!);
+          // TODO: figure out typings here
+          const responseErrors = responseTextKeys.map(
+            (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
+          );
           let joinString;
           if (props.listType === EListType.BOOK_LIST || props.listType === EListType.MUSIC_LIST) {
             joinString = ' or ';
@@ -92,10 +97,10 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           }
           toast(responseErrors.join(joinString), { type: 'error' });
         }
-      } else if (err?.request) {
+      } else if (error.request) {
         toast('Something went wrong', { type: 'error' });
       } else {
-        toast(err?.message, { type: 'error' });
+        toast(error.message, { type: 'error' });
       }
     }
   };
@@ -106,7 +111,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         <>
           <Button
             variant="link"
-            onClick={() => setShowForm(true)}
+            onClick={(): void => setShowForm(true)}
             aria-controls="form-collapse"
             aria-expanded={showForm}
           >
@@ -127,7 +132,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"
-            cancelAction={() => setShowForm(false)}
+            cancelAction={(): void => setShowForm(false)}
             cancelText="Collapse Form"
             displayCancelButton={true}
           />

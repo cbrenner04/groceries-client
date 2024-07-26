@@ -1,4 +1,4 @@
-import React, { CSSProperties, MouseEventHandler } from 'react';
+import React, { type CSSProperties, type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
 interface ICompleteProps {
@@ -9,7 +9,13 @@ interface ICompleteProps {
   classes?: string;
 }
 
-const Complete: React.FC<ICompleteProps> = ({ handleClick, testID, disabled = false, style = {}, classes = '' }) => (
+const Complete: React.FC<ICompleteProps> = ({
+  handleClick,
+  testID,
+  disabled = false,
+  style = {},
+  classes = '',
+}): React.JSX.Element => (
   <Button
     variant="link"
     onClick={handleClick}

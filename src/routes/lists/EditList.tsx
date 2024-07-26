@@ -1,5 +1,6 @@
 import React from 'react';
-import Async, { PromiseFn } from 'react-async';
+import type { PromiseFn } from 'react-async';
+import Async from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchListToEdit } from './utils';

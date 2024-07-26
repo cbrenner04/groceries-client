@@ -1,7 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 
-import { IList } from '../../../typings';
+import type { IList } from '../../../typings';
 
 interface IListsProps {
   title: ReactElement;

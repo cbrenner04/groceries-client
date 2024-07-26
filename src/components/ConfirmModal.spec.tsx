@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ConfirmModal from './ConfirmModal';
+import ConfirmModal, { type IConfirmModalProps } from './ConfirmModal';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IConfirmModalProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IConfirmModalProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     action: 'testAction',
@@ -46,6 +51,8 @@ describe('ConfirmModal', () => {
 
     it('calls handleConfirm when the close button is selected', async () => {
       const { findByText, props, user } = setup({ show: true });
+      // prettier and eslint fighting below
+      // eslint-disable-next-line @typescript-eslint/quotes
       await user.click(await findByText("Yes, I'm sure."));
 
       expect(props.handleConfirm).toHaveBeenCalled();

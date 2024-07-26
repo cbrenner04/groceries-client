@@ -4,9 +4,9 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import { prettyDueBy } from '../../../utils/format';
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
-import { EListType, IListItem, IListUser } from '../../../typings';
+import { EListType, type IListItem, type IListUser } from '../../../typings';
 
-interface IListItemProps {
+export interface IListItemProps {
   item: IListItem;
   purchased?: boolean;
   listType: EListType;
@@ -23,7 +23,7 @@ interface IListItemProps {
   pending: boolean;
 }
 
-const ListItem: React.FC<IListItemProps> = (props) => {
+const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   let assignee = '';
   if (props.listType === EListType.TO_DO_LIST && props.item.assignee_id) {
     const assignedUser = (props.listUsers ?? []).find((user) => user.id === props.item.assignee_id);
@@ -41,7 +41,11 @@ const ListItem: React.FC<IListItemProps> = (props) => {
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
           <Col xs="1">
-            <input type="checkbox" className="multi-select-check" onClick={() => props.handleItemSelect(props.item)} />
+            <input
+              type="checkbox"
+              className="multi-select-check"
+              onClick={(): void => props.handleItemSelect(props.item)}
+            />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}

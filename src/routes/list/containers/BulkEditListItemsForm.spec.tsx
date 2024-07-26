@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import BulkEditListItemsForm from './BulkEditListItemsForm';
+import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkEditListItemsForm';
 import axios from '../../../utils/api';
 import { EListType } from '../../../typings';
 
@@ -11,7 +11,12 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-function setup(listType = EListType.GROCERY_LIST, suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IBulkEditListItemsFormProps;
+}
+
+function setup(listType = EListType.GROCERY_LIST, suppliedProps?: Partial<IBulkEditListItemsFormProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     navigate: jest.fn(),
@@ -169,7 +174,10 @@ describe('BulkEditListItemsForm', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
-      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1', move: false }),
+      list_items: expect.not.objectContaining({ move: expect.any(Boolean) }),
+    });
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+      list_items: expect.objectContaining({ copy: true, existing_list_id: 'id1' }),
     });
   });
 

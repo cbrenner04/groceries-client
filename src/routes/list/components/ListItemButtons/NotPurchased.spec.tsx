@@ -1,13 +1,18 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import NotPurchased from './NotPurchased';
+import NotPurchased, { type INotPurchasedItemButtonsProps } from './NotPurchased';
 import { EListType } from '../../../../typings';
 
-async function setup(
-  suppliedProps: { listType?: EListType; item?: { id: string; book_list_id?: string; read?: boolean } } = {},
-) {
+interface ISetupReturn {
+  container: HTMLElement;
+  buttons: HTMLElement[];
+  props: INotPurchasedItemButtonsProps;
+  user: UserEvent;
+}
+
+async function setup(suppliedProps?: Partial<INotPurchasedItemButtonsProps>): Promise<ISetupReturn> {
   const user = userEvent.setup();
   const defaultProps = {
     item: {

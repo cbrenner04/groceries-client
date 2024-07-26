@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 
 interface IShareProps {
@@ -9,7 +9,7 @@ interface IShareProps {
   classes?: string;
 }
 
-const Share: React.FC<IShareProps> = ({ to, testID, disabled, style = {}, classes = '' }) => {
+const Share: React.FC<IShareProps> = ({ to, testID, disabled, style = {}, classes = '' }): React.JSX.Element => {
   const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
   return (
     <Link

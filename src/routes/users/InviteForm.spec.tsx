@@ -93,6 +93,6 @@ describe('InviteForm', () => {
 
     await user.click((await findAllByRole('button'))[1]);
 
-    expect(mockNavigate).toHaveBeenCalledWith(`/lists`);
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 });

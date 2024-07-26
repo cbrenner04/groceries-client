@@ -1,8 +1,8 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, TextField } from '../../../../components/FormFields';
 
-interface IMusicProps {
+export interface IMusicProps {
   artist: string;
   clearArtist: boolean;
   handleClearArtist: ChangeEventHandler;
@@ -20,7 +20,7 @@ const Music: React.FC<IMusicProps> = ({
   clearAlbum,
   handleClearAlbum,
   handleInput,
-}) => (
+}): React.JSX.Element => (
   <>
     <TextField
       name="artist"

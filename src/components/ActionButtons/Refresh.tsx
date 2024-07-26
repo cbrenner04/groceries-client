@@ -1,4 +1,4 @@
-import React, { CSSProperties, MouseEventHandler } from 'react';
+import React, { type CSSProperties, type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
 
 interface IRefreshProps {
@@ -9,7 +9,13 @@ interface IRefreshProps {
   classes?: string;
 }
 
-const Refresh: React.FC<IRefreshProps> = ({ handleClick, testID, style = {}, disabled = false, classes = '' }) => (
+const Refresh: React.FC<IRefreshProps> = ({
+  handleClick,
+  testID,
+  style = {},
+  disabled = false,
+  classes = '',
+}): React.JSX.Element => (
   <Button
     variant="link"
     onClick={handleClick}

@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
@@ -11,7 +12,7 @@ import axios from '../../../utils/api';
 import { fetchData } from '../utils';
 import { usePolling } from '../../../hooks';
 import FormSubmission from '../../../components/FormSubmission';
-import { IListUser, IUsersList } from '../../../typings';
+import type { IListUser, IUsersList } from '../../../typings';
 
 interface IShareListFormProps {
   name: string;
@@ -108,7 +109,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     try {
       const {
         data: { user, users_list: usersList },
-      } = await axios.post(`/auth/invitation`, {
+      } = await axios.post('/auth/invitation', {
         email: newEmail,
         list_id: props.listId,
       });

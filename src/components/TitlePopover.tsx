@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { OverlayTrigger, Popover, Row } from 'react-bootstrap';
 
 interface ITitlePopoverProps {
@@ -6,7 +6,7 @@ interface ITitlePopoverProps {
   title: string;
 }
 
-const TitlePopover: React.FC<ITitlePopoverProps> = ({ message, title }) => (
+const TitlePopover: React.FC<ITitlePopoverProps> = ({ message, title }): React.JSX.Element => (
   <OverlayTrigger
     trigger={['click']}
     placement="top"
@@ -17,7 +17,7 @@ const TitlePopover: React.FC<ITitlePopoverProps> = ({ message, title }) => (
       </Popover>
     }
   >
-    {({ ref, ...triggerHandler }) => (
+    {({ ref, ...triggerHandler }): React.JSX.Element => (
       <Row className="m-0">
         <h2 className="text-capitalize pe-0 w-auto">{title}</h2>
         <i

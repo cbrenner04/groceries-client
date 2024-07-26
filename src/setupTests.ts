@@ -8,7 +8,17 @@ import { cleanup, configure } from '@testing-library/react';
 configure({ testIdAttribute: 'data-test-id' });
 
 jest.mock('axios', () => ({
-  create: () => ({
+  create: (): {
+    interceptors: {
+      request: {
+        use: jest.Mock;
+      };
+      response: {
+        use: jest.Mock;
+      };
+    };
+    delete: jest.Mock;
+  } => ({
     interceptors: {
       request: {
         use: jest.fn(),
@@ -24,7 +34,9 @@ jest.mock('axios', () => ({
 // make sure when `moment()` is called without a date, the same date is always returned
 jest.mock(
   'moment',
-  () => (date: Date | string | number | undefined) => jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
+  () =>
+    (date: Date | string | number | undefined): Date =>
+      jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
 );
 
 afterEach(() => {

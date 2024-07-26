@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 
 interface IEditLinkProps {
@@ -9,7 +9,13 @@ interface IEditLinkProps {
   disabled?: boolean;
 }
 
-const EditLink: React.FC<IEditLinkProps> = ({ to, style = {}, testID, classes = '', disabled = false }) => {
+const EditLink: React.FC<IEditLinkProps> = ({
+  to,
+  style = {},
+  testID,
+  classes = '',
+  disabled = false,
+}): React.JSX.Element => {
   const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
   return (
     <Link

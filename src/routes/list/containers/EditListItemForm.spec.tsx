@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import EditListItemForm from './EditListItemForm';
+import EditListItemForm, { type IEditListItemFormProps } from './EditListItemForm';
 import axios from '../../../utils/api';
 import { EListType } from '../../../typings';
 
@@ -11,7 +11,13 @@ jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
 
-async function setup(listType = EListType.GROCERY_LIST) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IEditListItemFormProps;
+  buttons: HTMLElement[];
+}
+
+async function setup(listType = EListType.GROCERY_LIST): Promise<ISetupReturn> {
   const user = userEvent.setup();
   const props = {
     navigate: jest.fn(),
@@ -51,10 +57,10 @@ async function setup(listType = EListType.GROCERY_LIST) {
     },
     userId: 'id1',
   };
-  const { container, findAllByRole, findByLabelText } = render(<EditListItemForm {...props} />);
-  const buttons = await findAllByRole('button');
+  const component = render(<EditListItemForm {...props} />);
+  const buttons = await component.findAllByRole('button');
 
-  return { buttons, container, findByLabelText, props, user };
+  return { buttons, ...component, props, user };
 }
 
 describe('EditListItemForm', () => {

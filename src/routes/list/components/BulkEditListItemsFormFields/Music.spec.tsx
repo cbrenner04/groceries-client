@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Music from './Music';
+import Music, { type IMusicProps } from './Music';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IMusicProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps: Partial<IMusicProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     artist: 'foo',
@@ -16,9 +21,9 @@ function setup(suppliedProps = {}) {
     handleClearAlbum: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, findAllByRole } = render(<Music {...props} />);
+  const component = render(<Music {...props} />);
 
-  return { container, findByLabelText, findAllByRole, props, user };
+  return { ...component, props, user };
 }
 
 describe('Music', () => {

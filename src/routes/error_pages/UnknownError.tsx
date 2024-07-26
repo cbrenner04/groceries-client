@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UnknownError: React.FC = () => {
+const UnknownError: React.FC = (): React.JSX.Element => {
   const [hover, setHover] = useState(false);
 
   const buttonStyles = {
@@ -15,21 +15,21 @@ const UnknownError: React.FC = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <h1>Something went wrong!</h1>
       <h2>We are currently unable to render this page.</h2>
       <p>
         Please check your connection and try to &nbsp;
         <button
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          onClick={() => window.location.reload()}
+          onMouseEnter={(): void => setHover(true)}
+          onMouseLeave={(): void => setHover(false)}
+          onClick={(): void => window.location.reload()}
           style={buttonStyles}
         >
           refresh the page
         </button>
       </p>
-    </>
+    </React.Fragment>
   );
 };
 
