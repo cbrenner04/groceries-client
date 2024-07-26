@@ -1,12 +1,13 @@
 import React, { type ChangeEventHandler } from 'react';
 
+import { CategoryField, CheckboxField } from 'components/FormFields';
+import { type IListUser } from 'typings';
+
 import Book from './Book';
 import Grocery from './Grocery';
 import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
-import { CategoryField, CheckboxField } from '../../../../components/FormFields';
-import { type IListUser } from '../../../../typings';
 
 export interface IBulkEditListItemsFormFieldsFormDataProps {
   copy: boolean;

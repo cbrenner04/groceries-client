@@ -1,6 +1,6 @@
 import type { EListType } from '../typings';
 
-const listIconClass = (listType: EListType) =>
+const listIconClass = (listType: EListType): string =>
   ({
     BookList: 'fa-book',
     GroceryList: 'fa-shopping-bag',

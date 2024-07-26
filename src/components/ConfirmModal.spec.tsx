@@ -39,7 +39,7 @@ describe('ConfirmModal', () => {
 
       expect(await findByRole('dialog')).toMatchSnapshot();
       expect(await findByText(`Confirm ${props.action}`)).toBeVisible();
-      expect(await findByText(props.body)).toBeVisible();
+      expect(await findByText(props.body as string)).toBeVisible();
     });
 
     it('calls handleClear when the close button is selected', async () => {
@@ -51,8 +51,6 @@ describe('ConfirmModal', () => {
 
     it('calls handleConfirm when the close button is selected', async () => {
       const { findByText, props, user } = setup({ show: true });
-      // prettier and eslint fighting below
-      // eslint-disable-next-line @typescript-eslint/quotes
       await user.click(await findByText("Yes, I'm sure."));
 
       expect(props.handleConfirm).toHaveBeenCalled();

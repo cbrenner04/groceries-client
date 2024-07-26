@@ -4,10 +4,11 @@ import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
+import axios from 'utils/api';
+import FormSubmission from 'components/FormSubmission';
+import { EListType, type IListItem, type IListUser } from 'typings';
+
 import ListItemFormFields from './ListItemFormFields';
-import axios from '../../../utils/api';
-import FormSubmission from '../../../components/FormSubmission';
-import { EListType, type IListItem, type IListUser } from '../../../typings';
 
 export interface IListItemFormProps {
   navigate: (path: string) => void;
@@ -77,14 +78,14 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(error.response?.status!)) {
+        } else if ([403, 404].includes(error.response.status!)) {
           toast('List not found', { type: 'error' });
           props.navigate('/lists');
         } else {
-          const responseTextKeys = Object.keys(error.response?.data!);
+          const responseTextKeys = Object.keys(error.response.data!);
           // TODO: figure out typings here
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,

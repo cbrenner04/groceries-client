@@ -1,21 +1,21 @@
-import React from 'react';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import React, { type ReactNode } from 'react';
+import Async, { type PromiseFn } from 'react-async';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import Loading from 'components/Loading';
+import type { IListUser, IUsersList } from 'typings';
 
 import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
-import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import { useNavigate, useParams } from 'react-router-dom';
-import type { IListUser, IUsersList } from '../../typings';
 
-export default function ShareList() {
+const ShareList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const { list_id } = useParams();
+  const { list_id: pListId } = useParams();
 
   return (
     // TODO: figure out typings for PromiseFn
-    <Async promiseFn={fetchData as unknown as PromiseFn<void>} listId={list_id} navigate={navigate}>
+    <Async promiseFn={fetchData as unknown as PromiseFn<void>} listId={pListId} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
@@ -29,7 +29,7 @@ export default function ShareList() {
           accepted: IUsersList[];
           refused: IUsersList[];
           userId: string;
-        }) => (
+        }): ReactNode => (
           <ShareListForm
             name={data.name}
             invitableUsers={data.invitableUsers}
@@ -47,4 +47,6 @@ export default function ShareList() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default ShareList;

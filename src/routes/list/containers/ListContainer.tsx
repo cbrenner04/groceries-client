@@ -1,25 +1,23 @@
-import type { ChangeEvent, MouseEventHandler } from 'react';
-import React, { useState } from 'react';
+import React, { type ChangeEvent, type MouseEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
-
-import { capitalize } from '../../../utils/format';
-import ListItem from '../components/ListItem';
-import ListItemForm from '../components/ListItemForm';
-import ConfirmModal from '../../../components/ConfirmModal';
-import axios from '../../../utils/api';
-import { itemName, sortItems } from '../utils';
-import CategoryFilter from '../components/CategoryFilter';
-import { fetchList } from '../utils';
-import { usePolling } from '../../../hooks';
-import type { IList, IListItem, IListUser } from '../../../typings';
 import type { AxiosResponse } from 'axios';
 
-interface IListContainerProps {
+import ConfirmModal from 'components/ConfirmModal';
+import axios from 'utils/api';
+import { capitalize } from 'utils/format';
+import { usePolling } from 'hooks';
+import type { IList, IListItem, IListUser } from 'typings';
+
+import ListItem from '../components/ListItem';
+import ListItemForm from '../components/ListItemForm';
+import CategoryFilter from '../components/CategoryFilter';
+import { fetchList, itemName, sortItems } from '../utils';
+
+export interface IListContainerProps {
   userId: string;
   list: IList;
   purchasedItems: IListItem[];
@@ -58,7 +56,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           notPurchasedItems: updatedNotPurchasedItems,
         } = fetchResponse;
         const isSameSet = (
-          newSet: Record<string, IListItem[]>,
+          newSet: IListItem[] | Record<string, IListItem[]>,
           oldSet: IListItem[] | Record<string, IListItem[]>,
         ): boolean => JSON.stringify(newSet) === JSON.stringify(oldSet);
         const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
@@ -182,7 +180,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       } else if ([403, 404].includes(error.response.status)) {
         toast('Item not found', { type: 'error' });
       } else {
-        const responseTextKeys = Object.keys(error.response?.data!);
+        const responseTextKeys = Object.keys(error.response.data!);
         const responseErrors = responseTextKeys.map(
           (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
         );

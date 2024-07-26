@@ -2,11 +2,12 @@ import React from 'react';
 import { fireEvent, render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import { EListType } from 'typings';
+
 import BulkEditListItemsFormFields, {
   type IBulkEditListItemsFormFieldsProps,
   type IBulkEditListItemsFormFieldsFormDataProps,
 } from './index';
-import { EListType } from '../../../../typings';
 
 const defaultFormData: IBulkEditListItemsFormFieldsFormDataProps = {
   copy: false,

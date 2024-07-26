@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import axios from 'utils/api';
 
 import EditInvite from './EditInvite';
-import axios from '../../utils/api';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -13,13 +14,17 @@ jest.mock('react-toastify', () => ({
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-  useLocation: () => ({
+  useNavigate: (): jest.Mock => mockNavigate,
+  useLocation: (): { search: jest.Mock } => ({
     search: jest.fn(() => 'foo'),
   }),
 }));
 
-function setup() {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+}
+
+function setup(): ISetupReturn {
   const user = userEvent.setup();
   const component = render(<EditInvite />);
 

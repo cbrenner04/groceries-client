@@ -1,14 +1,14 @@
-import React from 'react';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import React, { type ReactNode } from 'react';
+import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import Loading from 'components/Loading';
 
 import { fetchListToEdit } from './utils';
 import EditListForm from './containers/EditListForm';
-import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 
-const EditList: React.FC = () => {
+const EditList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -19,7 +19,7 @@ const EditList: React.FC = () => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { listId: string; name: string; type: string; completed: boolean }) => (
+        {(data: { listId: string; name: string; type: string; completed: boolean }): ReactNode => (
           <EditListForm listId={data.listId} name={data.name} completed={data.completed} type={data.type} />
         )}
       </Async.Fulfilled>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Bookmark, Complete, EditButton, Trash } from '../../../../components/ActionButtons';
-import type { IListItem } from '../../../../typings';
+import { Bookmark, Complete, EditButton, Trash } from 'components/ActionButtons';
+import type { IListItem } from 'typings';
 
 export interface INotPurchasedItemButtonsProps {
   listType: string;

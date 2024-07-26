@@ -1,17 +1,15 @@
-import type { ChangeEvent, FormEvent } from 'react';
-import React, { useState } from 'react';
+import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import Async, { type PromiseFn } from 'react-async';
 import { toast } from 'react-toastify';
 
-import { CheckboxField, EmailField, PasswordField } from '../../components/FormFields';
-import axios from '../../utils/api';
-import Loading from '../../components/Loading';
-import FormSubmission from '../../components/FormSubmission';
+import { CheckboxField, EmailField, PasswordField } from 'components/FormFields';
+import axios from 'utils/api';
+import Loading from 'components/Loading';
+import FormSubmission from 'components/FormSubmission';
 
-async function fetchData({ navigate }: { navigate: (url: string) => void }) {
+async function fetchData({ navigate }: { navigate: (url: string) => void }): Promise<void> {
   try {
     await axios.get('/auth/validate_token');
     navigate('/lists');
@@ -20,17 +18,17 @@ async function fetchData({ navigate }: { navigate: (url: string) => void }) {
   }
 }
 
-interface INewSessionProps {
+export interface INewSessionProps {
   signInUser: (accessToken: string, client: string, uid: string) => void;
 }
 
-const NewSession: React.FC<INewSessionProps> = ({ signInUser }) => {
+const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     const user = {
       email,
@@ -63,13 +61,13 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }) => {
         <Form onSubmit={handleSubmit}>
           <EmailField
             value={email}
-            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setEmail(value)}
+            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setEmail(value)}
           />
           <PasswordField
             name="password"
             label="Password"
             value={password}
-            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPassword(value)}
+            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setPassword(value)}
             placeholder="password"
           />
           <CheckboxField
@@ -77,9 +75,9 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }) => {
             classes="mb-3"
             label="Remember me"
             value={rememberMe}
-            handleChange={() => setRememberMe(!rememberMe)}
+            handleChange={(): void => setRememberMe(!rememberMe)}
           />
-          <FormSubmission submitText="Log In" displayCancelButton={false} cancelAction={() => undefined} />
+          <FormSubmission submitText="Log In" displayCancelButton={false} cancelAction={(): undefined => undefined} />
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>

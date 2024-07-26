@@ -1,10 +1,9 @@
-import type { ChangeEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
-import { TextField, CategoryField, DateField, CheckboxField, SelectField } from '../../../../components/FormFields';
-import type { IListUser } from '../../../../typings';
+import { TextField, CategoryField, DateField, CheckboxField, SelectField } from 'components/FormFields';
+import type { IListUser } from 'typings';
 
-interface IToDoFormFieldsProps {
+export interface IToDoFormFieldsProps {
   task: string;
   assigneeId: string;
   dueBy: string;
@@ -17,7 +16,7 @@ interface IToDoFormFieldsProps {
 }
 
 const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props) => (
-  <>
+  <React.Fragment>
     <TextField
       name="task"
       label="Task"
@@ -54,7 +53,7 @@ const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props) => (
         classes="mb-3"
       />
     )}
-  </>
+  </React.Fragment>
 );
 
 export default ToDoFormFields;

@@ -1,12 +1,13 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListContainer from './ListContainer';
-import axios from '../../../utils/api';
-import { EListType } from '../../../typings';
+import axios from 'utils/api';
+import { EListType } from 'typings';
+
+import ListContainer, { type IListContainerProps } from './ListContainer';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -15,10 +16,15 @@ jest.mock('react-toastify', () => ({
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup(suppliedProps = {}, listType = EListType.GROCERY_LIST) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IListContainerProps;
+}
+
+function setup(suppliedProps?: Partial<IListContainerProps>, listType = EListType.GROCERY_LIST): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',

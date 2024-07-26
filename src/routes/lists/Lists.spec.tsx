@@ -1,18 +1,18 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import axios from 'utils/api';
+
 import Lists from './Lists';
-import axios from '../../utils/api';
 
 describe('Lists', () => {
-  const renderLists = () => {
-    return render(
+  const renderLists = (): RenderResult =>
+    render(
       <MemoryRouter>
         <Lists />
       </MemoryRouter>,
     );
-  };
 
   it('renders loading component when data is being fetched', async () => {
     const { container, findByText } = renderLists();

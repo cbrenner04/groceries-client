@@ -1,12 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import IncompleteListButtons from './IncompleteListButtons';
-import { EListType } from '../../../typings';
+import { EListType } from 'typings';
 
-function setup(suppliedProps = {}, listOwnerId = 'id1') {
+import IncompleteListButtons, { type IIncompleteListButtonsProps } from './IncompleteListButtons';
+
+interface ISetupReturn extends RenderResult {
+  props: IIncompleteListButtonsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IIncompleteListButtonsProps>, listOwnerId = 'id1'): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',

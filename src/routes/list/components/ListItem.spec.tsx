@@ -3,9 +3,10 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import { prettyDueBy } from 'utils/format';
+import { EListType, type IListItem } from 'typings';
+
 import ListItem, { type IListItemProps } from './ListItem';
-import { prettyDueBy } from '../../../utils/format';
-import { EListType, type IListItem } from '../../../typings';
 
 interface ISetupReturn extends RenderResult {
   props: IListItemProps;

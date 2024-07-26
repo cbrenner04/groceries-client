@@ -2,8 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import { EListType } from 'typings';
+
 import NotPurchased, { type INotPurchasedItemButtonsProps } from './NotPurchased';
-import { EListType } from '../../../../typings';
 
 interface ISetupReturn {
   container: HTMLElement;

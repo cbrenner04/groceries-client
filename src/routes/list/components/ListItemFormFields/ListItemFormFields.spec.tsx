@@ -1,10 +1,19 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListItemFormFields from './index';
+import { EListType } from 'typings';
 
-async function setup(listType: string, inputLabel: string) {
+import ListItemFormFields, { type IListItemFormFieldsProps } from './index';
+
+interface ISetupReturn {
+  container: HTMLElement;
+  input: HTMLElement;
+  props: IListItemFormFieldsProps;
+  user: UserEvent;
+}
+
+async function setup(listType: EListType, inputLabel: string): Promise<ISetupReturn> {
   const user = userEvent.setup();
   const props = {
     setFormData: jest.fn(),
@@ -35,7 +44,7 @@ async function setup(listType: string, inputLabel: string) {
 
 describe('ListItemFormFields', () => {
   it('render Book fields when listType is BookList and calls setFormData when input is changed', async () => {
-    const { container, input, props, user } = await setup('BookList', 'Author');
+    const { container, input, props, user } = await setup(EListType.BOOK_LIST, 'Author');
 
     expect(container).toMatchSnapshot();
     expect(input).toBeVisible();
@@ -46,7 +55,7 @@ describe('ListItemFormFields', () => {
   });
 
   it('render Grocery fields when listType is GroceryList and calls setFormData when input is changed', async () => {
-    const { container, input, props, user } = await setup('GroceryList', 'Product');
+    const { container, input, props, user } = await setup(EListType.GROCERY_LIST, 'Product');
 
     expect(container).toMatchSnapshot();
     expect(input).toBeVisible();
@@ -57,7 +66,7 @@ describe('ListItemFormFields', () => {
   });
 
   it('render Music fields when listType is MusicList and calls setFormData when input is changed', async () => {
-    const { container, input, props, user } = await setup('MusicList', 'Album');
+    const { container, input, props, user } = await setup(EListType.MUSIC_LIST, 'Album');
 
     expect(container).toMatchSnapshot();
     expect(input).toBeVisible();
@@ -68,7 +77,7 @@ describe('ListItemFormFields', () => {
   });
 
   it('render ToDo fields when listType is ToDoList and calls setFormData when input is changed', async () => {
-    const { container, input, props, user } = await setup('ToDoList', 'Task');
+    const { container, input, props, user } = await setup(EListType.TO_DO_LIST, 'Task');
 
     expect(container).toMatchSnapshot();
     expect(input).toBeVisible();
@@ -79,7 +88,7 @@ describe('ListItemFormFields', () => {
   });
 
   it('sets value for numberInSeries as a number when input', async () => {
-    const { input, props, user } = await setup('BookList', 'Number in series');
+    const { input, props, user } = await setup(EListType.BOOK_LIST, 'Number in series');
 
     await user.type(input, '2');
 

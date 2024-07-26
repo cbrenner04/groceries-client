@@ -4,12 +4,13 @@ import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
-import { formatDueBy } from '../../../utils/format';
-import axios from '../../../utils/api';
+import { formatDueBy } from 'utils/format';
+import axios from 'utils/api';
+import FormSubmission from 'components/FormSubmission';
+import { EListType, type IList, type IListItem, type IListUser } from 'typings';
+
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
-import FormSubmission from '../../../components/FormSubmission';
-import { EListType, type IList, type IListItem, type IListUser } from '../../../typings';
 
 export interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
@@ -50,11 +51,8 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   // set attributes to initial value if all items have the same value for the attribute
   // the value of these attributes can be cleared for all items with their respective clear state attributes
   // read, purchased, completed not included as they add complexity and they can be updated in bulk on the list itself
-  const initialAttr = (attribute: keyof IListItem): string | Date | number | undefined => {
+  const initialAttr = (attribute: keyof IListItem): string | Date | number | boolean | undefined => {
     const uniqValues = [...new Set(props.items.map(({ [attribute]: value }) => value))];
-    // TODO: I have no idea why this says it will return a boolean value
-    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-    // @ts-ignore
     return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : undefined;
   };
   const initialValues = {
@@ -73,7 +71,10 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     clearAuthor: false,
     category: initialAttr('category') as string | undefined,
     clearCategory: false,
-    dueBy: formatDueBy(initialAttr('due_by')),
+    dueBy: ((): string | undefined => {
+      const value = initialAttr('due_by');
+      return typeof value !== 'boolean' ? formatDueBy(value) : undefined;
+    })(),
     clearDueBy: false,
     quantity: initialAttr('quantity') as string | undefined,
     clearQuantity: false,
@@ -136,14 +137,14 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           toast('You must sign in', { type: 'error' });
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(error.response?.status!)) {
+        } else if ([403, 404].includes(error.response.status!)) {
           toast('Some items not found', { type: 'error' });
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(error.response?.data!);
+          const keys = Object.keys(error.response.data!);
           // TODO: sort out typings
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,

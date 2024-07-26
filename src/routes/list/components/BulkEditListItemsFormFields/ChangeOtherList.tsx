@@ -1,8 +1,8 @@
 import React, { type ChangeEventHandler } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-import { CheckboxField, SelectField, TextField } from '../../../../components/FormFields';
-import { prettyListType } from '../../../../utils/format';
+import { CheckboxField, SelectField, TextField } from 'components/FormFields';
+import { prettyListType } from 'utils/format';
 
 export interface IChangeOtherListProps {
   handleOtherListChange: (isCopy: boolean) => void;

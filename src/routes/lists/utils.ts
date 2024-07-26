@@ -1,19 +1,21 @@
 import { toast } from 'react-toastify';
+import { type AxiosError } from 'axios';
 
-import axios from '../../utils/api';
-import type { IList, TUserPermissions } from '../../typings';
+import axios from 'utils/api';
+import type { EListType, IList, TUserPermissions } from 'typings';
 
-export const sortLists = (lists: IList[]) =>
+export const sortLists = (lists: IList[]): IList[] =>
   lists.sort((a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)));
 
-function handleFailure(error: any, navigate: (url: string) => void) {
+function handleFailure(error: unknown, navigate: (url: string) => void): void {
+  const err = error as AxiosError;
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
-  if (error.response && error.response.status === 401) {
+  if (err.response?.status === 401) {
     toast('You must sign in', { type: 'error' });
     navigate('/users/sign_in');
-    return;
+  } else {
+    throw new Error(JSON.stringify(err));
   }
-  throw new Error(error);
 }
 
 export async function fetchLists({ navigate }: { navigate: (url: string) => void }): Promise<
@@ -30,14 +32,14 @@ export async function fetchLists({ navigate }: { navigate: (url: string) => void
     const {
       data: {
         current_user_id: userId,
-        accepted_lists: { completed_lists, not_completed_lists },
-        pending_lists,
+        accepted_lists: { completed_lists: dCompletedLists, not_completed_lists: dNotCompletedLists },
+        pending_lists: dPendingLists,
         current_list_permissions: currentUserPermissions,
       },
     } = await axios.get('/lists/');
-    const pendingLists = sortLists(pending_lists);
-    const completedLists = sortLists(completed_lists);
-    const incompleteLists = sortLists(not_completed_lists);
+    const pendingLists = sortLists(dPendingLists);
+    const completedLists = sortLists(dCompletedLists);
+    const incompleteLists = sortLists(dNotCompletedLists);
     return {
       userId,
       pendingLists,
@@ -73,54 +75,68 @@ export async function fetchCompletedLists({
   }
 }
 
-export async function fetchListToEdit({ id, navigate }: { id: string; navigate: (url: string) => void }) {
+export async function fetchListToEdit({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<
+  | {
+      listId: string;
+      name: string;
+      completed: boolean;
+      type: EListType;
+    }
+  | undefined
+> {
   try {
     const {
-      data: { id: listId, name, completed, type },
+      data: { id: listId, name, completed, type: dType },
     } = await axios.get(`/lists/${id}/edit`);
     return {
       listId,
       name,
       completed,
-      type,
+      type: dType as EListType,
     };
-  } catch (error: any) {
-    if (error.response) {
-      if (error.response.status === 401) {
+  } catch (error: unknown) {
+    const err = error as AxiosError;
+    if (err.response) {
+      if (err.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-        return;
-      } else if ([403, 404].includes(error.response.status)) {
+      } else if ([403, 404].includes(err.response.status)) {
         toast('List not found', { type: 'error' });
         navigate('/lists');
-        return;
+      } else {
+        // any other errors will just be caught and render the generic UnknownError
+        throw new Error();
       }
+    } else {
+      // any other errors will just be caught and render the generic UnknownError
+      throw new Error();
     }
-    // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
   }
 }
 
-export function failure(error: any, navigate: (url: string) => void, setPending: (arg: boolean) => void) {
-  if (error.response) {
-    if (error.response.status === 401) {
+export function failure(error: unknown, navigate: (url: string) => void, setPending: (arg: boolean) => void): void {
+  const err = error as AxiosError;
+  if (err.response) {
+    if (err.response.status === 401) {
       toast('You must sign in', { type: 'error' });
       navigate('/users/sign_in');
-    } else if ([403, 404].includes(error.response.status)) {
+    } else if ([403, 404].includes(err.response.status)) {
       toast('List not found', { type: 'error' });
     } else {
       setPending(false);
-      const responseTextKeys = Object.keys(error.response.data);
-      const responseErrors = responseTextKeys.map((key) => `${key} ${error.response.data[key]}`);
+      const responseTextKeys = Object.keys(err.response.data!);
+      const responseErrors = responseTextKeys.map(
+        (key) => `${key} ${(err.response?.data as Record<string, string>)[key]}`,
+      );
       toast(responseErrors.join(' and '), { type: 'error' });
     }
   } else {
     setPending(false);
-    const toastMessage = error.request ? 'Something went wrong' : error.message;
+    const toastMessage = err.request ? 'Something went wrong' : err.message;
     toast(toastMessage, { type: 'error' });
   }
 }
 
-export function pluralize(listCount: number) {
+export function pluralize(listCount: number): string {
   return listCount > 1 ? 'Lists' : 'List';
 }

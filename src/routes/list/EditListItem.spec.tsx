@@ -2,8 +2,9 @@ import React from 'react';
 import { render, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import axios from 'utils/api';
+
 import EditListItem from './EditListItem';
-import axios from '../../utils/api';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

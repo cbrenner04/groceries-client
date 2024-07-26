@@ -1,10 +1,15 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ToDo from './ToDo';
+import ToDo, { type IToDoFormFieldsProps } from './ToDo';
 
-function setup(suppliedProps: { editForm: boolean }) {
+interface ISetupReturn extends RenderResult {
+  props: IToDoFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IToDoFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     task: 'foo',
@@ -23,9 +28,9 @@ function setup(suppliedProps: { editForm: boolean }) {
     inputChangeHandler: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, queryByLabelText } = render(<ToDo {...props} />);
+  const component = render(<ToDo {...props} />);
 
-  return { container, findByLabelText, queryByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('ToDo', () => {

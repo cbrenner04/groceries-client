@@ -1,21 +1,21 @@
-import type { ChangeEventHandler, ChangeEvent, ReactElement } from 'react';
-import React, { useState } from 'react';
+import React, { useState, type ChangeEventHandler, type ChangeEvent, type ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { useNavigate } from 'react-router-dom';
 
-import axios from '../../../utils/api';
+import axios from 'utils/api';
+import ConfirmModal from 'components/ConfirmModal';
+import type { IList, TUserPermissions } from 'typings';
+
 import { sortLists, failure, pluralize } from '../utils';
-import ConfirmModal from '../../../components/ConfirmModal';
 import MergeModal from './MergeModal';
 import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';
 import Lists from './Lists';
-import type { IList, TUserPermissions } from '../../../typings';
 
-interface IAcceptedListsProps {
+export interface IAcceptedListsProps {
   completed: boolean;
   title: ReactElement;
   userId: string;
@@ -28,7 +28,7 @@ interface IAcceptedListsProps {
   fullList: boolean;
 }
 
-const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
+const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element => {
   const [multiSelect, setMultiSelect] = useState(false);
   const [selectedLists, setSelectedLists] = useState([] as IList[]);
   const [listsToDelete, setListsToDelete] = useState([] as IList[]);
@@ -39,18 +39,18 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
-  const resetMultiSelect = () => {
+  const resetMultiSelect = (): void => {
     setSelectedLists([]);
     setMultiSelect(false);
   };
 
-  const handleDelete = (list: IList) => {
+  const handleDelete = (list: IList): void => {
     const lists = selectedLists.length ? selectedLists : [list];
     setListsToDelete(lists);
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
     setPending(true);
     const ownedLists = listsToDelete.filter((l) => props.userId === l.owner_id);
@@ -73,12 +73,12 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
       setListsToDelete([]);
       setPending(false);
       toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
-    } catch (error: any) {
+    } catch (error: unknown) {
       failure(error, navigate, setPending);
     }
   };
 
-  const handleMerge = () => {
+  const handleMerge = (): void => {
     // just using the first list selected arbitrarily
     const listType = selectedLists[0].type;
     const filteredLists = selectedLists.filter((l) => l.type === listType);
@@ -87,7 +87,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
   };
 
   // TODO: this does not get triggered if you hit enter when in modal
-  const handleMergeConfirm = async () => {
+  const handleMergeConfirm = async (): Promise<void> => {
     setShowMergeModal(false);
     setPending(true);
     const listIds = listsToMerge.map((l) => l.id).join(',');
@@ -112,7 +112,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
     }
   };
 
-  const handleCompletion = async (list: IList) => {
+  const handleCompletion = async (list: IList): Promise<void> => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
     // can only complete lists you own
@@ -138,7 +138,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
     }
   };
 
-  const handleRefresh = async (list: IList) => {
+  const handleRefresh = async (list: IList): Promise<void> => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
     // TODO: can i do anything to not have to cast to IList[]?
@@ -243,12 +243,12 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props) => {
           </>
         }
         show={showDeleteConfirm}
-        handleConfirm={() => handleDeleteConfirm()}
-        handleClear={() => setShowDeleteConfirm(false)}
+        handleConfirm={(): Promise<void> => handleDeleteConfirm()}
+        handleClear={(): void => setShowDeleteConfirm(false)}
       />
       <MergeModal
         showModal={showMergeModal}
-        clearModal={() => setShowMergeModal(false)}
+        clearModal={(): void => setShowMergeModal(false)}
         listNames={listsToMerge.map((l) => l.name).join('", "')}
         mergeName={mergeName}
         // TODO: figure out typings

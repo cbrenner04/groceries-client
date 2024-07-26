@@ -1,10 +1,11 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { toast } from 'react-toastify';
 
-import EditListForm from './EditListForm';
-import axios from '../../../utils/api';
+import axios from 'utils/api';
+
+import EditListForm, { type IEditListFormProps } from './EditListForm';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -13,10 +14,15 @@ jest.mock('react-toastify', () => ({
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup() {
+interface ISetupReturn extends RenderResult {
+  props: IEditListFormProps;
+  user: UserEvent;
+}
+
+function setup(): ISetupReturn {
   const user = userEvent.setup();
   const props = {
     listId: 'id1',

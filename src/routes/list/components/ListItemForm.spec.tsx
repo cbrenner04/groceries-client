@@ -3,9 +3,10 @@ import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import axios from 'utils/api';
+import { EListType } from 'typings';
+
 import ListItemForm, { type IListItemFormProps } from './ListItemForm';
-import axios from '../../../utils/api';
-import { EListType } from '../../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),

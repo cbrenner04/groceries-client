@@ -1,6 +1,6 @@
 import React, { type ChangeEventHandler } from 'react';
 
-import { CheckboxField, TextField } from '../../../../components/FormFields';
+import { CheckboxField, TextField } from 'components/FormFields';
 
 export interface IGroceryProps {
   quantity: string;

@@ -1,10 +1,17 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Lists from './Lists';
+import { EListType } from 'typings';
 
-function setup(suppliedProps = {}) {
+import Lists, { type IListsProps } from './Lists';
+
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IListsProps;
+}
+
+function setup(suppliedProps?: Partial<IListsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     title: <div />,
@@ -37,7 +44,7 @@ describe('Lists', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: 'GroceryList',
+          type: EListType.GROCERY_LIST,
           created_at: new Date('05/27/2020').toISOString(),
           completed: true,
           users_list_id: 'id1',

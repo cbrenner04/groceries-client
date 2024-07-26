@@ -1,15 +1,15 @@
-import React from 'react';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import React, { type ReactNode } from 'react';
+import Async, { type PromiseFn } from 'react-async';
 import { useNavigate } from 'react-router-dom';
+
+import Loading from 'components/Loading';
+import type { IList, TUserPermissions } from 'typings';
 
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
-import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import type { IList, TUserPermissions } from '../../typings';
 
-export default function Lists() {
+const Lists: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
@@ -25,7 +25,7 @@ export default function Lists() {
           completedLists: IList[];
           incompleteLists: IList[];
           currentUserPermissions: TUserPermissions;
-        }) => (
+        }): ReactNode => (
           <ListsContainer
             userId={data.userId}
             pendingLists={data.pendingLists}
@@ -40,4 +40,6 @@ export default function Lists() {
       </Async.Rejected>
     </Async>
   );
-}
+};
+
+export default Lists;

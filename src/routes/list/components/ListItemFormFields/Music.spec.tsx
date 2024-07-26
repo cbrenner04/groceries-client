@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Music from './Music';
+import Music, { type IMusicFormFieldsProps } from './Music';
 
-function setup(suppliedProps: { editForm: boolean }) {
+interface ISetupReturn extends RenderResult {
+  props: IMusicFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IMusicFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     title: 'foo',
@@ -17,9 +22,9 @@ function setup(suppliedProps: { editForm: boolean }) {
     inputChangeHandler: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, queryByLabelText } = render(<Music {...props} />);
+  const component = render(<Music {...props} />);
 
-  return { container, findByLabelText, queryByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('Music', () => {

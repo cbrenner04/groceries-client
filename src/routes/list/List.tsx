@@ -2,11 +2,12 @@ import React from 'react';
 import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import Loading from 'components/Loading';
+import type { IList, IListItem, IListUser } from 'typings';
+
 import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
-import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import type { IList, IListItem, IListUser } from '../../typings';
 
 const List = (): React.JSX.Element => {
   const navigate = useNavigate();

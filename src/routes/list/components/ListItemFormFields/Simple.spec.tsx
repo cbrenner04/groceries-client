@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Simple from './Simple';
+import Simple, { type ISimpleFormFieldsProps } from './Simple';
 
-function setup(suppliedProps: { editForm: boolean }) {
+interface ISetupReturn extends RenderResult {
+  props: ISimpleFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<ISimpleFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     content: 'foo',
@@ -21,9 +26,9 @@ function setup(suppliedProps: { editForm: boolean }) {
     inputChangeHandler: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, queryByLabelText } = render(<Simple {...props} />);
+  const component = render(<Simple {...props} />);
 
-  return { container, findByLabelText, queryByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('Simple', () => {

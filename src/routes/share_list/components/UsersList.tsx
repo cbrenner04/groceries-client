@@ -1,11 +1,11 @@
 import React from 'react';
 import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { Trash } from '../../../components/ActionButtons';
-import TitlePopover from '../../../components/TitlePopover';
-import type { IUsersList } from '../../../typings';
+import { Trash } from 'components/ActionButtons';
+import TitlePopover from 'components/TitlePopover';
+import type { IUsersList } from 'typings';
 
-interface IUsersListProps {
+export interface IUsersListProps {
   togglePermission: (id: string, permissions: string, status: string) => void;
   removeShare: (id: string) => void;
   userIsOwner: boolean;
@@ -14,8 +14,8 @@ interface IUsersListProps {
   users: IUsersList[];
 }
 
-const UsersList: React.FC<IUsersListProps> = (props) => (
-  <>
+const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
+  <React.Fragment>
     <TitlePopover
       title={props.status}
       message="Click the arrows to upgrade or downgrade the permissions between read and write"
@@ -46,14 +46,14 @@ const UsersList: React.FC<IUsersListProps> = (props) => (
                     <Button
                       variant="link"
                       className="p-0 me-4"
-                      onClick={() => props.togglePermission(id, permissions, props.status)}
+                      onClick={(): void => props.togglePermission(id, permissions, props.status)}
                       data-test-id="toggle-permissions"
                     >
                       <i
                         className={`fas fa-angle-double-${permissions === 'write' ? 'down' : 'up'} fa-2x text-warning`}
                       />
                     </Button>
-                    <Trash testID="remove-share" handleClick={() => props.removeShare(id)} />
+                    <Trash testID="remove-share" handleClick={(): void => props.removeShare(id)} />
                   </ButtonGroup>
                 </Col>
               </Row>
@@ -67,7 +67,7 @@ const UsersList: React.FC<IUsersListProps> = (props) => (
         );
       })}
     </ListGroup>
-  </>
+  </React.Fragment>
 );
 
 export default UsersList;

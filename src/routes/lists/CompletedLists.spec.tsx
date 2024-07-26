@@ -1,19 +1,17 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import CompletedLists from './CompletedLists';
-import axios from '../../utils/api';
+import axios from 'utils/api';
 
-function setup() {
-  const component = render(
+import CompletedLists from './CompletedLists';
+
+const setup = (): RenderResult =>
+  render(
     <MemoryRouter>
       <CompletedLists />
     </MemoryRouter>,
   );
-
-  return { ...component };
-}
 
 describe('CompletedLists', () => {
   it('renders loading component when data is being fetched', async () => {

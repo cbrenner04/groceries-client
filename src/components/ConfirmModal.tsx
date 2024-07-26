@@ -1,9 +1,9 @@
-import React, { type MouseEventHandler } from 'react';
+import React, { type ReactNode, type MouseEventHandler } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
 export interface IConfirmModalProps {
   action: string;
-  body: string;
+  body: string | ReactNode;
   show: boolean;
   handleConfirm: MouseEventHandler;
   handleClear: () => void;

@@ -4,7 +4,7 @@ interface IUserInfo {
   uid: string;
 }
 
-const setUserInfo = (headers: IUserInfo) => {
+const setUserInfo = (headers: IUserInfo): void => {
   const accessToken = headers['access-token'];
   if (!accessToken) {
     return;

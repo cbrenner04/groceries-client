@@ -1,10 +1,9 @@
-import type { ChangeEventHandler, MouseEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler, type MouseEventHandler } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-import { TextField } from '../../../components/FormFields';
+import { TextField } from 'components/FormFields';
 
-interface IMergeModalProps {
+export interface IMergeModalProps {
   showModal: boolean;
   clearModal: () => void;
   listNames: string;
@@ -20,7 +19,7 @@ const MergeModal: React.FC<IMergeModalProps> = ({
   mergeName,
   handleMergeConfirm,
   handleMergeNameChange,
-}) => {
+}): React.JSX.Element => {
   return (
     <Modal show={showModal} onHide={clearModal}>
       <Modal.Header closeButton>

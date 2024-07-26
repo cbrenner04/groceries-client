@@ -1,13 +1,14 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import AcceptedLists from './AcceptedLists';
-import axios from '../../../utils/api';
-import type { TUserPermissions } from '../../../typings';
-import { EListType } from '../../../typings';
+import axios from 'utils/api';
+import type { TUserPermissions } from 'typings';
+import { EListType } from 'typings';
+
+import AcceptedLists, { type IAcceptedListsProps } from './AcceptedLists';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -16,10 +17,15 @@ jest.mock('react-toastify', () => ({
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IAcceptedListsProps;
+}
+
+function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
   const user = userEvent.setup();
   // not sure what the problem is trying to set `currentUserPermissions` in the `defaultProps` object with this object
   const perms: TUserPermissions = {

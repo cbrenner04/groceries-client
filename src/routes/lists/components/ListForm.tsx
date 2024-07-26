@@ -1,24 +1,23 @@
-import type { ChangeEvent, FormEvent } from 'react';
-import React, { useState } from 'react';
+import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 
-import ListFormFields from '../components/ListFormFields';
-import FormSubmission from '../../../components/FormSubmission';
-import type { IList } from '../../../typings';
-import { EListType } from '../../../typings';
+import FormSubmission from 'components/FormSubmission';
+import { EListType, type IList } from 'typings';
 
-interface IListFormProps {
+import ListFormFields from '../components/ListFormFields';
+
+export interface IListFormProps {
   onFormSubmit: (list: IList) => Promise<void>;
   pending: boolean;
 }
 
-const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }) => {
+const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JSX.Element => {
   const defaultListType = EListType.GROCERY_LIST;
   const [name, setName] = useState('');
-  const [type, setType] = useState(defaultListType as EListType);
+  const [type, setType] = useState(defaultListType);
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     // TODO: figure this out.
     await onFormSubmit({ name, type } as IList);
@@ -27,9 +26,14 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       {!showForm && (
-        <Button variant="link" onClick={() => setShowForm(true)} aria-controls="form-collapse" aria-expanded={showForm}>
+        <Button
+          variant="link"
+          onClick={(): void => setShowForm(true)}
+          aria-controls="form-collapse"
+          aria-expanded={showForm}
+        >
           Add List
         </Button>
       )}
@@ -38,19 +42,21 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }) => {
           <ListFormFields
             name={name}
             type={type}
-            handleNameChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setName(value)}
-            handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setType(value as EListType)}
+            handleNameChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setName(value)}
+            handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
+              setType(value as EListType)
+            }
           />
           <FormSubmission
             disabled={pending}
             submitText="Create List"
-            cancelAction={() => setShowForm(false)}
+            cancelAction={(): void => setShowForm(false)}
             cancelText="Collapse Form"
             displayCancelButton={true}
           />
         </Form>
       </Collapse>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,18 +1,17 @@
-import type { ChangeEvent, FormEvent } from 'react';
-import React, { useState } from 'react';
+import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import { EmailField } from '../../components/FormFields';
-import axios from '../../utils/api';
-import FormSubmission from '../../components/FormSubmission';
+import { EmailField } from 'components/FormFields';
+import axios from 'utils/api';
+import FormSubmission from 'components/FormSubmission';
 
-export default function NewPassword() {
+const NewPassword: React.FC = (): React.JSX.Element => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
       await axios.post('/auth/password', {
@@ -35,15 +34,17 @@ export default function NewPassword() {
       <Form onSubmit={handleSubmit} autoComplete="off">
         <EmailField
           value={email}
-          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setEmail(value)}
+          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setEmail(value)}
         />
         <FormSubmission
           submitText="Send me reset password instructions"
           displayCancelButton={false}
-          cancelAction={() => undefined}
+          cancelAction={(): undefined => undefined}
         />
       </Form>
       <Link to="/users/sign_in">Log in</Link>
     </>
   );
-}
+};
+
+export default NewPassword;

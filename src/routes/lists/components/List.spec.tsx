@@ -1,12 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import List from './List';
-import { EListType } from '../../../typings';
+import { EListType } from 'typings';
 
-function setup(suppliedProps = {}) {
+import List, { type IListProps } from './List';
+
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IListProps;
+}
+
+function setup(suppliedProps?: Partial<IListProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     listButtons: <div />,

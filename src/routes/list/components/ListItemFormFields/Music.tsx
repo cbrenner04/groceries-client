@@ -1,9 +1,8 @@
-import type { ChangeEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
-import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
+import { TextField, CategoryField, CheckboxField } from 'components/FormFields';
 
-interface IMusicFormFieldsProps {
+export interface IMusicFormFieldsProps {
   title: string;
   artist: string;
   album: string;
@@ -15,7 +14,7 @@ interface IMusicFormFieldsProps {
 }
 
 const MusicFormFields: React.FC<IMusicFormFieldsProps> = (props) => (
-  <>
+  <React.Fragment>
     <TextField
       name="title"
       label="Title"
@@ -51,7 +50,7 @@ const MusicFormFields: React.FC<IMusicFormFieldsProps> = (props) => (
         classes="mb-3"
       />
     )}
-  </>
+  </React.Fragment>
 );
 
 export default MusicFormFields;

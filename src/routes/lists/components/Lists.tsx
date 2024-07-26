@@ -1,10 +1,9 @@
-import type { ReactElement, ReactNode } from 'react';
-import React from 'react';
+import React, { type ReactElement, type ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 
-import type { IList } from '../../../typings';
+import type { IList } from 'typings';
 
-interface IListsProps {
+export interface IListsProps {
   title: ReactElement;
   multiSelect: boolean;
   selectedLists: IList[];
@@ -13,7 +12,7 @@ interface IListsProps {
   children: ReactNode[];
 }
 
-const Lists: React.FC<IListsProps> = (props) => {
+const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
   return (
     <div className="mb-4">
       <div className="clearfix">
@@ -21,7 +20,7 @@ const Lists: React.FC<IListsProps> = (props) => {
         <Button
           variant="link"
           className="mx-auto float-end"
-          onClick={() => {
+          onClick={(): void => {
             if (props.multiSelect && props.selectedLists.length > 0) {
               props.setSelectedLists([]);
             }

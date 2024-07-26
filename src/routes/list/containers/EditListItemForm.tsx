@@ -4,12 +4,13 @@ import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
-import axios from '../../../utils/api';
+import axios from 'utils/api';
+import FormSubmission from 'components/FormSubmission';
+import { EListType, type IList, type IListUser } from 'typings';
+
 import type { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
-import FormSubmission from '../../../components/FormSubmission';
-import { EListType, type IList, type IListUser } from '../../../typings';
 
 export interface IEditListItemFormProps {
   navigate: (url: string) => void;

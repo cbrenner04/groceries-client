@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import ShareList from './ShareList';
@@ -7,20 +7,19 @@ import axios from '../../utils/api';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({
+  useNavigate: (): jest.Mock => jest.fn(),
+  useParams: (): { list_id: string } => ({
     list_id: '1',
   }),
 }));
 
 describe('ShareList', () => {
-  const renderShareList = () => {
-    return render(
+  const renderShareList = (): RenderResult =>
+    render(
       <MemoryRouter>
         <ShareList />
       </MemoryRouter>,
     );
-  };
 
   it('renders loading when data fetch is not complete', async () => {
     const { container, findByText } = renderShareList();

@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Book from './Book';
+import Book, { type IBookFormFieldsProps } from './Book';
 
-function setup(suppliedProps: { editForm: boolean }) {
+interface ISetupReturn extends RenderResult {
+  props: IBookFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IBookFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     author: 'asdf',
@@ -15,9 +20,9 @@ function setup(suppliedProps: { editForm: boolean }) {
     categories: ['asdf'],
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, queryByLabelText } = render(<Book {...props} />);
+  const component = render(<Book {...props} />);
 
-  return { container, findByLabelText, queryByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('Book', () => {

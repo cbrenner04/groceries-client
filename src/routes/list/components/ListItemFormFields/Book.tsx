@@ -1,10 +1,9 @@
-import type { ChangeEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler } from 'react';
 import { Row } from 'react-bootstrap';
 
-import { CategoryField, TextField, NumberField, CheckboxField } from '../../../../components/FormFields';
+import { CategoryField, TextField, NumberField, CheckboxField } from 'components/FormFields';
 
-interface IBookFormFieldsProps {
+export interface IBookFormFieldsProps {
   author: string;
   title: string;
   purchased?: boolean;
@@ -17,7 +16,7 @@ interface IBookFormFieldsProps {
 }
 
 const BookFormFields: React.FC<IBookFormFieldsProps> = (props) => (
-  <>
+  <React.Fragment>
     <TextField
       name="author"
       label="Author"
@@ -61,7 +60,7 @@ const BookFormFields: React.FC<IBookFormFieldsProps> = (props) => (
         />
       </Row>
     )}
-  </>
+  </React.Fragment>
 );
 
 export default BookFormFields;

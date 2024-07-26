@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { type AxiosError } from 'axios';
+
+import TitlePopover from 'components/TitlePopover';
+import { usePolling } from 'hooks';
+import type { IList, TUserPermissions } from 'typings';
 
 import AcceptedLists from '../components/AcceptedLists';
-import TitlePopover from '../../../components/TitlePopover';
 import { fetchCompletedLists } from '../utils';
-import { usePolling } from '../../../hooks';
-import type { IList, TUserPermissions } from '../../../typings';
 
 interface ICompletedListContainer {
   userId: string;
@@ -14,7 +16,7 @@ interface ICompletedListContainer {
   currentUserPermissions: TUserPermissions;
 }
 
-const CompletedListsContainer: React.FC<ICompletedListContainer> = (props) => {
+const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): React.JSX.Element => {
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props) => {
       const lists = await fetchCompletedLists({ navigate });
       if (lists) {
         const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } = lists;
-        const isSameSet = (newSet: IList[] | TUserPermissions, oldSet: IList[] | TUserPermissions) =>
+        const isSameSet = (newSet: IList[] | TUserPermissions, oldSet: IList[] | TUserPermissions): boolean =>
           JSON.stringify(newSet) === JSON.stringify(oldSet);
         const completedSame = isSameSet(updatedCompletedLists, completedLists);
         const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
@@ -35,11 +37,12 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props) => {
           setCurrentUserPermissions(updatedUserPerms);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
       // `response` will not be undefined if the response from the server comes back
       // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = err.response
+      const errorMessage = error.response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -50,7 +53,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props) => {
   }, 10000);
 
   return (
-    <>
+    <React.Fragment>
       <div className="clearfix mb-3">
         <Link to="/lists" className="float-end">
           Back to lists
@@ -70,10 +73,10 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props) => {
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
-        setIncompleteLists={() => undefined}
+        setIncompleteLists={(): undefined => undefined}
         incompleteLists={[]}
       />
-    </>
+    </React.Fragment>
   );
 };
 

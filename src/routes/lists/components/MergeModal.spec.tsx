@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import MergeModal from './MergeModal';
+import MergeModal, { type IMergeModalProps } from './MergeModal';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  props: IMergeModalProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IMergeModalProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     showModal: true,

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 
-import { prettyDueBy } from '../../../utils/format';
+import { prettyDueBy } from 'utils/format';
+import { EListType, type IListItem, type IListUser } from 'typings';
+
 import ListItemButtons from './ListItemButtons';
 import { itemName } from '../utils';
-import { EListType, type IListItem, type IListUser } from '../../../typings';
 
 export interface IListItemProps {
   item: IListItem;

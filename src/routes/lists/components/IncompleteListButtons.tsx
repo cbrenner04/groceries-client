@@ -1,10 +1,10 @@
 import React from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 
-import { Complete, EditLink, Merge, Share, Trash } from '../../../components/ActionButtons';
-import type { IList } from '../../../typings';
+import { Complete, EditLink, Merge, Share, Trash } from 'components/ActionButtons';
+import type { IList } from 'typings';
 
-interface IIncompleteListButtons {
+export interface IIncompleteListButtonsProps {
   userId: string;
   list: IList;
   onListCompletion: (list: IList) => void;
@@ -16,7 +16,7 @@ interface IIncompleteListButtons {
   pending: boolean;
 }
 
-const IncompleteListButtons: React.FC<IIncompleteListButtons> = (props) => {
+const IncompleteListButtons: React.FC<IIncompleteListButtonsProps> = (props): React.JSX.Element => {
   const userIsOwner = props.userId === props.list.owner_id;
   const multipleListsSelected = props.multiSelect && props.selectedLists.length > 1;
   const userCanShare = props.currentUserPermissions === 'write';
@@ -24,7 +24,7 @@ const IncompleteListButtons: React.FC<IIncompleteListButtons> = (props) => {
   return (
     <ButtonGroup className="float-end">
       <Complete
-        handleClick={() => props.onListCompletion(props.list)}
+        handleClick={(): void => props.onListCompletion(props.list)}
         disabled={!userIsOwner || props.pending}
         classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
         testID="incomplete-list-complete"
@@ -49,7 +49,7 @@ const IncompleteListButtons: React.FC<IIncompleteListButtons> = (props) => {
         />
       )}
       <Trash
-        handleClick={() => props.onListDeletion(props.list)}
+        handleClick={(): void => props.onListDeletion(props.list)}
         testID="incomplete-list-trash"
         disabled={props.pending}
       />

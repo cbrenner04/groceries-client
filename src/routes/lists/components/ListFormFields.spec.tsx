@@ -1,11 +1,17 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListFormFields from './ListFormFields';
-import { EListType } from '../../../typings';
+import { EListType } from 'typings';
 
-function setup(suppliedProps = {}) {
+import ListFormFields, { type IListFormFieldsProps } from './ListFormFields';
+
+interface ISetupReturn extends RenderResult {
+  props: IListFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IListFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     name: 'foo',

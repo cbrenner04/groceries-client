@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import PasswordForm from './PasswordForm';
+import PasswordForm, { type IPasswordFormProps } from './PasswordForm';
 
-function setup() {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IPasswordFormProps;
+}
+
+function setup(): ISetupReturn {
   const user = userEvent.setup();
   const props = {
     password: '',

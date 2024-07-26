@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import RefusedUsersList from './RefusedUsersList';
+import RefusedUsersList, { type IRefusedUsersListProps } from './RefusedUsersList';
 
-function setup(userIsOwner = true) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IRefusedUsersListProps;
+}
+
+function setup(userIsOwner = true): ISetupReturn {
   const user = userEvent.setup();
   const props = {
     refreshShare: jest.fn(),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EditList from './EditList';
@@ -7,21 +7,16 @@ import axios from '../../utils/api';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({
-    id: '1',
-  }),
+  useNavigate: (): jest.Mock => jest.fn(),
+  useParams: (): { id: string } => ({ id: '1' }),
 }));
 
-function setup() {
-  const component = render(
+const setup = (): RenderResult =>
+  render(
     <MemoryRouter>
       <EditList />
     </MemoryRouter>,
   );
-
-  return { ...component };
-}
 
 describe('EditList', () => {
   it('renders the Loading component when fetch request is pending', async () => {

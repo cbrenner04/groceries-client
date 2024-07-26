@@ -93,13 +93,38 @@ export function sortItems(listType: EListType, items: IListItem[]): IListItem[] 
   return sorted;
 }
 
+function handleFailure(
+  error: AxiosError,
+  notFoundMessage: string,
+  navigate: (url: string) => void,
+  redirectURI: string,
+): void {
+  if (error.response) {
+    if (error.response.status === 401) {
+      toast('You must sign in', {
+        type: 'error',
+      });
+      navigate('/users/sign_in');
+    } else if ([403, 404].includes(error.response.status)) {
+      toast(notFoundMessage, { type: 'error' });
+      navigate(redirectURI);
+    } else {
+      // any other errors will just be caught and render the generic UnknownError
+      throw new Error();
+    }
+  } else {
+    // any other errors will just be caught and render the generic UnknownError
+    throw new Error();
+  }
+}
+
 export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<
   | {
       currentUserId: string;
       list: IList;
       purchasedItems: IListItem[];
       categories: string[];
-      listUsers: IListUser;
+      listUsers: IListUser[];
       includedCategories: string[];
       notPurchasedItems: Record<string, IListItem[]>;
       permissions: string;
@@ -132,24 +157,7 @@ export async function fetchList({ id, navigate }: { id: string; navigate: (url: 
       permissions,
     };
   } catch (err: unknown) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.status === 401) {
-        toast('You must sign in', {
-          type: 'error',
-        });
-        navigate('/users/sign_in');
-        return;
-      } else if ([403, 404].includes(error.response.status)) {
-        toast('List not found', {
-          type: 'error',
-        });
-        navigate('/lists');
-        return;
-      }
-    }
-    // any other errors we will catch and render generic UnknownError
-    throw new Error(JSON.stringify(error));
+    handleFailure(err as AxiosError, 'List not found', navigate, '/lists');
   }
 }
 
@@ -161,7 +169,7 @@ export async function fetchItemToEdit({
   itemId: string;
   listId: string;
   navigate: (url: string) => void;
-}): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem }> {
+}): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem } | undefined> {
   try {
     const {
       data: { item, list, categories, list_users: listUsers },
@@ -209,22 +217,7 @@ export async function fetchItemToEdit({
       },
     };
   } catch (err: unknown) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.status === 401) {
-        toast('You must sign in', {
-          type: 'error',
-        });
-        navigate('/users/sign_in');
-      } else if ([403, 404].includes(error.response.status)) {
-        toast('Item not found', {
-          type: 'error',
-        });
-        navigate(`/lists/${listId}`);
-      }
-    }
-    // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
+    handleFailure(err as AxiosError, 'Item not found', navigate, `/lists/${listId}`);
   }
 }
 
@@ -236,26 +229,13 @@ export async function fetchItemsToEdit({
   listId: string;
   search: string;
   navigate: (url: string) => void;
-}): Promise<{ list: IList; lists: IList[]; items: IListItem[]; categories: string[]; list_users: IListUser[] }> {
+}): Promise<
+  { list: IList; lists: IList[]; items: IListItem[]; categories: string[]; list_users: IListUser[] } | undefined
+> {
   try {
     const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
     return data;
   } catch (err: unknown) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.status === 401) {
-        toast('You must sign in', {
-          type: 'error',
-        });
-        navigate('/users/sign_in');
-      } else if ([403, 404].includes(error.response.status)) {
-        toast('One or more items not found', {
-          type: 'error',
-        });
-        navigate(`/lists/${listId}`);
-      }
-    }
-    // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
+    handleFailure(err as AxiosError, 'One or more items not found', navigate, `/lists/${listId}`);
   }
 }

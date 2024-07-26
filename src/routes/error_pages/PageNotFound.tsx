@@ -5,8 +5,9 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import type { AxiosError } from 'axios';
 
-import axios from '../../utils/api';
-import Loading from '../../components/Loading';
+import axios from 'utils/api';
+import Loading from 'components/Loading';
+
 import UnknownError from './UnknownError';
 
 const fetchData = async ({ navigate }: { navigate: NavigateFunction }): Promise<void> => {

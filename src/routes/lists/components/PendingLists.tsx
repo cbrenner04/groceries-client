@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { ListGroup, ButtonGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
-
-import TitlePopover from '../../../components/TitlePopover';
-import ConfirmModal from '../../../components/ConfirmModal';
-import List from './List';
-import axios from '../../../utils/api';
-import { sortLists, failure, pluralize } from '../utils';
-import { Complete, Trash } from '../../../components/ActionButtons';
-import Lists from './Lists';
 import { useNavigate } from 'react-router-dom';
-import type { IList } from '../../../typings';
 
-interface IPendingListsProps {
+import TitlePopover from 'components/TitlePopover';
+import ConfirmModal from 'components/ConfirmModal';
+import axios from 'utils/api';
+import { sortLists, failure, pluralize } from 'routes/lists/utils';
+import { Complete, Trash } from 'components/ActionButtons';
+import type { IList } from 'typings';
+
+import List from './List';
+import Lists from './Lists';
+
+export interface IPendingListsProps {
   userId: string;
   pendingLists: IList[];
   setPendingLists: (lists: IList[]) => void;
@@ -24,7 +25,7 @@ interface IPendingListsProps {
   currentUserPermissions: Record<string, string>;
 }
 
-const PendingLists: React.FC<IPendingListsProps> = (props) => {
+const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element => {
   const [multiSelect, setMultiSelect] = useState(false);
   const [selectedLists, setSelectedLists] = useState([] as IList[]);
   const [listsToReject, setListsToReject] = useState([] as IList[]);
@@ -32,12 +33,12 @@ const PendingLists: React.FC<IPendingListsProps> = (props) => {
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
-  const resetMultiSelect = () => {
+  const resetMultiSelect = (): void => {
     setSelectedLists([]);
     setMultiSelect(false);
   };
 
-  const handleAccept = async (list: IList) => {
+  const handleAccept = async (list: IList): Promise<void> => {
     setPending(true);
     const listsToAccept = selectedLists.length ? selectedLists : [list];
     const requests = listsToAccept.map((l) =>
@@ -70,13 +71,13 @@ const PendingLists: React.FC<IPendingListsProps> = (props) => {
     }
   };
 
-  const handleReject = (list: IList) => {
+  const handleReject = (list: IList): void => {
     const rejectLists = selectedLists.length ? selectedLists : [list];
     setListsToReject(rejectLists);
     setShowRejectConfirm(true);
   };
 
-  const handleRejectConfirm = async () => {
+  const handleRejectConfirm = async (): Promise<void> => {
     setPending(true);
     setShowRejectConfirm(false);
     const requests = listsToReject.map((l) =>
@@ -130,8 +131,12 @@ const PendingLists: React.FC<IPendingListsProps> = (props) => {
             listName={list.name}
             listButtons={
               <ButtonGroup className="float-end">
-                <Complete handleClick={() => handleAccept(list)} testID="pending-list-accept" disabled={pending} />
-                <Trash handleClick={() => handleReject(list)} testID="pending-list-trash" disabled={pending} />
+                <Complete
+                  handleClick={(): Promise<void> => handleAccept(list)}
+                  testID="pending-list-accept"
+                  disabled={pending}
+                />
+                <Trash handleClick={(): void => handleReject(list)} testID="pending-list-trash" disabled={pending} />
               </ButtonGroup>
             }
           />
@@ -143,8 +148,8 @@ const PendingLists: React.FC<IPendingListsProps> = (props) => {
           .map((list) => list.name)
           .join(', ')}`}
         show={showRejectConfirm}
-        handleConfirm={() => handleRejectConfirm()}
-        handleClear={() => setShowRejectConfirm(false)}
+        handleConfirm={(): Promise<void> => handleRejectConfirm()}
+        handleClear={(): void => setShowRejectConfirm(false)}
       />
     </Lists>
   );

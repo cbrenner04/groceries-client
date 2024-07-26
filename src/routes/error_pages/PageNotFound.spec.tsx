@@ -3,7 +3,8 @@ import { render, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import axios from '../../utils/api';
+import axios from 'utils/api';
+
 import PageNotFound from './PageNotFound';
 
 jest.mock('react-toastify', () => ({
@@ -16,15 +17,12 @@ jest.mock('react-router-dom', () => ({
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-function setup(): RenderResult {
-  const component = render(
+const setup = (): RenderResult =>
+  render(
     <MemoryRouter>
       <PageNotFound />
     </MemoryRouter>,
   );
-
-  return { ...component };
-}
 
 describe('PageNotFound', () => {
   it('renders the Loading component when fetch request is pending', async () => {

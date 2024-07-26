@@ -1,13 +1,13 @@
 import React from 'react';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import Async, { type PromiseFn } from 'react-async';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import Loading from 'components/Loading';
+import type { IList, IListItem, IListUser } from 'typings';
 
 import { fetchItemsToEdit } from './utils';
 import BulkEditListItemsForm from './containers/BulkEditListItemsForm';
-import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
-import type { IList, IListItem, IListUser } from '../../typings';
 
 const BulkEditListItems: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();

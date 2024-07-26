@@ -1,9 +1,8 @@
-import type { ChangeEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
-import { TextField, CategoryField, CheckboxField } from '../../../../components/FormFields';
+import { TextField, CategoryField, CheckboxField } from 'components/FormFields';
 
-interface ISimpleFormFieldsProps {
+export interface ISimpleFormFieldsProps {
   content: string;
   completed?: boolean;
   editForm?: boolean;
@@ -13,7 +12,7 @@ interface ISimpleFormFieldsProps {
 }
 
 const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props) => (
-  <>
+  <React.Fragment>
     <TextField
       name="content"
       label="Content"
@@ -35,7 +34,7 @@ const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props) => (
         classes="mb-3"
       />
     )}
-  </>
+  </React.Fragment>
 );
 
 export default SimpleFormFields;

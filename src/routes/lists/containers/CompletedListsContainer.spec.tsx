@@ -1,13 +1,14 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { act, render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import CompletedListsContainer from './CompletedListsContainer';
-import axios from '../../../utils/api';
-import type { TUserPermissions } from '../../../typings';
-import { EListType } from '../../../typings';
+import axios from 'utils/api';
+import type { TUserPermissions } from 'typings';
+import { EListType } from 'typings';
 
-function setup() {
+import CompletedListsContainer from './CompletedListsContainer';
+
+function setup(): RenderResult {
   const props = {
     userId: 'id1',
     completedLists: [
@@ -57,7 +58,7 @@ function setup() {
     </MemoryRouter>,
   );
 
-  return { ...component };
+  return component;
 }
 
 describe('CompletedListsContainer', () => {

@@ -1,11 +1,17 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import CompleteListButtons from './CompleteListButtons';
-import { EListType } from '../../../typings';
+import { EListType } from 'typings';
 
-function setup(suppliedProps = {}, listOwnerId = 'id1') {
+import CompleteListButtons, { type ICompleteListButtonsProps } from './CompleteListButtons';
+
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: ICompleteListButtonsProps;
+}
+
+function setup(suppliedProps?: Partial<ICompleteListButtonsProps>, listOwnerId = 'id1'): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     onListRefresh: jest.fn(),

@@ -1,8 +1,9 @@
 import React from 'react';
 
+import type { IListItem, EListType } from 'typings';
+
 import NotPurchased from './NotPurchased';
 import Purchased from './Purchased';
-import type { IListItem, EListType } from '../../../../typings';
 
 export interface IListItemButtonsProps {
   item: IListItem;

@@ -2,8 +2,9 @@ import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import { EListType } from 'typings';
+
 import ChangeOtherList, { type IChangeOtherListProps } from './ChangeOtherList';
-import { EListType } from '../../../../typings';
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;

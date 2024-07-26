@@ -1,10 +1,15 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import Grocery from './Grocery';
+import Grocery, { type IGroceryFormFieldsProps } from './Grocery';
 
-function setup(suppliedProps: { editForm: boolean }) {
+interface ISetupReturn extends RenderResult {
+  props: IGroceryFormFieldsProps;
+  user: UserEvent;
+}
+
+function setup(suppliedProps?: Partial<IGroceryFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     product: 'foo',
@@ -16,9 +21,9 @@ function setup(suppliedProps: { editForm: boolean }) {
     inputChangeHandler: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
-  const { container, findByLabelText, queryByLabelText } = render(<Grocery {...props} />);
+  const component = render(<Grocery {...props} />);
 
-  return { container, findByLabelText, queryByLabelText, props, user };
+  return { ...component, props, user };
 }
 
 describe('Grocery', () => {

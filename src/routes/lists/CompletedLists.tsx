@@ -1,15 +1,15 @@
-import React from 'react';
-import type { PromiseFn } from 'react-async';
-import Async from 'react-async';
+import React, { type ReactNode } from 'react';
+import Async, { type PromiseFn } from 'react-async';
 import { useNavigate } from 'react-router-dom';
+
+import Loading from 'components/Loading';
+import type { IList, TUserPermissions } from 'typings';
 
 import UnknownError from '../error_pages/UnknownError';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
-import Loading from '../../components/Loading';
-import type { IList, TUserPermissions } from '../../typings';
 
-const CompletedLists: React.FC = () => {
+const CompletedLists: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,7 @@ const CompletedLists: React.FC = () => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { completedLists: IList[]; currentUserPermissions: TUserPermissions; userId: string }) => (
+        {(data: { completedLists: IList[]; currentUserPermissions: TUserPermissions; userId: string }): ReactNode => (
           <CompletedListsContainer
             completedLists={data.completedLists}
             currentUserPermissions={data.currentUserPermissions}

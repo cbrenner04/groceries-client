@@ -1,5 +1,9 @@
 import { toast } from 'react-toastify';
 
+import axios from 'utils/api';
+import { formatDueBy } from 'utils/format';
+import { EListType } from 'typings';
+
 import {
   itemName,
   mapIncludedCategories,
@@ -9,9 +13,6 @@ import {
   fetchItemToEdit,
   fetchItemsToEdit,
 } from './utils';
-import axios from '../../utils/api';
-import { formatDueBy } from '../../utils/format';
-import { EListType } from '../../typings';
 
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -304,10 +305,10 @@ describe('utils', () => {
           title: '',
           read: false,
           artist: '',
-          dueBy: formatDueBy(),
-          assigneeId: '',
+          due_by: formatDueBy(),
+          assignee_id: '',
           album: '',
-          numberInSeries: 0,
+          number_in_series: 0,
           category: '',
         },
       });

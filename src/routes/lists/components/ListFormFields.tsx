@@ -1,10 +1,9 @@
-import type { ChangeEventHandler, ChangeEvent } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler, type ChangeEvent } from 'react';
 
-import { CheckboxField, SelectField, TextField } from '../../../components/FormFields';
-import { EListType } from '../../../typings';
+import { CheckboxField, SelectField, TextField } from 'components/FormFields';
+import { EListType } from 'typings';
 
-interface IListFormFieldsProps {
+export interface IListFormFieldsProps {
   name: string;
   type: string;
   completed?: boolean;
@@ -14,9 +13,9 @@ interface IListFormFieldsProps {
   editForm?: boolean;
 }
 
-const ListFormFields: React.FC<IListFormFieldsProps> = (props) => {
+const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Element => {
   return (
-    <>
+    <React.Fragment>
       <TextField
         name="name"
         label="Name"
@@ -45,11 +44,11 @@ const ListFormFields: React.FC<IListFormFieldsProps> = (props) => {
           name="completed"
           label="Completed"
           value={props.completed ?? false}
-          handleChange={props.handleCompletedChange ?? (() => undefined)}
+          handleChange={props.handleCompletedChange ?? ((): undefined => undefined)}
           classes="mb-3"
         />
       )}
-    </>
+    </React.Fragment>
   );
 };
 

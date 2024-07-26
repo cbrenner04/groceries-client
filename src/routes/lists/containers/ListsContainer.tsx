@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import { type AxiosError } from 'axios';
+
+import axios from 'utils/api';
+import TitlePopover from 'components/TitlePopover';
+import { usePolling } from 'hooks';
+import type { IList, TUserPermissions } from 'typings';
 
 import ListForm from '../components/ListForm';
-import axios from '../../../utils/api';
-import { sortLists, failure } from '../utils';
+import { fetchLists, sortLists, failure } from '../utils';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
-import TitlePopover from '../../../components/TitlePopover';
-import { fetchLists } from '../utils';
-import { usePolling } from '../../../hooks';
-import type { IList, TUserPermissions } from '../../../typings';
 
 // TODO: can we do better?
-const isSameSet = (newSet: any, oldSet: any) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+const isSameSet = (newSet: TUserPermissions | IList[], oldSet: TUserPermissions | IList[]): boolean =>
+  JSON.stringify(newSet) === JSON.stringify(oldSet);
 
-interface IListsContainerProps {
+export interface IListsContainerProps {
   userId: string;
   pendingLists: IList[];
   completedLists: IList[];
@@ -24,7 +26,7 @@ interface IListsContainerProps {
   currentUserPermissions: TUserPermissions;
 }
 
-const ListsContainer: React.FC<IListsContainerProps> = (props) => {
+const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Element => {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
@@ -59,11 +61,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props) => {
           setCurrentUserPermissions(updatedCurrentUserPermissions);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
       // `response` will not be undefined if the response from the server comes back
       // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = err.response
+      const errorMessage = error.response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -73,7 +76,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props) => {
     }
   }, 10000);
 
-  const handleFormSubmit = async (list: IList) => {
+  const handleFormSubmit = async (list: IList): Promise<void> => {
     setPending(true);
     try {
       const { data } = await axios.post('/lists', { list });

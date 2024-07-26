@@ -1,20 +1,21 @@
-import type { ChangeEvent, FormEvent } from 'react';
-import React, { useState } from 'react';
+import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { type AxiosError } from 'axios';
 
-import { EmailField } from '../../../components/FormFields';
+import { EmailField } from 'components/FormFields';
+import axios from 'utils/api';
+import { usePolling } from 'hooks';
+import FormSubmission from 'components/FormSubmission';
+import type { IListUser, IUsersList } from 'typings';
+
 import UsersList from '../components/UsersList';
 import RefusedUsersList from '../components/RefusedUsersList';
-import axios from '../../../utils/api';
 import { fetchData } from '../utils';
-import { usePolling } from '../../../hooks';
-import FormSubmission from '../../../components/FormSubmission';
-import type { IListUser, IUsersList } from '../../../typings';
 
-interface IShareListFormProps {
+export interface IShareListFormProps {
   name: string;
   invitableUsers: IListUser[];
   listId: string;
@@ -46,7 +47,8 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           accepted: updatedAccepted,
           refused: updatedRefused,
         } = list;
-        const isSameSet = (newSet: any, oldSet: any) => JSON.stringify(newSet) === JSON.stringify(oldSet);
+        const isSameSet = (newSet: IListUser[] | IUsersList[], oldSet: IListUser[] | IUsersList[]): boolean =>
+          JSON.stringify(newSet) === JSON.stringify(oldSet);
         const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
         const pendingSame = isSameSet(updatedPending, pending);
         const acceptedSame = isSameSet(updatedAccepted, accepted);
@@ -64,11 +66,11 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           setRefused(updatedRefused);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // `response` will not be undefined if the response from the server comes back
       // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
       // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = err.response
+      const errorMessage = (err as AxiosError).response
         ? 'Something went wrong.'
         : 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
@@ -78,33 +80,36 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     }
   }, 5000);
 
-  const failure = (err: any) => {
-    if (err.response) {
-      if (err.response.status === 401) {
+  const failure = (err: unknown): void => {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
-      } else if (err.response.status === 403) {
+      } else if (error.response.status === 403) {
         toast('You do not have permission to take that action', { type: 'error' });
         navigate('/lists');
-      } else if (err.response.status === 404) {
+      } else if (error.response.status === 404) {
         toast('User not found', { type: 'error' });
       } else {
-        if (err.response.data.responseText) {
-          toast(err.response.data.responseText, { type: 'error' });
+        if ((error.response.data as Record<string, string>).responseText) {
+          toast((error.response.data as Record<string, string>).responseText, { type: 'error' });
         } else {
-          const responseTextKeys = Object.keys(err.response.data);
-          const responseErrors = responseTextKeys.map((key) => `${key} ${err.response.data[key]}`);
+          const responseTextKeys = Object.keys(error.response.data as Record<string, string>);
+          const responseErrors = responseTextKeys.map(
+            (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
+          );
           toast(responseErrors.join(' and '), { type: 'error' });
         }
       }
-    } else if (err.request) {
+    } else if (error.request) {
       toast('Something went wrong', { type: 'error' });
     } else {
-      toast(err.message, { type: 'error' });
+      toast(error.message, { type: 'error' });
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
       const {
@@ -135,7 +140,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     }
   };
 
-  const handleSelectUser = async (user: IListUser) => {
+  const handleSelectUser = async (user: IListUser): Promise<void> => {
     const usersList = {
       user_id: user.id,
       list_id: props.listId,
@@ -165,7 +170,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     }
   };
 
-  const togglePermission = async (id: string, currentPermission: string, status: string) => {
+  const togglePermission = async (id: string, currentPermission: string, status: string): Promise<void> => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
       await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
@@ -188,7 +193,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     }
   };
 
-  const refreshShare = async (id: string, userId: string) => {
+  const refreshShare = async (id: string, userId: string): Promise<void> => {
     const usersList = refused.find(({ user }) => user.id === userId);
     if (usersList) {
       const { user } = usersList;
@@ -216,7 +221,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     }
   };
 
-  const removeShare = async (id: string) => {
+  const removeShare = async (id: string): Promise<void> => {
     try {
       await axios.delete(`/lists/${props.listId}/users_lists/${id}`);
       const {
@@ -242,15 +247,20 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           name="new-email"
           label="Enter an email to invite someone to share this list:"
           value={newEmail}
-          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setNewEmail(value)}
+          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setNewEmail(value)}
         />
-        <FormSubmission submitText="Share List" displayCancelButton={false} cancelAction={() => undefined} />
+        <FormSubmission submitText="Share List" displayCancelButton={false} cancelAction={(): void => undefined} />
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup className="mb-5">
         {invitableUsers.map((user) => (
           <div data-test-id={`invite-user-${user.id}`} key={user.id}>
-            <ListGroup.Item action key={user.id} className="btn btn-link" onClick={() => handleSelectUser(user)}>
+            <ListGroup.Item
+              action
+              key={user.id}
+              className="btn btn-link"
+              onClick={(): Promise<void> => handleSelectUser(user)}
+            >
               {user.email}
             </ListGroup.Item>
           </div>

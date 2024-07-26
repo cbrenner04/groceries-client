@@ -1,9 +1,8 @@
-import type { ChangeEventHandler } from 'react';
-import React from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
-import { CategoryField, TextField, CheckboxField } from '../../../../components/FormFields';
+import { CategoryField, TextField, CheckboxField } from 'components/FormFields';
 
-interface IGroceryFormFieldsProps {
+export interface IGroceryFormFieldsProps {
   product: string;
   quantity: string;
   purchased?: boolean;
@@ -13,7 +12,7 @@ interface IGroceryFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 const GroceryFormFields: React.FC<IGroceryFormFieldsProps> = (props) => (
-  <>
+  <React.Fragment>
     <TextField
       name="product"
       label="Product"
@@ -42,7 +41,7 @@ const GroceryFormFields: React.FC<IGroceryFormFieldsProps> = (props) => (
         classes="mb-3"
       />
     )}
-  </>
+  </React.Fragment>
 );
 
 export default GroceryFormFields;

@@ -1,10 +1,15 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, type RenderResult, waitFor } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import ListForm from './ListForm';
+import ListForm, { type IListFormProps } from './ListForm';
 
-function setup(suppliedProps = {}) {
+interface ISetupReturn extends RenderResult {
+  user: UserEvent;
+  props: IListFormProps;
+}
+
+function setup(suppliedProps?: Partial<IListFormProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     pending: false,

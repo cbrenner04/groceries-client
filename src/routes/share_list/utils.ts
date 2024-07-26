@@ -1,13 +1,26 @@
 import { toast } from 'react-toastify';
+import { type AxiosError } from 'axios';
 
 import axios from '../../utils/api';
-import type IUserList from '../../typings/IUsersList';
+import { type IListUser, type IUsersList } from 'typings';
 
-export async function fetchData({ listId, navigate }: { listId: string; navigate: (url: string) => void }) {
+export async function fetchData({ listId, navigate }: { listId: string; navigate: (url: string) => void }): Promise<
+  | {
+      name: string;
+      invitableUsers: IListUser[];
+      listId: string;
+      userIsOwner: boolean;
+      pending: IUsersList[];
+      accepted: IUsersList[];
+      refused: IUsersList[];
+      userId: string;
+    }
+  | undefined
+> {
   try {
     const { data } = await axios.get(`/lists/${listId}/users_lists`);
     const userInAccepted = data.accepted.find(
-      (acceptedList: IUserList) => acceptedList.user.id === data.current_user_id,
+      (acceptedList: IUsersList) => acceptedList.user.id === data.current_user_id,
     );
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       toast('List not found', { type: 'error' });
@@ -24,19 +37,20 @@ export async function fetchData({ listId, navigate }: { listId: string; navigate
       refused: data.refused,
       userId: data.current_user_id,
     };
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 401) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    if (error.response) {
+      if (error.response.status === 401) {
         toast('You must sign in', { type: 'error' });
         navigate('/users/sign_in');
         return;
-      } else if ([403, 404].includes(err.response.status)) {
+      } else if ([403, 404].includes(error.response.status)) {
         toast('List not found', { type: 'error' });
         navigate('/lists');
         return;
       }
     }
     // any other errors will just be caught and render the generic UnknownError
-    throw new Error(err);
+    throw new Error(JSON.stringify(error));
   }
 }

@@ -1,14 +1,13 @@
-import type { ReactElement } from 'react';
-import React from 'react';
+import React, { type ReactElement } from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
 
-import { formatDate } from '../../../utils/format';
-import listIconClass from '../../../utils/list_icon';
-import type { IList } from '../../../typings';
+import { formatDate } from 'utils/format';
+import listIconClass from 'utils/list_icon';
+import type { IList } from 'typings';
 
-interface IListProps {
+export interface IListProps {
   listButtons: ReactElement;
   listName: string;
   listClass: string;
@@ -20,8 +19,8 @@ interface IListProps {
   setSelectedLists: (lists: IList[]) => void;
 }
 
-const List: React.FC<IListProps> = (props) => {
-  const handleListSelect = (list: IList) => {
+const List: React.FC<IListProps> = (props): React.JSX.Element => {
+  const handleListSelect = (list: IList): void => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
     if (listIds.includes(list.id)) {
@@ -56,7 +55,7 @@ const List: React.FC<IListProps> = (props) => {
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
         {props.multiSelect && (
           <Col xs="1" className="mx-sm-auto">
-            <input type="checkbox" className="multi-select-check" onClick={() => handleListSelect(props.list)} />
+            <input type="checkbox" className="multi-select-check" onClick={(): void => handleListSelect(props.list)} />
             <div className="list-item-multi-divider"></div>
           </Col>
         )}

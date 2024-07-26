@@ -2,8 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { EListType } from 'typings';
+
 import ListItemButtons, { type IListItemButtonsProps } from './index';
-import { EListType } from '../../../../typings';
 
 async function setup(
   suppliedProps: Partial<IListItemButtonsProps>,
