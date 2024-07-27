@@ -41,6 +41,23 @@ describe('Grocery', () => {
     expect(await findByLabelText('Purchased')).toBeVisible();
   });
 
+  it('renders with defaults', async () => {
+    const { container, findByLabelText, findByTestId, queryByLabelText } = setup({
+      product: 'foo',
+      quantity: '2 bar',
+      purchased: undefined,
+      editForm: undefined,
+      category: undefined,
+      categories: undefined,
+      inputChangeHandler: jest.fn(),
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Purchased')).toBeNull();
+    expect(await findByLabelText('Category')).toHaveValue('');
+    expect((await findByTestId('categories')).firstChild).toBeNull();
+  });
+
   it('calls appropriate change handlers when changes occur', async () => {
     const { findByLabelText, props, user } = setup({ editForm: true });
 

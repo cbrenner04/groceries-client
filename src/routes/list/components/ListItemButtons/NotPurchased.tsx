@@ -15,30 +15,39 @@ export interface INotPurchasedItemButtonsProps {
   multiSelect?: boolean;
 }
 
-const NotPurchasedItemButtons: React.FC<INotPurchasedItemButtonsProps> = (props): React.JSX.Element => {
+const NotPurchasedItemButtons: React.FC<INotPurchasedItemButtonsProps> = ({
+  listType,
+  item,
+  handlePurchaseOfItem,
+  handleItemDelete,
+  handleItemEdit,
+  toggleItemRead,
+  pending,
+  multiSelect = false,
+}): React.JSX.Element => {
   return (
-    <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>
-      {props.listType === 'BookList' && (
+    <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
+      {listType === 'BookList' && (
         <Bookmark
-          handleClick={(): void => props.toggleItemRead(props.item)}
-          read={props.item.read ?? false}
-          testID={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
+          handleClick={(): void => toggleItemRead(item)}
+          read={item.read ?? false}
+          testID={`not-purchased-item-${item.read ? 'unread' : 'read'}-${item.id}`}
         />
       )}
       <Complete
-        handleClick={(): void => props.handlePurchaseOfItem(props.item)}
-        testID={`not-purchased-item-complete-${props.item.id}`}
-        disabled={props.pending}
+        handleClick={(): void => handlePurchaseOfItem(item)}
+        testID={`not-purchased-item-complete-${item.id}`}
+        disabled={pending}
       />
       <EditButton
-        handleClick={(): void => props.handleItemEdit(props.item)}
-        testID={`not-purchased-item-edit-${props.item.id}`}
-        disabled={props.pending}
+        handleClick={(): void => handleItemEdit(item)}
+        testID={`not-purchased-item-edit-${item.id}`}
+        disabled={pending}
       />
       <Trash
-        handleClick={(): void => props.handleItemDelete(props.item)}
-        testID={`not-purchased-item-delete-${props.item.id}`}
-        disabled={props.pending}
+        handleClick={(): void => handleItemDelete(item)}
+        testID={`not-purchased-item-delete-${item.id}`}
+        disabled={pending}
       />
     </ButtonGroup>
   );

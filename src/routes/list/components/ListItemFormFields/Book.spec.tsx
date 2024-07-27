@@ -42,6 +42,27 @@ describe('Book', () => {
     expect(await findByLabelText('Read')).toBeVisible();
   });
 
+  it('renders with defaults', async () => {
+    const { container, findByLabelText, findByTestId, queryByLabelText } = setup({
+      author: 'asdf',
+      inputChangeHandler: jest.fn(),
+      title: 'asdf',
+      purchased: undefined,
+      read: undefined,
+      editForm: undefined,
+      numberInSeries: undefined,
+      categories: undefined,
+      category: undefined,
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Purchased')).toBeNull();
+    expect(queryByLabelText('Read')).toBeNull();
+    expect(await findByLabelText('Number in series')).toHaveValue(0);
+    expect(await findByLabelText('Category')).toHaveValue('');
+    expect((await findByTestId('categories')).firstChild).toBeNull();
+  });
+
   it('calls appropriate change handlers when changes occur', async () => {
     const { findByLabelText, props, user } = setup({ editForm: true });
 

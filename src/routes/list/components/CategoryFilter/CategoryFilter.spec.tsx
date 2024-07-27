@@ -33,7 +33,7 @@ describe('CategoryFilter', () => {
   });
 
   it('renders NoFilter when categories do not exist', async () => {
-    const { container, findByRole } = setup({ categories: [], filter: '' });
+    const { container, findByRole } = setup({ categories: undefined, filter: undefined });
 
     expect(container).toMatchSnapshot();
     expect(await findByRole('button')).toHaveTextContent('Filter by category');

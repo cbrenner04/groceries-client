@@ -117,6 +117,7 @@ exports[`BulkEditListItemsForm renders 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option

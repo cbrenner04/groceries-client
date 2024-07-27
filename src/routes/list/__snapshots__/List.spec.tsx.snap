@@ -80,6 +80,7 @@ exports[`List displays List 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       />
     </div>

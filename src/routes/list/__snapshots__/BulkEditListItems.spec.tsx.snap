@@ -117,6 +117,7 @@ exports[`BulkEditListItems displays BulkEditListItems 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       />
       <div

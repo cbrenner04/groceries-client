@@ -1,18 +1,18 @@
 export default interface IListItem {
   id: string;
-  product?: string | null;
+  product?: string;
   task?: string;
   content?: string;
-  quantity?: string | null;
-  author?: string | null;
+  quantity?: string;
+  author?: string;
   title?: string;
-  artist?: string | null;
-  album?: string | null;
-  assignee_id?: string | null;
-  due_by?: Date | string | null;
+  artist?: string;
+  album?: string;
+  assignee_id?: string;
+  due_by?: Date | string;
   read?: boolean;
-  number_in_series?: number | null;
-  category?: string | null;
+  number_in_series?: number;
+  category?: string;
   completed?: boolean;
   purchased?: boolean;
   created_at?: string;

@@ -28,7 +28,7 @@ const CategoryField: React.FC<ICategoryFieldProps> = ({
       name={name}
       disabled={disabled}
     />
-    <datalist id="categories">
+    <datalist id="categories" data-test-id="categories">
       {categories.map((category) => (
         <option key={category} value={category} />
       ))}

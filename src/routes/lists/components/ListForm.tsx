@@ -46,6 +46,9 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JS
             handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
               setType(value as EListType)
             }
+            completed={false}
+            handleCompletedChange={(): undefined => undefined}
+            editForm={false}
           />
           <FormSubmission
             disabled={pending}

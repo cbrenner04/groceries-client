@@ -16,27 +16,27 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditListItem', () => {
-  const renderEditListItem = (): RenderResult => {
-    return render(
+  const renderEditListItem = (): RenderResult =>
+    render(
       <MemoryRouter>
         <EditListItem />
       </MemoryRouter>,
     );
-  };
 
   it('renders the Loading component when fetch request is pending', async () => {
     const { container, findByText } = renderEditListItem();
+    const status = await findByText('Loading...');
 
-    expect(await findByText('Loading...')).toBeTruthy();
+    expect(status).toBeTruthy();
     expect(container).toMatchSnapshot();
   });
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, getByRole } = renderEditListItem();
+    const { container, findByRole } = renderEditListItem();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    expect(getByRole('button')).toHaveTextContent('refresh the page');
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
   });
 

@@ -20,3 +20,23 @@ exports[`CheckboxField renders input 1`] = `
   </label>
 </div>
 `;
+
+exports[`CheckboxField renders with defaults 1`] = `
+<div
+  class="form-check"
+>
+  <input
+    class="form-check-input"
+    id="testName"
+    name="testName"
+    type="checkbox"
+  />
+  <label
+    class="form-check-label"
+    for="testName"
+    title=""
+  >
+    testLabel
+  </label>
+</div>
+`;

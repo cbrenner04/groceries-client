@@ -71,6 +71,13 @@ describe('ListItem', () => {
     expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
   });
 
+  it('sets the data-test-class to not-purchased-item when item purchased undefined', () => {
+    const { container } = setup({ purchased: undefined }, {});
+
+    expect(container).toMatchSnapshot();
+    expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
+  });
+
   it('shows assignee when listType is ToDoList, the item is assigned, the assignee is in the listUsers', async () => {
     const email = 'foo@example.com';
     const { container, findByTestId } = setup(
@@ -82,6 +89,28 @@ describe('ListItem', () => {
             email,
           },
         ],
+      },
+      {
+        assignee_id: 'id1',
+      },
+    );
+
+    expect(container).toMatchSnapshot();
+    expect(await findByTestId('assignee-email')).toHaveTextContent(`Assigned To: ${email}`);
+  });
+
+  it('listType is ToDoList, item is assigned, assignee is in the listUsers, multiselect is true', async () => {
+    const email = 'foo@example.com';
+    const { container, findByTestId } = setup(
+      {
+        listType: EListType.TO_DO_LIST,
+        listUsers: [
+          {
+            id: 'id1',
+            email,
+          },
+        ],
+        multiSelect: true,
       },
       {
         assignee_id: 'id1',
@@ -112,6 +141,21 @@ describe('ListItem', () => {
     expect(await findByTestId('assignee-email')).not.toHaveTextContent('Assigned To');
   });
 
+  it('does not show assignee when listType is ToDoList, item is assigned & listUsers is undefined', async () => {
+    const { container, findByTestId } = setup(
+      {
+        listType: EListType.TO_DO_LIST,
+        listUsers: undefined,
+      },
+      {
+        assignee_id: 'id1',
+      },
+    );
+
+    expect(container).toMatchSnapshot();
+    expect(await findByTestId('assignee-email')).not.toHaveTextContent('Assigned To');
+  });
+
   it('does not show assignee when listType is ToDoList and the item is not assigned', async () => {
     const { container, findByTestId } = setup(
       {
@@ -124,7 +168,7 @@ describe('ListItem', () => {
         ],
       },
       {
-        assignee_id: null,
+        assignee_id: undefined,
       },
     );
 
@@ -153,7 +197,7 @@ describe('ListItem', () => {
         listType: EListType.TO_DO_LIST,
       },
       {
-        due_by: null,
+        due_by: undefined,
       },
     );
 

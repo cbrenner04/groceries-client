@@ -14,7 +14,7 @@ const EmailField: React.FC<IEmailFieldProps> = ({
   value,
   handleChange,
 }): React.JSX.Element => (
-  <Form.Group controlId={name || 'email'} className="mb-3">
+  <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control type="email" value={value} onChange={handleChange} placeholder="jane.smith@example.com" name={name} />
   </Form.Group>

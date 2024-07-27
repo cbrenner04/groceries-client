@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
-import { formatDueBy } from 'utils/format';
 import { EListType } from 'typings';
 
 import {
@@ -52,7 +51,6 @@ describe('utils', () => {
         { id: 'id1', category: 'Bar', name: 'f' },
         { id: 'id1', category: '', name: 'g' },
         { id: 'id1', category: undefined, name: 'h' },
-        { id: 'id1', category: null, name: 'i' },
       ];
       expect(mapIncludedCategories(items)).toStrictEqual(['', 'foo', 'bar']);
     });
@@ -69,7 +67,6 @@ describe('utils', () => {
         { id: 'id1', category: 'Bar', name: 'f' },
         { id: 'id1', category: '', name: 'g' },
         { id: 'id1', category: undefined, name: 'h' },
-        { id: 'id1', category: null, name: 'i' },
       ];
       const categories = ['', 'foo'];
       expect(categorizeNotPurchasedItems(items, categories)).toStrictEqual({
@@ -86,7 +83,6 @@ describe('utils', () => {
         '': [
           { id: 'id1', category: '', name: 'g' },
           { id: 'id1', category: undefined, name: 'h' },
-          { id: 'id1', category: null, name: 'i' },
         ],
       });
     });
@@ -95,85 +91,102 @@ describe('utils', () => {
   describe('sortItems', () => {
     it('returns sorted items for BookList', () => {
       const items = [
-        { id: 'id1', author: null, number_in_series: 1, title: 'foo' },
+        { id: 'id1', author: undefined, number_in_series: 1, title: 'foo' },
         { id: 'id1', author: 'foo', number_in_series: 1, title: 'bar' },
         { id: 'id1', author: 'bar', number_in_series: 2, title: 'baz' },
         { id: 'id1', author: 'bar', number_in_series: 1, title: 'foobar' },
-        { id: 'id1', author: 'bar', number_in_series: null, title: 'foobaz' },
+        { id: 'id1', author: 'bar', number_in_series: undefined, title: 'foobaz' },
         { id: 'id1', author: 'bar', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: '', number_in_series: null, title: 'foo' },
+        { id: 'id1', author: '', number_in_series: undefined, title: 'foo' },
       ];
       expect(sortItems(EListType.BOOK_LIST, items)).toStrictEqual([
         { id: 'id1', author: 'bar', number_in_series: 1, title: 'bar' },
         { id: 'id1', author: 'bar', number_in_series: 1, title: 'foobar' },
         { id: 'id1', author: 'bar', number_in_series: 2, title: 'baz' },
-        { id: 'id1', author: 'bar', number_in_series: null, title: 'foobaz' },
+        { id: 'id1', author: 'bar', number_in_series: undefined, title: 'foobaz' },
         { id: 'id1', author: 'foo', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: null, number_in_series: 1, title: 'foo' },
-        { id: 'id1', author: '', number_in_series: null, title: 'foo' },
+        { id: 'id1', author: undefined, number_in_series: 1, title: 'foo' },
+        { id: 'id1', author: '', number_in_series: undefined, title: 'foo' },
       ]);
     });
 
     it('returns sorted items for GroceryList', () => {
       const items = [
-        { id: 'id1', product: null, quantity: 'foo' },
+        { id: 'id1', product: undefined, quantity: 'foo' },
         { id: 'id1', product: '', quantity: 'bar' },
-        { id: 'id1', product: 'foo', quantity: null },
+        { id: 'id1', product: 'foo', quantity: undefined },
         { id: 'id1', product: 'foo', quantity: 'bar' },
         { id: 'id1', product: 'foo', quantity: 'foo' },
         { id: 'id1', product: 'bar', quantity: '' },
-        { id: 'id1', product: null, quantity: 'baz' },
+        { id: 'id1', product: undefined, quantity: 'baz' },
       ];
       expect(sortItems(EListType.GROCERY_LIST, items)).toStrictEqual([
         { id: 'id1', product: 'bar', quantity: '' },
-        { id: 'id1', product: 'foo', quantity: null },
+        { id: 'id1', product: 'foo', quantity: undefined },
         { id: 'id1', product: 'foo', quantity: 'bar' },
         { id: 'id1', product: 'foo', quantity: 'foo' },
-        { id: 'id1', product: null, quantity: 'foo' },
+        { id: 'id1', product: undefined, quantity: 'foo' },
         { id: 'id1', product: '', quantity: 'bar' },
-        { id: 'id1', product: null, quantity: 'baz' },
+        { id: 'id1', product: undefined, quantity: 'baz' },
       ]);
     });
 
     it('returns sorted items for MusicList', () => {
       const items = [
-        { id: 'id1', artist: null, album: 'bar', title: 'foo' },
+        { id: 'id1', artist: undefined, album: 'bar', title: 'foo' },
         { id: 'id1', artist: 'foo', album: 'bar', title: 'bar' },
         { id: 'id1', artist: 'bar', album: 'foo', title: 'baz' },
         { id: 'id1', artist: 'bar', album: 'bar', title: 'foobar' },
-        { id: 'id1', artist: 'bar', album: null, title: 'foobaz' },
+        { id: 'id1', artist: 'bar', album: undefined, title: 'foobaz' },
         { id: 'id1', artist: 'bar', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: '', album: null, title: 'foo' },
+        { id: 'id1', artist: '', album: undefined, title: 'foo' },
       ];
       expect(sortItems(EListType.MUSIC_LIST, items)).toStrictEqual([
         { id: 'id1', artist: 'bar', album: 'bar', title: 'bar' },
         { id: 'id1', artist: 'bar', album: 'bar', title: 'foobar' },
         { id: 'id1', artist: 'bar', album: 'foo', title: 'baz' },
-        { id: 'id1', artist: 'bar', album: null, title: 'foobaz' },
+        { id: 'id1', artist: 'bar', album: undefined, title: 'foobaz' },
         { id: 'id1', artist: 'foo', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: null, album: 'bar', title: 'foo' },
-        { id: 'id1', artist: '', album: null, title: 'foo' },
+        { id: 'id1', artist: undefined, album: 'bar', title: 'foo' },
+        { id: 'id1', artist: '', album: undefined, title: 'foo' },
+      ]);
+    });
+
+    it('returns sorted items for Simple list', () => {
+      const items = [
+        { id: 'id1', content: undefined },
+        { id: 'id1', content: 'baz' },
+        { id: 'id1', content: 'foo' },
+        { id: 'id1', content: 'bar' },
+        { id: 'id1', content: '' },
+      ];
+      expect(sortItems(EListType.SIMPLE_LIST, items)).toStrictEqual([
+        { id: 'id1', content: 'bar' },
+        { id: 'id1', content: 'baz' },
+        { id: 'id1', content: 'foo' },
+        { id: 'id1', content: undefined },
+        { id: 'id1', content: '' },
       ]);
     });
 
     it('returns sorted items for ToDoList', () => {
       const items = [
-        { id: 'id1', due_by: null, assignee_id: '1', task: 'foo' },
+        { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
         { id: 'id1', due_by: new Date('05/20/2020'), assignee_id: '1', task: 'bar' },
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '2', task: 'baz' },
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'foobar' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: null, task: 'foobaz' },
+        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: undefined, task: 'foobaz' },
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: '', assignee_id: null, task: 'foo' },
+        { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
       ];
       expect(sortItems(EListType.TO_DO_LIST, items)).toStrictEqual([
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'bar' },
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'foobar' },
         { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '2', task: 'baz' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: null, task: 'foobaz' },
+        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: undefined, task: 'foobaz' },
         { id: 'id1', due_by: new Date('05/20/2020'), assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: null, assignee_id: '1', task: 'foo' },
-        { id: 'id1', due_by: '', assignee_id: null, task: 'foo' },
+        { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
+        { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
       ]);
     });
   });
@@ -295,21 +308,7 @@ describe('utils', () => {
         },
         item: {
           id: '1',
-          product: '',
-          task: '',
-          content: '',
-          purchased: false,
-          quantity: '',
-          completed: false,
-          author: '',
-          title: '',
-          read: false,
-          artist: '',
-          due_by: formatDueBy(),
-          assignee_id: '',
-          album: '',
-          number_in_series: 0,
-          category: '',
+          user_id: '1',
         },
       });
     });

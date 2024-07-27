@@ -11,18 +11,18 @@ import ToDo from './ToDo';
 // TODO: can this just be IListItem - I think this is confusing shit around the app
 export interface IListITemsFormFieldsFormDataProps {
   id?: string;
-  product?: string | null;
+  product?: string;
   task?: string;
   content?: string;
-  quantity?: string | null;
-  author?: string | null;
+  quantity?: string;
+  author?: string;
   title?: string;
-  artist?: string | null;
-  album?: string | null;
-  assigneeId?: string | null;
-  dueBy?: string | null;
-  numberInSeries?: number | null;
-  category?: string | null;
+  artist?: string;
+  album?: string;
+  assigneeId?: string;
+  dueBy?: string;
+  numberInSeries?: number;
+  category?: string;
   read?: boolean;
   purchased?: boolean;
   completed?: boolean;
@@ -45,7 +45,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
   formData,
   setFormData,
   editForm,
-}) =>
+}): React.JSX.Element =>
   ({
     BookList: (
       <Book
@@ -106,6 +106,6 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
         editForm={editForm ?? false}
       />
     ),
-  })[listType] ?? null;
+  })[listType]!;
 
 export default ListItemFormFields;

@@ -38,6 +38,7 @@ exports[`Simple renders base form when props.editForm is false 1`] = `
       value="foo"
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option
@@ -89,6 +90,7 @@ exports[`Simple renders edit form when props.editForm is true 1`] = `
       value="foo"
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option
@@ -119,6 +121,51 @@ exports[`Simple renders edit form when props.editForm is true 1`] = `
         Completed
       </label>
     </div>
+  </div>
+</div>
+`;
+
+exports[`Simple renders with defaults 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="content"
+    >
+      Content
+    </label>
+    <input
+      class="form-control"
+      id="content"
+      name="content"
+      placeholder="Something cool"
+      type="text"
+      value="foo"
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
   </div>
 </div>
 `;

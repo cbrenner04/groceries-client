@@ -65,6 +65,7 @@ exports[`EditListItem displays EditListItem 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       />
     </div>

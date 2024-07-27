@@ -158,6 +158,7 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
       value=""
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option
@@ -297,6 +298,7 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
       value=""
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option
@@ -475,6 +477,7 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
       value=""
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option
@@ -660,6 +663,7 @@ exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoLis
       value=""
     />
     <datalist
+      data-test-id="categories"
       id="categories"
     >
       <option

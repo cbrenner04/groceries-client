@@ -11,26 +11,29 @@ export interface ISimpleFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 
-const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props) => (
+const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = ({
+  content,
+  inputChangeHandler,
+  completed = false,
+  editForm = '',
+  category = '',
+  categories = [],
+}) => (
   <React.Fragment>
     <TextField
       name="content"
       label="Content"
-      value={props.content}
-      handleChange={props.inputChangeHandler}
+      value={content}
+      handleChange={inputChangeHandler}
       placeholder="Something cool"
     />
-    <CategoryField
-      category={props.category ?? ''}
-      categories={props.categories ?? []}
-      handleInput={props.inputChangeHandler}
-    />
-    {props.editForm && (
+    <CategoryField category={category} categories={categories} handleInput={inputChangeHandler} />
+    {editForm && (
       <CheckboxField
         name="completed"
         label="Completed"
-        value={props.completed ?? false}
-        handleChange={props.inputChangeHandler}
+        value={completed}
+        handleChange={inputChangeHandler}
         classes="mb-3"
       />
     )}

@@ -6,17 +6,18 @@ import CategoryField, { type ICategoryFieldProps } from './CategoryField';
 
 const categories = ['testCategory1'];
 
-async function setup(): Promise<{
+async function setup(suppliedProps?: Partial<ICategoryFieldProps>): Promise<{
   formInput: HTMLElement;
   props: ICategoryFieldProps;
   user: UserEvent;
 }> {
   const user = userEvent.setup();
-  const props = {
+  const defaultProps = {
     handleInput: jest.fn(),
     category: 'testCategory',
     categories,
   };
+  const props = { ...defaultProps, ...suppliedProps };
   const { findByLabelText } = render(<CategoryField {...props} />);
   const formInput = await findByLabelText('Category');
 
@@ -30,7 +31,16 @@ describe('CategoryField', () => {
 
     expect(formGroup).toMatchSnapshot();
     expect(formInput).toHaveValue(props.category);
-    expect(formGroup?.children[2].firstChild).toHaveAttribute('value', categories[0]);
+    expect(formGroup?.children[2].firstChild).toHaveValue(categories[0]);
+  });
+
+  it('renders when no category or categories given', async () => {
+    const { formInput } = await setup({ category: undefined, categories: undefined });
+    const formGroup = formInput.parentElement;
+
+    expect(formGroup).toMatchSnapshot();
+    expect(formInput).toHaveValue('');
+    expect(formGroup?.children[2].firstChild).toBeNull();
   });
 
   describe('when value changes', () => {

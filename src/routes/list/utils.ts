@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
 
 import axios from '../../utils/api';
-import { formatDueBy } from '../../utils/format';
 import { EListType, type IList, type IListItem, type IListUser } from '../../typings';
 import type { IListITemsFormFieldsFormDataProps } from './components/ListItemFormFields';
 
@@ -175,46 +174,12 @@ export async function fetchItemToEdit({
       data: { item, list, categories, list_users: listUsers },
     } = await axios.get(`/lists/${listId}/list_items/${itemId}/edit`);
     list.categories = categories;
-    // TODO: why? can these just be optional?
     const userId = item.user_id;
-    const returnedItemId = item.id;
-    const product = item.product || '';
-    const task = item.task || '';
-    const content = item.content || '';
-    const purchased = item.purchased || false;
-    const quantity = item.quantity || '';
-    const completed = item.completed || false;
-    const author = item.author || '';
-    const title = item.title || '';
-    const read = item.read || false;
-    const artist = item.artist || '';
-    const album = item.album || '';
-    const dueBy = formatDueBy(item.due_by);
-    const assigneeId = item.assignee_id ? String(item.assignee_id) : '';
-    const numberInSeries = item.number_in_series ? Number(item.number_in_series) : 0;
-    const category = item.category || '';
     return {
-      listUsers: listUsers || [],
+      listUsers: listUsers,
       userId,
       list,
-      item: {
-        id: returnedItemId,
-        product,
-        task,
-        content,
-        purchased,
-        quantity,
-        completed,
-        author,
-        title,
-        read,
-        artist,
-        due_by: dueBy,
-        assignee_id: assigneeId,
-        album,
-        number_in_series: numberInSeries,
-        category,
-      },
+      item,
     };
   } catch (err: unknown) {
     handleFailure(err as AxiosError, 'Item not found', navigate, `/lists/${listId}`);

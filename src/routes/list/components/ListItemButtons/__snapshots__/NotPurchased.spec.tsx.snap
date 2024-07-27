@@ -82,3 +82,49 @@ exports[`NotPurchased renders Bookmark when listType is BookList 1`] = `
   </div>
 </div>
 `;
+
+exports[`NotPurchased renders Bookmark when listType is BookList and item.read is undefined 1`] = `
+<div>
+  <div
+    class=" float-end btn-group"
+    role="group"
+  >
+    <button
+      class="p-0 me-3 btn btn-link"
+      data-test-id="not-purchased-item-read-id1"
+      type="button"
+    >
+      <i
+        class="far fa-bookmark fa-2x text-secondary"
+      />
+    </button>
+    <button
+      class="p-0 me-3  btn btn-link"
+      data-test-id="not-purchased-item-complete-id1"
+      type="button"
+    >
+      <i
+        class="fa fa-check fa-2x text-success"
+      />
+    </button>
+    <button
+      class="p-0 me-3 btn btn-link"
+      data-test-id="not-purchased-item-edit-id1"
+      type="button"
+    >
+      <i
+        class="fa fa-edit fa-2x text-warning"
+      />
+    </button>
+    <button
+      class="p-0 btn btn-link"
+      data-test-id="not-purchased-item-delete-id1"
+      type="button"
+    >
+      <i
+        class="fa fa-trash fa-2x text-danger"
+      />
+    </button>
+  </div>
+</div>
+`;

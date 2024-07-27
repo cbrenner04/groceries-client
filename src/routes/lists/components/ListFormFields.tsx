@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler, type ChangeEvent } from 'react';
+import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, SelectField, TextField } from 'components/FormFields';
 import { EListType } from 'typings';
@@ -6,30 +6,36 @@ import { EListType } from 'typings';
 export interface IListFormFieldsProps {
   name: string;
   type: string;
-  completed?: boolean;
-  handleNameChange: ({ target: { value } }: ChangeEvent<HTMLInputElement>) => void;
-  handleTypeChange: ({ target: { value } }: ChangeEvent<HTMLInputElement>) => void;
-  handleCompletedChange?: ChangeEventHandler;
-  editForm?: boolean;
+  completed: boolean;
+  handleNameChange: ChangeEventHandler;
+  handleTypeChange: ChangeEventHandler;
+  handleCompletedChange: ChangeEventHandler;
+  editForm: boolean;
 }
 
-const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Element => {
+const ListFormFields: React.FC<IListFormFieldsProps> = ({
+  name,
+  type,
+  handleNameChange,
+  handleTypeChange,
+  handleCompletedChange,
+  completed,
+  editForm,
+}): React.JSX.Element => {
   return (
     <React.Fragment>
       <TextField
         name="name"
         label="Name"
-        value={props.name}
-        // TODO: figure typings out
-        handleChange={props.handleNameChange as unknown as ChangeEventHandler}
+        value={name}
+        handleChange={handleNameChange}
         placeholder="My super cool list"
       />
       <SelectField
         name="type"
         label="Type"
-        value={props.type}
-        // TODO: figure typings out
-        handleChange={props.handleTypeChange as unknown as ChangeEventHandler}
+        value={type}
+        handleChange={handleTypeChange}
         options={[
           { value: EListType.BOOK_LIST, label: 'books' },
           { value: EListType.GROCERY_LIST, label: 'groceries' },
@@ -39,12 +45,12 @@ const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Elemen
         ]}
         blankOption={false}
       />
-      {props.editForm && (
+      {editForm && (
         <CheckboxField
           name="completed"
           label="Completed"
-          value={props.completed ?? false}
-          handleChange={props.handleCompletedChange ?? ((): undefined => undefined)}
+          value={completed}
+          handleChange={handleCompletedChange}
           classes="mb-3"
         />
       )}

@@ -7,13 +7,12 @@ import axios from 'utils/api';
 import BulkEditListItems from './BulkEditListItems';
 
 describe('BulkEditListItems', () => {
-  const renderBulkEditListItems = (): RenderResult => {
-    return render(
+  const renderBulkEditListItems = (): RenderResult =>
+    render(
       <MemoryRouter>
         <BulkEditListItems />
       </MemoryRouter>,
     );
-  };
 
   it('renders the Loading component when fetch request is pending', async () => {
     const { container, findByText } = renderBulkEditListItems();

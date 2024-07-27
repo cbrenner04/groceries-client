@@ -46,6 +46,18 @@ describe('NotPurchased', () => {
 
     expect(container).toMatchSnapshot();
     expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
+    expect(buttons[0].firstChild).toHaveClass('fas');
+  });
+
+  it('renders Bookmark when listType is BookList and item.read is undefined', async () => {
+    const { container, buttons } = await setup({
+      listType: EListType.BOOK_LIST,
+      item: { book_list_id: 'id1', id: 'id1' },
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
+    expect(buttons[0].firstChild).toHaveClass('far');
   });
 
   it('does not render Bookmark when listType is not BookList', async () => {

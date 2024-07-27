@@ -19,6 +19,8 @@ function setup(suppliedProps?: Partial<IListFormFieldsProps>): ISetupReturn {
     handleNameChange: jest.fn(),
     handleTypeChange: jest.fn(),
     handleCompletedChange: jest.fn(),
+    completed: false,
+    editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ListFormFields {...props} />);

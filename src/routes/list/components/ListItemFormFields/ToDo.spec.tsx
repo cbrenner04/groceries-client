@@ -48,6 +48,24 @@ describe('ToDo', () => {
     expect(await findByLabelText('Completed')).toBeVisible();
   });
 
+  it('renders with defaults', async () => {
+    const { container, findByLabelText, findByTestId, queryByLabelText } = setup({
+      task: 'foo',
+      assigneeId: '1',
+      dueBy: '05/20/2020',
+      completed: undefined,
+      editForm: undefined,
+      category: undefined,
+      categories: undefined,
+      inputChangeHandler: jest.fn(),
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Completed')).toBeNull();
+    expect(await findByLabelText('Category')).toHaveValue('');
+    expect((await findByTestId('categories')).firstChild).toBeNull();
+  });
+
   it('calls appropriate change handlers when changes occur', async () => {
     const { findByLabelText, props, user } = setup({ editForm: true });
 

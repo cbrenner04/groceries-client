@@ -15,12 +15,6 @@ function setup(suppliedProps?: Partial<ISimpleFormFieldsProps>): ISetupReturn {
     content: 'foo',
     completed: false,
     editForm: false,
-    listUsers: [
-      {
-        id: 1,
-        email: 'foo@example.com',
-      },
-    ],
     category: 'foo',
     categories: ['foo', 'bar'],
     inputChangeHandler: jest.fn(),
@@ -44,6 +38,22 @@ describe('Simple', () => {
 
     expect(container).toMatchSnapshot();
     expect(await findByLabelText('Completed')).toBeVisible();
+  });
+
+  it('renders with defaults', async () => {
+    const { container, findByLabelText, findByTestId, queryByLabelText } = setup({
+      content: 'foo',
+      completed: undefined,
+      editForm: undefined,
+      category: undefined,
+      categories: undefined,
+      inputChangeHandler: jest.fn(),
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(queryByLabelText('Completed')).toBeNull();
+    expect(await findByLabelText('Category')).toHaveValue('');
+    expect((await findByTestId('categories')).firstChild).toBeNull();
   });
 
   it('calls appropriate change handlers when changes occur', async () => {

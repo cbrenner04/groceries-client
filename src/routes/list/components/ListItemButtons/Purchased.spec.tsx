@@ -61,11 +61,29 @@ describe('Purchased', () => {
   });
 
   it('does not render Refresh and does render Bookmark when listType is BookList', async () => {
-    const { container, buttons } = await setup({ listType: EListType.BOOK_LIST });
+    const { container, buttons } = await setup({
+      listType: EListType.BOOK_LIST,
+      item: { book_list_id: 'id1', id: 'id1', read: true },
+    });
 
     expect(container).toMatchSnapshot();
     expect(buttons.length).toBe(3);
     expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
+    expect(buttons[0].firstChild).toHaveClass('fas');
+    expect(buttons[1].firstChild).toHaveClass('fa-edit');
+    expect(buttons[2].firstChild).toHaveClass('fa-trash');
+  });
+
+  it('does not render Refresh & does render Bookmark when listType is BookList & item.read is undefined', async () => {
+    const { container, buttons } = await setup({
+      listType: EListType.BOOK_LIST,
+      item: { book_list_id: 'id1', id: 'id1' },
+    });
+
+    expect(container).toMatchSnapshot();
+    expect(buttons.length).toBe(3);
+    expect(buttons[0].firstChild).toHaveClass('fa-bookmark');
+    expect(buttons[0].firstChild).toHaveClass('far');
     expect(buttons[1].firstChild).toHaveClass('fa-edit');
     expect(buttons[2].firstChild).toHaveClass('fa-trash');
   });

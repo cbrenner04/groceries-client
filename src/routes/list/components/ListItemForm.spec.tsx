@@ -46,6 +46,13 @@ describe('ListItemForm', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it ('rendes with default values for categories and list users', async () => {
+    const { container, findByTestId } = setup({ listUsers: undefined, categories: undefined });
+
+    expect(container).toMatchSnapshot();
+    expect((await findByTestId('categories')).firstChild).toBeNull();
+  });
+
   it('expands form', async () => {
     const { findByTestId, findByText, user } = setup();
 

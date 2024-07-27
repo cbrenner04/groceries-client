@@ -241,6 +241,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
@@ -653,6 +654,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
@@ -880,6 +882,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
@@ -1317,6 +1320,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
@@ -1754,6 +1758,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
@@ -2082,6 +2087,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
         value=""
       />
       <datalist
+        data-test-id="categories"
         id="categories"
       >
         <option
