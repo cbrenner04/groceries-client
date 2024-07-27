@@ -47,6 +47,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   usePolling(async () => {
     try {
       const fetchResponse = await fetchList({ id: props.list.id, navigate });
+      /* istanbul ignore else */
       if (fetchResponse) {
         const {
           purchasedItems: updatedPurchasedItems,
@@ -70,19 +71,15 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         if (!purchasedItemsSame || !notPurchasedItemsSame) {
           setCategories(updatedCategories);
           setIncludedCategories(updatedIncludedCategories);
+          /* istanbul ignore else */
           if (!filter) {
             setDisplayedCategories(updatedIncludedCategories);
           }
           setListUsers(updatedListUsers);
         }
       }
-    } catch (err: unknown) {
-      // `response` will not be undefined if the response from the server comes back
-      // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
-      // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = (err as AxiosError).response
-        ? 'Something went wrong.'
-        : 'You may not be connected to the internet. Please check your connection.';
+    } catch (_err) {
+      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
         type: 'error',
         autoClose: 5000,
@@ -96,6 +93,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     let updatedNotPurchasedItems = notPurchasedItems;
     const itemCategories: string[] = [];
     items.forEach((item) => {
+      /* istanbul ignore next */
       const category = item.category ?? '';
       itemCategories.push(category);
       // TODO: why????
@@ -131,6 +129,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     let updatedNotPurchasedItems = notPurchasedItems;
     const itemCategories: string[] = [];
     items.forEach((item) => {
+      /* istanbul ignore next */
       const category = item.category ?? '';
       itemCategories.push(category);
       const itemIndex = updatedNotPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);

@@ -104,17 +104,18 @@ function handleFailure(
         type: 'error',
       });
       navigate('/users/sign_in');
+      return;
     } else if ([403, 404].includes(error.response.status)) {
       toast(notFoundMessage, { type: 'error' });
       navigate(redirectURI);
+      return;
     } else {
-      // any other errors will just be caught and render the generic UnknownError
-      throw new Error();
+      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
+      return;
     }
-  } else {
-    // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
   }
+  // any other errors will just be caught and render the generic UnknownError
+  throw new Error();
 }
 
 export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<

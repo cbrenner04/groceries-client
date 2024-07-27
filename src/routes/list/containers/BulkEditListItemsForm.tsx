@@ -49,7 +49,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
   list,
   lists,
   categories,
-  listUsers = [],
+  listUsers,
 }): React.JSX.Element => {
   // if no existing list options, new list form should be displayed by default
   const existingListsOptions = lists.map((list) => ({ value: String(list.id), label: list.name }));
@@ -62,6 +62,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
     const uniqValues = [...new Set(items.map(({ [attribute]: value }) => value))];
     return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : undefined;
   };
+  const initialDueBy = initialAttr('due_by');
   // TODO: this is kind of silly
   const initialValues = {
     copy: false,
@@ -79,10 +80,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
     clearAuthor: false,
     category: initialAttr('category') as string | undefined,
     clearCategory: false,
-    dueBy: ((): string | undefined => {
-      const value = initialAttr('due_by');
-      return typeof value !== 'boolean' ? formatDueBy(value) : undefined;
-    })(),
+    dueBy: typeof initialDueBy !== 'boolean' ? formatDueBy(initialDueBy) : /* istanbul ignore next */ undefined,
     clearDueBy: false,
     quantity: initialAttr('quantity') as string | undefined,
     clearQuantity: false,

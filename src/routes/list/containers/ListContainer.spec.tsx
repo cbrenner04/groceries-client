@@ -273,6 +273,41 @@ describe('ListContainer', () => {
     jest.useRealTimers();
   });
 
+  it('usePolling shows toast with unexplained error', async () => {
+    jest.useFakeTimers();
+    axios.get = jest.fn().mockRejectedValueOnce(new Error('Ahhhh!'));
+    setup({ permissions: 'write' });
+
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    expect(toast).toHaveBeenCalledWith(
+      'You may not be connected to the internet. Please check your connection. ' +
+        'Data may be incomplete and user actions may not persist.',
+      { autoClose: 5000, type: 'error' },
+    );
+    jest.useRealTimers();
+  });
+
+  it('usePolling shows toast with server error', async () => {
+    jest.useFakeTimers();
+    axios.get = jest.fn().mockRejectedValueOnce({ response: { status: 500 } });
+    setup({ permissions: 'write' });
+
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    expect(toast).toHaveBeenCalledWith(
+      'Something went wrong. Data may be incomplete and user actions may not persist.',
+      { type: 'error' },
+    );
+    jest.useRealTimers();
+  });
+
   it('renders ListForm when user has write permissions', async () => {
     const { container, findByTestId } = setup({ permissions: 'write' });
 

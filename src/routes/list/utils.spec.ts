@@ -255,10 +255,15 @@ describe('utils', () => {
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
-    it('throws when status is not 401, 403, 404', () => {
+    it('displays generic toast when status is not 401, 403, 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchList({ id, navigate })).rejects.toThrow();
+      await fetchList({ id, navigate });
+
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('throws when request fails', () => {
@@ -340,10 +345,15 @@ describe('utils', () => {
       expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
     });
 
-    it('throws when status is not 401, 403, 404', () => {
+    it('displays generic toast when status is not 401, 403, 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchItemToEdit({ itemId, listId, navigate })).rejects.toThrow();
+      await fetchItemToEdit({ itemId, listId, navigate });
+
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('throws when request fails', () => {
@@ -427,10 +437,15 @@ describe('utils', () => {
       expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
     });
 
-    it('throws when status is not 401, 403, 404', () => {
+    it('throws when status is not 401, 403, 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchItemsToEdit({ search, listId, navigate })).rejects.toThrow();
+      await fetchItemsToEdit({ search, listId, navigate });
+
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('throws when request fails', () => {

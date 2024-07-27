@@ -46,7 +46,7 @@ describe('ListItemForm', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it ('rendes with default values for categories and list users', async () => {
+  it('rendes with default values for categories and list users', async () => {
     const { container, findByTestId } = setup({ listUsers: undefined, categories: undefined });
 
     expect(container).toMatchSnapshot();
