@@ -3,9 +3,10 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import AppNav from './AppNav';
 import mockAxios from 'utils/api';
 import { UserContext } from 'AppRouter';
+
+import AppNav from './AppNav';
 
 interface ISetupReturn extends RenderResult {
   signOutUser: jest.Mock;

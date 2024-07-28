@@ -19,7 +19,7 @@ const TextField: React.FC<ITextFieldProps> = ({
   placeholder = '',
   child = '',
   disabled = false,
-}) => (
+}): React.JSX.Element => (
   <Form.Group controlId={name} className="mb-3">
     <Form.Label>{label}</Form.Label>
     <Form.Control

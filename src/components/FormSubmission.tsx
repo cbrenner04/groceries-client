@@ -9,7 +9,6 @@ interface IFormSubmissionProps {
   cancelText?: string;
 }
 
-// TODO: check react-bootstrap has some way of handling the grid
 const FormSubmission: React.FC<IFormSubmissionProps> = ({
   disabled = false,
   submitText,
