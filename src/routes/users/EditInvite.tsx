@@ -42,7 +42,7 @@ const EditInvite: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <h2>Set your password</h2>
       <PasswordForm
         password={password}
@@ -53,7 +53,7 @@ const EditInvite: React.FC = (): React.JSX.Element => {
         }
         submissionHandler={handleSubmit}
       />
-    </>
+    </React.Fragment>
   );
 };
 

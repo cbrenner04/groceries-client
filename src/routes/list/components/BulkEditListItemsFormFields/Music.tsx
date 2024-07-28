@@ -21,7 +21,7 @@ const Music: React.FC<IMusicProps> = ({
   handleClearAlbum,
   handleInput,
 }): React.JSX.Element => (
-  <>
+  <React.Fragment>
     <TextField
       name="artist"
       label="Artist"
@@ -56,7 +56,7 @@ const Music: React.FC<IMusicProps> = ({
         />
       }
     />
-  </>
+  </React.Fragment>
 );
 
 export default Music;

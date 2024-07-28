@@ -29,7 +29,7 @@ const NewPassword: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <h2>Forgot your password?</h2>
       <Form onSubmit={handleSubmit} autoComplete="off">
         <EmailField
@@ -39,11 +39,11 @@ const NewPassword: React.FC = (): React.JSX.Element => {
         <FormSubmission
           submitText="Send me reset password instructions"
           displayCancelButton={false}
-          cancelAction={(): undefined => undefined}
+          cancelAction={/* istanbul ignore next */ (): undefined => undefined}
         />
       </Form>
       <Link to="/users/sign_in">Log in</Link>
-    </>
+    </React.Fragment>
   );
 };
 

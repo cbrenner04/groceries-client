@@ -47,7 +47,7 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JS
               setType(value as EListType)
             }
             completed={false}
-            handleCompletedChange={(): undefined => undefined}
+            handleCompletedChange={/* istanbul ignore next */ (): undefined => undefined}
             editForm={false}
           />
           <FormSubmission

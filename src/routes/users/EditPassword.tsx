@@ -46,7 +46,7 @@ const EditPassword: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <h2>Change your password</h2>
       <PasswordForm
         password={password}
@@ -58,7 +58,7 @@ const EditPassword: React.FC = (): React.JSX.Element => {
         submissionHandler={handleSubmit}
       />
       <Link to="/users/sign_in">Log in</Link>
-    </>
+    </React.Fragment>
   );
 };
 

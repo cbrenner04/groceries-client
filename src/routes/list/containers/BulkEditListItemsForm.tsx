@@ -228,7 +228,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
   };
 
   return (
-    <>
+    <React.Fragment>
       <h1>Edit {items.map((item) => itemName(item, list.type)).join(', ')}</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
@@ -252,7 +252,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
           displayCancelButton={true}
         />
       </Form>
-    </>
+    </React.Fragment>
   );
 };
 

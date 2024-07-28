@@ -191,6 +191,27 @@ describe('ShareListForm', () => {
     jest.useRealTimers();
   });
 
+  it('fires generic toast when unknown error occurs in usePolling', async () => {
+    jest.useFakeTimers();
+    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    setup();
+
+    await act(async () => {
+      jest.advanceTimersByTime(5000);
+    });
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(toast).toHaveBeenCalledWith(
+      'You may not be connected to the internet. Please check your connection. ' +
+        'Data may be incomplete and user actions may not persist.',
+      {
+        type: 'error',
+        autoClose: 5000,
+      },
+    );
+    jest.useRealTimers();
+  });
+
   it('creates new user on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: { user: { id: 'id6', email: 'foobaz@example.com' }, users_list: { id: 'id6', permissions: 'write' } },

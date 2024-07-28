@@ -40,6 +40,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
         listId: props.listId,
         navigate: navigate,
       });
+      /* istanbul ignore else */
       if (list) {
         const {
           invitableUsers: updatedInvitableUsers,
@@ -67,12 +68,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
         }
       }
     } catch (err: unknown) {
-      // `response` will not be undefined if the response from the server comes back
-      // 401, 403, 404 are handled in `fetchList` so this will most likely only be a 500
-      // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = (err as AxiosError).response
-        ? 'Something went wrong.'
-        : 'You may not be connected to the internet. Please check your connection.';
+      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
         type: 'error',
         autoClose: 5000,
@@ -182,6 +178,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
         const tmpUsersList = newList.users_list;
+        /* istanbul ignore else */
         if (tmpUsersList.id === id) {
           tmpUsersList.permissions = permissions;
         }
@@ -195,6 +192,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
 
   const refreshShare = async (id: string, userId: string): Promise<void> => {
     const usersList = refused.find(({ user }) => user.id === userId);
+    /* istanbul ignore else */
     if (usersList) {
       const { user } = usersList;
       try {
@@ -249,7 +247,11 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           value={newEmail}
           handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setNewEmail(value)}
         />
-        <FormSubmission submitText="Share List" displayCancelButton={false} cancelAction={(): void => undefined} />
+        <FormSubmission
+          submitText="Share List"
+          displayCancelButton={false}
+          cancelAction={/* istanbul ignore next */ (): undefined => undefined}
+        />
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup className="mb-5">

@@ -310,6 +310,27 @@ describe('ListsContainer', () => {
     jest.useRealTimers();
   });
 
+  it('fires generic toast when unknown error on usePolling', async () => {
+    jest.useFakeTimers();
+    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    setup();
+
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(toast).toHaveBeenCalledWith(
+      'You may not be connected to the internet. Please check your connection. ' +
+        'Data may be incomplete and user actions may not persist.',
+      {
+        type: 'error',
+        autoClose: 5000,
+      },
+    );
+    jest.useRealTimers();
+  });
+
   it('does not render pending lists when they do not exist', () => {
     const { container, queryByText } = setup({ pendingLists: [] });
 

@@ -1,12 +1,17 @@
 import React from 'react';
 import { act, render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
 import { EListType } from 'typings';
 
 import CompletedListsContainer from './CompletedListsContainer';
+
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
 
 function setup(): RenderResult {
   const props = {
@@ -184,5 +189,24 @@ describe('CompletedListsContainer', () => {
 
     expect(axios.get).toHaveBeenCalledTimes(2);
     expect(await findByTestId('list-id1')).toBeVisible();
+  });
+
+  it('fires generic toast when unknown error occurs in usePolling', async () => {
+    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    setup();
+
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(toast).toHaveBeenCalledWith(
+      'You may not be connected to the internet. Please check your connection. ' +
+        'Data may be incomplete and user actions may not persist.',
+      {
+        type: 'error',
+        autoClose: 5000,
+      },
+    );
   });
 });

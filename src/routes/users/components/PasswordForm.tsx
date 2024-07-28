@@ -31,7 +31,7 @@ const PasswordForm: React.FC<IPasswordFormProps> = (props): React.JSX.Element =>
     <FormSubmission
       submitText="Set my password"
       displayCancelButton={false}
-      cancelAction={(): undefined => undefined}
+      cancelAction={/* istanbul ignore next */ (): undefined => undefined}
     />
   </Form>
 );

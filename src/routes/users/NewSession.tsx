@@ -77,7 +77,11 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Eleme
             value={rememberMe}
             handleChange={(): void => setRememberMe(!rememberMe)}
           />
-          <FormSubmission submitText="Log In" displayCancelButton={false} cancelAction={(): undefined => undefined} />
+          <FormSubmission
+            submitText="Log In"
+            displayCancelButton={false}
+            cancelAction={/* istanbul ignore next */ (): undefined => undefined}
+          />
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>

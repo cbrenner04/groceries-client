@@ -88,7 +88,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
   };
 
   return (
-    <>
+    <React.Fragment>
       <h1>Edit {itemName(item, props.list.type)}</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
@@ -108,7 +108,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           displayCancelButton={true}
         />
       </Form>
-    </>
+    </React.Fragment>
   );
 };
 

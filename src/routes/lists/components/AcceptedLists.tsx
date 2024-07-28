@@ -234,13 +234,13 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
       <ConfirmModal
         action="delete"
         body={
-          <>
+          <React.Fragment>
             <p>
               Are you sure you want to delete the following lists? The lists you do not own will continue to exist for
               the owner, you will just be removed from the list of users.
             </p>
             <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
-          </>
+          </React.Fragment>
         }
         show={showDeleteConfirm}
         handleConfirm={(): Promise<void> => handleDeleteConfirm()}

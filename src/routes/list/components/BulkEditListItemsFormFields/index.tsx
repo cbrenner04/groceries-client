@@ -54,7 +54,7 @@ export interface IBulkEditListItemsFormFieldsProps {
 
 const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> = (props): React.JSX.Element => {
   return (
-    <>
+    <React.Fragment>
       <div>Move or copy these items to another list.</div>
       <br />
       <ChangeOtherList
@@ -74,7 +74,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
       />
       <hr />
       {!props.formData.allComplete && (
-        <>
+        <React.Fragment>
           <div>Update attributes for all items.</div>
           <br />
           {
@@ -137,9 +137,9 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
               />
             }
           />
-        </>
+        </React.Fragment>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

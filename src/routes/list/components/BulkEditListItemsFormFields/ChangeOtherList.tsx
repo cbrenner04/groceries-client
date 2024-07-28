@@ -37,7 +37,7 @@ const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Elem
     : `You do not have any other ${prettyListType(props.listType)}s. Please create a new list to take this action.`;
 
   return (
-    <>
+    <React.Fragment>
       <Form.Group className="form-check-inline mb-3">
         <Form.Check
           name="copy"
@@ -61,7 +61,7 @@ const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Elem
         />
       </Form.Group>
       {(props.copy || props.move) && (
-        <>
+        <React.Fragment>
           <div className="mb-3">{changeListInstructions}</div>
           {props.showNewListForm && props.existingListsOptions.length > 0 && (
             <Button variant="link" onClick={props.clearNewListForm} className="mb-3">
@@ -69,7 +69,7 @@ const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Elem
             </Button>
           )}
           {!props.showNewListForm && (
-            <>
+            <React.Fragment>
               <Button variant="link" onClick={props.handleShowNewListForm} className="mb-3">
                 Create new list
               </Button>
@@ -81,7 +81,7 @@ const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Elem
                 handleChange={props.handleInput}
                 blankOption
               />
-            </>
+            </React.Fragment>
           )}
           {props.showNewListForm && (
             <TextField
@@ -101,9 +101,9 @@ const ChangeOtherList: React.FC<IChangeOtherListProps> = (props): React.JSX.Elem
               classes="mt-3"
             />
           )}
-        </>
+        </React.Fragment>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

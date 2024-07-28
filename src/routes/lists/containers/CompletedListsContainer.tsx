@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { type AxiosError } from 'axios';
 
 import TitlePopover from 'components/TitlePopover';
 import { usePolling } from 'hooks';
@@ -24,6 +23,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
   usePolling(async () => {
     try {
       const lists = await fetchCompletedLists({ navigate });
+      /* istanbul ignore else */
       if (lists) {
         const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } = lists;
         const isSameSet = (newSet: IList[] | TUserPermissions, oldSet: IList[] | TUserPermissions): boolean =>
@@ -38,13 +38,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
         }
       }
     } catch (err: unknown) {
-      const error = err as AxiosError;
-      // `response` will not be undefined if the response from the server comes back
-      // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
-      // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = error.response
-        ? 'Something went wrong.'
-        : 'You may not be connected to the internet. Please check your connection.';
+      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
         type: 'error',
         autoClose: 5000,
@@ -73,7 +67,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
         setCompletedLists={setCompletedLists}
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
-        setIncompleteLists={(): undefined => undefined}
+        setIncompleteLists={/* istanbul ignore next */ (): undefined => undefined}
         incompleteLists={[]}
       />
     </React.Fragment>

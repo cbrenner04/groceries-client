@@ -24,7 +24,7 @@ const ToDo: React.FC<IToDoProps> = ({
   handleInput,
   listUsers,
 }): React.JSX.Element => (
-  <>
+  <React.Fragment>
     <SelectField
       name="assigneeId"
       label="Assignee"
@@ -60,7 +60,7 @@ const ToDo: React.FC<IToDoProps> = ({
         />
       }
     />
-  </>
+  </React.Fragment>
 );
 
 export default ToDo;

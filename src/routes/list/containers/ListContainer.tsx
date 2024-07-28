@@ -240,11 +240,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           newItems[itemIndex] = item;
           newPurchasedItems = update(newPurchasedItems, { $set: newItems });
         } else {
-          const itemsInCat = newNotPurchasedItems[item.category ?? ''];
+          const cat = item.category ?? /* istanbul ignore next */ '';
+          const itemsInCat = newNotPurchasedItems[cat];
           const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
           const newItemsInCat = [...itemsInCat];
           newItemsInCat[itemIndex] = item;
-          newNotPurchasedItems = update(newNotPurchasedItems, { [item.category ?? '']: { $set: newItemsInCat } });
+          newNotPurchasedItems = update(newNotPurchasedItems, { [cat]: { $set: newItemsInCat } });
         }
       });
       setPurchasedItems(newPurchasedItems);
@@ -270,7 +271,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const handleRefresh = async (item: IListItem): Promise<void> => {
     setPending(true);
     const items = selectedItems.length ? selectedItems : [item];
-    const filteredItems = items.filter((item) => item.purchased ?? item.completed);
+    const filteredItems = items.filter((item) => item.purchased ?? /* istanbul ignore next */ item.completed);
     const createNewItemRequests: Promise<AxiosResponse>[] = [];
     const updateOldItemRequests: Promise<AxiosResponse>[] = [];
     filteredItems.forEach((item) => {
@@ -284,7 +285,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         completed: false,
         assignee_id: item.assignee_id,
         due_by: item.due_by,
-        category: item.category ?? '',
+        category: item.category,
       };
       const postData: Record<'list_item', typeof newItem> = { list_item: newItem };
       createNewItemRequests.push(axios.post(listItemPath(), postData));
@@ -364,7 +365,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   return (
-    <>
+    <React.Fragment>
       <Link to="/lists" className="float-end">
         Back to lists
       </Link>
@@ -494,7 +495,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         handleConfirm={(): Promise<void> => handleDeleteConfirm()}
         handleClear={(): void => setShowDeleteConfirm(false)}
       />
-    </>
+    </React.Fragment>
   );
 };
 

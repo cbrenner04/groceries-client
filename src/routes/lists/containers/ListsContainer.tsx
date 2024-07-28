@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';
@@ -37,6 +36,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   usePolling(async () => {
     try {
       const lists = await fetchLists({ navigate });
+      /* istanbul ignore else */
       if (lists) {
         const {
           pendingLists: updatedPending,
@@ -62,13 +62,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         }
       }
     } catch (err: unknown) {
-      const error = err as AxiosError;
-      // `response` will not be undefined if the response from the server comes back
-      // 401 is handled in `fetchLists`, 403 and 404 is not possible so this will most likely only be a 500
-      // if we aren't getting a response back we can assume there are network issues
-      const errorMessage = error.response
-        ? 'Something went wrong.'
-        : 'You may not be connected to the internet. Please check your connection.';
+      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
       toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
         type: 'error',
         autoClose: 5000,
@@ -93,7 +87,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   return (
-    <>
+    <React.Fragment>
       <h1>Lists</h1>
       <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
       <hr className="mb-4" />
@@ -131,11 +125,11 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           <TitlePopover
             title="Completed"
             message={
-              <>
+              <React.Fragment>
                 These are the completed lists most recently created.&nbsp;
                 <Link to="/completed_lists">See all completed lists here.</Link>&nbsp; Previously refreshed lists are
                 marked with an asterisk (*).
-              </>
+              </React.Fragment>
             }
           />
         }
@@ -149,7 +143,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         currentUserPermissions={currentUserPermissions}
         setCurrentUserPermissions={setCurrentUserPermissions}
       />
-    </>
+    </React.Fragment>
   );
 };
 

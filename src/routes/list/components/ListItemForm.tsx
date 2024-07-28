@@ -107,18 +107,16 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       {!showForm && (
-        <>
-          <Button
-            variant="link"
-            onClick={(): void => setShowForm(true)}
-            aria-controls="form-collapse"
-            aria-expanded={showForm}
-          >
-            Add Item
-          </Button>
-        </>
+        <Button
+          variant="link"
+          onClick={(): void => setShowForm(true)}
+          aria-controls="form-collapse"
+          aria-expanded={showForm}
+        >
+          Add Item
+        </Button>
       )}
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
@@ -139,7 +137,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           />
         </Form>
       </Collapse>
-    </>
+    </React.Fragment>
   );
 };
 
