@@ -46,7 +46,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   usePolling(async () => {
     try {
-      const fetchResponse = await fetchList({ id: props.list.id, navigate });
+      const fetchResponse = await fetchList({ id: props.list.id!, navigate });
       /* istanbul ignore else */
       if (fetchResponse) {
         const {
@@ -373,7 +373,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       <br />
       {props.permissions === 'write' ? (
         <ListItemForm
-          listId={props.list.id}
+          listId={props.list.id!}
           listType={props.list.type}
           listUsers={listUsers}
           userId={props.userId}

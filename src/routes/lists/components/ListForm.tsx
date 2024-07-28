@@ -20,7 +20,7 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JS
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     // TODO: figure this out.
-    await onFormSubmit({ name, type } as IList);
+    await onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
   };

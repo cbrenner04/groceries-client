@@ -16,7 +16,6 @@ const BulkEditListItems: React.FC = (): React.JSX.Element => {
 
   return (
     <Async
-      // TODO: figure out the `promiseFn` typings
       promiseFn={fetchItemsToEdit as unknown as PromiseFn<void>}
       listId={listId}
       search={location.search}

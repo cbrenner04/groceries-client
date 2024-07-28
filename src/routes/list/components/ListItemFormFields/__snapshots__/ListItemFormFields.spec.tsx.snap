@@ -43,14 +43,14 @@ exports[`ListItemFormFields render Book fields when listType is BookList and cal
   >
     <label
       class="form-label"
-      for="numberInSeries"
+      for="number_in_series"
     >
       Number in series
     </label>
     <input
       class="form-control"
-      id="numberInSeries"
-      name="numberInSeries"
+      id="number_in_series"
+      name="number_in_series"
       type="number"
       value="0"
     />
@@ -397,14 +397,14 @@ exports[`ListItemFormFields renders default Book fields when listType is BookLis
   >
     <label
       class="form-label"
-      for="numberInSeries"
+      for="number_in_series"
     >
       Number in series
     </label>
     <input
       class="form-control"
-      id="numberInSeries"
-      name="numberInSeries"
+      id="number_in_series"
+      name="number_in_series"
       type="number"
       value="0"
     />

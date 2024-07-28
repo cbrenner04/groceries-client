@@ -3,9 +3,8 @@ import { type AxiosError } from 'axios';
 
 import axios from '../../utils/api';
 import { EListType, type IList, type IListItem, type IListUser } from '../../typings';
-import type { IListITemsFormFieldsFormDataProps } from './components/ListItemFormFields';
 
-export function itemName(item: IListItem | IListITemsFormFieldsFormDataProps, listType: EListType): string | undefined {
+export function itemName(item: IListItem, listType: EListType): string | undefined {
   return {
     BookList: `${item.title ? `"${item.title}"` : ''} ${item.author ?? ''}`,
     GroceryList: `${item.quantity ?? ''} ${item.product ?? ''}`,

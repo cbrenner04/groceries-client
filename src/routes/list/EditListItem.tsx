@@ -12,7 +12,6 @@ const EditListItem: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id, list_id: listId } = useParams();
 
-  // TODO: figure out `promiseFn` typings
   return (
     <Async promiseFn={fetchItemToEdit as unknown as PromiseFn<void>} itemId={id} listId={listId} navigate={navigate}>
       <Async.Pending>

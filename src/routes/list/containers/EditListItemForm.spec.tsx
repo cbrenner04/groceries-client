@@ -40,10 +40,10 @@ async function setup(listType = EListType.GROCERY_LIST): Promise<ISetupReturn> {
       title: '',
       read: false,
       artist: '',
-      dueBy: '',
-      assigneeId: '',
+      due_by: '',
+      assignee_id: '',
       album: '',
-      numberInSeries: 0,
+      number_in_series: 0,
       category: '',
     },
     list: {
@@ -225,7 +225,7 @@ describe('EditListItemForm', () => {
     });
   });
 
-  it('sets value for numberInSeries as a number when input', async () => {
+  it('sets value for number_in_series as a number when input', async () => {
     const { findByLabelText, buttons, user } = await setup(EListType.BOOK_LIST);
 
     await user.type(await findByLabelText('Number in series'), '2');

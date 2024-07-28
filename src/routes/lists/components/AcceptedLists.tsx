@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEventHandler, type ChangeEvent, type ReactElement } from 'react';
+import React, { useState, type ChangeEventHandler, type ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -141,7 +141,6 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
   const handleRefresh = async (list: IList): Promise<void> => {
     setPending(true);
     const lists = selectedLists.length ? selectedLists : [list];
-    // TODO: can i do anything to not have to cast to IList[]?
     const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean) as IList[];
     ownedLists.forEach((lList) => {
       lList.refreshed = true;
@@ -212,7 +211,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
               list={list}
               onListDeletion={handleDelete}
               onListCompletion={handleCompletion}
-              currentUserPermissions={props.currentUserPermissions[list.id]}
+              currentUserPermissions={props.currentUserPermissions[list.id!]}
               multiSelect={multiSelect}
               selectedLists={selectedLists}
               handleMerge={handleMerge}
@@ -251,10 +250,8 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         clearModal={(): void => setShowMergeModal(false)}
         listNames={listsToMerge.map((l) => l.name).join('", "')}
         mergeName={mergeName}
-        // TODO: figure out typings
         handleMergeNameChange={
-          (({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-            setMergeName(value)) as unknown as ChangeEventHandler
+          ((({ target: { value } }) => setMergeName(value))) as ChangeEventHandler<HTMLInputElement>
         }
         handleMergeConfirm={handleMergeConfirm}
       />

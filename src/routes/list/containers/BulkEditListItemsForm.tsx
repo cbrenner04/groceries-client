@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEventHandler, type ChangeEvent, type FormEvent } from 'react';
+import React, { useState, type ChangeEventHandler, type FormEvent } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -151,7 +151,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
           navigate(`/lists/${list.id}`);
         } else {
           const keys = Object.keys(error.response.data!);
-          // TODO: sort out typings
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
@@ -197,7 +196,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
     setFormData(updatedFormData);
   };
 
-  const handleInput = ({ target: { name, value, checked } }: ChangeEvent<HTMLInputElement>): void => {
+  const handleInput: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value, checked } }): void => {
     let newValue: string | boolean = value;
     if (name === 'updateCurrentItems') {
       newValue = checked;
@@ -234,8 +233,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           formData={formData}
-          // TODO: is this what we want?
-          handleInput={handleInput as unknown as ChangeEventHandler}
+          handleInput={handleInput}
           clearAttribute={clearAttribute}
           listUsers={listUsers}
           listType={list.type}

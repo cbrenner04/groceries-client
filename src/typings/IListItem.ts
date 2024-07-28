@@ -1,5 +1,5 @@
 export default interface IListItem {
-  id: string;
+  id?: string;
   product?: string;
   task?: string;
   content?: string;
@@ -9,7 +9,7 @@ export default interface IListItem {
   artist?: string;
   album?: string;
   assignee_id?: string;
-  due_by?: Date | string;
+  due_by?: string;
   read?: boolean;
   number_in_series?: number;
   category?: string;

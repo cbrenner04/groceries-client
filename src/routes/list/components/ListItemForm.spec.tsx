@@ -227,7 +227,7 @@ describe('ListItemForm', () => {
     expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
   });
 
-  it('sets value for numberInSeries as a number when input', async () => {
+  it('sets value for number_in_series as a number when input', async () => {
     const { findByLabelText, findAllByRole, user } = setup({ listType: EListType.BOOK_LIST });
 
     await user.type(await findByLabelText('Number in series'), '2');

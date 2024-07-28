@@ -3,8 +3,6 @@ import { render, fireEvent } from '@testing-library/react';
 
 import DateField, { type IDateFieldProps } from './DateField';
 
-// TODO: couldn't get userEvent to work with this field. Tried `userEvent.type()` and `userEvent.selectOptions()`
-
 async function setup(): Promise<{
   formInput: HTMLElement;
   props: IDateFieldProps;
@@ -32,6 +30,7 @@ describe('DateField', () => {
   describe('when value changes', () => {
     it('calls handleChange', async () => {
       const { formInput, props } = await setup();
+      // userEvent doesn't work with this input
       fireEvent.change(formInput, { target: { value: '06/30/2022' } });
 
       expect(props.handleChange).toHaveBeenCalled();

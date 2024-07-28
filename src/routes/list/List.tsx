@@ -13,7 +13,6 @@ const List = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // TODO: figure out `promiseFn` typings
   return (
     <Async promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
       <Async.Pending>

@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEventHandler, type FormEventHandler, type ChangeEvent } from 'react';
+import React, { useState, type ChangeEventHandler, type FormEventHandler } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -20,29 +20,14 @@ export interface IListItemFormProps {
   categories?: string[];
 }
 
-export const defaultFormState = {
-  product: '',
-  task: '',
-  content: '',
-  quantity: '',
-  author: '',
-  title: '',
-  artist: '',
-  album: '',
-  assigneeId: '',
-  dueBy: '',
-  numberInSeries: 0,
-  category: '',
-};
-
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
-  const [formData, setFormData] = useState(defaultFormState);
+  const [formData, setFormData] = useState({} as IListItem);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => {
+  const setData: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value } }) => {
     let newValue: string | number = value;
-    if (name === 'numberInSeries') {
+    if (name === 'number_in_series') {
       newValue = Number(value);
     }
     const data = update(formData, { [name]: { $set: newValue } });
@@ -63,16 +48,16 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         title: formData.title,
         artist: formData.artist,
         album: formData.album,
-        assignee_id: formData.assigneeId,
-        due_by: formData.dueBy,
-        number_in_series: formData.numberInSeries,
-        category: formData.category.trim().toLowerCase(),
+        assignee_id: formData.assignee_id,
+        due_by: formData.due_by,
+        number_in_series: formData.number_in_series,
+        category: (formData.category ?? '').trim().toLowerCase(),
       },
     };
     try {
       const { data } = await axios.post(`/lists/${props.listId}/list_items`, postData);
       props.handleItemAddition(data);
-      setFormData(defaultFormState);
+      // setFormData(defaultFormState);
       setPending(false);
       toast('Item successfully added.', { type: 'info' });
     } catch (err: unknown) {
@@ -86,7 +71,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           props.navigate('/lists');
         } else {
           const responseTextKeys = Object.keys(error.response.data!);
-          // TODO: figure out typings here
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
@@ -122,8 +106,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
           <ListItemFormFields
             formData={formData}
-            // TODO: pretty sure this is not what we want
-            setFormData={setData as unknown as ChangeEventHandler}
+            setFormData={setData}
             categories={props.categories ?? []}
             listType={props.listType}
             listUsers={props.listUsers ?? []}

@@ -31,9 +31,9 @@ async function setup(
       title: '',
       artist: '',
       album: '',
-      assigneeId: '',
-      dueBy: '2020-05-21',
-      numberInSeries: 0,
+      assignee_id: '',
+      due_by: '2020-05-21',
+      number_in_series: 0,
       category: '',
       read: false,
       purchased: false,
@@ -64,7 +64,7 @@ describe('ListItemFormFields', () => {
       formData: {
         author: undefined,
         title: undefined,
-        numberInSeries: undefined,
+        number_in_series: undefined,
         category: undefined,
         read: undefined,
         purchased: undefined,
@@ -178,7 +178,7 @@ describe('ListItemFormFields', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('sets value for numberInSeries as a number when input', async () => {
+  it('sets value for number_in_series as a number when input', async () => {
     const { input, props, user } = await setup(EListType.BOOK_LIST, 'Number in series');
 
     await user.type(input, '2');

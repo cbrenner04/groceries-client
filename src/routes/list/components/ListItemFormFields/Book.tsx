@@ -42,7 +42,7 @@ const BookFormFields: React.FC<IBookFormFieldsProps> = ({
       placeholder="Slaughterhouse-Five"
     />
     <NumberField
-      name="numberInSeries"
+      name="number_in_series"
       label="Number in series"
       value={numberInSeries}
       handleChange={inputChangeHandler}

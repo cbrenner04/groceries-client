@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEventHandler, type ChangeEvent, type FormEvent } from 'react';
+import React, { type ChangeEventHandler, type FormEventHandler, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -6,33 +6,32 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-import { EListType, type IList, type IListUser } from 'typings';
+import { EListType, type IListItem, type IList, type IListUser } from 'typings';
 
-import type { IListITemsFormFieldsFormDataProps } from '../components/ListItemFormFields';
 import ListItemFormFields from '../components/ListItemFormFields';
 import { itemName } from '../utils';
 
 export interface IEditListItemFormProps {
   navigate: (url: string) => void;
   listUsers: IListUser[];
-  item: IListITemsFormFieldsFormDataProps;
+  item: IListItem;
   list: IList;
   userId: string;
 }
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
   const [item, setItem] = useState(props.item);
-  const setData = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => {
+  const setData: ChangeEventHandler<HTMLInputElement>  = ({ target: { name, value } }): void => {
     let newValue: string | number = value;
     /* istanbul ignore else */
-    if (name === 'numberInSeries') {
+    if (name === 'number_in_series') {
       newValue = Number(value);
     }
     const data = update(item, { [name]: { $set: newValue } });
     setItem(data);
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event): Promise<void> => {
     event.preventDefault();
     const putData = {
       list_item: {
@@ -48,9 +47,9 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         read: item.read,
         artist: item.artist,
         album: item.album,
-        due_by: item.dueBy,
-        assignee_id: item.assigneeId,
-        number_in_series: item.numberInSeries,
+        due_by: item.due_by,
+        assignee_id: item.assignee_id,
+        number_in_series: item.number_in_series,
         category: item.category?.trim().toLowerCase(),
         list_id: props.list.id,
       },
@@ -94,8 +93,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           formData={item}
-          // TODO: i don't think this is what we want
-          setFormData={setData as unknown as ChangeEventHandler}
+          setFormData={setData}
           categories={props.list.categories}
           listType={props.list.type}
           listUsers={props.listUsers}

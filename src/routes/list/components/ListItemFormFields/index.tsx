@@ -1,6 +1,6 @@
 import React, { type ChangeEventHandler } from 'react';
 
-import type { IListUser } from 'typings';
+import type { IListUser, IListItem } from 'typings';
 
 import Book from './Book';
 import Grocery from './Grocery';
@@ -8,36 +8,15 @@ import Music from './Music';
 import Simple from './Simple';
 import ToDo from './ToDo';
 
-// TODO: can this just be IListItem - I think this is confusing shit around the app
-export interface IListITemsFormFieldsFormDataProps {
-  id?: string;
-  product?: string;
-  task?: string;
-  content?: string;
-  quantity?: string;
-  author?: string;
-  title?: string;
-  artist?: string;
-  album?: string;
-  assigneeId?: string;
-  dueBy?: string;
-  numberInSeries?: number;
-  category?: string;
-  read?: boolean;
-  purchased?: boolean;
-  completed?: boolean;
-}
-
 export interface IListItemFormFieldsProps {
   listType: string;
   listUsers?: IListUser[];
   categories?: string[];
-  formData: IListITemsFormFieldsFormDataProps;
+  formData: IListItem;
   setFormData: ChangeEventHandler;
   editForm?: boolean;
 }
 
-// TODO: reduce redundancy
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
   categories,
   listType,
@@ -51,7 +30,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
       <Book
         author={formData.author ?? ''}
         title={formData.title ?? ''}
-        numberInSeries={formData.numberInSeries ?? 0}
+        numberInSeries={formData.number_in_series ?? 0}
         category={formData.category ?? ''}
         categories={categories ?? []}
         inputChangeHandler={setFormData}
@@ -96,9 +75,9 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
     ToDoList: (
       <ToDo
         task={formData.task ?? ''}
-        assigneeId={formData.assigneeId ?? ''}
+        assigneeId={formData.assignee_id ?? ''}
         listUsers={listUsers ?? []}
-        dueBy={formData.dueBy ?? ''}
+        dueBy={formData.due_by ?? ''}
         category={formData.category ?? ''}
         categories={categories ?? []}
         inputChangeHandler={setFormData}

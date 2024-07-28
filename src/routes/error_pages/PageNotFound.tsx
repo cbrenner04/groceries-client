@@ -26,7 +26,6 @@ const fetchData = async ({ navigate }: { navigate: NavigateFunction }): Promise<
 const PageNotFound: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   return (
-    // TODO: figure out typing here
     <Async promiseFn={fetchData as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />
