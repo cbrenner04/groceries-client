@@ -51,14 +51,14 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="05/20/2020"
@@ -147,14 +147,14 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="05/20/2020"
@@ -264,14 +264,14 @@ exports[`ToDo renders with defaults 1`] = `
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="05/20/2020"

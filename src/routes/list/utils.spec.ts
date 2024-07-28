@@ -172,19 +172,19 @@ describe('utils', () => {
     it('returns sorted items for ToDoList', () => {
       const items = [
         { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
-        { id: 'id1', due_by: new Date('05/20/2020'), assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '2', task: 'baz' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'foobar' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: undefined, task: 'foobaz' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'bar' },
+        { id: 'id1', due_by: '05/20/2020', assignee_id: '1', task: 'bar' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '2', task: 'baz' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'foobar' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: undefined, task: 'foobaz' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'bar' },
         { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
       ];
       expect(sortItems(EListType.TO_DO_LIST, items)).toStrictEqual([
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '1', task: 'foobar' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: '2', task: 'baz' },
-        { id: 'id1', due_by: new Date('05/19/2020'), assignee_id: undefined, task: 'foobaz' },
-        { id: 'id1', due_by: new Date('05/20/2020'), assignee_id: '1', task: 'bar' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'bar' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'foobar' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: '2', task: 'baz' },
+        { id: 'id1', due_by: '05/19/2020', assignee_id: undefined, task: 'foobaz' },
+        { id: 'id1', due_by: '05/20/2020', assignee_id: '1', task: 'bar' },
         { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
         { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
       ]);

@@ -5,7 +5,7 @@ import axios from 'utils/api';
 import type { EListType, IList, TUserPermissions } from 'typings';
 
 export const sortLists = (lists: IList[]): IList[] =>
-  lists.sort((a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)));
+  lists.sort((a, b) => Number(new Date(b.created_at!)) - Number(new Date(a.created_at!)));
 
 function handleFailure(error: unknown, navigate: (url: string) => void): void {
   const err = error as AxiosError;

@@ -44,7 +44,7 @@ const ToDo: React.FC<IToDoProps> = ({
       }
     />
     <DateField
-      name="dueBy"
+      name="due_by"
       label="Due By"
       value={dueBy}
       handleChange={handleInput}

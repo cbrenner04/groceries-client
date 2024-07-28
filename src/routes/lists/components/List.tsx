@@ -23,7 +23,7 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
   const handleListSelect = (list: IList): void => {
     const listIds = props.selectedLists.map((l) => l.id).join(',');
     let updatedLists;
-    if (listIds.includes(list.id)) {
+    if (listIds.includes(list.id!)) {
       updatedLists = props.selectedLists.filter((l) => l.id !== list.id);
     } else {
       updatedLists = update(props.selectedLists, { $push: [list] });
@@ -63,7 +63,7 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
           <Row className={`${props.multiSelect ? 'ms-1' : ''} pt-1`}>
             <Col lg="6">{listNameElement}</Col>
             <Col lg="4" className={props.multiSelect ? 'list-multi-created-at' : ''}>
-              <small className="text-muted">{formatDate(props.list.created_at)}</small>
+              <small className="text-muted">{formatDate(props.list.created_at!)}</small>
             </Col>
             <Col lg="2" className={`${props.multiSelect ? 'list-multi-buttons' : ''} pe-lg-3`}>
               {props.listButtons}

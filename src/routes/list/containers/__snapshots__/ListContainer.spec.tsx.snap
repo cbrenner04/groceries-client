@@ -623,14 +623,14 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     >
       <label
         class="form-label"
-        for="dueBy"
+        for="due_by"
       >
         Due By
       </label>
       <input
         class="form-control"
-        id="dueBy"
-        name="dueBy"
+        id="due_by"
+        name="due_by"
         placeholder="mm/dd/yyyy"
         type="date"
         value=""

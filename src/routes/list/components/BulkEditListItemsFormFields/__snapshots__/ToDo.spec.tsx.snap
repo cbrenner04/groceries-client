@@ -56,14 +56,14 @@ exports[`ToDo renders assigneeId input disabled when clearAssignee is true 1`] =
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="bar"
@@ -147,14 +147,14 @@ exports[`ToDo renders assigneeId input enabled when clearAssignee is false 1`] =
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="bar"
@@ -238,15 +238,15 @@ exports[`ToDo renders dueBy input disabled when clearDueBy is true 1`] = `
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
       disabled=""
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="bar"
@@ -331,14 +331,14 @@ exports[`ToDo renders dueBy input enabled when clearDueBy is false 1`] = `
   >
     <label
       class="form-label"
-      for="dueBy"
+      for="due_by"
     >
       Due By
     </label>
     <input
       class="form-control"
-      id="dueBy"
-      name="dueBy"
+      id="due_by"
+      name="due_by"
       placeholder="mm/dd/yyyy"
       type="date"
       value="bar"

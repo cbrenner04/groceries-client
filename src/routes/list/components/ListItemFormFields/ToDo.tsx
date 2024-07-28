@@ -42,7 +42,7 @@ const ToDoFormFields: React.FC<IToDoFormFieldsProps> = ({
       options={listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
     />
-    <DateField name="dueBy" label="Due By" value={dueBy} handleChange={inputChangeHandler} placeholder="mm/dd/yyyy" />
+    <DateField name="due_by" label="Due By" value={dueBy} handleChange={inputChangeHandler} placeholder="mm/dd/yyyy" />
     <CategoryField category={category} categories={categories} handleInput={inputChangeHandler} />
     {editForm && (
       <CheckboxField
