@@ -21,7 +21,7 @@ export interface IEditListItemFormProps {
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
   const [item, setItem] = useState(props.item);
-  const setData: ChangeEventHandler<HTMLInputElement>  = ({ target: { name, value } }): void => {
+  const setData: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value } }): void => {
     let newValue: string | number = value;
     /* istanbul ignore else */
     if (name === 'number_in_series') {

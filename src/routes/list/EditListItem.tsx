@@ -8,6 +8,13 @@ import Loading from '../../components/Loading';
 import UnknownError from '../error_pages/UnknownError';
 import type { IList, IListItem, IListUser } from '../../typings';
 
+interface IFetchResponse {
+  list: IList;
+  item: IListItem;
+  listUsers: IListUser[];
+  userId: string;
+}
+
 const EditListItem: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id, list_id: listId } = useParams();
@@ -18,7 +25,7 @@ const EditListItem: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { list: IList; item: IListItem; listUsers: IListUser[]; userId: string }): React.JSX.Element => (
+        {(data: IFetchResponse): React.JSX.Element => (
           <EditListItemForm
             navigate={navigate}
             listUsers={data.listUsers}

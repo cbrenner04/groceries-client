@@ -9,6 +9,7 @@ import Music from './Music';
 import ToDo from './ToDo';
 import ChangeOtherList from './ChangeOtherList';
 
+// TODO: This is ridiculous. Its just silly
 export interface IBulkEditListItemsFormFieldsFormDataProps {
   copy: boolean;
   move: boolean;

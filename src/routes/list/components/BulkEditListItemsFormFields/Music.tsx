@@ -12,29 +12,21 @@ export interface IMusicProps {
   handleInput: ChangeEventHandler;
 }
 
-const Music: React.FC<IMusicProps> = ({
-  artist,
-  clearArtist,
-  handleClearArtist,
-  album,
-  clearAlbum,
-  handleClearAlbum,
-  handleInput,
-}): React.JSX.Element => (
+const Music: React.FC<IMusicProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="artist"
       label="Artist"
-      value={artist}
-      handleChange={handleInput}
+      value={props.artist}
+      handleChange={props.handleInput}
       placeholder="Sir Mix-a-Lot"
-      disabled={clearArtist}
+      disabled={props.clearArtist}
       child={
         <CheckboxField
           name="clearArtist"
           label="Clear artist"
-          handleChange={handleClearArtist}
-          value={clearArtist}
+          handleChange={props.handleClearArtist}
+          value={props.clearArtist}
           classes="ms-1 mt-1"
         />
       }
@@ -42,16 +34,16 @@ const Music: React.FC<IMusicProps> = ({
     <TextField
       name="album"
       label="Album"
-      value={album}
-      handleChange={handleInput}
+      value={props.album}
+      handleChange={props.handleInput}
       placeholder="Mack Daddy"
-      disabled={clearAlbum}
+      disabled={props.clearAlbum}
       child={
         <CheckboxField
           name="clearAlbum"
           label="Clear album"
-          handleChange={handleClearAlbum}
-          value={clearAlbum}
+          handleChange={props.handleClearAlbum}
+          value={props.clearAlbum}
           classes="ms-1 mt-1"
         />
       }

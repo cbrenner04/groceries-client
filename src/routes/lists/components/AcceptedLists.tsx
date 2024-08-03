@@ -250,9 +250,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         clearModal={(): void => setShowMergeModal(false)}
         listNames={listsToMerge.map((l) => l.name).join('", "')}
         mergeName={mergeName}
-        handleMergeNameChange={
-          ((({ target: { value } }) => setMergeName(value))) as ChangeEventHandler<HTMLInputElement>
-        }
+        handleMergeNameChange={(({ target: { value } }) => setMergeName(value)) as ChangeEventHandler<HTMLInputElement>}
         handleMergeConfirm={handleMergeConfirm}
       />
     </Lists>

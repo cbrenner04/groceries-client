@@ -9,20 +9,20 @@ export interface IBookProps {
   handleInput: ChangeEventHandler;
 }
 
-const Book: React.FC<IBookProps> = ({ author, clearAuthor, handleClearAuthor, handleInput }): React.JSX.Element => (
+const Book: React.FC<IBookProps> = (props): React.JSX.Element => (
   <TextField
     name="author"
     label="Author"
-    value={author}
-    handleChange={handleInput}
+    value={props.author}
+    handleChange={props.handleInput}
     placeholder="Kurt Vonnagut"
-    disabled={clearAuthor}
+    disabled={props.clearAuthor}
     child={
       <CheckboxField
         name="clearAuthor"
         label="Clear author"
-        handleChange={handleClearAuthor}
-        value={clearAuthor}
+        handleChange={props.handleClearAuthor}
+        value={props.clearAuthor}
         classes="ms-1 mt-1"
       />
     }

@@ -9,20 +9,14 @@ interface ICompleteProps {
   classes?: string;
 }
 
-const Complete: React.FC<ICompleteProps> = ({
-  handleClick,
-  testID,
-  disabled = false,
-  style = {},
-  classes = '',
-}): React.JSX.Element => (
+const Complete: React.FC<ICompleteProps> = (props): React.JSX.Element => (
   <Button
     variant="link"
-    onClick={handleClick}
-    className={`p-0 me-3 ${classes}`}
-    data-test-id={testID}
-    disabled={disabled}
-    style={style}
+    onClick={props.handleClick}
+    className={`p-0 me-3 ${props.classes ?? ''}`}
+    data-test-id={props.testID}
+    disabled={props.disabled ?? false}
+    style={props.style ?? {}}
   >
     <i className="fa fa-check fa-2x text-success" />
   </Button>

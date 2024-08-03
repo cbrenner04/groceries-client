@@ -14,31 +14,22 @@ export interface IToDoProps {
   listUsers: IListUser[];
 }
 
-const ToDo: React.FC<IToDoProps> = ({
-  assigneeId,
-  clearAssignee,
-  handleClearAssignee,
-  dueBy,
-  clearDueBy,
-  handleClearDueBy,
-  handleInput,
-  listUsers,
-}): React.JSX.Element => (
+const ToDo: React.FC<IToDoProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <SelectField
       name="assigneeId"
       label="Assignee"
-      value={assigneeId}
-      handleChange={handleInput}
-      options={listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
+      value={props.assigneeId}
+      handleChange={props.handleInput}
+      options={props.listUsers.map((user) => ({ value: String(user.id), label: user.email }))}
       blankOption
-      disabled={clearAssignee}
+      disabled={props.clearAssignee}
       child={
         <CheckboxField
           name="clearAssignee"
           label="Clear assignee"
-          handleChange={handleClearAssignee}
-          value={clearAssignee}
+          handleChange={props.handleClearAssignee}
+          value={props.clearAssignee}
           classes="ms-1 mt-1"
         />
       }
@@ -46,16 +37,16 @@ const ToDo: React.FC<IToDoProps> = ({
     <DateField
       name="due_by"
       label="Due By"
-      value={dueBy}
-      handleChange={handleInput}
+      value={props.dueBy}
+      handleChange={props.handleInput}
       placeholder="mm/dd/yyyy"
-      disabled={clearDueBy}
+      disabled={props.clearDueBy}
       child={
         <CheckboxField
           name="clearDueBy"
           label="Clear due by"
-          handleChange={handleClearDueBy}
-          value={clearDueBy}
+          handleChange={props.handleClearDueBy}
+          value={props.clearDueBy}
           classes="ms-1 mt-1"
         />
       }
