@@ -16,7 +16,6 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use(
   function (response) {
-    // TODO: figure this out
     setUserInfo(response.headers as { 'access-token': string; uid: string; client: string });
     return response;
   },

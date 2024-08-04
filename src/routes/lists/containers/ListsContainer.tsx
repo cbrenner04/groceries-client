@@ -13,7 +13,6 @@ import { fetchLists, sortLists, failure } from '../utils';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 
-// TODO: can we do better?
 const isSameSet = (newSet: TUserPermissions | IList[], oldSet: TUserPermissions | IList[]): boolean =>
   JSON.stringify(newSet) === JSON.stringify(oldSet);
 

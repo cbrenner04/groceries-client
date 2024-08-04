@@ -9,6 +9,14 @@ import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import UnknownError from '../error_pages/UnknownError';
 
+interface IFulfilledLists {
+  userId: string;
+  pendingLists: IList[];
+  completedLists: IList[];
+  incompleteLists: IList[];
+  currentUserPermissions: TUserPermissions;
+}
+
 const Lists: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
 
@@ -18,13 +26,7 @@ const Lists: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: {
-          userId: string;
-          pendingLists: IList[];
-          completedLists: IList[];
-          incompleteLists: IList[];
-          currentUserPermissions: TUserPermissions;
-        }): ReactNode => (
+        {(data: IFulfilledLists): ReactNode => (
           <ListsContainer
             userId={data.userId}
             pendingLists={data.pendingLists}

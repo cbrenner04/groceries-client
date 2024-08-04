@@ -22,11 +22,10 @@ interface IFulfilledResponse {
 
 const ShareList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const { list_id: pListId } = useParams();
+  const params = useParams();
 
   return (
-    // TODO: figure out typings for PromiseFn
-    <Async promiseFn={fetchData as unknown as PromiseFn<void>} listId={pListId} navigate={navigate}>
+    <Async promiseFn={fetchData as unknown as PromiseFn<void>} listId={params.list_id} navigate={navigate}>
       <Async.Pending>
         <Loading />
       </Async.Pending>

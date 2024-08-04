@@ -9,7 +9,7 @@ export interface IListFormFieldsProps {
   completed: boolean;
   handleNameChange: ChangeEventHandler;
   handleTypeChange: ChangeEventHandler;
-  handleCompletedChange: ChangeEventHandler;
+  handleCompletedChange?: ChangeEventHandler;
   editForm: boolean;
 }
 
@@ -42,7 +42,7 @@ const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Elemen
           name="completed"
           label="Completed"
           value={props.completed}
-          handleChange={props.handleCompletedChange}
+          handleChange={props.handleCompletedChange!}
           classes="mb-3"
         />
       )}

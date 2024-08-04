@@ -15,18 +15,10 @@ const EditPassword: React.FC = (): React.JSX.Element => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
-      // this doesn't use global instance b/c need to skip the interceptors b/c the headers aren't coming through
-      await axios.put(
-        `${process.env.REACT_APP_API_BASE}/auth/password`,
-        {
-          password,
-          password_confirmation: passwordConfirmation,
-        },
-        // TODO: is this needed? it kinda doesn't make sense
-        // {
-        //   headers: queryString.parse(location.search),
-        // },
-      );
+      await axios.put(`${process.env.REACT_APP_API_BASE}/auth/password`, {
+        password,
+        password_confirmation: passwordConfirmation,
+      });
       toast('Password successfully updated', { type: 'info' });
       navigate('/users/sign_in');
     } catch (err: unknown) {

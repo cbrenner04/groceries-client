@@ -19,7 +19,6 @@ const ListForm: React.FC<IListFormProps> = (props): React.JSX.Element => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    // TODO: figure this out.
     await props.onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
@@ -45,7 +44,6 @@ const ListForm: React.FC<IListFormProps> = (props): React.JSX.Element => {
             handleNameChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
             handleTypeChange={(event: ChangeEvent<HTMLInputElement>): void => setType(event.target.value as EListType)}
             completed={false}
-            handleCompletedChange={/* istanbul ignore next */ (): undefined => undefined}
             editForm={false}
           />
           <FormSubmission
