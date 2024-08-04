@@ -17,6 +17,7 @@ import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList, itemName, sortItems } from '../utils';
 
+// TODO: this is ridiculous
 export interface IListContainerProps {
   userId: string;
   list: IList;
@@ -300,7 +301,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     try {
       const newItemResponses = await Promise.all(createNewItemRequests);
       await Promise.all(updateOldItemRequests);
-      const newItems = newItemResponses.map(({ data }) => data);
+      const newItems = newItemResponses.map((response) => response.data);
       handleAddItem(newItems);
       removeItemsFromPurchased(filteredItems);
       setSelectedItems([]);
@@ -393,9 +394,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             filter={filter}
             // TODO: figure out typing
             handleCategoryFilter={
-              (({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
-                setFilter(name);
-                setDisplayedCategories([name]);
+              ((event: ChangeEvent<HTMLInputElement>): void => {
+                setFilter(event.target.name);
+                setDisplayedCategories([event.target.name]);
               }) as unknown as MouseEventHandler
             }
             handleClearFilter={(): void => {

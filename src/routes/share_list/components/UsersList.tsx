@@ -21,20 +21,21 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
       message="Click the arrows to upgrade or downgrade the permissions between read and write"
     />
     <ListGroup className="mb-4">
-      {props.users.map(({ user, users_list: { id, permissions } }) => {
-        if (user.id === props.userId) {
+      {props.users.map((user) => {
+        if (user.user.id === props.userId) {
           return '';
         }
+        const { permissions } = user.users_list;
         if (props.userIsOwner) {
           return (
             <ListGroup.Item
-              key={id}
-              data-test-id={`${props.status}-user-${user.id}`}
+              key={user.users_list.id}
+              data-test-id={`${props.status}-user-${user.user.id}`}
               className="users-list-list-group-item"
             >
               <Row>
                 <Col md="6" className="pt-1">
-                  {user.email}
+                  {user.user.email}
                 </Col>
                 <Col md="4" className="pt-1">
                   <Badge data-test-id={`perm-${permissions}`} bg={permissions === 'write' ? 'success' : 'primary'}>
@@ -46,14 +47,14 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
                     <Button
                       variant="link"
                       className="p-0 me-4"
-                      onClick={(): void => props.togglePermission(id, permissions, props.status)}
+                      onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
                       data-test-id="toggle-permissions"
                     >
                       <i
                         className={`fas fa-angle-double-${permissions === 'write' ? 'down' : 'up'} fa-2x text-warning`}
                       />
                     </Button>
-                    <Trash testID="remove-share" handleClick={(): void => props.removeShare(id)} />
+                    <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />
                   </ButtonGroup>
                 </Col>
               </Row>
@@ -61,8 +62,8 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
           );
         }
         return (
-          <div key={id} data-test-id={`${props.status}-user-${user.id}`}>
-            <ListGroup.Item>{user.email}</ListGroup.Item>
+          <div key={user.users_list.id} data-test-id={`${props.status}-user-${user.user.id}`}>
+            <ListGroup.Item>{user.user.email}</ListGroup.Item>
           </div>
         );
       })}

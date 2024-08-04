@@ -13,7 +13,6 @@ const EditList: React.FC = (): React.JSX.Element => {
   const { id } = useParams();
 
   return (
-    // TODO: figure out typings for PromiseFn
     <Async promiseFn={fetchListToEdit as unknown as PromiseFn<void>} navigate={navigate} id={id}>
       <Async.Pending>
         <Loading />

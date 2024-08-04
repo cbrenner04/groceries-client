@@ -9,6 +9,17 @@ import ShareListForm from './containers/ShareListForm';
 import { fetchData } from './utils';
 import UnknownError from '../error_pages/UnknownError';
 
+interface IFulfilledResponse {
+  name: string;
+  invitableUsers: IListUser[];
+  listId: string;
+  userIsOwner: boolean;
+  pending: IUsersList[];
+  accepted: IUsersList[];
+  refused: IUsersList[];
+  userId: string;
+}
+
 const ShareList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { list_id: pListId } = useParams();
@@ -20,16 +31,7 @@ const ShareList: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: {
-          name: string;
-          invitableUsers: IListUser[];
-          listId: string;
-          userIsOwner: boolean;
-          pending: IUsersList[];
-          accepted: IUsersList[];
-          refused: IUsersList[];
-          userId: string;
-        }): ReactNode => (
+        {(data: IFulfilledResponse): ReactNode => (
           <ShareListForm
             name={data.name}
             invitableUsers={data.invitableUsers}

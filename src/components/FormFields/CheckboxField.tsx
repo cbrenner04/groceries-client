@@ -11,16 +11,15 @@ export interface ICheckboxFieldProps {
   type?: FormCheckType;
 }
 
-const CheckboxField: React.FC<ICheckboxFieldProps> = ({
-  name,
-  label,
-  value = false,
-  handleChange,
-  classes = '',
-  type = 'checkbox',
-}): React.JSX.Element => (
-  <Form.Group controlId={name} className={`${classes} mb-3`}>
-    <Form.Check type={type} checked={value} onChange={handleChange} label={label} name={name} />
+const CheckboxField: React.FC<ICheckboxFieldProps> = (props): React.JSX.Element => (
+  <Form.Group controlId={props.name} className={`${props.classes ?? ''} mb-3`}>
+    <Form.Check
+      type={props.type ?? 'checkbox'}
+      checked={props.value ?? false}
+      onChange={props.handleChange}
+      label={props.label}
+      name={props.name}
+    />
   </Form.Group>
 );
 

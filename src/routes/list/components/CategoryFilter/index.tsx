@@ -1,8 +1,8 @@
 import React, { type MouseEventHandler } from 'react';
+import { Button } from 'react-bootstrap';
 
 import Filter from './Filter';
 import Filtered from './Filtered';
-import NoFilter from './NoFilter';
 
 export interface ICategoryFilterProps {
   categories?: string[];
@@ -11,20 +11,17 @@ export interface ICategoryFilterProps {
   handleCategoryFilter: MouseEventHandler;
 }
 
-const CategoryFilter: React.FC<ICategoryFilterProps> = ({
-  categories = [],
-  filter = '',
-  handleClearFilter,
-  handleCategoryFilter,
-}): React.JSX.Element => {
-  return categories.filter(Boolean).length ? (
-    filter ? (
-      <Filtered filter={filter} handleClearFilter={handleClearFilter} />
-    ) : (
-      <Filter categories={categories} handleCategoryFilter={handleCategoryFilter} />
-    )
-  ) : (
-    <NoFilter />
+const CategoryFilter: React.FC<ICategoryFilterProps> = (props): React.JSX.Element => {
+  if (props.filter) {
+    return <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;
+  }
+  if (props.categories?.filter(Boolean).length) {
+    return <Filter categories={props.categories} handleCategoryFilter={props.handleCategoryFilter} />;
+  }
+  return (
+    <Button variant="light" id="no-filter" disabled>
+      Filter by category
+    </Button>
   );
 };
 

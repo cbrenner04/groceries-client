@@ -12,40 +12,33 @@ export interface IMergeModalProps {
   handleMergeNameChange: ChangeEventHandler;
 }
 
-const MergeModal: React.FC<IMergeModalProps> = ({
-  showModal,
-  clearModal,
-  listNames,
-  mergeName,
-  handleMergeConfirm,
-  handleMergeNameChange,
-}): React.JSX.Element => {
+const MergeModal: React.FC<IMergeModalProps> = (props): React.JSX.Element => {
   return (
-    <Modal show={showModal} onHide={clearModal}>
+    <Modal show={props.showModal} onHide={props.clearModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Merge {`"${listNames}"`}</Modal.Title>
+        <Modal.Title>Merge {`"${props.listNames}"`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <TextField
             name="mergeName"
             label="Name for the merged list"
-            value={mergeName}
-            handleChange={handleMergeNameChange}
+            value={props.mergeName}
+            handleChange={props.handleMergeNameChange}
             placeholder="My super cool list"
           />
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={clearModal} data-test-id={'clear-merge'}>
+        <Button variant="secondary" onClick={props.clearModal} data-test-id={'clear-merge'}>
           Close
         </Button>
         <Button
           variant="primary"
-          onClick={handleMergeConfirm}
+          onClick={props.handleMergeConfirm}
           data-test-id={'confirm-merge'}
-          disabled={!mergeName}
-          className={mergeName ? 'merge-modal-confirm-enabled' : 'merge-modal-confirm-disabled'}
+          disabled={!props.mergeName}
+          className={props.mergeName ? 'merge-modal-confirm-enabled' : 'merge-modal-confirm-disabled'}
         >
           Merge lists
         </Button>

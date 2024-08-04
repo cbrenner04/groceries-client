@@ -7,8 +7,14 @@ interface IMergeProps {
   disabled: boolean;
 }
 
-const Merge: React.FC<IMergeProps> = ({ handleClick, testID, disabled }): React.JSX.Element => (
-  <Button variant="link" onClick={handleClick} className="p-0 me-3" data-test-id={testID} disabled={disabled}>
+const Merge: React.FC<IMergeProps> = (props): React.JSX.Element => (
+  <Button
+    variant="link"
+    onClick={props.handleClick}
+    className="p-0 me-3"
+    data-test-id={props.testID}
+    disabled={props.disabled}
+  >
     <i className="fa fa-compress-alt fa-2x text-warning" />
   </Button>
 );

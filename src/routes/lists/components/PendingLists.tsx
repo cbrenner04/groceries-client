@@ -88,8 +88,8 @@ const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element =>
     try {
       await Promise.all(requests);
       let updatedPendingLists = props.pendingLists;
-      listsToReject.forEach(({ id }) => {
-        updatedPendingLists = updatedPendingLists.filter((list) => list.id !== id);
+      listsToReject.forEach((l) => {
+        updatedPendingLists = updatedPendingLists.filter((list) => list.id !== l.id);
       });
       props.setPendingLists(updatedPendingLists);
       // otherwise PendingLists will be unmounted

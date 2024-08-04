@@ -46,10 +46,10 @@ const EditInvite: React.FC = (): React.JSX.Element => {
       <h2>Set your password</h2>
       <PasswordForm
         password={password}
-        passwordChangeHandler={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setPassword(value)}
+        passwordChangeHandler={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
         passwordConfirmation={passwordConfirmation}
-        passwordConfirmationChangeHandler={({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
-          setPasswordConfirmation(value)
+        passwordConfirmationChangeHandler={(event: ChangeEvent<HTMLInputElement>): void =>
+          setPasswordConfirmation(event.target.value)
         }
         submissionHandler={handleSubmit}
       />

@@ -11,26 +11,18 @@ export interface ITextFieldProps {
   disabled?: boolean;
 }
 
-const TextField: React.FC<ITextFieldProps> = ({
-  name,
-  label,
-  value,
-  handleChange,
-  placeholder = '',
-  child = '',
-  disabled = false,
-}): React.JSX.Element => (
-  <Form.Group controlId={name} className="mb-3">
-    <Form.Label>{label}</Form.Label>
+const TextField: React.FC<ITextFieldProps> = (props): React.JSX.Element => (
+  <Form.Group controlId={props.name} className="mb-3">
+    <Form.Label>{props.label}</Form.Label>
     <Form.Control
       type="text"
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      name={name}
-      disabled={disabled}
+      value={props.value}
+      onChange={props.handleChange}
+      placeholder={props.placeholder ?? ''}
+      name={props.name}
+      disabled={props.disabled ?? false}
     />
-    {child}
+    {props.child ?? ''}
   </Form.Group>
 );
 

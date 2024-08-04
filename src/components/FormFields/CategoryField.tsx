@@ -10,30 +10,23 @@ export interface ICategoryFieldProps {
   disabled?: boolean;
 }
 
-const CategoryField: React.FC<ICategoryFieldProps> = ({
-  category = '',
-  categories = [],
-  handleInput,
-  name = 'category',
-  child = '',
-  disabled = false,
-}): React.JSX.Element => (
-  <Form.Group controlId={name} className="mb-3">
+const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element => (
+  <Form.Group controlId={props.name ?? 'category'} className="mb-3">
     <Form.Label>Category</Form.Label>
     <Form.Control
       type="text"
-      value={category}
-      onChange={handleInput}
+      value={props.category ?? ''}
+      onChange={props.handleInput}
       list="categories"
-      name={name}
-      disabled={disabled}
+      name={props.name ?? 'category'}
+      disabled={props.disabled ?? false}
     />
     <datalist id="categories" data-test-id="categories">
-      {categories.map((category) => (
+      {(props.categories ?? []).map((category) => (
         <option key={category} value={category} />
       ))}
     </datalist>
-    {child}
+    {props.child ?? ''}
   </Form.Group>
 );
 

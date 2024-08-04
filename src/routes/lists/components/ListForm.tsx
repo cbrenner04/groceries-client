@@ -11,7 +11,7 @@ export interface IListFormProps {
   pending: boolean;
 }
 
-const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JSX.Element => {
+const ListForm: React.FC<IListFormProps> = (props): React.JSX.Element => {
   const defaultListType = EListType.GROCERY_LIST;
   const [name, setName] = useState('');
   const [type, setType] = useState(defaultListType);
@@ -20,7 +20,7 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JS
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     // TODO: figure this out.
-    await onFormSubmit({ name, type });
+    await props.onFormSubmit({ name, type });
     setName('');
     setType(defaultListType);
   };
@@ -42,20 +42,17 @@ const ListForm: React.FC<IListFormProps> = ({ onFormSubmit, pending }): React.JS
           <ListFormFields
             name={name}
             type={type}
-            handleNameChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setName(value)}
-            handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
-              setType(value as EListType)
-            }
+            handleNameChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+            handleTypeChange={(event: ChangeEvent<HTMLInputElement>): void => setType(event.target.value as EListType)}
             completed={false}
             handleCompletedChange={/* istanbul ignore next */ (): undefined => undefined}
             editForm={false}
           />
           <FormSubmission
-            disabled={pending}
+            disabled={props.pending}
             submitText="Create List"
             cancelAction={(): void => setShowForm(false)}
             cancelText="Collapse Form"
-            displayCancelButton={true}
           />
         </Form>
       </Collapse>

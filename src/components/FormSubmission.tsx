@@ -4,25 +4,18 @@ import { Button } from 'react-bootstrap';
 interface IFormSubmissionProps {
   disabled?: boolean;
   submitText: string;
-  displayCancelButton: boolean;
-  cancelAction: MouseEventHandler;
+  cancelAction?: MouseEventHandler;
   cancelText?: string;
 }
 
-const FormSubmission: React.FC<IFormSubmissionProps> = ({
-  disabled = false,
-  submitText,
-  displayCancelButton,
-  cancelAction,
-  cancelText = '',
-}): React.JSX.Element => (
+const FormSubmission: React.FC<IFormSubmissionProps> = (props): React.JSX.Element => (
   <div className="d-grid gap-2 mt-3">
-    <Button type="submit" variant="success" disabled={disabled}>
-      {submitText}
+    <Button type="submit" variant="success" disabled={props.disabled ?? false}>
+      {props.submitText}
     </Button>
-    {displayCancelButton && (
-      <Button variant="link" onClick={cancelAction}>
-        {cancelText}
+    {props.cancelAction && props.cancelText && (
+      <Button variant="link" onClick={props.cancelAction}>
+        {props.cancelText}
       </Button>
     )}
   </div>

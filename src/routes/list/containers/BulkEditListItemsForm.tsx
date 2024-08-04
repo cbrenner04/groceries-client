@@ -43,23 +43,16 @@ interface IPutData {
   update_current_items: boolean;
 }
 
-const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
-  navigate,
-  items,
-  list,
-  lists,
-  categories,
-  listUsers,
-}): React.JSX.Element => {
+const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
   // if no existing list options, new list form should be displayed by default
-  const existingListsOptions = lists.map((list) => ({ value: String(list.id), label: list.name }));
+  const existingListsOptions = props.lists.map((list) => ({ value: String(list.id), label: list.name }));
 
   // attributes that makes sense to updated on all items are included
   // set attributes to initial value if all items have the same value for the attribute
   // the value of these attributes can be cleared for all items with their respective clear state attributes
   // read, purchased, completed not included as they add complexity and they can be updated in bulk on the list itself
   const initialAttr = (attribute: keyof IListItem): string | Date | number | boolean | undefined => {
-    const uniqValues = [...new Set(items.map(({ [attribute]: value }) => value))];
+    const uniqValues = [...new Set(props.items.map((item) => item[attribute]))];
     return uniqValues.length === 1 && uniqValues[0] ? uniqValues[0] : undefined;
   };
   const initialDueBy = initialAttr('due_by');
@@ -133,29 +126,29 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
     if (formData.newListName) {
       putData.new_list_name = formData.newListName;
     }
-    const itemIds = items.map(({ id }) => id).join(',');
+    const itemIds = props.items.map((item) => item.id).join(',');
     try {
-      await axios.put(`/lists/${list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
+      await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         list_items: putData,
       });
       toast('Items successfully updated', { type: 'info' });
-      navigate(`/lists/${list.id}`);
+      props.navigate(`/lists/${props.list.id}`);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
           toast('You must sign in', { type: 'error' });
-          navigate('/users/sign_in');
+          props.navigate('/users/sign_in');
         } else if ([403, 404].includes(error.response.status!)) {
           toast('Some items not found', { type: 'error' });
-          navigate(`/lists/${list.id}`);
+          props.navigate(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(error.response.data!);
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
           let joinString;
-          if (list.type === EListType.BOOK_LIST || list.type === EListType.MUSIC_LIST) {
+          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
             joinString = ' or ';
           } else {
             joinString = ' and ';
@@ -196,12 +189,12 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
     setFormData(updatedFormData);
   };
 
-  const handleInput: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value, checked } }): void => {
-    let newValue: string | boolean = value;
-    if (name === 'updateCurrentItems') {
-      newValue = checked;
+  const handleInput: ChangeEventHandler<HTMLInputElement> = (element): void => {
+    let newValue: string | boolean = element.target.value;
+    if (element.target.name === 'updateCurrentItems') {
+      newValue = element.target.checked;
     }
-    const updatedFormData = update(formData, { [name]: { $set: newValue } });
+    const updatedFormData = update(formData, { [element.target.name]: { $set: newValue } });
     setFormData(updatedFormData);
   };
 
@@ -228,26 +221,25 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = ({
 
   return (
     <React.Fragment>
-      <h1>Edit {items.map((item) => itemName(item, list.type)).join(', ')}</h1>
+      <h1>Edit {props.items.map((item) => itemName(item, props.list.type)).join(', ')}</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           formData={formData}
           handleInput={handleInput}
           clearAttribute={clearAttribute}
-          listUsers={listUsers}
-          listType={list.type}
+          listUsers={props.listUsers}
+          listType={props.list.type}
           handleOtherListChange={handleOtherListChange}
           existingListsOptions={existingListsOptions}
           handleShowNewListForm={handleShowNewListForm}
           clearNewListForm={clearNewListForm}
-          categories={categories}
+          categories={props.categories}
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={(): void => navigate(`/lists/${list.id}`)}
+          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
-          displayCancelButton={true}
         />
       </Form>
     </React.Fragment>

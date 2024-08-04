@@ -6,13 +6,13 @@ export interface IFilterProps {
   handleCategoryFilter: MouseEventHandler;
 }
 
-const Filter: React.FC<IFilterProps> = ({ categories, handleCategoryFilter }): React.JSX.Element => (
+const Filter: React.FC<IFilterProps> = (props): React.JSX.Element => (
   <Dropdown data-test-id="filter-dropdown">
     <Dropdown.Toggle variant="light" id="filter-by-category-button">
       Filter by category
     </Dropdown.Toggle>
     <Dropdown.Menu>
-      {categories.sort().map((category) => {
+      {props.categories.sort().map((category) => {
         if (!category) {
           return '';
         }
@@ -21,7 +21,7 @@ const Filter: React.FC<IFilterProps> = ({ categories, handleCategoryFilter }): R
             as="button"
             key={category}
             name={category}
-            onClick={handleCategoryFilter}
+            onClick={props.handleCategoryFilter}
             data-test-id={`filter-by-${category}`}
           >
             {category}

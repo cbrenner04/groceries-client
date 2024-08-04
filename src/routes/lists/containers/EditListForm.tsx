@@ -64,17 +64,12 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
           name={name}
           type={type}
           completed={completed}
-          handleNameChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setName(value)}
-          handleTypeChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setType(value)}
+          handleNameChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+          handleTypeChange={(event: ChangeEvent<HTMLInputElement>): void => setType(event.target.value)}
           handleCompletedChange={(): void => setCompleted(!completed)}
           editForm
         />
-        <FormSubmission
-          submitText="Update List"
-          cancelAction={(): void => navigate('/lists')}
-          cancelText="Cancel"
-          displayCancelButton={true}
-        />
+        <FormSubmission submitText="Update List" cancelAction={(): void => navigate('/lists')} cancelText="Cancel" />
       </Form>
     </React.Fragment>
   );

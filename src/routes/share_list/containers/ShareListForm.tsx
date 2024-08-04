@@ -42,29 +42,23 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
       });
       /* istanbul ignore else */
       if (list) {
-        const {
-          invitableUsers: updatedInvitableUsers,
-          pending: updatedPending,
-          accepted: updatedAccepted,
-          refused: updatedRefused,
-        } = list;
         const isSameSet = (newSet: IListUser[] | IUsersList[], oldSet: IListUser[] | IUsersList[]): boolean =>
           JSON.stringify(newSet) === JSON.stringify(oldSet);
-        const invitableUsersSame = isSameSet(updatedInvitableUsers, invitableUsers);
-        const pendingSame = isSameSet(updatedPending, pending);
-        const acceptedSame = isSameSet(updatedAccepted, accepted);
-        const refusedSame = isSameSet(updatedRefused, refused);
+        const invitableUsersSame = isSameSet(list.invitableUsers, invitableUsers);
+        const pendingSame = isSameSet(list.pending, pending);
+        const acceptedSame = isSameSet(list.accepted, accepted);
+        const refusedSame = isSameSet(list.refused, refused);
         if (!invitableUsersSame) {
-          setInvitableUsers(updatedInvitableUsers);
+          setInvitableUsers(list.invitableUsers);
         }
         if (!pendingSame) {
-          setPending(updatedPending);
+          setPending(list.pending);
         }
         if (!acceptedSame) {
-          setAccepted(updatedAccepted);
+          setAccepted(list.accepted);
         }
         if (!refusedSame) {
-          setRefused(updatedRefused);
+          setRefused(list.refused);
         }
       }
     } catch (err: unknown) {
@@ -108,26 +102,11 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
-      const {
-        data: { user, users_list: usersList },
-      } = await axios.post('/auth/invitation', {
+      const { data } = await axios.post('/auth/invitation', {
         email: newEmail,
         list_id: props.listId,
       });
-      const newPending = update(pending, {
-        $push: [
-          {
-            user: {
-              id: user.id,
-              email: user.email,
-            },
-            users_list: {
-              id: usersList.id,
-              permissions: usersList.permissions,
-            },
-          },
-        ],
-      });
+      const newPending = update(pending, { $push: [data] });
       setPending(newPending);
       setNewEmail('');
       toast(`"${props.name}" has been successfully shared with ${newEmail}.`, { type: 'info' });
@@ -137,12 +116,13 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   };
 
   const handleSelectUser = async (user: IListUser): Promise<void> => {
-    const usersList = {
-      user_id: user.id,
-      list_id: props.listId,
-    };
     try {
-      const { data } = await axios.post(`/lists/${props.listId}/users_lists`, { users_list: usersList });
+      const { data } = await axios.post(`/lists/${props.listId}/users_lists`, {
+        users_list: {
+          user_id: user.id,
+          list_id: props.listId,
+        },
+      });
       const newUsers = invitableUsers.filter((tmpUser: IListUser) => tmpUser.id !== user.id);
       setInvitableUsers(newUsers);
       const newPending = update(pending, {
@@ -159,6 +139,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           },
         ],
       });
+
       setPending(newPending);
       toast(`"${props.name}" has been successfully shared with ${user.email}.`, { type: 'info' });
     } catch (error) {
@@ -191,7 +172,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   };
 
   const refreshShare = async (id: string, userId: string): Promise<void> => {
-    const usersList = refused.find(({ user }) => user.id === userId);
+    const usersList = refused.find((user) => user.user.id === userId);
     /* istanbul ignore else */
     if (usersList) {
       const { user } = usersList;
@@ -211,7 +192,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           ],
         });
         setPending(updatedPending);
-        const updatedRefused = refused.filter(({ user }) => user.id !== userId);
+        const updatedRefused = refused.filter((user) => user.user.id !== userId);
         setRefused(updatedRefused);
       } catch (error) {
         failure(error);
@@ -222,13 +203,11 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const removeShare = async (id: string): Promise<void> => {
     try {
       await axios.delete(`/lists/${props.listId}/users_lists/${id}`);
-      const {
-        data: { accepted, invitable_users: invitableUsers, pending, refused },
-      } = await axios.get(`/lists/${props.listId}/users_lists`);
-      setAccepted(accepted);
-      setInvitableUsers(invitableUsers);
-      setPending(pending);
-      setRefused(refused);
+      const { data } = await axios.get(`/lists/${props.listId}/users_lists`);
+      setAccepted(data.accepted);
+      setInvitableUsers(data.invitable_users);
+      setPending(data.pending);
+      setRefused(data.refused);
     } catch (error) {
       failure(error);
     }
@@ -245,13 +224,9 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           name="new-email"
           label="Enter an email to invite someone to share this list:"
           value={newEmail}
-          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setNewEmail(value)}
+          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
         />
-        <FormSubmission
-          submitText="Share List"
-          displayCancelButton={false}
-          cancelAction={/* istanbul ignore next */ (): undefined => undefined}
-        />
+        <FormSubmission submitText="Share List" />
       </Form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
       <ListGroup className="mb-5">

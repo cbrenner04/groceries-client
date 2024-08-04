@@ -10,13 +10,13 @@ import Loading from 'components/Loading';
 
 import UnknownError from './UnknownError';
 
-const fetchData = async ({ navigate }: { navigate: NavigateFunction }): Promise<void> => {
+const fetchData = async (fetchParams: { navigate: NavigateFunction }): Promise<void> => {
   try {
     await axios.get('/auth/validate_token');
   } catch (err: unknown) {
     if ((err as AxiosError).response?.status === 401) {
       toast('You must sign in', { type: 'error' });
-      navigate('/users/sign_in');
+      fetchParams.navigate('/users/sign_in');
     }
     // any other errors will just be caught and render the generic UnknownError
     throw new Error();

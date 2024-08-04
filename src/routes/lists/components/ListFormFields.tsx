@@ -13,29 +13,21 @@ export interface IListFormFieldsProps {
   editForm: boolean;
 }
 
-const ListFormFields: React.FC<IListFormFieldsProps> = ({
-  name,
-  type,
-  handleNameChange,
-  handleTypeChange,
-  handleCompletedChange,
-  completed,
-  editForm,
-}): React.JSX.Element => {
+const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Element => {
   return (
     <React.Fragment>
       <TextField
         name="name"
         label="Name"
-        value={name}
-        handleChange={handleNameChange}
+        value={props.name}
+        handleChange={props.handleNameChange}
         placeholder="My super cool list"
       />
       <SelectField
         name="type"
         label="Type"
-        value={type}
-        handleChange={handleTypeChange}
+        value={props.type}
+        handleChange={props.handleTypeChange}
         options={[
           { value: EListType.BOOK_LIST, label: 'books' },
           { value: EListType.GROCERY_LIST, label: 'groceries' },
@@ -45,12 +37,12 @@ const ListFormFields: React.FC<IListFormFieldsProps> = ({
         ]}
         blankOption={false}
       />
-      {editForm && (
+      {props.editForm && (
         <CheckboxField
           name="completed"
           label="Completed"
-          value={completed}
-          handleChange={handleCompletedChange}
+          value={props.completed}
+          handleChange={props.handleCompletedChange}
           classes="mb-3"
         />
       )}

@@ -4,27 +4,29 @@ import { type AxiosError } from 'axios';
 import axios from '../../utils/api';
 import { type IListUser, type IUsersList } from 'typings';
 
-export async function fetchData({ listId, navigate }: { listId: string; navigate: (url: string) => void }): Promise<
-  | {
-      name: string;
-      invitableUsers: IListUser[];
-      listId: string;
-      userIsOwner: boolean;
-      pending: IUsersList[];
-      accepted: IUsersList[];
-      refused: IUsersList[];
-      userId: string;
-    }
-  | undefined
-> {
+interface IFetchDataReturn {
+  name: string;
+  invitableUsers: IListUser[];
+  listId: string;
+  userIsOwner: boolean;
+  pending: IUsersList[];
+  accepted: IUsersList[];
+  refused: IUsersList[];
+  userId: string;
+}
+
+export async function fetchData(fetchParams: {
+  listId: string;
+  navigate: (url: string) => void;
+}): Promise<IFetchDataReturn | undefined> {
   try {
-    const { data } = await axios.get(`/lists/${listId}/users_lists`);
+    const { data } = await axios.get(`/lists/${fetchParams.listId}/users_lists`);
     const userInAccepted = data.accepted.find(
       (acceptedList: IUsersList) => acceptedList.user.id === data.current_user_id,
     );
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
       toast('List not found', { type: 'error' });
-      navigate('/lists');
+      fetchParams.navigate('/lists');
       return;
     }
     return {
@@ -42,11 +44,11 @@ export async function fetchData({ listId, navigate }: { listId: string; navigate
     if (error.response) {
       if (error.response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        navigate('/users/sign_in');
+        fetchParams.navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(error.response.status)) {
         toast('List not found', { type: 'error' });
-        navigate('/lists');
+        fetchParams.navigate('/lists');
         return;
       }
     }

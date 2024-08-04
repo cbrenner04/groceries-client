@@ -18,91 +18,77 @@ function handleFailure(error: unknown, navigate: (url: string) => void): void {
   }
 }
 
-export async function fetchLists({ navigate }: { navigate: (url: string) => void }): Promise<
-  | {
-      userId: string;
-      completedLists: IList[];
-      currentUserPermissions: TUserPermissions;
-      pendingLists: IList[];
-      incompleteLists: IList[];
-    }
-  | undefined
-> {
+interface IFetchListReturn {
+  userId: string;
+  completedLists: IList[];
+  currentUserPermissions: TUserPermissions;
+  pendingLists: IList[];
+  incompleteLists: IList[];
+}
+
+export async function fetchLists(fetchParams: {
+  navigate: (url: string) => void;
+}): Promise<IFetchListReturn | undefined> {
   try {
-    const {
-      data: {
-        current_user_id: userId,
-        accepted_lists: { completed_lists: dCompletedLists, not_completed_lists: dNotCompletedLists },
-        pending_lists: dPendingLists,
-        current_list_permissions: currentUserPermissions,
-      },
-    } = await axios.get('/lists/');
-    const pendingLists = sortLists(dPendingLists);
-    const completedLists = sortLists(dCompletedLists);
-    const incompleteLists = sortLists(dNotCompletedLists);
+    const { data } = await axios.get('/lists/');
+    const pendingLists = sortLists(data.pending_lists);
+    const completedLists = sortLists(data.accepted_lists.completed_lists);
+    const incompleteLists = sortLists(data.accepted_lists.not_completed_lists);
     return {
-      userId,
+      userId: data.current_user_id,
       pendingLists,
       completedLists,
       incompleteLists,
-      currentUserPermissions,
+      currentUserPermissions: data.current_list_permissions,
     };
   } catch (error) {
-    handleFailure(error, navigate);
+    handleFailure(error, fetchParams.navigate);
   }
 }
 
-export async function fetchCompletedLists({
-  navigate,
-}: {
+export async function fetchCompletedLists(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<{ userId: string; completedLists: IList[]; currentUserPermissions: TUserPermissions } | undefined> {
   try {
-    const {
-      data: {
-        current_user_id: userId,
-        completed_lists: completedLists,
-        current_list_permissions: currentUserPermissions,
-      },
-    } = await axios.get('/completed_lists/');
+    const { data } = await axios.get('/completed_lists/');
     return {
-      userId,
-      completedLists,
-      currentUserPermissions,
+      userId: data.current_user_id,
+      completedLists: data.completed_lists,
+      currentUserPermissions: data.current_list_permissions,
     };
   } catch (error) {
-    handleFailure(error, navigate);
+    handleFailure(error, fetchParams.navigate);
   }
 }
 
-export async function fetchListToEdit({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<
-  | {
-      listId: string;
-      name: string;
-      completed: boolean;
-      type: EListType;
-    }
-  | undefined
-> {
+interface IFetchListToEditReturn {
+  listId: string;
+  name: string;
+  completed: boolean;
+  type: EListType;
+}
+
+export async function fetchListToEdit(fetchParams: {
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFetchListToEditReturn | undefined> {
   try {
-    const {
-      data: { id: listId, name, completed, type: dType },
-    } = await axios.get(`/lists/${id}/edit`);
+    const { data } = await axios.get(`/lists/${fetchParams.id}/edit`);
     return {
-      listId,
-      name,
-      completed,
-      type: dType as EListType,
+      listId: data.id,
+      name: data.name,
+      completed: data.completed,
+      type: data.type as EListType,
     };
   } catch (error: unknown) {
     const err = error as AxiosError;
     if (err.response) {
       if (err.response.status === 401) {
         toast('You must sign in', { type: 'error' });
-        navigate('/users/sign_in');
+        fetchParams.navigate('/users/sign_in');
       } else if ([403, 404].includes(err.response.status)) {
         toast('List not found', { type: 'error' });
-        navigate('/lists');
+        fetchParams.navigate('/lists');
       } else {
         // any other errors will just be caught and render the generic UnknownError
         throw new Error();

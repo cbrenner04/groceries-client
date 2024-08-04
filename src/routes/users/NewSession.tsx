@@ -9,10 +9,10 @@ import axios from 'utils/api';
 import Loading from 'components/Loading';
 import FormSubmission from 'components/FormSubmission';
 
-async function fetchData({ navigate }: { navigate: (url: string) => void }): Promise<void> {
+async function fetchData(fetchParams: { navigate: (url: string) => void }): Promise<void> {
   try {
     await axios.get('/auth/validate_token');
-    navigate('/lists');
+    fetchParams.navigate('/lists');
   } catch {
     // noop. all errors require login
   }
@@ -22,7 +22,7 @@ export interface INewSessionProps {
   signInUser: (accessToken: string, client: string, uid: string) => void;
 }
 
-const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Element => {
+const NewSession: React.FC<INewSessionProps> = (props): React.JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -36,13 +36,8 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Eleme
       remember_me: rememberMe,
     };
     try {
-      const {
-        data: {
-          data: { uid },
-        },
-        headers: { 'access-token': accessToken, client },
-      } = await axios.post('/auth/sign_in', user);
-      signInUser(accessToken, client, uid);
+      const response = await axios.post('/auth/sign_in', user);
+      props.signInUser(response.headers['access-token'], response.headers.client, response.data.data.uid);
       toast(`Welcome ${email}!`, { type: 'info' });
       navigate('/lists');
     } catch {
@@ -51,7 +46,6 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Eleme
   };
 
   return (
-    // TODO: figure out typings for promiseFn
     <Async promiseFn={fetchData as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />
@@ -61,13 +55,13 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Eleme
         <Form onSubmit={handleSubmit}>
           <EmailField
             value={email}
-            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setEmail(value)}
+            handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
           />
           <PasswordField
             name="password"
             label="Password"
             value={password}
-            handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setPassword(value)}
+            handleChange={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
             placeholder="password"
           />
           <CheckboxField
@@ -77,11 +71,7 @@ const NewSession: React.FC<INewSessionProps> = ({ signInUser }): React.JSX.Eleme
             value={rememberMe}
             handleChange={(): void => setRememberMe(!rememberMe)}
           />
-          <FormSubmission
-            submitText="Log In"
-            displayCancelButton={false}
-            cancelAction={/* istanbul ignore next */ (): undefined => undefined}
-          />
+          <FormSubmission submitText="Log In" />
         </Form>
         <Link to="/users/password/new">Forgot your password?</Link>
       </Async.Fulfilled>

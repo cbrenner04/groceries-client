@@ -9,6 +9,17 @@ import { fetchList } from './utils';
 import ListContainer from './containers/ListContainer';
 import UnknownError from '../error_pages/UnknownError';
 
+interface IFulfilledData {
+  currentUserId: string;
+  list: IList;
+  purchasedItems: IListItem[];
+  categories: string[];
+  listUsers: IListUser[];
+  includedCategories: string[];
+  notPurchasedItems: Record<string, IListItem[]>;
+  permissions: string;
+}
+
 const List = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -19,16 +30,7 @@ const List = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: {
-          currentUserId: string;
-          list: IList;
-          purchasedItems: IListItem[];
-          categories: string[];
-          listUsers: IListUser[];
-          includedCategories: string[];
-          notPurchasedItems: Record<string, IListItem[]>;
-          permissions: string;
-        }): React.JSX.Element => (
+        {(data: IFulfilledData): React.JSX.Element => (
           <ListContainer
             userId={data.currentUserId}
             list={data.list}

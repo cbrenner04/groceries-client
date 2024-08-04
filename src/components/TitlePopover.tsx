@@ -6,25 +6,24 @@ interface ITitlePopoverProps {
   title: string;
 }
 
-const TitlePopover: React.FC<ITitlePopoverProps> = ({ message, title }): React.JSX.Element => (
+const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element => (
   <OverlayTrigger
     trigger={['click']}
     placement="top"
     rootClose={true}
     overlay={
       <Popover>
-        <Popover.Body data-test-id="popover-content">{message}</Popover.Body>
+        <Popover.Body data-test-id="popover-content">{props.message}</Popover.Body>
       </Popover>
     }
   >
-    {({ ref, ...triggerHandler }): React.JSX.Element => (
+    {(overlayProps): React.JSX.Element => (
       <Row className="m-0">
-        <h2 className="text-capitalize pe-0 w-auto">{title}</h2>
+        <h2 className="text-capitalize pe-0 w-auto">{props.title}</h2>
         <i
-          ref={ref}
-          {...triggerHandler}
+          ref={overlayProps.ref}
           className="far fa-question-circle float-end text-secondary ps-0 w-auto"
-          data-test-id={`${title}-popover`}
+          data-test-id={`${props.title}-popover`}
         />
       </Row>
     )}

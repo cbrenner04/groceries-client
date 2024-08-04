@@ -8,10 +8,10 @@ export interface INumberFieldProps {
   handleChange: ChangeEventHandler;
 }
 
-const NumberField: React.FC<INumberFieldProps> = ({ name, label, value = '', handleChange }): React.JSX.Element => (
-  <Form.Group controlId={name} className="mb-3">
-    <Form.Label>{label}</Form.Label>
-    <Form.Control type="number" value={value} onChange={handleChange} name={name} />
+const NumberField: React.FC<INumberFieldProps> = (props): React.JSX.Element => (
+  <Form.Group controlId={props.name} className="mb-3">
+    <Form.Label>{props.label}</Form.Label>
+    <Form.Control type="number" value={props.value ?? ''} onChange={props.handleChange} name={props.name} />
   </Form.Group>
 );
 

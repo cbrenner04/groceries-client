@@ -13,7 +13,6 @@ const Lists: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
-    // TODO: figure out typings for promiseFn
     <Async promiseFn={fetchLists as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
         <Loading />

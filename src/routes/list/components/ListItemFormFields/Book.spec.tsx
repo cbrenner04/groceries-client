@@ -44,9 +44,6 @@ describe('Book', () => {
 
   it('renders with defaults', async () => {
     const { container, findByLabelText, findByTestId, queryByLabelText } = setup({
-      author: 'asdf',
-      inputChangeHandler: jest.fn(),
-      title: 'asdf',
       purchased: undefined,
       read: undefined,
       editForm: undefined,

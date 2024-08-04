@@ -28,11 +28,7 @@ const PasswordForm: React.FC<IPasswordFormProps> = (props): React.JSX.Element =>
       handleChange={props.passwordConfirmationChangeHandler}
       placeholder="Confirm new password"
     />
-    <FormSubmission
-      submitText="Set my password"
-      displayCancelButton={false}
-      cancelAction={/* istanbul ignore next */ (): undefined => undefined}
-    />
+    <FormSubmission submitText="Set my password" />
   </Form>
 );
 

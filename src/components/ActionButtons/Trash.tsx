@@ -7,8 +7,14 @@ interface ITrashProps {
   disabled?: boolean;
 }
 
-const Trash: React.FC<ITrashProps> = ({ handleClick, testID, disabled = false }): React.JSX.Element => (
-  <Button variant="link" onClick={handleClick} className="p-0" data-test-id={testID} disabled={disabled}>
+const Trash: React.FC<ITrashProps> = (props): React.JSX.Element => (
+  <Button
+    variant="link"
+    onClick={props.handleClick}
+    className="p-0"
+    data-test-id={props.testID}
+    disabled={props.disabled ?? false}
+  >
     <i className="fa fa-trash fa-2x text-danger" />
   </Button>
 );

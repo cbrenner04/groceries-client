@@ -64,8 +64,8 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     try {
       await Promise.all(deleteRequests.concat(removeRequests));
       let updatedLists = props.completed ? props.completedLists : props.incompleteLists;
-      listsToDelete.forEach(({ id }) => {
-        updatedLists = updatedLists.filter((ll) => ll.id !== id);
+      listsToDelete.forEach((list) => {
+        updatedLists = updatedLists.filter((ll) => ll.id !== list.id);
       });
       updatedLists = sortLists(updatedLists);
       props.completed ? props.setCompletedLists(updatedLists) : props.setIncompleteLists(updatedLists);
@@ -152,9 +152,11 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
       if (!props.completed || !props.fullList) {
         let updatedCurrentUserPermissions = props.currentUserPermissions;
         let updatedIncompleteLists = props.incompleteLists;
-        responses.forEach(({ data }) => {
-          updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, { [data.id]: { $set: 'write' } });
-          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [data] });
+        responses.forEach((response) => {
+          updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, {
+            [response.data.id]: { $set: 'write' },
+          });
+          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [response.data] });
         });
         // must update currentUserPermissions prior to incompleteLists
         props.setCurrentUserPermissions(updatedCurrentUserPermissions);
@@ -250,7 +252,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         clearModal={(): void => setShowMergeModal(false)}
         listNames={listsToMerge.map((l) => l.name).join('", "')}
         mergeName={mergeName}
-        handleMergeNameChange={(({ target: { value } }) => setMergeName(value)) as ChangeEventHandler<HTMLInputElement>}
+        handleMergeNameChange={((event) => setMergeName(event.target.value)) as ChangeEventHandler<HTMLInputElement>}
         handleMergeConfirm={handleMergeConfirm}
       />
     </Lists>

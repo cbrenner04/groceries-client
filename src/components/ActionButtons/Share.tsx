@@ -9,15 +9,16 @@ interface IShareProps {
   classes?: string;
 }
 
-const Share: React.FC<IShareProps> = ({ to, testID, disabled, style = {}, classes = '' }): React.JSX.Element => {
-  const updatedStyles: CSSProperties = disabled ? { ...style, pointerEvents: 'none' } : style;
+const Share: React.FC<IShareProps> = (props): React.JSX.Element => {
+  const providedStyles = props.style ?? {};
+  const updatedStyles: CSSProperties = props.disabled ? { ...providedStyles, pointerEvents: 'none' } : providedStyles;
   return (
     <Link
-      className={`p-0 me-3 ${classes || ''}`}
-      to={to}
-      data-test-id={testID}
+      className={`p-0 me-3 ${props.classes ?? ''}`}
+      to={props.to}
+      data-test-id={props.testID}
       style={updatedStyles}
-      aria-disabled={disabled}
+      aria-disabled={props.disabled}
     >
       <i className="fa fa-users fa-2x text-primary" />
     </Link>

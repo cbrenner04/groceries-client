@@ -10,7 +10,7 @@ interface IAppNavProps {
   signOutUser: Function;
 }
 
-const AppNav: React.FC<IAppNavProps> = ({ signOutUser }): React.JSX.Element => {
+const AppNav: React.FC<IAppNavProps> = (props): React.JSX.Element => {
   const navigate = useNavigate();
   const user = useContext(UserContext);
 
@@ -20,7 +20,7 @@ const AppNav: React.FC<IAppNavProps> = ({ signOutUser }): React.JSX.Element => {
     } catch {
       // noop
     }
-    signOutUser();
+    props.signOutUser();
     toast('Log out successful', { type: 'info' });
     navigate('/users/sign_in');
   };

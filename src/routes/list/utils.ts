@@ -117,7 +117,7 @@ function handleFailure(
   throw new Error();
 }
 
-export async function fetchList({ id, navigate }: { id: string; navigate: (url: string) => void }): Promise<
+export async function fetchList(fetchParams: { id: string; navigate: (url: string) => void }): Promise<
   | {
       currentUserId: string;
       list: IList;
@@ -141,7 +141,7 @@ export async function fetchList({ id, navigate }: { id: string; navigate: (url: 
         permissions,
         list_users: listUsers,
       },
-    } = await axios.get(`/lists/${id}`);
+    } = await axios.get(`/lists/${fetchParams.id}`);
     const includedCategories = mapIncludedCategories(responseNotPurchasedItems);
     const notPurchasedItems = categorizeNotPurchasedItems(responseNotPurchasedItems, includedCategories);
 
@@ -156,15 +156,11 @@ export async function fetchList({ id, navigate }: { id: string; navigate: (url: 
       permissions,
     };
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'List not found', navigate, '/lists');
+    handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
   }
 }
 
-export async function fetchItemToEdit({
-  itemId,
-  listId,
-  navigate,
-}: {
+export async function fetchItemToEdit(fetchParams: {
   itemId: string;
   listId: string;
   navigate: (url: string) => void;
@@ -172,7 +168,7 @@ export async function fetchItemToEdit({
   try {
     const {
       data: { item, list, categories, list_users: listUsers },
-    } = await axios.get(`/lists/${listId}/list_items/${itemId}/edit`);
+    } = await axios.get(`/lists/${fetchParams.listId}/list_items/${fetchParams.itemId}/edit`);
     list.categories = categories;
     const userId = item.user_id;
     return {
@@ -182,15 +178,11 @@ export async function fetchItemToEdit({
       item,
     };
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'Item not found', navigate, `/lists/${listId}`);
+    handleFailure(err as AxiosError, 'Item not found', fetchParams.navigate, `/lists/${fetchParams.listId}`);
   }
 }
 
-export async function fetchItemsToEdit({
-  listId,
-  search,
-  navigate,
-}: {
+export async function fetchItemsToEdit(fetchParams: {
   listId: string;
   search: string;
   navigate: (url: string) => void;
@@ -198,9 +190,14 @@ export async function fetchItemsToEdit({
   { list: IList; lists: IList[]; items: IListItem[]; categories: string[]; list_users: IListUser[] } | undefined
 > {
   try {
-    const { data } = await axios.get(`/lists/${listId}/list_items/bulk_update${search}`);
+    const { data } = await axios.get(`/lists/${fetchParams.listId}/list_items/bulk_update${fetchParams.search}`);
     return data;
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'One or more items not found', navigate, `/lists/${listId}`);
+    handleFailure(
+      err as AxiosError,
+      'One or more items not found',
+      fetchParams.navigate,
+      `/lists/${fetchParams.listId}`,
+    );
   }
 }

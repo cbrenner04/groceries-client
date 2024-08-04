@@ -7,8 +7,14 @@ interface IEditButtonProps {
   disabled?: boolean;
 }
 
-const EditButton: React.FC<IEditButtonProps> = ({ handleClick, testID, disabled = false }): React.JSX.Element => (
-  <Button variant="link" onClick={handleClick} className="p-0 me-3" disabled={disabled} data-test-id={testID}>
+const EditButton: React.FC<IEditButtonProps> = (props): React.JSX.Element => (
+  <Button
+    variant="link"
+    onClick={props.handleClick}
+    className="p-0 me-3"
+    disabled={props.disabled ?? false}
+    data-test-id={props.testID}
+  >
     <i className="fa fa-edit fa-2x text-warning" />
   </Button>
 );

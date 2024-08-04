@@ -34,13 +34,9 @@ const NewPassword: React.FC = (): React.JSX.Element => {
       <Form onSubmit={handleSubmit} autoComplete="off">
         <EmailField
           value={email}
-          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setEmail(value)}
+          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
         />
-        <FormSubmission
-          submitText="Send me reset password instructions"
-          displayCancelButton={false}
-          cancelAction={/* istanbul ignore next */ (): undefined => undefined}
-        />
+        <FormSubmission submitText="Send me reset password instructions" />
       </Form>
       <Link to="/users/sign_in">Log in</Link>
     </React.Fragment>

@@ -15,42 +15,31 @@ export interface INotPurchasedItemButtonsProps {
   multiSelect?: boolean;
 }
 
-const NotPurchasedItemButtons: React.FC<INotPurchasedItemButtonsProps> = ({
-  listType,
-  item,
-  handlePurchaseOfItem,
-  handleItemDelete,
-  handleItemEdit,
-  toggleItemRead,
-  pending,
-  multiSelect = false,
-}): React.JSX.Element => {
-  return (
-    <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
-      {listType === 'BookList' && (
-        <Bookmark
-          handleClick={(): void => toggleItemRead(item)}
-          read={item.read ?? false}
-          testID={`not-purchased-item-${item.read ? 'unread' : 'read'}-${item.id}`}
-        />
-      )}
-      <Complete
-        handleClick={(): void => handlePurchaseOfItem(item)}
-        testID={`not-purchased-item-complete-${item.id}`}
-        disabled={pending}
+const NotPurchasedItemButtons: React.FC<INotPurchasedItemButtonsProps> = (props): React.JSX.Element => (
+  <ButtonGroup className={`${props.multiSelect ? 'list-item-buttons' : ''} float-end`}>
+    {props.listType === 'BookList' && (
+      <Bookmark
+        handleClick={(): void => props.toggleItemRead(props.item)}
+        read={props.item.read ?? false}
+        testID={`not-purchased-item-${props.item.read ? 'unread' : 'read'}-${props.item.id}`}
       />
-      <EditButton
-        handleClick={(): void => handleItemEdit(item)}
-        testID={`not-purchased-item-edit-${item.id}`}
-        disabled={pending}
-      />
-      <Trash
-        handleClick={(): void => handleItemDelete(item)}
-        testID={`not-purchased-item-delete-${item.id}`}
-        disabled={pending}
-      />
-    </ButtonGroup>
-  );
-};
+    )}
+    <Complete
+      handleClick={(): void => props.handlePurchaseOfItem(props.item)}
+      testID={`not-purchased-item-complete-${props.item.id}`}
+      disabled={props.pending}
+    />
+    <EditButton
+      handleClick={(): void => props.handleItemEdit(props.item)}
+      testID={`not-purchased-item-edit-${props.item.id}`}
+      disabled={props.pending}
+    />
+    <Trash
+      handleClick={(): void => props.handleItemDelete(props.item)}
+      testID={`not-purchased-item-delete-${props.item.id}`}
+      disabled={props.pending}
+    />
+  </ButtonGroup>
+);
 
 export default NotPurchasedItemButtons;

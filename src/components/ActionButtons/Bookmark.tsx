@@ -7,9 +7,9 @@ export interface IBookmarkProps {
   testID: string;
 }
 
-const Bookmark: React.FC<IBookmarkProps> = ({ handleClick, read, testID }): React.JSX.Element => (
-  <Button variant="link" onClick={handleClick} className="p-0 me-3" data-test-id={testID}>
-    <i className={`${read ? 'fas' : 'far'} fa-bookmark fa-2x text-secondary`} />
+const Bookmark: React.FC<IBookmarkProps> = (props): React.JSX.Element => (
+  <Button variant="link" onClick={props.handleClick} className="p-0 me-3" data-test-id={props.testID}>
+    <i className={`${props.read ? 'fas' : 'far'} fa-bookmark fa-2x text-secondary`} />
   </Button>
 );
 

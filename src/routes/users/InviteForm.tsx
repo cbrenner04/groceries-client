@@ -45,14 +45,9 @@ const InviteForm: React.FC = (): React.JSX.Element => {
       <Form onSubmit={handleSubmit} className="mt-3">
         <EmailField
           value={email}
-          handleChange={({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setEmail(value)}
+          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
         />
-        <FormSubmission
-          submitText="Invite User"
-          cancelAction={(): void => navigate('/lists')}
-          cancelText="Cancel"
-          displayCancelButton={true}
-        />
+        <FormSubmission submitText="Invite User" cancelAction={(): void => navigate('/lists')} cancelText="Cancel" />
       </Form>
     </React.Fragment>
   );

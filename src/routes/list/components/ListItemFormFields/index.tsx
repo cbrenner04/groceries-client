@@ -17,74 +17,67 @@ export interface IListItemFormFieldsProps {
   editForm?: boolean;
 }
 
-const ListItemFormFields: React.FC<IListItemFormFieldsProps> = ({
-  categories,
-  listType,
-  listUsers,
-  formData,
-  setFormData,
-  editForm,
-}): React.JSX.Element =>
+const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element =>
   ({
     BookList: (
       <Book
-        author={formData.author ?? ''}
-        title={formData.title ?? ''}
-        numberInSeries={formData.number_in_series ?? 0}
-        category={formData.category ?? ''}
-        categories={categories ?? []}
-        inputChangeHandler={setFormData}
-        read={formData.read ?? false}
-        purchased={formData.purchased ?? false}
-        editForm={editForm ?? false}
+        author={props.formData.author ?? ''}
+        title={props.formData.title ?? ''}
+        numberInSeries={props.formData.number_in_series ?? 0}
+        category={props.formData.category ?? ''}
+        categories={props.categories ?? []}
+        inputChangeHandler={props.setFormData}
+        read={props.formData.read ?? false}
+        purchased={props.formData.purchased ?? false}
+        editForm={props.editForm ?? false}
       />
     ),
     GroceryList: (
       <Grocery
-        quantity={formData.quantity ?? ''}
-        product={formData.product ?? ''}
-        category={formData.category ?? ''}
-        categories={categories ?? []}
-        inputChangeHandler={setFormData}
-        purchased={formData.purchased ?? false}
-        editForm={editForm ?? false}
+        quantity={props.formData.quantity ?? ''}
+        product={props.formData.product ?? ''}
+        category={props.formData.category ?? ''}
+        categories={props.categories ?? []}
+        inputChangeHandler={props.setFormData}
+        purchased={props.formData.purchased ?? false}
+        editForm={props.editForm ?? false}
       />
     ),
     MusicList: (
       <Music
-        title={formData.title ?? ''}
-        artist={formData.artist ?? ''}
-        album={formData.album ?? ''}
-        category={formData.category ?? ''}
-        categories={categories ?? []}
-        inputChangeHandler={setFormData}
-        purchased={formData.purchased ?? false}
-        editForm={editForm ?? false}
+        title={props.formData.title ?? ''}
+        artist={props.formData.artist ?? ''}
+        album={props.formData.album ?? ''}
+        category={props.formData.category ?? ''}
+        categories={props.categories ?? []}
+        inputChangeHandler={props.setFormData}
+        purchased={props.formData.purchased ?? false}
+        editForm={props.editForm ?? false}
       />
     ),
     SimpleList: (
       <Simple
-        content={formData.content ?? ''}
-        category={formData.category ?? ''}
-        categories={categories ?? []}
-        inputChangeHandler={setFormData}
-        completed={formData.completed ?? false}
-        editForm={editForm ?? false}
+        content={props.formData.content ?? ''}
+        category={props.formData.category ?? ''}
+        categories={props.categories ?? []}
+        inputChangeHandler={props.setFormData}
+        completed={props.formData.completed ?? false}
+        editForm={props.editForm ?? false}
       />
     ),
     ToDoList: (
       <ToDo
-        task={formData.task ?? ''}
-        assigneeId={formData.assignee_id ?? ''}
-        listUsers={listUsers ?? []}
-        dueBy={formData.due_by ?? ''}
-        category={formData.category ?? ''}
-        categories={categories ?? []}
-        inputChangeHandler={setFormData}
-        completed={formData.completed ?? false}
-        editForm={editForm ?? false}
+        task={props.formData.task ?? ''}
+        assigneeId={props.formData.assignee_id ?? ''}
+        listUsers={props.listUsers ?? []}
+        dueBy={props.formData.due_by ?? ''}
+        category={props.formData.category ?? ''}
+        categories={props.categories ?? []}
+        inputChangeHandler={props.setFormData}
+        completed={props.formData.completed ?? false}
+        editForm={props.editForm ?? false}
       />
     ),
-  })[listType]!;
+  })[props.listType]!;
 
 export default ListItemFormFields;

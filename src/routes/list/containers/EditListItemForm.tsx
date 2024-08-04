@@ -21,7 +21,8 @@ export interface IEditListItemFormProps {
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
   const [item, setItem] = useState(props.item);
-  const setData: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value } }): void => {
+  const setData: ChangeEventHandler<HTMLInputElement> = (element): void => {
+    const { name, value } = element.target;
     let newValue: string | number = value;
     /* istanbul ignore else */
     if (name === 'number_in_series') {
@@ -103,7 +104,6 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           submitText="Update Item"
           cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
-          displayCancelButton={true}
         />
       </Form>
     </React.Fragment>

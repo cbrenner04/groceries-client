@@ -25,11 +25,9 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const setData: ChangeEventHandler<HTMLInputElement> = ({ target: { name, value } }) => {
-    let newValue: string | number = value;
-    if (name === 'number_in_series') {
-      newValue = Number(value);
-    }
+  const setData: ChangeEventHandler<HTMLInputElement> = (element) => {
+    const { name, value } = element.target;
+    const newValue = name === 'number_in_series' ? Number(value) : value;
     const data = update(formData, { [name]: { $set: newValue } });
     setFormData(data);
   };
@@ -57,7 +55,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     try {
       const { data } = await axios.post(`/lists/${props.listId}/list_items`, postData);
       props.handleItemAddition(data);
-      // setFormData(defaultFormState);
       setPending(false);
       toast('Item successfully added.', { type: 'info' });
     } catch (err: unknown) {
@@ -116,7 +113,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
             submitText="Add New Item"
             cancelAction={(): void => setShowForm(false)}
             cancelText="Collapse Form"
-            displayCancelButton={true}
           />
         </Form>
       </Collapse>
