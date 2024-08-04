@@ -34,7 +34,7 @@
     "react-router-dom": "6.25.1",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
-    "sass-loader": "14.2.1",
+    "sass-loader": "16.0.0",
     "ts-jest": "^29.2.3",
     "typescript-eslint": "^7.16.1"
   },
