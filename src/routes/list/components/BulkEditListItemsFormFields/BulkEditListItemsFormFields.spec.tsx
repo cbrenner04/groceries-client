@@ -163,7 +163,7 @@ describe('BulkEditListItemsFormFields', () => {
 
     await user.click((await findAllByRole('checkbox'))[1]);
 
-    expect(props.clearAttribute).toHaveBeenCalledWith('dueBy', 'clearDueBy');
+    expect(props.clearAttribute).toHaveBeenCalledWith('due_by', 'clearDueBy');
 
     await user.click((await findAllByRole('checkbox'))[2]);
 

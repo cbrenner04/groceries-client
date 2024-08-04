@@ -52,7 +52,7 @@ exports[`Book renders base form when props.editForm is false 1`] = `
       id="number_in_series"
       name="number_in_series"
       type="number"
-      value="1"
+      value="0"
     />
   </div>
   <div
@@ -136,7 +136,7 @@ exports[`Book renders edit form when props.editForm is true 1`] = `
       id="number_in_series"
       name="number_in_series"
       type="number"
-      value="1"
+      value="0"
     />
   </div>
   <div
