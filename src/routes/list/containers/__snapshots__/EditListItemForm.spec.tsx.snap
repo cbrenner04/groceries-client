@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditListItemForm renders 1`] = `
+<div>
+  <h1>
+    Edit 
+    foo foo
+  </h1>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value="foo"
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value="foo"
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+      </datalist>
+    </div>
+    <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="purchased"
+          name="purchased"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="purchased"
+          title=""
+        >
+          Purchased
+        </label>
+      </div>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Update Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+`;

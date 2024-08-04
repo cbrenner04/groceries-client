@@ -1,0 +1,696 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BulkEditListItemsFormFields does not render list item attribute fields when all items are completed 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+</div>
+`;
+
+exports[`BulkEditListItemsFormFields render Book fields when listType is BookList and fires appropriate change handlers 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+  <div>
+    Update attributes for all items.
+  </div>
+  <br />
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="author"
+    >
+      Author
+    </label>
+    <input
+      class="form-control"
+      id="author"
+      name="author"
+      placeholder="Kurt Vonnagut"
+      type="text"
+      value=""
+    />
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearAuthor"
+          name="clearAuthor"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearAuthor"
+          title=""
+        >
+          Clear author
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    >
+      <option
+        value="foo"
+      />
+    </datalist>
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearCategory"
+          name="clearCategory"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearCategory"
+          title=""
+        >
+          Clear category
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BulkEditListItemsFormFields render Grocery fields when listType is GroceryList and fires appropriate change handlers 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+  <div>
+    Update attributes for all items.
+  </div>
+  <br />
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="quantity"
+    >
+      Quantity
+    </label>
+    <input
+      class="form-control"
+      id="quantity"
+      name="quantity"
+      placeholder="3 bags"
+      type="text"
+      value=""
+    />
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearQuantity"
+          name="clearQuantity"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearQuantity"
+          title=""
+        >
+          Clear quantity
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    >
+      <option
+        value="foo"
+      />
+    </datalist>
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearCategory"
+          name="clearCategory"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearCategory"
+          title=""
+        >
+          Clear category
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BulkEditListItemsFormFields render Music fields when listType is MusicList and fires appropriate change handlers 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+  <div>
+    Update attributes for all items.
+  </div>
+  <br />
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="artist"
+    >
+      Artist
+    </label>
+    <input
+      class="form-control"
+      id="artist"
+      name="artist"
+      placeholder="Sir Mix-a-Lot"
+      type="text"
+      value=""
+    />
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearArtist"
+          name="clearArtist"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearArtist"
+          title=""
+        >
+          Clear artist
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="album"
+    >
+      Album
+    </label>
+    <input
+      class="form-control"
+      id="album"
+      name="album"
+      placeholder="Mack Daddy"
+      type="text"
+      value=""
+    />
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearAlbum"
+          name="clearAlbum"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearAlbum"
+          title=""
+        >
+          Clear album
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    >
+      <option
+        value="foo"
+      />
+    </datalist>
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearCategory"
+          name="clearCategory"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearCategory"
+          title=""
+        >
+          Clear category
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoList and fires appropriate change handlers 1`] = `
+<div>
+  <div>
+    Move or copy these items to another list.
+  </div>
+  <br />
+  <div
+    class="form-check-inline mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-copy"
+        name="copy"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-copy"
+        title=""
+      >
+        Copy
+      </label>
+    </div>
+    <div
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        id="move-action-move"
+        name="move"
+        type="radio"
+        value="false"
+      />
+      <label
+        class="form-check-label"
+        for="move-action-move"
+        title=""
+      >
+        Move
+      </label>
+    </div>
+  </div>
+  <hr />
+  <div>
+    Update attributes for all items.
+  </div>
+  <br />
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="assigneeId"
+    >
+      Assignee
+    </label>
+    <select
+      class="form-control"
+      id="assigneeId"
+      name="assigneeId"
+    >
+      <option
+        disabled=""
+        value=""
+      >
+        Select Assignee
+      </option>
+      <option
+        value="id1"
+      />
+    </select>
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearAssignee"
+          name="clearAssignee"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearAssignee"
+          title=""
+        >
+          Clear assignee
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="due_by"
+    >
+      Due By
+    </label>
+    <input
+      class="form-control"
+      id="due_by"
+      name="due_by"
+      placeholder="mm/dd/yyyy"
+      type="date"
+      value=""
+    />
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearDueBy"
+          name="clearDueBy"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearDueBy"
+          title=""
+        >
+          Clear due by
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    >
+      <option
+        value="foo"
+      />
+    </datalist>
+    <div
+      class="ms-1 mt-1 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="clearCategory"
+          name="clearCategory"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="clearCategory"
+          title=""
+        >
+          Clear category
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

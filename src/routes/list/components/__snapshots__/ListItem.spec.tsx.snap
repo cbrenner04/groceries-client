@@ -1,0 +1,821 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItem displays due by when listType is ToDoList and dueBy exists 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem does not display due by when listType is ToDoList and dueBy does not exist 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            />
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem does not render ListItemButtons when the user has read permission 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo foo
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem does not show assignee when listType is ToDoList and the item is not assigned 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem does not show assignee when listType is ToDoList, item is assigned & assignee is not in listUsers 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem does not show assignee when listType is ToDoList, item is assigned & listUsers is undefined 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            />
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem listType is ToDoList, item is assigned, assignee is in the listUsers, multiselect is true 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="list-item-row row"
+    >
+      <div
+        class="col-1"
+      >
+        <input
+          class="multi-select-check"
+          type="checkbox"
+        />
+        <div
+          class="list-item-multi-divider"
+        />
+      </div>
+      <div
+        class="col-sm-11 col-10"
+      >
+        <div
+          class="ms-3 ms-sm-2 pt-1"
+        >
+          foo
+        </div>
+        <div
+          class="ms-3 ms-sm-2 pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            >
+              Assigned To: foo@example.com
+            </div>
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class="list-item-buttons float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem renders ListItemButtons when the user has write permission 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem sets selected items when multi select checkbox is selected 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="list-item-row row"
+    >
+      <div
+        class="col-1"
+      >
+        <input
+          class="multi-select-check"
+          type="checkbox"
+        />
+        <div
+          class="list-item-multi-divider"
+        />
+      </div>
+      <div
+        class="col-sm-11 col-10"
+      >
+        <div
+          class="ms-3 ms-sm-2 pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class="list-item-buttons float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem sets the data-test-class to not-purchased-item when item is not purchased 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem sets the data-test-class to not-purchased-item when item purchased undefined 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem sets the data-test-class to purchased-item when item is purchased 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo foo
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="purchased-item-refresh-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-redo fa-2x text-primary"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="purchased-item-edit-id1"
+            disabled=""
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ListItem shows assignee when listType is ToDoList, the item is assigned, the assignee is in the listUsers 1`] = `
+<div>
+  <div
+    class="list-item-list-group-item list-group-item"
+    data-test-class="non-purchased-item"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-sm-12 col-12"
+      >
+        <div
+          class=" pt-1"
+        >
+          foo
+        </div>
+        <div
+          class=" pt-1"
+        >
+          <small
+            class="text-muted"
+          >
+            <div
+              data-test-id="assignee-email"
+            >
+              Assigned To: foo@example.com
+            </div>
+            <div
+              data-test-id="due-by"
+            >
+              Due By: May 21, 2020
+            </div>
+          </small>
+        </div>
+        <div
+          class=" float-end btn-group"
+          role="group"
+        >
+          <button
+            class="p-0 me-3  btn btn-link"
+            data-test-id="not-purchased-item-complete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-check fa-2x text-success"
+            />
+          </button>
+          <button
+            class="p-0 me-3 btn btn-link"
+            data-test-id="not-purchased-item-edit-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-edit fa-2x text-warning"
+            />
+          </button>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="not-purchased-item-delete-id1"
+            type="button"
+          >
+            <i
+              class="fa fa-trash fa-2x text-danger"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

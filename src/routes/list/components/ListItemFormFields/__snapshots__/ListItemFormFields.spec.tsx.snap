@@ -1,0 +1,709 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItemFormFields render Book fields when listType is BookList and calls setFormData when input is changed 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="author"
+    >
+      Author
+    </label>
+    <input
+      class="form-control"
+      id="author"
+      name="author"
+      placeholder="Kurt Vonnagut"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="title"
+    >
+      Title
+    </label>
+    <input
+      class="form-control"
+      id="title"
+      name="title"
+      placeholder="Slaughterhouse-Five"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="number_in_series"
+    >
+      Number in series
+    </label>
+    <input
+      class="form-control"
+      id="number_in_series"
+      name="number_in_series"
+      type="number"
+      value="0"
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields render Grocery fields when listType is GroceryList and calls setFormData when input is changed 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="product"
+    >
+      Product
+    </label>
+    <input
+      class="form-control"
+      id="product"
+      name="product"
+      placeholder="apples"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="quantity"
+    >
+      Quantity
+    </label>
+    <input
+      class="form-control"
+      id="quantity"
+      name="quantity"
+      placeholder="3 bags"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields render Music fields when listType is MusicList and calls setFormData when input is changed 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="title"
+    >
+      Title
+    </label>
+    <input
+      class="form-control"
+      id="title"
+      name="title"
+      placeholder="Baby Got Back"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="artist"
+    >
+      Artist
+    </label>
+    <input
+      class="form-control"
+      id="artist"
+      name="artist"
+      placeholder="Sir Mix-a-Lot"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="album"
+    >
+      Album
+    </label>
+    <input
+      class="form-control"
+      id="album"
+      name="album"
+      placeholder="Mack Daddy"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields render Simple fields when listType is SimpleList and calls setFormData when input is changed 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="content"
+    >
+      Content
+    </label>
+    <input
+      class="form-control"
+      id="content"
+      name="content"
+      placeholder="Something cool"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields render ToDo fields when listType is ToDoList and calls setFormData when input is changed 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="task"
+    >
+      Task
+    </label>
+    <input
+      class="form-control"
+      id="task"
+      name="task"
+      placeholder="Clean the toilets"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="assigneeId"
+    >
+      Assignee
+    </label>
+    <select
+      class="form-control"
+      id="assigneeId"
+      name="assigneeId"
+    >
+      <option
+        disabled=""
+        value=""
+      >
+        Select Assignee
+      </option>
+    </select>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="due_by"
+    >
+      Due By
+    </label>
+    <input
+      class="form-control"
+      id="due_by"
+      name="due_by"
+      placeholder="mm/dd/yyyy"
+      type="date"
+      value="2020-05-21"
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields renders default Book fields when listType is BookList 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="author"
+    >
+      Author
+    </label>
+    <input
+      class="form-control"
+      id="author"
+      name="author"
+      placeholder="Kurt Vonnagut"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="title"
+    >
+      Title
+    </label>
+    <input
+      class="form-control"
+      id="title"
+      name="title"
+      placeholder="Slaughterhouse-Five"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="number_in_series"
+    >
+      Number in series
+    </label>
+    <input
+      class="form-control"
+      id="number_in_series"
+      name="number_in_series"
+      type="number"
+      value="0"
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields renders default Grocery fields when listType is GroceryList 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="product"
+    >
+      Product
+    </label>
+    <input
+      class="form-control"
+      id="product"
+      name="product"
+      placeholder="apples"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="quantity"
+    >
+      Quantity
+    </label>
+    <input
+      class="form-control"
+      id="quantity"
+      name="quantity"
+      placeholder="3 bags"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields renders default Music fields when listType is MusicList 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="title"
+    >
+      Title
+    </label>
+    <input
+      class="form-control"
+      id="title"
+      name="title"
+      placeholder="Baby Got Back"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="artist"
+    >
+      Artist
+    </label>
+    <input
+      class="form-control"
+      id="artist"
+      name="artist"
+      placeholder="Sir Mix-a-Lot"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="album"
+    >
+      Album
+    </label>
+    <input
+      class="form-control"
+      id="album"
+      name="album"
+      placeholder="Mack Daddy"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields renders default Simple fields when listType is SimpleList 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="content"
+    >
+      Content
+    </label>
+    <input
+      class="form-control"
+      id="content"
+      name="content"
+      placeholder="Something cool"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;
+
+exports[`ListItemFormFields renders default ToDo fields when listType is ToDoList 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="task"
+    >
+      Task
+    </label>
+    <input
+      class="form-control"
+      id="task"
+      name="task"
+      placeholder="Clean the toilets"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="assigneeId"
+    >
+      Assignee
+    </label>
+    <select
+      class="form-control"
+      id="assigneeId"
+      name="assigneeId"
+    >
+      <option
+        disabled=""
+        value=""
+      >
+        Select Assignee
+      </option>
+    </select>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="due_by"
+    >
+      Due By
+    </label>
+    <input
+      class="form-control"
+      id="due_by"
+      name="due_by"
+      placeholder="mm/dd/yyyy"
+      type="date"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="form-control"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+    <datalist
+      data-test-id="categories"
+      id="categories"
+    />
+  </div>
+</div>
+`;

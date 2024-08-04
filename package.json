@@ -10,11 +10,13 @@
     "@testing-library/jest-dom": "6.4.6",
     "@testing-library/react": "16.0.0",
     "@testing-library/user-event": "14.5.2",
+    "@types/jest": "^29.5.12",
     "autoprefixer": "10.4.19",
     "axios": "^1.6.5",
     "bootstrap": "5.3.3",
     "env-cmd": "10.1.0",
     "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-destructuring": "^2.2.1",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.35.0",
     "immutability-helper": "3.1.1",
@@ -32,7 +34,9 @@
     "react-router-dom": "6.25.1",
     "react-scripts": "5.0.1",
     "react-toastify": "10.0.5",
-    "sass-loader": "14.2.1"
+    "sass-loader": "14.2.1",
+    "ts-jest": "^29.2.3",
+    "typescript-eslint": "^7.16.1"
   },
   "scripts": {
     "start": "REACT_APP_VERSION=$(git rev-parse --short HEAD) react-scripts start",
@@ -40,21 +44,32 @@
     "deploy:production": "sh scripts/deploy-prod.sh",
     "build:staging": "rm -rf build && REACT_APP_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging react-scripts build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
-    "lint": "eslint --ext .js,.jsx src/",
+    "lint": "eslint --ext .ts,.tsx src/",
     "test": "react-scripts test",
     "test:ci": "npm run lint && CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
-    "format": "prettier --write 'src/**/*.{js,jsx,json,css,md}'"
+    "format": "prettier --write 'src/**/*.{ts,tsx,json,css,md}'"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "eslint:recommended",
+      "plugin:@typescript-eslint/strict",
       "plugin:react/recommended",
-      "plugin:prettier/recommended"
+      "plugin:destructuring/recommended",
+      "prettier"
     ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "destructuring"
+    ],
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json"
+      ]
+    },
     "rules": {
-      "prettier/prettier": "error",
       "no-console": "error",
       "max-len": [
         "error",
@@ -66,23 +81,72 @@
       "curly": [
         "error",
         "all"
-      ]
+      ],
+      "no-unused-vars": "off",
+      "destructuring/in-params": [
+        "error",
+        {
+          "max-params":0
+        }
+      ],
+      "destructuring/no-rename": "off",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/consistent-type-definitions": [
+        "error",
+        "interface"
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-inferrable-types": "error",
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "variableLike",
+          "format": [
+            "camelCase",
+            "UPPER_CASE",
+            "PascalCase"
+          ]
+        }
+      ],
+      "@typescript-eslint/member-delimiter-style": [
+        "error",
+        {
+          "multiline": {
+            "delimiter": "semi",
+            "requireLast": true
+          },
+          "singleline": {
+            "delimiter": "semi",
+            "requireLast": false
+          }
+        }
+      ],
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/prefer-optional-chain": "error",
+      "@typescript-eslint/semi": [
+        "error",
+        "always"
+      ],
+      "@typescript-eslint/type-annotation-spacing": "error",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-empty-function": "error",
+      "@typescript-eslint/explicit-module-boundary-types": "error"
     }
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
+      "src/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/",
-      "!<rootDir>/src/serviceWorker.js",
-      "!<rootDir>/src/AppRouter.jsx",
-      "!<rootDir>/src/index.js"
+      "!<rootDir>/src/AppRouter.tsx",
+      "!<rootDir>/src/index.tsx"
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 95.82,
-        "functions": 98.25,
-        "lines": 98.92,
-        "statements": 98.96
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
       }
     },
     "resetMocks": true,

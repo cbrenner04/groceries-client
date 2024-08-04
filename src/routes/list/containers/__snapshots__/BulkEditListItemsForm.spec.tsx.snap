@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BulkEditListItemsForm renders 1`] = `
+<div>
+  <h1>
+    Edit 
+    foo, foo
+  </h1>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+  >
+    <div>
+      Move or copy these items to another list.
+    </div>
+    <br />
+    <div
+      class="form-check-inline mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="move-action-copy"
+          name="copy"
+          type="radio"
+          value="false"
+        />
+        <label
+          class="form-check-label"
+          for="move-action-copy"
+          title=""
+        >
+          Copy
+        </label>
+      </div>
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="move-action-move"
+          name="move"
+          type="radio"
+          value="false"
+        />
+        <label
+          class="form-check-label"
+          for="move-action-move"
+          title=""
+        >
+          Move
+        </label>
+      </div>
+    </div>
+    <hr />
+    <div>
+      Update attributes for all items.
+    </div>
+    <br />
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value="foo"
+      />
+      <div
+        class="ms-1 mt-1 mb-3"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clearQuantity"
+            name="clearQuantity"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clearQuantity"
+            title=""
+          >
+            Clear quantity
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+      </datalist>
+      <div
+        class="ms-1 mt-1 mb-3"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clearCategory"
+            name="clearCategory"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clearCategory"
+            title=""
+          >
+            Clear category
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Update Items
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+`;

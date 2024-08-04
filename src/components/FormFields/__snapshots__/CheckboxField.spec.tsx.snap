@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxField renders input 1`] = `
+<div
+  class="form-check"
+>
+  <input
+    checked=""
+    class="form-check-input"
+    id="testName"
+    name="testName"
+    type="checkbox"
+  />
+  <label
+    class="form-check-label"
+    for="testName"
+    title=""
+  >
+    testLabel
+  </label>
+</div>
+`;
+
+exports[`CheckboxField renders with defaults 1`] = `
+<div
+  class="form-check"
+>
+  <input
+    class="form-check-input"
+    id="testName"
+    name="testName"
+    type="checkbox"
+  />
+  <label
+    class="form-check-label"
+    for="testName"
+    title=""
+  >
+    testLabel
+  </label>
+</div>
+`;

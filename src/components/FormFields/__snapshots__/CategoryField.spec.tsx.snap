@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CategoryField renders input with datalist 1`] = `
+<div
+  class="mb-3"
+>
+  <label
+    class="form-label"
+    for="category"
+  >
+    Category
+  </label>
+  <input
+    class="form-control"
+    id="category"
+    list="categories"
+    name="category"
+    type="text"
+    value="testCategory"
+  />
+  <datalist
+    data-test-id="categories"
+    id="categories"
+  >
+    <option
+      value="testCategory1"
+    />
+  </datalist>
+</div>
+`;
+
+exports[`CategoryField renders when no category or categories given 1`] = `
+<div
+  class="mb-3"
+>
+  <label
+    class="form-label"
+    for="category"
+  >
+    Category
+  </label>
+  <input
+    class="form-control"
+    id="category"
+    list="categories"
+    name="category"
+    type="text"
+    value=""
+  />
+  <datalist
+    data-test-id="categories"
+    id="categories"
+  />
+</div>
+`;
