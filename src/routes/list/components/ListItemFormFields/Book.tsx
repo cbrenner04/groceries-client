@@ -15,7 +15,7 @@ export interface IBookFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 
-const BookFormFields: React.FC<IBookFormFieldsProps> = (props) => (
+const BookFormFields: React.FC<IBookFormFieldsProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="author"

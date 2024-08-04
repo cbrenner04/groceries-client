@@ -11,7 +11,7 @@ export interface ISimpleFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 
-const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props) => (
+const SimpleFormFields: React.FC<ISimpleFormFieldsProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="content"

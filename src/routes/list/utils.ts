@@ -117,43 +117,35 @@ function handleFailure(
   throw new Error();
 }
 
-export async function fetchList(fetchParams: { id: string; navigate: (url: string) => void }): Promise<
-  | {
-      currentUserId: string;
-      list: IList;
-      purchasedItems: IListItem[];
-      categories: string[];
-      listUsers: IListUser[];
-      includedCategories: string[];
-      notPurchasedItems: Record<string, IListItem[]>;
-      permissions: string;
-    }
-  | undefined
-> {
+interface IFetchListReturn {
+  currentUserId: string;
+  list: IList;
+  purchasedItems: IListItem[];
+  categories: string[];
+  listUsers: IListUser[];
+  includedCategories: string[];
+  notPurchasedItems: Record<string, IListItem[]>;
+  permissions: string;
+}
+
+export async function fetchList(fetchParams: {
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFetchListReturn | undefined> {
   try {
-    const {
-      data: {
-        current_user_id: currentUserId,
-        not_purchased_items: responseNotPurchasedItems,
-        purchased_items: purchasedItems,
-        list,
-        categories,
-        permissions,
-        list_users: listUsers,
-      },
-    } = await axios.get(`/lists/${fetchParams.id}`);
-    const includedCategories = mapIncludedCategories(responseNotPurchasedItems);
-    const notPurchasedItems = categorizeNotPurchasedItems(responseNotPurchasedItems, includedCategories);
+    const { data } = await axios.get(`/lists/${fetchParams.id}`);
+    const includedCategories = mapIncludedCategories(data.not_purchased_items);
+    const notPurchasedItems = categorizeNotPurchasedItems(data.not_purchased_items, includedCategories);
 
     return {
-      currentUserId,
-      list,
-      purchasedItems,
-      categories,
-      listUsers,
+      currentUserId: data.current_user_id,
+      list: data.list,
+      purchasedItems: data.purchased_items,
+      categories: data.categories,
+      listUsers: data.list_users,
       includedCategories,
       notPurchasedItems,
-      permissions,
+      permissions: data.permissions,
     };
   } catch (err: unknown) {
     handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
@@ -166,29 +158,33 @@ export async function fetchItemToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem } | undefined> {
   try {
-    const {
-      data: { item, list, categories, list_users: listUsers },
-    } = await axios.get(`/lists/${fetchParams.listId}/list_items/${fetchParams.itemId}/edit`);
-    list.categories = categories;
-    const userId = item.user_id;
+    const { data } = await axios.get(`/lists/${fetchParams.listId}/list_items/${fetchParams.itemId}/edit`);
+    data.list.categories = data.categories;
+    const userId = data.item.user_id;
     return {
-      listUsers: listUsers,
+      listUsers: data.list_users,
       userId,
-      list,
-      item,
+      list: data.list,
+      item: data.item,
     };
   } catch (err: unknown) {
     handleFailure(err as AxiosError, 'Item not found', fetchParams.navigate, `/lists/${fetchParams.listId}`);
   }
 }
 
+interface IFetchItemsToEditReturn {
+  list: IList;
+  lists: IList[];
+  items: IListItem[];
+  categories: string[];
+  list_users: IListUser[];
+}
+
 export async function fetchItemsToEdit(fetchParams: {
   listId: string;
   search: string;
   navigate: (url: string) => void;
-}): Promise<
-  { list: IList; lists: IList[]; items: IListItem[]; categories: string[]; list_users: IListUser[] } | undefined
-> {
+}): Promise<IFetchItemsToEditReturn | undefined> {
   try {
     const { data } = await axios.get(`/lists/${fetchParams.listId}/list_items/bulk_update${fetchParams.search}`);
     return data;

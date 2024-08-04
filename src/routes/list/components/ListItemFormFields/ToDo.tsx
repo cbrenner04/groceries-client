@@ -15,7 +15,7 @@ export interface IToDoFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 
-const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props) => (
+const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="task"

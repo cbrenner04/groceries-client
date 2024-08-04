@@ -11,7 +11,7 @@ export interface IGroceryFormFieldsProps {
   categories: string[];
   inputChangeHandler: ChangeEventHandler;
 }
-const GroceryFormFields: React.FC<IGroceryFormFieldsProps> = (props) => (
+const GroceryFormFields: React.FC<IGroceryFormFieldsProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="product"

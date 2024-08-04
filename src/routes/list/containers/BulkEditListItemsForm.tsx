@@ -12,6 +12,7 @@ import { EListType, type IList, type IListItem, type IListUser } from 'typings';
 import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
 
+// TODO: this is ridiculous
 export interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
   items: IListItem[];

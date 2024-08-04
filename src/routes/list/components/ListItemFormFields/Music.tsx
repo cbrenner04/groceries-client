@@ -13,7 +13,7 @@ export interface IMusicFormFieldsProps {
   inputChangeHandler: ChangeEventHandler;
 }
 
-const MusicFormFields: React.FC<IMusicFormFieldsProps> = (props) => (
+const MusicFormFields: React.FC<IMusicFormFieldsProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <TextField
       name="title"
