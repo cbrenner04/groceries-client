@@ -17,11 +17,12 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
       </Popover>
     }
   >
-    {(overlayProps): React.JSX.Element => (
+    {({ ref, ...triggerHandler }): React.JSX.Element => ( // eslint-disable-line destructuring/in-params
       <Row className="m-0">
         <h2 className="text-capitalize pe-0 w-auto">{props.title}</h2>
         <i
-          ref={overlayProps.ref}
+          ref={ref}
+          {...triggerHandler}
           className="far fa-question-circle float-end text-secondary ps-0 w-auto"
           data-test-id={`${props.title}-popover`}
         />

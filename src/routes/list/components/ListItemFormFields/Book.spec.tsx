@@ -15,9 +15,12 @@ function setup(suppliedProps?: Partial<IBookFormFieldsProps>): ISetupReturn {
     author: 'asdf',
     inputChangeHandler: jest.fn(),
     title: 'asdf',
-    numberInSeries: 1,
+    number_in_series: 1,
     category: 'asdf',
     categories: ['asdf'],
+    purchased: false,
+    read: false,
+    editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<Book {...props} />);
