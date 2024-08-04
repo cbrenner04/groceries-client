@@ -1,5 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { OverlayTrigger, Popover, Row } from 'react-bootstrap';
+import { type OverlayTriggerRenderProps } from 'react-bootstrap/esm/OverlayTrigger';
 
 interface ITitlePopoverProps {
   message: ReactNode;
@@ -17,12 +18,11 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
       </Popover>
     }
   >
-    {({ ref, ...triggerHandler }): React.JSX.Element => ( // eslint-disable-line destructuring/in-params
+    {(overlayProps: OverlayTriggerRenderProps): React.JSX.Element => (
       <Row className="m-0">
         <h2 className="text-capitalize pe-0 w-auto">{props.title}</h2>
         <i
-          ref={ref}
-          {...triggerHandler}
+          {...overlayProps}
           className="far fa-question-circle float-end text-secondary ps-0 w-auto"
           data-test-id={`${props.title}-popover`}
         />
