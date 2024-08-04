@@ -26,7 +26,7 @@ export interface IBulkEditListItemsFormFieldsFormDataProps {
   clearAuthor: boolean;
   category?: string;
   clearCategory: boolean;
-  dueBy?: string;
+  due_by?: string;
   clearDueBy: boolean;
   quantity?: string;
   clearQuantity: boolean;
@@ -110,9 +110,9 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
               // simple list has no updatable attributes
               ToDoList: (
                 <ToDo
-                  dueBy={props.formData.dueBy ?? ''}
+                  dueBy={props.formData.due_by ?? ''}
                   clearDueBy={props.formData.clearDueBy}
-                  handleClearDueBy={(): void => props.clearAttribute('dueBy', 'clearDueBy')}
+                  handleClearDueBy={(): void => props.clearAttribute('due_by', 'clearDueBy')}
                   assigneeId={props.formData.assigneeId ?? ''}
                   clearAssignee={props.formData.clearAssignee}
                   handleClearAssignee={(): void => props.clearAttribute('assigneeId', 'clearAssignee')}

@@ -25,7 +25,7 @@ const defaultFormData: IBulkEditListItemsFormFieldsFormDataProps = {
   clearAuthor: false,
   category: '',
   clearCategory: false,
-  dueBy: '',
+  due_by: '',
   clearDueBy: false,
   quantity: '',
   clearQuantity: false,

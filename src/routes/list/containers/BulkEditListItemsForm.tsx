@@ -74,7 +74,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     clearAuthor: false,
     category: initialAttr('category') as string | undefined,
     clearCategory: false,
-    dueBy: typeof initialDueBy !== 'boolean' ? formatDueBy(initialDueBy) : /* istanbul ignore next */ undefined,
+    due_by: typeof initialDueBy !== 'boolean' ? formatDueBy(initialDueBy) : /* istanbul ignore next */ undefined,
     clearDueBy: false,
     quantity: initialAttr('quantity') as string | undefined,
     clearQuantity: false,
@@ -98,7 +98,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       artist: formData.artist,
       album: formData.album,
       assignee_id: formData.assigneeId,
-      due_by: formData.dueBy,
+      due_by: formData.due_by,
       clear_category: formData.clearCategory,
       clear_author: formData.clearAuthor,
       clear_quantity: formData.clearQuantity,
@@ -191,11 +191,12 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   };
 
   const handleInput: ChangeEventHandler<HTMLInputElement> = (element): void => {
-    let newValue: string | boolean = element.target.value;
-    if (element.target.name === 'updateCurrentItems') {
-      newValue = element.target.checked;
+    const { name, value, checked } = element.target;
+    let newValue: string | boolean = value;
+    if (name === 'updateCurrentItems') {
+      newValue = checked;
     }
-    const updatedFormData = update(formData, { [element.target.name]: { $set: newValue } });
+    const updatedFormData = update(formData, { [name]: { $set: newValue } });
     setFormData(updatedFormData);
   };
 
