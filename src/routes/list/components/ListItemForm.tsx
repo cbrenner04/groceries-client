@@ -56,6 +56,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const { data } = await axios.post(`/lists/${props.listId}/list_items`, postData);
       props.handleItemAddition(data);
       setPending(false);
+      setFormData({} as IListItem);
       toast('Item successfully added.', { type: 'info' });
     } catch (err: unknown) {
       const error = err as AxiosError;

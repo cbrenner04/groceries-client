@@ -406,7 +406,7 @@ exports[`ListItemFormFields renders default Book fields when listType is BookLis
       id="number_in_series"
       name="number_in_series"
       type="number"
-      value="0"
+      value=""
     />
   </div>
   <div
