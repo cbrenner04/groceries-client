@@ -58,7 +58,7 @@ describe('Book', () => {
     expect(container).toMatchSnapshot();
     expect(queryByLabelText('Purchased')).toBeNull();
     expect(queryByLabelText('Read')).toBeNull();
-    expect(await findByLabelText('Number in series')).toHaveValue(0);
+    expect(await findByLabelText('Number in series')).toHaveValue(null);
     expect(await findByLabelText('Category')).toHaveValue('');
     expect((await findByTestId('categories')).firstChild).toBeNull();
   });

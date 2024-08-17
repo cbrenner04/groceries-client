@@ -23,7 +23,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
       <Book
         author={props.formData.author ?? ''}
         title={props.formData.title ?? ''}
-        numberInSeries={props.formData.number_in_series ?? 0}
+        numberInSeries={props.formData.number_in_series}
         category={props.formData.category ?? ''}
         categories={props.categories ?? []}
         inputChangeHandler={props.setFormData}

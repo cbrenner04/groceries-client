@@ -73,18 +73,24 @@ describe('ListItemForm', () => {
     await waitFor(async () => expect(await findByTestId('list-item-form')).toHaveClass('collapse'));
   });
 
-  it('calls handleItemAddition and fires toast on successful submission', async () => {
+  it('calls handleItemAddition, fires toast, and clears form data on successful submission', async () => {
     const data = {
       foo: 'bar',
     };
     axios.post = jest.fn().mockResolvedValue({ data });
-    const { findAllByRole, props, user } = setup();
+    const { findAllByRole, getByLabelText, props, user } = setup();
 
+    await user.type(getByLabelText('Product'), 'foo');
+    await user.type(getByLabelText('Category'), 'foo');
+    await user.type(getByLabelText('Quantity'), 'foo');
     await user.click((await findAllByRole('button'))[1]);
 
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(props.handleItemAddition).toHaveBeenCalledWith(data);
     expect(toast).toHaveBeenCalledWith('Item successfully added.', { type: 'info' });
+    expect(getByLabelText('Product')).toHaveValue('');
+    expect(getByLabelText('Quantity')).toHaveValue('');
+    expect(getByLabelText('Category')).toHaveValue('');
   });
 
   it('disables submit button when form has been submitted', async () => {

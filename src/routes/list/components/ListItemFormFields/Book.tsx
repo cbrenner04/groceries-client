@@ -34,7 +34,7 @@ const BookFormFields: React.FC<IBookFormFieldsProps> = (props): React.JSX.Elemen
     <NumberField
       name="number_in_series"
       label="Number in series"
-      value={props.numberInSeries ?? 0}
+      value={props.numberInSeries}
       handleChange={props.inputChangeHandler}
     />
     <CategoryField category={props.category} categories={props.categories} handleInput={props.inputChangeHandler} />
