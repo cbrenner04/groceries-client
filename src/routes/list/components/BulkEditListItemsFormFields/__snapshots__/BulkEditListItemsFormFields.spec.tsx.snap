@@ -1,102 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BulkEditListItemsFormFields does not render list item attribute fields when all items are completed 1`] = `
-<div>
-  <div>
-    Move or copy these items to another list.
-  </div>
-  <br />
-  <div
-    class="form-check-inline mb-3"
-  >
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-copy"
-        name="copy"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-copy"
-        title=""
-      >
-        Copy
-      </label>
-    </div>
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-move"
-        name="move"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-move"
-        title=""
-      >
-        Move
-      </label>
-    </div>
-  </div>
-  <hr />
-</div>
-`;
-
 exports[`BulkEditListItemsFormFields render Book fields when listType is BookList and fires appropriate change handlers 1`] = `
 <div>
-  <div>
-    Move or copy these items to another list.
-  </div>
-  <br />
-  <div
-    class="form-check-inline mb-3"
-  >
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-copy"
-        name="copy"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-copy"
-        title=""
-      >
-        Copy
-      </label>
-    </div>
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-move"
-        name="move"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-move"
-        title=""
-      >
-        Move
-      </label>
-    </div>
-  </div>
-  <hr />
   <div>
     Update attributes for all items.
   </div>
@@ -193,51 +98,6 @@ exports[`BulkEditListItemsFormFields render Book fields when listType is BookLis
 exports[`BulkEditListItemsFormFields render Grocery fields when listType is GroceryList and fires appropriate change handlers 1`] = `
 <div>
   <div>
-    Move or copy these items to another list.
-  </div>
-  <br />
-  <div
-    class="form-check-inline mb-3"
-  >
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-copy"
-        name="copy"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-copy"
-        title=""
-      >
-        Copy
-      </label>
-    </div>
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-move"
-        name="move"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-move"
-        title=""
-      >
-        Move
-      </label>
-    </div>
-  </div>
-  <hr />
-  <div>
     Update attributes for all items.
   </div>
   <br />
@@ -332,51 +192,6 @@ exports[`BulkEditListItemsFormFields render Grocery fields when listType is Groc
 
 exports[`BulkEditListItemsFormFields render Music fields when listType is MusicList and fires appropriate change handlers 1`] = `
 <div>
-  <div>
-    Move or copy these items to another list.
-  </div>
-  <br />
-  <div
-    class="form-check-inline mb-3"
-  >
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-copy"
-        name="copy"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-copy"
-        title=""
-      >
-        Copy
-      </label>
-    </div>
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-move"
-        name="move"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-move"
-        title=""
-      >
-        Move
-      </label>
-    </div>
-  </div>
-  <hr />
   <div>
     Update attributes for all items.
   </div>
@@ -511,51 +326,6 @@ exports[`BulkEditListItemsFormFields render Music fields when listType is MusicL
 
 exports[`BulkEditListItemsFormFields render ToDo fields when listType is ToDoList and fires appropriate change handlers 1`] = `
 <div>
-  <div>
-    Move or copy these items to another list.
-  </div>
-  <br />
-  <div
-    class="form-check-inline mb-3"
-  >
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-copy"
-        name="copy"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-copy"
-        title=""
-      >
-        Copy
-      </label>
-    </div>
-    <div
-      class="form-check"
-    >
-      <input
-        class="form-check-input"
-        id="move-action-move"
-        name="move"
-        type="radio"
-        value="false"
-      />
-      <label
-        class="form-check-label"
-        for="move-action-move"
-        title=""
-      >
-        Move
-      </label>
-    </div>
-  </div>
-  <hr />
   <div>
     Update attributes for all items.
   </div>

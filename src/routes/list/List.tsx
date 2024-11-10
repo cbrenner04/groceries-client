@@ -18,6 +18,7 @@ interface IFulfilledData {
   includedCategories: string[];
   notPurchasedItems: Record<string, IListItem[]>;
   permissions: string;
+  lists: IList[];
 }
 
 const List = (): React.JSX.Element => {
@@ -40,6 +41,7 @@ const List = (): React.JSX.Element => {
             includedCategories={data.includedCategories}
             notPurchasedItems={data.notPurchasedItems}
             permissions={data.permissions}
+            lists={data.lists}
           />
         )}
       </Async.Fulfilled>

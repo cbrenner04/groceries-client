@@ -18,7 +18,7 @@ function handleFailure(error: unknown, navigate: (url: string) => void): void {
   }
 }
 
-interface IFetchListReturn {
+interface IFetchListsReturn {
   userId: string;
   completedLists: IList[];
   currentUserPermissions: TUserPermissions;
@@ -28,7 +28,7 @@ interface IFetchListReturn {
 
 export async function fetchLists(fetchParams: {
   navigate: (url: string) => void;
-}): Promise<IFetchListReturn | undefined> {
+}): Promise<IFetchListsReturn | undefined> {
   try {
     const { data } = await axios.get('/lists/');
     const pendingLists = sortLists(data.pending_lists);

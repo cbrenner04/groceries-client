@@ -57,6 +57,7 @@ describe('List', () => {
         categories: [],
         list_users: [{ id: 'id1', email: 'foo@example.com' }],
         permissions: 'write',
+        lists_to_update: [],
       },
     });
     const { container, findByText } = renderList();

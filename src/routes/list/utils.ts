@@ -126,6 +126,7 @@ interface IFetchListReturn {
   includedCategories: string[];
   notPurchasedItems: Record<string, IListItem[]>;
   permissions: string;
+  lists: IList[];
 }
 
 export async function fetchList(fetchParams: {
@@ -146,6 +147,7 @@ export async function fetchList(fetchParams: {
       includedCategories,
       notPurchasedItems,
       permissions: data.permissions,
+      lists: data.lists_to_update,
     };
   } catch (err: unknown) {
     handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');

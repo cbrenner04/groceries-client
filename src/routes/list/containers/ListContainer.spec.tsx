@@ -143,6 +143,17 @@ function setup(suppliedProps?: Partial<IListContainerProps>, listType = EListTyp
         },
       ],
     },
+    lists: [
+      {
+        id: 'id2',
+        name: 'bar',
+        type: EListType.GROCERY_LIST,
+        created_at: new Date('05/22/2020').toISOString(),
+        completed: false,
+        owner_id: 'id2',
+        refreshed: false,
+      },
+    ],
     permissions: 'write',
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -1413,7 +1424,7 @@ describe('ListContainer', () => {
     expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
   });
 
-  it('clears selected items for mutli select is hidden for not purchased items', async () => {
+  it('clears selected items for multi select is hidden for not purchased items', async () => {
     const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[0]);
@@ -1432,7 +1443,7 @@ describe('ListContainer', () => {
     expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
   });
 
-  it('clears selected items for mutli select is hidden for purchased items', async () => {
+  it('clears selected items for multi select is hidden for purchased items', async () => {
     const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
 
     await user.click((await findAllByText('Select'))[1]);
@@ -1476,6 +1487,62 @@ describe('ListContainer', () => {
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
     expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id5');
+  });
+
+  it('multi select copy incomplete items', async () => {
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+
+    await user.click((await findAllByText('Select'))[0]);
+
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[1]);
+    await user.click(await findByText('Copy to list'));
+
+    expect(await findByText('Choose an existing list or create a new one to copy items')).toBeVisible();
+  });
+
+  it('multi select move incomplete items', async () => {
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+
+    await user.click((await findAllByText('Select'))[0]);
+
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[1]);
+    await user.click(await findByText('Move to list'));
+
+    expect(await findByText('Choose an existing list or create a new one to move items')).toBeVisible();
+  });
+
+  it('multi select copy complete items', async () => {
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+
+    await user.click((await findAllByText('Select'))[1]);
+
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[1]);
+    await user.click(await findByText('Copy to list'));
+
+    expect(await findByText('Choose an existing list or create a new one to copy items')).toBeVisible();
+  });
+
+  it('multi select move complete items', async () => {
+    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+
+    await user.click((await findAllByText('Select'))[1]);
+
+    await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+    await user.click((await findAllByRole('checkbox'))[0]);
+    await user.click((await findAllByRole('checkbox'))[1]);
+    await user.click(await findByText('Move to list'));
+
+    expect(await findByText('Choose an existing list or create a new one to move items')).toBeVisible();
   });
 
   it('adds item while filter, stays filtered', async () => {
