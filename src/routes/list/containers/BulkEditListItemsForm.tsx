@@ -37,6 +37,7 @@ interface IPutData {
   clear_album: boolean;
   clear_assignee: boolean;
   clear_due_by: boolean;
+  update_current_items: boolean; // TODO: remove when copy/move has been fully removed from bulk update
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
@@ -87,6 +88,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       clear_album: formData.clearAlbum,
       clear_assignee: formData.clearAssignee,
       clear_due_by: formData.clearDueBy,
+      update_current_items: true, // TODO: remove when copy/move has been fully removed from bulk update
     };
     const itemIds = props.items.map((item) => item.id).join(',');
     try {
