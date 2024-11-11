@@ -10,11 +10,6 @@ import BulkEditListItemsFormFields, {
 } from './index';
 
 const defaultFormData: IBulkEditListItemsFormFieldsFormDataProps = {
-  copy: false,
-  move: false,
-  existingList: '',
-  newListName: '',
-  updateCurrentItems: false,
   album: '',
   clearAlbum: false,
   artist: '',
@@ -29,8 +24,6 @@ const defaultFormData: IBulkEditListItemsFormFieldsFormDataProps = {
   clearDueBy: false,
   quantity: '',
   clearQuantity: false,
-  showNewListForm: false,
-  allComplete: false,
 };
 
 interface ISetupReturn extends RenderResult {
@@ -40,7 +33,7 @@ interface ISetupReturn extends RenderResult {
 
 function setup(suppliedProps: Partial<IBulkEditListItemsFormFieldsProps>): ISetupReturn {
   const user = userEvent.setup();
-  const defaultProps = {
+  const defaultProps: IBulkEditListItemsFormFieldsProps = {
     listType: EListType.GROCERY_LIST,
     formData: defaultFormData,
     handleInput: jest.fn(),
@@ -51,15 +44,6 @@ function setup(suppliedProps: Partial<IBulkEditListItemsFormFieldsProps>): ISetu
         email: '',
       },
     ],
-    handleOtherListChange: jest.fn(),
-    existingListsOptions: [
-      {
-        value: '1',
-        label: 'Foo',
-      },
-    ],
-    handleShowNewListForm: jest.fn(),
-    clearNewListForm: jest.fn(),
     categories: ['foo'],
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -168,15 +152,5 @@ describe('BulkEditListItemsFormFields', () => {
     await user.click((await findAllByRole('checkbox'))[2]);
 
     expect(props.clearAttribute).toHaveBeenCalledWith('category', 'clearCategory');
-  });
-
-  it('does not render list item attribute fields when all items are completed', () => {
-    const { container, queryByLabelText } = setup({
-      listType: EListType.GROCERY_LIST,
-      formData: { ...defaultFormData, allComplete: true },
-    });
-
-    expect(container).toMatchSnapshot();
-    expect(queryByLabelText('Quantity')).toBeNull();
   });
 });

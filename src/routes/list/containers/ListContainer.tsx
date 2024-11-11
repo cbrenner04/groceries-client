@@ -2,7 +2,7 @@ import React, { type ChangeEvent, type MouseEventHandler, useState } from 'react
 import { Link, useNavigate } from 'react-router-dom';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
-import { Button, ListGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, ListGroup } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 
@@ -16,6 +16,7 @@ import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList, itemName, sortItems } from '../utils';
+import ChangeOtherListModal from '../components/ChangeOtherListModal';
 
 // TODO: this is ridiculous
 export interface IListContainerProps {
@@ -27,6 +28,7 @@ export interface IListContainerProps {
   includedCategories: string[];
   notPurchasedItems: Record<string, IListItem[]>;
   permissions: string;
+  lists: IList[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -43,6 +45,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [pending, setPending] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
   const [listUsers, setListUsers] = useState(props.listUsers);
+  const [copy, setCopy] = useState(false);
+  const [move, setMove] = useState(false);
   const navigate = useNavigate();
 
   usePolling(async () => {
@@ -365,8 +369,28 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
+  const handleMove = (): void => {
+    if (!move) {
+      return;
+    }
+    removeItemsFromNotPurchased(selectedItems);
+  };
+
   return (
     <React.Fragment>
+      <ChangeOtherListModal
+        show={copy || move}
+        setShow={copy ? setCopy : setMove}
+        copy={copy}
+        move={move}
+        currentList={props.list}
+        lists={props.lists}
+        items={selectedItems}
+        setSelectedItems={setSelectedItems}
+        setIncompleteMultiSelect={setIncompleteMultiSelect}
+        setCompleteMultiSelect={setCompleteMultiSelect}
+        handleMove={handleMove}
+      />
       <Link to="/lists" className="float-end">
         Back to lists
       </Link>
@@ -408,6 +432,16 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       </div>
       {props.permissions === 'write' && (
         <div className="clearfix">
+          {incompleteMultiSelect && (
+            <ButtonGroup aria-label="copy or move items">
+              <Button variant="link" onClick={(): void => setCopy(true)}>
+                Copy to list
+              </Button>
+              <Button variant="link" onClick={(): void => setMove(true)}>
+                Move to list
+              </Button>
+            </ButtonGroup>
+          )}
           <Button
             variant="link"
             className="mx-auto float-end"
@@ -452,6 +486,16 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
       {props.permissions === 'write' && (
         <div className="clearfix">
+          {completeMultiSelect && (
+            <ButtonGroup aria-label="copy or move items">
+              <Button variant="link" onClick={(): void => setCopy(true)}>
+                Copy to list
+              </Button>
+              <Button variant="link" onClick={(): void => setMove(true)}>
+                Move to list
+              </Button>
+            </ButtonGroup>
+          )}
           <Button
             variant="link"
             className="mx-auto float-end"

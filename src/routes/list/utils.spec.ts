@@ -210,6 +210,7 @@ describe('utils', () => {
             { id: '2', email: 'bar@example.com' },
           ],
           permissions: 'read',
+          lists_to_update: [],
         },
       });
 
@@ -225,6 +226,7 @@ describe('utils', () => {
         includedCategories: [''],
         notPurchasedItems: { '': [] },
         permissions: 'read',
+        lists: [],
       });
     });
 

@@ -37,17 +37,10 @@ interface IPutData {
   clear_album: boolean;
   clear_assignee: boolean;
   clear_due_by: boolean;
-  copy?: boolean;
-  move?: boolean;
-  existing_list_id?: string;
-  new_list_name?: string;
-  update_current_items: boolean;
+  update_current_items: boolean; // TODO: remove when copy/move has been fully removed from bulk update
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
-  // if no existing list options, new list form should be displayed by default
-  const existingListsOptions = props.lists.map((list) => ({ value: String(list.id), label: list.name }));
-
   // attributes that makes sense to updated on all items are included
   // set attributes to initial value if all items have the same value for the attribute
   // the value of these attributes can be cleared for all items with their respective clear state attributes
@@ -59,11 +52,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   const initialDueBy = initialAttr('due_by');
   // TODO: this is kind of silly
   const initialValues = {
-    copy: false,
-    move: false,
-    existingList: '',
-    newListName: '',
-    updateCurrentItems: false,
     album: initialAttr('album') as string | undefined,
     clearAlbum: false,
     artist: initialAttr('artist') as string | undefined,
@@ -78,7 +66,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     clearDueBy: false,
     quantity: initialAttr('quantity') as string | undefined,
     clearQuantity: false,
-    showNewListForm: !existingListsOptions.length,
     allComplete: (initialAttr('purchased') ?? initialAttr('completed') ?? false) as boolean,
   };
 
@@ -86,11 +73,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    // must have existing list or new list identified to copy or move
-    if ((formData.copy || formData.move) && !formData.existingList && !formData.newListName) {
-      toast(`You must specify a list to ${formData.copy ? 'copy' : 'move'} items`, { type: 'error' });
-      return;
-    }
     const putData: IPutData = {
       category: formData.category,
       author: formData.author,
@@ -106,27 +88,8 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       clear_album: formData.clearAlbum,
       clear_assignee: formData.clearAssignee,
       clear_due_by: formData.clearDueBy,
-      copy: undefined,
-      move: undefined,
-      existing_list_id: undefined,
-      new_list_name: undefined,
-      // if copying, the user will set whether or not to update current items
-      // if moving, the current items will not be updated
-      // if not doing either, updating the current items is the only action being take
-      update_current_items: formData.copy ? formData.updateCurrentItems : !formData.move,
+      update_current_items: true, // TODO: remove when copy/move has been fully removed from bulk update
     };
-    if (formData.copy) {
-      putData.copy = formData.copy;
-    }
-    if (formData.move) {
-      putData.move = formData.move;
-    }
-    if (formData.existingList) {
-      putData.existing_list_id = formData.existingList;
-    }
-    if (formData.newListName) {
-      putData.new_list_name = formData.newListName;
-    }
     const itemIds = props.items.map((item) => item.id).join(',');
     try {
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
@@ -164,39 +127,9 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     }
   };
 
-  const clearNewListForm = (): void => {
-    const updatedFormData = update(formData, {
-      newListName: { $set: '' },
-      showNewListForm: { $set: initialValues.showNewListForm },
-    });
-    setFormData(updatedFormData);
-  };
-
-  const handleOtherListChange = (isCopy: boolean): void => {
-    const [action, oppositeAction]: [keyof typeof formData, keyof typeof formData] = isCopy
-      ? ['copy', 'move']
-      : ['move', 'copy'];
-    const updates: Record<string, { $set: boolean | string }> = {};
-    if (!formData[action] && formData[oppositeAction]) {
-      updates[oppositeAction] = { $set: false };
-    }
-    if (formData[action]) {
-      updates.showNewListForm = { $set: initialValues.showNewListForm };
-      updates.newListName = { $set: '' };
-      updates.existingList = { $set: '' };
-    }
-    updates[action] = { $set: !formData[action] };
-    const updatedFormData = update(formData, updates);
-    setFormData(updatedFormData);
-  };
-
   const handleInput: ChangeEventHandler<HTMLInputElement> = (element): void => {
-    const { name, value, checked } = element.target;
-    let newValue: string | boolean = value;
-    if (name === 'updateCurrentItems') {
-      newValue = checked;
-    }
-    const updatedFormData = update(formData, { [name]: { $set: newValue } });
+    const { name, value } = element.target;
+    const updatedFormData = update(formData, { [name]: { $set: value } });
     setFormData(updatedFormData);
   };
 
@@ -213,14 +146,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     setFormData(updatedFormData);
   };
 
-  const handleShowNewListForm = (): void => {
-    const updatedFormData = update(formData, {
-      existingList: { $set: '' },
-      showNewListForm: { $set: true },
-    });
-    setFormData(updatedFormData);
-  };
-
   return (
     <React.Fragment>
       <h1>Edit {props.items.map((item) => itemName(item, props.list.type)).join(', ')}</h1>
@@ -232,10 +157,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           clearAttribute={clearAttribute}
           listUsers={props.listUsers}
           listType={props.list.type}
-          handleOtherListChange={handleOtherListChange}
-          existingListsOptions={existingListsOptions}
-          handleShowNewListForm={handleShowNewListForm}
-          clearNewListForm={clearNewListForm}
           categories={props.categories}
         />
         <FormSubmission

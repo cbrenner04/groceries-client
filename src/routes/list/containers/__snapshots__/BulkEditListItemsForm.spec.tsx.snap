@@ -12,51 +12,6 @@ exports[`BulkEditListItemsForm renders 1`] = `
     class=""
   >
     <div>
-      Move or copy these items to another list.
-    </div>
-    <br />
-    <div
-      class="form-check-inline mb-3"
-    >
-      <div
-        class="form-check"
-      >
-        <input
-          class="form-check-input"
-          id="move-action-copy"
-          name="copy"
-          type="radio"
-          value="false"
-        />
-        <label
-          class="form-check-label"
-          for="move-action-copy"
-          title=""
-        >
-          Copy
-        </label>
-      </div>
-      <div
-        class="form-check"
-      >
-        <input
-          class="form-check-input"
-          id="move-action-move"
-          name="move"
-          type="radio"
-          value="false"
-        />
-        <label
-          class="form-check-label"
-          for="move-action-move"
-          title=""
-        >
-          Move
-        </label>
-      </div>
-    </div>
-    <hr />
-    <div>
       Update attributes for all items.
     </div>
     <br />
