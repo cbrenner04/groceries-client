@@ -63,6 +63,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
     setSelectedItems: jest.fn(),
     setIncompleteMultiSelect: jest.fn(),
     setCompleteMultiSelect: jest.fn(),
+    handleMove: jest.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ChangeOtherListModal {...props} />);
@@ -144,6 +145,7 @@ describe('ChangeOtherListModal', () => {
     expect(props.setSelectedItems).toHaveBeenCalledWith([]);
     expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.handleMove).toHaveBeenCalled();
     expect(toast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
   });
 

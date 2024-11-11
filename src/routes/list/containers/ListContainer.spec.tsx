@@ -1490,7 +1490,10 @@ describe('ListContainer', () => {
   });
 
   it('multi select copy incomplete items', async () => {
-    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+    axios.put = jest.fn().mockResolvedValue(false);
+    const { findAllByRole, findAllByText, findByText, getByLabelText, getByText, user } = setup({
+      permissions: 'write',
+    });
 
     await user.click((await findAllByText('Select'))[0]);
 
@@ -1501,20 +1504,44 @@ describe('ListContainer', () => {
     await user.click(await findByText('Copy to list'));
 
     expect(await findByText('Choose an existing list or create a new one to copy items')).toBeVisible();
+
+    await user.click(getByLabelText('Existing list'));
+    await user.selectOptions(getByLabelText('Existing list'), ['bar']);
+    await user.click(getByText('Complete'));
+
+    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity foo not purchased product 2')).toBeVisible();
   });
 
   it('multi select move incomplete items', async () => {
-    const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: 'write' });
+    axios.put = jest.fn().mockResolvedValue(false);
+    const { findAllByRole, findAllByText, findByText, getByLabelText, getByText, queryByText, user } = setup({
+      permissions: 'write',
+    });
 
     await user.click((await findAllByText('Select'))[0]);
 
     await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+    expect(getByText('not purchased quantity no category not purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity bar not purchased product')).toBeVisible();
 
     await user.click((await findAllByRole('checkbox'))[0]);
     await user.click((await findAllByRole('checkbox'))[1]);
     await user.click(await findByText('Move to list'));
 
     expect(await findByText('Choose an existing list or create a new one to move items')).toBeVisible();
+
+    await user.click(getByLabelText('Existing list'));
+    await user.selectOptions(getByLabelText('Existing list'), ['bar']);
+    await user.click(getByText('Complete'));
+
+    expect(queryByText('not purchased quantity no category not purchased product')).toBeNull();
+    expect(queryByText('not purchased quantity bar not purchased product')).toBeNull();
+    expect(getByText('not purchased quantity foo not purchased product')).toBeVisible();
+    expect(getByText('not purchased quantity foo not purchased product 2')).toBeVisible();
   });
 
   it('multi select copy complete items', async () => {

@@ -369,6 +369,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
+  const handleMove = (): void => {
+    if (!move) {
+      return;
+    }
+    removeItemsFromNotPurchased(selectedItems);
+  };
+
   return (
     <React.Fragment>
       <ChangeOtherListModal
@@ -382,6 +389,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         setSelectedItems={setSelectedItems}
         setIncompleteMultiSelect={setIncompleteMultiSelect}
         setCompleteMultiSelect={setCompleteMultiSelect}
+        handleMove={handleMove}
       />
       <Link to="/lists" className="float-end">
         Back to lists
