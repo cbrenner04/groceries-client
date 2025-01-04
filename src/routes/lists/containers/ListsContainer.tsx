@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';

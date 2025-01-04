@@ -1,6 +1,6 @@
 import React from 'react';
 import Async, { type PromiseFn } from 'react-async';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import Loading from 'components/Loading';
 import type { IList, IListItem, IListUser } from 'typings';

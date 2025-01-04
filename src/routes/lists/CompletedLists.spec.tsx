@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
 

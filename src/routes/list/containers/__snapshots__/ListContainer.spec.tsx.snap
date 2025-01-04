@@ -4,6 +4,7 @@ exports[`ListContainer does not render ListForm when user has read permissions 1
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -165,6 +166,7 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -551,6 +553,7 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -806,6 +809,7 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -1244,6 +1248,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -1682,6 +1687,7 @@ exports[`ListContainer renders filtered items without category buckets when filt
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists
@@ -2011,6 +2017,7 @@ exports[`ListContainer renders items with category buckets when includedCategori
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists

@@ -7,6 +7,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
   >
     <a
       class="float-end"
+      data-discover="true"
       href="/lists"
     >
       Back to lists
@@ -64,6 +65,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id1"
                 >
                   <h5

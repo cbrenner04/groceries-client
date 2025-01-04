@@ -1,6 +1,6 @@
 import React from 'react';
 import Async, { type PromiseFn } from 'react-async';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { fetchItemToEdit } from './utils';
 import EditListItemForm from './containers/EditListItemForm';

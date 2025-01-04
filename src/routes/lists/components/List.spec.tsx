@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import { EListType } from 'typings';

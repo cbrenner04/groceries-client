@@ -149,6 +149,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id3"
                 >
                   <h5
@@ -189,6 +190,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-share"
                     href="/id3/users_lists"
                   >
@@ -199,6 +201,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-edit"
                     href="/id3/edit"
                   >
@@ -240,6 +243,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id5"
                 >
                   <h5
@@ -280,6 +284,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-share"
                     href="/id5/users_lists"
                     style="pointer-events: none;"
@@ -291,6 +296,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-edit"
                     href="/id5/edit"
                   >
@@ -367,6 +373,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id2"
                 >
                   <h5
@@ -438,6 +445,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id4"
                 >
                   <h5
@@ -746,6 +754,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id3"
                 >
                   <h5
@@ -786,6 +795,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-share"
                     href="/id3/users_lists"
                   >
@@ -796,6 +806,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-edit"
                     href="/id3/edit"
                   >
@@ -837,6 +848,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id5"
                 >
                   <h5
@@ -877,6 +889,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-share"
                     href="/id5/users_lists"
                     style="pointer-events: none;"
@@ -888,6 +901,7 @@ exports[`ListsContainer renders 1`] = `
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-edit"
                     href="/id5/edit"
                   >
@@ -964,6 +978,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id2"
                 >
                   <h5
@@ -1035,6 +1050,7 @@ exports[`ListsContainer renders 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id4"
                 >
                   <h5

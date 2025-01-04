@@ -4,6 +4,7 @@ exports[`List displays List 1`] = `
 <div>
   <a
     class="float-end"
+    data-discover="true"
     href="/lists"
   >
     Back to lists

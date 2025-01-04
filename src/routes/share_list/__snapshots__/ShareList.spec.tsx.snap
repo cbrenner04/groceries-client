@@ -5,6 +5,7 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
   <div>
     <a
       class="float-end"
+      data-discover="true"
       href="/lists"
     >
       Back to lists
