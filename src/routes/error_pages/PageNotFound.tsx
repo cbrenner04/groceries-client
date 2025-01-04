@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, type NavigateFunction } from 'react-router-dom';
+import { Link, type NavigateFunction } from 'react-router';
 import Async, { type PromiseFn } from 'react-async';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type { AxiosError } from 'axios';
 
 import axios from 'utils/api';

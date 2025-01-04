@@ -4,6 +4,7 @@ exports[`EditLink renders a link 1`] = `
 <a
   aria-disabled="false"
   class="p-0 me-3 "
+  data-discover="true"
   data-test-id="foo"
   href="/fake/route"
 >

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, type RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
@@ -12,8 +12,8 @@ jest.mock('react-toastify', () => ({
 }));
 
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 

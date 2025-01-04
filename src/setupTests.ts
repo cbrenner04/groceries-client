@@ -4,7 +4,9 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import { cleanup, configure } from '@testing-library/react';
+import { TextEncoder } from 'util';
 
+global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
 
 jest.mock('axios', () => ({

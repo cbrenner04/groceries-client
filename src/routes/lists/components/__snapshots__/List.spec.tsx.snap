@@ -190,6 +190,7 @@ exports[`List does render Link when includeLinkToList is true 1`] = `
           >
             <a
               class="router-link"
+              data-discover="true"
               href="/lists/id1"
             >
               <h5

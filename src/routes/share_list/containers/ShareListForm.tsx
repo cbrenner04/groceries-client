@@ -1,5 +1,5 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';

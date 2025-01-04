@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ListGroup, ButtonGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import TitlePopover from 'components/TitlePopover';
 import ConfirmModal from 'components/ConfirmModal';

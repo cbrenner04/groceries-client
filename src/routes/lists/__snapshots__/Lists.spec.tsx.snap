@@ -250,6 +250,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id2"
                 >
                   <h5
@@ -290,6 +291,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-share"
                     href="/id2/users_lists"
                   >
@@ -300,6 +302,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
                     data-test-id="incomplete-list-edit"
                     href="/id2/edit"
                   >
@@ -376,6 +379,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
               >
                 <a
                   class="router-link"
+                  data-discover="true"
                   href="/lists/id1"
                 >
                   <h5

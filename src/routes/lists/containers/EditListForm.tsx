@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
