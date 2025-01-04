@@ -47,7 +47,11 @@ const InviteForm: React.FC = (): React.JSX.Element => {
           value={email}
           handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
         />
-        <FormSubmission submitText="Invite User" cancelAction={(): void => navigate('/lists')} cancelText="Cancel" />
+        <FormSubmission
+          submitText="Invite User"
+          cancelAction={(): void | Promise<void> => navigate('/lists')}
+          cancelText="Cancel"
+        />
       </Form>
     </React.Fragment>
   );
