@@ -69,7 +69,11 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
           handleCompletedChange={(): void => setCompleted(!completed)}
           editForm
         />
-        <FormSubmission submitText="Update List" cancelAction={(): void => navigate('/lists')} cancelText="Cancel" />
+        <FormSubmission
+          submitText="Update List"
+          cancelAction={(): void | Promise<void> => navigate('/lists')}
+          cancelText="Cancel"
+        />
       </Form>
     </React.Fragment>
   );
