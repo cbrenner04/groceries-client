@@ -25,7 +25,7 @@ const ToDoFormFields: React.FC<IToDoFormFieldsProps> = (props): React.JSX.Elemen
       placeholder="Clean the toilets"
     />
     <SelectField
-      name="assigneeId"
+      name="assignee_id"
       label="Assignee"
       value={props.assigneeId}
       handleChange={props.inputChangeHandler}
