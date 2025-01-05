@@ -599,14 +599,14 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
     >
       <label
         class="form-label"
-        for="assigneeId"
+        for="assignee_id"
       >
         Assignee
       </label>
       <select
         class="form-control"
-        id="assigneeId"
-        name="assigneeId"
+        id="assignee_id"
+        name="assignee_id"
       >
         <option
           disabled=""

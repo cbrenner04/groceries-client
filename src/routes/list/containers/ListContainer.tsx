@@ -103,11 +103,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       itemCategories.push(category);
       // TODO: why????
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!updatedNotPurchasedItems[category]) {
-        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $set: [item] } });
-      } else {
+      if (updatedNotPurchasedItems[category]) {
         updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $push: [item] } });
         updatedNotPurchasedItems[category] = sortItems(props.list.type, updatedNotPurchasedItems[category]);
+      } else {
+        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $set: [item] } });
       }
     });
     setNotPurchasedItems(updatedNotPurchasedItems);

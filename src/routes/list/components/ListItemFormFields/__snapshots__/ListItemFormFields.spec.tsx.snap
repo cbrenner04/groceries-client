@@ -294,14 +294,14 @@ exports[`ListItemFormFields render ToDo fields when listType is ToDoList and cal
   >
     <label
       class="form-label"
-      for="assigneeId"
+      for="assignee_id"
     >
       Assignee
     </label>
     <select
       class="form-control"
-      id="assigneeId"
-      name="assigneeId"
+      id="assignee_id"
+      name="assignee_id"
     >
       <option
         disabled=""
@@ -648,14 +648,14 @@ exports[`ListItemFormFields renders default ToDo fields when listType is ToDoLis
   >
     <label
       class="form-label"
-      for="assigneeId"
+      for="assignee_id"
     >
       Assignee
     </label>
     <select
       class="form-control"
-      id="assigneeId"
-      name="assigneeId"
+      id="assignee_id"
+      name="assignee_id"
     >
       <option
         disabled=""
