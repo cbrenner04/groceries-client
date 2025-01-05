@@ -25,14 +25,14 @@ exports[`ToDo renders base form when props.editForm is false 1`] = `
   >
     <label
       class="form-label"
-      for="assigneeId"
+      for="assignee_id"
     >
       Assignee
     </label>
     <select
       class="form-control"
-      id="assigneeId"
-      name="assigneeId"
+      id="assignee_id"
+      name="assignee_id"
     >
       <option
         value=""
@@ -121,14 +121,14 @@ exports[`ToDo renders edit form when props.editForm is true 1`] = `
   >
     <label
       class="form-label"
-      for="assigneeId"
+      for="assignee_id"
     >
       Assignee
     </label>
     <select
       class="form-control"
-      id="assigneeId"
-      name="assigneeId"
+      id="assignee_id"
+      name="assignee_id"
     >
       <option
         value=""
@@ -238,14 +238,14 @@ exports[`ToDo renders with defaults 1`] = `
   >
     <label
       class="form-label"
-      for="assigneeId"
+      for="assignee_id"
     >
       Assignee
     </label>
     <select
       class="form-control"
-      id="assigneeId"
-      name="assigneeId"
+      id="assignee_id"
+      name="assignee_id"
     >
       <option
         value=""
