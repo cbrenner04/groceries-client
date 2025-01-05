@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
@@ -39,7 +39,10 @@ const AppNav: React.FC<IAppNavProps> = (props): React.JSX.Element => {
           <Navbar.Collapse id="navbar">
             <Nav className="me-auto">
               <Nav.Item>
-                <Nav.Link onClick={(): void => navigate('/users/invitation/new')} data-test-id="invite-link">
+                <Nav.Link
+                  onClick={(): void | Promise<void> => navigate('/users/invitation/new')}
+                  data-test-id="invite-link"
+                >
                   Invite
                 </Nav.Link>
               </Nav.Item>

@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import Async, { type PromiseFn } from 'react-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import Loading from 'components/Loading';
 import type { IList, TUserPermissions } from 'typings';

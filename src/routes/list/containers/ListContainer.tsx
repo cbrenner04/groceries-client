@@ -1,5 +1,5 @@
 import React, { type ChangeEvent, type MouseEventHandler, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, ListGroup } from 'react-bootstrap';

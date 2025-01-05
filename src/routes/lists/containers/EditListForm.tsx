@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -69,7 +69,11 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
           handleCompletedChange={(): void => setCompleted(!completed)}
           editForm
         />
-        <FormSubmission submitText="Update List" cancelAction={(): void => navigate('/lists')} cancelText="Cancel" />
+        <FormSubmission
+          submitText="Update List"
+          cancelAction={(): void | Promise<void> => navigate('/lists')}
+          cancelText="Cancel"
+        />
       </Form>
     </React.Fragment>
   );

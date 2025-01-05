@@ -1,7 +1,7 @@
 import React, { type FormEvent, type ChangeEvent, useState } from 'react';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';

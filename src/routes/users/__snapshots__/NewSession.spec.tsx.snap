@@ -98,6 +98,7 @@ exports[`NewSession renders session form when fetch errors 1`] = `
     </div>
   </form>
   <a
+    data-discover="true"
     href="/users/password/new"
   >
     Forgot your password?
