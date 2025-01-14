@@ -95,7 +95,7 @@ describe('ListItemForm', () => {
 
   it('disables submit button when form has been submitted', async () => {
     // post is not resolved so that the pending state will remain after calling post
-    axios.post = jest.fn();
+    axios.post = jest.fn().mockImplementation(() => new Promise((resolve, reject) => undefined));
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[1]);

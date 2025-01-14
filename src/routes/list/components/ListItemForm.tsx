@@ -85,6 +85,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       } else {
         toast(error.message, { type: 'error' });
       }
+      setPending(false);
     }
   };
 
