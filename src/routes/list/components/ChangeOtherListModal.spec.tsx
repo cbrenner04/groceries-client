@@ -133,7 +133,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['bar']);
     await user.click(getByText('Complete'));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/id1/v1/list_items/bulk_update?item_ids=id1', {
       list_items: {
         copy: true,
         existing_list_id: 'id2',

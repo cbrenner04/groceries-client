@@ -160,7 +160,7 @@ export async function fetchItemToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem } | undefined> {
   try {
-    const { data } = await axios.get(`/lists/${fetchParams.listId}/list_items/${fetchParams.itemId}/edit`);
+    const { data } = await axios.get(`/lists/${fetchParams.listId}/v1/list_items/${fetchParams.itemId}/edit`);
     data.list.categories = data.categories;
     const userId = data.item.user_id;
     return {
@@ -188,7 +188,7 @@ export async function fetchItemsToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFetchItemsToEditReturn | undefined> {
   try {
-    const { data } = await axios.get(`/lists/${fetchParams.listId}/list_items/bulk_update${fetchParams.search}`);
+    const { data } = await axios.get(`/lists/${fetchParams.listId}/v1/list_items/bulk_update${fetchParams.search}`);
     return data;
   } catch (err: unknown) {
     handleFailure(
