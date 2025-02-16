@@ -128,7 +128,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  const listItemPath = (): string => `/lists/${props.list.id}/v1/list_items`;
+  const listItemPath = (): string => `/v1/lists/${props.list.id}/list_items`;
 
   const removeItemsFromNotPurchased = (items: IListItem[]): void => {
     let updatedNotPurchasedItems = notPurchasedItems;

@@ -20,7 +20,7 @@ export async function fetchData(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFetchDataReturn | undefined> {
   try {
-    const { data } = await axios.get(`/lists/${fetchParams.listId}/users_lists`);
+    const { data } = await axios.get(`/v1/lists/${fetchParams.listId}/users_lists`);
     const userInAccepted = data.accepted.find(
       (acceptedList: IUsersList) => acceptedList.user.id === data.current_user_id,
     );

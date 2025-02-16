@@ -72,7 +72,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const handleFormSubmit = async (list: IList): Promise<void> => {
     setPending(true);
     try {
-      const { data } = await axios.post('/lists', { list });
+      const { data } = await axios.post('/v1/lists', { list });
       // must update currentUserPermissions prior to incompleteLists
       const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
       setCurrentUserPermissions(updatedCurrentUserPermissions);

@@ -55,9 +55,9 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     setPending(true);
     const ownedLists = listsToDelete.filter((l) => props.userId === l.owner_id);
     const sharedLists = listsToDelete.filter((l) => props.userId !== l.owner_id);
-    const deleteRequests = ownedLists.map((list) => axios.delete(`lists/${list.id}`));
+    const deleteRequests = ownedLists.map((list) => axios.delete(`/v1/lists/${list.id}`));
     const removeRequests = sharedLists.map((list) =>
-      axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
+      axios.patch(`/v1/lists/${list.id}/users_lists/${list.users_list_id}`, {
         users_list: { has_accepted: false },
       }),
     );
@@ -92,7 +92,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     setPending(true);
     const listIds = listsToMerge.map((l) => l.id).join(',');
     try {
-      const { data } = await axios.post('/lists/merge_lists', {
+      const { data } = await axios.post('/v1/lists/merge_lists', {
         merge_lists: { list_ids: listIds, new_list_name: mergeName },
       });
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
@@ -119,7 +119,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     const ownedLists = lists.filter((l) => props.userId === l.owner_id);
     const filteredLists = ownedLists.filter((l) => !l.completed);
     const filteredListsIds = filteredLists.map((l) => l.id);
-    const updateRequests = filteredLists.map((l) => axios.put(`lists/${l.id}`, { list: { completed: true } }));
+    const updateRequests = filteredLists.map((l) => axios.put(`/v1/lists/${l.id}`, { list: { completed: true } }));
     try {
       await Promise.all(updateRequests);
       const updatedIncompleteLists = props.incompleteLists.filter((nonList) => !filteredListsIds.includes(nonList.id));
@@ -145,7 +145,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     ownedLists.forEach((lList) => {
       lList.refreshed = true;
     });
-    const refreshRequests = ownedLists.map((l) => axios.post(`/lists/${l.id}/refresh_list`, {}));
+    const refreshRequests = ownedLists.map((l) => axios.post(`/v1/lists/${l.id}/refresh_list`, {}));
     try {
       const responses = await Promise.all(refreshRequests);
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
