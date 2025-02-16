@@ -556,7 +556,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
+    expect(axios.post).toHaveBeenCalledWith('/v1/lists/merge_lists', {
       merge_lists: { list_ids: 'id3', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
@@ -632,7 +632,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
+    expect(axios.post).toHaveBeenCalledWith('/v1/lists/merge_lists', {
       merge_lists: { list_ids: 'id2,id4', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).not.toHaveBeenCalled();

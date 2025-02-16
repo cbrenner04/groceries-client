@@ -53,7 +53,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       },
     };
     try {
-      const { data } = await axios.post(`/lists/${props.listId}/v1/list_items`, postData);
+      const { data } = await axios.post(`/v1/lists/${props.listId}/list_items`, postData);
       props.handleItemAddition(data);
       setPending(false);
       setFormData({} as IListItem);
