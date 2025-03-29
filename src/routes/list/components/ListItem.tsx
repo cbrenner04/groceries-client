@@ -33,6 +33,26 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
     }
   }
 
+  const multiSelectCheckbox = props.multiSelect && (
+    <Col xs="1">
+      <input type="checkbox" className="multi-select-check" onClick={(): void => props.handleItemSelect(props.item)} />
+      <div className="list-item-multi-divider"></div>
+    </Col>
+  );
+
+  const itemTitle = (
+    <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>{itemName(props.item, props.listType)}</div>
+  );
+
+  const extraInfo = props.listType === EListType.TO_DO_LIST && (
+    <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
+      <small className="text-muted">
+        <div data-test-id="assignee-email">{assignee}</div>
+        <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
+      </small>
+    </div>
+  );
+
   return (
     <ListGroup.Item
       key={props.item.id}
@@ -40,28 +60,10 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
       data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
     >
       <Row className={props.multiSelect ? 'list-item-row' : ''}>
-        {props.multiSelect && (
-          <Col xs="1">
-            <input
-              type="checkbox"
-              className="multi-select-check"
-              onClick={(): void => props.handleItemSelect(props.item)}
-            />
-            <div className="list-item-multi-divider"></div>
-          </Col>
-        )}
+        {multiSelectCheckbox}
         <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
-            {itemName(props.item, props.listType)}
-          </div>
-          {props.listType === EListType.TO_DO_LIST && (
-            <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
-              <small className="text-muted">
-                <div data-test-id="assignee-email">{assignee}</div>
-                <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
-              </small>
-            </div>
-          )}
+          {itemTitle}
+          {extraInfo}
           {props.permission === 'write' && (
             <ListItemButtons
               purchased={props.purchased ?? false}
