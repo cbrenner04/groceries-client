@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "overrides": {
-    "autoprefixer": "10.4.20"
+    "autoprefixer": "10.4.21"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.7.2",
@@ -11,7 +11,7 @@
     "@testing-library/react": "16.2.0",
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "^29.5.12",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "10.4.21",
     "axios": "^1.8.2",
     "bootstrap": "5.3.3",
     "env-cmd": "10.1.0",
