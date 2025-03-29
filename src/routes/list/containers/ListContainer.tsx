@@ -2,7 +2,7 @@ import React, { type ChangeEvent, type MouseEventHandler, useState } from 'react
 import { Link, useNavigate } from 'react-router';
 import update from 'immutability-helper';
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, ListGroup } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 
@@ -17,6 +17,7 @@ import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
 import { fetchList, itemName, sortItems } from '../utils';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
+import MultiSelectMenu from '../components/MultiSelectMenu';
 
 // TODO: this is ridiculous
 export interface IListContainerProps {
@@ -378,6 +379,22 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     removeItemsFromNotPurchased(selectedItems);
   };
 
+  const deleteConfirmationModalBody = (): string =>
+    `Are you sure you want to delete the following items? ${itemsToDelete
+      .map((item) => itemName(item, props.list.type))
+      .join(', ')}`;
+
+  // TODO: figure out typing
+  const handleCategoryFilter = ((event: ChangeEvent<HTMLInputElement>): void => {
+    setFilter(event.target.name);
+    setDisplayedCategories([event.target.name]);
+  }) as unknown as MouseEventHandler;
+
+  const handleClearFilter = (): void => {
+    setFilter('');
+    setDisplayedCategories(includedCategories);
+  };
+
   return (
     <React.Fragment>
       <ChangeOtherListModal
@@ -418,45 +435,20 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           <CategoryFilter
             categories={includedCategories}
             filter={filter}
-            // TODO: figure out typing
-            handleCategoryFilter={
-              ((event: ChangeEvent<HTMLInputElement>): void => {
-                setFilter(event.target.name);
-                setDisplayedCategories([event.target.name]);
-              }) as unknown as MouseEventHandler
-            }
-            handleClearFilter={(): void => {
-              setFilter('');
-              setDisplayedCategories(includedCategories);
-            }}
+            handleCategoryFilter={handleCategoryFilter}
+            handleClearFilter={handleClearFilter}
           />
         </div>
       </div>
       {props.permissions === 'write' && (
-        <div className="clearfix">
-          {incompleteMultiSelect && (
-            <ButtonGroup aria-label="copy or move items">
-              <Button variant="link" onClick={(): void => setCopy(true)}>
-                Copy to list
-              </Button>
-              <Button variant="link" onClick={(): void => setMove(true)}>
-                Move to list
-              </Button>
-            </ButtonGroup>
-          )}
-          <Button
-            variant="link"
-            className="mx-auto float-end"
-            onClick={(): void => {
-              if (incompleteMultiSelect && selectedItems.length > 0) {
-                setSelectedItems([]);
-              }
-              setIncompleteMultiSelect(!incompleteMultiSelect);
-            }}
-          >
-            {incompleteMultiSelect ? 'Hide' : ''} Select
-          </Button>
-        </div>
+        <MultiSelectMenu
+          setCopy={setCopy}
+          setMove={setMove}
+          isMultiSelect={incompleteMultiSelect}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setMultiSelect={setIncompleteMultiSelect}
+        />
       )}
       {displayedCategories.sort().map((category) => (
         <ListGroup className="mb-3" key={category}>
@@ -487,30 +479,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       <br />
       <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
       {props.permissions === 'write' && (
-        <div className="clearfix">
-          {completeMultiSelect && (
-            <ButtonGroup aria-label="copy or move items">
-              <Button variant="link" onClick={(): void => setCopy(true)}>
-                Copy to list
-              </Button>
-              <Button variant="link" onClick={(): void => setMove(true)}>
-                Move to list
-              </Button>
-            </ButtonGroup>
-          )}
-          <Button
-            variant="link"
-            className="mx-auto float-end"
-            onClick={(): void => {
-              if (completeMultiSelect && selectedItems.length > 0) {
-                setSelectedItems([]);
-              }
-              setCompleteMultiSelect(!completeMultiSelect);
-            }}
-          >
-            {completeMultiSelect ? 'Hide' : ''} Select
-          </Button>
-        </div>
+        <MultiSelectMenu
+          setCopy={setCopy}
+          setMove={setMove}
+          isMultiSelect={completeMultiSelect}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setMultiSelect={setCompleteMultiSelect}
+        />
       )}
       <ListGroup className="mb-3">
         {purchasedItems.map((item) => (
@@ -535,9 +511,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       </ListGroup>
       <ConfirmModal
         action="delete"
-        body={`Are you sure you want to delete the following items? ${itemsToDelete
-          .map((item) => itemName(item, props.list.type))
-          .join(', ')}`}
+        body={deleteConfirmationModalBody()}
         show={showDeleteConfirm}
         handleConfirm={(): Promise<void> => handleDeleteConfirm()}
         handleClear={(): void => setShowDeleteConfirm(false)}

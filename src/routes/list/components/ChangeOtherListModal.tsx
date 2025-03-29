@@ -63,58 +63,72 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
     toast('Items successfully updated', { type: 'info' });
   };
 
+  const switchToExisting = (
+    <Button
+      variant="link"
+      onClick={(): void => setShowNewListForm(false)}
+      className="float-end"
+      style={{ padding: '0' }}
+    >
+      Choose existing list
+    </Button>
+  );
+
+  const switchToNew = (
+    <Button
+      variant="link"
+      onClick={(): void => setShowNewListForm(true)}
+      className="float-end"
+      style={{ padding: '0' }}
+    >
+      Create new list
+    </Button>
+  );
+
+  const existingListSelect = (
+    <SelectField
+      name="existingList"
+      label="Existing list"
+      value={existingList}
+      options={existingListsOptions}
+      handleChange={handleExistingListSelect}
+      blankOption
+    />
+  );
+
+  const newListNameInput = (
+    <TextField
+      name="newListName"
+      label="New list name"
+      value={newListName ?? ''}
+      handleChange={handleNewListNameInput}
+      placeholder="My super cool list"
+    />
+  );
+
+  const submit = (
+    <ButtonGroup>
+      <FormSubmission
+        submitText="Complete"
+        cancelAction={(): void => props.setShow(false)}
+        cancelText="Cancel"
+        noGrid={true}
+      />
+    </ButtonGroup>
+  );
+
   return (
     <Modal show={props.show} onHide={(): void => props.setShow(false)}>
       <Modal.Header closeButton>{changeListInstructions}</Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit} autoComplete="off">
-          {showNewListForm && existingListsOptions.length > 0 && (
-            <Button
-              variant="link"
-              onClick={(): void => setShowNewListForm(false)}
-              className="float-end"
-              style={{ padding: '0' }}
-            >
-              Choose existing list
-            </Button>
-          )}
-          {!showNewListForm && (
-            <Button
-              variant="link"
-              onClick={(): void => setShowNewListForm(true)}
-              className="float-end"
-              style={{ padding: '0' }}
-            >
-              Create new list
-            </Button>
-          )}
-          {!showNewListForm && existingListsOptions.length > 0 && (
-            <SelectField
-              name="existingList"
-              label="Existing list"
-              value={existingList}
-              options={existingListsOptions}
-              handleChange={handleExistingListSelect}
-              blankOption
-            />
-          )}
-          {showNewListForm && (
-            <TextField
-              name="newListName"
-              label="New list name"
-              value={newListName ?? ''}
-              handleChange={handleNewListNameInput}
-              placeholder="My super cool list"
-            />
-          )}
-          <ButtonGroup>
-            <FormSubmission
-              submitText="Complete"
-              cancelAction={(): void => props.setShow(false)}
-              cancelText="Cancel"
-              noGrid={true}
-            />
-          </ButtonGroup>
+          {showNewListForm && existingListsOptions.length > 0 && switchToExisting}
+          {showNewListForm && newListNameInput}
+
+          {!showNewListForm && switchToNew}
+          {!showNewListForm && existingListsOptions.length > 0 && existingListSelect}
+
+          {submit}
         </Form>
       </Modal.Body>
     </Modal>
