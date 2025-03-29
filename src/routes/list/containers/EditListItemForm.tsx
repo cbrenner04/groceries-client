@@ -56,7 +56,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
       },
     };
     try {
-      await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, putData);
+      await axios.put(`/v1/lists/${props.list.id}/list_items/${props.item.id}`, putData);
       toast('Item successfully updated', { type: 'info' });
       props.navigate(`/lists/${props.list.id}`);
     } catch (err: unknown) {

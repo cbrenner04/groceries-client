@@ -115,7 +115,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+    expect(axios.put).toHaveBeenCalledWith('/v1/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.objectContaining({ quantity: '', clear_quantity: true }),
     });
   });
@@ -141,7 +141,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(async () => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
+    expect(axios.put).toHaveBeenCalledWith('/v1/lists/id1/list_items/bulk_update?item_ids=id1,id2', {
       list_items: expect.objectContaining({ quantity: 'foo', clear_quantity: false }),
     });
   });

@@ -128,7 +128,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  const listItemPath = (): string => `/lists/${props.list.id}/list_items`;
+  const listItemPath = (): string => `/v1/lists/${props.list.id}/list_items`;
 
   const removeItemsFromNotPurchased = (items: IListItem[]): void => {
     let updatedNotPurchasedItems = notPurchasedItems;
@@ -360,12 +360,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setSelectedItems(updatedItems);
   };
 
+  const listItemNavigatePath = (): string => `/lists/${props.list.id}/list_items`;
+
   const handleItemEdit = async (item: IListItem): Promise<void> => {
     if (selectedItems.length) {
       const itemIds = selectedItems.map((item) => item.id).join(',');
-      navigate(`${listItemPath()}/bulk-edit?item_ids=${itemIds}`);
+      navigate(`${listItemNavigatePath()}/bulk-edit?item_ids=${itemIds}`);
     } else {
-      navigate(`${listItemPath()}/${item.id}/edit`);
+      navigate(`${listItemNavigatePath()}/${item.id}/edit`);
     }
   };
 

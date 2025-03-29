@@ -52,7 +52,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
       copy: props.copy,
     };
     // TODO: need to separate this functionality out from bulk updates
-    await axios.put(`/lists/${props.currentList.id}/list_items/bulk_update?item_ids=${itemIds}`, {
+    await axios.put(`/v1/lists/${props.currentList.id}/list_items/bulk_update?item_ids=${itemIds}`, {
       list_items: putData,
     });
     props.setShow(false);

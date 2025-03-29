@@ -30,7 +30,7 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
       type,
     };
     try {
-      await axios.put(`/lists/${props.listId}`, { list });
+      await axios.put(`/v1/lists/${props.listId}`, { list });
       toast('List successfully updated', { type: 'info' });
       navigate('/lists');
     } catch (err: unknown) {

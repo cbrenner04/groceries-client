@@ -240,7 +240,7 @@ describe('ListItemForm', () => {
     await user.click((await findAllByRole('button'))[1]);
 
     expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith('/lists/id1/list_items', {
+    expect(axios.post).toHaveBeenCalledWith('/v1/lists/id1/list_items', {
       list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });

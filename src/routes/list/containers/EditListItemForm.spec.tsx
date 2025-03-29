@@ -220,7 +220,7 @@ describe('EditListItemForm', () => {
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {
+    expect(axios.put).toHaveBeenCalledWith('/v1/lists/id1/list_items/id1', {
       list_item: expect.objectContaining({ product: 'foo' }),
     });
   });
@@ -232,7 +232,7 @@ describe('EditListItemForm', () => {
     await user.click(buttons[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(axios.put).toHaveBeenCalledWith('/lists/id1/list_items/id1', {
+    expect(axios.put).toHaveBeenCalledWith('/v1/lists/id1/list_items/id1', {
       list_item: expect.objectContaining({ number_in_series: 2 }),
     });
   });
