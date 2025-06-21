@@ -1,15 +1,18 @@
 import { toast } from 'react-toastify';
-import { showToast } from './toast';
+import * as toastUtils from './toast';
 
-// Mock react-toastify
-jest.mock('react-toastify', () => ({
-  toast: {
-    success: jest.fn(),
-    error: jest.fn(),
-    info: jest.fn(),
-    warning: jest.fn(),
-  },
-}));
+jest.mock('react-toastify', () => {
+  const toastMock: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  toastMock.success = jest.fn();
+  toastMock.error = jest.fn();
+  toastMock.info = jest.fn();
+  toastMock.warning = jest.fn();
+  toastMock.dismiss = jest.fn();
+  return {
+    toast: toastMock,
+    ToastContainer: (): null => null,
+  };
+});
 
 describe('Toast Utility', () => {
   beforeEach(() => {
@@ -18,7 +21,7 @@ describe('Toast Utility', () => {
 
   it('should call toast.success with correct parameters', () => {
     const message = 'Success message';
-    showToast.success(message);
+    toastUtils.showToast.success(message);
     
     expect(toast.success).toHaveBeenCalledWith(message, {
       position: 'top-right',
@@ -35,9 +38,60 @@ describe('Toast Utility', () => {
 
   it('should call toast.error with correct parameters', () => {
     const message = 'Error message';
-    showToast.error(message);
+    toastUtils.showToast.error(message);
     
     expect(toast.error).toHaveBeenCalledWith(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      pauseOnFocusLoss: false,
+      rtl: false,
+      theme: 'colored',
+    });
+  });
+
+  it('should call toast.info with correct parameters', () => {
+    const message = 'Info message';
+    toastUtils.showToast.info(message);
+    
+    expect(toast.info).toHaveBeenCalledWith(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      pauseOnFocusLoss: false,
+      rtl: false,
+      theme: 'colored',
+    });
+  });
+
+  it('should call toast.warning with correct parameters', () => {
+    const message = 'Warning message';
+    toastUtils.showToast.warning(message);
+    
+    expect(toast.warning).toHaveBeenCalledWith(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      pauseOnFocusLoss: false,
+      rtl: false,
+      theme: 'colored',
+    });
+  });
+
+  it('should call toast.default (backward compatibility) with correct parameters', () => {
+    const message = 'Default message';
+    toastUtils.showToast.default(message);
+    
+    expect(toast).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
       hideProgressBar: true,
@@ -53,7 +107,7 @@ describe('Toast Utility', () => {
   it('should merge custom options with defaults', () => {
     const message = 'Custom message';
     const customOptions = { autoClose: 5000 };
-    showToast.info(message, customOptions);
+    toastUtils.showToast.info(message, customOptions);
     
     expect(toast.info).toHaveBeenCalledWith(message, {
       position: 'top-right',
