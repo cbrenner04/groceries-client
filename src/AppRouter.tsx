@@ -15,7 +15,6 @@ import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
-import ToastTest from './components/ToastTest';
 
 interface IUser {
   accessToken: string;
@@ -76,8 +75,6 @@ export default function AppRouter(): React.JSX.Element {
           <Route path="/users/password/edit" element={<EditPassword />} />
           <Route path="/users/invitation/new" element={<InviteForm />} />
           <Route path="/users/invitation/accept" element={<EditInvite />} />
-          {/* Test route - remove after testing */}
-          <Route path="/test-toast" element={<ToastTest />} />
           {/* routes/error_pages */}
           <Route errorElement={<PageNotFound />} />
         </Routes>
