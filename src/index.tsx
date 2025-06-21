@@ -3,15 +3,26 @@ import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss';
+import 'react-toastify/dist/ReactToastify.css';
 import AppRouter from './AppRouter';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 
 const root: Root = createRoot(document.getElementById('root') as Element);
 root.render(
   <React.StrictMode>
     <div hidden>{process.env.REACT_APP_VERSION}</div>
-    <ToastContainer limit={3} hideProgressBar autoClose={2000} theme="colored" />
+    <ToastContainer 
+      limit={3} 
+      hideProgressBar 
+      autoClose={2000} 
+      theme="colored"
+      position="top-right"
+      closeOnClick
+      pauseOnHover
+      draggable
+      pauseOnFocusLoss={false}
+      rtl={false}
+    />
     <AppRouter />
   </React.StrictMode>,
 );
