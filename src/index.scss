@@ -5,6 +5,33 @@ body {
   margin-bottom: 2rem;
 }
 
+// Ensure react-toastify styles are properly isolated
+.Toastify__toast-container {
+  z-index: 9999 !important;
+}
+
+.Toastify__toast {
+  font-family: inherit !important;
+  border-radius: 4px !important;
+}
+
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+}
+
+.Toastify__toast--success {
+  background-color: #28a745 !important;
+}
+
+.Toastify__toast--info {
+  background-color: #17a2b8 !important;
+}
+
+.Toastify__toast--warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
 .navbar {
   padding-left: 10px;
   padding-right: 10px;
@@ -45,11 +72,14 @@ body {
 
 .list-item-row {
   @include media-breakpoint-down(xs) {
-    margin-right: -45px
+    margin-right: -45px;
   }
 }
 
 .list-item-multi-divider {
+  border-right: 1px solid lightgray;
+  height: 100%;
+  
   @include media-breakpoint-down(xs) {
     margin-right: -22px;
   }
@@ -57,9 +87,6 @@ body {
   @include media-breakpoint-up(sm) {
     margin-right: -15px;
   }
-
-  border-right: 1px solid lightgray;
-  height: 100%;
 }
 
 .list-item-title {
@@ -69,11 +96,12 @@ body {
 }
 
 .list-item-buttons {
-  @include media-breakpoint-up(sm) {
-    margin-right: 33px;
-  }
   @include media-breakpoint-up(xs) {
     margin-right: 2px;
+  }
+  
+  @include media-breakpoint-up(sm) {
+    margin-right: 33px;
   }
 }
 
@@ -95,12 +123,12 @@ body {
 }
 
 .list-multi-buttons {
-  @include media-breakpoint-down(lg) {
-    margin-left: -33px;
-  }
-
   @include media-breakpoint-down(sm) {
     margin-left: -2px;
+  }
+  
+  @include media-breakpoint-down(lg) {
+    margin-left: -33px;
   }
 }
 
