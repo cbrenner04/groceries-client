@@ -1,0 +1,4 @@
+# ... existing ignores ...
+build/
+coverage/
+craco.config.js 

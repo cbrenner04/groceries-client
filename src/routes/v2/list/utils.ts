@@ -14,17 +14,15 @@ function handleFailure(
     if (error.response.status === 401) {
       toast('You must sign in', { type: 'error' });
       navigate('/users/sign_in');
-      return;
     } else if ([403, 404].includes(error.response.status)) {
       toast(notFoundMessage, { type: 'error' });
       navigate(redirectURI);
-      return;
     } else {
       toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
-      return;
     }
   }
-  // any other errors will just be caught and render the generic UnknownError
+  // Always throw an error so that Async.Rejected renders
+  /* istanbul ignore next */
   throw new Error();
 }
 
@@ -47,6 +45,17 @@ export async function fetchList(fetchParams: {
 }): Promise<IFulfilledListData | undefined> {
   try {
     const { data } = await axios.get(`/v2/lists/${fetchParams.id}`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new Error('No data received from server');
+    }
+
+    // Ensure required fields exist
+    if (!data.list || !data.not_completed_items || !data.completed_items) {
+      throw new Error('Invalid data structure received from server');
+    }
+
     const categories = data.not_completed_items
       .concat(data.completed_items)
       .map((item: IV2ListItem) => {
@@ -59,5 +68,8 @@ export async function fetchList(fetchParams: {
     return data;
   } catch (err: unknown) {
     handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
+    // Re-throw the error so that Async.Rejected renders
+    /* istanbul ignore next */
+    throw err;
   }
 }

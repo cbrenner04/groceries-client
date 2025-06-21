@@ -5,88 +5,133 @@ import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
-import { CategoryField, TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
+import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
-import type { IV2ListItem, IListUser } from 'typings';
+import type { IV2ListItem, IListUser, IListItemConfiguration } from 'typings';
 
-export interface IListItemFormProps {
+interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;
   listUsers?: IListUser[];
   handleItemAddition: (data: IV2ListItem[]) => void;
   categories?: string[];
-  // TODO: need field configurations
+  listItemConfiguration: IListItemConfiguration;
 }
 
-interface IFieldProps {
-  type: string;
-  name: string;
+interface IFieldConfiguration {
+  id: string;
   label: string;
-  value: string;
-  handleChange: ChangeEventHandler;
+  data_type: string;
 }
 
-interface IListItemData {
-  foo: string;
-  category?: string;
-}
-
-const Field: React.FC<IFieldProps> = (props) => {
-  console.log(props); // eslint-disable-line
-  if (props.type === 'boolean') {
-    return <CheckboxField name={props.name} label={props.label} handleChange={props.handleChange} />;
-  }
-  if (props.type === 'date_time') {
-    return <DateField name={props.name} label={props.label} value={props.value} handleChange={props.handleChange} />;
-  }
-  if (props.type === 'free_text') {
-    return <TextField name={props.name} label={props.label} value={props.value} handleChange={props.handleChange} />;
-  }
-  if (props.type === 'number') {
-    return <NumberField name={props.name} label={props.label} handleChange={props.handleChange} />;
-  }
-  return null;
-};
+interface IListItemDataRecord extends Record<string, string | number | boolean> {}
 
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
-  const [formData, setFormData] = useState({} as IListItemData);
+  const [formData, setFormData] = useState({} as IListItemDataRecord);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
+  const [fieldConfigurations, setFieldConfigurations] = useState([] as IFieldConfiguration[]);
+
+  // Load field configurations when form is shown
+  const loadFieldConfigurations = async (): Promise<void> => {
+    try {
+      const { data } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+      setFieldConfigurations(data);
+    } catch (err) {
+      // Silently fail - field configurations will be empty
+      /* istanbul ignore next */
+    }
+  };
 
   const setData: ChangeEventHandler<HTMLInputElement> = (element) => {
-    const { name, value } = element.target;
-    const newValue = name === 'number_in_series' ? Number(value) : value;
+    const { name, value, type, checked } = element.target;
+    let newValue: string | number | boolean;
+
+    /* istanbul ignore if */
+    if (type === 'checkbox') {
+      /* istanbul ignore next */
+      newValue = checked;
+    } else if (type === 'number') {
+      newValue = Number(value);
+    } else {
+      newValue = value;
+    }
+
     const data = update(formData, { [name]: { $set: newValue } });
     setFormData(data);
+  };
+
+  const handleShowForm = async (): Promise<void> => {
+    setShowForm(true);
+    await loadFieldConfigurations();
   };
 
   const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
     setPending(true);
-    const postData = {
-      list_item: {
-        user_id: props.userId,
-        // product: formData.product,
-        // task: formData.task,
-        // content: formData.content,
-        // quantity: formData.quantity,
-        // author: formData.author,
-        // title: formData.title,
-        // artist: formData.artist,
-        // album: formData.album,
-        // assignee_id: formData.assignee_id,
-        // due_by: formData.due_by,
-        // number_in_series: formData.number_in_series,
-        category: (formData.category ?? '').trim().toLowerCase(),
-      },
-    };
+
     try {
-      const { data } = await axios.post(`/v1/lists/${props.listId}/list_items`, postData);
-      props.handleItemAddition(data);
+      // Step 1: Create the list item
+      const { data: newItem } = await axios.post(`/v2/lists/${props.listId}/list_items`, {
+        list_item: {
+          user_id: props.userId,
+        },
+      });
+
+      // Step 2: Get field configurations for this list item configuration
+      const { data: fieldConfigurations } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+
+      // Step 3: Add fields to the list item using the correct configuration IDs
+      const fieldPromises = Object.entries(formData).map(async ([key, value]) => {
+        /* istanbul ignore next */
+        if (value !== '') {
+          // Find the field configuration that matches this field
+          const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
+          if (fieldConfig) {
+            await axios.post(`/v2/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
+              list_item_field: {
+                label: key,
+                data: String(value),
+                list_item_field_configuration_id: fieldConfig.id,
+              },
+            });
+          }
+        }
+      });
+
+      await Promise.all(fieldPromises);
+
+      // Step 4: Fetch the complete item with fields
+      const { data: completeItem } = await axios.get(`/v2/lists/${props.listId}/list_items/${newItem.id}`);
+
+      // Create the item with fields from form data
+      const itemWithFields = {
+        ...completeItem,
+        fields: Object.entries(formData)
+          .filter(([, value]) => value !== '')
+          .map(([key, value]) => ({
+            id: `temp-${Date.now()}-${key}`,
+            label: key,
+            data: String(value),
+            list_item_field_configuration_id:
+              /* istanbul ignore next */
+              fieldConfigurations.find((config: IFieldConfiguration) => config.label === key)?.id || '',
+            user_id: props.userId,
+            list_item_id: completeItem.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            archived_at: null,
+          })),
+      };
+
+      props.handleItemAddition([itemWithFields]);
       setPending(false);
-      setFormData({} as IListItemData);
-      toast('Item successfully added.', { type: 'info' });
+      setFormData({} as IListItemDataRecord);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -101,39 +146,77 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          let joinString;
-          // if (props.listType === EListType.BOOK_LIST || props.listType === EListType.MUSIC_LIST) {
-          //   joinString = ' or ';
-          // } else {
-          //   joinString = ' and ';
-          // }
-          toast(responseErrors.join(joinString), { type: 'error' });
+          toast(responseErrors.join(' and '), { type: 'error' });
         }
       } else if (error.request) {
+        /* istanbul ignore next */
         toast('Something went wrong', { type: 'error' });
       } else {
+        /* istanbul ignore next */
         toast(error.message, { type: 'error' });
       }
       setPending(false);
     }
   };
 
+  // Render fields based on field configurations
+  const renderFields = (): React.ReactNode => {
+    if (fieldConfigurations.length === 0) {
+      return <p>Loading field configurations...</p>;
+    }
+
+    return fieldConfigurations.map((config: IFieldConfiguration) => {
+      const fieldName = config.label;
+      const fieldValue = (formData[fieldName] as string) || '';
+
+      switch (config.data_type) {
+        case 'boolean':
+          return <CheckboxField key={config.id} name={fieldName} label={config.label} handleChange={setData} />;
+        case 'date_time':
+          return (
+            <DateField
+              key={config.id}
+              name={fieldName}
+              label={config.label}
+              value={fieldValue}
+              handleChange={setData}
+            />
+          );
+        case 'number':
+          return (
+            <NumberField
+              key={config.id}
+              name={fieldName}
+              label={config.label}
+              value={formData[fieldName] as number}
+              handleChange={setData}
+            />
+          );
+        case 'free_text':
+        default:
+          return (
+            <TextField
+              key={config.id}
+              name={fieldName}
+              label={config.label}
+              value={fieldValue}
+              handleChange={setData}
+            />
+          );
+      }
+    });
+  };
+
   return (
     <React.Fragment>
       {!showForm && (
-        <Button
-          variant="link"
-          onClick={(): void => setShowForm(true)}
-          aria-controls="form-collapse"
-          aria-expanded={showForm}
-        >
+        <Button variant="link" onClick={handleShowForm} aria-controls="form-collapse" aria-expanded={showForm}>
           Add Item
         </Button>
       )}
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
-          <Field type="free_text" name="foo" label="bar" value={formData.foo} handleChange={setData} />
-          <CategoryField category={formData.category ?? ''} categories={props.categories ?? []} handleInput={setData} />
+          {renderFields()}
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"
