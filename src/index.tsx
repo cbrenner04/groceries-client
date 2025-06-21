@@ -11,10 +11,10 @@ const root: Root = createRoot(document.getElementById('root') as Element);
 root.render(
   <React.StrictMode>
     <div hidden>{process.env.REACT_APP_VERSION}</div>
-    <ToastContainer 
-      limit={3} 
-      hideProgressBar 
-      autoClose={2000} 
+    <ToastContainer
+      limit={3}
+      hideProgressBar
+      autoClose={2000}
       theme="colored"
       position="top-right"
       closeOnClick

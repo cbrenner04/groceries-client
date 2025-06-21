@@ -22,7 +22,7 @@ describe('Toast Utility', () => {
   it('should call toast.success with correct parameters', () => {
     const message = 'Success message';
     toastUtils.showToast.success(message);
-    
+
     expect(toast.success).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
@@ -39,7 +39,7 @@ describe('Toast Utility', () => {
   it('should call toast.error with correct parameters', () => {
     const message = 'Error message';
     toastUtils.showToast.error(message);
-    
+
     expect(toast.error).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
@@ -56,7 +56,7 @@ describe('Toast Utility', () => {
   it('should call toast.info with correct parameters', () => {
     const message = 'Info message';
     toastUtils.showToast.info(message);
-    
+
     expect(toast.info).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
@@ -73,7 +73,7 @@ describe('Toast Utility', () => {
   it('should call toast.warning with correct parameters', () => {
     const message = 'Warning message';
     toastUtils.showToast.warning(message);
-    
+
     expect(toast.warning).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
@@ -90,7 +90,7 @@ describe('Toast Utility', () => {
   it('should call toast.default (backward compatibility) with correct parameters', () => {
     const message = 'Default message';
     toastUtils.showToast.default(message);
-    
+
     expect(toast).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 2000,
@@ -108,7 +108,7 @@ describe('Toast Utility', () => {
     const message = 'Custom message';
     const customOptions = { autoClose: 5000 };
     toastUtils.showToast.info(message, customOptions);
-    
+
     expect(toast.info).toHaveBeenCalledWith(message, {
       position: 'top-right',
       autoClose: 5000, // Custom option should override default
@@ -121,4 +121,4 @@ describe('Toast Utility', () => {
       theme: 'colored',
     });
   });
-}); 
+});
