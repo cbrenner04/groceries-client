@@ -132,12 +132,8 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       )}
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
-          <Field type='free_text' name='foo' label='bar' value={formData.foo} handleChange={setData} />
-          <CategoryField
-            category={formData.category ?? ''}
-            categories={props.categories ?? []}
-            handleInput={setData}
-          />
+          <Field type="free_text" name="foo" label="bar" value={formData.foo} handleChange={setData} />
+          <CategoryField category={formData.category ?? ''} categories={props.categories ?? []} handleInput={setData} />
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"
