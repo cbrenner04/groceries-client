@@ -2,11 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import ListItemForm from './ListItemForm';
 import { toast } from 'react-toastify';
+import { mockedAxios } from 'test-utils/axiosMocks';
 
-jest.mock('utils/api', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
 jest.mock('react-toastify');
 
 const mockHandleItemAddition = jest.fn();
@@ -37,8 +34,7 @@ const defaultProps = {
 describe('ListItemForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigurations });
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
   });
 
   it('renders fields from configuration', async () => {
@@ -49,13 +45,12 @@ describe('ListItemForm', () => {
   });
 
   it('handles input and submits form', async () => {
-    const axios = require('utils/api');
     // Mock all the axios calls that happen during form submission
-    axios.get
+    mockedAxios.get
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigurations }) // field config during submit
       .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
-    axios.post
+    mockedAxios.post
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
 
@@ -76,8 +71,7 @@ describe('ListItemForm', () => {
   });
 
   it('shows error toast on API error', async () => {
-    const axios = require('utils/api');
-    axios.post.mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
+    mockedAxios.post.mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Bananas' } });
@@ -88,8 +82,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles field configuration loading failure', async () => {
-    const axios = require('utils/api');
-    axios.get.mockRejectedValue(new Error('Network error'));
+    mockedAxios.get.mockRejectedValue(new Error('Network error'));
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -105,8 +98,7 @@ describe('ListItemForm', () => {
       { id: '4', label: 'due_date', data_type: 'date_time' },
     ];
 
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigsWithTypes });
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithTypes });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -123,8 +115,7 @@ describe('ListItemForm', () => {
       { id: '2', label: 'completed', data_type: 'boolean' },
     ];
 
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigsWithCheckbox });
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithCheckbox });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -140,12 +131,11 @@ describe('ListItemForm', () => {
   it('handles field configuration not found during submission', async () => {
     const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
 
-    const axios = require('utils/api');
-    axios.get
+    mockedAxios.get
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
       .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
-    axios.post
+    mockedAxios.post
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
 
@@ -164,8 +154,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles 401 authentication error', async () => {
-    const axios = require('utils/api');
-    axios.post.mockRejectedValue({ response: { status: 401 } });
+    mockedAxios.post.mockRejectedValue({ response: { status: 401 } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -180,8 +169,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles 403/404 list not found error', async () => {
-    const axios = require('utils/api');
-    axios.post.mockRejectedValue({ response: { status: 404 } });
+    mockedAxios.post.mockRejectedValue({ response: { status: 404 } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -196,8 +184,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles network request error', async () => {
-    const axios = require('utils/api');
-    axios.post.mockRejectedValue({ request: {} });
+    mockedAxios.post.mockRejectedValue({ request: {} });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -211,8 +198,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles generic error', async () => {
-    const axios = require('utils/api');
-    axios.post.mockRejectedValue({ message: 'Generic error' });
+    mockedAxios.post.mockRejectedValue({ message: 'Generic error' });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -226,8 +212,7 @@ describe('ListItemForm', () => {
   });
 
   it('shows loading message when field configurations are empty', async () => {
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: [] });
+    mockedAxios.get.mockResolvedValue({ data: [] });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
     expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
@@ -261,8 +246,7 @@ describe('ListItemForm', () => {
     const mockFieldConfigs = [{ id: '1', label: 'unknown_field', data_type: 'unknown_type' }];
 
     // Mock axios to return field configs
-    const axios = require('../../../../utils/api');
-    axios.get.mockResolvedValueOnce({ data: mockFieldConfigs });
+    mockedAxios.get.mockResolvedValueOnce({ data: mockFieldConfigs });
 
     render(<ListItemForm {...defaultProps} />);
 
@@ -276,8 +260,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles field configuration loading failure silently', async () => {
-    const axios = require('utils/api');
-    axios.get.mockRejectedValue(new Error('Network error'));
+    mockedAxios.get.mockRejectedValue(new Error('Network error'));
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -287,9 +270,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles response errors with data during form submission', async () => {
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigurations });
-    axios.post.mockRejectedValue({
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
+    mockedAxios.post.mockRejectedValue({
       response: {
         status: 422,
         data: {
@@ -311,9 +293,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles network request error during form submission', async () => {
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigurations });
-    axios.post.mockRejectedValue({
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
+    mockedAxios.post.mockRejectedValue({
       request: {},
       message: 'Network Error',
     });
@@ -330,9 +311,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles generic error during form submission', async () => {
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigurations });
-    axios.post.mockRejectedValue({
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
+    mockedAxios.post.mockRejectedValue({
       message: 'Generic error message',
     });
 
@@ -348,9 +328,8 @@ describe('ListItemForm', () => {
   });
 
   it('submits form successfully', async () => {
-    const axios = require('utils/api');
-    axios.get.mockResolvedValue({ data: fieldConfigurations });
-    axios.post.mockResolvedValue({ data: { id: '1' } });
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
+    mockedAxios.post.mockResolvedValue({ data: { id: '1' } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));

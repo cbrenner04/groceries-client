@@ -2,15 +2,13 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
 import { toast } from 'react-toastify';
+import { mockedAxios } from 'test-utils/axiosMocks';
 
 import List from './List';
 import { UserContext } from '../../../AppRouter';
 
 // Mock dependencies
 jest.mock('react-toastify');
-jest.mock('../../../utils/api', () => ({
-  get: jest.fn(),
-}));
 
 const mockNavigate = jest.fn();
 
@@ -72,8 +70,7 @@ describe('V2 List', () => {
   });
 
   it('renders loading state initially', () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockImplementation(
+    mockedAxios.get.mockImplementation(
       () =>
         new Promise(() => {
           /* never resolves for loading state */
@@ -85,8 +82,7 @@ describe('V2 List', () => {
   });
 
   it('renders list data when fetch succeeds', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: mockListData });
+    mockedAxios.get.mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderList();
     });
@@ -97,8 +93,7 @@ describe('V2 List', () => {
   });
 
   it('renders error state when fetch fails', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue(new Error('Network error'));
+    mockedAxios.get.mockRejectedValue(new Error('Network error'));
     await act(async () => {
       renderList();
     });
@@ -107,10 +102,9 @@ describe('V2 List', () => {
   });
 
   it('handles authentication errors', async () => {
-    const axios = require('../../../utils/api');
     const authError = new Error('Unauthorized') as Error & { response?: { status: number } };
     authError.response = { status: 401 };
-    axios.get.mockRejectedValue(authError);
+    mockedAxios.get.mockRejectedValue(authError);
     await act(async () => {
       renderList();
     });

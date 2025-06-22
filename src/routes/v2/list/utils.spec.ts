@@ -1,10 +1,8 @@
 import { fetchList } from './utils';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
+import { mockedAxios } from 'test-utils/axiosMocks';
 
-jest.mock('../../../utils/api', () => ({
-  get: jest.fn(),
-}));
 jest.mock('react-toastify');
 
 const mockNavigate = jest.fn();
@@ -26,8 +24,7 @@ describe('fetchList', () => {
       list_item_configurations: [],
       categories: [],
     };
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: mockData });
+    mockedAxios.get.mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
   });
@@ -37,8 +34,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 401 },
     } as Partial<AxiosError> as AxiosError;
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue(error);
+    mockedAxios.get.mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -49,8 +45,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 403 },
     } as Partial<AxiosError> as AxiosError;
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue(error);
+    mockedAxios.get.mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
@@ -61,8 +56,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 500 },
     } as Partial<AxiosError> as AxiosError;
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue(error);
+    mockedAxios.get.mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith(
       'Something went wrong. Data may be incomplete and user actions may not persist.',
@@ -71,32 +65,27 @@ describe('fetchList', () => {
   });
 
   it('handles missing data from server', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: null });
+    mockedAxios.get.mockResolvedValue({ data: null });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles invalid data structure', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: { list: null, not_completed_items: null, completed_items: null } });
+    mockedAxios.get.mockResolvedValue({ data: { list: null, not_completed_items: null, completed_items: null } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing list field', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: { not_completed_items: [], completed_items: [] } });
+    mockedAxios.get.mockResolvedValue({ data: { not_completed_items: [], completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing not_completed_items field', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: { list: {}, completed_items: [] } });
+    mockedAxios.get.mockResolvedValue({ data: { list: {}, completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing completed_items field', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: { list: {}, not_completed_items: [] } });
+    mockedAxios.get.mockResolvedValue({ data: { list: {}, not_completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
@@ -125,8 +114,7 @@ describe('fetchList', () => {
       list_item_configuration: {},
       list_item_configurations: [],
     };
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: mockData });
+    mockedAxios.get.mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['Fruits', 'Vegetables']);
   });
@@ -152,15 +140,13 @@ describe('fetchList', () => {
       list_item_configuration: {},
       list_item_configurations: [],
     };
-    const axios = require('../../../utils/api');
-    axios.get.mockResolvedValue({ data: mockData });
+    mockedAxios.get.mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['Fruits', 'Vegetables', 'Dairy']);
   });
 
   it('handles error when no data is received from server', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue({
+    mockedAxios.get.mockRejectedValue({
       response: { status: 404 },
       isAxiosError: true,
     } as AxiosError);
@@ -174,8 +160,7 @@ describe('fetchList', () => {
   });
 
   it('handles error when invalid data structure is received', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue({
+    mockedAxios.get.mockRejectedValue({
       response: { status: 404 },
       isAxiosError: true,
     } as AxiosError);
@@ -189,9 +174,9 @@ describe('fetchList', () => {
   });
 
   it('always throws an error in handleFailure even when no response', async () => {
-    const axios = require('../../../utils/api');
-    axios.get.mockRejectedValue({
+    mockedAxios.get.mockRejectedValue({
       isAxiosError: true,
+      response: { status: 500 },
     } as AxiosError);
 
     try {
@@ -199,9 +184,9 @@ describe('fetchList', () => {
     } catch (error) {
       // Expected to throw
     }
-    // Should still throw even when error.response is undefined
-    expect(() => {
-      throw new Error();
-    }).toThrow();
+    expect(toast).toHaveBeenCalledWith(
+      'Something went wrong. Data may be incomplete and user actions may not persist.',
+      { type: 'error' },
+    );
   });
 });

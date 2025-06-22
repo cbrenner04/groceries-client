@@ -6,15 +6,10 @@ import { toast } from 'react-toastify';
 import type { IList, IV2ListItem, IListItemConfiguration, IListItemField } from 'typings';
 import { EUserPermissions, EListType } from 'typings';
 import type { AxiosError } from 'axios';
+import { mockedAxios } from 'test-utils/axiosMocks';
 
 // Mock dependencies
 jest.mock('react-toastify');
-jest.mock('utils/api', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
-}));
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => jest.fn(),
@@ -150,8 +145,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item completion error', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue(new Error('Failed to complete item'));
+    mockedAxios.put.mockRejectedValue(new Error('Failed to complete item'));
 
     renderListContainer();
 
@@ -163,8 +157,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item deletion error', async () => {
-    const axios = require('utils/api');
-    axios.delete.mockRejectedValue(new Error('Failed to delete item'));
+    mockedAxios.delete.mockRejectedValue(new Error('Failed to delete item'));
 
     renderListContainer();
 
@@ -176,8 +169,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item refresh error', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue(new Error('Failed to refresh item'));
+    mockedAxios.put.mockRejectedValue(new Error('Failed to refresh item'));
 
     renderListContainer({
       completedItems: [completedItem],
@@ -192,8 +184,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 401 authentication error during item completion', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ response: { status: 401 } });
+    mockedAxios.put.mockRejectedValue({ response: { status: 401 } });
 
     renderListContainer();
 
@@ -206,8 +197,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 404 list not found error during item completion', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ response: { status: 404 } });
+    mockedAxios.put.mockRejectedValue({ response: { status: 404 } });
 
     renderListContainer();
 
@@ -219,8 +209,7 @@ describe('ListContainer', () => {
   });
 
   it('handles network request error during item completion', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ request: {} });
+    mockedAxios.put.mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -232,8 +221,7 @@ describe('ListContainer', () => {
   });
 
   it('handles generic error during item completion', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ message: 'Generic error' });
+    mockedAxios.put.mockRejectedValue({ message: 'Generic error' });
 
     renderListContainer();
 
@@ -284,8 +272,7 @@ describe('ListContainer', () => {
     renderListContainer({}, 'browser');
 
     // Trigger an error by mocking axios to throw
-    const axios = require('../../../../utils/api');
-    axios.put.mockRejectedValueOnce(mockError);
+    mockedAxios.put.mockRejectedValueOnce(mockError);
 
     // This will test the error.request branch in handleFailure
     // The error handling is tested through the actual error scenarios
@@ -304,10 +291,9 @@ describe('ListContainer', () => {
     renderListContainer({}, 'browser');
 
     // Mock axios to return a completed item
-    const axios = require('../../../../utils/api');
-    axios.post.mockResolvedValueOnce({ data: mockCompletedItem });
-    axios.get.mockResolvedValueOnce({ data: [] });
-    axios.get.mockResolvedValueOnce({ data: mockCompletedItem });
+    mockedAxios.post.mockResolvedValueOnce({ data: mockCompletedItem });
+    mockedAxios.get.mockResolvedValueOnce({ data: [] });
+    mockedAxios.get.mockResolvedValueOnce({ data: mockCompletedItem });
 
     // This tests the completed item branch in handleAddItem
     // The actual test is in the form submission flow
@@ -361,24 +347,21 @@ describe('ListContainer', () => {
   });
 
   it('handles errors in handleItemComplete', async () => {
-    const axios = require('../../../../utils/api');
-    axios.put.mockRejectedValueOnce(new Error('Complete failed'));
+    mockedAxios.put.mockRejectedValueOnce(new Error('Complete failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
   });
 
   it('handles errors in handleItemDelete', async () => {
-    const axios = require('../../../../utils/api');
-    axios.delete.mockRejectedValueOnce(new Error('Delete failed'));
+    mockedAxios.delete.mockRejectedValueOnce(new Error('Delete failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
   });
 
   it('handles errors in handleItemRefresh', async () => {
-    const axios = require('../../../../utils/api');
-    axios.put.mockRejectedValueOnce(new Error('Refresh failed'));
+    mockedAxios.put.mockRejectedValueOnce(new Error('Refresh failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
@@ -391,8 +374,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 403 error in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ response: { status: 403 } });
+    mockedAxios.put.mockRejectedValue({ response: { status: 403 } });
 
     renderListContainer();
 
@@ -404,8 +386,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 500 error in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ response: { status: 500 } });
+    mockedAxios.put.mockRejectedValue({ response: { status: 500 } });
 
     renderListContainer();
 
@@ -417,8 +398,7 @@ describe('ListContainer', () => {
   });
 
   it('handles request error in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ request: {} });
+    mockedAxios.put.mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -430,8 +410,7 @@ describe('ListContainer', () => {
   });
 
   it('handles generic error in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ message: 'Generic error message' });
+    mockedAxios.put.mockRejectedValue({ message: 'Generic error message' });
 
     renderListContainer();
 
@@ -508,8 +487,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 500+ status codes in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ response: { status: 500 } });
+    mockedAxios.put.mockRejectedValue({ response: { status: 500 } });
 
     renderListContainer();
 
@@ -521,8 +499,7 @@ describe('ListContainer', () => {
   });
 
   it('handles network request errors in handleFailure', async () => {
-    const axios = require('utils/api');
-    axios.put.mockRejectedValue({ request: {} });
+    mockedAxios.put.mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -534,16 +511,14 @@ describe('ListContainer', () => {
   });
 
   it('handles generic errors in handleFailure', async () => {
-    const axios = require('utils/api');
-    const errorMessage = 'Some unexpected error';
-    axios.put.mockRejectedValue({ message: errorMessage });
+    mockedAxios.put.mockRejectedValue({ message: 'Generic error message' });
 
     renderListContainer();
 
     fireEvent.click(screen.getByTestId('not-purchased-item-complete-1'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith(errorMessage, { type: 'error' });
+      expect(toast).toHaveBeenCalledWith('Generic error message', { type: 'error' });
     });
   });
 

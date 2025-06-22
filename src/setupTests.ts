@@ -10,6 +10,18 @@ import type { ReactNode } from 'react';
 global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
 
+// Mock the utils/api module (configured axios instance)
+jest.mock('utils/api', () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+    patch: jest.fn(),
+  },
+}));
+
 jest.mock('axios', () => ({
   create: (): {
     interceptors: {
