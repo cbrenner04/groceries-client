@@ -50,9 +50,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     const { name, value, type, checked } = element.target;
     let newValue: string | number | boolean;
 
-    /* istanbul ignore if */
     if (type === 'checkbox') {
-      /* istanbul ignore next */
       newValue = checked;
     } else if (type === 'number') {
       newValue = Number(value);
@@ -88,7 +86,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       // Step 3: Add fields to the list item using the correct configuration IDs
       const fieldPromises = Object.entries(formData).map(async ([key, value]) => {
-        /* istanbul ignore next */
         if (value !== '') {
           // Find the field configuration that matches this field
           const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
@@ -141,18 +138,18 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         } else if ([403, 404].includes(error.response.status!)) {
           toast('List not found', { type: 'error' });
           props.navigate('/lists');
-        } else {
+        } else if (error.response.status === 422) {
           const responseTextKeys = Object.keys(error.response.data!);
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
           toast(responseErrors.join(' and '), { type: 'error' });
+        } else {
+          toast('Something went wrong. Data may be incomplete and user actions may not persist.', { type: 'error' });
         }
       } else if (error.request) {
-        /* istanbul ignore next */
         toast('Something went wrong', { type: 'error' });
       } else {
-        /* istanbul ignore next */
         toast(error.message, { type: 'error' });
       }
       setPending(false);

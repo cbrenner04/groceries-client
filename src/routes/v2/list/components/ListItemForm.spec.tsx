@@ -121,9 +121,13 @@ describe('ListItemForm', () => {
     const checkbox = await screen.findByLabelText('completed');
     expect(checkbox).toBeInTheDocument();
 
-    // Test checkbox interaction to cover line 54
-    fireEvent.change(checkbox, { target: { checked: true } });
+    // Test checkbox interaction to cover line 91 (newValue = checked)
+    fireEvent.change(checkbox, { target: { checked: true, type: 'checkbox' } });
     expect(checkbox).toBeChecked();
+
+    // Test unchecking the checkbox to ensure full coverage
+    fireEvent.change(checkbox, { target: { checked: false, type: 'checkbox' } });
+    expect(checkbox).not.toBeChecked();
   });
 
   it('handles field configuration not found during submission', async () => {
