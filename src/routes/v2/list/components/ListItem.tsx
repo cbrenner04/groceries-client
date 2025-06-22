@@ -20,10 +20,12 @@ interface IListItemProps {
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   const multiSelect = props.multiSelect ?? false;
   const itemTitle = (fields: IListItemField[]): ReactNode => {
-    if (fields.length === 0) {
+    // Defensive: handle undefined or null fields
+    const safeFields = Array.isArray(fields) ? fields : [];
+    if (safeFields.length === 0) {
       return <span>Untitled Item</span>;
     }
-    return fields.map(
+    return safeFields.map(
       (field: IListItemField) => field.label !== 'category' && <span key={field.id}>{field.data} </span>,
     );
   };

@@ -238,6 +238,31 @@ describe('handleItemComplete', () => {
     expect(setCompleted).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith('Item marked as completed.', { type: 'info' });
   });
+
+  it('preserves original fields when API returns minimal response', async () => {
+    const testItem = makeItem({ id: 'test-id' });
+    const otherItem = makeItem({ id: 'other-id' });
+    // API returns minimal response without fields
+    mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', completed: true } });
+    const setNotCompleted = jest.fn();
+    const setCompleted = jest.fn();
+    const setPending = jest.fn();
+
+    await handleItemComplete({
+      item: testItem,
+      listId: '1',
+      notCompletedItems: [testItem, otherItem],
+      setNotCompletedItems: setNotCompleted,
+      completedItems: [],
+      setCompletedItems: setCompleted,
+      setPending,
+      handleFailure: jest.fn(),
+    });
+
+    expect(setCompleted).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith('Item marked as completed.', { type: 'info' });
+  });
+
   it('handles error', async () => {
     mockAxios.put.mockRejectedValueOnce(new Error('fail'));
     const fail = jest.fn();
@@ -347,6 +372,30 @@ describe('handleItemRefresh', () => {
     expect(setNotCompleted).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
   });
+
+  it('preserves original fields when API returns minimal response', async () => {
+    const testItem = makeItem({ id: 'test-id' });
+    const otherItem = makeItem({ id: 'other-id' });
+    // API returns minimal response without fields
+    mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', refreshed: true, completed: false } });
+    const setCompleted = jest.fn();
+    const setNotCompleted = jest.fn();
+    const setPending = jest.fn();
+    await handleItemRefresh({
+      item: testItem,
+      listId: '1',
+      completedItems: [testItem, otherItem],
+      setCompletedItems: setCompleted,
+      notCompletedItems: [],
+      setNotCompletedItems: setNotCompleted,
+      setPending,
+      handleFailure: jest.fn(),
+    });
+    expect(setCompleted).toHaveBeenCalled();
+    expect(setNotCompleted).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+  });
+
   it('handles error', async () => {
     mockAxios.put.mockRejectedValueOnce(new Error('fail'));
     const fail = jest.fn();

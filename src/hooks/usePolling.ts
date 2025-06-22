@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, startTransition } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 
 const ONE_SECOND = 1000;
@@ -19,7 +19,19 @@ export default function usePolling(callback: () => void, delay: number | null): 
       if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && isIdle()) {
         return;
       }
-      callbackRef.current?.();
+
+      // Use startTransition to mark this as a non-urgent update
+      // This helps React prioritize rendering and prevents concurrent rendering issues
+      startTransition(() => {
+        try {
+          callbackRef.current?.();
+        } catch (error) {
+          /* istanbul ignore next */
+          // Silently handle errors to prevent polling from breaking
+          // eslint-disable-next-line no-console
+          console.warn('Polling callback error:', error);
+        }
+      });
     }
 
     /* istanbul ignore else */

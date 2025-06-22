@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor, type RenderResult } from '@testing-
 import { MemoryRouter, BrowserRouter } from 'react-router';
 import ListContainer from './ListContainer';
 import { toast } from 'react-toastify';
-import type { IList, IV2ListItem, IListItemConfiguration } from 'typings';
+import type { IList, IV2ListItem, IListItemConfiguration, IListItemField } from 'typings';
 import { EUserPermissions, EListType } from 'typings';
 import type { AxiosError } from 'axios';
 
@@ -457,5 +457,19 @@ describe('ListContainer', () => {
     // The handleItemSelect function exists but is not currently used
     // This test ensures the handler is defined and accessible
     expect(screen.getByText('Apples')).toBeInTheDocument();
+  });
+
+  it('handles items with undefined fields gracefully', () => {
+    const itemWithUndefinedFields = {
+      ...mockItem,
+      fields: undefined as unknown as IListItemField[], // Simulate API response without fields
+    };
+
+    renderListContainer({
+      notCompletedItems: [itemWithUndefinedFields],
+    });
+
+    // Should render "Untitled Item" when fields is undefined
+    expect(screen.getByText('Untitled Item')).toBeInTheDocument();
   });
 });

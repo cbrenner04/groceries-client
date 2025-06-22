@@ -125,7 +125,12 @@ export async function handleItemComplete(params: {
       list_item: { completed: true },
     });
     setNotCompletedItems(notCompletedItems.filter((notCompletedItem) => notCompletedItem.id !== item.id));
-    setCompletedItems(update(completedItems, { $push: [data] }));
+    // Preserve original fields if API response doesn't include them
+    const completedItem = {
+      ...data,
+      fields: Array.isArray(data.fields) && data.fields.length > 0 ? data.fields : item.fields,
+    };
+    setCompletedItems(update(completedItems, { $push: [completedItem] }));
     toast('Item marked as completed.', { type: 'info' });
   } catch (err) {
     handleFailure(err as AxiosError, 'Failed to complete item');
@@ -203,7 +208,12 @@ export async function handleItemRefresh(params: {
       list_item: { refreshed: true, completed: false },
     });
     setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
-    setNotCompletedItems(update(notCompletedItems, { $push: [data] }));
+    // Preserve original fields if API response doesn't include them
+    const refreshedItem = {
+      ...data,
+      fields: Array.isArray(data.fields) && data.fields.length > 0 ? data.fields : item.fields,
+    };
+    setNotCompletedItems(update(notCompletedItems, { $push: [refreshedItem] }));
     toast('Item refreshed successfully.', { type: 'info' });
   } catch (err) {
     handleFailure(err as AxiosError, 'Failed to refresh item');

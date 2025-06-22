@@ -145,12 +145,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     // NOTE: adding `undefined` to handle uncategorized items
     [undefined, ...categories].map((category: string | undefined) => {
       const itemsToRender = items.filter((item: IV2ListItem) => {
-        // Add defensive check for item.fields
-        // item.fields is always defined, so this check is unnecessary
-        // return false;
+        // Defensive: treat missing fields as empty array
+        const fields = Array.isArray(item.fields) ? item.fields : [];
         return category
-          ? item.fields.find((field: IListItemField) => field.label === 'category' && field.data === category)
-          : !item.fields.find((field: IListItemField) => field.label === 'category');
+          ? fields.find((field: IListItemField) => field.label === 'category' && field.data === category)
+          : !fields.find((field: IListItemField) => field.label === 'category');
       });
       if (itemsToRender.length === 0) {
         return null;
