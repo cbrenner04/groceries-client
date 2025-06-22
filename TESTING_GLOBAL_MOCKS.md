@@ -13,10 +13,12 @@ We've implemented global mocks for commonly used libraries that are frequently m
 **Location**: `src/setupTests.ts`
 
 **What's mocked**:
+
 - `toast` function with all its methods (`success`, `error`, `info`, `warning`, `dismiss`)
 - `ToastContainer` component (returns `null`)
 
 **Usage in tests**:
+
 ```typescript
 import { toast } from 'react-toastify';
 
@@ -25,6 +27,7 @@ expect(toast.success).toHaveBeenCalledWith('Success message');
 ```
 
 **Helper utilities**: `src/test-utils/toastMocks.ts`
+
 ```typescript
 import { mockedToast, resetToastMocks, clearToastMocks } from 'test-utils';
 
@@ -46,6 +49,7 @@ clearToastMocks();
 - `useNavigate` hook (returns a mock function)
 
 **Usage in tests**:
+
 ```typescript
 import { mockNavigate } from 'test-utils';
 
@@ -62,6 +66,7 @@ expect(mockNavigate).toHaveBeenCalledWith('/some-route');
 ## Migration Guide
 
 ### Before (Individual Mocking)
+
 ```typescript
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
@@ -75,6 +80,7 @@ jest.mock('react-router', () => ({
 ```
 
 ### After (Global Mocks)
+
 ```typescript
 import { mockNavigate } from 'test-utils';
 
