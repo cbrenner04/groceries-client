@@ -4,30 +4,6 @@ import axios from '../../../../utils/api';
 import update from 'immutability-helper';
 import type { IV2ListItem } from 'typings';
 
-// handleFailure
-export function handleFailure(params: {
-  error: AxiosError;
-  notFoundMessage: string;
-  navigate: (url: string) => void;
-  redirectURI?: string;
-}): void {
-  const { error, notFoundMessage, navigate, redirectURI = '/lists' } = params;
-  if (error.response) {
-    if (error.response.status === 401) {
-      toast('You must sign in', { type: 'error' });
-      navigate('/users/sign_in');
-    } else if ([403, 404].includes(error.response.status)) {
-      toast(notFoundMessage, { type: 'error' });
-      navigate(redirectURI);
-    } else {
-      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
-    }
-  }
-  // Always throw an error so that Async.Rejected renders
-  /* istanbul ignore next */
-  throw new Error();
-}
-
 // handleAddItem
 export function handleAddItem(params: {
   newItems: IV2ListItem[];
@@ -63,14 +39,11 @@ export function handleAddItem(params: {
     } else {
       setNotCompletedItems(update(notCompletedItems, { $push: [itemWithFields] }));
     }
-    /* istanbul ignore else */
     if (itemCategory && !categories.includes(itemCategory)) {
-      /* istanbul ignore next */
       setCategories([...categories, itemCategory]);
     }
     toast('Item successfully added.', { type: 'info' });
   } catch (err) {
-    /* istanbul ignore next */
     toast('Failed to add item', { type: 'error' });
   } finally {
     setPending(false);

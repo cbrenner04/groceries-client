@@ -1,30 +1,7 @@
-import { toast } from 'react-toastify';
+import { handleFailure } from '../../../utils/handleFailure';
 import { type AxiosError } from 'axios';
-
 import axios from '../../../utils/api';
 import type { IList, IListItemConfiguration, IListItemField, IListUser, IV2ListItem, EUserPermissions } from 'typings';
-
-function handleFailure(
-  error: AxiosError,
-  notFoundMessage: string,
-  navigate: (url: string) => void,
-  redirectURI: string,
-): void {
-  if (error.response) {
-    if (error.response.status === 401) {
-      toast('You must sign in', { type: 'error' });
-      navigate('/users/sign_in');
-    } else if ([403, 404].includes(error.response.status)) {
-      toast(notFoundMessage, { type: 'error' });
-      navigate(redirectURI);
-    } else {
-      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
-    }
-  }
-  // Always throw an error so that Async.Rejected renders
-  /* istanbul ignore next */
-  throw new Error();
-}
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -67,9 +44,11 @@ export async function fetchList(fetchParams: {
 
     return data;
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
-    // Re-throw the error so that Async.Rejected renders
-    /* istanbul ignore next */
-    throw err;
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List not found',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+    });
   }
 }

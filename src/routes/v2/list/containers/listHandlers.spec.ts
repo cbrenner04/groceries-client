@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 import type { IListItemField, IV2ListItem } from 'typings';
 import {
-  handleFailure,
   handleAddItem,
   handleItemSelect,
   handleItemEdit,
@@ -10,6 +9,7 @@ import {
   handleItemDelete,
   handleItemRefresh,
 } from './listHandlers';
+import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
 
 jest.mock('react-toastify', () => ({ toast: jest.fn() }));
@@ -176,23 +176,67 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).toHaveBeenCalledWith(['ExistingCategory1', 'ExistingCategory2', 'BrandNewCategory']);
   });
+  it('does not add category when item category already exists in categories', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'category', data: 'ExistingCategory' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory', 'OtherCategory'],
+      setCategories,
+    });
+    expect(setCategories).not.toHaveBeenCalled();
+  });
+  it('does not add category when item has no category field', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'name', data: 'Item Name' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+    });
+    expect(setCategories).not.toHaveBeenCalled();
+  });
+  it('does not add category when item has empty category field', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'category', data: '' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+    });
+    expect(setCategories).not.toHaveBeenCalled();
+  });
   it('handles error', () => {
-    const setPending = jest.fn(() => {
+    const setCompletedItems = jest.fn(() => {
       throw new Error('fail');
     });
-    expect(() =>
-      handleAddItem({
-        newItems: [{ ...item, completed: false }],
-        pending: false,
-        setPending,
-        completedItems: [],
-        setCompletedItems: mockSet,
-        notCompletedItems: [],
-        setNotCompletedItems: mockSet,
-        categories: [],
-        setCategories: mockSet,
-      }),
-    ).toThrow();
+    handleAddItem({
+      newItems: [{ ...item, completed: true }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: [],
+      setCategories: mockSet,
+    });
+    expect(mockToast).toHaveBeenCalledWith('Failed to add item', { type: 'error' });
   });
 });
 
