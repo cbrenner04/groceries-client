@@ -202,10 +202,37 @@ describe('utils', () => {
 
     it('redirects to login when 401 is returned', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-      await fetchLists({ navigate });
-
+      await expect(fetchLists({ navigate })).rejects.toThrow();
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('redirects to login when 401 is returned for completed lists', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      await expect(fetchCompletedLists({ navigate })).rejects.toThrow();
+      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('redirects to /users/sign_in when 401 is returned for fetchListToEdit', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      await expect(fetchListToEdit({ id: '1', navigate })).rejects.toThrow();
+      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('redirects to /lists when 403 is returned for fetchListToEdit', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      await expect(fetchListToEdit({ id: '1', navigate })).rejects.toThrow();
+      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(navigate).toHaveBeenCalledWith('/lists');
+    });
+
+    it('redirects to /lists when 404 is returned for fetchListToEdit', async () => {
+      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      await expect(fetchListToEdit({ id: '1', navigate })).rejects.toThrow();
+      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
     it('throws error when error not 401 is returned', async () => {
@@ -284,8 +311,7 @@ describe('utils', () => {
 
     it('redirects to login when 401 is returned', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-      await fetchCompletedLists({ navigate });
-
+      await expect(fetchCompletedLists({ navigate })).rejects.toThrow();
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
@@ -314,11 +340,9 @@ describe('utils', () => {
       });
     });
 
-    it('redirects to /users/sign_in when 401', async () => {
+    it('redirects to login when 401 is returned', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-
-      await fetchListToEdit({ id, navigate });
-
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
@@ -326,7 +350,7 @@ describe('utils', () => {
     it('redirects to /lists when 403', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
 
-      await fetchListToEdit({ id, navigate });
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');
@@ -335,7 +359,7 @@ describe('utils', () => {
     it('redirects to /lists when 404', async () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
 
-      await fetchListToEdit({ id, navigate });
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
 
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
       expect(navigate).toHaveBeenCalledWith('/lists');

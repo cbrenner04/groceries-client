@@ -1,6 +1,5 @@
-import { toast } from 'react-toastify';
+import { handleFailure } from '../../utils/handleFailure';
 import { type AxiosError } from 'axios';
-
 import axios from '../../utils/api';
 import { EListType, type IList, type IListItem, type IListUser } from '../../typings';
 
@@ -91,32 +90,6 @@ export function sortItems(listType: EListType, items: IListItem[]): IListItem[] 
   return sorted;
 }
 
-function handleFailure(
-  error: AxiosError,
-  notFoundMessage: string,
-  navigate: (url: string) => void,
-  redirectURI: string,
-): void {
-  if (error.response) {
-    if (error.response.status === 401) {
-      toast('You must sign in', {
-        type: 'error',
-      });
-      navigate('/users/sign_in');
-      return;
-    } else if ([403, 404].includes(error.response.status)) {
-      toast(notFoundMessage, { type: 'error' });
-      navigate(redirectURI);
-      return;
-    } else {
-      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
-      return;
-    }
-  }
-  // any other errors will just be caught and render the generic UnknownError
-  throw new Error();
-}
-
 interface IFetchListReturn {
   currentUserId: string;
   list: IList;
@@ -150,7 +123,12 @@ export async function fetchList(fetchParams: {
       lists: data.lists_to_update,
     };
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List not found',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+    });
   }
 }
 
@@ -170,7 +148,12 @@ export async function fetchItemToEdit(fetchParams: {
       item: data.item,
     };
   } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'Item not found', fetchParams.navigate, `/lists/${fetchParams.listId}`);
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Item not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/lists/${fetchParams.listId}`,
+    });
   }
 }
 
@@ -191,11 +174,11 @@ export async function fetchItemsToEdit(fetchParams: {
     const { data } = await axios.get(`/v1/lists/${fetchParams.listId}/list_items/bulk_update${fetchParams.search}`);
     return data;
   } catch (err: unknown) {
-    handleFailure(
-      err as AxiosError,
-      'One or more items not found',
-      fetchParams.navigate,
-      `/lists/${fetchParams.listId}`,
-    );
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'One or more items not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/lists/${fetchParams.listId}`,
+    });
   }
 }

@@ -8,10 +8,6 @@ import { EListType } from 'typings';
 
 import EditListItemForm, { type IEditListItemFormProps } from './EditListItemForm';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
   props: IEditListItemFormProps;

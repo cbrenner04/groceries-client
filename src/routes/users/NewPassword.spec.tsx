@@ -5,18 +5,9 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { mockNavigate } from 'test-utils';
 
 import NewPassword from './NewPassword';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
-}));
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;

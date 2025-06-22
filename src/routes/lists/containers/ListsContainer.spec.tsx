@@ -6,18 +6,9 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { EListType, type TUserPermissions } from 'typings';
+import { mockNavigate } from 'test-utils';
 
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
-}));
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
@@ -353,6 +344,9 @@ describe('ListsContainer', () => {
     });
     const { findByLabelText, findByTestId, findByText, user } = setup();
 
+    // Click "Add List" to expand the form
+    await user.click(await findByText('Add List'));
+
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
@@ -365,6 +359,9 @@ describe('ListsContainer', () => {
   it('redirects to login when submit response is 401', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByLabelText, findByText, user } = setup();
+
+    // Click "Add List" to expand the form
+    await user.click(await findByText('Add List'));
 
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
@@ -379,6 +376,9 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findByLabelText, findByText, user } = setup();
 
+    // Click "Add List" to expand the form
+    await user.click(await findByText('Add List'));
+
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
@@ -391,6 +391,9 @@ describe('ListsContainer', () => {
     axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
 
+    // Click "Add List" to expand the form
+    await user.click(await findByText('Add List'));
+
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
@@ -402,6 +405,9 @@ describe('ListsContainer', () => {
   it('shows errors when unknown error occurs', async () => {
     axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
+
+    // Click "Add List" to expand the form
+    await user.click(await findByText('Add List'));
 
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
