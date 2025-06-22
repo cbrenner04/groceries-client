@@ -3,30 +3,6 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import ListItemForm from './ListItemForm';
 import { toast } from 'react-toastify';
 
-// Suppress React act() warnings for React Bootstrap Collapse transitions
-// eslint-disable-next-line no-console
-const originalError = console.error;
-beforeAll(() => {
-  // eslint-disable-next-line no-console
-  console.error = (...args): void => {
-    const message = args[0];
-    if (
-      typeof message === 'string' &&
-      (message.includes('An update to Transition inside a test was not wrapped in act') ||
-        message.includes('Warning: An update to') ||
-        message.includes('was not wrapped in act'))
-    ) {
-      return;
-    }
-    originalError.call(console, ...args);
-  };
-});
-
-afterAll(() => {
-  // eslint-disable-next-line no-console
-  console.error = originalError;
-});
-
 jest.mock('utils/api', () => ({
   get: jest.fn(),
   post: jest.fn(),
@@ -88,11 +64,7 @@ describe('ListItemForm', () => {
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Apples' } });
     fireEvent.change(screen.getByLabelText('quantity'), { target: { value: '3' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      // Small delay to allow Collapse transition to complete
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     // Wait for the handler to be called
     await waitFor(
@@ -110,10 +82,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Bananas' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => expect(toast).toHaveBeenCalled());
   });
@@ -187,10 +156,7 @@ describe('ListItemForm', () => {
     const nameField = await screen.findByLabelText('name');
     fireEvent.change(nameField, { target: { value: 'Test Item' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(mockHandleItemAddition).toHaveBeenCalled();
@@ -205,10 +171,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
@@ -224,10 +187,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
@@ -243,10 +203,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -261,10 +218,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Generic error', { type: 'error' });
@@ -349,10 +303,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('name cannot be blank and quantity must be positive', { type: 'error' });
@@ -371,10 +322,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
@@ -392,10 +340,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Generic error message', { type: 'error' });
@@ -411,10 +356,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText('Add New Item'));
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
       expect(mockHandleItemAddition).toHaveBeenCalled();

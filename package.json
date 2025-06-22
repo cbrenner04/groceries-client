@@ -139,7 +139,8 @@
       "src/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/",
       "!<rootDir>/src/AppRouter.tsx",
-      "!<rootDir>/src/index.tsx"
+      "!<rootDir>/src/index.tsx",
+      "!<rootDir>/src/test-utils/**/*"
     ],
     "coverageThreshold": {
       "global": {

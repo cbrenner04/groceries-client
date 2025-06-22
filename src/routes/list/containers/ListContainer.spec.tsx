@@ -320,9 +320,13 @@ describe('ListContainer', () => {
   });
 
   it('renders ListForm when user has write permissions', async () => {
-    const { container, findByTestId } = setup({ permissions: 'write' });
+    const { container, findByTestId, findByText, user } = setup({ permissions: 'write' });
 
     expect(container).toMatchSnapshot();
+
+    // Click "Add Item" to expand the form
+    await user.click(await findByText('Add Item'));
+
     expect(await findByTestId('list-item-form')).toBeVisible();
   });
 
@@ -619,6 +623,7 @@ describe('ListContainer', () => {
     });
     const { findByLabelText, findByText, user } = setup();
 
+    await user.click(await findByText('Add Item'));
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'foo');
@@ -647,6 +652,7 @@ describe('ListContainer', () => {
     });
     const { findByLabelText, findByText, user } = setup();
 
+    await user.click(await findByText('Add Item'));
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'new category');
@@ -1595,6 +1601,10 @@ describe('ListContainer', () => {
     await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
 
     await user.click(await findByTestId('filter-by-foo'));
+
+    // Click "Add Item" to expand the form
+    await user.click(await findByText('Add Item'));
+
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'bar');
