@@ -8,7 +8,7 @@ import EditListItem from './EditListItem';
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => jest.fn(),
+  useNavigate: (): jest.Mock => require('test-utils').mockNavigate,
   useParams: (): { id: string; list_id: string } => ({
     id: '1',
     list_id: '1',

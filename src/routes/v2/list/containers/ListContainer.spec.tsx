@@ -7,16 +7,9 @@ import type { IList, IV2ListItem, IListItemConfiguration, IListItemField } from 
 import { EUserPermissions, EListType } from 'typings';
 import type { AxiosError } from 'axios';
 import { mockedAxios } from 'test-utils/axiosMocks';
+import { mockNavigate } from 'test-utils';
 
 // Mock dependencies
-jest.mock('react-toastify');
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => jest.fn(),
-}));
-
-const mockNavigate = jest.fn();
-
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,

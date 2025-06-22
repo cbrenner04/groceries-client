@@ -5,22 +5,17 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { mockNavigate } from 'test-utils';
 
 import EditPassword from './EditPassword';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
-jest.mock('axios');
-
-const mockNavigate = jest.fn();
+// Mock useLocation for this specific test
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
   useLocation: (): { search: jest.Mock } => ({
     search: jest.fn(() => 'foo'),
   }),
+  useNavigate: (): jest.Mock => require('test-utils').mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {

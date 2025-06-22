@@ -54,6 +54,31 @@ jest.mock(
       jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
 );
 
+// Mock react-toastify globally to avoid repetitive mocking in individual tests
+jest.mock('react-toastify', () => {
+  const toastMock: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  toastMock.success = jest.fn();
+  toastMock.error = jest.fn();
+  toastMock.info = jest.fn();
+  toastMock.warning = jest.fn();
+  toastMock.dismiss = jest.fn();
+
+  return {
+    toast: toastMock,
+    ToastContainer: (): null => null,
+  };
+});
+
+// Mock react-router globally to avoid repetitive mocking in individual tests
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
+
+// Export the mock navigate function for tests that need to access it
+export { mockNavigate };
+
 interface ReactBootstrapComponentProps {
   children: ReactNode;
   [key: string]: unknown;

@@ -3,21 +3,10 @@ import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-
 import axios from 'utils/api';
 import { EListType } from 'typings';
-
 import PendingLists, { type IPendingListsProps } from './PendingLists';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
-}));
+import { mockNavigate } from 'test-utils';
 
 interface ISetupReturn extends RenderResult {
   props: IPendingListsProps;

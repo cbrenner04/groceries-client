@@ -4,8 +4,6 @@ import ListItemForm from './ListItemForm';
 import { toast } from 'react-toastify';
 import { mockedAxios } from 'test-utils/axiosMocks';
 
-jest.mock('react-toastify');
-
 const mockHandleItemAddition = jest.fn();
 const mockNavigate = jest.fn();
 

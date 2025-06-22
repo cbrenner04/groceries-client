@@ -7,14 +7,9 @@ import { mockedAxios } from 'test-utils/axiosMocks';
 import List from './List';
 import { UserContext } from '../../../AppRouter';
 
-// Mock dependencies
-jest.mock('react-toastify');
-
-const mockNavigate = jest.fn();
-
+// Mock useParams for this specific test
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
   useParams: (): { id: string } => ({ id: '123' }),
 }));
 
@@ -58,6 +53,7 @@ const renderList = (): ReturnType<typeof render> => {
       <MemoryRouter initialEntries={['/v2/lists/123']}>
         <Routes>
           <Route path="/v2/lists/:id" element={<List />} />
+          <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
         </Routes>
       </MemoryRouter>
     </UserContext.Provider>,

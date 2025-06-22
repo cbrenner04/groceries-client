@@ -6,18 +6,9 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { EListType, type TUserPermissions } from 'typings';
+import { mockNavigate } from 'test-utils';
 
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
-}));
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
