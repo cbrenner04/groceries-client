@@ -9,7 +9,7 @@ import { TextField, CheckboxField, NumberField, DateField } from 'components/For
 import FormSubmission from 'components/FormSubmission';
 import type { IV2ListItem, IListUser, IListItemConfiguration } from 'typings';
 
-interface IListItemFormProps {
+export interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;

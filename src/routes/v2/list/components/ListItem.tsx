@@ -4,7 +4,7 @@ import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 import type { EUserPermissions, IListItemField, IV2ListItem } from 'typings';
 import { Complete, EditButton, Refresh, Trash } from 'components/ActionButtons';
 
-interface IListItemProps {
+export interface IListItemProps {
   item: IV2ListItem;
   multiSelect?: boolean;
   permissions: EUserPermissions;

@@ -25,7 +25,7 @@ import {
   handleItemRefresh as exportedHandleItemRefresh,
 } from './listHandlers';
 
-interface IListContainerProps {
+export interface IListContainerProps {
   userId: string;
   list: IList;
   categories: string[];
@@ -66,9 +66,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  /* istanbul ignore next */
   const handleAddItem = (newItems: IV2ListItem[]): void => {
-    /* istanbul ignore next */
     exportedHandleAddItem({
       newItems,
       pending,
@@ -82,9 +80,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
-  /* istanbul ignore next */
   const handleItemSelect = (item: IV2ListItem): void => {
-    /* istanbul ignore next */
     exportedHandleItemSelect({
       item,
       selectedItems,
