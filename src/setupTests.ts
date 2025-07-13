@@ -33,7 +33,6 @@ jest.mock('axios', () => ({
   }),
 }));
 
-
 jest.mock('react-toastify', () => {
   const toastMock: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
   toastMock.success = jest.fn();
