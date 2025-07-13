@@ -6,7 +6,6 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { mockNavigate } from 'test-utils';
-
 import EditPassword from './EditPassword';
 
 // Mock useLocation for this specific test
@@ -15,7 +14,7 @@ jest.mock('react-router', () => ({
   useLocation: (): { search: jest.Mock } => ({
     search: jest.fn(() => 'foo'),
   }),
-  useNavigate: (): jest.Mock => require('test-utils').mockNavigate,
+  useNavigate: (): jest.Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
