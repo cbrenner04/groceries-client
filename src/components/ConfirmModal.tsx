@@ -10,11 +10,11 @@ export interface IConfirmModalProps {
 }
 
 const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element => (
-  <Modal show={props.show} onHide={props.handleClear} data-test-id="confirm-modal">
+  <Modal show={props.show} onHide={props.handleClear}>
     <Modal.Header closeButton>
       <Modal.Title>Confirm {props.action}</Modal.Title>
     </Modal.Header>
-    <Modal.Body data-test-id={`confirm-modal-body`}>{props.body}</Modal.Body>
+    <Modal.Body>{props.body}</Modal.Body>
     <Modal.Footer>
       <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
         Close

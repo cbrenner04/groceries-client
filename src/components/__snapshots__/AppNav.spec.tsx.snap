@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AppNav when user is not signed in renders basic nav with brand linking to sign in 1`] = `
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
+  data-test-id="nav"
+>
+  <span
+    class="navbar-brand"
+  >
+    Groceries
+  </span>
+</nav>
+`;
+
 exports[`AppNav when user is signed in renders nav with brand linking to root, invite link and logout visible 1`] = `
 <nav
   class="navbar navbar-expand-lg navbar-light bg-light fixed-top"

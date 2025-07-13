@@ -2,47 +2,57 @@
 
 exports[`ConfirmModal when show is true renders dialog 1`] = `
 <div
-  class="modal show"
-  data-test-id="confirm-modal"
+  aria-modal="true"
+  class="fade modal show"
   role="dialog"
+  style="display: block; padding-right: 0px;"
+  tabindex="-1"
 >
   <div
-    class="modal-header"
+    class="modal-dialog"
   >
-    <button
-      aria-label="Close"
-      type="button"
-    />
-    <h5
-      class="modal-title"
+    <div
+      class="modal-content"
     >
-      Confirm 
-      testAction
-    </h5>
-  </div>
-  <div
-    class="modal-body"
-    data-test-id="confirm-modal-body"
-  >
-    testBody
-  </div>
-  <div
-    class="modal-footer"
-  >
-    <button
-      class="btn btn-secondary"
-      data-test-id="clear-testAction"
-      type="button"
-    >
-      Close
-    </button>
-    <button
-      class="btn btn-primary"
-      data-test-id="confirm-testAction"
-      type="button"
-    >
-      Yes, I'm sure.
-    </button>
+      <div
+        class="modal-header"
+      >
+        <div
+          class="modal-title h4"
+        >
+          Confirm 
+          testAction
+        </div>
+        <button
+          aria-label="Close"
+          class="btn-close"
+          type="button"
+        />
+      </div>
+      <div
+        class="modal-body"
+      >
+        testBody
+      </div>
+      <div
+        class="modal-footer"
+      >
+        <button
+          class="btn btn-secondary"
+          data-test-id="clear-testAction"
+          type="button"
+        >
+          Close
+        </button>
+        <button
+          class="btn btn-primary"
+          data-test-id="confirm-testAction"
+          type="button"
+        >
+          Yes, I'm sure.
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 `;
