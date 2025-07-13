@@ -7,6 +7,7 @@ import { type AxiosError } from 'axios';
 import axios from 'utils/api';
 import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
+import { capitalize } from 'utils/format';
 import type { IV2ListItem, IListUser, IListItemConfiguration } from 'typings';
 
 export interface IListItemFormProps {
@@ -168,13 +169,15 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       switch (config.data_type) {
         case 'boolean':
-          return <CheckboxField key={config.id} name={fieldName} label={config.label} handleChange={setData} />;
+          return (
+            <CheckboxField key={config.id} name={fieldName} label={capitalize(config.label)} handleChange={setData} />
+          );
         case 'date_time':
           return (
             <DateField
               key={config.id}
               name={fieldName}
-              label={config.label}
+              label={capitalize(config.label)}
               value={fieldValue}
               handleChange={setData}
             />
@@ -184,7 +187,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
             <NumberField
               key={config.id}
               name={fieldName}
-              label={config.label}
+              label={capitalize(config.label)}
               value={formData[fieldName] as number}
               handleChange={setData}
             />
@@ -195,7 +198,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
             <TextField
               key={config.id}
               name={fieldName}
-              label={config.label}
+              label={capitalize(config.label)}
               value={fieldValue}
               handleChange={setData}
             />
@@ -207,7 +210,13 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   return (
     <React.Fragment>
       {!showForm && (
-        <Button variant="link" onClick={handleShowForm} aria-controls="form-collapse" aria-expanded={showForm}>
+        <Button
+          data-test-id="add-item-button"
+          variant="link"
+          onClick={handleShowForm}
+          aria-controls="form-collapse"
+          aria-expanded={showForm}
+        >
           Add Item
         </Button>
       )}

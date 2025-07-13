@@ -38,8 +38,8 @@ describe('ListItemForm', () => {
   it('renders fields from configuration', async () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    expect(await screen.findByLabelText('name')).toBeInTheDocument();
-    expect(screen.getByLabelText('quantity')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
   });
 
   it('handles input and submits form', async () => {
@@ -54,8 +54,8 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Apples' } });
-    fireEvent.change(screen.getByLabelText('quantity'), { target: { value: '3' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Apples' } });
+    fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '3' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -72,7 +72,7 @@ describe('ListItemForm', () => {
     mockedAxios.post.mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Bananas' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Bananas' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -101,10 +101,10 @@ describe('ListItemForm', () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
 
-    await screen.findByLabelText('name');
-    expect(screen.getByLabelText('quantity')).toBeInTheDocument();
-    expect(screen.getByLabelText('completed')).toBeInTheDocument();
-    expect(screen.getByLabelText('due_date')).toBeInTheDocument();
+    await screen.findByLabelText('Name');
+    expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
+    expect(screen.getByLabelText('Completed')).toBeInTheDocument();
+    expect(screen.getByLabelText('Due date')).toBeInTheDocument();
   });
 
   it('handles checkbox field interaction', async () => {
@@ -118,7 +118,7 @@ describe('ListItemForm', () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
 
-    const checkbox = await screen.findByLabelText('completed');
+    const checkbox = await screen.findByLabelText('Completed');
     expect(checkbox).toBeInTheDocument();
 
     // Test checkbox interaction to cover line 91 (newValue = checked)
@@ -127,6 +127,22 @@ describe('ListItemForm', () => {
 
     // Test unchecking the checkbox to ensure full coverage
     fireEvent.change(checkbox, { target: { checked: false, type: 'checkbox' } });
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it('handles checkbox input changes (branch coverage)', async () => {
+    const fieldConfigsWithCheckbox = [{ id: '1', label: 'completed', data_type: 'boolean' }];
+    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithCheckbox });
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    const checkbox = await screen.findByLabelText('Completed');
+    // Simulate a change event with type 'checkbox' (checked true)
+    fireEvent.change(checkbox, { target: { checked: true, type: 'checkbox', name: 'completed' } });
+    expect(checkbox).toBeChecked();
+    // Simulate a change event with type 'checkbox' (checked false)
+    fireEvent.change(checkbox, { target: { checked: false, type: 'checkbox', name: 'completed' } });
     expect(checkbox).not.toBeChecked();
   });
 
@@ -145,7 +161,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
 
     // Add a field that doesn't have a configuration
-    const nameField = await screen.findByLabelText('name');
+    const nameField = await screen.findByLabelText('Name');
     fireEvent.change(nameField, { target: { value: 'Test Item' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
@@ -155,12 +171,43 @@ describe('ListItemForm', () => {
     });
   });
 
+  it('handles field configuration not found during itemWithFields creation', async () => {
+    // Mock different field configs for initial load vs submission
+    const initialFieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+    const submissionFieldConfigs = [{ id: '2', label: 'quantity', data_type: 'number' }]; // Different config
+
+    mockedAxios.get
+      .mockResolvedValueOnce({ data: initialFieldConfigs }) // initial field config load
+      .mockResolvedValueOnce({ data: submissionFieldConfigs }) // different field config during submit
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+    mockedAxios.post
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
+      .mockResolvedValue({}); // create item fields
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    // Add a field that exists in initial config but not in submission config
+    const nameField = await screen.findByLabelText('Name');
+    fireEvent.change(nameField, { target: { value: 'Test Item' } });
+
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(mockHandleItemAddition).toHaveBeenCalled();
+      // Verify that the item was created with empty string for missing field config
+      const callArgs = mockHandleItemAddition.mock.calls[0][0];
+      expect(callArgs[0].fields).toHaveLength(1);
+      expect(callArgs[0].fields[0].list_item_field_configuration_id).toBe('');
+    });
+  });
+
   it('handles 401 authentication error', async () => {
     mockedAxios.post.mockRejectedValue({ response: { status: 401 } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -175,7 +222,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -190,7 +237,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -204,7 +251,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -285,7 +332,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test Item' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -303,7 +350,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test Item' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -320,7 +367,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test Item' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -335,7 +382,7 @@ describe('ListItemForm', () => {
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('name'), { target: { value: 'Test Item' } });
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Test Item' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
@@ -348,7 +395,7 @@ describe('ListItemForm', () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
     // Wait for the form to appear
-    await screen.findByLabelText('name');
+    await screen.findByLabelText('Name');
     // Click the cancel button
     fireEvent.click(screen.getByText('Collapse Form'));
     // The Add Item button should be visible again (form collapsed)

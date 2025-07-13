@@ -69,14 +69,11 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id3"
+                  href="/v2/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
                     baz
                   </h5>
                 </a>
@@ -163,14 +160,11 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id5"
+                  href="/v2/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
                     foobar
                   </h5>
                 </a>
@@ -293,14 +287,11 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id2"
+                  href="/v2/lists/id2"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
                     bar
                   </h5>
                 </a>
@@ -365,14 +356,11 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id4"
+                  href="/v2/lists/id4"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
                     bar
                   </h5>
                 </a>
@@ -492,9 +480,6 @@ exports[`ListsContainer renders 1`] = `
                 <h5
                   class="mb-1"
                 >
-                  <i
-                    class="fa fa-shopping-bag text-secondary me-3"
-                  />
                   foo
                 </h5>
               </div>
@@ -593,14 +578,11 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id3"
+                  href="/v2/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
                     baz
                   </h5>
                 </a>
@@ -687,14 +669,11 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id5"
+                  href="/v2/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
                     foobar
                   </h5>
                 </a>
@@ -817,14 +796,11 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id2"
+                  href="/v2/lists/id2"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
                     bar
                   </h5>
                 </a>
@@ -889,14 +865,11 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id4"
+                  href="/v2/lists/id4"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
                     bar
                   </h5>
                 </a>

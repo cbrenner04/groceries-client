@@ -157,6 +157,13 @@ describe('ListContainer', () => {
     fireEvent.click(screen.getByTestId('not-completed-item-delete-1'));
 
     await waitFor(() => {
+      expect(screen.getByTestId('confirm-modal-body')).toHaveTextContent(
+        'Are you sure you want to delete the following items? Apples',
+      );
+    });
+    fireEvent.click(screen.getByTestId('confirm-delete'));
+
+    await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Failed to delete item', { type: 'error' });
     });
   });

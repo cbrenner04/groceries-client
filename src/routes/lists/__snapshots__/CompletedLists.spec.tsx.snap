@@ -66,14 +66,11 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id1"
+                  href="/v2/lists/id1"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-shopping-bag text-secondary me-3"
-                    />
                     foo
                   </h5>
                 </a>

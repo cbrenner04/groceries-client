@@ -3,6 +3,7 @@
 exports[`ConfirmModal when show is true renders dialog 1`] = `
 <div
   class="modal show"
+  data-test-id="confirm-modal"
   role="dialog"
 >
   <div
@@ -21,6 +22,7 @@ exports[`ConfirmModal when show is true renders dialog 1`] = `
   </div>
   <div
     class="modal-body"
+    data-test-id="confirm-modal-body"
   >
     testBody
   </div>

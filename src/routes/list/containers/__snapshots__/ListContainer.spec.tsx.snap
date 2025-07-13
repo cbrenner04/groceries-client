@@ -1291,6 +1291,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   </div>
   <div
     class="modal show"
+    data-test-id="confirm-modal"
     role="dialog"
   >
     <div
@@ -1309,6 +1310,7 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
     </div>
     <div
       class="modal-body"
+      data-test-id="confirm-modal-body"
     >
       Are you sure you want to delete the following items? not purchased quantity no category not purchased product
     </div>

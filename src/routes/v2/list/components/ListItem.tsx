@@ -30,9 +30,15 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
     );
   };
   const multiSelectCheckbox = (item: IV2ListItem): ReactNode | undefined =>
-    multiSelect && (
+    multiSelect &&
+    !item.completed && (
       <Col xs="1">
-        <input type="checkbox" className="multi-select-check" onClick={(): void => props.handleItemSelect(item)} />
+        <input
+          type="checkbox"
+          className="multi-select-check"
+          data-test-id={`not-completed-item-select-${item.id}`}
+          onClick={(): void => props.handleItemSelect(item)}
+        />
         <div className="list-item-multi-divider"></div>
       </Col>
     );

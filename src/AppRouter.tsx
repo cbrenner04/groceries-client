@@ -7,7 +7,7 @@ import EditListItem from './routes/list/EditListItem';
 import BulkEditListItems from './routes/list/BulkEditListItems';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
-import List from './routes/list/List';
+// import List from './routes/list/List';
 import EditList from './routes/lists/EditList';
 import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
@@ -65,7 +65,7 @@ export default function AppRouter(): React.JSX.Element {
           <Route path="/lists" element={<Lists />} />
           <Route path="/completed_lists" element={<CompletedLists />} />
           {/* routes/list */}
-          <Route path="/lists/:id" element={<List />} />
+          <Route path="/lists/:id" element={<Navigate to="/v2/lists/:id" replace />} />
           <Route path="/lists/:id/edit" element={<EditList />} />
           <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
           <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />

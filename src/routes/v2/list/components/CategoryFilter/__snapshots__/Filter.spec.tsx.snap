@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Filter handles categories with empty strings 1`] = `
+<div>
+  <div
+    class="show dropdown"
+  >
+    <button
+      aria-expanded="true"
+      class="dropdown-toggle show btn btn-light"
+      id="dropdown-basic"
+      type="button"
+    >
+      Filter by category
+    </button>
+    <div
+      aria-labelledby="dropdown-basic"
+      class="dropdown-menu show"
+      data-popper-escaped="true"
+      data-popper-placement="bottom-start"
+      data-popper-reference-hidden="true"
+      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      x-placement="bottom-start"
+    >
+      <a
+        class="dropdown-item"
+        data-rr-ui-dropdown-item=""
+        href="#"
+        role="button"
+        tabindex="0"
+      >
+        Produce
+      </a>
+      <a
+        class="dropdown-item"
+        data-rr-ui-dropdown-item=""
+        href="#"
+        role="button"
+        tabindex="0"
+      >
+        Dairy
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Filter handles empty categories array 1`] = `
+<div>
+  <div
+    class="show dropdown"
+  >
+    <button
+      aria-expanded="true"
+      class="dropdown-toggle show btn btn-light"
+      id="dropdown-basic"
+      type="button"
+    >
+      Filter by category
+    </button>
+    <div
+      aria-labelledby="dropdown-basic"
+      class="dropdown-menu show"
+      data-popper-escaped="true"
+      data-popper-placement="bottom-start"
+      data-popper-reference-hidden="true"
+      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      x-placement="bottom-start"
+    />
+  </div>
+</div>
+`;
+
+exports[`Filter renders filter dropdown 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="dropdown-basic"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Filter renders filter options when dropdown is clicked 1`] = `
+<div>
+  <div
+    class="show dropdown"
+  >
+    <button
+      aria-expanded="true"
+      class="dropdown-toggle show btn btn-light"
+      id="dropdown-basic"
+      type="button"
+    >
+      Filter by category
+    </button>
+    <div
+      aria-labelledby="dropdown-basic"
+      class="dropdown-menu show"
+      data-popper-escaped="true"
+      data-popper-placement="bottom-start"
+      data-popper-reference-hidden="true"
+      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      x-placement="bottom-start"
+    >
+      <a
+        class="dropdown-item"
+        data-rr-ui-dropdown-item=""
+        href="#"
+        role="button"
+        tabindex="0"
+      >
+        Produce
+      </a>
+      <a
+        class="dropdown-item"
+        data-rr-ui-dropdown-item=""
+        href="#"
+        role="button"
+        tabindex="0"
+      >
+        Dairy
+      </a>
+      <a
+        class="dropdown-item"
+        data-rr-ui-dropdown-item=""
+        href="#"
+        role="button"
+        tabindex="0"
+      >
+        Meat
+      </a>
+    </div>
+  </div>
+</div>
+`;

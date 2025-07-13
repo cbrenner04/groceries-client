@@ -57,14 +57,11 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id3"
+                  href="/v2/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
                     baz
                   </h5>
                 </a>
@@ -149,14 +146,11 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id5"
+                  href="/v2/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
                     foobar
                   </h5>
                 </a>
@@ -273,14 +267,11 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id3"
+                  href="/v2/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
                     baz
                   </h5>
                 </a>
@@ -365,14 +356,11 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id5"
+                  href="/v2/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
                     foobar
                   </h5>
                 </a>
