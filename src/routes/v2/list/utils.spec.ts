@@ -1,7 +1,8 @@
-import { fetchList } from './utils';
+import { type AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import type { AxiosError } from 'axios';
-import { mockedAxios } from 'test-utils/axiosMocks';
+import { fetchList } from './utils';
+
+import axios from 'utils/api';
 
 jest.mock('react-toastify');
 
@@ -24,7 +25,7 @@ describe('fetchList', () => {
       list_item_configurations: [],
       categories: [],
     };
-    mockedAxios.get.mockResolvedValue({ data: mockData });
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
   });
@@ -34,7 +35,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 401 },
     } as Partial<AxiosError> as AxiosError;
-    mockedAxios.get.mockRejectedValue(error);
+    axios.get = jest.fn().mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -45,7 +46,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 403 },
     } as Partial<AxiosError> as AxiosError;
-    mockedAxios.get.mockRejectedValue(error);
+    axios.get = jest.fn().mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
@@ -56,7 +57,7 @@ describe('fetchList', () => {
       isAxiosError: true,
       response: { status: 500 },
     } as Partial<AxiosError> as AxiosError;
-    mockedAxios.get.mockRejectedValue(error);
+    axios.get = jest.fn().mockRejectedValue(error);
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
     expect(toast).toHaveBeenCalledWith(
       'Something went wrong. Data may be incomplete and user actions may not persist.',
@@ -65,27 +66,27 @@ describe('fetchList', () => {
   });
 
   it('handles missing data from server', async () => {
-    mockedAxios.get.mockResolvedValue({ data: null });
+    axios.get = jest.fn().mockResolvedValue({ data: null });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles invalid data structure', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { list: null, not_completed_items: null, completed_items: null } });
+    axios.get = jest.fn().mockResolvedValue({ data: { list: null, not_completed_items: null, completed_items: null } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing list field', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { not_completed_items: [], completed_items: [] } });
+    axios.get = jest.fn().mockResolvedValue({ data: { not_completed_items: [], completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing not_completed_items field', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { list: {}, completed_items: [] } });
+    axios.get = jest.fn().mockResolvedValue({ data: { list: {}, completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
   it('handles missing completed_items field', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { list: {}, not_completed_items: [] } });
+    axios.get = jest.fn().mockResolvedValue({ data: { list: {}, not_completed_items: [] } });
     await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
   });
 
@@ -114,7 +115,7 @@ describe('fetchList', () => {
       list_item_configuration: {},
       list_item_configurations: [],
     };
-    mockedAxios.get.mockResolvedValue({ data: mockData });
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['Fruits', 'Vegetables']);
   });
@@ -140,13 +141,13 @@ describe('fetchList', () => {
       list_item_configuration: {},
       list_item_configurations: [],
     };
-    mockedAxios.get.mockResolvedValue({ data: mockData });
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['Fruits', 'Vegetables', 'Dairy']);
   });
 
   it('handles error when no data is received from server', async () => {
-    mockedAxios.get.mockRejectedValue({
+    axios.get = jest.fn().mockRejectedValue({
       response: { status: 404 },
       isAxiosError: true,
     } as AxiosError);
@@ -160,7 +161,7 @@ describe('fetchList', () => {
   });
 
   it('handles error when invalid data structure is received', async () => {
-    mockedAxios.get.mockRejectedValue({
+    axios.get = jest.fn().mockRejectedValue({
       response: { status: 404 },
       isAxiosError: true,
     } as AxiosError);
@@ -174,7 +175,7 @@ describe('fetchList', () => {
   });
 
   it('always throws an error in handleFailure even when no response', async () => {
-    mockedAxios.get.mockRejectedValue({
+    axios.get = jest.fn().mockRejectedValue({
       isAxiosError: true,
       response: { status: 500 },
     } as AxiosError);

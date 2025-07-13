@@ -4,8 +4,13 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import axios from 'utils/api';
 import EditInvite from './EditInvite';
-import { mockNavigate } from 'test-utils';
 import { MemoryRouter } from 'react-router';
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;

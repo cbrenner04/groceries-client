@@ -1,11 +1,15 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import ListItemForm from './ListItemForm';
+import axios from 'utils/api';
 import { toast } from 'react-toastify';
-import { mockedAxios } from 'test-utils/axiosMocks';
+import ListItemForm from './ListItemForm';
 
 const mockHandleItemAddition = jest.fn();
 const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
 
 const fieldConfigurations = [
   { id: '1', label: 'name', data_type: 'free_text' },
@@ -32,7 +36,7 @@ const defaultProps = {
 describe('ListItemForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
   });
 
   it('renders fields from configuration', async () => {
@@ -44,11 +48,13 @@ describe('ListItemForm', () => {
 
   it('handles input and submits form', async () => {
     // Mock all the axios calls that happen during form submission
-    mockedAxios.get
+    axios.get = jest
+      .fn()
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigurations }) // field config during submit
       .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
-    mockedAxios.post
+    axios.post = jest
+      .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
 
@@ -69,7 +75,7 @@ describe('ListItemForm', () => {
   });
 
   it('shows error toast on API error', async () => {
-    mockedAxios.post.mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Bananas' } });
@@ -80,7 +86,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles field configuration loading failure', async () => {
-    mockedAxios.get.mockRejectedValue(new Error('Network error'));
+    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -96,7 +102,7 @@ describe('ListItemForm', () => {
       { id: '4', label: 'due_date', data_type: 'date_time' },
     ];
 
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithTypes });
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithTypes });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -113,7 +119,7 @@ describe('ListItemForm', () => {
       { id: '2', label: 'completed', data_type: 'boolean' },
     ];
 
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithCheckbox });
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithCheckbox });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -132,7 +138,7 @@ describe('ListItemForm', () => {
 
   it('handles checkbox input changes (branch coverage)', async () => {
     const fieldConfigsWithCheckbox = [{ id: '1', label: 'completed', data_type: 'boolean' }];
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigsWithCheckbox });
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithCheckbox });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -149,11 +155,13 @@ describe('ListItemForm', () => {
   it('handles field configuration not found during submission', async () => {
     const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
 
-    mockedAxios.get
+    axios.get = jest
+      .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
       .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
-    mockedAxios.post
+    axios.post = jest
+      .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
 
@@ -176,11 +184,13 @@ describe('ListItemForm', () => {
     const initialFieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
     const submissionFieldConfigs = [{ id: '2', label: 'quantity', data_type: 'number' }]; // Different config
 
-    mockedAxios.get
+    axios.get = jest
+      .fn()
       .mockResolvedValueOnce({ data: initialFieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: submissionFieldConfigs }) // different field config during submit
       .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
-    mockedAxios.post
+    axios.post = jest
+      .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
 
@@ -203,7 +213,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles 401 authentication error', async () => {
-    mockedAxios.post.mockRejectedValue({ response: { status: 401 } });
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -218,7 +228,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles 403/404 list not found error', async () => {
-    mockedAxios.post.mockRejectedValue({ response: { status: 404 } });
+    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -233,7 +243,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles network request error', async () => {
-    mockedAxios.post.mockRejectedValue({ request: {} });
+    axios.post = jest.fn().mockRejectedValue({ request: {} });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -247,7 +257,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles generic error', async () => {
-    mockedAxios.post.mockRejectedValue({ message: 'Generic error' });
+    axios.post = jest.fn().mockRejectedValue({ message: 'Generic error' });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -261,7 +271,7 @@ describe('ListItemForm', () => {
   });
 
   it('shows loading message when field configurations are empty', async () => {
-    mockedAxios.get.mockResolvedValue({ data: [] });
+    axios.get = jest.fn().mockResolvedValue({ data: [] });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
     expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
@@ -295,7 +305,7 @@ describe('ListItemForm', () => {
     const mockFieldConfigs = [{ id: '1', label: 'unknown_field', data_type: 'unknown_type' }];
 
     // Mock axios to return field configs
-    mockedAxios.get.mockResolvedValueOnce({ data: mockFieldConfigs });
+    axios.get = jest.fn().mockResolvedValueOnce({ data: mockFieldConfigs });
 
     render(<ListItemForm {...defaultProps} />);
 
@@ -309,7 +319,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles field configuration loading failure silently', async () => {
-    mockedAxios.get.mockRejectedValue(new Error('Network error'));
+    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
@@ -319,8 +329,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles response errors with data during form submission', async () => {
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
-    mockedAxios.post.mockRejectedValue({
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
+    axios.post = jest.fn().mockRejectedValue({
       response: {
         status: 422,
         data: {
@@ -342,8 +352,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles network request error during form submission', async () => {
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
-    mockedAxios.post.mockRejectedValue({
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
+    axios.post = jest.fn().mockRejectedValue({
       request: {},
       message: 'Network Error',
     });
@@ -360,8 +370,8 @@ describe('ListItemForm', () => {
   });
 
   it('handles generic error during form submission', async () => {
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
-    mockedAxios.post.mockRejectedValue({
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
+    axios.post = jest.fn().mockRejectedValue({
       message: 'Generic error message',
     });
 
@@ -377,8 +387,8 @@ describe('ListItemForm', () => {
   });
 
   it('submits form successfully', async () => {
-    mockedAxios.get.mockResolvedValue({ data: fieldConfigurations });
-    mockedAxios.post.mockResolvedValue({ data: { id: '1' } });
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
+    axios.post = jest.fn().mockResolvedValue({ data: { id: '1' } });
 
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));

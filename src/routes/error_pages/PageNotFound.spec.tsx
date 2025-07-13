@@ -4,9 +4,13 @@ import { MemoryRouter } from 'react-router';
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
-import { mockNavigate } from 'test-utils';
-
 import PageNotFound from './PageNotFound';
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
 
 const setup = (): RenderResult =>
   render(

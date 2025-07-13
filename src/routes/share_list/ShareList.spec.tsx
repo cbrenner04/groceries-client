@@ -2,11 +2,10 @@ import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
-import { mockNavigate } from 'test-utils';
-
 import ShareList from './ShareList';
 import axios from '../../utils/api';
 
+const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,

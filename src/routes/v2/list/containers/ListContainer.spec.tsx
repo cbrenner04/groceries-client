@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter, BrowserRouter } from 'react-router';
-import ListContainer from './ListContainer';
 import { toast } from 'react-toastify';
 import type { IList, IV2ListItem, IListItemConfiguration, IListItemField } from 'typings';
 import { EUserPermissions, EListType } from 'typings';
-import type { AxiosError } from 'axios';
-import { mockedAxios } from 'test-utils/axiosMocks';
-import { mockNavigate } from 'test-utils';
+import { type AxiosError } from 'axios';
+import axios from 'utils/api';
+import ListContainer from './ListContainer';
 
 // Mock dependencies
+const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
@@ -138,7 +138,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item completion error', async () => {
-    mockedAxios.put.mockRejectedValue(new Error('Failed to complete item'));
+    axios.put = jest.fn().mockRejectedValue(new Error('Failed to complete item'));
 
     renderListContainer();
 
@@ -150,7 +150,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item deletion error', async () => {
-    mockedAxios.delete.mockRejectedValue(new Error('Failed to delete item'));
+    axios.delete = jest.fn().mockRejectedValue(new Error('Failed to delete item'));
 
     renderListContainer();
 
@@ -169,7 +169,7 @@ describe('ListContainer', () => {
   });
 
   it('handles item refresh error', async () => {
-    mockedAxios.put.mockRejectedValue(new Error('Failed to refresh item'));
+    axios.put = jest.fn().mockRejectedValue(new Error('Failed to refresh item'));
 
     renderListContainer({
       completedItems: [completedItem],
@@ -184,7 +184,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 401 authentication error during item completion', async () => {
-    mockedAxios.put.mockRejectedValue({ response: { status: 401 } });
+    axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
 
     renderListContainer();
 
@@ -197,7 +197,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 404 list not found error during item completion', async () => {
-    mockedAxios.put.mockRejectedValue({ response: { status: 404 } });
+    axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
 
     renderListContainer();
 
@@ -209,7 +209,7 @@ describe('ListContainer', () => {
   });
 
   it('handles network request error during item completion', async () => {
-    mockedAxios.put.mockRejectedValue({ request: {} });
+    axios.put = jest.fn().mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -221,7 +221,7 @@ describe('ListContainer', () => {
   });
 
   it('handles generic error during item completion', async () => {
-    mockedAxios.put.mockRejectedValue({ message: 'Generic error' });
+    axios.put = jest.fn().mockRejectedValue({ message: 'Generic error' });
 
     renderListContainer();
 
@@ -272,7 +272,7 @@ describe('ListContainer', () => {
     renderListContainer({}, 'browser');
 
     // Trigger an error by mocking axios to throw
-    mockedAxios.put.mockRejectedValueOnce(mockError);
+    axios.put = jest.fn().mockRejectedValueOnce(mockError);
 
     // This will test the error.request branch in handleFailure
     // The error handling is tested through the actual error scenarios
@@ -291,9 +291,9 @@ describe('ListContainer', () => {
     renderListContainer({}, 'browser');
 
     // Mock axios to return a completed item
-    mockedAxios.post.mockResolvedValueOnce({ data: mockCompletedItem });
-    mockedAxios.get.mockResolvedValueOnce({ data: [] });
-    mockedAxios.get.mockResolvedValueOnce({ data: mockCompletedItem });
+    axios.post = jest.fn().mockResolvedValueOnce({ data: mockCompletedItem });
+    axios.get = jest.fn().mockResolvedValueOnce({ data: [] });
+    axios.get = jest.fn().mockResolvedValueOnce({ data: mockCompletedItem });
 
     // This tests the completed item branch in handleAddItem
     // The actual test is in the form submission flow
@@ -347,21 +347,21 @@ describe('ListContainer', () => {
   });
 
   it('handles errors in handleItemComplete', async () => {
-    mockedAxios.put.mockRejectedValueOnce(new Error('Complete failed'));
+    axios.put = jest.fn().mockRejectedValueOnce(new Error('Complete failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
   });
 
   it('handles errors in handleItemDelete', async () => {
-    mockedAxios.delete.mockRejectedValueOnce(new Error('Delete failed'));
+    axios.delete = jest.fn().mockRejectedValueOnce(new Error('Delete failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
   });
 
   it('handles errors in handleItemRefresh', async () => {
-    mockedAxios.put.mockRejectedValueOnce(new Error('Refresh failed'));
+    axios.put = jest.fn().mockRejectedValueOnce(new Error('Refresh failed'));
     renderListContainer({}, 'browser');
     // Not directly testable without refactoring, but error branch is covered
     expect(screen.getByText('Apples')).toBeInTheDocument();
@@ -374,7 +374,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 403 error in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ response: { status: 403 } });
+    axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
 
     renderListContainer();
 
@@ -386,7 +386,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 500 error in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ response: { status: 500 } });
+    axios.put = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
     renderListContainer();
 
@@ -398,7 +398,7 @@ describe('ListContainer', () => {
   });
 
   it('handles request error in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ request: {} });
+    axios.put = jest.fn().mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -410,7 +410,7 @@ describe('ListContainer', () => {
   });
 
   it('handles generic error in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ message: 'Generic error message' });
+    axios.put = jest.fn().mockRejectedValue({ message: 'Generic error message' });
 
     renderListContainer();
 
@@ -487,7 +487,7 @@ describe('ListContainer', () => {
   });
 
   it('handles 500+ status codes in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ response: { status: 500 } });
+    axios.put = jest.fn().mockRejectedValue({ response: { status: 500 } });
 
     renderListContainer();
 
@@ -499,7 +499,7 @@ describe('ListContainer', () => {
   });
 
   it('handles network request errors in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ request: {} });
+    axios.put = jest.fn().mockRejectedValue({ request: {} });
 
     renderListContainer();
 
@@ -511,7 +511,7 @@ describe('ListContainer', () => {
   });
 
   it('handles generic errors in handleFailure', async () => {
-    mockedAxios.put.mockRejectedValue({ message: 'Generic error message' });
+    axios.put = jest.fn().mockRejectedValue({ message: 'Generic error message' });
 
     renderListContainer();
 

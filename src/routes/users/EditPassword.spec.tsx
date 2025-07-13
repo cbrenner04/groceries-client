@@ -5,9 +5,9 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-import { mockNavigate } from 'test-utils';
 import EditPassword from './EditPassword';
 
+const mockNavigate = jest.fn();
 // Mock useLocation for this specific test
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),

@@ -2,18 +2,17 @@
 
 exports[`ChangeOtherListModal renders appropriate instructions when copy and lists 1`] = `
 <div
-  class="modal show"
-  data-test-id="change-other-list-modal"
-  role="dialog"
+  class="modal-content"
 >
   <div
     class="modal-header"
   >
+    Choose an existing list or create a new one to copy items
     <button
       aria-label="Close"
+      class="btn-close"
       type="button"
     />
-    Choose an existing list or create a new one to copy items
   </div>
   <div
     class="modal-body"
@@ -84,18 +83,17 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
 
 exports[`ChangeOtherListModal renders appropriate instructions when move and lists 1`] = `
 <div
-  class="modal show"
-  data-test-id="change-other-list-modal"
-  role="dialog"
+  class="modal-content"
 >
   <div
     class="modal-header"
   >
+    Choose an existing list or create a new one to move items
     <button
       aria-label="Close"
+      class="btn-close"
       type="button"
     />
-    Choose an existing list or create a new one to move items
   </div>
   <div
     class="modal-body"
@@ -168,10 +166,11 @@ exports[`ChangeOtherListModal renders appropriate instructions when no lists 1`]
 <div
   class="modal-header"
 >
+  You do not have any other lists with the same configuration. Please create a new list to take this action.
   <button
     aria-label="Close"
+    class="btn-close"
     type="button"
   />
-  You do not have any other lists with the same configuration. Please create a new list to take this action.
 </div>
 `;

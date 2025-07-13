@@ -2,10 +2,11 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
 import { toast } from 'react-toastify';
-import { mockedAxios } from 'test-utils/axiosMocks';
+import axios from 'utils/api';
+
+import { UserContext } from '../../../AppRouter';
 
 import List from './List';
-import { UserContext } from '../../../AppRouter';
 
 // Mock useParams for this specific test
 jest.mock('react-router', () => ({
@@ -66,7 +67,7 @@ describe('V2 List', () => {
   });
 
   it('renders loading state initially', () => {
-    mockedAxios.get.mockImplementation(
+    axios.get = jest.fn().mockImplementation(
       () =>
         new Promise(() => {
           /* never resolves for loading state */
@@ -78,7 +79,7 @@ describe('V2 List', () => {
   });
 
   it('renders list data when fetch succeeds', async () => {
-    mockedAxios.get.mockResolvedValue({ data: mockListData });
+    axios.get = jest.fn().mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderList();
     });
@@ -89,7 +90,7 @@ describe('V2 List', () => {
   });
 
   it('renders error state when fetch fails', async () => {
-    mockedAxios.get.mockRejectedValue(new Error('Network error'));
+    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
     await act(async () => {
       renderList();
     });
@@ -100,7 +101,7 @@ describe('V2 List', () => {
   it('handles authentication errors', async () => {
     const authError = new Error('Unauthorized') as Error & { response?: { status: number } };
     authError.response = { status: 401 };
-    mockedAxios.get.mockRejectedValue(authError);
+    axios.get = jest.fn().mockRejectedValue(authError);
     await act(async () => {
       renderList();
     });
