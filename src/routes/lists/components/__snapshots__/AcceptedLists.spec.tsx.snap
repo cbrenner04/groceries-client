@@ -57,11 +57,14 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-music text-secondary me-3"
+                    />
                     baz
                   </h5>
                 </a>
@@ -146,11 +149,14 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-list text-secondary me-3"
+                    />
                     foobar
                   </h5>
                 </a>
@@ -267,11 +273,14 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-music text-secondary me-3"
+                    />
                     baz
                   </h5>
                 </a>
@@ -356,11 +365,14 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-list text-secondary me-3"
+                    />
                     foobar
                   </h5>
                 </a>
@@ -414,70 +426,6 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="modal show"
-      role="dialog"
-    >
-      <div
-        class="modal-header"
-      >
-        <button
-          aria-label="Close"
-          type="button"
-        />
-        <h5
-          class="modal-title"
-        >
-          Merge 
-          "baz"
-        </h5>
-      </div>
-      <div
-        class="modal-body"
-      >
-        <form
-          class=""
-        >
-          <div
-            class="mb-3"
-          >
-            <label
-              class="form-label"
-              for="mergeName"
-            >
-              Name for the merged list
-            </label>
-            <input
-              class="form-control"
-              id="mergeName"
-              name="mergeName"
-              placeholder="My super cool list"
-              type="text"
-              value=""
-            />
-          </div>
-        </form>
-      </div>
-      <div
-        class="modal-footer"
-      >
-        <button
-          class="btn btn-secondary"
-          data-test-id="clear-merge"
-          type="button"
-        >
-          Close
-        </button>
-        <button
-          class="merge-modal-confirm-disabled btn btn-primary"
-          data-test-id="confirm-merge"
-          disabled=""
-          type="button"
-        >
-          Merge lists
-        </button>
       </div>
     </div>
   </div>

@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { handleFailure } from '../../utils/handleFailure';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -7,6 +6,17 @@ import type { EListType, IList, TUserPermissions } from 'typings';
 
 export const sortLists = (lists: IList[]): IList[] =>
   lists.sort((a, b) => Number(new Date(b.created_at!)) - Number(new Date(a.created_at!)));
+
+function handleFailure(error: unknown, navigate: (url: string) => void): void {
+  const err = error as AxiosError;
+  // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
+  if (err.response?.status === 401) {
+    toast('You must sign in', { type: 'error' });
+    navigate('/users/sign_in');
+  } else {
+    throw new Error(JSON.stringify(err));
+  }
+}
 
 interface IFetchListsReturn {
   userId: string;
@@ -32,12 +42,7 @@ export async function fetchLists(fetchParams: {
       currentUserPermissions: data.current_list_permissions,
     };
   } catch (error) {
-    handleFailure({
-      error: error as AxiosError,
-      notFoundMessage: 'Lists not found',
-      navigate: fetchParams.navigate,
-      redirectURI: '/lists',
-    });
+    handleFailure(error, fetchParams.navigate);
   }
 }
 
@@ -52,12 +57,7 @@ export async function fetchCompletedLists(fetchParams: {
       currentUserPermissions: data.current_list_permissions,
     };
   } catch (error) {
-    handleFailure({
-      error: error as AxiosError,
-      notFoundMessage: 'Completed lists not found',
-      navigate: fetchParams.navigate,
-      redirectURI: '/lists',
-    });
+    handleFailure(error, fetchParams.navigate);
   }
 }
 
@@ -81,12 +81,22 @@ export async function fetchListToEdit(fetchParams: {
       type: data.type as EListType,
     };
   } catch (error: unknown) {
-    handleFailure({
-      error: error as AxiosError,
-      notFoundMessage: 'List not found',
-      navigate: fetchParams.navigate,
-      redirectURI: '/lists',
-    });
+    const err = error as AxiosError;
+    if (err.response) {
+      if (err.response.status === 401) {
+        toast('You must sign in', { type: 'error' });
+        fetchParams.navigate('/users/sign_in');
+      } else if ([403, 404].includes(err.response.status)) {
+        toast('List not found', { type: 'error' });
+        fetchParams.navigate('/lists');
+      } else {
+        // any other errors will just be caught and render the generic UnknownError
+        throw new Error();
+      }
+    } else {
+      // any other errors will just be caught and render the generic UnknownError
+      throw new Error();
+    }
   }
 }
 

@@ -10,93 +10,184 @@ exports[`ListItemForm renders 1`] = `
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
 </div>
 `;
 
 exports[`ListItemForm rendes with default values for categories and list users 1`] = `
 <div>
-  <div>
-    <form
-      autocomplete="off"
-      class=""
-      data-test-id="list-item-form"
-      id="form-collapse"
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    type="button"
+  >
+    Add Item
+  </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
     >
-      <div
-        class="mb-3"
+      <label
+        class="form-label"
+        for="product"
       >
-        <label
-          class="form-label"
-          for="product"
-        >
-          Product
-        </label>
-        <input
-          class="form-control"
-          id="product"
-          name="product"
-          placeholder="apples"
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="mb-3"
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
       >
-        <label
-          class="form-label"
-          for="quantity"
-        >
-          Quantity
-        </label>
-        <input
-          class="form-control"
-          id="quantity"
-          name="quantity"
-          placeholder="3 bags"
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="mb-3"
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
       >
-        <label
-          class="form-label"
-          for="category"
-        >
-          Category
-        </label>
-        <input
-          class="form-control"
-          id="category"
-          list="categories"
-          name="category"
-          type="text"
-          value=""
-        />
-        <datalist
-          data-test-id="categories"
-          id="categories"
-        />
-      </div>
-      <div
-        class="d-grid gap-2 mt-3"
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      />
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
       >
-        <button
-          class="btn btn-success"
-          type="submit"
-        >
-          Add New Item
-        </button>
-        <button
-          class="btn btn-link"
-          type="button"
-        >
-          Collapse Form
-        </button>
-      </div>
-    </form>
-  </div>
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
 </div>
 `;

@@ -6,9 +6,18 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { EListType } from 'typings';
-import { mockNavigate } from 'test-utils';
 
 import ListContainer, { type IListContainerProps } from './ListContainer';
+
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
@@ -311,13 +320,9 @@ describe('ListContainer', () => {
   });
 
   it('renders ListForm when user has write permissions', async () => {
-    const { container, findByTestId, findByText, user } = setup({ permissions: 'write' });
+    const { container, findByTestId } = setup({ permissions: 'write' });
 
     expect(container).toMatchSnapshot();
-
-    // Click "Add Item" to expand the form
-    await user.click(await findByText('Add Item'));
-
     expect(await findByTestId('list-item-form')).toBeVisible();
   });
 
@@ -614,7 +619,6 @@ describe('ListContainer', () => {
     });
     const { findByLabelText, findByText, user } = setup();
 
-    await user.click(await findByText('Add Item'));
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'foo');
@@ -643,7 +647,6 @@ describe('ListContainer', () => {
     });
     const { findByLabelText, findByText, user } = setup();
 
-    await user.click(await findByText('Add Item'));
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'new category');
@@ -1592,10 +1595,6 @@ describe('ListContainer', () => {
     await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
 
     await user.click(await findByTestId('filter-by-foo'));
-
-    // Click "Add Item" to expand the form
-    await user.click(await findByText('Add Item'));
-
     await user.type(await findByLabelText('Product'), 'new product');
     await user.type(await findByLabelText('Quantity'), 'new quantity');
     await user.type(await findByLabelText('Category'), 'bar');

@@ -8,6 +8,10 @@ import { EListType } from 'typings';
 
 import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkEditListItemsForm';
 
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
+
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
   props: IBulkEditListItemsFormProps;
@@ -77,7 +81,7 @@ function setup(listType = EListType.GROCERY_LIST, suppliedProps?: Partial<IBulkE
     listUsers: [
       {
         id: 'id1',
-        email: 'foo@example.com',
+        email: 'foobar@example.com',
       },
     ],
   };
@@ -88,6 +92,12 @@ function setup(listType = EListType.GROCERY_LIST, suppliedProps?: Partial<IBulkE
 }
 
 describe('BulkEditListItemsForm', () => {
+  it('renders', () => {
+    const { container } = setup();
+
+    expect(container).toMatchSnapshot();
+  });
+
   it('clears attribute when the clear checkbox is selected and attribute has value', async () => {
     axios.put = jest.fn().mockResolvedValue({ data: {} });
     const { findByText, findByLabelText, user } = setup();

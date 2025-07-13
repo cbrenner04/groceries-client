@@ -6,7 +6,6 @@ import { Link, useNavigate } from 'react-router';
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';
 import { usePolling } from 'hooks';
-import { batchStateUpdates } from 'utils/batchUpdates';
 import type { IList, TUserPermissions } from 'typings';
 
 import ListForm from '../components/ListForm';
@@ -48,25 +47,17 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         const completedSame = isSameSet(updatedCompleted, completedLists);
         const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
         const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
-
-        // Batch all state updates to prevent concurrent rendering issues
-        const updates: (() => void)[] = [];
-
         if (!pendingSame) {
-          updates.push(() => setPendingLists(updatedPending));
+          setPendingLists(updatedPending);
         }
         if (!completedSame) {
-          updates.push(() => setCompletedLists(updatedCompleted));
+          setCompletedLists(updatedCompleted);
         }
         if (!incompleteSame) {
-          updates.push(() => setIncompleteLists(updatedIncomplete));
+          setIncompleteLists(updatedIncomplete);
         }
         if (!userPermsSame) {
-          updates.push(() => setCurrentUserPermissions(updatedCurrentUserPermissions));
-        }
-
-        if (updates.length > 0) {
-          batchStateUpdates(updates);
+          setCurrentUserPermissions(updatedCurrentUserPermissions);
         }
       }
     } catch (err: unknown) {

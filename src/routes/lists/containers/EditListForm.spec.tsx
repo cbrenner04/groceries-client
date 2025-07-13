@@ -4,9 +4,18 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
-import { mockNavigate } from 'test-utils';
 
 import EditListForm, { type IEditListFormProps } from './EditListForm';
+
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
+
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): jest.Mock => mockNavigate,
+}));
 
 interface ISetupReturn extends RenderResult {
   props: IEditListFormProps;

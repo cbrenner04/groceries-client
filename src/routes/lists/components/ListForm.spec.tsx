@@ -29,40 +29,37 @@ describe('ListForm', () => {
   });
 
   it('expands form', async () => {
-    const { findByText, queryByLabelText, user } = setup();
+    const { baseElement, findByText, user } = setup();
 
-    expect(queryByLabelText('Name')).not.toBeInTheDocument();
     await user.click(await findByText('Add List'));
-    expect(await findByText('Collapse Form')).toBeInTheDocument();
-    expect(await findByText('Create List')).toBeInTheDocument();
-    expect(await findByText('Type')).toBeInTheDocument();
-    expect(await findByText('Name')).toBeInTheDocument();
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).toHaveClass('show');
   });
 
   it('collapses form', async () => {
-    const { findByText, queryByLabelText, user } = setup();
+    const { baseElement, findByText, user } = setup();
 
     await user.click(await findByText('Add List'));
-    expect(await findByText('Collapse Form')).toBeInTheDocument();
+    await waitFor(() => expect(baseElement.children[0].children[0]).toHaveClass('show'));
+
     await user.click(await findByText('Collapse Form'));
-    await waitFor(() => {
-      expect(queryByLabelText('Name')).not.toBeInTheDocument();
-    });
+    await waitFor(() => expect(baseElement.children[0].children[0]).not.toHaveClass('show'));
+
+    expect(baseElement.children[0].children[0]).not.toHaveClass('show');
   });
 
   it('changes the value in the name field', async () => {
-    const { findByLabelText, findByText, user } = setup();
+    const { findByLabelText, user } = setup();
 
-    await user.click(await findByText('Add List'));
     await user.type(await findByLabelText('Name'), 'foo');
 
     expect(await findByLabelText('Name')).toHaveValue('foo');
   });
 
   it('changes the value in the type field', async () => {
-    const { findByLabelText, findByText, user } = setup();
+    const { findByLabelText, user } = setup();
 
-    await user.click(await findByText('Add List'));
     await user.selectOptions(await findByLabelText('Type'), 'MusicList');
 
     expect(await findByLabelText('Type')).toHaveValue('MusicList');
@@ -70,12 +67,11 @@ describe('ListForm', () => {
 
   it('calls props.onFormSubmit when form is submitted', async () => {
     const onFormSubmit = jest.fn().mockResolvedValue({});
-    const { findByLabelText, findAllByRole, findByText, props, user } = setup({ onFormSubmit });
+    const { findByLabelText, findAllByRole, props, user } = setup({ onFormSubmit });
 
-    await user.click(await findByText('Add List'));
     await user.type(await findByLabelText('Name'), 'foo');
     await user.selectOptions(await findByLabelText('Type'), 'BookList');
-    await user.click((await findAllByRole('button'))[0]); // 'Create List' is now the first button
+    await user.click((await findAllByRole('button'))[1]);
 
     await waitFor(() => expect(props.onFormSubmit).toHaveBeenCalledTimes(1));
 
@@ -84,9 +80,8 @@ describe('ListForm', () => {
 
   it('disables submit when in pending state', async () => {
     const onFormSubmit = jest.fn().mockResolvedValue({});
-    const { findByText, findAllByRole } = setup({ pending: true, onFormSubmit });
+    const { findAllByRole } = setup({ pending: true, onFormSubmit });
 
-    await userEvent.click(await findByText('Add List'));
-    expect((await findAllByRole('button'))[0]).toBeDisabled();
+    expect((await findAllByRole('button'))[1]).toBeDisabled();
   });
 });

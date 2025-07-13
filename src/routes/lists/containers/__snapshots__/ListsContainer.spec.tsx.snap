@@ -13,6 +13,87 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
   >
     Add List
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="form-control"
+        id="name"
+        name="name"
+        placeholder="My super cool list"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="type"
+      >
+        Type
+      </label>
+      <select
+        class="form-control"
+        id="type"
+        name="type"
+      >
+        <option
+          value="BookList"
+        >
+          books
+        </option>
+        <option
+          value="GroceryList"
+        >
+          groceries
+        </option>
+        <option
+          value="MusicList"
+        >
+          music
+        </option>
+        <option
+          value="SimpleList"
+        >
+          simple
+        </option>
+        <option
+          value="ToDoList"
+        >
+          to-do
+        </option>
+      </select>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr
     class="mb-4"
   />
@@ -69,11 +150,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-music text-secondary me-3"
+                    />
                     baz
                   </h5>
                 </a>
@@ -160,11 +244,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-list text-secondary me-3"
+                    />
                     foobar
                   </h5>
                 </a>
@@ -287,11 +374,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     bar
                   </h5>
                 </a>
@@ -356,11 +446,14 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     bar
                   </h5>
                 </a>
@@ -424,6 +517,87 @@ exports[`ListsContainer renders 1`] = `
   >
     Add List
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="form-control"
+        id="name"
+        name="name"
+        placeholder="My super cool list"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="type"
+      >
+        Type
+      </label>
+      <select
+        class="form-control"
+        id="type"
+        name="type"
+      >
+        <option
+          value="BookList"
+        >
+          books
+        </option>
+        <option
+          value="GroceryList"
+        >
+          groceries
+        </option>
+        <option
+          value="MusicList"
+        >
+          music
+        </option>
+        <option
+          value="SimpleList"
+        >
+          simple
+        </option>
+        <option
+          value="ToDoList"
+        >
+          to-do
+        </option>
+      </select>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create List
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr
     class="mb-4"
   />
@@ -480,6 +654,9 @@ exports[`ListsContainer renders 1`] = `
                 <h5
                   class="mb-1"
                 >
+                  <i
+                    class="fa fa-shopping-bag text-secondary me-3"
+                  />
                   foo
                 </h5>
               </div>
@@ -578,11 +755,14 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-music text-secondary me-3"
+                    />
                     baz
                   </h5>
                 </a>
@@ -669,11 +849,14 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-list text-secondary me-3"
+                    />
                     foobar
                   </h5>
                 </a>
@@ -796,11 +979,14 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     bar
                   </h5>
                 </a>
@@ -865,11 +1051,14 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     bar
                   </h5>
                 </a>

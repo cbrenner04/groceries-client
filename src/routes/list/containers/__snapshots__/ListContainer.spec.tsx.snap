@@ -183,6 +183,97 @@ exports[`ListContainer does not render complete items when none exist 1`] = `
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"
@@ -479,6 +570,124 @@ exports[`ListContainer does not render incomplete items when none exist 1`] = `
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="task"
+      >
+        Task
+      </label>
+      <input
+        class="form-control"
+        id="task"
+        name="task"
+        placeholder="Clean the toilets"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="assignee_id"
+      >
+        Assignee
+      </label>
+      <select
+        class="form-control"
+        id="assignee_id"
+        name="assignee_id"
+      >
+        <option
+          disabled=""
+          value=""
+        >
+          Select Assignee
+        </option>
+        <option
+          value="id1"
+        >
+          foo@example.com
+        </option>
+      </select>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="due_by"
+      >
+        Due By
+      </label>
+      <input
+        class="form-control"
+        id="due_by"
+        name="due_by"
+        placeholder="mm/dd/yyyy"
+        type="date"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"
@@ -617,6 +826,97 @@ exports[`ListContainer renders ListForm when user has write permissions 1`] = `
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"
@@ -965,6 +1265,97 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"
@@ -1289,50 +1680,6 @@ exports[`ListContainer renders confirmation modal when delete is clicked 1`] = `
       </div>
     </div>
   </div>
-  <div
-    class="modal show"
-    data-test-id="confirm-modal"
-    role="dialog"
-  >
-    <div
-      class="modal-header"
-    >
-      <button
-        aria-label="Close"
-        type="button"
-      />
-      <h5
-        class="modal-title"
-      >
-        Confirm 
-        delete
-      </h5>
-    </div>
-    <div
-      class="modal-body"
-      data-test-id="confirm-modal-body"
-    >
-      Are you sure you want to delete the following items? not purchased quantity no category not purchased product
-    </div>
-    <div
-      class="modal-footer"
-    >
-      <button
-        class="btn btn-secondary"
-        data-test-id="clear-delete"
-        type="button"
-      >
-        Close
-      </button>
-      <button
-        class="btn btn-primary"
-        data-test-id="confirm-delete"
-        type="button"
-      >
-        Yes, I'm sure.
-      </button>
-    </div>
-  </div>
 </div>
 `;
 
@@ -1357,6 +1704,97 @@ exports[`ListContainer renders filtered items without category buckets when filt
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"
@@ -1596,6 +2034,97 @@ exports[`ListContainer renders items with category buckets when includedCategori
   >
     Add Item
   </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    data-test-id="list-item-form"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="product"
+      >
+        Product
+      </label>
+      <input
+        class="form-control"
+        id="product"
+        name="product"
+        placeholder="apples"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="quantity"
+      >
+        Quantity
+      </label>
+      <input
+        class="form-control"
+        id="quantity"
+        name="quantity"
+        placeholder="3 bags"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Add New Item
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
   <hr />
   <div
     class="d-flex justify-content-between"

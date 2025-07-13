@@ -66,11 +66,14 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id1"
+                  href="/lists/id1"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-shopping-bag text-secondary me-3"
+                    />
                     foo
                   </h5>
                 </a>
@@ -135,11 +138,14 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     bar
                   </h5>
                 </a>
@@ -204,11 +210,14 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
                   >
+                    <i
+                      class="fa fa-book text-secondary me-3"
+                    />
                     baz
                   </h5>
                 </a>

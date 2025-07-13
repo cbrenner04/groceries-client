@@ -9,6 +9,10 @@ import { EListType } from 'typings';
 
 import CompletedListsContainer from './CompletedListsContainer';
 
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
+
 function setup(): RenderResult {
   const props = {
     userId: 'id1',

@@ -7,7 +7,7 @@ import axios from '../../utils/api';
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => require('test-utils').mockNavigate,
+  useNavigate: (): jest.Mock => jest.fn(),
   useParams: (): { id: string } => ({ id: '1' }),
 }));
 

@@ -7,6 +7,10 @@ import axios from 'utils/api';
 import { EListType } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
 
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
+
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
   props: IChangeOtherListModalProps;
