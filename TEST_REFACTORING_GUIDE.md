@@ -20,12 +20,14 @@ The current `ListContainer.spec.tsx` file has several issues:
 **Purpose**: Centralize all test data creation to eliminate repetition and ensure consistency.
 
 **Key Features**:
+
 - Factory functions for creating test objects
 - Pre-built test data sets for common scenarios
 - Override support for test-specific customization
 - Type-safe data creation
 
 **Usage**:
+
 ```typescript
 import { defaultTestData, createListItem, createField } from 'test-utils/factories';
 
@@ -46,6 +48,7 @@ const customItem = createListItem('custom-id', false, [
 **Purpose**: Provide common test utilities and patterns for consistent test behavior.
 
 **Key Features**:
+
 - Common setup functions
 - Timer and async operation helpers
 - API mocking utilities
@@ -53,6 +56,7 @@ const customItem = createListItem('custom-id', false, [
 - Common assertion patterns
 
 **Usage**:
+
 ```typescript
 import { setupListContainer, advanceTimersByTime, apiMocks } from 'test-utils/helpers';
 
@@ -74,6 +78,7 @@ await advanceTimersByTime(3000);
 **Purpose**: Group related tests logically and make the test file more navigable.
 
 **Structure**:
+
 ```typescript
 describe('ListContainer', () => {
   describe('Polling', () => {
@@ -103,11 +108,13 @@ describe('ListContainer', () => {
 ## Migration Steps
 
 ### Phase 1: Create Test Utilities
+
 - [x] Create `src/test-utils/factories.ts`
 - [x] Create `src/test-utils/helpers.ts`
 - [x] Create `src/test-utils/index.ts`
 
 ### Phase 2: Refactor Test File
+
 1. **Group existing tests** by functionality
 2. **Replace mock data** with factory functions
 3. **Use helper functions** for common operations
@@ -115,6 +122,7 @@ describe('ListContainer', () => {
 5. **Remove duplication** by extracting common patterns
 
 ### Phase 3: Apply to Other Test Files
+
 1. **Identify patterns** that can be reused
 2. **Extend utilities** as needed
 3. **Refactor other large test files** using the same approach
@@ -122,24 +130,28 @@ describe('ListContainer', () => {
 ## Best Practices
 
 ### Test Data Management
+
 - Use factory functions instead of inline objects
 - Create specific test data sets for different scenarios
 - Use overrides for test-specific customization
 - Keep test data close to the tests that use it
 
 ### Test Organization
+
 - Group related tests in describe blocks
 - Use descriptive test names
 - Keep individual tests focused on one behavior
 - Use beforeEach for common setup
 
 ### Mocking
+
 - Use centralized mock utilities
 - Mock at the right level (API calls, not implementation details)
 - Reset mocks between tests
 - Use consistent mock patterns
 
 ### Async Testing
+
 - Use proper async/await patterns
 - Handle timers consistently
 - Wait for async operations to complete
@@ -148,6 +160,7 @@ describe('ListContainer', () => {
 ## Example: Before vs After
 
 ### Before (Current Approach)
+
 ```typescript
 it('deletes item when delete is confirmed', async () => {
   axios.delete = jest.fn().mockResolvedValue({});
@@ -170,6 +183,7 @@ it('deletes item when delete is confirmed', async () => {
 ```
 
 ### After (Refactored Approach)
+
 ```typescript
 describe('Item Operations', () => {
   describe('Delete', () => {
