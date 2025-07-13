@@ -8,6 +8,13 @@ import { fetchListToEdit } from './utils';
 import EditListForm from './containers/EditListForm';
 import UnknownError from '../error_pages/UnknownError';
 
+interface IEditListData {
+  listId: string;
+  name: string;
+  type: string;
+  completed: boolean;
+}
+
 const EditList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,9 +25,14 @@ const EditList: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { listId: string; name: string; type: string; completed: boolean }): ReactNode => (
-          <EditListForm listId={data.listId} name={data.name} completed={data.completed} type={data.type} />
-        )}
+        {(data: IEditListData | undefined): ReactNode => {
+          // Handle the case where data might be undefined
+          if (!data) {
+            return <UnknownError />;
+          }
+
+          return <EditListForm listId={data.listId} name={data.name} completed={data.completed} type={data.type} />;
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

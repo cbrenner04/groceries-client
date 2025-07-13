@@ -31,19 +31,26 @@ const List = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: IFulfilledData): React.JSX.Element => (
-          <ListContainer
-            userId={data.currentUserId}
-            list={data.list}
-            purchasedItems={data.purchasedItems}
-            categories={data.categories}
-            listUsers={data.listUsers}
-            includedCategories={data.includedCategories}
-            notPurchasedItems={data.notPurchasedItems}
-            permissions={data.permissions}
-            lists={data.lists}
-          />
-        )}
+        {(data: IFulfilledData | undefined): React.JSX.Element => {
+          // Handle the case where data might be undefined
+          if (!data) {
+            return <UnknownError />;
+          }
+
+          return (
+            <ListContainer
+              userId={data.currentUserId}
+              list={data.list}
+              purchasedItems={data.purchasedItems}
+              categories={data.categories}
+              listUsers={data.listUsers}
+              includedCategories={data.includedCategories}
+              notPurchasedItems={data.notPurchasedItems}
+              permissions={data.permissions}
+              lists={data.lists}
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

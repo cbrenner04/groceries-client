@@ -15,6 +15,11 @@ export function handleAddItem(params: {
   setNotCompletedItems: (v: IV2ListItem[]) => void;
   categories: string[];
   setCategories: (v: string[]) => void;
+  includedCategories?: string[];
+  setIncludedCategories?: (v: string[]) => void;
+  displayedCategories?: string[];
+  setDisplayedCategories?: (v: string[]) => void;
+  filter?: string;
 }): void {
   const {
     newItems,
@@ -25,6 +30,9 @@ export function handleAddItem(params: {
     setNotCompletedItems,
     categories,
     setCategories,
+    setIncludedCategories,
+    setDisplayedCategories,
+    filter,
   } = params;
   setPending(true);
   try {
@@ -40,7 +48,14 @@ export function handleAddItem(params: {
       setNotCompletedItems(update(notCompletedItems, { $push: [itemWithFields] }));
     }
     if (itemCategory && !categories.includes(itemCategory)) {
-      setCategories([...categories, itemCategory]);
+      const newCategories = [...categories, itemCategory];
+      setCategories(newCategories);
+      if (setIncludedCategories) {
+        setIncludedCategories(newCategories);
+      }
+      if (setDisplayedCategories && !filter) {
+        setDisplayedCategories(newCategories);
+      }
     }
     toast('Item successfully added.', { type: 'info' });
   } catch (err) {
@@ -177,16 +192,39 @@ export async function handleItemRefresh(params: {
   } = params;
   setPending(true);
   try {
-    const { data } = await axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
-      list_item: { refreshed: true, completed: false },
-    });
-    setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
-    // Preserve original fields if API response doesn't include them
-    const refreshedItem = {
-      ...data,
-      fields: Array.isArray(data.fields) && data.fields.length > 0 ? data.fields : item.fields,
+    // Create a new item with the same data but completed: false
+    const newItemData = {
+      list_item: {
+        completed: false,
+        refreshed: false,
+        fields: item.fields.map((field) => ({
+          list_item_field_configuration_id: field.list_item_field_configuration_id,
+          data: field.data,
+          label: field.label,
+        })),
+      },
     };
-    setNotCompletedItems(update(notCompletedItems, { $push: [refreshedItem] }));
+
+    const [newItemResponse] = await Promise.all([
+      axios.post(`/v2/lists/${listId}/list_items`, newItemData),
+      axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
+        list_item: { refreshed: true },
+      }),
+    ]);
+
+    // Remove the old item from completed items
+    setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
+
+    // Add the new item to not completed items
+    const newItem = {
+      ...newItemResponse.data,
+      fields:
+        Array.isArray(newItemResponse.data.fields) && newItemResponse.data.fields.length > 0
+          ? newItemResponse.data.fields
+          : item.fields,
+    };
+    setNotCompletedItems(update(notCompletedItems, { $push: [newItem] }));
+
     toast('Item refreshed successfully.', { type: 'info' });
   } catch (err) {
     handleFailure(err as AxiosError, 'Failed to refresh item');

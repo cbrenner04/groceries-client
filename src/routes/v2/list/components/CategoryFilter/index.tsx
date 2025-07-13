@@ -26,6 +26,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = (props): React.JSX.Elemen
         {/* Add Uncategorized option */}
         <Dropdown.Item
           key="uncategorized"
+          data-test-id="filter-by-uncategorized"
           onClick={(): void => {
             const syntheticEvent = {
               target: { name: 'uncategorized' },
@@ -39,6 +40,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = (props): React.JSX.Elemen
         {props.categories?.filter(Boolean).map((category) => (
           <Dropdown.Item
             key={category}
+            data-test-id={`filter-by-${category}`}
             onClick={(): void => {
               const syntheticEvent = {
                 target: { name: category },

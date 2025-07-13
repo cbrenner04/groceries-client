@@ -19,6 +19,7 @@ jest.mock('../../../../utils/api', () => ({
   default: {
     put: jest.fn(),
     delete: jest.fn(),
+    post: jest.fn(),
   },
 }));
 
@@ -238,6 +239,58 @@ describe('handleAddItem', () => {
     });
     expect(mockToast).toHaveBeenCalledWith('Failed to add item', { type: 'error' });
   });
+  it('updates included categories when setIncludedCategories is provided', () => {
+    const setCategories = jest.fn();
+    const setIncludedCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'category', data: 'NewCategory' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+      setIncludedCategories,
+    });
+    expect(setIncludedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
+  });
+  it('updates displayed categories when setDisplayedCategories is provided and no filter is active', () => {
+    const setCategories = jest.fn();
+    const setDisplayedCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'category', data: 'NewCategory' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+      setDisplayedCategories,
+    });
+    expect(setDisplayedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
+  });
+  it('does not update displayed categories when filter is active', () => {
+    const setCategories = jest.fn();
+    const setDisplayedCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [makeField({ label: 'category', data: 'NewCategory' })] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+      setDisplayedCategories,
+      filter: 'SomeFilter',
+    });
+    expect(setDisplayedCategories).not.toHaveBeenCalled();
+  });
 });
 
 describe('handleItemSelect', () => {
@@ -399,6 +452,7 @@ describe('handleItemRefresh', () => {
     const testItem = makeItem({ id: 'test-id' });
     const otherItem = makeItem({ id: 'other-id' });
     mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
+    mockAxios.post.mockResolvedValueOnce({ data: { ...testItem, completed: false } });
     const setCompleted = jest.fn();
     const setNotCompleted = jest.fn();
     const setPending = jest.fn();
@@ -422,6 +476,7 @@ describe('handleItemRefresh', () => {
     const otherItem = makeItem({ id: 'other-id' });
     // API returns minimal response without fields
     mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', refreshed: true, completed: false } });
+    mockAxios.post.mockResolvedValueOnce({ data: { id: 'test-id', completed: false } });
     const setCompleted = jest.fn();
     const setNotCompleted = jest.fn();
     const setPending = jest.fn();

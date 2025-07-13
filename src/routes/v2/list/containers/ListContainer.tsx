@@ -3,6 +3,7 @@ import { ListGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
+import axios from 'utils/api';
 
 import ConfirmModal from 'components/ConfirmModal';
 import {
@@ -132,6 +133,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems,
       categories,
       setCategories,
+      includedCategories,
+      setIncludedCategories,
+      displayedCategories,
+      setDisplayedCategories,
+      filter,
     });
   };
 
@@ -144,24 +150,44 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleItemEdit = (item: IV2ListItem): void => {
-    exportedHandleItemEdit({
-      item,
-      listId: props.list.id!,
-      navigate,
-    });
+    if (selectedItems.length > 1) {
+      // Bulk edit - navigate with selected item IDs
+      const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
+      navigate(`/v2/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
+    } else {
+      // Single edit
+      exportedHandleItemEdit({
+        item,
+        listId: props.list.id!,
+        navigate,
+      });
+    }
   };
 
   const handleItemComplete = async (item: IV2ListItem): Promise<void> => {
-    await exportedHandleItemComplete({
-      item,
-      listId: props.list.id!,
-      notCompletedItems,
-      setNotCompletedItems,
-      completedItems,
-      setCompletedItems,
-      setPending,
-      handleFailure,
-    });
+    const items = selectedItems.length ? selectedItems : [item];
+    try {
+      // Process completion requests sequentially to ensure state updates properly
+      for (const selectedItem of items) {
+        await exportedHandleItemComplete({
+          item: selectedItem,
+          listId: props.list.id!,
+          notCompletedItems,
+          setNotCompletedItems,
+          completedItems,
+          setCompletedItems,
+          setPending,
+          handleFailure,
+        });
+      }
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
+      setCompleteMultiSelect(false);
+      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(items)} marked as completed.`, { type: 'info' });
+    } catch (error) {
+      handleFailure(error as AxiosError, 'Failed to complete items');
+    }
   };
 
   const handleItemRefresh = async (item: IV2ListItem): Promise<void> => {
@@ -177,6 +203,67 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
+  const toggleRead = async (item: IV2ListItem): Promise<void> => {
+    const items = selectedItems.length ? selectedItems : [item];
+    const updateRequests = items.map((item) => {
+      const readField = item.fields.find((field) => field.label === 'read');
+      const isRead = !(readField?.data === 'true');
+      return axios.put(`/v2/lists/${props.list.id}/list_items/${item.id}`, {
+        list_item: {
+          fields: [
+            {
+              label: 'read',
+              data: isRead.toString(),
+            },
+          ],
+        },
+      });
+    });
+    try {
+      await Promise.all(updateRequests);
+      let newCompletedItems = completedItems;
+      let newNotCompletedItems = notCompletedItems;
+      items.forEach((item) => {
+        const readField = item.fields.find((field) => field.label === 'read');
+        if (readField) {
+          readField.data = readField.data === 'true' ? 'false' : 'true';
+        } else {
+          item.fields.push({
+            id: `read-${item.id}`,
+            list_item_field_configuration_id: 'read-config',
+            data: 'true',
+            archived_at: '',
+            list_item_id: item.id,
+            label: 'read',
+            user_id: item.user_id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        }
+        if (item.completed) {
+          const itemIndex = newCompletedItems.findIndex((completedItem) => item.id === completedItem.id);
+          const newItems = [...newCompletedItems];
+          newItems[itemIndex] = item;
+          newCompletedItems = newItems;
+        } else {
+          const itemIndex = newNotCompletedItems.findIndex((notCompletedItem) => item.id === notCompletedItem.id);
+          const newItems = [...newNotCompletedItems];
+          newItems[itemIndex] = item;
+          newNotCompletedItems = newItems;
+        }
+      });
+      setCompletedItems(newCompletedItems);
+      setNotCompletedItems(newNotCompletedItems);
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
+      setCompleteMultiSelect(false);
+      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
+    } catch (error) {
+      handleFailure(error as AxiosError, 'Item not found');
+    }
+  };
+
   // Multi-select and bulk operation handlers
   const handleDelete = (item: IV2ListItem): void => {
     const items = selectedItems.length ? selectedItems : [item];
@@ -186,29 +273,51 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
-    const deleteRequests = itemsToDelete.map((item) =>
-      exportedHandleItemDelete({
-        item,
-        listId: props.list.id!,
-        completedItems,
-        setCompletedItems,
-        notCompletedItems,
-        setNotCompletedItems,
-        selectedItems,
-        setSelectedItems,
-        setPending,
-        handleFailure,
-      }),
+
+    // Update state immediately to remove selected items
+    const itemsToDeleteFromState = itemsToDelete;
+
+    // Remove items from completed and not completed lists
+    const updatedCompletedItems = completedItems.filter(
+      (item) => !itemsToDeleteFromState.some((deleteItem) => deleteItem.id === item.id),
     );
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !itemsToDeleteFromState.some((deleteItem) => deleteItem.id === item.id),
+    );
+
+    setCompletedItems(updatedCompletedItems);
+    setNotCompletedItems(updatedNotCompletedItems);
+
+    // Clear selections
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setCompleteMultiSelect(false);
+    setItemsToDelete([]);
+
     try {
-      await Promise.all(deleteRequests);
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
-      setItemsToDelete([]);
-      toast(`${itemsToDelete.length > 1 ? 'Items' : 'Item'} successfully deleted.`, { type: 'info' });
+      // Make API calls for each item to be deleted
+      for (const item of itemsToDeleteFromState) {
+        await exportedHandleItemDelete({
+          item,
+          listId: props.list.id!,
+          completedItems: updatedCompletedItems,
+          setCompletedItems,
+          notCompletedItems: updatedNotCompletedItems,
+          setNotCompletedItems,
+          selectedItems: [],
+          setSelectedItems,
+          setPending,
+          handleFailure,
+        });
+      }
+
+      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
     } catch (error) {
-      handleFailure(error as AxiosError, 'Failed to delete items');
+      // If API calls fail, revert the state changes
+      setCompletedItems(completedItems);
+      setNotCompletedItems(notCompletedItems);
+      toast('Failed to delete items. Please try again.', { type: 'error' });
     }
   };
 
@@ -223,6 +332,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompletedItems([...completedItems, ...selectedItems]);
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
+    setMove(false);
   };
 
   const deleteConfirmationModalBody = (): string => {
@@ -281,11 +391,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 permissions={props.permissions}
                 selectedItems={selectedItems}
                 pending={pending}
+                listType={props.list.type}
                 handleItemSelect={handleItemSelect}
                 handleItemComplete={handleItemComplete}
                 handleItemEdit={handleItemEdit}
                 handleItemDelete={handleDelete}
                 handleItemRefresh={handleItemRefresh}
+                toggleItemRead={toggleRead}
                 multiSelect={incompleteMultiSelect}
               />
             ))}
@@ -372,11 +484,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             permissions={props.permissions}
             selectedItems={selectedItems}
             pending={pending}
+            listType={props.list.type}
             handleItemSelect={handleItemSelect}
             handleItemComplete={handleItemComplete}
             handleItemEdit={handleItemEdit}
             handleItemDelete={handleDelete}
             handleItemRefresh={handleItemRefresh}
+            toggleItemRead={toggleRead}
             multiSelect={completeMultiSelect}
           />
         ))}
