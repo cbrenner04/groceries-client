@@ -46,6 +46,7 @@ clearToastMocks();
 **Location**: `src/setupTests.ts`
 
 **What's mocked**:
+
 - `useNavigate` hook (returns a mock function)
 
 **Usage in tests**:
