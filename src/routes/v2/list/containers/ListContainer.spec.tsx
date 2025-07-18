@@ -33,7 +33,6 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
     notCompletedItems: defaultTestData.notCompletedItems,
     listsToUpdate: defaultTestData.listsToUpdate,
     listItemConfiguration: defaultTestData.listItemConfiguration,
-    listItemConfigurations: defaultTestData.listItemConfigurations,
     permissions: defaultTestData.permissions,
     ...suppliedProps,
   };
@@ -292,7 +291,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Something went wrong. Please try again.', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('handles failed request on delete', async () => {
@@ -316,7 +318,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('deletes item when confirmed, hides modal, removes category when item is last of category', async () => {
@@ -546,7 +551,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Something went wrong. Please try again.', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('handles failed request on complete', async () => {
@@ -566,7 +574,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
   });
 
@@ -717,7 +728,10 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Something went wrong. Please try again.', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('handles failed request on refresh', async () => {
@@ -743,7 +757,10 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
   });
 
@@ -954,7 +971,10 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Something went wrong. Please try again.', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
 
     it('handles failed request on read', async () => {
@@ -979,7 +999,7 @@ describe('ListContainer', () => {
     });
 
     it('handles unknown failure on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+      axios.put = jest.fn().mockRejectedValue(new Error('failed to send request'));
       const { findByTestId, user } = setup({
         list: bookListTestData.list,
         notCompletedItems: [],
@@ -996,7 +1016,10 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(toast).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+        { type: 'error' },
+      );
     });
   });
 

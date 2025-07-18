@@ -3,7 +3,6 @@ import { ListGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
-import axios from 'utils/api';
 
 import ConfirmModal from 'components/ConfirmModal';
 import {
@@ -30,7 +29,9 @@ import {
   handleItemComplete as exportedHandleItemComplete,
   handleItemDelete as exportedHandleItemDelete,
   handleItemRefresh as exportedHandleItemRefresh,
+  handleToggleRead as exportedHandleToggleRead,
 } from './listHandlers';
+import { handleFailure } from 'utils/handleFailure';
 
 export interface IListContainerProps {
   userId: string;
@@ -42,7 +43,6 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration: IListItemConfiguration;
-  listItemConfigurations: IListItemConfiguration[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -88,6 +88,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         if (!notCompletedSame || !completedSame) {
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
+          /* istanbul ignore else */
           if (!filter) {
             setDisplayedCategories(updatedCategories);
           }
@@ -101,26 +102,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       });
     }
   }, 3000);
-
-  const handleFailure = (error: AxiosError, defaultMessage: string): void => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        toast('You must sign in', { type: 'error' });
-        navigate('/users/sign_in');
-      } else if ([403, 404].includes(error.response.status)) {
-        toast(defaultMessage, { type: 'error' });
-      } else {
-        /* istanbul ignore next */
-        toast('Something went wrong. Please try again.', { type: 'error' });
-      }
-    } else if (error.request) {
-      /* istanbul ignore next */
-      toast('Network error. Please check your connection.', { type: 'error' });
-    } else {
-      /* istanbul ignore next */
-      toast(error.message, { type: 'error' });
-    }
-  };
 
   const handleAddItem = (newItems: IV2ListItem[]): void => {
     exportedHandleAddItem({
@@ -138,6 +119,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       displayedCategories,
       setDisplayedCategories,
       filter,
+      navigate,
     });
   };
 
@@ -177,7 +159,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           completedItems,
           setCompletedItems,
           setPending,
-          handleFailure,
+          navigate,
         });
       }
       setSelectedItems([]);
@@ -186,7 +168,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
       toast(`${pluralize(items)} marked as completed.`, { type: 'info' });
     } catch (error) {
-      handleFailure(error as AxiosError, 'Failed to complete items');
+      handleFailure({ error: error as AxiosError, notFoundMessage: 'Failed to complete items' });
     }
   };
 
@@ -199,69 +181,24 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       notCompletedItems,
       setNotCompletedItems,
       setPending,
-      handleFailure,
+      navigate,
     });
   };
 
   const toggleRead = async (item: IV2ListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
-    const updateRequests = items.map((item) => {
-      const readField = item.fields.find((field) => field.label === 'read');
-      const isRead = !(readField?.data === 'true');
-      return axios.put(`/v2/lists/${props.list.id}/list_items/${item.id}`, {
-        list_item: {
-          fields: [
-            {
-              label: 'read',
-              data: isRead.toString(),
-            },
-          ],
-        },
-      });
+    await exportedHandleToggleRead({
+      items,
+      listId: props.list.id!,
+      completedItems,
+      setCompletedItems,
+      notCompletedItems,
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+      navigate,
     });
-    try {
-      await Promise.all(updateRequests);
-      let newCompletedItems = completedItems;
-      let newNotCompletedItems = notCompletedItems;
-      items.forEach((item) => {
-        const readField = item.fields.find((field) => field.label === 'read');
-        if (readField) {
-          readField.data = readField.data === 'true' ? 'false' : 'true';
-        } else {
-          item.fields.push({
-            id: `read-${item.id}`,
-            list_item_field_configuration_id: 'read-config',
-            data: 'true',
-            archived_at: '',
-            list_item_id: item.id,
-            label: 'read',
-            user_id: item.user_id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          });
-        }
-        if (item.completed) {
-          const itemIndex = newCompletedItems.findIndex((completedItem) => item.id === completedItem.id);
-          const newItems = [...newCompletedItems];
-          newItems[itemIndex] = item;
-          newCompletedItems = newItems;
-        } else {
-          const itemIndex = newNotCompletedItems.findIndex((notCompletedItem) => item.id === notCompletedItem.id);
-          const newItems = [...newNotCompletedItems];
-          newItems[itemIndex] = item;
-          newNotCompletedItems = newItems;
-        }
-      });
-      setCompletedItems(newCompletedItems);
-      setNotCompletedItems(newNotCompletedItems);
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
-      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
-    } catch (error) {
-      handleFailure(error as AxiosError, 'Item not found');
-    }
   };
 
   // Multi-select and bulk operation handlers
@@ -307,7 +244,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           selectedItems: [],
           setSelectedItems,
           setPending,
-          handleFailure,
+          navigate,
         });
       }
 

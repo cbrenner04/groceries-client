@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
-import { toast } from 'react-toastify';
 import axios from 'utils/api';
+import { AxiosError } from 'axios';
 
 import { UserContext } from '../../../AppRouter';
+import { handleFailure } from '../../../utils/handleFailure';
 
 import List from './List';
 
@@ -12,6 +13,16 @@ import List from './List';
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: (): { id: string } => ({ id: '123' }),
+}));
+
+const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockNavigate = jest.fn();
+jest.mock('../../../utils/handleFailure', () => ({
+  handleFailure: jest.fn(),
+}));
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 
 const mockUser = {
@@ -43,7 +54,6 @@ const mockListData = {
     updated_at: '2023-01-01T00:00:00Z',
     archived_at: null,
   },
-  list_item_configurations: [],
   categories: [],
 };
 
@@ -99,13 +109,20 @@ describe('V2 List', () => {
   });
 
   it('handles authentication errors', async () => {
-    const authError = new Error('Unauthorized') as Error & { response?: { status: number } };
-    authError.response = { status: 401 };
+    const authError = new AxiosError('Unauthorized', '401');
     axios.get = jest.fn().mockRejectedValue(authError);
     await act(async () => {
       renderList();
     });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledTimes(1);
+    });
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: authError,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 });

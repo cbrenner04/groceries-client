@@ -3,6 +3,7 @@ import type { AxiosError } from 'axios';
 import axios from '../../../../utils/api';
 import update from 'immutability-helper';
 import type { IV2ListItem } from 'typings';
+import { handleFailure } from '../../../../utils/handleFailure';
 
 // handleAddItem
 export function handleAddItem(params: {
@@ -20,6 +21,7 @@ export function handleAddItem(params: {
   displayedCategories?: string[];
   setDisplayedCategories?: (v: string[]) => void;
   filter?: string;
+  navigate?: (url: string) => void;
 }): void {
   const {
     newItems,
@@ -33,6 +35,7 @@ export function handleAddItem(params: {
     setIncludedCategories,
     setDisplayedCategories,
     filter,
+    navigate,
   } = params;
   setPending(true);
   try {
@@ -59,7 +62,7 @@ export function handleAddItem(params: {
     }
     toast('Item successfully added.', { type: 'info' });
   } catch (err) {
-    toast('Failed to add item', { type: 'error' });
+    handleFailure({ error: err as AxiosError, notFoundMessage: 'Failed to add item', navigate, redirectURI: '/lists' });
   } finally {
     setPending(false);
   }
@@ -95,7 +98,7 @@ export async function handleItemComplete(params: {
   completedItems: IV2ListItem[];
   setCompletedItems: (v: IV2ListItem[]) => void;
   setPending: (v: boolean) => void;
-  handleFailure: (error: AxiosError, msg: string) => void;
+  navigate?: (url: string) => void;
 }): Promise<void> {
   const {
     item,
@@ -105,7 +108,7 @@ export async function handleItemComplete(params: {
     completedItems,
     setCompletedItems,
     setPending,
-    handleFailure,
+    navigate,
   } = params;
   setPending(true);
   try {
@@ -121,7 +124,12 @@ export async function handleItemComplete(params: {
     setCompletedItems(update(completedItems, { $push: [completedItem] }));
     toast('Item marked as completed.', { type: 'info' });
   } catch (err) {
-    handleFailure(err as AxiosError, 'Failed to complete item');
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Failed to complete item',
+      navigate,
+      redirectURI: '/lists',
+    });
   } finally {
     setPending(false);
   }
@@ -138,7 +146,7 @@ export async function handleItemDelete(params: {
   selectedItems: IV2ListItem[];
   setSelectedItems: (v: IV2ListItem[]) => void;
   setPending: (v: boolean) => void;
-  handleFailure: (error: AxiosError, msg: string) => void;
+  navigate?: (url: string) => void;
 }): Promise<void> {
   const {
     item,
@@ -150,7 +158,7 @@ export async function handleItemDelete(params: {
     selectedItems,
     setSelectedItems,
     setPending,
-    handleFailure,
+    navigate,
   } = params;
   setPending(true);
   try {
@@ -163,7 +171,12 @@ export async function handleItemDelete(params: {
     setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
     toast('Item deleted successfully.', { type: 'info' });
   } catch (err) {
-    handleFailure(err as AxiosError, 'Failed to delete item');
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Failed to delete item',
+      navigate,
+      redirectURI: '/lists',
+    });
   } finally {
     setPending(false);
   }
@@ -178,7 +191,7 @@ export async function handleItemRefresh(params: {
   notCompletedItems: IV2ListItem[];
   setNotCompletedItems: (v: IV2ListItem[]) => void;
   setPending: (v: boolean) => void;
-  handleFailure: (error: AxiosError, msg: string) => void;
+  navigate?: (url: string) => void;
 }): Promise<void> {
   const {
     item,
@@ -188,7 +201,7 @@ export async function handleItemRefresh(params: {
     notCompletedItems,
     setNotCompletedItems,
     setPending,
-    handleFailure,
+    navigate,
   } = params;
   setPending(true);
   try {
@@ -227,8 +240,110 @@ export async function handleItemRefresh(params: {
 
     toast('Item refreshed successfully.', { type: 'info' });
   } catch (err) {
-    handleFailure(err as AxiosError, 'Failed to refresh item');
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Failed to refresh item',
+      navigate,
+      redirectURI: '/lists',
+    });
   } finally {
     setPending(false);
+  }
+}
+
+// handleToggleRead
+export async function handleToggleRead(params: {
+  items: IV2ListItem[];
+  listId: string;
+  completedItems: IV2ListItem[];
+  setCompletedItems: (v: IV2ListItem[]) => void;
+  notCompletedItems: IV2ListItem[];
+  setNotCompletedItems: (v: IV2ListItem[]) => void;
+  setSelectedItems: (v: IV2ListItem[]) => void;
+  setIncompleteMultiSelect: (v: boolean) => void;
+  setCompleteMultiSelect: (v: boolean) => void;
+  navigate?: (url: string) => void;
+}): Promise<void> {
+  const {
+    items,
+    listId,
+    completedItems,
+    setCompletedItems,
+    notCompletedItems,
+    setNotCompletedItems,
+    setSelectedItems,
+    setIncompleteMultiSelect,
+    setCompleteMultiSelect,
+    navigate,
+  } = params;
+
+  const updateRequests = items.map((item) => {
+    const readField = item.fields.find((field) => field.label === 'read');
+    const isRead = !(readField?.data === 'true');
+    return axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
+      list_item: {
+        fields: [
+          {
+            label: 'read',
+            data: isRead.toString(),
+          },
+        ],
+      },
+    });
+  });
+
+  try {
+    await Promise.all(updateRequests);
+    let newCompletedItems = completedItems;
+    let newNotCompletedItems = notCompletedItems;
+
+    items.forEach((item) => {
+      const readField = item.fields.find((field) => field.label === 'read');
+      if (readField) {
+        readField.data = readField.data === 'true' ? 'false' : 'true';
+      } else {
+        item.fields.push({
+          id: `read-${item.id}`,
+          list_item_field_configuration_id: 'read-config',
+          data: 'true',
+          archived_at: null,
+          list_item_id: item.id,
+          label: 'read',
+          user_id: item.user_id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          position: 0,
+          data_type: 'boolean',
+        });
+      }
+
+      if (item.completed) {
+        const itemIndex = newCompletedItems.findIndex((completedItem) => item.id === completedItem.id);
+        const newItems = [...newCompletedItems];
+        newItems[itemIndex] = item;
+        newCompletedItems = newItems;
+      } else {
+        const itemIndex = newNotCompletedItems.findIndex((notCompletedItem) => item.id === notCompletedItem.id);
+        const newItems = [...newNotCompletedItems];
+        newItems[itemIndex] = item;
+        newNotCompletedItems = newItems;
+      }
+    });
+
+    setCompletedItems(newCompletedItems);
+    setNotCompletedItems(newNotCompletedItems);
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setCompleteMultiSelect(false);
+
+    const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+    toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
+  } catch (error) {
+    handleFailure({
+      error: error as AxiosError,
+      notFoundMessage: 'Item not found',
+      navigate,
+      redirectURI: '/lists',
+    });
   }
 }

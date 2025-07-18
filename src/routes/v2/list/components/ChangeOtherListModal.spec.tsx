@@ -22,9 +22,11 @@ const mockFields: IListItemField[] = [
     list_item_field_configuration_id: 'config-1',
     user_id: 'user-1',
     list_item_id: 'item-1',
-    created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-01T00:00:00Z',
-    archived_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 0,
+    data_type: 'free_text' as 'free_text',
   },
   {
     id: 'field-2',
@@ -33,9 +35,11 @@ const mockFields: IListItemField[] = [
     list_item_field_configuration_id: 'config-2',
     user_id: 'user-1',
     list_item_id: 'item-1',
-    created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2023-01-01T00:00:00Z',
-    archived_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 1,
+    data_type: 'number' as 'number',
   },
 ];
 
@@ -45,9 +49,9 @@ const mockV2Item: IV2ListItem = {
   list_id: 'list-1',
   completed: false,
   refreshed: false,
-  created_at: '2023-01-01T00:00:00Z',
-  updated_at: '2023-01-01T00:00:00Z',
-  archived_at: undefined,
+  created_at: new Date().toISOString(),
+  updated_at: null,
+  archived_at: null,
   fields: mockFields,
 };
 

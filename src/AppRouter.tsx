@@ -15,6 +15,8 @@ import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
 import V2List from './routes/v2/list/List';
+import V2EditList from './routes/v2/list/EditList';
+import V2EditListItem from './routes/v2/list/EditListItem';
 
 interface IUser {
   accessToken: string;
@@ -75,6 +77,9 @@ export default function AppRouter(): React.JSX.Element {
           <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
           {/* routes/v2/list */}
           <Route path="/v2/lists/:id" element={<V2List />} />
+          <Route path="/v2/lists/:id/edit" element={<V2EditList />} />
+          <Route path="/v2/lists/:list_id/list_items/:id/edit" element={<V2EditListItem />} />
+          {/* <Route path="/v2/lists/:list_id/list_items/bulk-edit" element={<V2BulkEditListItems />} /> */}
           {/* routes/share_list */}
           <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
           {/* routes/users */}

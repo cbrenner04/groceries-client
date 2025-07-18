@@ -26,7 +26,6 @@ export function setupListContainer(suppliedProps?: Partial<IListContainerProps>)
     notCompletedItems: defaultTestData.notCompletedItems,
     listsToUpdate: defaultTestData.listsToUpdate,
     listItemConfiguration: defaultTestData.listItemConfiguration,
-    listItemConfigurations: defaultTestData.listItemConfigurations,
     permissions: defaultTestData.permissions,
     ...suppliedProps,
   };

@@ -1,12 +1,193 @@
-import { type AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import { fetchList } from './utils';
+import { AxiosError } from 'axios';
 
+import { fetchList, fetchListToEdit, fetchListItemToEdit, itemName, type IFulfilledEditListData } from './utils';
 import axios from 'utils/api';
+import { EListType } from 'typings';
+import type { IV2ListItem } from 'typings';
+import {
+  createList,
+  createListItem,
+  createField,
+  createListItemConfiguration,
+  createApiResponse,
+} from 'test-utils/factories';
+import { handleFailure } from '../../../utils/handleFailure';
+
+const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
 jest.mock('react-toastify');
+jest.mock('../../../utils/handleFailure', () => ({
+  handleFailure: jest.fn(),
+}));
 
 const mockNavigate = jest.fn();
+
+// Helper to create mock error with status
+const createError = (status: number): AxiosError => new AxiosError('Test error', String(status));
+
+describe('itemName', () => {
+  const createMockItem = (fields: { label: string; data: string }[]): IV2ListItem => {
+    const mappedFields = fields.map((field, index) => createField(`field-${index}`, field.label, field.data, '1'));
+    return createListItem('1', false, mappedFields);
+  };
+
+  describe('BOOK_LIST', () => {
+    it('returns formatted title and author', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'The Great Gatsby' },
+        { label: 'author', data: 'F. Scott Fitzgerald' },
+      ]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby" F. Scott Fitzgerald');
+    });
+
+    it('handles missing title', () => {
+      const item = createMockItem([{ label: 'author', data: 'F. Scott Fitzgerald' }]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('F. Scott Fitzgerald');
+    });
+
+    it('handles missing author', () => {
+      const item = createMockItem([{ label: 'title', data: 'The Great Gatsby' }]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby"');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('');
+    });
+  });
+
+  describe('GROCERY_LIST', () => {
+    it('returns formatted quantity and product', () => {
+      const item = createMockItem([
+        { label: 'quantity', data: '2' },
+        { label: 'product', data: 'Apples' },
+      ]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2 Apples');
+    });
+
+    it('handles missing quantity', () => {
+      const item = createMockItem([{ label: 'product', data: 'Apples' }]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('Apples');
+    });
+
+    it('handles missing product', () => {
+      const item = createMockItem([{ label: 'quantity', data: '2' }]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('');
+    });
+  });
+
+  describe('MUSIC_LIST', () => {
+    it('returns formatted title, artist, and album', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'artist', data: 'Queen' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen - A Night at the Opera');
+    });
+
+    it('handles missing title', () => {
+      const item = createMockItem([
+        { label: 'artist', data: 'Queen' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('Queen - A Night at the Opera');
+    });
+
+    it('handles missing artist', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" A Night at the Opera');
+    });
+
+    it('handles missing album', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'artist', data: 'Queen' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('');
+    });
+  });
+
+  describe('SIMPLE_LIST', () => {
+    it('returns content field value', () => {
+      const item = createMockItem([{ label: 'content', data: 'Buy groceries' }]);
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('Buy groceries');
+    });
+
+    it('handles missing content', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+    });
+  });
+
+  describe('TO_DO_LIST', () => {
+    it('returns task field value', () => {
+      const item = createMockItem([{ label: 'task', data: 'Complete project' }]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project');
+    });
+
+    it('handles missing task', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('');
+    });
+  });
+
+  describe('default case', () => {
+    it('returns all field data joined with spaces', () => {
+      const item = createMockItem([
+        { label: 'field1', data: 'value1' },
+        { label: 'field2', data: 'value2' },
+        { label: 'field3', data: 'value3' },
+      ]);
+      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('value1 value2 value3');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('');
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles null fields', () => {
+      const item = {
+        ...createListItem('1'),
+        fields: null as unknown as IV2ListItem['fields'],
+      };
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+    });
+
+    it('handles undefined fields', () => {
+      const item = {
+        ...createListItem('1'),
+        fields: undefined as unknown as IV2ListItem['fields'],
+      };
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+    });
+
+    it('handles fields with null data', () => {
+      const item = createMockItem([
+        { label: 'content', data: null as unknown as string },
+        { label: 'task', data: 'Valid task' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Valid task');
+    });
+  });
+});
 
 describe('fetchList', () => {
   beforeEach(() => {
@@ -14,180 +195,241 @@ describe('fetchList', () => {
   });
 
   it('returns data on success', async () => {
-    const mockData = {
-      list: {},
-      not_completed_items: [],
-      completed_items: [],
-      list_users: [],
-      permissions: 'write',
-      lists_to_update: [],
-      list_item_configuration: {},
-      list_item_configurations: [],
-      categories: [],
-    };
+    const mockData = createApiResponse();
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('handles 401 error', async () => {
-    const error = {
-      isAxiosError: true,
-      response: { status: 401 },
-    } as Partial<AxiosError> as AxiosError;
+    const error = createError(401);
     axios.get = jest.fn().mockRejectedValue(error);
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
-  it('handles 403/404 error', async () => {
-    const error = {
-      isAxiosError: true,
-      response: { status: 403 },
-    } as Partial<AxiosError> as AxiosError;
+  it('handles 403 error', async () => {
+    const error = createError(403);
     axios.get = jest.fn().mockRejectedValue(error);
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles 404 error', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
   it('handles generic error', async () => {
-    const error = {
-      isAxiosError: true,
-      response: { status: 500 },
-    } as Partial<AxiosError> as AxiosError;
+    const error = createError(500);
     axios.get = jest.fn().mockRejectedValue(error);
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
-    expect(toast).toHaveBeenCalledWith(
-      'Something went wrong. Data may be incomplete and user actions may not persist.',
-      { type: 'error' },
-    );
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
   it('handles missing data from server', async () => {
+    const error = createError(404);
     axios.get = jest.fn().mockResolvedValue({ data: null });
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
-  it('handles invalid data structure', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: { list: null, not_completed_items: null, completed_items: null } });
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
+  it('handles invalid data structure - missing list', async () => {
+    const error = createError(500);
+    const { list, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
-  it('handles missing list field', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: { not_completed_items: [], completed_items: [] } });
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
+  it('handles invalid data structure - missing not_completed_items', async () => {
+    const error = createError(500);
+    const { not_completed_items: notCompletedItems, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
-  it('handles missing not_completed_items field', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: { list: {}, completed_items: [] } });
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
-  });
-
-  it('handles missing completed_items field', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: { list: {}, not_completed_items: [] } });
-    await expect(fetchList({ id: '1', navigate: mockNavigate })).rejects.toThrow();
+  it('handles invalid data structure - missing completed_items', async () => {
+    const error = createError(500);
+    const { completed_items: completedItems, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
   });
 
   it('extracts categories from items with category fields', async () => {
-    const mockData = {
-      list: {},
-      not_completed_items: [
-        {
-          fields: [
-            { label: 'category', data: 'Fruits' },
-            { label: 'name', data: 'Apple' },
-          ],
-        },
-      ],
-      completed_items: [
-        {
-          fields: [
-            { label: 'category', data: 'Vegetables' },
-            { label: 'name', data: 'Carrot' },
-          ],
-        },
-      ],
-      list_users: [],
-      permissions: 'write',
-      lists_to_update: [],
-      list_item_configuration: {},
-      list_item_configurations: [],
-    };
+    const mockData = createApiResponse();
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['Fruits', 'Vegetables']);
+    expect(result?.categories).toEqual(['foo', 'bar']);
   });
 
   it('deduplicates categories from items', async () => {
-    const mockData = {
-      list: {},
-      not_completed_items: [
-        { fields: [{ label: 'category', data: 'Fruits' }] },
-        { fields: [{ label: 'category', data: 'Fruits' }] },
-        { fields: [{ label: 'category', data: 'Fruits' }] },
-        { fields: [{ label: 'category', data: 'Vegetables' }] },
-      ],
-      completed_items: [
-        { fields: [{ label: 'category', data: 'Vegetables' }] },
-        { fields: [{ label: 'category', data: 'Vegetables' }] },
-        { fields: [{ label: 'category', data: 'Dairy' }] },
-        { fields: [{ label: 'category', data: 'Dairy' }] },
-      ],
-      list_users: [],
-      permissions: 'write',
-      lists_to_update: [],
-      list_item_configuration: {},
-      list_item_configurations: [],
-    };
+    const mockData = createApiResponse();
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['Fruits', 'Vegetables', 'Dairy']);
+    expect(result?.categories).toEqual(['foo', 'bar']);
+  });
+});
+
+describe('fetchListToEdit', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('handles error when no data is received from server', async () => {
-    axios.get = jest.fn().mockRejectedValue({
-      response: { status: 404 },
-      isAxiosError: true,
-    } as AxiosError);
-
-    try {
-      await fetchList({ id: '1', navigate: mockNavigate });
-    } catch (error) {
-      // Expected to throw
-    }
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  it('returns data on success', async () => {
+    const mockData: IFulfilledEditListData = {
+      id: '1',
+      name: 'Test List',
+      type: EListType.GROCERY_LIST,
+      completed: false,
+      refreshed: false,
+      list_item_configuration_id: null,
+      archived_at: null,
+    };
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it('handles error when invalid data structure is received', async () => {
-    axios.get = jest.fn().mockRejectedValue({
-      response: { status: 404 },
-      isAxiosError: true,
-    } as AxiosError);
-
-    try {
-      await fetchList({ id: '1', navigate: mockNavigate });
-    } catch (error) {
-      // Expected to throw
-    }
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+  it('handles missing data from server', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      // rethrow: true,
+    });
   });
 
-  it('always throws an error in handleFailure even when no response', async () => {
-    axios.get = jest.fn().mockRejectedValue({
-      isAxiosError: true,
-      response: { status: 500 },
-    } as AxiosError);
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      // rethrow: true,
+    });
+  });
+});
 
-    try {
-      await fetchList({ id: '1', navigate: mockNavigate });
-    } catch (error) {
-      // Expected to throw
-    }
-    expect(toast).toHaveBeenCalledWith(
-      'Something went wrong. Data may be incomplete and user actions may not persist.',
-      { type: 'error' },
-    );
+describe('fetchListItemToEdit', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns data on success', async () => {
+    const mockData = {
+      id: '1',
+      item: createListItem('1'),
+      list: createList(),
+      list_users: [],
+      list_item_configuration: createListItemConfiguration(),
+      list_item_field_configurations: [],
+    };
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('handles missing data from server', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/v2/lists/1/',
+      // rethrow: true,
+    });
+  });
+
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/v2/lists/1/',
+      // rethrow: true,
+    });
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'utils/api';
 import { toast } from 'react-toastify';
 import ListItemForm from './ListItemForm';
@@ -35,7 +35,7 @@ const defaultProps = {
 
 describe('ListItemForm', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
   });
 
@@ -284,24 +284,19 @@ describe('ListItemForm', () => {
     expect(addItemButton).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('handles text input changes', () => {
+  it('handles text input changes', async () => {
     render(<ListItemForm {...defaultProps} />);
 
     // Show form first
     fireEvent.click(screen.getByText('Add Item'));
 
     // Wait for form to load
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText('Loading field configurations...')).toBeInTheDocument();
-    });
-
-    // Mock field configurations
-    act(() => {
-      // Simulate field configurations loaded
     });
   });
 
-  it('handles unknown field types with default rendering', () => {
+  it('handles unknown field types with default rendering', async () => {
     const mockFieldConfigs = [{ id: '1', label: 'unknown_field', data_type: 'unknown_type' }];
 
     // Mock axios to return field configs
@@ -313,8 +308,8 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
 
     // Should render TextField for unknown types (default case)
-    waitFor(() => {
-      expect(screen.getByLabelText('unknown_field')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByLabelText('Unknown field')).toBeInTheDocument();
     });
   });
 

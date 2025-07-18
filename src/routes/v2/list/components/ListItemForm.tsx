@@ -24,6 +24,7 @@ interface IFieldConfiguration {
   id: string;
   label: string;
   data_type: string;
+  position: number;
 }
 
 interface IListItemDataRecord extends Record<string, string | number | boolean> {}
@@ -40,7 +41,8 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const { data } = await axios.get(
         `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
       );
-      setFieldConfigurations(data);
+      const orderedData = data.sort((a: IFieldConfiguration, b: IFieldConfiguration) => a.position - b.position);
+      setFieldConfigurations(orderedData);
     } catch (err) {
       // Silently fail - field configurations will be empty
       /* istanbul ignore next */

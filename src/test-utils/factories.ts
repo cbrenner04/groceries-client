@@ -30,12 +30,14 @@ export function createField(
     id,
     list_item_field_configuration_id: id,
     data,
-    archived_at: '',
+    archived_at: null,
     list_item_id: listItemId,
     label,
     user_id: 'id1',
     created_at: BASE_DATE,
     updated_at: BASE_DATE,
+    position: overrides?.position !== undefined ? overrides.position : 0,
+    data_type: overrides?.data_type !== undefined ? overrides.data_type : 'free_text',
     ...overrides,
   };
 }
@@ -51,6 +53,7 @@ export function createListItem(
     id,
     refreshed: false,
     completed,
+    archived_at: null,
     user_id: 'id1',
     list_id: 'id1',
     created_at: BASE_DATE,
@@ -100,7 +103,7 @@ export function createListItemConfiguration(
     created_at: BASE_DATE,
     updated_at: BASE_DATE,
     user_id: 'id1',
-    archived_at: '',
+    archived_at: null,
     ...overrides,
   };
 }

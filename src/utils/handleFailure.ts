@@ -1,27 +1,41 @@
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 
+const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Data may be incomplete and user actions may not persist.';
+
 export function handleFailure(params: {
   error: AxiosError;
   notFoundMessage: string;
-  navigate: (url: string) => void;
+  navigate?: (url: string) => void;
   redirectURI?: string;
-  shouldThrow?: boolean;
+  rethrow?: boolean;
 }): void {
-  const { error, notFoundMessage, navigate, redirectURI = '/lists', shouldThrow = true } = params;
+  const { error, notFoundMessage, navigate, redirectURI = '/lists', rethrow = false } = params;
+
   if (error.response) {
     if (error.response.status === 401) {
       toast('You must sign in', { type: 'error' });
-      navigate('/users/sign_in');
+      if (navigate) {
+        navigate('/users/sign_in');
+      }
     } else if ([403, 404].includes(error.response.status)) {
       toast(notFoundMessage, { type: 'error' });
-      navigate(redirectURI);
+      if (navigate) {
+        navigate(redirectURI);
+      }
     } else {
-      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
+      toast(DEFAULT_ERROR_MESSAGE, { type: 'error' });
+      if (navigate) {
+        navigate(redirectURI);
+      }
     }
-  }
-  /* istanbul ignore else */
-  if (shouldThrow) {
-    throw new Error();
+  } else if (error.request) {
+    toast('Network error. Please check your connection.', { type: 'error' });
+  } else {
+    if (rethrow) {
+      throw error;
+    } else {
+      toast(DEFAULT_ERROR_MESSAGE, { type: 'error' });
+    }
   }
 }

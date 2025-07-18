@@ -8,6 +8,7 @@ import {
   handleItemComplete,
   handleItemDelete,
   handleItemRefresh,
+  handleToggleRead,
 } from './listHandlers';
 import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
@@ -22,30 +23,34 @@ jest.mock('../../../../utils/api', () => ({
     post: jest.fn(),
   },
 }));
+jest.mock('../../../../utils/handleFailure');
 
 const mockToast = toast as jest.MockedFunction<typeof toast>;
 const mockAxios = axios as jest.Mocked<typeof axios>;
+const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockNavigate = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
-const mockNavigate = jest.fn();
 const mockSet = jest.fn();
 const mockSetPending = jest.fn();
 
 // Helper to create a valid IListItemField
-function makeField(overrides = {}): IListItemField {
+function makeField(overrides: Partial<IListItemField> = {}): IListItemField {
   return {
     id: 'field1',
     list_item_field_configuration_id: 'config1',
     data: 'Fruit',
-    archived_at: '',
+    archived_at: null,
     user_id: 'u',
     list_item_id: '1',
-    created_at: '',
-    updated_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
     label: 'category',
+    position: overrides.position ?? 0,
+    data_type: overrides.data_type ?? 'free_text',
     ...overrides,
   };
 }
@@ -58,67 +63,18 @@ function makeItem(overrides = {}): IV2ListItem {
     refreshed: false,
     user_id: 'u',
     list_id: 'l',
-    created_at: '',
-    updated_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
     fields: [makeField()],
     ...overrides,
   };
-}
-
-// Helper to create a valid AxiosError
-function makeAxiosError(status: number): AxiosError {
-  return {
-    config: { headers: {} },
-    isAxiosError: true,
-    toJSON: () => ({}),
-    name: 'AxiosError',
-    message: '',
-    response: {
-      status,
-      statusText: '',
-      headers: {},
-      config: { headers: {} },
-      data: {},
-    },
-  } as AxiosError;
 }
 
 const item = makeItem();
 
 axios.put = jest.fn();
 axios.delete = jest.fn();
-
-// handleFailure
-
-describe('handleFailure', () => {
-  it('handles 401', () => {
-    const error = makeAxiosError(401);
-    expect(() => handleFailure({ error, notFoundMessage: 'not found', navigate: mockNavigate })).toThrow();
-    expect(mockToast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
-  });
-  it('handles 403/404', () => {
-    const error = makeAxiosError(404);
-    expect(() => handleFailure({ error, notFoundMessage: 'not found', navigate: mockNavigate })).toThrow();
-    expect(mockToast).toHaveBeenCalledWith('not found', { type: 'error' });
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
-  });
-  it('handles other response', () => {
-    const error = makeAxiosError(500);
-    expect(() => handleFailure({ error, notFoundMessage: 'not found', navigate: mockNavigate })).toThrow();
-    expect(mockToast).toHaveBeenCalledWith(expect.stringContaining('Something went wrong'), { type: 'error' });
-  });
-  it('handles error when error.response is undefined', () => {
-    const error = { response: undefined } as AxiosError;
-    expect(() => handleFailure({ error, notFoundMessage: 'not found', navigate: mockNavigate })).toThrow();
-    // Should still throw an error even when response is undefined
-  });
-  it('handles error when error has no response property', () => {
-    const error = {} as AxiosError;
-    expect(() => handleFailure({ error, notFoundMessage: 'not found', navigate: mockNavigate })).toThrow();
-    // Should still throw an error even when response property doesn't exist
-  });
-});
 
 describe('handleAddItem', () => {
   it('adds to completed or notCompleted and new category', () => {
@@ -135,6 +91,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: setNotCompleted,
       categories: [],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setNotCompleted).toHaveBeenCalled();
     handleAddItem({
@@ -147,6 +104,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: setNotCompleted,
       categories: [],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCompleted).toHaveBeenCalled();
     handleAddItem({
@@ -159,6 +117,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: setNotCompleted,
       categories: [],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCategories).toHaveBeenCalledWith(['NewCat']);
   });
@@ -174,6 +133,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: mockSet,
       categories: ['ExistingCategory1', 'ExistingCategory2'],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCategories).toHaveBeenCalledWith(['ExistingCategory1', 'ExistingCategory2', 'BrandNewCategory']);
   });
@@ -189,6 +149,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: mockSet,
       categories: ['ExistingCategory', 'OtherCategory'],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
@@ -204,6 +165,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: mockSet,
       categories: ['ExistingCategory'],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
@@ -219,6 +181,7 @@ describe('handleAddItem', () => {
       setNotCompletedItems: mockSet,
       categories: ['ExistingCategory'],
       setCategories,
+      navigate: mockNavigate,
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
@@ -236,8 +199,14 @@ describe('handleAddItem', () => {
       setNotCompletedItems: mockSet,
       categories: [],
       setCategories: mockSet,
+      navigate: mockNavigate,
     });
-    expect(mockToast).toHaveBeenCalledWith('Failed to add item', { type: 'error' });
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(Error),
+      notFoundMessage: 'Failed to add item',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
   });
   it('updates included categories when setIncludedCategories is provided', () => {
     const setCategories = jest.fn();
@@ -253,6 +222,7 @@ describe('handleAddItem', () => {
       categories: ['ExistingCategory'],
       setCategories,
       setIncludedCategories,
+      navigate: mockNavigate,
     });
     expect(setIncludedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
   });
@@ -270,6 +240,7 @@ describe('handleAddItem', () => {
       categories: ['ExistingCategory'],
       setCategories,
       setDisplayedCategories,
+      navigate: mockNavigate,
     });
     expect(setDisplayedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
   });
@@ -288,6 +259,7 @@ describe('handleAddItem', () => {
       setCategories,
       setDisplayedCategories,
       filter: 'SomeFilter',
+      navigate: mockNavigate,
     });
     expect(setDisplayedCategories).not.toHaveBeenCalled();
   });
@@ -328,7 +300,6 @@ describe('handleItemComplete', () => {
       completedItems: [],
       setCompletedItems: setCompleted,
       setPending,
-      handleFailure: jest.fn(),
     });
 
     expect(setNotCompleted).toHaveBeenCalled();
@@ -353,7 +324,6 @@ describe('handleItemComplete', () => {
       completedItems: [],
       setCompletedItems: setCompleted,
       setPending,
-      handleFailure: jest.fn(),
     });
 
     expect(setCompleted).toHaveBeenCalled();
@@ -361,8 +331,8 @@ describe('handleItemComplete', () => {
   });
 
   it('handles error', async () => {
-    mockAxios.put.mockRejectedValueOnce(new Error('fail'));
-    const fail = jest.fn();
+    const error = new Error('fail') as AxiosError;
+    mockAxios.put.mockRejectedValueOnce(error);
     const setPending = jest.fn();
     await handleItemComplete({
       item,
@@ -372,9 +342,14 @@ describe('handleItemComplete', () => {
       completedItems: [],
       setCompletedItems: jest.fn(),
       setPending,
-      handleFailure: fail,
+      navigate: mockNavigate,
     });
-    expect(fail).toHaveBeenCalled();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to complete item',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
   });
 });
 
@@ -396,7 +371,7 @@ describe('handleItemDelete', () => {
       selectedItems: [testItem, otherItem],
       setSelectedItems: setSelected,
       setPending,
-      handleFailure: jest.fn(),
+      navigate: mockNavigate,
     });
     expect(setNotCompleted).toHaveBeenCalled();
     expect(setSelected).toHaveBeenCalled();
@@ -420,7 +395,7 @@ describe('handleItemDelete', () => {
       selectedItems: [testItem, otherItem],
       setSelectedItems: setSelected,
       setPending,
-      handleFailure: jest.fn(),
+      navigate: mockNavigate,
     });
     expect(setCompleted).toHaveBeenCalled();
     expect(setSelected).toHaveBeenCalled();
@@ -428,8 +403,8 @@ describe('handleItemDelete', () => {
   });
 
   it('handles error', async () => {
-    mockAxios.delete.mockRejectedValueOnce(new Error('fail'));
-    const fail = jest.fn();
+    const error = new Error('fail') as AxiosError;
+    mockAxios.delete.mockRejectedValueOnce(error);
     const setPending = jest.fn();
     await handleItemDelete({
       item,
@@ -441,9 +416,14 @@ describe('handleItemDelete', () => {
       selectedItems: [item],
       setSelectedItems: jest.fn(),
       setPending,
-      handleFailure: fail,
+      navigate: mockNavigate,
     });
-    expect(fail).toHaveBeenCalled();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to delete item',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
   });
 });
 
@@ -464,7 +444,6 @@ describe('handleItemRefresh', () => {
       notCompletedItems: [],
       setNotCompletedItems: setNotCompleted,
       setPending,
-      handleFailure: jest.fn(),
     });
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
@@ -488,7 +467,6 @@ describe('handleItemRefresh', () => {
       notCompletedItems: [],
       setNotCompletedItems: setNotCompleted,
       setPending,
-      handleFailure: jest.fn(),
     });
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
@@ -496,8 +474,8 @@ describe('handleItemRefresh', () => {
   });
 
   it('handles error', async () => {
-    mockAxios.put.mockRejectedValueOnce(new Error('fail'));
-    const fail = jest.fn();
+    const error = new Error('fail') as AxiosError;
+    mockAxios.put.mockRejectedValueOnce(error);
     const setPending = jest.fn();
     await handleItemRefresh({
       item,
@@ -507,8 +485,231 @@ describe('handleItemRefresh', () => {
       notCompletedItems: [],
       setNotCompletedItems: jest.fn(),
       setPending,
-      handleFailure: fail,
+      navigate: mockNavigate,
     });
-    expect(fail).toHaveBeenCalled();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to refresh item',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
+  });
+});
+
+describe('handleToggleRead', () => {
+  it('toggles read status for single item', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [makeField({ label: 'read', data: 'false' })],
+    });
+    mockAxios.put.mockResolvedValueOnce({});
+
+    const setCompletedItems = jest.fn();
+    const setNotCompletedItems = jest.fn();
+    const setSelectedItems = jest.fn();
+    const setIncompleteMultiSelect = jest.fn();
+    const setCompleteMultiSelect = jest.fn();
+
+    await handleToggleRead({
+      items: [testItem],
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems,
+      notCompletedItems: [],
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+    });
+
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: {
+        fields: [
+          {
+            label: 'read',
+            data: 'true',
+          },
+        ],
+      },
+    });
+    expect(setCompletedItems).toHaveBeenCalled();
+    expect(setSelectedItems).toHaveBeenCalledWith([]);
+    expect(setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(setCompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(mockToast).toHaveBeenCalledWith('Item successfully updated.', { type: 'info' });
+  });
+
+  it('toggles read status for multiple items', async () => {
+    const testItem1 = makeItem({
+      id: 'test-id-1',
+      fields: [makeField({ label: 'read', data: 'true' })],
+    });
+    const testItem2 = makeItem({
+      id: 'test-id-2',
+      fields: [makeField({ label: 'read', data: 'false' })],
+    });
+
+    mockAxios.put.mockResolvedValueOnce({});
+    mockAxios.put.mockResolvedValueOnce({});
+
+    const setCompletedItems = jest.fn();
+    const setNotCompletedItems = jest.fn();
+    const setSelectedItems = jest.fn();
+    const setIncompleteMultiSelect = jest.fn();
+    const setCompleteMultiSelect = jest.fn();
+
+    await handleToggleRead({
+      items: [testItem1, testItem2],
+      listId: '1',
+      completedItems: [testItem1],
+      setCompletedItems,
+      notCompletedItems: [testItem2],
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+    });
+
+    expect(mockAxios.put).toHaveBeenCalledTimes(2);
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-1', {
+      list_item: {
+        fields: [
+          {
+            label: 'read',
+            data: 'false',
+          },
+        ],
+      },
+    });
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-2', {
+      list_item: {
+        fields: [
+          {
+            label: 'read',
+            data: 'true',
+          },
+        ],
+      },
+    });
+    expect(setCompletedItems).toHaveBeenCalled();
+    expect(setNotCompletedItems).toHaveBeenCalled();
+    expect(setSelectedItems).toHaveBeenCalledWith([]);
+    expect(setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(setCompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(mockToast).toHaveBeenCalledWith('Items successfully updated.', { type: 'info' });
+  });
+
+  it('adds read field when it does not exist', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [makeField({ label: 'name', data: 'Test Item' })], // No read field
+    });
+    mockAxios.put.mockResolvedValueOnce({});
+
+    const setCompletedItems = jest.fn();
+    const setNotCompletedItems = jest.fn();
+    const setSelectedItems = jest.fn();
+    const setIncompleteMultiSelect = jest.fn();
+    const setCompleteMultiSelect = jest.fn();
+
+    await handleToggleRead({
+      items: [testItem],
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems,
+      notCompletedItems: [],
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+    });
+
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: {
+        fields: [
+          {
+            label: 'read',
+            data: 'true',
+          },
+        ],
+      },
+    });
+    expect(setCompletedItems).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith('Item successfully updated.', { type: 'info' });
+  });
+
+  it('updates both completed and not completed items correctly', async () => {
+    const completedItem = makeItem({
+      id: 'completed-id',
+      completed: true,
+      fields: [makeField({ label: 'read', data: 'false' })],
+    });
+    const notCompletedItem = makeItem({
+      id: 'not-completed-id',
+      completed: false,
+      fields: [makeField({ label: 'read', data: 'true' })],
+    });
+
+    mockAxios.put.mockResolvedValueOnce({});
+    mockAxios.put.mockResolvedValueOnce({});
+
+    const setCompletedItems = jest.fn();
+    const setNotCompletedItems = jest.fn();
+    const setSelectedItems = jest.fn();
+    const setIncompleteMultiSelect = jest.fn();
+    const setCompleteMultiSelect = jest.fn();
+
+    await handleToggleRead({
+      items: [completedItem, notCompletedItem],
+      listId: '1',
+      completedItems: [completedItem],
+      setCompletedItems,
+      notCompletedItems: [notCompletedItem],
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+    });
+
+    expect(setCompletedItems).toHaveBeenCalled();
+    expect(setNotCompletedItems).toHaveBeenCalled();
+    expect(setSelectedItems).toHaveBeenCalledWith([]);
+    expect(setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(setCompleteMultiSelect).toHaveBeenCalledWith(false);
+  });
+
+  it('handles error', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [makeField({ label: 'read', data: 'false' })],
+    });
+    const error = new Error('fail') as AxiosError;
+    mockAxios.put.mockRejectedValueOnce(error);
+
+    const setCompletedItems = jest.fn();
+    const setNotCompletedItems = jest.fn();
+    const setSelectedItems = jest.fn();
+    const setIncompleteMultiSelect = jest.fn();
+    const setCompleteMultiSelect = jest.fn();
+
+    await handleToggleRead({
+      items: [testItem],
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems,
+      notCompletedItems: [],
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+      navigate: mockNavigate,
+    });
+
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Item not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
   });
 });

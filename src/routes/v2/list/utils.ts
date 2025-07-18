@@ -1,7 +1,15 @@
 import { handleFailure } from '../../../utils/handleFailure';
-import { type AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import axios from '../../../utils/api';
-import type { IList, IListItemConfiguration, IListItemField, IListUser, IV2ListItem, EUserPermissions } from 'typings';
+import type {
+  IList,
+  IListItemConfiguration,
+  IListItemField,
+  IListItemFieldConfiguration,
+  IListUser,
+  IV2ListItem,
+  EUserPermissions,
+} from 'typings';
 import { EListType } from 'typings';
 
 export interface IFulfilledListData {
@@ -12,9 +20,27 @@ export interface IFulfilledListData {
   list_users: IListUser[];
   permissions: EUserPermissions;
   lists_to_update: IList[];
-  list_item_configurations: IListItemConfiguration[];
   list_item_configuration: IListItemConfiguration;
   categories: string[];
+}
+
+export interface IFulfilledEditListData {
+  id: string;
+  name: string;
+  completed: boolean;
+  type: EListType;
+  archived_at: string | null;
+  refreshed: boolean;
+  list_item_configuration_id: string | null;
+}
+
+export interface IFulfilledEditListItemData {
+  id: string;
+  item: IV2ListItem;
+  list: IList;
+  list_users: IListUser[];
+  list_item_configuration: IListItemConfiguration;
+  list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
 export function itemName(item: IV2ListItem, listType: EListType): string {
@@ -65,12 +91,12 @@ export async function fetchList(fetchParams: {
 
     // Add defensive checks for undefined data
     if (!data) {
-      throw new Error('No data received from server');
+      throw new AxiosError('No data received from server', '404');
     }
 
     // Ensure required fields exist
     if (!data.list || !data.not_completed_items || !data.completed_items) {
-      throw new Error('Invalid data structure received from server');
+      throw new AxiosError('Invalid data structure received from server', '500');
     }
 
     const categories = data.not_completed_items
@@ -89,6 +115,54 @@ export async function fetchList(fetchParams: {
       notFoundMessage: 'List not found',
       navigate: fetchParams.navigate,
       redirectURI: '/lists',
+      rethrow: true,
+    });
+  }
+}
+
+export async function fetchListToEdit(fetchParams: {
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledEditListData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.id}/edit`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List not found',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+    });
+  }
+}
+
+export async function fetchListItemToEdit(fetchParams: {
+  list_id: string;
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledEditListItemData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/${fetchParams.id}/edit`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List item not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/v2/lists/${fetchParams.list_id}/`,
     });
   }
 }

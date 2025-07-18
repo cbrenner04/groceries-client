@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ListItem from './ListItem';
 import type { IV2ListItem, IListItemField } from 'typings';
-import { EUserPermissions, EListType } from 'typings';
+import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
 
 const mockHandleItemSelect = jest.fn();
 const mockHandleItemRefresh = jest.fn();
@@ -19,9 +19,11 @@ const mockFields: IListItemField[] = [
     list_item_field_configuration_id: '1',
     user_id: '1',
     list_item_id: '1',
-    created_at: '2023-01-01',
-    updated_at: '2023-01-01',
-    archived_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 0,
+    data_type: 'free_text' as 'free_text',
   },
   {
     id: '2',
@@ -30,9 +32,11 @@ const mockFields: IListItemField[] = [
     list_item_field_configuration_id: '2',
     user_id: '1',
     list_item_id: '1',
-    created_at: '2023-01-01',
-    updated_at: '2023-01-01',
-    archived_at: '',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 1,
+    data_type: 'number' as 'number',
   },
 ];
 
@@ -42,9 +46,9 @@ const mockItem: IV2ListItem = {
   list_id: 'list-1',
   completed: false,
   refreshed: false,
-  created_at: '2023-01-01T00:00:00Z',
-  updated_at: '2023-01-01T00:00:00Z',
-  archived_at: undefined,
+  created_at: new Date().toISOString(),
+  updated_at: null,
+  archived_at: null,
   fields: mockFields,
 };
 
@@ -147,7 +151,9 @@ describe('ListItem', () => {
           list_item_id: '1',
           created_at: '2023-01-01',
           updated_at: '2023-01-01',
-          archived_at: '',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
         },
       ],
     };
@@ -170,7 +176,9 @@ describe('ListItem', () => {
           list_item_id: '1',
           created_at: '2023-01-01',
           updated_at: '2023-01-01',
-          archived_at: '',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
         },
       ],
     };
@@ -192,7 +200,9 @@ describe('ListItem', () => {
           list_item_id: '1',
           created_at: '2023-01-01',
           updated_at: '2023-01-01',
-          archived_at: '',
+          archived_at: null,
+          position: 2,
+          data_type: EListItemFieldType.BOOLEAN,
         },
       ],
     };

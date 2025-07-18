@@ -5,11 +5,32 @@
 import '@testing-library/jest-dom';
 import { cleanup, configure } from '@testing-library/react';
 import { TextEncoder } from 'util';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
 
 jest.mock('axios', () => ({
+  AxiosError: jest.fn().mockImplementation(
+    (message: string, code: string, requestError = false): Partial<AxiosError> => ({
+      message,
+      code,
+      name: 'AxiosError',
+      isAxiosError: true,
+      request: requestError
+        ? {
+            method: 'GET',
+            url: '/lists/1',
+            headers: {},
+            data: undefined,
+          }
+        : undefined,
+      response: {
+        status: Number(code),
+      } as AxiosResponse,
+      toJSON: () => ({}),
+    }),
+  ),
   create: (): {
     interceptors: {
       request: {
