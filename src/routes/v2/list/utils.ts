@@ -43,6 +43,16 @@ export interface IFulfilledEditListItemData {
   list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
+export interface IFulfilledBulkEditItemsData {
+  list: IList;
+  lists: IList[];
+  items: IV2ListItem[];
+  categories: string[];
+  list_users: IListUser[];
+  list_item_configuration: IListItemConfiguration;
+  list_item_field_configurations: IListItemFieldConfiguration[];
+}
+
 export function itemName(item: IV2ListItem, listType: EListType): string {
   const fields = Array.isArray(item.fields) ? item.fields : [];
 
@@ -161,6 +171,30 @@ export async function fetchListItemToEdit(fetchParams: {
     handleFailure({
       error: err as AxiosError,
       notFoundMessage: 'List item not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/v2/lists/${fetchParams.list_id}/`,
+    });
+  }
+}
+
+export async function fetchItemsToEdit(fetchParams: {
+  list_id: string;
+  search: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledBulkEditItemsData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/bulk_update${fetchParams.search}`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'One or more items not found',
       navigate: fetchParams.navigate,
       redirectURI: `/v2/lists/${fetchParams.list_id}/`,
     });
