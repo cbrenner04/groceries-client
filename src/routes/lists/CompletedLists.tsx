@@ -9,6 +9,12 @@ import UnknownError from '../error_pages/UnknownError';
 import { fetchCompletedLists } from './utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
 
+interface ICompletedListsData {
+  completedLists: IList[];
+  currentUserPermissions: TUserPermissions;
+  userId: string;
+}
+
 const CompletedLists: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
 
@@ -19,13 +25,21 @@ const CompletedLists: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: { completedLists: IList[]; currentUserPermissions: TUserPermissions; userId: string }): ReactNode => (
-          <CompletedListsContainer
-            completedLists={data.completedLists}
-            currentUserPermissions={data.currentUserPermissions}
-            userId={data.userId}
-          />
-        )}
+        {(data: ICompletedListsData | undefined): ReactNode => {
+          // Handle the case where data might be undefined (e.g., when fetchCompletedLists returns
+          // undefined due to an error)
+          if (!data) {
+            return <UnknownError />;
+          }
+
+          return (
+            <CompletedListsContainer
+              completedLists={data.completedLists}
+              currentUserPermissions={data.currentUserPermissions}
+              userId={data.userId}
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItemFormFields matches snapshot 1`] = `
+<div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="title"
+    >
+      Title
+    </label>
+    <input
+      class="form-control"
+      id="title"
+      name="title"
+      placeholder=""
+      type="text"
+      value="Test Item"
+    />
+  </div>
+  <div
+    class="mb-3 mb-3"
+  >
+    <div
+      class="form-check"
+    >
+      <input
+        checked=""
+        class="form-check-input"
+        id="completed"
+        name="completed"
+        type="checkbox"
+      />
+      <label
+        class="form-check-label"
+        for="completed"
+        title=""
+      >
+        Completed
+      </label>
+    </div>
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="due_date"
+    >
+      Due_date
+    </label>
+    <input
+      class="form-control"
+      id="due_date"
+      name="due_date"
+      placeholder=""
+      type="date"
+      value="2024-01-15"
+    />
+  </div>
+  <div
+    class="mb-3"
+  >
+    <label
+      class="form-label"
+      for="quantity"
+    >
+      Quantity
+    </label>
+    <input
+      class="form-control"
+      id="quantity"
+      name="quantity"
+      type="number"
+      value="5"
+    />
+  </div>
+</div>
+`;

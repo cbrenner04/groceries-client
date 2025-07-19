@@ -26,15 +26,22 @@ const Lists: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: IFulfilledLists): ReactNode => (
-          <ListsContainer
-            userId={data.userId}
-            pendingLists={data.pendingLists}
-            completedLists={data.completedLists}
-            incompleteLists={data.incompleteLists}
-            currentUserPermissions={data.currentUserPermissions}
-          />
-        )}
+        {(data: IFulfilledLists | undefined): ReactNode => {
+          // Handle the case where data might be undefined (e.g., when fetchLists returns undefined due to an error)
+          if (!data) {
+            return <UnknownError />;
+          }
+
+          return (
+            <ListsContainer
+              userId={data.userId}
+              pendingLists={data.pendingLists}
+              completedLists={data.completedLists}
+              incompleteLists={data.incompleteLists}
+              currentUserPermissions={data.currentUserPermissions}
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

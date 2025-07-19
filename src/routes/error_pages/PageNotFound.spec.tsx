@@ -4,12 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { toast } from 'react-toastify';
 
 import axios from 'utils/api';
-
 import PageNotFound from './PageNotFound';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({

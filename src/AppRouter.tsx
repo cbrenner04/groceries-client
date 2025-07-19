@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter as Router, Navigate, Route, Routes, useParams } from 'react-router';
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
@@ -7,7 +7,6 @@ import EditListItem from './routes/list/EditListItem';
 import BulkEditListItems from './routes/list/BulkEditListItems';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
-import List from './routes/list/List';
 import EditList from './routes/lists/EditList';
 import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
@@ -15,6 +14,10 @@ import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
+import V2List from './routes/v2/list/List';
+import V2EditList from './routes/v2/list/EditList';
+import V2EditListItem from './routes/v2/list/EditListItem';
+import V2BulkEditListItems from './routes/v2/list/BulkEditListItems';
 
 interface IUser {
   accessToken: string;
@@ -23,6 +26,12 @@ interface IUser {
 }
 
 export const UserContext = createContext<IUser | null>(null);
+
+// Custom redirect component for dynamic parameters
+const ListRedirect: React.FC = () => {
+  const { id } = useParams();
+  return <Navigate to={`/v2/lists/${id}`} replace />;
+};
 
 export default function AppRouter(): React.JSX.Element {
   const [user, setUser] = useState<IUser | null>(null);
@@ -63,10 +72,15 @@ export default function AppRouter(): React.JSX.Element {
           <Route path="/lists" element={<Lists />} />
           <Route path="/completed_lists" element={<CompletedLists />} />
           {/* routes/list */}
-          <Route path="/lists/:id" element={<List />} />
+          <Route path="/lists/:id" element={<ListRedirect />} />
           <Route path="/lists/:id/edit" element={<EditList />} />
           <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
           <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+          {/* routes/v2/list */}
+          <Route path="/v2/lists/:id" element={<V2List />} />
+          <Route path="/v2/lists/:id/edit" element={<V2EditList />} />
+          <Route path="/v2/lists/:list_id/list_items/:id/edit" element={<V2EditListItem />} />
+          <Route path="/v2/lists/:list_id/list_items/bulk-edit" element={<V2BulkEditListItems />} />
           {/* routes/share_list */}
           <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
           {/* routes/users */}

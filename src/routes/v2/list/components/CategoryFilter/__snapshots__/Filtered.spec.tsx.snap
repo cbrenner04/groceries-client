@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Filtered renders with filter name in button 1`] = `
+<div>
+  <span
+    id="filter-title"
+  >
+    Filtering by:
+  </span>
+  <button
+    class="btn btn-outline-primary"
+    data-test-id="clear-filter"
+    id="filter-button"
+    type="button"
+  >
+    Produce
+     
+    <i
+      class="fa fa-trash"
+    />
+  </button>
+</div>
+`;

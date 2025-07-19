@@ -2,22 +2,14 @@ import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-
 import axios from 'utils/api';
-
 import EditInvite from './EditInvite';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+import { MemoryRouter } from 'react-router';
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
-  useLocation: (): { search: jest.Mock } => ({
-    search: jest.fn(() => 'foo'),
-  }),
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -26,8 +18,11 @@ interface ISetupReturn extends RenderResult {
 
 function setup(): ISetupReturn {
   const user = userEvent.setup();
-  const component = render(<EditInvite />);
-
+  const component = render(
+    <MemoryRouter>
+      <EditInvite />
+    </MemoryRouter>,
+  );
   return { ...component, user };
 }
 
