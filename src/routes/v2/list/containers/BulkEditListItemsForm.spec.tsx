@@ -198,7 +198,7 @@ describe('BulkEditListItemsForm', () => {
         list_id: 'list-1',
         list_items: {
           update_current_items: true,
-          list_item_fields_attributes: [],
+          fields_to_update: [],
         },
       });
     });
@@ -222,10 +222,11 @@ describe('BulkEditListItemsForm', () => {
         '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
-            list_item_fields_attributes: expect.arrayContaining([
+            fields_to_update: expect.arrayContaining([
               expect.objectContaining({
-                list_item_field_ids: ['field-1', 'field-3'],
                 data: 'Updated Product',
+                label: 'product',
+                item_ids: ['item-1', 'item-2'],
               }),
             ]),
           }),
@@ -248,10 +249,11 @@ describe('BulkEditListItemsForm', () => {
         '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
-            list_item_fields_attributes: expect.arrayContaining([
+            fields_to_update: expect.arrayContaining([
               expect.objectContaining({
-                list_item_field_ids: ['field-1', 'field-3'],
                 data: '',
+                label: 'product',
+                item_ids: ['item-1', 'item-2'],
               }),
             ]),
           }),
@@ -376,7 +378,7 @@ describe('BulkEditListItemsForm', () => {
         '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
-            list_item_fields_attributes: [],
+            fields_to_update: [],
           }),
         }),
       );

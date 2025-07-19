@@ -113,30 +113,7 @@ describe('ListItemForm', () => {
     expect(screen.getByLabelText('Due date')).toBeInTheDocument();
   });
 
-  it('handles checkbox field interaction', async () => {
-    const fieldConfigsWithCheckbox = [
-      { id: '1', label: 'name', data_type: 'free_text' },
-      { id: '2', label: 'completed', data_type: 'boolean' },
-    ];
-
-    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithCheckbox });
-
-    render(<ListItemForm {...defaultProps} />);
-    fireEvent.click(screen.getByText('Add Item'));
-
-    const checkbox = await screen.findByLabelText('Completed');
-    expect(checkbox).toBeInTheDocument();
-
-    // Test checkbox interaction to cover line 91 (newValue = checked)
-    fireEvent.change(checkbox, { target: { checked: true, type: 'checkbox' } });
-    expect(checkbox).toBeChecked();
-
-    // Test unchecking the checkbox to ensure full coverage
-    fireEvent.change(checkbox, { target: { checked: false, type: 'checkbox' } });
-    expect(checkbox).not.toBeChecked();
-  });
-
-  it('handles checkbox input changes (branch coverage)', async () => {
+  it('handles checkbox click event for React Bootstrap Form.Check (line 62 coverage)', async () => {
     const fieldConfigsWithCheckbox = [{ id: '1', label: 'completed', data_type: 'boolean' }];
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithCheckbox });
 
@@ -144,12 +121,22 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
 
     const checkbox = await screen.findByLabelText('Completed');
-    // Simulate a change event with type 'checkbox' (checked true)
-    fireEvent.change(checkbox, { target: { checked: true, type: 'checkbox', name: 'completed' } });
-    expect(checkbox).toBeChecked();
-    // Simulate a change event with type 'checkbox' (checked false)
-    fireEvent.change(checkbox, { target: { checked: false, type: 'checkbox', name: 'completed' } });
-    expect(checkbox).not.toBeChecked();
+
+    // Use fireEvent.click instead of fireEvent.change for React Bootstrap Form.Check
+    fireEvent.click(checkbox);
+
+    // Wait for the state to update and the checkbox to be checked
+    await waitFor(() => {
+      expect(checkbox).toBeChecked();
+    });
+
+    // Click again to uncheck
+    fireEvent.click(checkbox);
+
+    // Wait for the state to update and the checkbox to be unchecked
+    await waitFor(() => {
+      expect(checkbox).not.toBeChecked();
+    });
   });
 
   it('handles field configuration not found during submission', async () => {
@@ -210,6 +197,171 @@ describe('ListItemForm', () => {
       expect(callArgs[0].fields).toHaveLength(1);
       expect(callArgs[0].fields[0].list_item_field_configuration_id).toBe('');
     });
+  });
+
+  it('filters out empty fields when creating item with fields', async () => {
+    const fieldConfigs = [
+      { id: '1', label: 'name', data_type: 'free_text' },
+      { id: '2', label: 'description', data_type: 'free_text' },
+      { id: '3', label: 'quantity', data_type: 'number' },
+    ];
+
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
+      .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
+      .mockResolvedValue({}); // create item fields
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    // Fill only one field, leave others empty
+    const nameField = await screen.findByLabelText('Name');
+    fireEvent.change(nameField, { target: { value: 'Test Item' } });
+
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(mockHandleItemAddition).toHaveBeenCalled();
+      // Verify that only non-empty fields are included
+      const callArgs = mockHandleItemAddition.mock.calls[0][0];
+      expect(callArgs[0].fields).toHaveLength(1);
+      expect(callArgs[0].fields[0].label).toBe('name');
+      expect(callArgs[0].fields[0].data).toBe('Test Item');
+    });
+  });
+
+  it('sorts field configurations by position', async () => {
+    const unsortedFieldConfigs = [
+      { id: '3', label: 'third', data_type: 'free_text', position: 3 },
+      { id: '1', label: 'first', data_type: 'free_text', position: 1 },
+      { id: '2', label: 'second', data_type: 'free_text', position: 2 },
+    ];
+
+    axios.get = jest.fn().mockResolvedValue({ data: unsortedFieldConfigs });
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    // Wait for fields to load and verify they appear in sorted order
+    await waitFor(() => {
+      const fields = screen.getAllByRole('textbox');
+      expect(fields).toHaveLength(3);
+    });
+
+    // The fields should be rendered in position order (first, second, third)
+    const labels = screen.getAllByText(/^(First|Second|Third)$/);
+    expect(labels[0]).toHaveTextContent('First');
+    expect(labels[1]).toHaveTextContent('Second');
+    expect(labels[2]).toHaveTextContent('Third');
+  });
+
+  it('handles missing list item configuration gracefully', () => {
+    const propsWithoutConfig = {
+      ...defaultProps,
+      listItemConfiguration: undefined,
+    };
+
+    render(<ListItemForm {...propsWithoutConfig} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    expect(
+      screen.getByText(
+        "This list doesn't have a field configuration set up. Please contact support to fix this issue.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('shows error when no field configuration is available during submission', async () => {
+    const propsWithoutConfig = {
+      ...defaultProps,
+      listItemConfiguration: undefined,
+    };
+
+    render(<ListItemForm {...propsWithoutConfig} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    // Try to submit the form
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(toast).toHaveBeenCalledWith('No field configuration available for this list. Please contact support.', {
+        type: 'error',
+      });
+    });
+  });
+
+  it('handles number input changes correctly', async () => {
+    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number' }];
+
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigs });
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    const numberField = await screen.findByLabelText('Quantity');
+    fireEvent.change(numberField, { target: { value: '42', type: 'number', name: 'quantity' } });
+
+    expect(numberField).toHaveValue(42);
+  });
+
+  it('handles text input changes correctly', async () => {
+    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+
+    axios.get = jest.fn().mockResolvedValue({ data: fieldConfigs });
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    const textField = await screen.findByLabelText('Name');
+    fireEvent.change(textField, { target: { value: 'Test Item', type: 'text', name: 'name' } });
+
+    expect(textField).toHaveValue('Test Item');
+  });
+
+  it('resets form data after successful submission', async () => {
+    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
+      .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
+      .mockResolvedValue({}); // create item fields
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    const nameField = await screen.findByLabelText('Name');
+    fireEvent.change(nameField, { target: { value: 'Test Item' } });
+
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(mockHandleItemAddition).toHaveBeenCalled();
+    });
+
+    // Verify form data is reset but form remains open
+    const resetNameField = await screen.findByLabelText('Name');
+    expect(resetNameField).toHaveValue('');
+    expect(screen.getByText('Add New Item')).toBeInTheDocument();
+  });
+
+  it('handles field configuration loading failure silently', async () => {
+    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+
+    // Should show loading message since field configurations are empty
+    expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
   });
 
   it('handles 401 authentication error', async () => {
@@ -311,16 +463,6 @@ describe('ListItemForm', () => {
     await waitFor(() => {
       expect(screen.getByLabelText('Unknown field')).toBeInTheDocument();
     });
-  });
-
-  it('handles field configuration loading failure silently', async () => {
-    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
-
-    render(<ListItemForm {...defaultProps} />);
-    fireEvent.click(screen.getByText('Add Item'));
-
-    // Should show loading message since field configurations are empty
-    expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
   });
 
   it('handles response errors with data during form submission', async () => {

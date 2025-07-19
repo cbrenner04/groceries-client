@@ -42,7 +42,7 @@ export interface IListContainerProps {
   notCompletedItems: IV2ListItem[];
   permissions: EUserPermissions;
   listsToUpdate: IList[];
-  listItemConfiguration: IListItemConfiguration;
+  listItemConfiguration?: IListItemConfiguration;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -307,9 +307,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const itemsToRender = items.filter((item: IV2ListItem) => {
         // Defensive: treat missing fields as empty array
         const fields = Array.isArray(item.fields) ? item.fields : [];
-        if (category === 'uncategorized') {
-          return !fields.find((field: IListItemField) => field.label === 'category');
-        }
         return category
           ? fields.find((field: IListItemField) => field.label === 'category' && field.data === category)
           : !fields.find((field: IListItemField) => field.label === 'category');

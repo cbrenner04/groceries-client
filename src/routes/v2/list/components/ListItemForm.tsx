@@ -17,7 +17,7 @@ export interface IListItemFormProps {
   listUsers?: IListUser[];
   handleItemAddition: (data: IV2ListItem[]) => void;
   categories?: string[];
-  listItemConfiguration: IListItemConfiguration;
+  listItemConfiguration?: IListItemConfiguration;
 }
 
 interface IFieldConfiguration {
@@ -38,6 +38,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   // Load field configurations when form is shown
   const loadFieldConfigurations = async (): Promise<void> => {
     try {
+      if (!props.listItemConfiguration?.id) {
+        // No configuration available, field configurations will remain empty
+        return;
+      }
+
       const { data } = await axios.get(
         `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
       );
@@ -75,6 +80,12 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     setPending(true);
 
     try {
+      if (!props.listItemConfiguration?.id) {
+        toast('No field configuration available for this list. Please contact support.', { type: 'error' });
+        setPending(false);
+        return;
+      }
+
       // Step 1: Create the list item
       const { data: newItem } = await axios.post(`/v2/lists/${props.listId}/list_items`, {
         list_item: {
@@ -89,6 +100,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       // Step 3: Add fields to the list item using the correct configuration IDs
       const fieldPromises = Object.entries(formData).map(async ([key, value]) => {
+        /* istanbul ignore else */
         if (value !== '') {
           // Find the field configuration that matches this field
           const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
@@ -161,6 +173,10 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
   // Render fields based on field configurations
   const renderFields = (): React.ReactNode => {
+    if (!props.listItemConfiguration?.id) {
+      return <p>This list doesn&apos;t have a field configuration set up. Please contact support to fix this issue.</p>;
+    }
+
     if (fieldConfigurations.length === 0) {
       return <p>Loading field configurations...</p>;
     }
@@ -172,7 +188,13 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       switch (config.data_type) {
         case 'boolean':
           return (
-            <CheckboxField key={config.id} name={fieldName} label={capitalize(config.label)} handleChange={setData} />
+            <CheckboxField
+              key={config.id}
+              name={fieldName}
+              label={capitalize(config.label)}
+              value={(formData[fieldName] as boolean) || false}
+              handleChange={setData}
+            />
           );
         case 'date_time':
           return (

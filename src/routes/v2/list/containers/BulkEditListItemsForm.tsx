@@ -33,7 +33,7 @@ interface IFieldUpdate {
   label: string;
   data: string;
   clear: boolean;
-  fieldIds: string[];
+  itemIds: string[];
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
@@ -57,7 +57,8 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         label: config.label,
         data: commonValue,
         clear: false,
-        fieldIds: fieldValues.map((field) => field.id).filter((id) => id !== ''),
+
+        itemIds: props.items.map((item) => item.id),
       };
     });
   }, [props.listItemFieldConfigurations, props.items]);
@@ -83,13 +84,14 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     const itemIds = props.items.map((item) => item.id).join(',');
 
     try {
-      // Filter out fields that are empty and not marked for clearing, and have valid field IDs
-      const fieldsToUpdate = fieldUpdates.filter((field) => (field.data || field.clear) && field.fieldIds.length > 0);
+      // Filter out fields that are empty and not marked for clearing
+      const filteredFields = fieldUpdates.filter((field) => field.data || field.clear);
 
       // Group field IDs and data together as expected by the service
-      const listItemFieldsAttributes = fieldsToUpdate.map((field) => ({
-        list_item_field_ids: field.fieldIds,
+      const fieldsToUpdateData = filteredFields.map((field) => ({
         data: field.clear ? '' : field.data,
+        label: field.label,
+        item_ids: field.itemIds,
       }));
 
       await axios.put(`/v2/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
@@ -97,7 +99,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         list_id: props.list.id,
         list_items: {
           update_current_items: true,
-          list_item_fields_attributes: listItemFieldsAttributes,
+          fields_to_update: fieldsToUpdateData,
         },
       });
 
