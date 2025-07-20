@@ -12,6 +12,7 @@ import type {
   TUserPermissions,
 } from 'typings';
 import { EListType } from 'typings';
+import moment from 'moment';
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -83,7 +84,10 @@ export function itemName(item: IV2ListItem, listType: EListType): string {
       return getFieldValue('content');
     }
     case EListType.TO_DO_LIST: {
-      return getFieldValue('task');
+      const task = getFieldValue('task');
+      const assignee = getFieldValue('assignee_email') || getFieldValue('assignee_id');
+      const dueBy = getFieldValue('due_by');
+      return `${task}${assignee ? `\nAssigned To: ${assignee}` : ''}\nDue By: ${moment(dueBy).format('LL')}`.trim();
     }
     default:
       return fields

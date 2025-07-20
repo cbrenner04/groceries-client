@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
+import { capitalize } from 'utils/format';
 
 export interface IFieldUpdate {
   label: string;
@@ -29,14 +30,14 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
 
     const commonProps = {
       name: config.label,
-      label: config.label.charAt(0).toUpperCase() + config.label.slice(1),
+      label: capitalize(config.label),
       handleChange: props.handleFieldChange,
     };
 
     const clearCheckbox = (
       <CheckboxField
         name={`clear_${config.label}`}
-        label={`Clear ${config.label}`}
+        label={`Clear ${capitalize(config.label)}`}
         value={isCleared}
         handleChange={(): void => props.handleClearField(config.label)}
         classes="ms-1 mt-1"
@@ -49,7 +50,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
           <div key={config.id} className="mb-3">
             <CheckboxField
               name={config.label}
-              label={config.label.charAt(0).toUpperCase() + config.label.slice(1)}
+              label={capitalize(config.label)}
               value={value === 'true'}
               handleChange={props.handleFieldChange}
             />

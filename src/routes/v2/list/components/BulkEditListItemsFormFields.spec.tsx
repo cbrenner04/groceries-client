@@ -77,14 +77,14 @@ describe('BulkEditListItemsFormFields', () => {
     // Check that all fields are rendered
     expect(screen.getByLabelText('Title')).toBeInTheDocument();
     expect(screen.getByLabelText('Completed')).toBeInTheDocument();
-    expect(screen.getByLabelText('Due_date')).toBeInTheDocument();
+    expect(screen.getByLabelText('Due date')).toBeInTheDocument();
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
 
     // Check that clear checkboxes are rendered for each field
-    expect(screen.getByLabelText('Clear title')).toBeInTheDocument();
-    expect(screen.getByLabelText('Clear completed')).toBeInTheDocument();
-    expect(screen.getByLabelText('Clear due_date')).toBeInTheDocument();
-    expect(screen.getByLabelText('Clear quantity')).toBeInTheDocument();
+    expect(screen.getByLabelText('Clear Title')).toBeInTheDocument();
+    expect(screen.getByLabelText('Clear Completed')).toBeInTheDocument();
+    expect(screen.getByLabelText('Clear Due date')).toBeInTheDocument();
+    expect(screen.getByLabelText('Clear Quantity')).toBeInTheDocument();
   });
 
   it('renders fields with correct values', async () => {
@@ -93,7 +93,7 @@ describe('BulkEditListItemsFormFields', () => {
     // Check field values
     expect(screen.getByLabelText('Title')).toHaveValue('Test Item');
     expect(screen.getByLabelText('Completed')).toBeChecked();
-    expect(screen.getByLabelText('Due_date')).toHaveValue('2024-01-15');
+    expect(screen.getByLabelText('Due date')).toHaveValue('2024-01-15');
     expect(screen.getByLabelText('Quantity')).toHaveValue(5);
   });
 
@@ -104,7 +104,7 @@ describe('BulkEditListItemsFormFields', () => {
 
     expect(screen.getByLabelText('Title')).toHaveValue('');
     expect(screen.getByLabelText('Completed')).not.toBeChecked();
-    expect(screen.getByLabelText('Due_date')).toHaveValue('');
+    expect(screen.getByLabelText('Due date')).toHaveValue('');
     expect(screen.getByLabelText('Quantity')).toHaveValue(null);
   });
 
@@ -138,8 +138,8 @@ describe('BulkEditListItemsFormFields', () => {
       ],
     });
 
-    expect(screen.getByLabelText('Product_name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Is_urgent')).toBeInTheDocument();
+    expect(screen.getByLabelText('Product name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Is urgent')).toBeInTheDocument();
   });
 
   it('sorts fields by position when provided', async () => {
@@ -244,7 +244,7 @@ describe('BulkEditListItemsFormFields', () => {
 
     it('calls handleFieldChange when date field changes', async () => {
       const { props, user } = await setup();
-      const dateField = screen.getByLabelText('Due_date');
+      const dateField = screen.getByLabelText('Due date');
 
       await user.clear(dateField);
       await user.type(dateField, '2024-02-01');
@@ -263,7 +263,7 @@ describe('BulkEditListItemsFormFields', () => {
 
     it('calls handleClearField when clear checkbox is clicked', async () => {
       const { props, user } = await setup();
-      const clearTitleCheckbox = screen.getByLabelText('Clear title');
+      const clearTitleCheckbox = screen.getByLabelText('Clear Title');
 
       await user.click(clearTitleCheckbox);
 
@@ -397,7 +397,7 @@ describe('BulkEditListItemsFormFields', () => {
         ],
       });
 
-      expect(screen.getByLabelText('Clear title')).toBeChecked();
+      expect(screen.getByLabelText('Clear Title')).toBeChecked();
     });
 
     it('shows clear checkbox as unchecked when field is not marked for clearing', async () => {
@@ -411,26 +411,26 @@ describe('BulkEditListItemsFormFields', () => {
         ],
       });
 
-      expect(screen.getByLabelText('Clear title')).not.toBeChecked();
+      expect(screen.getByLabelText('Clear Title')).not.toBeChecked();
     });
 
     it('calls handleClearField with correct label for each field type', async () => {
       const { props, user } = await setup();
 
       // Test clear checkbox for text field
-      await user.click(screen.getByLabelText('Clear title'));
+      await user.click(screen.getByLabelText('Clear Title'));
       expect(props.handleClearField).toHaveBeenCalledWith('title');
 
       // Test clear checkbox for boolean field
-      await user.click(screen.getByLabelText('Clear completed'));
+      await user.click(screen.getByLabelText('Clear Completed'));
       expect(props.handleClearField).toHaveBeenCalledWith('completed');
 
       // Test clear checkbox for date field
-      await user.click(screen.getByLabelText('Clear due_date'));
+      await user.click(screen.getByLabelText('Clear Due date'));
       expect(props.handleClearField).toHaveBeenCalledWith('due_date');
 
       // Test clear checkbox for number field
-      await user.click(screen.getByLabelText('Clear quantity'));
+      await user.click(screen.getByLabelText('Clear Quantity'));
       expect(props.handleClearField).toHaveBeenCalledWith('quantity');
     });
   });
@@ -551,7 +551,7 @@ describe('BulkEditListItemsFormFields', () => {
         ],
       });
 
-      const textField = screen.getByLabelText('Unknown_field');
+      const textField = screen.getByLabelText('Unknown field');
       expect(textField).toHaveAttribute('type', 'text');
       expect(textField).toHaveValue('Some value');
     });
@@ -563,17 +563,17 @@ describe('BulkEditListItemsFormFields', () => {
 
       expect(screen.getByLabelText('Title')).toBeInTheDocument();
       expect(screen.getByLabelText('Completed')).toBeInTheDocument();
-      expect(screen.getByLabelText('Due_date')).toBeInTheDocument();
+      expect(screen.getByLabelText('Due date')).toBeInTheDocument();
       expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
     });
 
     it('has proper labels for all clear checkboxes', async () => {
       await setup();
 
-      expect(screen.getByLabelText('Clear title')).toBeInTheDocument();
-      expect(screen.getByLabelText('Clear completed')).toBeInTheDocument();
-      expect(screen.getByLabelText('Clear due_date')).toBeInTheDocument();
-      expect(screen.getByLabelText('Clear quantity')).toBeInTheDocument();
+      expect(screen.getByLabelText('Clear Title')).toBeInTheDocument();
+      expect(screen.getByLabelText('Clear Completed')).toBeInTheDocument();
+      expect(screen.getByLabelText('Clear Due date')).toBeInTheDocument();
+      expect(screen.getByLabelText('Clear Quantity')).toBeInTheDocument();
     });
   });
 });
