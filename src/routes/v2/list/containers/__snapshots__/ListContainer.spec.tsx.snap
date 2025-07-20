@@ -1555,38 +1555,6 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span>
             not completed quantity no category not completed product
           </span>
-          <div
-            class=" float-end btn-group"
-            role="group"
-          >
-            <button
-              class="p-0 me-3  btn btn-link"
-              data-test-id="not-completed-item-complete-id2"
-              type="button"
-            >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <button
-              class="p-0 me-3 btn btn-link"
-              data-test-id="not-completed-item-edit-id2"
-              type="button"
-            >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="not-completed-item-delete-id2"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -1612,38 +1580,6 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span>
             not completed quantity foo not completed product
           </span>
-          <div
-            class=" float-end btn-group"
-            role="group"
-          >
-            <button
-              class="p-0 me-3  btn btn-link"
-              data-test-id="not-completed-item-complete-id3"
-              type="button"
-            >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <button
-              class="p-0 me-3 btn btn-link"
-              data-test-id="not-completed-item-edit-id3"
-              type="button"
-            >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="not-completed-item-delete-id3"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -1660,38 +1596,6 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span>
             not completed quantity foo not completed product 2
           </span>
-          <div
-            class=" float-end btn-group"
-            role="group"
-          >
-            <button
-              class="p-0 me-3  btn btn-link"
-              data-test-id="not-completed-item-complete-id4"
-              type="button"
-            >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <button
-              class="p-0 me-3 btn btn-link"
-              data-test-id="not-completed-item-edit-id4"
-              type="button"
-            >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="not-completed-item-delete-id4"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -1717,38 +1621,6 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span>
             not completed quantity bar not completed product
           </span>
-          <div
-            class=" float-end btn-group"
-            role="group"
-          >
-            <button
-              class="p-0 me-3  btn btn-link"
-              data-test-id="not-completed-item-complete-id5"
-              type="button"
-            >
-              <i
-                class="fa fa-check fa-2x text-success"
-              />
-            </button>
-            <button
-              class="p-0 me-3 btn btn-link"
-              data-test-id="not-completed-item-edit-id5"
-              type="button"
-            >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="not-completed-item-delete-id5"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -1772,38 +1644,6 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span>
             completed quantity foo completed product
           </span>
-          <div
-            class=" float-end btn-group"
-            role="group"
-          >
-            <button
-              class="p-0 me-3  btn btn-link"
-              data-test-id="completed-item-refresh-id1"
-              type="button"
-            >
-              <i
-                class="fa fa-redo fa-2x text-primary"
-              />
-            </button>
-            <button
-              class="p-0 me-3 btn btn-link"
-              data-test-id="completed-item-edit-id1"
-              type="button"
-            >
-              <i
-                class="fa fa-edit fa-2x text-warning"
-              />
-            </button>
-            <button
-              class="p-0 btn btn-link"
-              data-test-id="completed-item-delete-id1"
-              type="button"
-            >
-              <i
-                class="fa fa-trash fa-2x text-danger"
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>

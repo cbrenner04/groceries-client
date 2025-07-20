@@ -216,3 +216,92 @@ describe('ListItem', () => {
     expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
   });
 });
+
+describe('ListItem with read permissions', () => {
+  const readOnlyProps = {
+    ...defaultProps,
+    permissions: EUserPermissions.READ,
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('does not render action buttons for read permissions', () => {
+    render(<ListItem {...readOnlyProps} />);
+    expect(screen.queryByTestId('not-completed-item-complete-item-1')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('not-completed-item-edit-item-1')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('not-completed-item-delete-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render refresh button for completed items with read permissions', () => {
+    const completedItem = { ...mockItem, completed: true };
+    render(<ListItem {...readOnlyProps} item={completedItem} />);
+    expect(screen.queryByTestId('completed-item-refresh-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render bookmark button for book lists with read permissions', () => {
+    const bookItem = {
+      ...mockItem,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...readOnlyProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render bookmark button for completed book items with read permissions', () => {
+    const completedBookItem = {
+      ...mockItem,
+      completed: true,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'true',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...readOnlyProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.queryByTestId('completed-item-unread-item-1')).not.toBeInTheDocument();
+  });
+
+  it('still renders item content for read permissions', () => {
+    render(<ListItem {...readOnlyProps} />);
+    expect(screen.getByText('3 Apples')).toBeInTheDocument();
+  });
+
+  it('still shows multi-select checkbox when multiSelect is true for read permissions', () => {
+    render(<ListItem {...readOnlyProps} multiSelect={true} />);
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
+  it('handles multi-select checkbox click for read permissions', () => {
+    render(<ListItem {...readOnlyProps} multiSelect={true} />);
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(mockHandleItemSelect).toHaveBeenCalledWith(mockItem);
+  });
+});

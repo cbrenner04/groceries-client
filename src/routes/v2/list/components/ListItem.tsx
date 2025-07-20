@@ -1,7 +1,8 @@
 import React, { type ReactNode } from 'react';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import type { EUserPermissions, IV2ListItem } from 'typings';
+import { EUserPermissions } from 'typings';
+import type { IV2ListItem } from 'typings';
 import { EListType } from 'typings';
 import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
 import { itemName } from '../utils';
@@ -57,49 +58,51 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
         {multiSelectCheckbox(props.item)}
         <Col xs={multiSelect ? 10 : 12} sm={multiSelect ? 11 : 12}>
           {itemTitle()}
-          <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
-            {props.item.completed ? (
-              <>
-                {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
-                  <Bookmark
-                    handleClick={(): void => props.toggleItemRead!(props.item)}
-                    read={getReadStatus()}
-                    testID={`completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+          {props.permissions === EUserPermissions.WRITE && (
+            <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
+              {props.item.completed ? (
+                <>
+                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                    <Bookmark
+                      handleClick={(): void => props.toggleItemRead!(props.item)}
+                      read={getReadStatus()}
+                      testID={`completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+                    />
+                  )}
+                  <Refresh
+                    handleClick={(): void => props.handleItemRefresh(props.item)}
+                    testID={`completed-item-refresh-${props.item.id}`}
+                    disabled={props.pending}
                   />
-                )}
-                <Refresh
-                  handleClick={(): void => props.handleItemRefresh(props.item)}
-                  testID={`completed-item-refresh-${props.item.id}`}
-                  disabled={props.pending}
-                />
-              </>
-            ) : (
-              <>
-                {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
-                  <Bookmark
-                    handleClick={(): void => props.toggleItemRead!(props.item)}
-                    read={getReadStatus()}
-                    testID={`not-completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+                </>
+              ) : (
+                <>
+                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                    <Bookmark
+                      handleClick={(): void => props.toggleItemRead!(props.item)}
+                      read={getReadStatus()}
+                      testID={`not-completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+                    />
+                  )}
+                  <Complete
+                    handleClick={(): void => props.handleItemComplete(props.item)}
+                    testID={`not-completed-item-complete-${props.item.id}`}
+                    disabled={props.pending}
                   />
-                )}
-                <Complete
-                  handleClick={(): void => props.handleItemComplete(props.item)}
-                  testID={`not-completed-item-complete-${props.item.id}`}
-                  disabled={props.pending}
-                />
-              </>
-            )}
-            <EditButton
-              handleClick={(): void => props.handleItemEdit(props.item)}
-              testID={`${props.item.completed ? '' : 'not-'}completed-item-edit-${props.item.id}`}
-              disabled={props.pending}
-            />
-            <Trash
-              handleClick={(): void => props.handleItemDelete(props.item)}
-              testID={`${props.item.completed ? '' : 'not-'}completed-item-delete-${props.item.id}`}
-              disabled={props.pending}
-            />
-          </ButtonGroup>
+                </>
+              )}
+              <EditButton
+                handleClick={(): void => props.handleItemEdit(props.item)}
+                testID={`${props.item.completed ? '' : 'not-'}completed-item-edit-${props.item.id}`}
+                disabled={props.pending}
+              />
+              <Trash
+                handleClick={(): void => props.handleItemDelete(props.item)}
+                testID={`${props.item.completed ? '' : 'not-'}completed-item-delete-${props.item.id}`}
+                disabled={props.pending}
+              />
+            </ButtonGroup>
+          )}
         </Col>
       </Row>
     </ListGroup.Item>
