@@ -1,6 +1,6 @@
 import type IListItemField from './IListItemField';
 
-export default interface IV2ListItems {
+export default interface IV2ListItem {
   id: string;
   archived_at: string | null;
   refreshed: boolean;

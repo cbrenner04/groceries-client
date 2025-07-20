@@ -964,20 +964,30 @@ describe('ListContainer', () => {
 
     it('toggles read on multiple items when selected', async () => {
       axios.put = jest.fn().mockResolvedValue({});
-      const { findAllByRole, findByTestId, findAllByText, findByText, user } = setup({
+      axios.get = jest
+        .fn()
+        .mockResolvedValue({ data: { list_item_configuration_id: 'list-config-1' } })
+        .mockResolvedValue({ data: [{ id: 'read-config-1', label: 'read', data_type: 'boolean' }] });
+      axios.post = jest.fn().mockResolvedValue({});
+
+      // All notCompletedItems have a 'read' field
+      const { findAllByRole, findAllByText, findByTestId, findByText, queryByTestId, user } = setup({
         list: bookListTestData.list,
         notCompletedItems: [
           createListItem('id2', false, [
             createField('id1', 'title', 'Book Title 1', 'id2'),
             createField('id2', 'author', 'Author 1', 'id2'),
+            createField('id10', 'read', 'true', 'id2'),
           ]),
           createListItem('id3', false, [
             createField('id3', 'title', 'Book Title 2', 'id3'),
             createField('id4', 'author', 'Author 2', 'id3'),
+            createField('id11', 'read', 'true', 'id3'),
           ]),
           createListItem('id4', false, [
             createField('id5', 'title', 'Book Title 3', 'id4'),
             createField('id6', 'author', 'Author 3', 'id4'),
+            createField('id12', 'read', 'true', 'id4'),
           ]),
         ],
         completedItems: [
@@ -997,11 +1007,16 @@ describe('ListContainer', () => {
 
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('completed-item-read-id5'));
+      await user.click(checkboxes[2]);
+      await user.click(await findByTestId('not-completed-item-unread-id2'));
 
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
-
-      expect(await findByTestId('completed-item-read-id5')).toBeVisible();
+      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(3));
+      expect(await findByTestId('not-completed-item-read-id2')).toBeVisible();
+      expect(queryByTestId('not-completed-item-unread-id2')).toBeNull();
+      expect(await findByTestId('not-completed-item-read-id3')).toBeVisible();
+      expect(queryByTestId('not-completed-item-unread-id3')).toBeNull();
+      expect(await findByTestId('not-completed-item-read-id4')).toBeVisible();
+      expect(queryByTestId('not-completed-item-unread-id4')).toBeNull();
     });
 
     it('handles 401 on read', async () => {

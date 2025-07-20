@@ -22,6 +22,7 @@ jest.mock('../../../../utils/api', () => ({
     put: jest.fn(),
     delete: jest.fn(),
     post: jest.fn(),
+    get: jest.fn(),
   },
 }));
 jest.mock('../../../../utils/handleFailure');
@@ -520,10 +521,17 @@ describe('handleItemRefresh', () => {
 });
 
 describe('handleToggleRead', () => {
-  it('toggles read status for single item', async () => {
+  it('toggles read status for single item with existing read field', async () => {
     const testItem = makeItem({
       id: 'test-id',
-      fields: [makeField({ label: 'read', data: 'false' })],
+      fields: [
+        makeField({
+          id: 'read-field-1',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: 'read-config-1',
+        }),
+      ],
     });
     mockAxios.put.mockResolvedValueOnce({});
 
@@ -545,14 +553,10 @@ describe('handleToggleRead', () => {
       setCompleteMultiSelect,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
-      list_item: {
-        fields: [
-          {
-            label: 'read',
-            data: 'true',
-          },
-        ],
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields/read-field-1', {
+      list_item_field: {
+        data: 'true',
+        list_item_field_configuration_id: 'read-config-1',
       },
     });
     expect(setCompletedItems).toHaveBeenCalled();
@@ -562,14 +566,28 @@ describe('handleToggleRead', () => {
     expect(mockToast).toHaveBeenCalledWith('Item successfully updated.', { type: 'info' });
   });
 
-  it('toggles read status for multiple items', async () => {
+  it('toggles read status for multiple items with existing read fields', async () => {
     const testItem1 = makeItem({
       id: 'test-id-1',
-      fields: [makeField({ label: 'read', data: 'true' })],
+      fields: [
+        makeField({
+          id: 'read-field-1',
+          label: 'read',
+          data: 'true',
+          list_item_field_configuration_id: 'read-config-1',
+        }),
+      ],
     });
     const testItem2 = makeItem({
       id: 'test-id-2',
-      fields: [makeField({ label: 'read', data: 'false' })],
+      fields: [
+        makeField({
+          id: 'read-field-2',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: 'read-config-2',
+        }),
+      ],
     });
 
     mockAxios.put.mockResolvedValueOnce({});
@@ -594,24 +612,16 @@ describe('handleToggleRead', () => {
     });
 
     expect(mockAxios.put).toHaveBeenCalledTimes(2);
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-1', {
-      list_item: {
-        fields: [
-          {
-            label: 'read',
-            data: 'false',
-          },
-        ],
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-1/list_item_fields/read-field-1', {
+      list_item_field: {
+        data: 'false',
+        list_item_field_configuration_id: 'read-config-1',
       },
     });
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-2', {
-      list_item: {
-        fields: [
-          {
-            label: 'read',
-            data: 'true',
-          },
-        ],
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-2/list_item_fields/read-field-2', {
+      list_item_field: {
+        data: 'true',
+        list_item_field_configuration_id: 'read-config-2',
       },
     });
     expect(setCompletedItems).toHaveBeenCalled();
@@ -622,12 +632,19 @@ describe('handleToggleRead', () => {
     expect(mockToast).toHaveBeenCalledWith('Items successfully updated.', { type: 'info' });
   });
 
-  it('adds read field when it does not exist', async () => {
+  it('creates read field when it does not exist', async () => {
     const testItem = makeItem({
       id: 'test-id',
       fields: [makeField({ label: 'name', data: 'Test Item' })], // No read field
     });
-    mockAxios.put.mockResolvedValueOnce({});
+
+    // Mock the list response
+    mockAxios.get.mockResolvedValueOnce({ data: { list_item_configuration_id: 'list-config-1' } });
+    // Mock the field configurations response
+    mockAxios.get.mockResolvedValueOnce({
+      data: [{ id: 'read-config-1', label: 'read', data_type: 'boolean' }],
+    });
+    mockAxios.post.mockResolvedValueOnce({});
 
     const setCompletedItems = jest.fn();
     const setNotCompletedItems = jest.fn();
@@ -647,14 +664,14 @@ describe('handleToggleRead', () => {
       setCompleteMultiSelect,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
-      list_item: {
-        fields: [
-          {
-            label: 'read',
-            data: 'true',
-          },
-        ],
+    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1');
+    expect(mockAxios.get).toHaveBeenCalledWith(
+      '/list_item_configurations/list-config-1/list_item_field_configurations',
+    );
+    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields', {
+      list_item_field: {
+        data: 'true',
+        list_item_field_configuration_id: 'read-config-1',
       },
     });
     expect(setCompletedItems).toHaveBeenCalled();
@@ -665,12 +682,26 @@ describe('handleToggleRead', () => {
     const completedItem = makeItem({
       id: 'completed-id',
       completed: true,
-      fields: [makeField({ label: 'read', data: 'false' })],
+      fields: [
+        makeField({
+          id: 'read-field-1',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: 'read-config-1',
+        }),
+      ],
     });
     const notCompletedItem = makeItem({
       id: 'not-completed-id',
       completed: false,
-      fields: [makeField({ label: 'read', data: 'true' })],
+      fields: [
+        makeField({
+          id: 'read-field-2',
+          label: 'read',
+          data: 'true',
+          list_item_field_configuration_id: 'read-config-2',
+        }),
+      ],
     });
 
     mockAxios.put.mockResolvedValueOnce({});
@@ -704,7 +735,14 @@ describe('handleToggleRead', () => {
   it('handles error', async () => {
     const testItem = makeItem({
       id: 'test-id',
-      fields: [makeField({ label: 'read', data: 'false' })],
+      fields: [
+        makeField({
+          id: 'read-field-1',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: 'read-config-1',
+        }),
+      ],
     });
     const error = new Error('fail') as AxiosError;
     mockAxios.put.mockRejectedValueOnce(error);

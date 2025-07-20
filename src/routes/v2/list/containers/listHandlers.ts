@@ -260,19 +260,36 @@ export async function handleToggleRead(params: {
     navigate,
   } = params;
 
-  const updateRequests = items.map((item) => {
+  const updateRequests = items.map(async (item) => {
     const readField = item.fields.find((field) => field.label === 'read');
     const isRead = !(readField?.data === 'true');
-    return axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
-      list_item: {
-        fields: [
-          {
-            label: 'read',
+
+    if (readField) {
+      // Update existing field
+      return axios.put(`/v2/lists/${listId}/list_items/${item.id}/list_item_fields/${readField.id}`, {
+        list_item_field: {
+          data: isRead.toString(),
+          list_item_field_configuration_id: readField.list_item_field_configuration_id,
+        },
+      });
+    } else {
+      // Create new field - we need to get the field configuration first
+      // Get the list to find its configuration ID
+      const { data: list } = await axios.get(`/v2/lists/${listId}`);
+      const { data: fieldConfigurations } = await axios.get(
+        `/list_item_configurations/${list.list_item_configuration_id}/list_item_field_configurations`,
+      );
+      const readConfig = fieldConfigurations.find((config: { label: string }) => config.label === 'read');
+      /* istanbul ignore else */
+      if (readConfig) {
+        return axios.post(`/v2/lists/${listId}/list_items/${item.id}/list_item_fields`, {
+          list_item_field: {
             data: isRead.toString(),
+            list_item_field_configuration_id: readConfig.id,
           },
-        ],
-      },
-    });
+        });
+      }
+    }
   });
 
   try {
