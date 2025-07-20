@@ -12,8 +12,9 @@ import {
 } from './listHandlers';
 import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
+import { mockNavigate } from '../../../../test-utils';
 
-jest.mock('react-toastify', () => ({ toast: jest.fn() }));
+// Mock immutability-helper
 jest.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
 jest.mock('../../../../utils/api', () => ({
   __esModule: true,
@@ -28,7 +29,6 @@ jest.mock('../../../../utils/handleFailure');
 const mockToast = toast as jest.MockedFunction<typeof toast>;
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -121,6 +121,7 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).toHaveBeenCalledWith(['NewCat']);
   });
+
   it('adds new category when item has category not in existing categories', () => {
     const setCategories = jest.fn();
     handleAddItem({
@@ -137,6 +138,7 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).toHaveBeenCalledWith(['ExistingCategory1', 'ExistingCategory2', 'BrandNewCategory']);
   });
+
   it('does not add category when item category already exists in categories', () => {
     const setCategories = jest.fn();
     handleAddItem({
@@ -153,6 +155,7 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
+
   it('does not add category when item has no category field', () => {
     const setCategories = jest.fn();
     handleAddItem({
@@ -169,6 +172,7 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
+
   it('does not add category when item has empty category field', () => {
     const setCategories = jest.fn();
     handleAddItem({
@@ -185,6 +189,7 @@ describe('handleAddItem', () => {
     });
     expect(setCategories).not.toHaveBeenCalled();
   });
+
   it('handles error', () => {
     const setCompletedItems = jest.fn(() => {
       throw new Error('fail');
@@ -208,6 +213,7 @@ describe('handleAddItem', () => {
       redirectURI: '/lists',
     });
   });
+
   it('updates included categories when setIncludedCategories is provided', () => {
     const setCategories = jest.fn();
     const setIncludedCategories = jest.fn();
@@ -226,6 +232,7 @@ describe('handleAddItem', () => {
     });
     expect(setIncludedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
   });
+
   it('updates displayed categories when setDisplayedCategories is provided and no filter is active', () => {
     const setCategories = jest.fn();
     const setDisplayedCategories = jest.fn();
@@ -244,6 +251,7 @@ describe('handleAddItem', () => {
     });
     expect(setDisplayedCategories).toHaveBeenCalledWith(['ExistingCategory', 'NewCategory']);
   });
+
   it('does not update displayed categories when filter is active', () => {
     const setCategories = jest.fn();
     const setDisplayedCategories = jest.fn();
@@ -286,64 +294,52 @@ describe('handleItemEdit', () => {
 describe('handleItemComplete', () => {
   it('completes item', async () => {
     const testItem = makeItem({ id: 'test-id' });
-    const otherItem = makeItem({ id: 'other-id' });
-    mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, completed: true } });
-    const setNotCompleted = jest.fn();
-    const setCompleted = jest.fn();
     const setPending = jest.fn();
 
     await handleItemComplete({
       item: testItem,
       listId: '1',
-      notCompletedItems: [testItem, otherItem],
-      setNotCompletedItems: setNotCompleted,
-      completedItems: [],
-      setCompletedItems: setCompleted,
       setPending,
     });
 
-    expect(setNotCompleted).toHaveBeenCalled();
-    expect(setCompleted).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item marked as completed.', { type: 'info' });
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: { completed: true },
+    });
+    expect(setPending).toHaveBeenCalledWith(true);
+    expect(setPending).toHaveBeenCalledWith(false);
   });
 
   it('preserves original fields when API returns minimal response', async () => {
     const testItem = makeItem({ id: 'test-id' });
-    const otherItem = makeItem({ id: 'other-id' });
     // API returns minimal response without fields
     mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', completed: true } });
-    const setNotCompleted = jest.fn();
-    const setCompleted = jest.fn();
     const setPending = jest.fn();
 
     await handleItemComplete({
       item: testItem,
       listId: '1',
-      notCompletedItems: [testItem, otherItem],
-      setNotCompletedItems: setNotCompleted,
-      completedItems: [],
-      setCompletedItems: setCompleted,
       setPending,
     });
 
-    expect(setCompleted).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item marked as completed.', { type: 'info' });
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: { completed: true },
+    });
+    expect(setPending).toHaveBeenCalledWith(true);
+    expect(setPending).toHaveBeenCalledWith(false);
   });
 
   it('handles error', async () => {
-    const error = new Error('fail') as AxiosError;
+    const error = new Error('AHHHH!');
     mockAxios.put.mockRejectedValueOnce(error);
     const setPending = jest.fn();
-    await handleItemComplete({
-      item,
-      listId: '1',
-      notCompletedItems: [item],
-      setNotCompletedItems: jest.fn(),
-      completedItems: [],
-      setCompletedItems: jest.fn(),
-      setPending,
-      navigate: mockNavigate,
-    });
+    await expect(
+      handleItemComplete({
+        item,
+        listId: '1',
+        setPending,
+        navigate: mockNavigate,
+      }),
+    ).rejects.toThrow(error);
     expect(mockHandleFailure).toHaveBeenCalledWith({
       error,
       notFoundMessage: 'Failed to complete item',
@@ -403,21 +399,23 @@ describe('handleItemDelete', () => {
   });
 
   it('handles error', async () => {
-    const error = new Error('fail') as AxiosError;
+    const error = new Error('AHHHH!');
     mockAxios.delete.mockRejectedValueOnce(error);
     const setPending = jest.fn();
-    await handleItemDelete({
-      item,
-      listId: '1',
-      completedItems: [],
-      setCompletedItems: jest.fn(),
-      notCompletedItems: [item],
-      setNotCompletedItems: jest.fn(),
-      selectedItems: [item],
-      setSelectedItems: jest.fn(),
-      setPending,
-      navigate: mockNavigate,
-    });
+    await expect(
+      handleItemDelete({
+        item,
+        listId: '1',
+        completedItems: [],
+        setCompletedItems: jest.fn(),
+        notCompletedItems: [item],
+        setNotCompletedItems: jest.fn(),
+        selectedItems: [item],
+        setSelectedItems: jest.fn(),
+        setPending,
+        navigate: mockNavigate,
+      }),
+    ).rejects.toThrow(error);
     expect(mockHandleFailure).toHaveBeenCalledWith({
       error,
       notFoundMessage: 'Failed to delete item',

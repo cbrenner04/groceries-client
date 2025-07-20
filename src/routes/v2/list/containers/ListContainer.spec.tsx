@@ -410,6 +410,70 @@ describe('ListContainer', () => {
       expect(await findByText('Bar')).toBeVisible();
     });
 
+    it('handles partial failure when deleting multiple items - some succeed, some fail', async () => {
+      // Mock first item to succeed, second to fail
+      axios.delete = jest
+        .fn()
+        .mockResolvedValueOnce({})
+        .mockRejectedValueOnce({ response: { status: 500 } });
+
+      const { findAllByRole, findByText, findByTestId, findAllByText, queryByText, user } = setup();
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[1]);
+      await user.click(checkboxes[2]);
+      await user.click(await findByTestId('not-completed-item-delete-id2'));
+
+      expect(await findByTestId('confirm-delete')).toBeVisible();
+      await user.click(await findByTestId('confirm-delete'));
+
+      await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
+
+      // Should show warning toast about partial failure
+      expect(toast).toHaveBeenCalledWith('Some items failed to delete. Item deleted successfully. Item failed.', {
+        type: 'warning',
+      });
+
+      // The successful item should be deleted, failed item should be rolled back
+      // checkboxes[1] = id3 (foo not completed product) - should be deleted (success)
+      // checkboxes[2] = id4 (foo not completed product 2) - should be rolled back (failure)
+      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
+      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
+    });
+
+    it('handles complete failure when deleting multiple items - all fail', async () => {
+      // Mock all items to fail
+      axios.delete = jest
+        .fn()
+        .mockRejectedValueOnce({ response: { status: 500 } })
+        .mockRejectedValueOnce({ response: { status: 500 } });
+
+      const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[1]);
+      await user.click(checkboxes[2]);
+      await user.click(await findByTestId('not-completed-item-delete-id2'));
+
+      expect(await findByTestId('confirm-delete')).toBeVisible();
+      await user.click(await findByTestId('confirm-delete'));
+
+      await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
+
+      // Should show error toast for complete failure
+      expect(toast).toHaveBeenCalledWith('Failed to delete items. Please try again.', { type: 'error' });
+
+      // All items should be rolled back to their original state
+      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
+    });
+
     it('does not delete item when delete is cleared, hides modal', async () => {
       const { findByTestId, findByText, queryByTestId, user } = setup();
 
@@ -509,6 +573,58 @@ describe('ListContainer', () => {
       const completedItems = document.querySelectorAll('[data-test-class="completed-item"]');
       expect(completedItems.length).toBeGreaterThan(1);
       expect(await findByText('Bar')).toBeVisible();
+    });
+
+    it('handles partial failure when completing multiple items - some succeed, some fail', async () => {
+      // Mock first item to succeed, second to fail
+      axios.put = jest
+        .fn()
+        .mockResolvedValueOnce({ data: createListItem('id2', true, [createField('id2', 'product', 'item 1', 'id2')]) })
+        .mockRejectedValueOnce({ response: { status: 500 } });
+
+      const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[0]);
+      await user.click(checkboxes[1]);
+      await user.click(await findByTestId('not-completed-item-complete-id2'));
+
+      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
+
+      // Should show warning toast about partial failure
+      expect(toast).toHaveBeenCalledWith('Some items failed to complete. Item completed successfully. Item failed.', {
+        type: 'warning',
+      });
+
+      // The successful item should remain in completed, failed item should be rolled back to not completed
+      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+    });
+
+    it('handles complete failure when completing multiple items - all fail', async () => {
+      // Mock all items to fail
+      axios.put = jest
+        .fn()
+        .mockRejectedValueOnce({ response: { status: 500 } })
+        .mockRejectedValueOnce({ response: { status: 500 } });
+
+      const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[0]);
+      await user.click(checkboxes[1]);
+      await user.click(await findByTestId('not-completed-item-complete-id2'));
+
+      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
+
+      // Should call handleFailure for complete failure
+      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
     });
 
     it('handles 401 on complete', async () => {

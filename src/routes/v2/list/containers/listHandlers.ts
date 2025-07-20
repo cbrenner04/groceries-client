@@ -93,36 +93,13 @@ export function handleItemEdit(params: { item: IV2ListItem; listId: string; navi
 export async function handleItemComplete(params: {
   item: IV2ListItem;
   listId: string;
-  notCompletedItems: IV2ListItem[];
-  setNotCompletedItems: (v: IV2ListItem[]) => void;
-  completedItems: IV2ListItem[];
-  setCompletedItems: (v: IV2ListItem[]) => void;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
 }): Promise<void> {
-  const {
-    item,
-    listId,
-    notCompletedItems,
-    setNotCompletedItems,
-    completedItems,
-    setCompletedItems,
-    setPending,
-    navigate,
-  } = params;
+  const { item, listId, setPending, navigate } = params;
   setPending(true);
   try {
-    const { data } = await axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
-      list_item: { completed: true },
-    });
-    setNotCompletedItems(notCompletedItems.filter((notCompletedItem) => notCompletedItem.id !== item.id));
-    // Preserve original fields if API response doesn't include them
-    const completedItem = {
-      ...data,
-      fields: Array.isArray(data.fields) && data.fields.length > 0 ? data.fields : item.fields,
-    };
-    setCompletedItems(update(completedItems, { $push: [completedItem] }));
-    toast('Item marked as completed.', { type: 'info' });
+    await axios.put(`/v2/lists/${listId}/list_items/${item.id}`, { list_item: { completed: true } });
   } catch (err) {
     handleFailure({
       error: err as AxiosError,
@@ -130,6 +107,7 @@ export async function handleItemComplete(params: {
       navigate,
       redirectURI: '/lists',
     });
+    throw err; // Re-throw the error so the caller can handle it
   } finally {
     setPending(false);
   }
@@ -181,6 +159,7 @@ export async function handleItemDelete(params: {
       navigate,
       redirectURI: '/lists',
     });
+    throw err; // Re-throw the error so the caller can handle it
   } finally {
     setPending(false);
   }

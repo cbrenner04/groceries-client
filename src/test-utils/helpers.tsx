@@ -3,12 +3,39 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { act } from '@testing-library/react';
+import type { AxiosError } from 'axios';
 
 import { defaultTestData } from './factories';
 import type { IListContainerProps } from 'routes/v2/list/containers/ListContainer';
 
 // Mock navigation
 export const mockNavigate = jest.fn();
+
+// API mock utilities
+export const apiMocks = {
+  mockSuccess: (apiMock: jest.Mock, responseData: Record<string, unknown>): void => {
+    apiMock.mockResolvedValue({ data: responseData });
+  },
+
+  mockError: (apiMock: jest.Mock, statusCode: number, errorData?: AxiosError): void => {
+    apiMock.mockRejectedValue({
+      response: {
+        status: statusCode,
+        data: errorData,
+      },
+    });
+  },
+
+  mockNetworkError: (apiMock: jest.Mock): void => {
+    apiMock.mockRejectedValue({
+      request: 'failed to send request',
+    });
+  },
+
+  mockGenericError: (apiMock: jest.Mock, errorMessage?: string): void => {
+    apiMock.mockRejectedValue(new Error(errorMessage ?? 'Generic error'));
+  },
+};
 
 // Setup function for ListContainer tests
 export function setupListContainer(suppliedProps?: Partial<IListContainerProps>): {

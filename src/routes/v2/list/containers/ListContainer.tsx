@@ -147,29 +147,84 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleItemComplete = async (item: IV2ListItem): Promise<void> => {
-    const items = selectedItems.length ? selectedItems : [item];
+    const itemsToComplete = selectedItems.length ? selectedItems : [item];
 
-    try {
-      // Process completion requests sequentially to ensure state updates properly
-      for (const selectedItem of items) {
+    // Optimistic update - move items to completed immediately
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !itemsToComplete.some((completeItem) => completeItem.id === item.id),
+    );
+    const updatedCompletedItems = [...completedItems, ...itemsToComplete.map((item) => ({ ...item, completed: true }))];
+
+    setNotCompletedItems(updatedNotCompletedItems);
+    setCompletedItems(updatedCompletedItems);
+
+    // Clear selections
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setCompleteMultiSelect(false);
+
+    // Make API calls in parallel for better performance
+    const apiPromises = itemsToComplete.map(async (selectedItem) => {
+      try {
         await exportedHandleItemComplete({
           item: selectedItem,
           listId: props.list.id!,
-          notCompletedItems,
-          setNotCompletedItems,
-          completedItems,
-          setCompletedItems,
           setPending,
           navigate,
         });
+        return { success: true, item: selectedItem };
+      } catch (error) {
+        return { success: false, item: selectedItem, error };
       }
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
+    });
+
+    const results = await Promise.all(apiPromises);
+
+    // Check for any failures
+    const failures: IV2ListItem[] = [];
+    const successfulItems: IV2ListItem[] = [];
+    results.forEach((result) => {
+      if (result.success) {
+        successfulItems.push(result.item);
+      } else {
+        failures.push(result.item);
+      }
+    });
+
+    if (failures.length > 0) {
+      // Some items failed - rollback only the failed items
+      const failedItemIds = failures.map((item) => item.id);
+
+      // Rollback failed items to original state
+      const rollbackNotCompletedItems = [
+        ...updatedNotCompletedItems,
+        ...failures.map((item) => ({ ...item!, completed: false })),
+      ];
+      const rollbackCompletedItems = updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id));
+
+      setNotCompletedItems(rollbackNotCompletedItems);
+      setCompletedItems(rollbackCompletedItems);
+
+      // Show appropriate feedback
+      if (successfulItems.length > 0) {
+        const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        toast(
+          `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
+            failures,
+          )} failed.`,
+          { type: 'warning' },
+        );
+      } else {
+        // All items failed
+        handleFailure({
+          error: new Error('All items failed to complete') as AxiosError,
+          notFoundMessage: 'Failed to complete items',
+        });
+      }
+    } else {
+      // All items succeeded
       const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      toast(`${pluralize(items)} marked as completed.`, { type: 'info' });
-    } catch (error) {
-      handleFailure({ error: error as AxiosError, notFoundMessage: 'Failed to complete items' });
+      toast(`${pluralize(itemsToComplete)} marked as completed.`, { type: 'info' });
     }
   };
 
@@ -212,10 +267,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
 
-    // Update state immediately to remove selected items
     const itemsToDeleteFromState = itemsToDelete;
 
-    // Remove items from completed and not completed lists
+    // Optimistic update - remove items immediately
     const updatedCompletedItems = completedItems.filter(
       (item) => !itemsToDeleteFromState.some((deleteItem) => deleteItem.id === item.id),
     );
@@ -232,31 +286,68 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompleteMultiSelect(false);
     setItemsToDelete([]);
 
-    try {
-      // Make API calls for each item to be deleted
-      for (const item of itemsToDeleteFromState) {
-        await exportedHandleItemDelete({
-          item,
-          listId: props.list.id!,
-          completedItems: updatedCompletedItems,
-          setCompletedItems,
-          notCompletedItems: updatedNotCompletedItems,
-          setNotCompletedItems,
-          selectedItems: [],
-          setSelectedItems,
-          setPending,
-          navigate,
-          showToast: false,
-        });
-      }
+    // Make API calls in parallel for better performance
+    const apiPromises = itemsToDeleteFromState.map((item) =>
+      exportedHandleItemDelete({
+        item,
+        listId: props.list.id!,
+        completedItems: updatedCompletedItems,
+        setCompletedItems,
+        notCompletedItems: updatedNotCompletedItems,
+        setNotCompletedItems,
+        selectedItems: [],
+        setSelectedItems,
+        setPending,
+        navigate,
+        showToast: false,
+      }),
+    );
 
+    const results = await Promise.allSettled(apiPromises);
+
+    // Check for any failures
+    const failures: IV2ListItem[] = [];
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        failures.push(itemsToDeleteFromState[index]);
+      }
+    });
+
+    if (failures.length > 0) {
+      // Some items failed - rollback only the failed items
+      const failedItemIds = failures.map((item) => item.id);
+      const successfulItems = itemsToDeleteFromState.filter((item) => !failedItemIds.includes(item.id));
+
+      // Rollback failed items to original state
+      const rollbackCompletedItems = [
+        ...updatedCompletedItems,
+        ...failures.filter((item) => completedItems.some((orig) => orig.id === item.id)),
+      ];
+      const rollbackNotCompletedItems = [
+        ...updatedNotCompletedItems,
+        ...failures.filter((item) => notCompletedItems.some((orig) => orig.id === item.id)),
+      ];
+
+      setCompletedItems(rollbackCompletedItems);
+      setNotCompletedItems(rollbackNotCompletedItems);
+
+      // Show appropriate feedback
+      if (successfulItems.length > 0) {
+        const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        toast(
+          `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
+            failures,
+          )} failed.`,
+          { type: 'warning' },
+        );
+      } else {
+        // All items failed
+        toast('Failed to delete items. Please try again.', { type: 'error' });
+      }
+    } else {
+      // All items succeeded
       const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
       toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
-    } catch (error) {
-      // If API calls fail, revert the state changes
-      setCompletedItems(completedItems);
-      setNotCompletedItems(notCompletedItems);
-      toast('Failed to delete items. Please try again.', { type: 'error' });
     }
   };
 
