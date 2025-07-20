@@ -53,22 +53,34 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
   const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
     setPending(true);
-    const ownedLists = listsToDelete.filter((l) => props.userId === l.owner_id);
-    const sharedLists = listsToDelete.filter((l) => props.userId !== l.owner_id);
-    const deleteRequests = ownedLists.map((list) => axios.delete(`/v1/lists/${list.id}`));
-    const removeRequests = sharedLists.map((list) =>
-      axios.patch(`/v1/lists/${list.id}/users_lists/${list.users_list_id}`, {
-        users_list: { has_accepted: false },
-      }),
-    );
+
     try {
-      await Promise.all(deleteRequests.concat(removeRequests));
-      let updatedLists = props.completed ? props.completedLists : props.incompleteLists;
-      listsToDelete.forEach((list) => {
-        updatedLists = updatedLists.filter((ll) => ll.id !== list.id);
+      const requests = listsToDelete.map(async (list) => {
+        // If user owns the list, delete it completely
+        if (props.userId === list.owner_id) {
+          await axios.delete(`/v2/lists/${list.id}`);
+        } else {
+          // If user doesn't own the list, just refuse the share
+          await axios.patch(`/v2/lists/${list.id}/users_lists/${list.users_list_id}`, {
+            users_list: { has_accepted: false },
+          });
+        }
       });
-      updatedLists = sortLists(updatedLists);
-      props.completed ? props.setCompletedLists(updatedLists) : props.setIncompleteLists(updatedLists);
+
+      await Promise.all(requests);
+
+      if (props.completed) {
+        const updatedCompletedLists = props.completedLists.filter(
+          (nonList) => !listsToDelete.map((l) => l.id).includes(nonList.id),
+        );
+        props.setCompletedLists(sortLists(updatedCompletedLists));
+      } else {
+        const updatedIncompleteLists = props.incompleteLists.filter(
+          (nonList) => !listsToDelete.map((l) => l.id).includes(nonList.id),
+        );
+        props.setIncompleteLists(sortLists(updatedIncompleteLists));
+      }
+
       resetMultiSelect();
       setListsToDelete([]);
       setPending(false);
@@ -92,7 +104,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     setPending(true);
     const listIds = listsToMerge.map((l) => l.id).join(',');
     try {
-      const { data } = await axios.post('/v1/lists/merge_lists', {
+      const { data } = await axios.post('/v2/lists/merge_lists', {
         merge_lists: { list_ids: listIds, new_list_name: mergeName },
       });
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
@@ -112,62 +124,68 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     }
   };
 
-  const handleCompletion = async (list: IList): Promise<void> => {
-    setPending(true);
+  const handleCompletion = (list: IList): void => {
     const lists = selectedLists.length ? selectedLists : [list];
     // can only complete lists you own
     const ownedLists = lists.filter((l) => props.userId === l.owner_id);
     const filteredLists = ownedLists.filter((l) => !l.completed);
     const filteredListsIds = filteredLists.map((l) => l.id);
-    const updateRequests = filteredLists.map((l) => axios.put(`/v1/lists/${l.id}`, { list: { completed: true } }));
-    try {
-      await Promise.all(updateRequests);
-      const updatedIncompleteLists = props.incompleteLists.filter((nonList) => !filteredListsIds.includes(nonList.id));
-      props.setIncompleteLists(sortLists(updatedIncompleteLists));
-      let updatedCompletedLists = props.completedLists;
-      filteredLists.forEach((l) => {
-        l.completed = true;
-        updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+    const updateRequests = filteredLists.map((l) => axios.put(`/v2/lists/${l.id}`, { list: { completed: true } }));
+
+    setPending(true);
+    Promise.all(updateRequests)
+      .then(() => {
+        const updatedIncompleteLists = props.incompleteLists.filter(
+          (nonList) => !filteredListsIds.includes(nonList.id),
+        );
+        props.setIncompleteLists(sortLists(updatedIncompleteLists));
+        let updatedCompletedLists = props.completedLists;
+        filteredLists.forEach((l) => {
+          l.completed = true;
+          updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+        });
+        props.setCompletedLists(sortLists(updatedCompletedLists));
+        resetMultiSelect();
+        setPending(false);
+        toast(`${pluralize(filteredLists.length)} successfully completed.`, { type: 'info' });
+      })
+      .catch((error) => {
+        failure(error, navigate, setPending);
       });
-      props.setCompletedLists(sortLists(updatedCompletedLists));
-      resetMultiSelect();
-      setPending(false);
-      toast(`${pluralize(filteredLists.length)} successfully completed.`, { type: 'info' });
-    } catch (error) {
-      failure(error, navigate, setPending);
-    }
   };
 
-  const handleRefresh = async (list: IList): Promise<void> => {
-    setPending(true);
+  const handleRefresh = (list: IList): void => {
     const lists = selectedLists.length ? selectedLists : [list];
     const ownedLists = lists.map((l) => (props.userId === l.owner_id ? l : undefined)).filter(Boolean) as IList[];
     ownedLists.forEach((lList) => {
       lList.refreshed = true;
     });
-    const refreshRequests = ownedLists.map((l) => axios.post(`/v1/lists/${l.id}/refresh_list`, {}));
-    try {
-      const responses = await Promise.all(refreshRequests);
-      // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
-      if (!props.completed || !props.fullList) {
-        let updatedCurrentUserPermissions = props.currentUserPermissions;
-        let updatedIncompleteLists = props.incompleteLists;
-        responses.forEach((response) => {
-          updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, {
-            [response.data.id]: { $set: 'write' },
+    const refreshRequests = ownedLists.map((l) => axios.post(`/v2/lists/${l.id}/refresh_list`, {}));
+
+    setPending(true);
+    Promise.all(refreshRequests)
+      .then((responses) => {
+        // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
+        if (!props.completed || !props.fullList) {
+          let updatedCurrentUserPermissions = props.currentUserPermissions;
+          let updatedIncompleteLists = props.incompleteLists;
+          responses.forEach((response) => {
+            updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, {
+              [response.data.id]: { $set: 'write' },
+            });
+            updatedIncompleteLists = update(updatedIncompleteLists, { $push: [response.data] });
           });
-          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [response.data] });
-        });
-        // must update currentUserPermissions prior to incompleteLists
-        props.setCurrentUserPermissions(updatedCurrentUserPermissions);
-        props.setIncompleteLists(sortLists(updatedIncompleteLists));
-      }
-      resetMultiSelect();
-      setPending(false);
-      toast(`${pluralize(ownedLists.length)} successfully refreshed.`, { type: 'info' });
-    } catch (error) {
-      failure(error, navigate, setPending);
-    }
+          // must update currentUserPermissions prior to incompleteLists
+          props.setCurrentUserPermissions(updatedCurrentUserPermissions);
+          props.setIncompleteLists(sortLists(updatedIncompleteLists));
+        }
+        resetMultiSelect();
+        setPending(false);
+        toast(`${pluralize(ownedLists.length)} successfully refreshed.`, { type: 'info' });
+      })
+      .catch((error) => {
+        failure(error, navigate, setPending);
+      });
   };
 
   const lists = props.completed
@@ -237,8 +255,8 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         body={
           <React.Fragment>
             <p>
-              Are you sure you want to delete the following lists? The lists you do not own will continue to exist for
-              the owner, you will just be removed from the list of users.
+              Are you sure you want to remove the following lists? Lists you own will be deleted completely. Lists you
+              do not own will continue to exist for the owner, you will just be removed from the list of users.
             </p>
             <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
           </React.Fragment>

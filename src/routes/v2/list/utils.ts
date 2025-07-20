@@ -9,6 +9,7 @@ import type {
   IListUser,
   IV2ListItem,
   EUserPermissions,
+  TUserPermissions,
 } from 'typings';
 import { EListType } from 'typings';
 
@@ -197,6 +198,26 @@ export async function fetchItemsToEdit(fetchParams: {
       notFoundMessage: 'One or more items not found',
       navigate: fetchParams.navigate,
       redirectURI: `/v2/lists/${fetchParams.list_id}/`,
+    });
+  }
+}
+
+export async function fetchCompletedLists(fetchParams: {
+  navigate: (url: string) => void;
+}): Promise<{ userId: string; completedLists: IList[]; currentUserPermissions: TUserPermissions } | undefined> {
+  try {
+    const { data } = await axios.get('/v2/completed_lists/');
+    return {
+      userId: data.current_user_id,
+      completedLists: data.completed_lists,
+      currentUserPermissions: data.current_list_permissions,
+    };
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Failed to fetch completed lists',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
     });
   }
 }

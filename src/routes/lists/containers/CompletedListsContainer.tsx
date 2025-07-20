@@ -7,7 +7,7 @@ import { usePolling } from 'hooks';
 import type { IList, TUserPermissions } from 'typings';
 
 import AcceptedLists from '../components/AcceptedLists';
-import { fetchCompletedLists } from '../utils';
+import { fetchCompletedLists } from '../../v2/list/utils';
 
 interface ICompletedListContainer {
   userId: string;

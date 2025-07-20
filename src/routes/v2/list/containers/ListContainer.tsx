@@ -148,6 +148,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleItemComplete = async (item: IV2ListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
+
     try {
       // Process completion requests sequentially to ensure state updates properly
       for (const selectedItem of items) {
@@ -245,6 +246,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           setSelectedItems,
           setPending,
           navigate,
+          showToast: false,
         });
       }
 
@@ -299,9 +301,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const groupByCategory = (items: IV2ListItem[]): ReactNode => {
-    // When a filter is applied, only show the selected category
+    // When a filter is applied, show the selected category plus uncategorized items
     // When no filter is applied, show all categories plus uncategorized items
-    const categoriesToShow = filter ? displayedCategories : [undefined, ...displayedCategories];
+    const categoriesToShow = filter ? [undefined, ...displayedCategories] : [undefined, ...displayedCategories];
 
     return categoriesToShow.map((category: string | undefined) => {
       const itemsToRender = items.filter((item: IV2ListItem) => {
@@ -309,8 +311,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         const fields = Array.isArray(item.fields) ? item.fields : [];
         return category
           ? fields.find((field: IListItemField) => field.label === 'category' && field.data === category)
-          : !fields.find((field: IListItemField) => field.label === 'category');
+          : !fields.find((field: IListItemField) => field.label === 'category') ||
+              fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''));
       });
+
       if (itemsToRender.length === 0) {
         return null;
       }

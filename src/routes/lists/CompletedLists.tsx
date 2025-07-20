@@ -6,7 +6,7 @@ import Loading from 'components/Loading';
 import type { IList, TUserPermissions } from 'typings';
 
 import UnknownError from '../error_pages/UnknownError';
-import { fetchCompletedLists } from './utils';
+import { fetchCompletedLists } from '../v2/list/utils';
 import CompletedListsContainer from './containers/CompletedListsContainer';
 
 interface ICompletedListsData {

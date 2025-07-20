@@ -19,7 +19,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = (props): React.JSX.Elemen
   // This allows filtering by uncategorized items
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="light" id="dropdown-basic">
+      <Dropdown.Toggle variant="light" id="filter-by-category-button">
         Filter by category
       </Dropdown.Toggle>
       <Dropdown.Menu>

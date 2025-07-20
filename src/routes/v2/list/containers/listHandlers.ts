@@ -147,6 +147,7 @@ export async function handleItemDelete(params: {
   setSelectedItems: (v: IV2ListItem[]) => void;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
+  showToast?: boolean;
 }): Promise<void> {
   const {
     item,
@@ -159,6 +160,7 @@ export async function handleItemDelete(params: {
     setSelectedItems,
     setPending,
     navigate,
+    showToast = true,
   } = params;
   setPending(true);
   try {
@@ -169,7 +171,9 @@ export async function handleItemDelete(params: {
       setNotCompletedItems(notCompletedItems.filter((notCompletedItem) => notCompletedItem.id !== item.id));
     }
     setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
-    toast('Item deleted successfully.', { type: 'info' });
+    if (showToast) {
+      toast('Item deleted successfully.', { type: 'info' });
+    }
   } catch (err) {
     handleFailure({
       error: err as AxiosError,

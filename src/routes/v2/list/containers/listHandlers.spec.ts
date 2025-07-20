@@ -425,6 +425,31 @@ describe('handleItemDelete', () => {
       redirectURI: '/lists',
     });
   });
+
+  it('does not show toast when showToast is false', async () => {
+    const testItem = makeItem({ id: 'test-id' });
+    const otherItem = makeItem({ id: 'other-id' });
+    mockAxios.delete.mockResolvedValueOnce({});
+    const setNotCompleted = jest.fn();
+    const setSelected = jest.fn();
+    const setPending = jest.fn();
+    await handleItemDelete({
+      item: testItem,
+      listId: '1',
+      completedItems: [],
+      setCompletedItems: jest.fn(),
+      notCompletedItems: [testItem, otherItem],
+      setNotCompletedItems: setNotCompleted,
+      selectedItems: [testItem, otherItem],
+      setSelectedItems: setSelected,
+      setPending,
+      navigate: mockNavigate,
+      showToast: false,
+    });
+    expect(setNotCompleted).toHaveBeenCalled();
+    expect(setSelected).toHaveBeenCalled();
+    expect(mockToast).not.toHaveBeenCalled();
+  });
 });
 
 describe('handleItemRefresh', () => {

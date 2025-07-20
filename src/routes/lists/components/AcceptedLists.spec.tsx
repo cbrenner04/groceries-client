@@ -99,6 +99,10 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
 }
 
 describe('AcceptedLists', () => {
+  beforeEach(() => {
+    axios.patch = jest.fn();
+  });
+
   it('does not delete list when confirm modal is cleared', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, user } = setup();
@@ -125,10 +129,11 @@ describe('AcceptedLists', () => {
 
     expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
     expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(axios.patch).not.toHaveBeenCalled();
     expect(props.setIncompleteLists).toHaveBeenCalledWith([props.incompleteLists[1]]);
   });
 
-  it('deletes complete list', async () => {
+  it('deletes complete list (owned)', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup({ completed: true });
 
@@ -140,10 +145,28 @@ describe('AcceptedLists', () => {
 
     expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
     expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(axios.patch).not.toHaveBeenCalled();
     expect(props.setCompletedLists).toHaveBeenCalledWith([props.completedLists[1]]);
   });
 
-  it('deletes multiple lists', async () => {
+  it('refuses shared complete list (not owned)', async () => {
+    axios.patch = jest.fn().mockResolvedValue({});
+    const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup({ completed: true });
+
+    // Click on the second list which is owned by another user (id2)
+    await user.click((await findAllByTestId('complete-list-trash'))[1]);
+    await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
+
+    await user.click(await findByTestId('confirm-delete'));
+    await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
+
+    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+    expect(axios.patch).toHaveBeenCalledTimes(1);
+    expect(axios.delete).not.toHaveBeenCalled();
+    expect(props.setCompletedLists).toHaveBeenCalledWith([props.completedLists[0]]);
+  });
+
+  it('deletes multiple lists (mixed ownership)', async () => {
     axios.delete = jest.fn().mockResolvedValue({});
     axios.patch = jest.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, findAllByRole, findByText, props, user } = setup();
@@ -152,15 +175,15 @@ describe('AcceptedLists', () => {
 
     const checkboxes = await findAllByRole('checkbox');
 
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]); // Owned list
+    await user.click(checkboxes[1]); // Non-owned list
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
     await waitFor(async () => expect(await findByTestId('confirm-delete')).toBeVisible());
 
     await user.click(await findByTestId('confirm-delete'));
-    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1)); // For owned list
+    await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1)); // For non-owned list
 
     expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
     expect(props.setIncompleteLists).toHaveBeenCalledWith([]);
@@ -556,7 +579,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/v1/lists/merge_lists', {
+    expect(axios.post).toHaveBeenCalledWith('/v2/lists/merge_lists', {
       merge_lists: { list_ids: 'id3', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
@@ -632,7 +655,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(axios.post).toHaveBeenCalledWith('/v1/lists/merge_lists', {
+    expect(axios.post).toHaveBeenCalledWith('/v2/lists/merge_lists', {
       merge_lists: { list_ids: 'id2,id4', new_list_name: 'a' },
     });
     expect(props.setIncompleteLists).not.toHaveBeenCalled();

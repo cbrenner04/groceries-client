@@ -74,7 +74,7 @@ exports[`CategoryFilter renders dropdown when categories array contains only emp
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
@@ -91,7 +91,7 @@ exports[`CategoryFilter renders dropdown when categories array contains some val
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
@@ -108,7 +108,7 @@ exports[`CategoryFilter renders dropdown when categories do not exist 1`] = `
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
@@ -125,7 +125,7 @@ exports[`CategoryFilter renders dropdown when categories exist but filter is emp
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
@@ -142,7 +142,7 @@ exports[`CategoryFilter renders dropdown when categories exist but filter is und
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
@@ -159,7 +159,7 @@ exports[`CategoryFilter renders dropdown when categories is empty array 1`] = `
     <button
       aria-expanded="false"
       class="dropdown-toggle btn btn-light"
-      id="dropdown-basic"
+      id="filter-by-category-button"
       type="button"
     >
       Filter by category
