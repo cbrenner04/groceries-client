@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-import { EUserPermissions } from 'typings';
+import { EUserPermissions, type IV2ListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
 import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
@@ -213,6 +213,189 @@ describe('ListContainer', () => {
 
       await user.click(await findByTestId('clear-filter'));
 
+      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('Foo')).toBeVisible();
+      expect(await findByText('Bar')).toBeVisible();
+    });
+
+    it('filters by uncategorized items only', async () => {
+      const { findByTestId, findByText, queryByText, user } = setup();
+
+      await user.click(await findByText('Filter by category'));
+      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      await user.click(await findByTestId('filter-by-uncategorized'));
+
+      // Should only show uncategorized items
+      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByTestId('clear-filter')).toBeVisible();
+
+      // Should not show categorized items
+      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
+      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+      expect(queryByText('Foo')).toBeNull();
+      expect(queryByText('Bar')).toBeNull();
+    });
+
+    it('filters by specific category only', async () => {
+      const { findByTestId, findByText, queryByText, user } = setup();
+
+      await user.click(await findByText('Filter by category'));
+      await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
+      await user.click(await findByTestId('filter-by-bar'));
+
+      // Should only show bar category items
+      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('Bar')).toBeVisible();
+
+      // Should not show other categories or uncategorized items
+      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
+      expect(queryByText('not completed quantity no category not completed product')).toBeNull();
+      expect(queryByText('Foo')).toBeNull();
+    });
+
+    it('shows only selected category when filter is applied', async () => {
+      const { findByTestId, findByText, queryByText, user } = setup();
+
+      // Apply filter
+      await user.click(await findByText('Filter by category'));
+      await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
+      await user.click(await findByTestId('filter-by-foo'));
+
+      // Should only show foo category items, not uncategorized items
+      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('Foo')).toBeVisible();
+      expect(queryByText('not completed quantity no category not completed product')).toBeNull();
+      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+    });
+
+    it('handles items with empty category data as uncategorized', async () => {
+      const itemsWithEmptyCategory: IV2ListItem[] = [
+        {
+          id: 'id4',
+          archived_at: null,
+          refreshed: false,
+          completed: false,
+          user_id: 'user_id',
+          list_id: 'list_id',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          fields: [
+            {
+              id: 'id4',
+              list_item_field_configuration_id: 'id4',
+              archived_at: null,
+              user_id: 'user_id',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              label: 'product',
+              data: 'item with empty category',
+              list_item_id: 'id4',
+              position: 0,
+              data_type: 'free_text',
+            },
+            {
+              id: 'id4',
+              list_item_field_configuration_id: 'id4',
+              archived_at: null,
+              user_id: 'user_id',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              label: 'quantity',
+              data: '1',
+              list_item_id: 'id4',
+              position: 1,
+              data_type: 'number',
+            },
+            {
+              id: 'id4',
+              list_item_field_configuration_id: 'id4',
+              archived_at: null,
+              user_id: 'user_id',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              label: 'category',
+              data: '',
+              list_item_id: 'id4',
+              position: 2,
+              data_type: 'free_text',
+            }, // Empty category data
+          ],
+        },
+      ];
+
+      const { findByTestId, findByText, user } = setup({
+        notCompletedItems: itemsWithEmptyCategory,
+      });
+
+      await user.click(await findByText('Filter by category'));
+      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      await user.click(await findByTestId('filter-by-uncategorized'));
+
+      // Should show item with empty category data
+      expect(await findByText('1 item with empty category')).toBeVisible();
+    });
+
+    it('handles items with missing category field as uncategorized', async () => {
+      const itemsWithoutCategoryField: IV2ListItem[] = [
+        {
+          id: 'id5',
+          archived_at: null,
+          refreshed: false,
+          completed: false,
+          user_id: 'user_id',
+          list_id: 'list_id',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          fields: [
+            {
+              id: 'id5',
+              list_item_field_configuration_id: 'id5',
+              archived_at: null,
+              user_id: 'user_id',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              label: 'product',
+              data: 'item without category field',
+              list_item_id: 'id5',
+              position: 0,
+              data_type: 'free_text',
+            },
+            {
+              id: 'id5',
+              list_item_field_configuration_id: 'id5',
+              archived_at: null,
+              user_id: 'user_id',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              label: 'quantity',
+              data: '1',
+              list_item_id: 'id5',
+              position: 1,
+              data_type: 'number',
+            },
+            // No category field at all
+          ],
+        },
+      ];
+
+      const { findByTestId, findByText, user } = setup({
+        notCompletedItems: itemsWithoutCategoryField,
+      });
+
+      await user.click(await findByText('Filter by category'));
+      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      await user.click(await findByTestId('filter-by-uncategorized'));
+
+      // Should show item without category field
+      expect(await findByText('1 item without category field')).toBeVisible();
+    });
+
+    it('shows all categories and uncategorized when no filter is applied', async () => {
+      const { findByText } = setup();
+
+      // Should show all items grouped by category
       expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
       expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
       expect(await findByText('not completed quantity bar not completed product')).toBeVisible();

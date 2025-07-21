@@ -392,18 +392,35 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const groupByCategory = (items: IV2ListItem[]): ReactNode => {
-    // When a filter is applied, show the selected category plus uncategorized items
+    // When a filter is applied, show only the selected category
     // When no filter is applied, show all categories plus uncategorized items
-    const categoriesToShow = filter ? [undefined, ...displayedCategories] : [undefined, ...displayedCategories];
+    const categoriesToShow = filter ? displayedCategories : [undefined, ...displayedCategories];
 
     return categoriesToShow.map((category: string | undefined) => {
       const itemsToRender = items.filter((item: IV2ListItem) => {
         // Defensive: treat missing fields as empty array
         const fields = Array.isArray(item.fields) ? item.fields : [];
-        return category
-          ? fields.find((field: IListItemField) => field.label === 'category' && field.data === category)
-          : !fields.find((field: IListItemField) => field.label === 'category') ||
-              fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''));
+
+        if (category === 'uncategorized') {
+          // Show items with no category field or empty category data
+          const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
+          return (
+            !hasCategoryField ||
+            fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
+          );
+        }
+
+        if (category) {
+          // Show items with matching category
+          return fields.find((field: IListItemField) => field.label === 'category' && field.data === category);
+        }
+
+        // Show uncategorized items when no filter is applied
+        const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
+        return (
+          !hasCategoryField ||
+          fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
+        );
       });
 
       if (itemsToRender.length === 0) {
