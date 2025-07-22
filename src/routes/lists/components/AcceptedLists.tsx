@@ -272,6 +272,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         mergeName={mergeName}
         handleMergeNameChange={((event) => setMergeName(event.target.value)) as ChangeEventHandler<HTMLInputElement>}
         handleMergeConfirm={handleMergeConfirm}
+        selectedLists={selectedLists}
       />
     </Lists>
   );

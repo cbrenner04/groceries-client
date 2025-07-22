@@ -1,4 +1,9 @@
-# ... existing ignores ...
 build/
 coverage/
-craco.config.js 
+craco.config.js
+node_modules/
+.git/
+coverage/
+scripts/
+.ruby-lsp/
+.github/
