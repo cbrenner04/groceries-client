@@ -66,7 +66,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id1"
+                  href="/v2/lists/id1"
                 >
                   <h5
                     class="mb-1"
@@ -138,7 +138,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id2"
+                  href="/v2/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -210,7 +210,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id3"
+                  href="/v2/lists/id3"
                 >
                   <h5
                     class="mb-1"

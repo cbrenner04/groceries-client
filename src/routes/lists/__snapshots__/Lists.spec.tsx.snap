@@ -251,7 +251,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id2"
+                  href="/v2/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -304,7 +304,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/id2/edit"
+                    href="/v2/lists/id2/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -380,7 +380,7 @@ exports[`Lists renders Lists when data retrieval is complete 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/lists/id1"
+                  href="/v2/lists/id1"
                 >
                   <h5
                     class="mb-1"
