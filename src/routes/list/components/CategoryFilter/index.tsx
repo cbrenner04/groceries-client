@@ -1,27 +1,58 @@
-import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
 
-import Filter from './Filter';
 import Filtered from './Filtered';
 
 export interface ICategoryFilterProps {
   categories?: string[];
   filter?: string;
-  handleClearFilter: MouseEventHandler;
-  handleCategoryFilter: MouseEventHandler;
+  handleClearFilter: () => void;
+  handleCategoryFilter: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CategoryFilter: React.FC<ICategoryFilterProps> = (props): React.JSX.Element => {
   if (props.filter) {
     return <Filtered filter={props.filter} handleClearFilter={props.handleClearFilter} />;
   }
-  if (props.categories?.filter(Boolean).length) {
-    return <Filter categories={props.categories} handleCategoryFilter={props.handleCategoryFilter} />;
-  }
+
+  // Always show the filter dropdown, even if no categories exist
+  // This allows filtering by uncategorized items
   return (
-    <Button variant="light" id="no-filter" disabled>
-      Filter by category
-    </Button>
+    <Dropdown>
+      <Dropdown.Toggle variant="light" id="filter-by-category-button">
+        Filter by category
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        {/* Add Uncategorized option */}
+        <Dropdown.Item
+          key="uncategorized"
+          data-test-id="filter-by-uncategorized"
+          onClick={(): void => {
+            const syntheticEvent = {
+              target: { name: 'uncategorized' },
+            } as React.ChangeEvent<HTMLInputElement>;
+            props.handleCategoryFilter(syntheticEvent);
+          }}
+        >
+          Uncategorized
+        </Dropdown.Item>
+        {/* Show valid categories */}
+        {props.categories?.filter(Boolean).map((category) => (
+          <Dropdown.Item
+            key={category}
+            data-test-id={`filter-by-${category}`}
+            onClick={(): void => {
+              const syntheticEvent = {
+                target: { name: category },
+              } as React.ChangeEvent<HTMLInputElement>;
+              props.handleCategoryFilter(syntheticEvent);
+            }}
+          >
+            {category}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
   );
 };
 

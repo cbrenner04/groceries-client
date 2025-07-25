@@ -1,81 +1,107 @@
-import React from 'react';
-import { Col, ListGroup, Row } from 'react-bootstrap';
+import React, { type ReactNode } from 'react';
+import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { prettyDueBy } from 'utils/format';
-import { EListType, type IListItem, type IListUser } from 'typings';
-
-import ListItemButtons from './ListItemButtons';
+import { EUserPermissions } from 'typings';
+import type { IListItem } from 'typings';
+import { EListType } from 'typings';
+import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
 import { itemName } from '../utils';
 
 export interface IListItemProps {
   item: IListItem;
-  purchased?: boolean;
-  listType: EListType;
-  listUsers?: IListUser[];
-  permission: string;
-  multiSelect: boolean;
-  handleItemDelete: (item: IListItem) => void;
-  handlePurchaseOfItem: (item: IListItem) => void;
-  handleItemRefresh: (item: IListItem) => void;
-  handleItemSelect: (item: IListItem) => void;
-  toggleItemRead: (item: IListItem) => void;
-  handleItemEdit: (item: IListItem) => void;
-  selectedItems: IListItem[];
+  multiSelect?: boolean;
+  permissions: EUserPermissions;
   pending: boolean;
+  selectedItems: IListItem[];
+  listType: EListType;
+  handleItemSelect: (item: IListItem) => void;
+  handleItemRefresh: (item: IListItem) => void;
+  handleItemComplete: (item: IListItem) => void;
+  handleItemEdit: (item: IListItem) => void;
+  handleItemDelete: (item: IListItem) => void;
+  toggleItemRead?: (item: IListItem) => void;
 }
 
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
-  let assignee = '';
-  if (props.listType === EListType.TO_DO_LIST && props.item.assignee_id) {
-    const assignedUser = (props.listUsers ?? []).find((user) => user.id === props.item.assignee_id);
-    if (assignedUser) {
-      assignee = `Assigned To: ${assignedUser.email}`;
-    }
-  }
+  const multiSelect = props.multiSelect ?? false;
 
+  const getReadStatus = (): boolean => {
+    return props.item.fields.find((field) => field.label === 'read')?.data === 'true';
+  };
+
+  const itemTitle = (): ReactNode => {
+    const formattedName = itemName(props.item, props.listType);
+    if (!formattedName) {
+      return <span>Untitled Item</span>;
+    }
+    return <span>{formattedName}</span>;
+  };
+  const multiSelectCheckbox = (item: IListItem): ReactNode | undefined =>
+    multiSelect && (
+      <Col xs="1">
+        <input
+          type="checkbox"
+          className="multi-select-check"
+          data-test-id={`${item.completed ? 'completed' : 'not-completed'}-item-select-${item.id}`}
+          onClick={(): void => props.handleItemSelect(item)}
+        />
+        <div className="list-item-multi-divider"></div>
+      </Col>
+    );
   return (
     <ListGroup.Item
       key={props.item.id}
       className="list-item-list-group-item"
-      data-test-class={props.purchased ? 'purchased-item' : 'non-purchased-item'}
+      data-test-class={props.item.completed ? 'completed-item' : 'non-completed-item'}
     >
-      <Row className={props.multiSelect ? 'list-item-row' : ''}>
-        {props.multiSelect && (
-          <Col xs="1">
-            <input
-              type="checkbox"
-              className="multi-select-check"
-              onClick={(): void => props.handleItemSelect(props.item)}
-            />
-            <div className="list-item-multi-divider"></div>
-          </Col>
-        )}
-        <Col xs={props.multiSelect ? 10 : 12} sm={props.multiSelect ? 11 : 12}>
-          <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
-            {itemName(props.item, props.listType)}
-          </div>
-          {props.listType === EListType.TO_DO_LIST && (
-            <div className={`${props.multiSelect ? 'ms-3 ms-sm-2' : ''} pt-1`}>
-              <small className="text-muted">
-                <div data-test-id="assignee-email">{assignee}</div>
-                <div data-test-id="due-by">{props.item.due_by ? `Due By: ${prettyDueBy(props.item.due_by)}` : ''}</div>
-              </small>
-            </div>
-          )}
-          {props.permission === 'write' && (
-            <ListItemButtons
-              purchased={props.purchased ?? false}
-              listType={props.listType}
-              item={props.item}
-              handleItemRefresh={props.handleItemRefresh}
-              handleItemDelete={props.handleItemDelete}
-              handlePurchaseOfItem={props.handlePurchaseOfItem}
-              toggleItemRead={props.toggleItemRead}
-              handleItemEdit={props.handleItemEdit}
-              multiSelect={props.multiSelect}
-              selectedItems={props.selectedItems}
-              pending={props.pending}
-            />
+      <Row className={multiSelect ? 'list-item-row' : ''}>
+        {multiSelectCheckbox(props.item)}
+        <Col xs={multiSelect ? 10 : 12} sm={multiSelect ? 11 : 12}>
+          {itemTitle()}
+          {props.permissions === EUserPermissions.WRITE && (
+            <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
+              {props.item.completed ? (
+                <>
+                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                    <Bookmark
+                      handleClick={(): void => props.toggleItemRead!(props.item)}
+                      read={getReadStatus()}
+                      testID={`completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+                    />
+                  )}
+                  <Refresh
+                    handleClick={(): void => props.handleItemRefresh(props.item)}
+                    testID={`completed-item-refresh-${props.item.id}`}
+                    disabled={props.pending}
+                  />
+                </>
+              ) : (
+                <>
+                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                    <Bookmark
+                      handleClick={(): void => props.toggleItemRead!(props.item)}
+                      read={getReadStatus()}
+                      testID={`not-completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
+                    />
+                  )}
+                  <Complete
+                    handleClick={(): void => props.handleItemComplete(props.item)}
+                    testID={`not-completed-item-complete-${props.item.id}`}
+                    disabled={props.pending}
+                  />
+                </>
+              )}
+              <EditButton
+                handleClick={(): void => props.handleItemEdit(props.item)}
+                testID={`${props.item.completed ? '' : 'not-'}completed-item-edit-${props.item.id}`}
+                disabled={props.pending}
+              />
+              <Trash
+                handleClick={(): void => props.handleItemDelete(props.item)}
+                testID={`${props.item.completed ? '' : 'not-'}completed-item-delete-${props.item.id}`}
+                disabled={props.pending}
+              />
+            </ButtonGroup>
           )}
         </Col>
       </Row>

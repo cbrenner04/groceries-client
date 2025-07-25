@@ -49,9 +49,9 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
             Select Existing list
           </option>
           <option
-            value="id2"
+            value="list-2"
           >
-            bar
+            Existing List
           </option>
         </select>
       </div>
@@ -130,9 +130,9 @@ exports[`ChangeOtherListModal renders appropriate instructions when move and lis
             Select Existing list
           </option>
           <option
-            value="id2"
+            value="list-2"
           >
-            bar
+            Existing List
           </option>
         </select>
       </div>
@@ -166,7 +166,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when no lists 1`]
 <div
   class="modal-header"
 >
-  You do not have any other  Grocery Lists. Please create a new list to take this action.
+  You do not have any other lists with the same configuration. Please create a new list to take this action.
   <button
     aria-label="Close"
     class="btn-close"

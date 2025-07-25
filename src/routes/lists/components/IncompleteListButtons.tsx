@@ -42,7 +42,7 @@ const IncompleteListButtons: React.FC<IIncompleteListButtonsProps> = (props): Re
       )}
       {!multipleListsSelected && (
         <EditLink
-          to={`${props.list.id}/edit`}
+          to={`/lists/${props.list.id}/edit`}
           disabled={!userIsOwner || props.pending}
           classes={userIsOwner && !props.pending ? 'list-button-enabled' : 'list-button-disabled'}
           testID="incomplete-list-edit"

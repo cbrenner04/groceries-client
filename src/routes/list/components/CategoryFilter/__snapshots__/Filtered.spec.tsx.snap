@@ -13,7 +13,7 @@ exports[`Filtered renders with filter name in button 1`] = `
     id="filter-button"
     type="button"
   >
-    foo
+    Produce
      
     <i
       class="fa fa-trash"

@@ -3,23 +3,10 @@ import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router';
 
 import Loading from 'components/Loading';
-import type { IList, IListItem, IListUser } from 'typings';
 
-import { fetchList } from './utils';
+import { fetchList, type IFulfilledListData } from './utils';
 import ListContainer from './containers/ListContainer';
 import UnknownError from '../error_pages/UnknownError';
-
-interface IFulfilledData {
-  currentUserId: string;
-  list: IList;
-  purchasedItems: IListItem[];
-  categories: string[];
-  listUsers: IListUser[];
-  includedCategories: string[];
-  notPurchasedItems: Record<string, IListItem[]>;
-  permissions: string;
-  lists: IList[];
-}
 
 const List = (): React.JSX.Element => {
   const navigate = useNavigate();
@@ -31,19 +18,25 @@ const List = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: IFulfilledData): React.JSX.Element => (
-          <ListContainer
-            userId={data.currentUserId}
-            list={data.list}
-            purchasedItems={data.purchasedItems}
-            categories={data.categories}
-            listUsers={data.listUsers}
-            includedCategories={data.includedCategories}
-            notPurchasedItems={data.notPurchasedItems}
-            permissions={data.permissions}
-            lists={data.lists}
-          />
-        )}
+        {(data: IFulfilledListData | undefined): React.JSX.Element => {
+          // TODO: needed after updates to handleFailure - keep?
+          if (!data) {
+            return <UnknownError />;
+          }
+          return (
+            <ListContainer
+              userId={data.current_user_id}
+              list={data.list}
+              completedItems={data.completed_items}
+              categories={data.categories}
+              listUsers={data.list_users}
+              notCompletedItems={data.not_completed_items}
+              permissions={data.permissions}
+              listsToUpdate={data.lists_to_update}
+              listItemConfiguration={data.list_item_configuration}
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

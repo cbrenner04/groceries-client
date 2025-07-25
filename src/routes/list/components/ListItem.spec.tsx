@@ -1,230 +1,307 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
-import userEvent, { type UserEvent } from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
+import ListItem from './ListItem';
+import type { IListItem, IListItemField } from 'typings';
+import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
 
-import { prettyDueBy } from 'utils/format';
-import { EListType, type IListItem } from 'typings';
+const mockHandleItemSelect = jest.fn();
+const mockHandleItemRefresh = jest.fn();
+const mockHandleItemComplete = jest.fn();
+const mockHandleItemEdit = jest.fn();
+const mockHandleItemDelete = jest.fn();
+const mockToggleItemRead = jest.fn();
 
-import ListItem, { type IListItemProps } from './ListItem';
+const mockFields: IListItemField[] = [
+  {
+    id: '1',
+    label: 'product',
+    data: 'Apples',
+    list_item_field_configuration_id: '1',
+    user_id: '1',
+    list_item_id: '1',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 0,
+    data_type: 'free_text' as 'free_text',
+  },
+  {
+    id: '2',
+    label: 'quantity',
+    data: '3',
+    list_item_field_configuration_id: '2',
+    user_id: '1',
+    list_item_id: '1',
+    created_at: new Date().toISOString(),
+    updated_at: null,
+    archived_at: null,
+    position: 1,
+    data_type: 'number' as 'number',
+  },
+];
 
-interface ISetupReturn extends RenderResult {
-  props: IListItemProps;
-  user: UserEvent;
-}
+const mockItem: IListItem = {
+  id: 'item-1',
+  user_id: 'user-1',
+  list_id: 'list-1',
+  completed: false,
+  refreshed: false,
+  created_at: new Date().toISOString(),
+  updated_at: null,
+  archived_at: null,
+  fields: mockFields,
+};
 
-function setup(suppliedProps: Partial<IListItemProps>, suppliedItem: Partial<IListItem>): ISetupReturn {
-  const user = userEvent.setup();
-  const defaultItem = {
-    id: 'id1',
-    product: 'foo',
-    task: 'foo',
-    quantity: 'foo',
-    author: 'foo',
-    title: 'foo',
-    artist: 'foo',
-    album: 'foo',
-    assignee_id: 'id1',
-    due_by: new Date('05/21/2020').toISOString(),
-    read: false,
-    number_in_series: 1,
-    category: 'foo',
-  };
-  const defaultProps = {
-    item: { ...defaultItem, ...suppliedItem },
-    purchased: false,
-    handleItemDelete: jest.fn(),
-    handlePurchaseOfItem: jest.fn(),
-    handleItemRefresh: jest.fn(),
-    handleItemSelect: jest.fn(),
-    handleItemEdit: jest.fn(),
-    multiSelect: false,
-    toggleItemRead: jest.fn(),
-    listType: EListType.GROCERY_LIST,
-    listUsers: [],
-    permission: 'write',
-    selectedItems: [],
-    pending: false,
-  };
-  const props = { ...defaultProps, ...suppliedProps };
-  const component = render(
-    <MemoryRouter>
-      <ListItem {...props} />
-    </MemoryRouter>,
-  );
-
-  return { ...component, props, user };
-}
+const defaultProps = {
+  item: mockItem,
+  permissions: EUserPermissions.WRITE,
+  pending: false,
+  selectedItems: [],
+  listType: EListType.GROCERY_LIST,
+  handleItemSelect: mockHandleItemSelect,
+  handleItemRefresh: mockHandleItemRefresh,
+  handleItemComplete: mockHandleItemComplete,
+  handleItemEdit: mockHandleItemEdit,
+  handleItemDelete: mockHandleItemDelete,
+  toggleItemRead: mockToggleItemRead,
+};
 
 describe('ListItem', () => {
-  it('sets the data-test-class to purchased-item when item is purchased', () => {
-    const { container } = setup({ purchased: true }, {});
-
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveAttribute('data-test-class', 'purchased-item');
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('sets the data-test-class to not-purchased-item when item is not purchased', () => {
-    const { container } = setup({ purchased: false }, {});
-
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
+  it('renders item fields correctly', () => {
+    render(<ListItem {...defaultProps} />);
+    expect(screen.getByText('3 Apples')).toBeInTheDocument();
   });
 
-  it('sets the data-test-class to not-purchased-item when item purchased undefined', () => {
-    const { container } = setup({ purchased: undefined }, {});
-
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveAttribute('data-test-class', 'non-purchased-item');
+  it('renders action buttons for write permissions', () => {
+    render(<ListItem {...defaultProps} />);
+    expect(screen.getByTestId('not-completed-item-complete-item-1')).toBeInTheDocument();
+    expect(screen.getByTestId('not-completed-item-edit-item-1')).toBeInTheDocument();
+    expect(screen.getByTestId('not-completed-item-delete-item-1')).toBeInTheDocument();
   });
 
-  it('shows assignee when listType is ToDoList, the item is assigned, the assignee is in the listUsers', async () => {
-    const email = 'foo@example.com';
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-        listUsers: [
-          {
-            id: 'id1',
-            email,
-          },
-        ],
-      },
-      {
-        assignee_id: 'id1',
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('assignee-email')).toHaveTextContent(`Assigned To: ${email}`);
+  it('handles complete button click', () => {
+    render(<ListItem {...defaultProps} />);
+    fireEvent.click(screen.getByTestId('not-completed-item-complete-item-1'));
+    expect(mockHandleItemComplete).toHaveBeenCalledWith(mockItem);
   });
 
-  it('listType is ToDoList, item is assigned, assignee is in the listUsers, multiselect is true', async () => {
-    const email = 'foo@example.com';
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-        listUsers: [
-          {
-            id: 'id1',
-            email,
-          },
-        ],
-        multiSelect: true,
-      },
-      {
-        assignee_id: 'id1',
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('assignee-email')).toHaveTextContent(`Assigned To: ${email}`);
+  it('handles edit button click', () => {
+    render(<ListItem {...defaultProps} />);
+    fireEvent.click(screen.getByTestId('not-completed-item-edit-item-1'));
+    expect(mockHandleItemEdit).toHaveBeenCalledWith(mockItem);
   });
 
-  it('does not show assignee when listType is ToDoList, item is assigned & assignee is not in listUsers', async () => {
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-        listUsers: [
-          {
-            id: 'id2',
-            email: 'foo@example.com',
-          },
-        ],
-      },
-      {
-        assignee_id: 'id1',
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('assignee-email')).not.toHaveTextContent('Assigned To');
+  it('handles delete button click', () => {
+    render(<ListItem {...defaultProps} />);
+    fireEvent.click(screen.getByTestId('not-completed-item-delete-item-1'));
+    expect(mockHandleItemDelete).toHaveBeenCalledWith(mockItem);
   });
 
-  it('does not show assignee when listType is ToDoList, item is assigned & listUsers is undefined', async () => {
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-        listUsers: undefined,
-      },
-      {
-        assignee_id: 'id1',
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('assignee-email')).not.toHaveTextContent('Assigned To');
+  it('renders refresh button for completed items', () => {
+    const completedItem = { ...mockItem, completed: true };
+    render(<ListItem {...defaultProps} item={completedItem} />);
+    expect(screen.getByTestId('completed-item-refresh-item-1')).toBeInTheDocument();
   });
 
-  it('does not show assignee when listType is ToDoList and the item is not assigned', async () => {
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-        listUsers: [
-          {
-            id: 'id1',
-            email: 'foo@example.com',
-          },
-        ],
-      },
-      {
-        assignee_id: undefined,
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('assignee-email')).not.toHaveTextContent('Assigned To');
+  it('handles refresh button click for completed items', () => {
+    const completedItem = { ...mockItem, completed: true };
+    render(<ListItem {...defaultProps} item={completedItem} />);
+    fireEvent.click(screen.getByTestId('completed-item-refresh-item-1'));
+    expect(mockHandleItemRefresh).toHaveBeenCalledWith(completedItem);
   });
 
-  it('displays due by when listType is ToDoList and dueBy exists', async () => {
-    const dueBy = new Date('05/21/2020').toISOString();
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-      },
-      {
-        due_by: dueBy,
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('due-by')).toHaveTextContent(`Due By: ${prettyDueBy(dueBy)}`);
+  it('shows multi-select checkbox when multiSelect is true', () => {
+    render(<ListItem {...defaultProps} multiSelect={true} />);
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
   });
 
-  it('does not display due by when listType is ToDoList and dueBy does not exist', async () => {
-    const { container, findByTestId } = setup(
-      {
-        listType: EListType.TO_DO_LIST,
-      },
-      {
-        due_by: undefined,
-      },
-    );
-
-    expect(container).toMatchSnapshot();
-    expect(await findByTestId('due-by')).not.toHaveTextContent('Due By');
+  it('handles multi-select checkbox click', () => {
+    render(<ListItem {...defaultProps} multiSelect={true} />);
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(mockHandleItemSelect).toHaveBeenCalledWith(mockItem);
   });
 
-  it('renders ListItemButtons when the user has write permission', async () => {
-    const { container, findAllByRole } = setup({ permission: 'write' }, {});
-
-    expect(container).toMatchSnapshot();
-    expect((await findAllByRole('button')).length).toBeTruthy();
+  it('shows "Untitled Item" when no fields are present', () => {
+    const itemWithoutFields = { ...mockItem, fields: [] };
+    render(<ListItem {...defaultProps} item={itemWithoutFields} />);
+    expect(screen.getByText('Untitled Item')).toBeInTheDocument();
   });
 
-  it('does not render ListItemButtons when the user has read permission', () => {
-    const { container, queryAllByRole } = setup({ permission: 'read' }, {});
-    expect(container).toMatchSnapshot();
-    expect(queryAllByRole('button').length).toBeFalsy();
+  it('disables buttons when pending is true', () => {
+    render(<ListItem {...defaultProps} pending={true} />);
+    const completeButton = screen.getByTestId('not-completed-item-complete-item-1');
+    expect(completeButton).toBeDisabled();
   });
 
-  it('sets selected items when multi select checkbox is selected', async () => {
-    const { container, findByRole, props, user } = setup({ multiSelect: true }, {});
+  it('renders bookmark button for book lists when item is not completed', () => {
+    const bookItem = {
+      ...mockItem,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.getByTestId('not-completed-item-read-item-1')).toBeInTheDocument();
+  });
 
-    expect(container).toMatchSnapshot();
+  it('renders bookmark button for book lists when item is completed', () => {
+    const completedBookItem = {
+      ...mockItem,
+      completed: true,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'true',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...defaultProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.getByTestId('completed-item-unread-item-1')).toBeInTheDocument();
+  });
 
-    await user.click(await findByRole('checkbox'));
+  it('handles bookmark button click for book lists', () => {
+    const bookItem = {
+      ...mockItem,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: EListItemFieldType.BOOLEAN,
+        },
+      ],
+    };
+    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    fireEvent.click(screen.getByTestId('not-completed-item-read-item-1'));
+    expect(mockToggleItemRead).toHaveBeenCalledWith(bookItem);
+  });
 
-    expect(props.handleItemSelect).toHaveBeenCalledWith(props.item);
+  it('does not render bookmark button for non-book lists', () => {
+    render(<ListItem {...defaultProps} />);
+    expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
+  });
+});
+
+describe('ListItem with read permissions', () => {
+  const readOnlyProps = {
+    ...defaultProps,
+    permissions: EUserPermissions.READ,
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('does not render action buttons for read permissions', () => {
+    render(<ListItem {...readOnlyProps} />);
+    expect(screen.queryByTestId('not-completed-item-complete-item-1')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('not-completed-item-edit-item-1')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('not-completed-item-delete-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render refresh button for completed items with read permissions', () => {
+    const completedItem = { ...mockItem, completed: true };
+    render(<ListItem {...readOnlyProps} item={completedItem} />);
+    expect(screen.queryByTestId('completed-item-refresh-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render bookmark button for book lists with read permissions', () => {
+    const bookItem = {
+      ...mockItem,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...readOnlyProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
+  });
+
+  it('does not render bookmark button for completed book items with read permissions', () => {
+    const completedBookItem = {
+      ...mockItem,
+      completed: true,
+      fields: [
+        ...mockFields,
+        {
+          id: '3',
+          label: 'read',
+          data: 'true',
+          list_item_field_configuration_id: '3',
+          user_id: '1',
+          list_item_id: '1',
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          archived_at: null,
+          position: 2,
+          data_type: 'boolean' as 'boolean',
+        },
+      ],
+    };
+    render(<ListItem {...readOnlyProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
+    expect(screen.queryByTestId('completed-item-unread-item-1')).not.toBeInTheDocument();
+  });
+
+  it('still renders item content for read permissions', () => {
+    render(<ListItem {...readOnlyProps} />);
+    expect(screen.getByText('3 Apples')).toBeInTheDocument();
+  });
+
+  it('still shows multi-select checkbox when multiSelect is true for read permissions', () => {
+    render(<ListItem {...readOnlyProps} multiSelect={true} />);
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
+  it('handles multi-select checkbox click for read permissions', () => {
+    render(<ListItem {...readOnlyProps} multiSelect={true} />);
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(mockHandleItemSelect).toHaveBeenCalledWith(mockItem);
   });
 });

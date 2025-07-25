@@ -5,12 +5,7 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-
 import NewSession, { type INewSessionProps } from './NewSession';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({

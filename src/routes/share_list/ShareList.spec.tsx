@@ -5,9 +5,10 @@ import { MemoryRouter } from 'react-router';
 import ShareList from './ShareList';
 import axios from '../../utils/api';
 
+const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => jest.fn(),
+  useNavigate: (): jest.Mock => mockNavigate,
   useParams: (): { list_id: string } => ({
     list_id: '1',
   }),

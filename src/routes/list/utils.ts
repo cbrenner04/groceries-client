@@ -1,201 +1,227 @@
-import { toast } from 'react-toastify';
-import { type AxiosError } from 'axios';
-
+import { handleFailure } from '../../utils/handleFailure';
+import { AxiosError } from 'axios';
 import axios from '../../utils/api';
-import { EListType, type IList, type IListItem, type IListUser } from '../../typings';
+import type {
+  IList,
+  IListItemConfiguration,
+  IListItemField,
+  IListItemFieldConfiguration,
+  IListUser,
+  IListItem,
+  EUserPermissions,
+  TUserPermissions,
+} from 'typings';
+import { EListType } from 'typings';
+import moment from 'moment';
 
-export function itemName(item: IListItem, listType: EListType): string | undefined {
-  return {
-    BookList: `${item.title ? `"${item.title}"` : ''} ${item.author ?? ''}`,
-    GroceryList: `${item.quantity ?? ''} ${item.product ?? ''}`,
-    MusicList:
-      `${item.title ? `"${item.title}"` : ''} ${item.artist ?? ''}` +
-      `${item.artist && item.album ? ' - ' : ''}${item.album ?? ''}`,
-    SimpleList: item.content,
-    ToDoList: item.task,
-  }[listType]?.trim();
-}
-
-export function mapIncludedCategories(items: IListItem[]): string[] {
-  const cats = [''];
-  items.forEach((item) => {
-    if (!item.category) {
-      return;
-    }
-    const cat = item.category.toLowerCase();
-    if (!cats.includes(cat)) {
-      cats.push(cat);
-    }
-  });
-  return cats;
-}
-
-export function categorizeNotPurchasedItems(items: IListItem[], categories: string[]): Record<string, IListItem[]> {
-  const obj: Record<string, IListItem[]> = {};
-  categories.forEach((cat) => {
-    obj[cat] = [];
-  });
-  items.forEach((item) => {
-    if (!item.category) {
-      obj[''].push(item);
-      return;
-    }
-    const cat = item.category.toLowerCase();
-    // TODO: why is this setting off this rule?
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!obj[cat]) {
-      obj[cat] = [];
-    }
-    obj[cat].push(item);
-  });
-  return obj;
-}
-
-function performSort(items: IListItem[], sortAttrs: (keyof IListItem)[]): IListItem[] {
-  // return when all items are sorted
-  if (sortAttrs.length === 0) {
-    return items;
-  }
-  const sortAttr = sortAttrs.pop()!;
-  const sorted = items.sort((a, b) => {
-    const aSorter = a[sortAttr];
-    const bSorter = b[sortAttr];
-    // the sort from the server comes back with items with number_in_series: `null` at the end of the list
-    // without the next two lines this would put those items at the front of the list
-    if (!aSorter) {
-      return 1;
-    }
-    if (!bSorter) {
-      return -1;
-    }
-    const positiveBranch = aSorter > bSorter ? 1 : 0;
-    return aSorter < bSorter ? -1 : positiveBranch;
-  });
-  return performSort(sorted, sortAttrs);
-}
-
-export function sortItems(listType: EListType, items: IListItem[]): IListItem[] {
-  let sortAttrs: (keyof IListItem)[] = [];
-  if (listType === EListType.BOOK_LIST) {
-    sortAttrs = ['author', 'number_in_series', 'title'];
-  } else if (listType === EListType.GROCERY_LIST) {
-    sortAttrs = ['product'];
-  } else if (listType === EListType.MUSIC_LIST) {
-    sortAttrs = ['artist', 'album', 'title'];
-  } else if (listType === EListType.SIMPLE_LIST) {
-    sortAttrs = ['created_at', 'content'];
-  } else {
-    sortAttrs = ['due_by', 'assignee_id', 'task'];
-  }
-  const sorted = performSort(items, sortAttrs);
-  return sorted;
-}
-
-function handleFailure(
-  error: AxiosError,
-  notFoundMessage: string,
-  navigate: (url: string) => void,
-  redirectURI: string,
-): void {
-  if (error.response) {
-    if (error.response.status === 401) {
-      toast('You must sign in', {
-        type: 'error',
-      });
-      navigate('/users/sign_in');
-      return;
-    } else if ([403, 404].includes(error.response.status)) {
-      toast(notFoundMessage, { type: 'error' });
-      navigate(redirectURI);
-      return;
-    } else {
-      toast(`Something went wrong. Data may be incomplete and user actions may not persist.`, { type: 'error' });
-      return;
-    }
-  }
-  // any other errors will just be caught and render the generic UnknownError
-  throw new Error();
-}
-
-interface IFetchListReturn {
-  currentUserId: string;
+export interface IFulfilledListData {
+  current_user_id: string;
   list: IList;
-  purchasedItems: IListItem[];
+  not_completed_items: IListItem[];
+  completed_items: IListItem[];
+  list_users: IListUser[];
+  permissions: EUserPermissions;
+  lists_to_update: IList[];
+  list_item_configuration: IListItemConfiguration;
   categories: string[];
-  listUsers: IListUser[];
-  includedCategories: string[];
-  notPurchasedItems: Record<string, IListItem[]>;
-  permissions: string;
-  lists: IList[];
 }
 
-export async function fetchList(fetchParams: {
+export interface IFulfilledEditListData {
   id: string;
-  navigate: (url: string) => void;
-}): Promise<IFetchListReturn | undefined> {
-  try {
-    const { data } = await axios.get(`/v1/lists/${fetchParams.id}`);
-    const includedCategories = mapIncludedCategories(data.not_purchased_items);
-    const notPurchasedItems = categorizeNotPurchasedItems(data.not_purchased_items, includedCategories);
-
-    return {
-      currentUserId: data.current_user_id,
-      list: data.list,
-      purchasedItems: data.purchased_items,
-      categories: data.categories,
-      listUsers: data.list_users,
-      includedCategories,
-      notPurchasedItems,
-      permissions: data.permissions,
-      lists: data.lists_to_update,
-    };
-  } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'List not found', fetchParams.navigate, '/lists');
-  }
+  name: string;
+  completed: boolean;
+  type: EListType;
+  archived_at: string | null;
+  refreshed: boolean;
+  list_item_configuration_id: string | null;
 }
 
-export async function fetchItemToEdit(fetchParams: {
-  itemId: string;
-  listId: string;
-  navigate: (url: string) => void;
-}): Promise<{ listUsers: IListUser[]; userId: string; list: IList; item: IListItem } | undefined> {
-  try {
-    const { data } = await axios.get(`/v1/lists/${fetchParams.listId}/list_items/${fetchParams.itemId}/edit`);
-    data.list.categories = data.categories;
-    const userId = data.item.user_id;
-    return {
-      listUsers: data.list_users,
-      userId,
-      list: data.list,
-      item: data.item,
-    };
-  } catch (err: unknown) {
-    handleFailure(err as AxiosError, 'Item not found', fetchParams.navigate, `/lists/${fetchParams.listId}`);
-  }
+export interface IFulfilledEditListItemData {
+  id: string;
+  item: IListItem;
+  list: IList;
+  list_users: IListUser[];
+  list_item_configuration: IListItemConfiguration;
+  list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
-interface IFetchItemsToEditReturn {
+export interface IFulfilledBulkEditItemsData {
   list: IList;
   lists: IList[];
   items: IListItem[];
   categories: string[];
   list_users: IListUser[];
+  list_item_configuration: IListItemConfiguration;
+  list_item_field_configurations: IListItemFieldConfiguration[];
+}
+
+export function itemName(item: IListItem, listType: EListType): string {
+  const fields = Array.isArray(item.fields) ? item.fields : [];
+
+  const getFieldValue = (label: string): string => {
+    const field = fields.find((f) => f.label === label);
+    return field?.data ?? '';
+  };
+
+  switch (listType) {
+    case EListType.BOOK_LIST: {
+      const title = getFieldValue('title');
+      const author = getFieldValue('author');
+      return `${title ? `"${title}"` : ''} ${author}`.trim();
+    }
+    case EListType.GROCERY_LIST: {
+      const quantity = getFieldValue('quantity');
+      const product = getFieldValue('product');
+      return `${quantity} ${product}`.trim();
+    }
+    case EListType.MUSIC_LIST: {
+      const title = getFieldValue('title');
+      const artist = getFieldValue('artist');
+      const album = getFieldValue('album');
+      return `${title ? `"${title}"` : ''} ${artist}${artist && album ? ' - ' : ''}${album}`.trim();
+    }
+    case EListType.SIMPLE_LIST: {
+      return getFieldValue('content');
+    }
+    case EListType.TO_DO_LIST: {
+      const task = getFieldValue('task');
+      const assignee = getFieldValue('assignee_email') || getFieldValue('assignee_id');
+      const dueBy = getFieldValue('due_by');
+      return `${task}${assignee ? `\nAssigned To: ${assignee}` : ''}\nDue By: ${moment(dueBy).format('LL')}`.trim();
+    }
+    default:
+      return fields
+        .map((f) => f.data)
+        .join(' ')
+        .trim();
+  }
+}
+
+export async function fetchList(fetchParams: {
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledListData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    // Ensure required fields exist
+    if (!data.list || !data.not_completed_items || !data.completed_items) {
+      throw new AxiosError('Invalid data structure received from server', '500');
+    }
+
+    const categories = data.not_completed_items
+      .concat(data.completed_items)
+      .map((item: IListItem) => {
+        return item.fields.find((field: IListItemField) => field.label === 'category')?.data;
+      })
+      .filter(Boolean)
+      .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
+    data.categories = categories;
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List not found',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  }
+}
+
+export async function fetchListToEdit(fetchParams: {
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledEditListData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.id}/edit`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List not found',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+    });
+  }
+}
+
+export async function fetchListItemToEdit(fetchParams: {
+  list_id: string;
+  id: string;
+  navigate: (url: string) => void;
+}): Promise<IFulfilledEditListItemData | undefined> {
+  try {
+    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/${fetchParams.id}/edit`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
+    return data;
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'List item not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/lists/${fetchParams.list_id}/`,
+    });
+  }
 }
 
 export async function fetchItemsToEdit(fetchParams: {
-  listId: string;
+  list_id: string;
   search: string;
   navigate: (url: string) => void;
-}): Promise<IFetchItemsToEditReturn | undefined> {
+}): Promise<IFulfilledBulkEditItemsData | undefined> {
   try {
-    const { data } = await axios.get(`/v1/lists/${fetchParams.listId}/list_items/bulk_update${fetchParams.search}`);
+    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/bulk_update${fetchParams.search}`);
+
+    // Add defensive checks for undefined data
+    if (!data) {
+      throw new AxiosError('No data received from server', '404');
+    }
+
     return data;
   } catch (err: unknown) {
-    handleFailure(
-      err as AxiosError,
-      'One or more items not found',
-      fetchParams.navigate,
-      `/lists/${fetchParams.listId}`,
-    );
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'One or more items not found',
+      navigate: fetchParams.navigate,
+      redirectURI: `/lists/${fetchParams.list_id}/`,
+    });
+  }
+}
+
+export async function fetchCompletedLists(fetchParams: {
+  navigate: (url: string) => void;
+}): Promise<{ userId: string; completedLists: IList[]; currentUserPermissions: TUserPermissions } | undefined> {
+  try {
+    const { data } = await axios.get('/v2/completed_lists/');
+    return {
+      userId: data.current_user_id,
+      completedLists: data.completed_lists,
+      currentUserPermissions: data.current_list_permissions,
+    };
+  } catch (err: unknown) {
+    handleFailure({
+      error: err as AxiosError,
+      notFoundMessage: 'Failed to fetch completed lists',
+      navigate: fetchParams.navigate,
+      redirectURI: '/lists',
+    });
   }
 }

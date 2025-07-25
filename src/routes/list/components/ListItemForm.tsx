@@ -5,59 +5,145 @@ import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
+import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
-import { EListType, type IListItem, type IListUser } from 'typings';
-
-import ListItemFormFields from './ListItemFormFields';
+import { capitalize } from 'utils/format';
+import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
 export interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;
-  listType: EListType;
   listUsers?: IListUser[];
   handleItemAddition: (data: IListItem[]) => void;
   categories?: string[];
+  listItemConfiguration?: IListItemConfiguration;
 }
 
+interface IFieldConfiguration {
+  id: string;
+  label: string;
+  data_type: string;
+  position: number;
+}
+
+interface IListItemDataRecord extends Record<string, string | number | boolean> {}
+
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
-  const [formData, setFormData] = useState({} as IListItem);
+  const [formData, setFormData] = useState({} as IListItemDataRecord);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
+  const [fieldConfigurations, setFieldConfigurations] = useState([] as IFieldConfiguration[]);
+
+  // Load field configurations when form is shown
+  const loadFieldConfigurations = async (): Promise<void> => {
+    try {
+      if (!props.listItemConfiguration?.id) {
+        // No configuration available, field configurations will remain empty
+        return;
+      }
+
+      const { data } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+      const orderedData = data.sort((a: IFieldConfiguration, b: IFieldConfiguration) => a.position - b.position);
+      setFieldConfigurations(orderedData);
+    } catch (err) {
+      // Silently fail - field configurations will be empty
+      /* istanbul ignore next */
+    }
+  };
 
   const setData: ChangeEventHandler<HTMLInputElement> = (element) => {
-    const { name, value } = element.target;
-    const newValue = name === 'number_in_series' ? Number(value) : value;
+    const { name, value, type, checked } = element.target;
+    let newValue: string | number | boolean;
+
+    if (type === 'checkbox') {
+      newValue = checked;
+    } else if (type === 'number') {
+      newValue = Number(value);
+    } else {
+      newValue = value;
+    }
+
     const data = update(formData, { [name]: { $set: newValue } });
     setFormData(data);
+  };
+
+  const handleShowForm = async (): Promise<void> => {
+    setShowForm(true);
+    await loadFieldConfigurations();
   };
 
   const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
     setPending(true);
-    const postData = {
-      list_item: {
-        user_id: props.userId,
-        product: formData.product,
-        task: formData.task,
-        content: formData.content,
-        quantity: formData.quantity,
-        author: formData.author,
-        title: formData.title,
-        artist: formData.artist,
-        album: formData.album,
-        assignee_id: formData.assignee_id,
-        due_by: formData.due_by,
-        number_in_series: formData.number_in_series,
-        category: (formData.category ?? '').trim().toLowerCase(),
-      },
-    };
+
     try {
-      const { data } = await axios.post(`/v1/lists/${props.listId}/list_items`, postData);
-      props.handleItemAddition(data);
+      if (!props.listItemConfiguration?.id) {
+        toast('No field configuration available for this list. Please contact support.', { type: 'error' });
+        setPending(false);
+        return;
+      }
+
+      // Step 1: Create the list item
+      const { data: newItem } = await axios.post(`/v2/lists/${props.listId}/list_items`, {
+        list_item: {
+          user_id: props.userId,
+        },
+      });
+
+      // Step 2: Get field configurations for this list item configuration
+      const { data: fieldConfigurations } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+
+      // Step 3: Add fields to the list item using the correct configuration IDs
+      const fieldPromises = Object.entries(formData).map(async ([key, value]) => {
+        /* istanbul ignore else */
+        if (value !== '') {
+          // Find the field configuration that matches this field
+          const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
+          if (fieldConfig) {
+            await axios.post(`/v2/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
+              list_item_field: {
+                label: key,
+                data: String(value),
+                list_item_field_configuration_id: fieldConfig.id,
+              },
+            });
+          }
+        }
+      });
+
+      await Promise.all(fieldPromises);
+
+      // Step 4: Fetch the complete item with fields
+      const { data: completeItem } = await axios.get(`/v2/lists/${props.listId}/list_items/${newItem.id}`);
+
+      // Create the item with fields from form data
+      const itemWithFields = {
+        ...completeItem,
+        fields: Object.entries(formData)
+          .filter(([, value]) => value !== '')
+          .map(([key, value]) => ({
+            id: `temp-${Date.now()}-${key}`,
+            label: key,
+            data: String(value),
+            list_item_field_configuration_id:
+              /* istanbul ignore next */
+              fieldConfigurations.find((config: IFieldConfiguration) => config.label === key)?.id || '',
+            user_id: props.userId,
+            list_item_id: completeItem.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            archived_at: null,
+          })),
+      };
+
+      props.handleItemAddition([itemWithFields]);
       setPending(false);
-      setFormData({} as IListItem);
-      toast('Item successfully added.', { type: 'info' });
+      setFormData({} as IListItemDataRecord);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -67,18 +153,14 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         } else if ([403, 404].includes(error.response.status!)) {
           toast('List not found', { type: 'error' });
           props.navigate('/lists');
-        } else {
+        } else if (error.response.status === 422) {
           const responseTextKeys = Object.keys(error.response.data!);
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          let joinString;
-          if (props.listType === EListType.BOOK_LIST || props.listType === EListType.MUSIC_LIST) {
-            joinString = ' or ';
-          } else {
-            joinString = ' and ';
-          }
-          toast(responseErrors.join(joinString), { type: 'error' });
+          toast(responseErrors.join(' and '), { type: 'error' });
+        } else {
+          toast('Something went wrong. Data may be incomplete and user actions may not persist.', { type: 'error' });
         }
       } else if (error.request) {
         toast('Something went wrong', { type: 'error' });
@@ -89,12 +171,73 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     }
   };
 
+  // Render fields based on field configurations
+  const renderFields = (): React.ReactNode => {
+    if (!props.listItemConfiguration?.id) {
+      return <p>This list doesn&apos;t have a field configuration set up. Please contact support to fix this issue.</p>;
+    }
+
+    if (fieldConfigurations.length === 0) {
+      return <p>Loading field configurations...</p>;
+    }
+
+    return fieldConfigurations.map((config: IFieldConfiguration) => {
+      const fieldName = config.label;
+      const fieldValue = (formData[fieldName] as string) || '';
+
+      switch (config.data_type) {
+        case 'boolean':
+          return (
+            <CheckboxField
+              key={config.id}
+              name={fieldName}
+              label={capitalize(config.label)}
+              value={(formData[fieldName] as boolean) || false}
+              handleChange={setData}
+            />
+          );
+        case 'date_time':
+          return (
+            <DateField
+              key={config.id}
+              name={fieldName}
+              label={capitalize(config.label)}
+              value={fieldValue}
+              handleChange={setData}
+            />
+          );
+        case 'number':
+          return (
+            <NumberField
+              key={config.id}
+              name={fieldName}
+              label={capitalize(config.label)}
+              value={formData[fieldName] as number}
+              handleChange={setData}
+            />
+          );
+        case 'free_text':
+        default:
+          return (
+            <TextField
+              key={config.id}
+              name={fieldName}
+              label={capitalize(config.label)}
+              value={fieldValue}
+              handleChange={setData}
+            />
+          );
+      }
+    });
+  };
+
   return (
     <React.Fragment>
       {!showForm && (
         <Button
+          data-test-id="add-item-button"
           variant="link"
-          onClick={(): void => setShowForm(true)}
+          onClick={handleShowForm}
           aria-controls="form-collapse"
           aria-expanded={showForm}
         >
@@ -103,13 +246,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       )}
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
-          <ListItemFormFields
-            formData={formData}
-            setFormData={setData}
-            categories={props.categories ?? []}
-            listType={props.listType}
-            listUsers={props.listUsers ?? []}
-          />
+          {renderFields()}
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"

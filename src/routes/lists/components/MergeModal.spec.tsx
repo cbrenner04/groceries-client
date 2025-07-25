@@ -1,27 +1,30 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
-import userEvent, { type UserEvent } from '@testing-library/user-event';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import MergeModal, { type IMergeModalProps } from './MergeModal';
+import MergeModal from './MergeModal';
+import { EListType } from 'typings';
 
-interface ISetupReturn extends RenderResult {
-  props: IMergeModalProps;
-  user: UserEvent;
-}
+const defaultProps = {
+  showModal: true,
+  clearModal: jest.fn(),
+  listNames: 'name, name',
+  mergeName: '',
+  handleMergeConfirm: jest.fn(),
+  handleMergeNameChange: jest.fn(),
+  selectedLists: [
+    { id: '1', name: 'Test List 1', type: EListType.GROCERY_LIST },
+    { id: '2', name: 'Test List 2', type: EListType.GROCERY_LIST },
+  ],
+};
 
-function setup(suppliedProps?: Partial<IMergeModalProps>): ISetupReturn {
-  const user = userEvent.setup();
-  const defaultProps = {
-    showModal: true,
-    clearModal: jest.fn(),
-    listNames: 'name", "name',
-    mergeName: '',
-    handleMergeConfirm: jest.fn(),
-    handleMergeNameChange: jest.fn(),
-  };
+function setup(suppliedProps = {}): ReturnType<typeof render> & {
+  props: typeof defaultProps;
+  user: ReturnType<typeof userEvent.setup>;
+} {
   const props = { ...defaultProps, ...suppliedProps };
+  const user = userEvent.setup();
   const component = render(<MergeModal {...props} />);
-
   return { ...component, props, user };
 }
 
@@ -37,7 +40,7 @@ describe('MergeModal', () => {
     const { container, findByTestId, findByText } = setup();
 
     expect(container).toMatchSnapshot();
-    expect(await findByText('Merge "name", "name"')).toBeVisible();
+    expect(await findByText('Merge "name, name"')).toBeVisible();
     expect(await findByTestId('confirm-merge')).toBeDisabled();
   });
 
@@ -78,5 +81,44 @@ describe('MergeModal', () => {
     await user.click(await findByTestId('confirm-merge'));
 
     expect(props.handleMergeNameChange).toHaveBeenCalled();
+  });
+
+  it('shows warning when lists of different types are selected', async () => {
+    const { findByText } = setup({
+      selectedLists: [
+        { id: '1', name: 'Grocery List', type: EListType.GROCERY_LIST },
+        { id: '2', name: 'Book List', type: EListType.BOOK_LIST },
+      ],
+    });
+
+    expect(await findByText(/Only lists of the same type can be merged/)).toBeVisible();
+    expect(await findByText(/while other types will be excluded/)).toBeVisible();
+  });
+
+  it('shows detailed breakdown when lists of different types are selected', async () => {
+    const { findByText } = setup({
+      selectedLists: [
+        { id: '1', name: 'Grocery List 1', type: EListType.GROCERY_LIST },
+        { id: '2', name: 'Grocery List 2', type: EListType.GROCERY_LIST },
+        { id: '3', name: 'Book List', type: EListType.BOOK_LIST },
+      ],
+    });
+
+    expect(await findByText('Lists to be merged (2):')).toBeVisible();
+    expect(await findByText('Lists excluded (1):')).toBeVisible();
+    expect(await findByText('Grocery List 1 (GroceryList)')).toBeVisible();
+    expect(await findByText('Grocery List 2 (GroceryList)')).toBeVisible();
+    expect(await findByText('Book List (BookList)')).toBeVisible();
+  });
+
+  it('does not show warning when all lists are the same type', async () => {
+    const { queryByText } = setup({
+      selectedLists: [
+        { id: '1', name: 'Grocery List 1', type: EListType.GROCERY_LIST },
+        { id: '2', name: 'Grocery List 2', type: EListType.GROCERY_LIST },
+      ],
+    });
+
+    expect(queryByText(/Only lists of the same type can be merged/)).toBeNull();
   });
 });

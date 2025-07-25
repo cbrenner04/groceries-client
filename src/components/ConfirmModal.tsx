@@ -14,7 +14,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element =>
     <Modal.Header closeButton>
       <Modal.Title>Confirm {props.action}</Modal.Title>
     </Modal.Header>
-    <Modal.Body>{props.body}</Modal.Body>
+    <Modal.Body data-test-id="confirm-modal-body">{props.body}</Modal.Body>
     <Modal.Footer>
       <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
         Close

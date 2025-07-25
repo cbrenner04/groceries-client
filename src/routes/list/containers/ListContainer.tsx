@@ -1,86 +1,97 @@
-import React, { type ChangeEvent, type MouseEventHandler, useState } from 'react';
+import React, { useState, type ReactNode } from 'react';
+import { ListGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
-import update from 'immutability-helper';
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, ListGroup } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
-import type { AxiosResponse } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
-import axios from 'utils/api';
+import {
+  EUserPermissions,
+  type IList,
+  type IListItemConfiguration,
+  type IListItemField,
+  type IListUser,
+  type IListItem,
+} from 'typings';
 import { capitalize } from 'utils/format';
 import { usePolling } from 'hooks';
-import type { IList, IListItem, IListUser } from 'typings';
 
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
-import { fetchList, itemName, sortItems } from '../utils';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
+import MultiSelectMenu from '../components/MultiSelectMenu';
+import { fetchList } from '../utils';
+import {
+  handleAddItem as exportedHandleAddItem,
+  handleItemSelect as exportedHandleItemSelect,
+  handleItemEdit as exportedHandleItemEdit,
+  handleItemComplete as exportedHandleItemComplete,
+  handleItemDelete as exportedHandleItemDelete,
+  handleItemRefresh as exportedHandleItemRefresh,
+  handleToggleRead as exportedHandleToggleRead,
+} from './listHandlers';
+import { handleFailure } from 'utils/handleFailure';
 
-// TODO: this is ridiculous
 export interface IListContainerProps {
   userId: string;
   list: IList;
-  purchasedItems: IListItem[];
   categories: string[];
+  completedItems: IListItem[];
   listUsers: IListUser[];
-  includedCategories: string[];
-  notPurchasedItems: Record<string, IListItem[]>;
-  permissions: string;
-  lists: IList[];
+  notCompletedItems: IListItem[];
+  permissions: EUserPermissions;
+  listsToUpdate: IList[];
+  listItemConfiguration?: IListItemConfiguration;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
-  const [notPurchasedItems, setNotPurchasedItems] = useState(props.notPurchasedItems);
-  const [purchasedItems, setPurchasedItems] = useState(props.purchasedItems);
+  const [pending, setPending] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([] as IListItem[]);
+  const [notCompletedItems, setNotCompletedItems] = useState(props.notCompletedItems);
+  const [completedItems, setCompletedItems] = useState(props.completedItems);
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
-  const [includedCategories, setIncludedCategories] = useState(props.includedCategories);
+  const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([] as IListItem[]);
-  const [pending, setPending] = useState(false);
-  const [displayedCategories, setDisplayedCategories] = useState(props.includedCategories);
-  const [listUsers, setListUsers] = useState(props.listUsers);
+  const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [copy, setCopy] = useState(false);
   const [move, setMove] = useState(false);
   const navigate = useNavigate();
 
+  // Add polling for real-time updates
   usePolling(async () => {
     try {
       const fetchResponse = await fetchList({ id: props.list.id!, navigate });
-      /* istanbul ignore else */
       if (fetchResponse) {
         const {
-          purchasedItems: updatedPurchasedItems,
+          not_completed_items: updatedNotCompletedItems,
+          completed_items: updatedCompletedItems,
           categories: updatedCategories,
-          listUsers: updatedListUsers,
-          includedCategories: updatedIncludedCategories,
-          notPurchasedItems: updatedNotPurchasedItems,
         } = fetchResponse;
-        const isSameSet = (
-          newSet: IListItem[] | Record<string, IListItem[]>,
-          oldSet: IListItem[] | Record<string, IListItem[]>,
-        ): boolean => JSON.stringify(newSet) === JSON.stringify(oldSet);
-        const purchasedItemsSame = isSameSet(updatedPurchasedItems, purchasedItems);
-        const notPurchasedItemsSame = isSameSet(updatedNotPurchasedItems, notPurchasedItems);
-        if (!purchasedItemsSame) {
-          setPurchasedItems(updatedPurchasedItems);
+
+        const isSameSet = (newSet: IListItem[], oldSet: IListItem[]): boolean =>
+          JSON.stringify(newSet) === JSON.stringify(oldSet);
+
+        const notCompletedSame = isSameSet(updatedNotCompletedItems, notCompletedItems);
+        const completedSame = isSameSet(updatedCompletedItems, completedItems);
+
+        if (!notCompletedSame) {
+          setNotCompletedItems(updatedNotCompletedItems);
         }
-        if (!notPurchasedItemsSame) {
-          setNotPurchasedItems(updatedNotPurchasedItems);
+        if (!completedSame) {
+          setCompletedItems(updatedCompletedItems);
         }
-        if (!purchasedItemsSame || !notPurchasedItemsSame) {
+        if (!notCompletedSame || !completedSame) {
           setCategories(updatedCategories);
-          setIncludedCategories(updatedIncludedCategories);
+          setIncludedCategories(updatedCategories);
           /* istanbul ignore else */
           if (!filter) {
-            setDisplayedCategories(updatedIncludedCategories);
+            setDisplayedCategories(updatedCategories);
           }
-          setListUsers(updatedListUsers);
         }
       }
     } catch (_err) {
@@ -92,231 +103,161 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   }, 3000);
 
-  const handleAddItem = (data: IListItem[]): void => {
-    // this is to deal the ListItemForm being passed this function
-    const items = Array.isArray(data) ? data : [data];
-    let updatedNotPurchasedItems = notPurchasedItems;
-    const itemCategories: string[] = [];
-    items.forEach((item) => {
-      /* istanbul ignore next */
-      const category = item.category ?? '';
-      itemCategories.push(category);
-      // TODO: why????
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (updatedNotPurchasedItems[category]) {
-        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $push: [item] } });
-        updatedNotPurchasedItems[category] = sortItems(props.list.type, updatedNotPurchasedItems[category]);
-      } else {
-        updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $set: [item] } });
-      }
+  const handleAddItem = (newItems: IListItem[]): void => {
+    exportedHandleAddItem({
+      newItems,
+      pending,
+      setPending,
+      completedItems,
+      setCompletedItems,
+      notCompletedItems,
+      setNotCompletedItems,
+      categories,
+      setCategories,
+      includedCategories,
+      setIncludedCategories,
+      displayedCategories,
+      setDisplayedCategories,
+      filter,
+      navigate,
     });
-    setNotPurchasedItems(updatedNotPurchasedItems);
-    let cats = categories;
-    let includedCats = includedCategories;
-    itemCategories.forEach((category) => {
-      if (!cats.includes(category)) {
-        cats = update(cats, { $push: [category] });
-      }
-      if (!includedCats.includes(category)) {
-        includedCats = update(includedCats, { $push: [category] });
-      }
-    });
-    setCategories(cats);
-    setIncludedCategories(includedCats);
-    if (!filter) {
-      setDisplayedCategories(includedCats);
-    }
   };
 
-  const listItemPath = (): string => `/v1/lists/${props.list.id}/list_items`;
-
-  const removeItemsFromNotPurchased = (items: IListItem[]): void => {
-    let updatedNotPurchasedItems = notPurchasedItems;
-    const itemCategories: string[] = [];
-    items.forEach((item) => {
-      /* istanbul ignore next */
-      const category = item.category ?? '';
-      itemCategories.push(category);
-      const itemIndex = updatedNotPurchasedItems[category].findIndex((npItem) => npItem.id === item.id);
-      updatedNotPurchasedItems = update(updatedNotPurchasedItems, { [category]: { $splice: [[itemIndex, 1]] } });
+  const handleItemSelect = (item: IListItem): void => {
+    exportedHandleItemSelect({
+      item,
+      selectedItems,
+      setSelectedItems,
     });
-    setNotPurchasedItems(updatedNotPurchasedItems);
-    let updateIncludedCats = includedCategories;
-    let updateDisplayedCategories = false;
-    itemCategories.forEach((category) => {
-      if (category && !updatedNotPurchasedItems[category].length) {
-        updateDisplayedCategories = true;
-        const catIndex = updateIncludedCats.findIndex((inCat) => inCat === category);
-        updateIncludedCats = update(updateIncludedCats, { $splice: [[catIndex, 1]] });
-        if (filter === category) {
-          setFilter('');
-        }
-      }
-    });
-    setIncludedCategories(updateIncludedCats);
-    // TODO: why???? this is so stupid. it is definitely not always falsy
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (updateDisplayedCategories) {
-      setDisplayedCategories(updateIncludedCats);
-    }
   };
 
-  const moveItemsToPurchased = (items: IListItem[]): void => {
-    removeItemsFromNotPurchased(items);
-    const updatedItems = items.map((item) => {
-      if (['ToDoList', 'SimpleList'].includes(props.list.type)) {
-        item.completed = true;
-      } else {
-        item.purchased = true;
-      }
-      return item;
-    });
-    const updatedPurchasedItems = update(purchasedItems, { $push: updatedItems });
-    setPurchasedItems(sortItems(props.list.type, updatedPurchasedItems));
-  };
-
-  const failure = (err: unknown): void => {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.status === 401) {
-        toast('You must sign in', { type: 'error' });
-        navigate('/users/sign_in');
-      } else if ([403, 404].includes(error.response.status)) {
-        toast('Item not found', { type: 'error' });
-      } else {
-        const responseTextKeys = Object.keys(error.response.data!);
-        const responseErrors = responseTextKeys.map(
-          (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
-        );
-        toast(responseErrors.join(' and '), { type: 'error' });
-      }
-    } else if (error.request) {
-      toast('Something went wrong', { type: 'error' });
+  const handleItemEdit = (item: IListItem): void => {
+    if (selectedItems.length > 1) {
+      // Bulk edit - navigate with selected item IDs
+      const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
+      navigate(`/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
     } else {
-      toast(error.message, { type: 'error' });
+      // Single edit
+      exportedHandleItemEdit({
+        item,
+        listId: props.list.id!,
+        navigate,
+      });
     }
   };
 
-  const pluralize = (items: IListItem[]): string => {
-    return items.length > 1 ? 'Items' : 'Item';
-  };
+  const handleItemComplete = async (item: IListItem): Promise<void> => {
+    const itemsToComplete = selectedItems.length ? selectedItems : [item];
 
-  const handleItemPurchase = async (item: IListItem): Promise<void> => {
-    const items = selectedItems.length ? selectedItems : [item];
-    const filteredItems = items.filter((i) => !i.purchased && !i.completed);
-    const completionType = ['ToDoList', 'SimpleList'].includes(props.list.type) ? 'completed' : 'purchased';
-    const updateRequests = filteredItems.map((i) =>
-      axios.put(`${listItemPath()}/${i.id}`, {
-        list_item: {
-          [completionType]: true,
-        },
-      }),
+    // Optimistic update - move items to completed immediately
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !itemsToComplete.some((completeItem) => completeItem.id === item.id),
     );
-    try {
-      await Promise.all(updateRequests);
-      moveItemsToPurchased(filteredItems);
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      toast(`${pluralize(filteredItems)} successfully purchased.`, { type: 'info' });
-    } catch (error) {
-      failure(error);
+    const updatedCompletedItems = [...completedItems, ...itemsToComplete.map((item) => ({ ...item, completed: true }))];
+
+    setNotCompletedItems(updatedNotCompletedItems);
+    setCompletedItems(updatedCompletedItems);
+
+    // Clear selections
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setCompleteMultiSelect(false);
+
+    // Make API calls in parallel for better performance
+    const apiPromises = itemsToComplete.map(async (selectedItem) => {
+      try {
+        await exportedHandleItemComplete({
+          item: selectedItem,
+          listId: props.list.id!,
+          setPending,
+          navigate,
+        });
+        return { success: true, item: selectedItem };
+      } catch (error) {
+        return { success: false, item: selectedItem, error };
+      }
+    });
+
+    const results = await Promise.all(apiPromises);
+
+    // Check for any failures
+    const failures: IListItem[] = [];
+    const successfulItems: IListItem[] = [];
+    results.forEach((result) => {
+      if (result.success) {
+        successfulItems.push(result.item);
+      } else {
+        failures.push(result.item);
+      }
+    });
+
+    if (failures.length > 0) {
+      // Some items failed - rollback only the failed items
+      const failedItemIds = failures.map((item) => item.id);
+
+      // Rollback failed items to original state
+      const rollbackNotCompletedItems = [
+        ...updatedNotCompletedItems,
+        ...failures.map((item) => ({ ...item!, completed: false })),
+      ];
+      const rollbackCompletedItems = updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id));
+
+      setNotCompletedItems(rollbackNotCompletedItems);
+      setCompletedItems(rollbackCompletedItems);
+
+      // Show appropriate feedback
+      if (successfulItems.length > 0) {
+        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        toast(
+          `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
+            failures,
+          )} failed.`,
+          { type: 'warning' },
+        );
+      } else {
+        // All items failed
+        handleFailure({
+          error: new Error('All items failed to complete') as AxiosError,
+          notFoundMessage: 'Failed to complete items',
+        });
+      }
+    } else {
+      // All items succeeded
+      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(itemsToComplete)} marked as completed.`, { type: 'info' });
     }
+  };
+
+  const handleItemRefresh = async (item: IListItem): Promise<void> => {
+    await exportedHandleItemRefresh({
+      item,
+      listId: props.list.id!,
+      completedItems,
+      setCompletedItems,
+      notCompletedItems,
+      setNotCompletedItems,
+      setPending,
+      navigate,
+    });
   };
 
   const toggleRead = async (item: IListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
-    const updateRequests = items.map((item) => {
-      const isRead = !item.read;
-      return axios.put(`${listItemPath()}/${item.id}`, {
-        list_item: {
-          read: isRead,
-        },
-      });
+    await exportedHandleToggleRead({
+      items,
+      listId: props.list.id!,
+      completedItems,
+      setCompletedItems,
+      notCompletedItems,
+      setNotCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+      navigate,
     });
-    try {
-      await Promise.all(updateRequests);
-      let newPurchasedItems = purchasedItems;
-      let newNotPurchasedItems = notPurchasedItems;
-      items.forEach((item) => {
-        item.read = !item.read;
-        if (item.purchased) {
-          const itemIndex = newPurchasedItems.findIndex((purchasedItem) => item.id === purchasedItem.id);
-          const newItems = [...newPurchasedItems];
-          newItems[itemIndex] = item;
-          newPurchasedItems = update(newPurchasedItems, { $set: newItems });
-        } else {
-          const cat = item.category ?? /* istanbul ignore next */ '';
-          const itemsInCat = newNotPurchasedItems[cat];
-          const itemIndex = itemsInCat.findIndex((notPurchasedItem) => item.id === notPurchasedItem.id);
-          const newItemsInCat = [...itemsInCat];
-          newItemsInCat[itemIndex] = item;
-          newNotPurchasedItems = update(newNotPurchasedItems, { [cat]: { $set: newItemsInCat } });
-        }
-      });
-      setPurchasedItems(newPurchasedItems);
-      setNotPurchasedItems(newNotPurchasedItems);
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
-      toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
-    } catch (error) {
-      failure(error);
-    }
   };
 
-  const removeItemsFromPurchased = (items: IListItem[]): void => {
-    let updatePurchasedItems = purchasedItems;
-    items.forEach((item) => {
-      const itemIndex = updatePurchasedItems.findIndex((purchasedItem) => purchasedItem.id === item.id);
-      updatePurchasedItems = sortItems(props.list.type, update(updatePurchasedItems, { $splice: [[itemIndex, 1]] }));
-    });
-    setPurchasedItems(updatePurchasedItems);
-  };
-
-  const handleRefresh = async (item: IListItem): Promise<void> => {
-    setPending(true);
-    const items = selectedItems.length ? selectedItems : [item];
-    const filteredItems = items.filter((item) => item.purchased ?? /* istanbul ignore next */ item.completed);
-    const createNewItemRequests: Promise<AxiosResponse>[] = [];
-    const updateOldItemRequests: Promise<AxiosResponse>[] = [];
-    filteredItems.forEach((item) => {
-      const newItem = {
-        user_id: item.user_id,
-        product: item.product,
-        task: item.task,
-        content: item.content,
-        quantity: item.quantity,
-        purchased: false,
-        completed: false,
-        assignee_id: item.assignee_id,
-        due_by: item.due_by,
-        category: item.category,
-      };
-      const postData: Record<'list_item', typeof newItem> = { list_item: newItem };
-      createNewItemRequests.push(axios.post(listItemPath(), postData));
-      updateOldItemRequests.push(
-        axios.put(`${listItemPath()}/${item.id}`, {
-          list_item: {
-            refreshed: true,
-          },
-        }),
-      );
-    });
-    try {
-      const newItemResponses = await Promise.all(createNewItemRequests);
-      await Promise.all(updateOldItemRequests);
-      const newItems = newItemResponses.map((response) => response.data);
-      handleAddItem(newItems);
-      removeItemsFromPurchased(filteredItems);
-      setSelectedItems([]);
-      setCompleteMultiSelect(false);
-      setPending(false);
-      toast(`${pluralize(filteredItems)} successfully refreshed.`, { type: 'info' });
-    } catch (error) {
-      failure(error);
-    }
-  };
-
+  // Multi-select and bulk operation handlers
   const handleDelete = (item: IListItem): void => {
     const items = selectedItems.length ? selectedItems : [item];
     setItemsToDelete(items);
@@ -325,49 +266,88 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
-    const deleteRequests = itemsToDelete.map((item) => axios.delete(`${listItemPath()}/${item.id}`));
-    try {
-      await Promise.all(deleteRequests);
-      const notPurchasedDeletedItems: IListItem[] = [];
-      const purchasedDeletedItems: IListItem[] = [];
-      itemsToDelete.forEach((item) => {
-        if (item.completed || item.purchased) {
-          purchasedDeletedItems.push(item);
-        } else {
-          notPurchasedDeletedItems.push(item);
-        }
-      });
-      removeItemsFromPurchased(purchasedDeletedItems);
-      removeItemsFromNotPurchased(notPurchasedDeletedItems);
-      setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
-      setItemsToDelete([]);
-      toast(`${pluralize(itemsToDelete)} successfully deleted.`, { type: 'info' });
-    } catch (error) {
-      failure(error);
-    }
-  };
 
-  const handleItemSelect = (item: IListItem): void => {
-    const itemIds = selectedItems.map((i) => i.id);
-    let updatedItems;
-    if (itemIds.includes(item.id)) {
-      updatedItems = selectedItems.filter((i) => i.id !== item.id);
+    const itemsToDeleteFromState = itemsToDelete;
+
+    // Optimistic update - remove items immediately
+    const updatedCompletedItems = completedItems.filter(
+      (item) => !itemsToDeleteFromState.some((deleteItem) => deleteItem.id === item.id),
+    );
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !itemsToDeleteFromState.some((deleteItem) => deleteItem.id === item.id),
+    );
+
+    setCompletedItems(updatedCompletedItems);
+    setNotCompletedItems(updatedNotCompletedItems);
+
+    // Clear selections
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setCompleteMultiSelect(false);
+    setItemsToDelete([]);
+
+    // Make API calls in parallel for better performance
+    const apiPromises = itemsToDeleteFromState.map((item) =>
+      exportedHandleItemDelete({
+        item,
+        listId: props.list.id!,
+        completedItems: updatedCompletedItems,
+        setCompletedItems,
+        notCompletedItems: updatedNotCompletedItems,
+        setNotCompletedItems,
+        selectedItems: [],
+        setSelectedItems,
+        setPending,
+        navigate,
+        showToast: false,
+      }),
+    );
+
+    const results = await Promise.allSettled(apiPromises);
+
+    // Check for any failures
+    const failures: IListItem[] = [];
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        failures.push(itemsToDeleteFromState[index]);
+      }
+    });
+
+    if (failures.length > 0) {
+      // Some items failed - rollback only the failed items
+      const failedItemIds = failures.map((item) => item.id);
+      const successfulItems = itemsToDeleteFromState.filter((item) => !failedItemIds.includes(item.id));
+
+      // Rollback failed items to original state
+      const rollbackCompletedItems = [
+        ...updatedCompletedItems,
+        ...failures.filter((item) => completedItems.some((orig) => orig.id === item.id)),
+      ];
+      const rollbackNotCompletedItems = [
+        ...updatedNotCompletedItems,
+        ...failures.filter((item) => notCompletedItems.some((orig) => orig.id === item.id)),
+      ];
+
+      setCompletedItems(rollbackCompletedItems);
+      setNotCompletedItems(rollbackNotCompletedItems);
+
+      // Show appropriate feedback
+      if (successfulItems.length > 0) {
+        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        toast(
+          `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
+            failures,
+          )} failed.`,
+          { type: 'warning' },
+        );
+      } else {
+        // All items failed
+        toast('Failed to delete items. Please try again.', { type: 'error' });
+      }
     } else {
-      updatedItems = update(selectedItems, { $push: [item] });
-    }
-    setSelectedItems(updatedItems);
-  };
-
-  const listItemNavigatePath = (): string => `/lists/${props.list.id}/list_items`;
-
-  const handleItemEdit = async (item: IListItem): Promise<void> => {
-    if (selectedItems.length) {
-      const itemIds = selectedItems.map((item) => item.id).join(',');
-      navigate(`${listItemNavigatePath()}/bulk-edit?item_ids=${itemIds}`);
-    } else {
-      navigate(`${listItemNavigatePath()}/${item.id}/edit`);
+      // All items succeeded
+      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
     }
   };
 
@@ -375,7 +355,102 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     if (!move) {
       return;
     }
-    removeItemsFromNotPurchased(selectedItems);
+    // Remove items from not completed and add to completed
+    setNotCompletedItems(
+      notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
+    );
+    setCompletedItems([...completedItems, ...selectedItems]);
+    setSelectedItems([]);
+    setIncompleteMultiSelect(false);
+    setMove(false);
+  };
+
+  const deleteConfirmationModalBody = (): string => {
+    const itemNames = itemsToDelete.map((item) => {
+      const nameField = item.fields.find(
+        (field) =>
+          field.label === 'name' ||
+          field.label === 'title' ||
+          field.label === 'product' ||
+          field.label === 'task' ||
+          field.label === 'content',
+      );
+      return nameField?.data ?? 'Unknown item';
+    });
+    return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
+  };
+
+  // Category filter handlers
+  const handleCategoryFilter = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setFilter(event.target.name);
+    setDisplayedCategories([event.target.name]);
+  };
+
+  const handleClearFilter = (): void => {
+    setFilter('');
+    setDisplayedCategories(includedCategories);
+  };
+
+  const groupByCategory = (items: IListItem[]): ReactNode => {
+    // When a filter is applied, show only the selected category
+    // When no filter is applied, show all categories plus uncategorized items
+    const categoriesToShow = filter ? displayedCategories : [undefined, ...displayedCategories];
+
+    return categoriesToShow.map((category: string | undefined) => {
+      const itemsToRender = items.filter((item: IListItem) => {
+        // Defensive: treat missing fields as empty array
+        const fields = Array.isArray(item.fields) ? item.fields : [];
+
+        if (category === 'uncategorized') {
+          // Show items with no category field or empty category data
+          const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
+          return (
+            !hasCategoryField ||
+            fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
+          );
+        }
+
+        if (category) {
+          // Show items with matching category
+          return fields.find((field: IListItemField) => field.label === 'category' && field.data === category);
+        }
+
+        // Show uncategorized items when no filter is applied
+        const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
+        return (
+          !hasCategoryField ||
+          fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
+        );
+      });
+
+      if (itemsToRender.length === 0) {
+        return null;
+      }
+      return (
+        <React.Fragment key={`${category ?? 'uncategorized'}-wrapper`}>
+          {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
+          <ListGroup className="mb-3" key={category ?? 'uncategorized'}>
+            {itemsToRender.map((item: IListItem) => (
+              <ListItem
+                key={item.id}
+                item={item}
+                permissions={props.permissions}
+                selectedItems={selectedItems}
+                pending={pending}
+                listType={props.list.type}
+                handleItemSelect={handleItemSelect}
+                handleItemComplete={handleItemComplete}
+                handleItemEdit={handleItemEdit}
+                handleItemDelete={handleDelete}
+                handleItemRefresh={handleItemRefresh}
+                toggleItemRead={toggleRead}
+                multiSelect={incompleteMultiSelect}
+              />
+            ))}
+          </ListGroup>
+        </React.Fragment>
+      );
+    });
   };
 
   return (
@@ -386,7 +461,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         copy={copy}
         move={move}
         currentList={props.list}
-        lists={props.lists}
+        lists={props.listsToUpdate}
         items={selectedItems}
         setSelectedItems={setSelectedItems}
         setIncompleteMultiSelect={setIncompleteMultiSelect}
@@ -398,15 +473,15 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       </Link>
       <h1>{props.list.name}</h1>
       <br />
-      {props.permissions === 'write' ? (
+      {props.permissions === EUserPermissions.WRITE ? (
         <ListItemForm
           listId={props.list.id!}
-          listType={props.list.type}
-          listUsers={listUsers}
+          listUsers={props.listUsers}
           userId={props.userId}
           handleItemAddition={handleAddItem}
-          categories={categories}
+          categories={props.categories}
           navigate={navigate}
+          listItemConfiguration={props.listItemConfiguration}
         />
       ) : (
         <p>You only have permission to read this list</p>
@@ -418,126 +493,57 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           <CategoryFilter
             categories={includedCategories}
             filter={filter}
-            // TODO: figure out typing
-            handleCategoryFilter={
-              ((event: ChangeEvent<HTMLInputElement>): void => {
-                setFilter(event.target.name);
-                setDisplayedCategories([event.target.name]);
-              }) as unknown as MouseEventHandler
-            }
-            handleClearFilter={(): void => {
-              setFilter('');
-              setDisplayedCategories(includedCategories);
-            }}
+            handleCategoryFilter={handleCategoryFilter}
+            handleClearFilter={handleClearFilter}
           />
         </div>
       </div>
-      {props.permissions === 'write' && (
-        <div className="clearfix">
-          {incompleteMultiSelect && (
-            <ButtonGroup aria-label="copy or move items">
-              <Button variant="link" onClick={(): void => setCopy(true)}>
-                Copy to list
-              </Button>
-              <Button variant="link" onClick={(): void => setMove(true)}>
-                Move to list
-              </Button>
-            </ButtonGroup>
-          )}
-          <Button
-            variant="link"
-            className="mx-auto float-end"
-            onClick={(): void => {
-              if (incompleteMultiSelect && selectedItems.length > 0) {
-                setSelectedItems([]);
-              }
-              setIncompleteMultiSelect(!incompleteMultiSelect);
-            }}
-          >
-            {incompleteMultiSelect ? 'Hide' : ''} Select
-          </Button>
-        </div>
+      {props.permissions === EUserPermissions.WRITE && (
+        <MultiSelectMenu
+          setCopy={setCopy}
+          setMove={setMove}
+          isMultiSelect={incompleteMultiSelect}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setMultiSelect={setIncompleteMultiSelect}
+        />
       )}
-      {displayedCategories.sort().map((category) => (
-        <ListGroup className="mb-3" key={category}>
-          {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
-          {// TODO: again, why?
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          notPurchasedItems[category]?.map((item) => (
-            <ListItem
-              item={item}
-              key={item.id}
-              purchased={false}
-              handleItemDelete={handleDelete}
-              handlePurchaseOfItem={handleItemPurchase}
-              handleItemRefresh={handleRefresh}
-              listType={props.list.type}
-              listUsers={props.listUsers}
-              permission={props.permissions}
-              multiSelect={incompleteMultiSelect}
-              handleItemSelect={handleItemSelect}
-              toggleItemRead={toggleRead}
-              handleItemEdit={handleItemEdit}
-              selectedItems={selectedItems}
-              pending={pending}
-            />
-          ))}
-        </ListGroup>
-      ))}
       <br />
-      <h2>{['ToDoList', 'SimpleList'].includes(props.list.type) ? 'Completed' : 'Purchased'}</h2>
-      {props.permissions === 'write' && (
-        <div className="clearfix">
-          {completeMultiSelect && (
-            <ButtonGroup aria-label="copy or move items">
-              <Button variant="link" onClick={(): void => setCopy(true)}>
-                Copy to list
-              </Button>
-              <Button variant="link" onClick={(): void => setMove(true)}>
-                Move to list
-              </Button>
-            </ButtonGroup>
-          )}
-          <Button
-            variant="link"
-            className="mx-auto float-end"
-            onClick={(): void => {
-              if (completeMultiSelect && selectedItems.length > 0) {
-                setSelectedItems([]);
-              }
-              setCompleteMultiSelect(!completeMultiSelect);
-            }}
-          >
-            {completeMultiSelect ? 'Hide' : ''} Select
-          </Button>
-        </div>
+      {groupByCategory(notCompletedItems)}
+
+      <h2>Completed Items</h2>
+      {props.permissions === EUserPermissions.WRITE && (
+        <MultiSelectMenu
+          setCopy={setCopy}
+          setMove={setMove}
+          isMultiSelect={completeMultiSelect}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setMultiSelect={setCompleteMultiSelect}
+        />
       )}
       <ListGroup className="mb-3">
-        {purchasedItems.map((item) => (
+        {completedItems.map((item: IListItem) => (
           <ListItem
-            item={item}
             key={item.id}
-            purchased={true}
-            handleItemDelete={handleDelete}
-            handlePurchaseOfItem={handleItemPurchase}
-            handleItemRefresh={handleRefresh}
-            listType={props.list.type}
-            listUsers={props.listUsers}
-            permission={props.permissions}
-            multiSelect={completeMultiSelect}
-            handleItemSelect={handleItemSelect}
-            toggleItemRead={toggleRead}
-            handleItemEdit={handleItemEdit}
+            item={item}
+            permissions={props.permissions}
             selectedItems={selectedItems}
             pending={pending}
+            listType={props.list.type}
+            handleItemSelect={handleItemSelect}
+            handleItemComplete={handleItemComplete}
+            handleItemEdit={handleItemEdit}
+            handleItemDelete={handleDelete}
+            handleItemRefresh={handleItemRefresh}
+            toggleItemRead={toggleRead}
+            multiSelect={completeMultiSelect}
           />
         ))}
       </ListGroup>
       <ConfirmModal
         action="delete"
-        body={`Are you sure you want to delete the following items? ${itemsToDelete
-          .map((item) => itemName(item, props.list.type))
-          .join(', ')}`}
+        body={deleteConfirmationModalBody()}
         show={showDeleteConfirm}
         handleConfirm={(): Promise<void> => handleDeleteConfirm()}
         handleClear={(): void => setShowDeleteConfirm(false)}

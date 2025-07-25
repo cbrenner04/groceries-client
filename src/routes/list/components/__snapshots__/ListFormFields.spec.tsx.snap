@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListFormFields snapshot tests matches snapshot for create form 1`] = `
+<div
+  class="mb-3"
+>
+  <label
+    class="form-label"
+    for="name"
+  >
+    Name
+  </label>
+  <input
+    class="form-control"
+    id="name"
+    name="name"
+    placeholder="My super cool list"
+    type="text"
+    value="Test List"
+  />
+</div>
+`;
+
+exports[`ListFormFields snapshot tests matches snapshot for edit form 1`] = `
+<div
+  class="mb-3"
+>
+  <label
+    class="form-label"
+    for="name"
+  >
+    Name
+  </label>
+  <input
+    class="form-control"
+    id="name"
+    name="name"
+    placeholder="My super cool list"
+    type="text"
+    value="Test List"
+  />
+</div>
+`;
