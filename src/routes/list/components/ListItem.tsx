@@ -2,24 +2,24 @@ import React, { type ReactNode } from 'react';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { EUserPermissions } from 'typings';
-import type { IV2ListItem } from 'typings';
+import type { IListItem } from 'typings';
 import { EListType } from 'typings';
 import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
 import { itemName } from '../utils';
 
 export interface IListItemProps {
-  item: IV2ListItem;
+  item: IListItem;
   multiSelect?: boolean;
   permissions: EUserPermissions;
   pending: boolean;
-  selectedItems: IV2ListItem[];
+  selectedItems: IListItem[];
   listType: EListType;
-  handleItemSelect: (item: IV2ListItem) => void;
-  handleItemRefresh: (item: IV2ListItem) => void;
-  handleItemComplete: (item: IV2ListItem) => void;
-  handleItemEdit: (item: IV2ListItem) => void;
-  handleItemDelete: (item: IV2ListItem) => void;
-  toggleItemRead?: (item: IV2ListItem) => void;
+  handleItemSelect: (item: IListItem) => void;
+  handleItemRefresh: (item: IListItem) => void;
+  handleItemComplete: (item: IListItem) => void;
+  handleItemEdit: (item: IListItem) => void;
+  handleItemDelete: (item: IListItem) => void;
+  toggleItemRead?: (item: IListItem) => void;
 }
 
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
@@ -36,7 +36,7 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
     }
     return <span>{formattedName}</span>;
   };
-  const multiSelectCheckbox = (item: IV2ListItem): ReactNode | undefined =>
+  const multiSelectCheckbox = (item: IListItem): ReactNode | undefined =>
     multiSelect && (
       <Col xs="1">
         <input

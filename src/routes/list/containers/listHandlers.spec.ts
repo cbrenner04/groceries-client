@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-import type { IListItemField, IV2ListItem } from 'typings';
+import type { IListItemField, IListItem } from 'typings';
 import {
   handleAddItem,
   handleItemSelect,
@@ -10,13 +10,13 @@ import {
   handleItemRefresh,
   handleToggleRead,
 } from './listHandlers';
-import { handleFailure } from '../../../../utils/handleFailure';
-import axios from '../../../../utils/api';
-import { mockNavigate } from '../../../../test-utils';
+import { handleFailure } from '../../../utils/handleFailure';
+import axios from '../../../utils/api';
+import { mockNavigate } from '../../../test-utils';
 
 // Mock immutability-helper
 jest.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
-jest.mock('../../../../utils/api', () => ({
+jest.mock('../../../utils/api', () => ({
   __esModule: true,
   default: {
     put: jest.fn(),
@@ -25,7 +25,7 @@ jest.mock('../../../../utils/api', () => ({
     get: jest.fn(),
   },
 }));
-jest.mock('../../../../utils/handleFailure');
+jest.mock('../../../utils/handleFailure');
 
 const mockToast = toast as jest.MockedFunction<typeof toast>;
 const mockAxios = axios as jest.Mocked<typeof axios>;
@@ -56,8 +56,8 @@ function makeField(overrides: Partial<IListItemField> = {}): IListItemField {
   };
 }
 
-// Helper to create a valid IV2ListItem
-function makeItem(overrides = {}): IV2ListItem {
+// Helper to create a valid IListItem
+function makeItem(overrides = {}): IListItem {
   return {
     id: '1',
     completed: false,
@@ -288,7 +288,7 @@ describe('handleItemEdit', () => {
   it('navigates to edit', () => {
     const nav = jest.fn();
     handleItemEdit({ item, listId: '1', navigate: nav });
-    expect(nav).toHaveBeenCalledWith('/v2/lists/1/list_items/1/edit');
+    expect(nav).toHaveBeenCalledWith('/lists/1/list_items/1/edit');
   });
 });
 

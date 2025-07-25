@@ -5,10 +5,10 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import Loading from 'components/Loading';
 
 import { fetchItemsToEdit, type IFulfilledBulkEditItemsData } from './utils';
-import V2BulkEditListItemsForm from './containers/BulkEditListItemsForm';
-import UnknownError from '../../error_pages/UnknownError';
+import BulkEditListItemsForm from './containers/BulkEditListItemsForm';
+import UnknownError from '../error_pages/UnknownError';
 
-const V2BulkEditListItems: React.FC = (): React.JSX.Element => {
+const BulkEditListItems: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { list_id: listId } = useParams();
   const location = useLocation();
@@ -32,7 +32,7 @@ const V2BulkEditListItems: React.FC = (): React.JSX.Element => {
           }
 
           return (
-            <V2BulkEditListItemsForm
+            <BulkEditListItemsForm
               navigate={navigate}
               list={data.list}
               lists={data.lists}
@@ -52,4 +52,4 @@ const V2BulkEditListItems: React.FC = (): React.JSX.Element => {
   );
 };
 
-export default V2BulkEditListItems;
+export default BulkEditListItems;

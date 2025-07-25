@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
 
 import { SelectField, TextField } from 'components/FormFields';
-import type { IList, IV2ListItem } from 'typings';
+import type { IList, IListItem } from 'typings';
 import FormSubmission from 'components/FormSubmission';
 import axios from 'utils/api';
 
@@ -15,8 +15,8 @@ export interface IChangeOtherListModalProps {
   setShow: Dispatch<SetStateAction<boolean>>;
   currentList: IList;
   lists: IList[];
-  items: IV2ListItem[];
-  setSelectedItems: Dispatch<SetStateAction<IV2ListItem[]>>;
+  items: IListItem[];
+  setSelectedItems: Dispatch<SetStateAction<IListItem[]>>;
   setIncompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
   setCompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
   handleMove: () => void;

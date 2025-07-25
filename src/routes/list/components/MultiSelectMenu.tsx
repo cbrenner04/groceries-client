@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 
-import type { IV2ListItem } from 'typings';
+import type { IListItem } from 'typings';
 
 export interface IMultiSelectMenuProps {
   isMultiSelect: boolean;
   setCopy: (bool: boolean) => void;
   setMove: (bool: boolean) => void;
-  selectedItems: IV2ListItem[];
-  setSelectedItems: (items: IV2ListItem[]) => void;
+  selectedItems: IListItem[];
+  setSelectedItems: (items: IListItem[]) => void;
   setMultiSelect: (bool: boolean) => void;
 }
 

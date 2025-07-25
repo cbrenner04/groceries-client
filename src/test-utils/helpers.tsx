@@ -6,7 +6,7 @@ import { act } from '@testing-library/react';
 import type { AxiosError } from 'axios';
 
 import { defaultTestData } from './factories';
-import type { IListContainerProps } from 'routes/v2/list/containers/ListContainer';
+import type { IListContainerProps } from 'routes/list/containers/ListContainer';
 
 // Mock navigation
 export const mockNavigate = jest.fn();

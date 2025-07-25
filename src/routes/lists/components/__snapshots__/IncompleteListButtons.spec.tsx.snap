@@ -32,7 +32,7 @@ exports[`IncompleteListButtons complete and edit are disabled when user is not o
       class="p-0 me-3 list-button-disabled"
       data-discover="true"
       data-test-id="incomplete-list-edit"
-      href="/v2/lists/id1/edit"
+      href="/lists/id1/edit"
       style="pointer-events: none;"
     >
       <i
@@ -83,7 +83,7 @@ exports[`IncompleteListButtons complete and edit are enabled when user is owner 
       class="p-0 me-3 list-button-enabled"
       data-discover="true"
       data-test-id="incomplete-list-edit"
-      href="/v2/lists/id1/edit"
+      href="/lists/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -208,7 +208,7 @@ exports[`IncompleteListButtons share is disabled when user does not have write p
       class="p-0 me-3 list-button-enabled"
       data-discover="true"
       data-test-id="incomplete-list-edit"
-      href="/v2/lists/id1/edit"
+      href="/lists/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"
@@ -258,7 +258,7 @@ exports[`IncompleteListButtons share is enabled when user has write permissions 
       class="p-0 me-3 list-button-enabled"
       data-discover="true"
       data-test-id="incomplete-list-edit"
-      href="/v2/lists/id1/edit"
+      href="/lists/id1/edit"
     >
       <i
         class="fa fa-edit fa-2x text-warning"

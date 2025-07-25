@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { fetchList, fetchListToEdit, fetchListItemToEdit, itemName, type IFulfilledEditListData } from './utils';
 import axios from 'utils/api';
 import { EListType } from 'typings';
-import type { IV2ListItem } from 'typings';
+import type { IListItem } from 'typings';
 import {
   createList,
   createListItem,
@@ -12,12 +12,12 @@ import {
   createListItemConfiguration,
   createApiResponse,
 } from 'test-utils/factories';
-import { handleFailure } from '../../../utils/handleFailure';
+import { handleFailure } from '../../utils/handleFailure';
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
 jest.mock('react-toastify');
-jest.mock('../../../utils/handleFailure', () => ({
+jest.mock('../../utils/handleFailure', () => ({
   handleFailure: jest.fn(),
 }));
 
@@ -27,7 +27,7 @@ const mockNavigate = jest.fn();
 const createError = (status: number): AxiosError => new AxiosError('Test error', String(status));
 
 describe('itemName', () => {
-  const createMockItem = (fields: { label: string; data: string }[]): IV2ListItem => {
+  const createMockItem = (fields: { label: string; data: string }[]): IListItem => {
     const mappedFields = fields.map((field, index) => createField(`field-${index}`, field.label, field.data, '1'));
     return createListItem('1', false, mappedFields);
   };
@@ -206,7 +206,7 @@ describe('itemName', () => {
     it('handles null fields', () => {
       const item = {
         ...createListItem('1'),
-        fields: null as unknown as IV2ListItem['fields'],
+        fields: null as unknown as IListItem['fields'],
       };
       expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
     });
@@ -214,7 +214,7 @@ describe('itemName', () => {
     it('handles undefined fields', () => {
       const item = {
         ...createListItem('1'),
-        fields: undefined as unknown as IV2ListItem['fields'],
+        fields: undefined as unknown as IListItem['fields'],
       };
       expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
     });
@@ -454,7 +454,7 @@ describe('fetchListItemToEdit', () => {
       error,
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
-      redirectURI: '/v2/lists/1/',
+      redirectURI: '/lists/1/',
       // rethrow: true,
     });
   });
@@ -468,7 +468,7 @@ describe('fetchListItemToEdit', () => {
       error,
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
-      redirectURI: '/v2/lists/1/',
+      redirectURI: '/lists/1/',
       // rethrow: true,
     });
   });

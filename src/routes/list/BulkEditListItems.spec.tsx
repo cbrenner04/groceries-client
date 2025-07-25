@@ -4,21 +4,21 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 
 import axios from 'utils/api';
 
-import V2BulkEditListItems from './BulkEditListItems';
-import type { IV2ListItem } from 'typings';
+import BulkEditListItems from './BulkEditListItems';
+import type { IListItem } from 'typings';
 
-describe('V2BulkEditListItems', () => {
-  const renderV2BulkEditListItems = (): RenderResult =>
+describe('BulkEditListItems', () => {
+  const renderBulkEditListItems = (): RenderResult =>
     render(
-      <MemoryRouter initialEntries={['/v2/lists/123/list_items/bulk-edit?item_ids=1,2,3']}>
+      <MemoryRouter initialEntries={['/lists/123/list_items/bulk-edit?item_ids=1,2,3']}>
         <Routes>
-          <Route path="/v2/lists/:list_id/list_items/bulk-edit" element={<V2BulkEditListItems />} />
+          <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
         </Routes>
       </MemoryRouter>,
     );
 
   it('renders the Loading component when fetch request is pending', async () => {
-    const { container, findByText } = renderV2BulkEditListItems();
+    const { container, findByText } = renderBulkEditListItems();
     const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
@@ -27,7 +27,7 @@ describe('V2BulkEditListItems', () => {
 
   it('displays UnknownError when an error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, findByRole } = renderV2BulkEditListItems();
+    const { container, findByRole } = renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
@@ -47,13 +47,13 @@ describe('V2BulkEditListItems', () => {
       },
     });
 
-    renderV2BulkEditListItems();
+    renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
     expect(axios.get).toHaveBeenCalledWith('/v2/lists/123/list_items/bulk_update?item_ids=1,2,3');
   });
 
   it('renders the form with items when API call is successful', async () => {
-    const mockItems: IV2ListItem[] = [
+    const mockItems: IListItem[] = [
       {
         id: '1',
         archived_at: null,
@@ -149,7 +149,7 @@ describe('V2BulkEditListItems', () => {
       },
     });
 
-    const { findByText } = renderV2BulkEditListItems();
+    const { findByText } = renderBulkEditListItems();
 
     // Wait for the API call to complete and form to render
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));

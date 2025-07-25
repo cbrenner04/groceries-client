@@ -4,8 +4,8 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 import { AxiosError } from 'axios';
 
-import { UserContext } from '../../../AppRouter';
-import { handleFailure } from '../../../utils/handleFailure';
+import { UserContext } from '../../AppRouter';
+import { handleFailure } from '../../utils/handleFailure';
 
 import List from './List';
 
@@ -17,7 +17,7 @@ jest.mock('react-router', () => ({
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = jest.fn();
-jest.mock('../../../utils/handleFailure', () => ({
+jest.mock('../../utils/handleFailure', () => ({
   handleFailure: jest.fn(),
 }));
 jest.mock('react-router', () => ({
@@ -61,9 +61,9 @@ const mockListData = {
 const renderList = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
-      <MemoryRouter initialEntries={['/v2/lists/123']}>
+      <MemoryRouter initialEntries={['/lists/123']}>
         <Routes>
-          <Route path="/v2/lists/:id" element={<List />} />
+          <Route path="/lists/:id" element={<List />} />
           <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
         </Routes>
       </MemoryRouter>
@@ -71,7 +71,7 @@ const renderList = (): ReturnType<typeof render> => {
   );
 };
 
-describe('V2 List', () => {
+describe('List', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

@@ -7,7 +7,7 @@ import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
 import {
   EListType,
-  type IV2ListItem,
+  type IListItem,
   type IList,
   type IListUser,
   type IListItemConfiguration,
@@ -19,7 +19,7 @@ import { itemName } from '../utils';
 
 export interface IEditListItemFormProps {
   list: IList;
-  item: IV2ListItem;
+  item: IListItem;
   listUsers: IListUser[];
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
@@ -91,7 +91,8 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         }),
       );
       toast('Item successfully updated', { type: 'info' });
-      window.location.href = `/v2/lists/${props.list.id}`;
+      // TODO: why aren't we using navigate?
+      window.location.href = `/lists/${props.list.id}`;
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -100,7 +101,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           window.location.href = '/users/sign_in';
         } else if ([403, 404].includes(error.response.status)) {
           toast('Item not found', { type: 'error' });
-          window.location.href = `/v2/lists/${props.list.id}`;
+          window.location.href = `/lists/${props.list.id}`;
         } else {
           const keys = Object.keys(error.response.data!);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
@@ -135,7 +136,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         <FormSubmission
           submitText="Update Item"
           cancelAction={(): void => {
-            window.location.href = `/v2/lists/${props.list.id}`;
+            window.location.href = `/lists/${props.list.id}`;
           }}
           cancelText="Cancel"
         />

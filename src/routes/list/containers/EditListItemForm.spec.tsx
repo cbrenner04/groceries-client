@@ -179,7 +179,7 @@ describe('EditListItemForm', () => {
           },
         });
         expect(mockToast).toHaveBeenCalledWith('Item successfully updated', { type: 'info' });
-        expect(mockLocation.href).toBe('/v2/lists/123');
+        expect(mockLocation.href).toBe('/lists/123');
       });
     });
 
@@ -282,7 +282,7 @@ describe('EditListItemForm', () => {
 
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-        expect(mockLocation.href).toBe('/v2/lists/123');
+        expect(mockLocation.href).toBe('/lists/123');
       });
     });
 
@@ -300,7 +300,7 @@ describe('EditListItemForm', () => {
 
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-        expect(mockLocation.href).toBe('/v2/lists/123');
+        expect(mockLocation.href).toBe('/lists/123');
       });
     });
 
@@ -395,7 +395,7 @@ describe('EditListItemForm', () => {
       const cancelButton = screen.getByText('Cancel');
       fireEvent.click(cancelButton);
 
-      expect(mockLocation.href).toBe('/v2/lists/123');
+      expect(mockLocation.href).toBe('/lists/123');
     });
   });
 

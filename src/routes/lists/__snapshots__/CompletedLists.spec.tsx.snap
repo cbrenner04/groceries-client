@@ -66,7 +66,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id1"
+                  href="/lists/id1"
                 >
                   <h5
                     class="mb-1"

@@ -1,5 +1,5 @@
 import { EListType, EUserPermissions } from 'typings';
-import type { IList, IListItemField, IListUser, IListItemConfiguration, IV2ListItem } from 'typings';
+import type { IList, IListItemField, IListUser, IListItemConfiguration, IListItem } from 'typings';
 
 // Base date for consistent test data
 const BASE_DATE = new Date('05/24/2020').toISOString();
@@ -7,8 +7,8 @@ const BASE_DATE = new Date('05/24/2020').toISOString();
 // Interface for API response data
 export interface IApiResponseData {
   current_user_id: string;
-  not_completed_items: IV2ListItem[];
-  completed_items: IV2ListItem[];
+  not_completed_items: IListItem[];
+  completed_items: IListItem[];
   list: IList;
   categories: string[];
   list_users: IListUser[];
@@ -47,8 +47,8 @@ export function createListItem(
   id: string,
   completed = false,
   fields: IListItemField[] = [],
-  overrides?: Partial<IV2ListItem>,
-): IV2ListItem {
+  overrides?: Partial<IListItem>,
+): IListItem {
   return {
     id,
     refreshed: false,
@@ -191,8 +191,8 @@ export const bookListTestData = {
 
 // Helper to create API response data
 export function createApiResponse(
-  notCompletedItems: IV2ListItem[] = defaultTestData.notCompletedItems,
-  completedItems: IV2ListItem[] = [defaultTestData.completedItem],
+  notCompletedItems: IListItem[] = defaultTestData.notCompletedItems,
+  completedItems: IListItem[] = [defaultTestData.completedItem],
   overrides?: Partial<IApiResponseData>,
 ): IApiResponseData {
   return {

@@ -4,16 +4,16 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 import { AxiosError } from 'axios';
 
-import { UserContext } from '../../../AppRouter';
-import { handleFailure } from '../../../utils/handleFailure';
+import { UserContext } from '../../AppRouter';
+import { handleFailure } from '../../utils/handleFailure';
 import {
   createList,
   createListItem,
   createListUser,
   createListItemConfiguration,
   createField,
-} from '../../../test-utils/factories';
-import { EListType } from '../../../typings';
+} from '../../test-utils/factories';
+import { EListType } from '../../typings';
 
 import EditListItem from './EditListItem';
 
@@ -25,7 +25,7 @@ jest.mock('react-router', () => ({
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = jest.fn();
-jest.mock('../../../utils/handleFailure', () => ({
+jest.mock('../../utils/handleFailure', () => ({
   handleFailure: jest.fn(),
 }));
 jest.mock('react-router', () => ({
@@ -78,9 +78,9 @@ const mockEditListItemData = {
 const renderEditListItem = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
-      <MemoryRouter initialEntries={['/v2/lists/123/list_items/456/edit']}>
+      <MemoryRouter initialEntries={['/lists/123/list_items/456/edit']}>
         <Routes>
-          <Route path="/v2/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+          <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
           <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
         </Routes>
       </MemoryRouter>
@@ -88,7 +88,7 @@ const renderEditListItem = (): ReturnType<typeof render> => {
   );
 };
 
-describe('V2 EditListItem', () => {
+describe('EditListItem', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -154,7 +154,7 @@ describe('V2 EditListItem', () => {
       error: authError,
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
-      redirectURI: '/v2/lists/123/',
+      redirectURI: '/lists/123/',
     });
   });
 
@@ -171,7 +171,7 @@ describe('V2 EditListItem', () => {
       error: notFoundError,
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
-      redirectURI: '/v2/lists/123/',
+      redirectURI: '/lists/123/',
     });
   });
 

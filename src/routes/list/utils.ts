@@ -1,13 +1,13 @@
-import { handleFailure } from '../../../utils/handleFailure';
+import { handleFailure } from '../../utils/handleFailure';
 import { AxiosError } from 'axios';
-import axios from '../../../utils/api';
+import axios from '../../utils/api';
 import type {
   IList,
   IListItemConfiguration,
   IListItemField,
   IListItemFieldConfiguration,
   IListUser,
-  IV2ListItem,
+  IListItem,
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
@@ -17,8 +17,8 @@ import moment from 'moment';
 export interface IFulfilledListData {
   current_user_id: string;
   list: IList;
-  not_completed_items: IV2ListItem[];
-  completed_items: IV2ListItem[];
+  not_completed_items: IListItem[];
+  completed_items: IListItem[];
   list_users: IListUser[];
   permissions: EUserPermissions;
   lists_to_update: IList[];
@@ -38,7 +38,7 @@ export interface IFulfilledEditListData {
 
 export interface IFulfilledEditListItemData {
   id: string;
-  item: IV2ListItem;
+  item: IListItem;
   list: IList;
   list_users: IListUser[];
   list_item_configuration: IListItemConfiguration;
@@ -48,14 +48,14 @@ export interface IFulfilledEditListItemData {
 export interface IFulfilledBulkEditItemsData {
   list: IList;
   lists: IList[];
-  items: IV2ListItem[];
+  items: IListItem[];
   categories: string[];
   list_users: IListUser[];
   list_item_configuration: IListItemConfiguration;
   list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
-export function itemName(item: IV2ListItem, listType: EListType): string {
+export function itemName(item: IListItem, listType: EListType): string {
   const fields = Array.isArray(item.fields) ? item.fields : [];
 
   const getFieldValue = (label: string): string => {
@@ -116,7 +116,7 @@ export async function fetchList(fetchParams: {
 
     const categories = data.not_completed_items
       .concat(data.completed_items)
-      .map((item: IV2ListItem) => {
+      .map((item: IListItem) => {
         return item.fields.find((field: IListItemField) => field.label === 'category')?.data;
       })
       .filter(Boolean)
@@ -177,7 +177,7 @@ export async function fetchListItemToEdit(fetchParams: {
       error: err as AxiosError,
       notFoundMessage: 'List item not found',
       navigate: fetchParams.navigate,
-      redirectURI: `/v2/lists/${fetchParams.list_id}/`,
+      redirectURI: `/lists/${fetchParams.list_id}/`,
     });
   }
 }
@@ -201,7 +201,7 @@ export async function fetchItemsToEdit(fetchParams: {
       error: err as AxiosError,
       notFoundMessage: 'One or more items not found',
       navigate: fetchParams.navigate,
-      redirectURI: `/v2/lists/${fetchParams.list_id}/`,
+      redirectURI: `/lists/${fetchParams.list_id}/`,
     });
   }
 }

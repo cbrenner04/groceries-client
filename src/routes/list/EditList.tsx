@@ -6,9 +6,9 @@ import Loading from 'components/Loading';
 
 import { fetchListToEdit, type IFulfilledEditListData } from './utils';
 import EditListForm from './containers/EditListForm';
-import UnknownError from '../../error_pages/UnknownError';
+import UnknownError from '../error_pages/UnknownError';
 
-const V2EditList: React.FC = (): React.JSX.Element => {
+const EditList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -44,4 +44,4 @@ const V2EditList: React.FC = (): React.JSX.Element => {
   );
 };
 
-export default V2EditList;
+export default EditList;

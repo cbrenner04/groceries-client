@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`V2BulkEditListItems displays UnknownError when an error occurs 1`] = `
+exports[`BulkEditListItems displays UnknownError when an error occurs 1`] = `
 <div>
   <h1>
     Something went wrong!
@@ -19,7 +19,7 @@ exports[`V2BulkEditListItems displays UnknownError when an error occurs 1`] = `
 </div>
 `;
 
-exports[`V2BulkEditListItems renders the Loading component when fetch request is pending 1`] = `
+exports[`BulkEditListItems renders the Loading component when fetch request is pending 1`] = `
 <div>
   <div
     id="loader"

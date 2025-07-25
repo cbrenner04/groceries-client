@@ -6,7 +6,7 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import { EListType } from 'typings';
-import type { IV2ListItem, IListItemField } from 'typings';
+import type { IListItem, IListItemField } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
 
 interface ISetupReturn extends RenderResult {
@@ -43,7 +43,7 @@ const mockFields: IListItemField[] = [
   },
 ];
 
-const mockV2Item: IV2ListItem = {
+const mockItem: IListItem = {
   id: 'item-1',
   user_id: 'user-1',
   list_id: 'list-1',
@@ -71,7 +71,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
       owner_id: 'user-1',
       refreshed: false,
     },
-    items: [mockV2Item],
+    items: [mockItem],
     lists: [
       {
         id: 'list-2',
@@ -330,10 +330,10 @@ describe('ChangeOtherListModal', () => {
   });
 
   it('handles multiple items correctly', async () => {
-    const multipleItems: IV2ListItem[] = [
-      mockV2Item,
+    const multipleItems: IListItem[] = [
+      mockItem,
       {
-        ...mockV2Item,
+        ...mockItem,
         id: 'item-2',
         fields: [
           {

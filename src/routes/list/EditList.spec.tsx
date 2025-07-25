@@ -4,11 +4,11 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 import { AxiosError } from 'axios';
 
-import { UserContext } from '../../../AppRouter';
-import { handleFailure } from '../../../utils/handleFailure';
+import { UserContext } from '../../AppRouter';
+import { handleFailure } from '../../utils/handleFailure';
 import { EListType } from 'typings';
 
-import V2EditList from './EditList';
+import EditList from './EditList';
 
 // Mock useParams for this specific test
 jest.mock('react-router', () => ({
@@ -18,7 +18,7 @@ jest.mock('react-router', () => ({
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = jest.fn();
-jest.mock('../../../utils/handleFailure', () => ({
+jest.mock('../../utils/handleFailure', () => ({
   handleFailure: jest.fn(),
 }));
 jest.mock('react-router', () => ({
@@ -46,9 +46,9 @@ const mockEditListData = {
 const renderEditList = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
-      <MemoryRouter initialEntries={['/v2/lists/123/edit']}>
+      <MemoryRouter initialEntries={['/lists/123/edit']}>
         <Routes>
-          <Route path="/v2/lists/:id/edit" element={<V2EditList />} />
+          <Route path="/lists/:id/edit" element={<EditList />} />
           <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
         </Routes>
       </MemoryRouter>
@@ -56,7 +56,7 @@ const renderEditList = (): ReturnType<typeof render> => {
   );
 };
 
-describe('V2 EditList', () => {
+describe('EditList', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

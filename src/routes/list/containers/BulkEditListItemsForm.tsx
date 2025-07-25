@@ -7,7 +7,7 @@ import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
 import {
   EListType,
-  type IV2ListItem,
+  type IListItem,
   type IList,
   type IListUser,
   type IListItemConfiguration,
@@ -19,7 +19,7 @@ import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFiel
 
 export interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
-  items: IV2ListItem[];
+  items: IListItem[];
   list: IList;
   lists: IList[];
   categories: string[];
@@ -104,7 +104,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       });
 
       toast('Items successfully updated', { type: 'info' });
-      props.navigate(`/v2/lists/${props.list.id}`);
+      props.navigate(`/lists/${props.list.id}`);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -113,7 +113,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           props.navigate('/users/sign_in');
         } else if ([403, 404].includes(error.response.status!)) {
           toast('Some items not found', { type: 'error' });
-          props.navigate(`/v2/lists/${props.list.id}`);
+          props.navigate(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(error.response.data!);
           const responseErrors = keys.map(
@@ -149,7 +149,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={(): void => props.navigate(`/v2/lists/${props.list.id}`)}
+          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
           cancelText="Cancel"
         />
       </Form>

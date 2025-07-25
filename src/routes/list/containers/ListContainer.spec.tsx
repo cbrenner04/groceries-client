@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-import { EUserPermissions, type IV2ListItem } from 'typings';
+import { EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
 import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
@@ -271,7 +271,7 @@ describe('ListContainer', () => {
     });
 
     it('handles items with empty category data as uncategorized', async () => {
-      const itemsWithEmptyCategory: IV2ListItem[] = [
+      const itemsWithEmptyCategory: IListItem[] = [
         {
           id: 'id4',
           archived_at: null,
@@ -338,7 +338,7 @@ describe('ListContainer', () => {
     });
 
     it('handles items with missing category field as uncategorized', async () => {
-      const itemsWithoutCategoryField: IV2ListItem[] = [
+      const itemsWithoutCategoryField: IListItem[] = [
         {
           id: 'id5',
           archived_at: null,
@@ -1414,7 +1414,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
-      expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/id1/list_items/id2/edit');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/id2/edit');
     });
 
     it('navigates to bulk edit form when multi select', async () => {
@@ -1432,7 +1432,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
-      expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/id1/list_items/bulk-edit?item_ids=id2,id3');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id3');
     });
 
     it('multi select copy incomplete items', async () => {

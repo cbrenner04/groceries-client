@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ListItem from './ListItem';
-import type { IV2ListItem, IListItemField } from 'typings';
+import type { IListItem, IListItemField } from 'typings';
 import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
 
 const mockHandleItemSelect = jest.fn();
@@ -40,7 +40,7 @@ const mockFields: IListItemField[] = [
   },
 ];
 
-const mockItem: IV2ListItem = {
+const mockItem: IListItem = {
   id: 'item-1',
   user_id: 'user-1',
   list_id: 'list-1',

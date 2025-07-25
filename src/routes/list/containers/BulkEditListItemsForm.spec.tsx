@@ -12,7 +12,7 @@ import {
   type IListUser,
   type IListItemConfiguration,
   type IListItemFieldConfiguration,
-  type IV2ListItem,
+  type IListItem,
 } from 'typings';
 
 import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkEditListItemsForm';
@@ -59,7 +59,7 @@ describe('BulkEditListItemsForm', () => {
     },
   ];
 
-  const mockItems: IV2ListItem[] = [
+  const mockItems: IListItem[] = [
     {
       id: 'item-1',
       list_id: 'list-1',
@@ -204,7 +204,7 @@ describe('BulkEditListItemsForm', () => {
     });
 
     expect(mockToast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
-    expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/list-1');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
   });
 
   it('submits form with updated field values', async () => {
@@ -290,7 +290,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
-      expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/list-1');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
 
@@ -306,7 +306,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
-      expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/list-1');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
 
@@ -363,7 +363,7 @@ describe('BulkEditListItemsForm', () => {
 
     await user.click(getByText('Cancel'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('/v2/lists/list-1');
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     expect(mockAxios.put).not.toHaveBeenCalled();
   });
 

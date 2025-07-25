@@ -1,19 +1,19 @@
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-import axios from '../../../../utils/api';
+import axios from '../../../utils/api';
 import update from 'immutability-helper';
-import type { IV2ListItem } from 'typings';
-import { handleFailure } from '../../../../utils/handleFailure';
+import type { IListItem } from 'typings';
+import { handleFailure } from '../../../utils/handleFailure';
 
 // handleAddItem
 export function handleAddItem(params: {
-  newItems: IV2ListItem[];
+  newItems: IListItem[];
   pending: boolean;
   setPending: (v: boolean) => void;
-  completedItems: IV2ListItem[];
-  setCompletedItems: (v: IV2ListItem[]) => void;
-  notCompletedItems: IV2ListItem[];
-  setNotCompletedItems: (v: IV2ListItem[]) => void;
+  completedItems: IListItem[];
+  setCompletedItems: (v: IListItem[]) => void;
+  notCompletedItems: IListItem[];
+  setNotCompletedItems: (v: IListItem[]) => void;
   categories: string[];
   setCategories: (v: string[]) => void;
   includedCategories?: string[];
@@ -70,9 +70,9 @@ export function handleAddItem(params: {
 
 // handleItemSelect
 export function handleItemSelect(params: {
-  item: IV2ListItem;
-  selectedItems: IV2ListItem[];
-  setSelectedItems: (v: IV2ListItem[]) => void;
+  item: IListItem;
+  selectedItems: IListItem[];
+  setSelectedItems: (v: IListItem[]) => void;
 }): void {
   const { item, selectedItems, setSelectedItems } = params;
   const isSelected = selectedItems.some((selectedItem) => selectedItem.id === item.id);
@@ -84,14 +84,14 @@ export function handleItemSelect(params: {
 }
 
 // handleItemEdit
-export function handleItemEdit(params: { item: IV2ListItem; listId: string; navigate: (url: string) => void }): void {
+export function handleItemEdit(params: { item: IListItem; listId: string; navigate: (url: string) => void }): void {
   const { item, listId, navigate } = params;
-  navigate(`/v2/lists/${listId}/list_items/${item.id}/edit`);
+  navigate(`/lists/${listId}/list_items/${item.id}/edit`);
 }
 
 // handleItemComplete
 export async function handleItemComplete(params: {
-  item: IV2ListItem;
+  item: IListItem;
   listId: string;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
@@ -115,14 +115,14 @@ export async function handleItemComplete(params: {
 
 // handleItemDelete
 export async function handleItemDelete(params: {
-  item: IV2ListItem;
+  item: IListItem;
   listId: string;
-  completedItems: IV2ListItem[];
-  setCompletedItems: (v: IV2ListItem[]) => void;
-  notCompletedItems: IV2ListItem[];
-  setNotCompletedItems: (v: IV2ListItem[]) => void;
-  selectedItems: IV2ListItem[];
-  setSelectedItems: (v: IV2ListItem[]) => void;
+  completedItems: IListItem[];
+  setCompletedItems: (v: IListItem[]) => void;
+  notCompletedItems: IListItem[];
+  setNotCompletedItems: (v: IListItem[]) => void;
+  selectedItems: IListItem[];
+  setSelectedItems: (v: IListItem[]) => void;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
   showToast?: boolean;
@@ -167,12 +167,12 @@ export async function handleItemDelete(params: {
 
 // handleItemRefresh
 export async function handleItemRefresh(params: {
-  item: IV2ListItem;
+  item: IListItem;
   listId: string;
-  completedItems: IV2ListItem[];
-  setCompletedItems: (v: IV2ListItem[]) => void;
-  notCompletedItems: IV2ListItem[];
-  setNotCompletedItems: (v: IV2ListItem[]) => void;
+  completedItems: IListItem[];
+  setCompletedItems: (v: IListItem[]) => void;
+  notCompletedItems: IListItem[];
+  setNotCompletedItems: (v: IListItem[]) => void;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
 }): Promise<void> {
@@ -236,13 +236,13 @@ export async function handleItemRefresh(params: {
 
 // handleToggleRead
 export async function handleToggleRead(params: {
-  items: IV2ListItem[];
+  items: IListItem[];
   listId: string;
-  completedItems: IV2ListItem[];
-  setCompletedItems: (v: IV2ListItem[]) => void;
-  notCompletedItems: IV2ListItem[];
-  setNotCompletedItems: (v: IV2ListItem[]) => void;
-  setSelectedItems: (v: IV2ListItem[]) => void;
+  completedItems: IListItem[];
+  setCompletedItems: (v: IListItem[]) => void;
+  notCompletedItems: IListItem[];
+  setNotCompletedItems: (v: IListItem[]) => void;
+  setSelectedItems: (v: IListItem[]) => void;
   setIncompleteMultiSelect: (v: boolean) => void;
   setCompleteMultiSelect: (v: boolean) => void;
   navigate?: (url: string) => void;
@@ -336,7 +336,7 @@ export async function handleToggleRead(params: {
     setIncompleteMultiSelect(false);
     setCompleteMultiSelect(false);
 
-    const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+    const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
     toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
   } catch (error) {
     handleFailure({

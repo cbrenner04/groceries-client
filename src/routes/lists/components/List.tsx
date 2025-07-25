@@ -39,7 +39,7 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
   );
 
   const listNameElement = props.includeLinkToList ? (
-    <Link to={`/v2/lists/${props.list.id}`} className="router-link">
+    <Link to={`/lists/${props.list.id}`} className="router-link">
       {listName}
     </Link>
   ) : (

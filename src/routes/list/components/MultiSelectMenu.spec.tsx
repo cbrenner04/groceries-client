@@ -3,7 +3,7 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import type { IV2ListItem, IListItemField } from 'typings';
+import type { IListItem, IListItemField } from 'typings';
 import MultiSelectMenu, { type IMultiSelectMenuProps } from './MultiSelectMenu';
 
 interface ISetupReturn extends RenderResult {
@@ -40,7 +40,7 @@ const mockFields: IListItemField[] = [
   },
 ];
 
-const mockV2Item: IV2ListItem = {
+const mockItem: IListItem = {
   id: 'item-1',
   user_id: 'user-1',
   list_id: 'list-1',
@@ -58,7 +58,7 @@ function setup(suppliedProps?: Partial<IMultiSelectMenuProps>): ISetupReturn {
     isMultiSelect: true,
     setCopy: jest.fn(),
     setMove: jest.fn(),
-    selectedItems: [mockV2Item],
+    selectedItems: [mockItem],
     setSelectedItems: jest.fn(),
     setMultiSelect: jest.fn(),
   };
@@ -133,10 +133,10 @@ describe('MultiSelectMenu', () => {
   });
 
   it('handles multiple selected items correctly', async () => {
-    const multipleItems: IV2ListItem[] = [
-      mockV2Item,
+    const multipleItems: IListItem[] = [
+      mockItem,
       {
-        ...mockV2Item,
+        ...mockItem,
         id: 'item-2',
         fields: [
           {

@@ -11,7 +11,7 @@ import {
   type IListItemConfiguration,
   type IListItemField,
   type IListUser,
-  type IV2ListItem,
+  type IListItem,
 } from 'typings';
 import { capitalize } from 'utils/format';
 import { usePolling } from 'hooks';
@@ -37,9 +37,9 @@ export interface IListContainerProps {
   userId: string;
   list: IList;
   categories: string[];
-  completedItems: IV2ListItem[];
+  completedItems: IListItem[];
   listUsers: IListUser[];
-  notCompletedItems: IV2ListItem[];
+  notCompletedItems: IListItem[];
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
@@ -47,13 +47,13 @@ export interface IListContainerProps {
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
   const [pending, setPending] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([] as IV2ListItem[]);
+  const [selectedItems, setSelectedItems] = useState([] as IListItem[]);
   const [notCompletedItems, setNotCompletedItems] = useState(props.notCompletedItems);
   const [completedItems, setCompletedItems] = useState(props.completedItems);
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
   const [includedCategories, setIncludedCategories] = useState(props.categories);
-  const [itemsToDelete, setItemsToDelete] = useState([] as IV2ListItem[]);
+  const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
@@ -73,7 +73,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           categories: updatedCategories,
         } = fetchResponse;
 
-        const isSameSet = (newSet: IV2ListItem[], oldSet: IV2ListItem[]): boolean =>
+        const isSameSet = (newSet: IListItem[], oldSet: IListItem[]): boolean =>
           JSON.stringify(newSet) === JSON.stringify(oldSet);
 
         const notCompletedSame = isSameSet(updatedNotCompletedItems, notCompletedItems);
@@ -103,7 +103,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   }, 3000);
 
-  const handleAddItem = (newItems: IV2ListItem[]): void => {
+  const handleAddItem = (newItems: IListItem[]): void => {
     exportedHandleAddItem({
       newItems,
       pending,
@@ -123,7 +123,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
-  const handleItemSelect = (item: IV2ListItem): void => {
+  const handleItemSelect = (item: IListItem): void => {
     exportedHandleItemSelect({
       item,
       selectedItems,
@@ -131,11 +131,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
-  const handleItemEdit = (item: IV2ListItem): void => {
+  const handleItemEdit = (item: IListItem): void => {
     if (selectedItems.length > 1) {
       // Bulk edit - navigate with selected item IDs
       const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
-      navigate(`/v2/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
+      navigate(`/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
     } else {
       // Single edit
       exportedHandleItemEdit({
@@ -146,7 +146,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  const handleItemComplete = async (item: IV2ListItem): Promise<void> => {
+  const handleItemComplete = async (item: IListItem): Promise<void> => {
     const itemsToComplete = selectedItems.length ? selectedItems : [item];
 
     // Optimistic update - move items to completed immediately
@@ -181,8 +181,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     const results = await Promise.all(apiPromises);
 
     // Check for any failures
-    const failures: IV2ListItem[] = [];
-    const successfulItems: IV2ListItem[] = [];
+    const failures: IListItem[] = [];
+    const successfulItems: IListItem[] = [];
     results.forEach((result) => {
       if (result.success) {
         successfulItems.push(result.item);
@@ -207,7 +207,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       // Show appropriate feedback
       if (successfulItems.length > 0) {
-        const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
         toast(
           `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
             failures,
@@ -223,12 +223,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       }
     } else {
       // All items succeeded
-      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
       toast(`${pluralize(itemsToComplete)} marked as completed.`, { type: 'info' });
     }
   };
 
-  const handleItemRefresh = async (item: IV2ListItem): Promise<void> => {
+  const handleItemRefresh = async (item: IListItem): Promise<void> => {
     await exportedHandleItemRefresh({
       item,
       listId: props.list.id!,
@@ -241,7 +241,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
-  const toggleRead = async (item: IV2ListItem): Promise<void> => {
+  const toggleRead = async (item: IListItem): Promise<void> => {
     const items = selectedItems.length ? selectedItems : [item];
     await exportedHandleToggleRead({
       items,
@@ -258,7 +258,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   // Multi-select and bulk operation handlers
-  const handleDelete = (item: IV2ListItem): void => {
+  const handleDelete = (item: IListItem): void => {
     const items = selectedItems.length ? selectedItems : [item];
     setItemsToDelete(items);
     setShowDeleteConfirm(true);
@@ -306,7 +306,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     const results = await Promise.allSettled(apiPromises);
 
     // Check for any failures
-    const failures: IV2ListItem[] = [];
+    const failures: IListItem[] = [];
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
         failures.push(itemsToDeleteFromState[index]);
@@ -333,7 +333,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       // Show appropriate feedback
       if (successfulItems.length > 0) {
-        const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
         toast(
           `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
             failures,
@@ -346,7 +346,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       }
     } else {
       // All items succeeded
-      const pluralize = (items: IV2ListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
       toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
     }
   };
@@ -391,13 +391,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setDisplayedCategories(includedCategories);
   };
 
-  const groupByCategory = (items: IV2ListItem[]): ReactNode => {
+  const groupByCategory = (items: IListItem[]): ReactNode => {
     // When a filter is applied, show only the selected category
     // When no filter is applied, show all categories plus uncategorized items
     const categoriesToShow = filter ? displayedCategories : [undefined, ...displayedCategories];
 
     return categoriesToShow.map((category: string | undefined) => {
-      const itemsToRender = items.filter((item: IV2ListItem) => {
+      const itemsToRender = items.filter((item: IListItem) => {
         // Defensive: treat missing fields as empty array
         const fields = Array.isArray(item.fields) ? item.fields : [];
 
@@ -430,7 +430,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         <React.Fragment key={`${category ?? 'uncategorized'}-wrapper`}>
           {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
           <ListGroup className="mb-3" key={category ?? 'uncategorized'}>
-            {itemsToRender.map((item: IV2ListItem) => (
+            {itemsToRender.map((item: IListItem) => (
               <ListItem
                 key={item.id}
                 item={item}
@@ -523,7 +523,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         />
       )}
       <ListGroup className="mb-3">
-        {completedItems.map((item: IV2ListItem) => (
+        {completedItems.map((item: IListItem) => (
           <ListItem
             key={item.id}
             item={item}

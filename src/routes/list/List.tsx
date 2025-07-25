@@ -6,7 +6,7 @@ import Loading from 'components/Loading';
 
 import { fetchList, type IFulfilledListData } from './utils';
 import ListContainer from './containers/ListContainer';
-import UnknownError from '../../error_pages/UnknownError';
+import UnknownError from '../error_pages/UnknownError';
 
 const List = (): React.JSX.Element => {
   const navigate = useNavigate();

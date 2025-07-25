@@ -150,7 +150,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -203,7 +203,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/v2/lists/id3/edit"
+                    href="/lists/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -244,7 +244,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
@@ -298,7 +298,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/v2/lists/id5/edit"
+                    href="/lists/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -374,7 +374,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -446,7 +446,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"
@@ -755,7 +755,7 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id3"
+                  href="/lists/id3"
                 >
                   <h5
                     class="mb-1"
@@ -808,7 +808,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/v2/lists/id3/edit"
+                    href="/lists/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -849,7 +849,7 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id5"
+                  href="/lists/id5"
                 >
                   <h5
                     class="mb-1"
@@ -903,7 +903,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/v2/lists/id5/edit"
+                    href="/lists/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -979,7 +979,7 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id2"
+                  href="/lists/id2"
                 >
                   <h5
                     class="mb-1"
@@ -1051,7 +1051,7 @@ exports[`ListsContainer renders 1`] = `
                 <a
                   class="router-link"
                   data-discover="true"
-                  href="/v2/lists/id4"
+                  href="/lists/id4"
                 >
                   <h5
                     class="mb-1"

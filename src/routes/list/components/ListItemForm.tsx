@@ -8,14 +8,14 @@ import axios from 'utils/api';
 import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
 import { capitalize } from 'utils/format';
-import type { IV2ListItem, IListUser, IListItemConfiguration } from 'typings';
+import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
 export interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
   listId: string;
   listUsers?: IListUser[];
-  handleItemAddition: (data: IV2ListItem[]) => void;
+  handleItemAddition: (data: IListItem[]) => void;
   categories?: string[];
   listItemConfiguration?: IListItemConfiguration;
 }
