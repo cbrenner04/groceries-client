@@ -53,6 +53,7 @@ describe('CompletedLists', () => {
     const { container, findByTestId } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+    expect(axios.get).toHaveBeenCalledWith('/v2/completed_lists/');
     expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
     expect(container).toMatchSnapshot();
   });

@@ -1,35 +1,37 @@
-import React, { type MouseEventHandler } from 'react';
+import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 
 export interface IFilterProps {
   categories: string[];
-  handleCategoryFilter: MouseEventHandler;
+  handleCategoryFilter: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Filter: React.FC<IFilterProps> = (props): React.JSX.Element => (
-  <Dropdown data-test-id="filter-dropdown">
-    <Dropdown.Toggle variant="light" id="filter-by-category-button">
-      Filter by category
-    </Dropdown.Toggle>
-    <Dropdown.Menu>
-      {props.categories.sort().map((category) => {
-        if (!category) {
-          return '';
-        }
-        return (
+const Filter: React.FC<IFilterProps> = (props): React.JSX.Element => {
+  // Filter out empty strings and create unique keys
+  const validCategories = props.categories.filter(Boolean);
+
+  return (
+    <Dropdown>
+      <Dropdown.Toggle variant="light" id="dropdown-basic">
+        Filter by category
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        {validCategories.map((category) => (
           <Dropdown.Item
-            as="button"
             key={category}
-            name={category}
-            onClick={props.handleCategoryFilter}
-            data-test-id={`filter-by-${category}`}
+            onClick={(): void => {
+              const syntheticEvent = {
+                target: { name: category },
+              } as React.ChangeEvent<HTMLInputElement>;
+              props.handleCategoryFilter(syntheticEvent);
+            }}
           >
             {category}
           </Dropdown.Item>
-        );
-      })}
-    </Dropdown.Menu>
-  </Dropdown>
-);
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+};
 
 export default Filter;

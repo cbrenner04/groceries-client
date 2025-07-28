@@ -3,18 +3,18 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router';
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
-import EditListItem from './routes/list/EditListItem';
-import BulkEditListItems from './routes/list/BulkEditListItems';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
-import List from './routes/list/List';
-import EditList from './routes/lists/EditList';
 import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
+import List from './routes/list/List';
+import EditList from './routes/list/EditList';
+import EditListItem from './routes/list/EditListItem';
+import BulkEditListItems from './routes/list/BulkEditListItems';
 
 interface IUser {
   accessToken: string;

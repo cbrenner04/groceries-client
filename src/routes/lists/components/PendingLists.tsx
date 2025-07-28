@@ -42,7 +42,7 @@ const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element =>
     setPending(true);
     const listsToAccept = selectedLists.length ? selectedLists : [list];
     const requests = listsToAccept.map((l) =>
-      axios.patch(`/v1/lists/${l.id}/users_lists/${l.users_list_id}`, { users_list: { has_accepted: true } }),
+      axios.patch(`/v2/lists/${l.id}/users_lists/${l.users_list_id}`, { users_list: { has_accepted: true } }),
     );
     try {
       await Promise.all(requests);
@@ -81,7 +81,7 @@ const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element =>
     setPending(true);
     setShowRejectConfirm(false);
     const requests = listsToReject.map((l) =>
-      axios.patch(`/v1/lists/${l.id}/users_lists/${l.users_list_id}`, {
+      axios.patch(`/v2/lists/${l.id}/users_lists/${l.users_list_id}`, {
         users_list: { has_accepted: false },
       }),
     );

@@ -1,23 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CategoryFilter renders Filter when categories exist but filter does not 1`] = `
-<div>
-  <div
-    class="dropdown"
-    data-test-id="filter-dropdown"
-  >
-    <button
-      aria-expanded="false"
-      class="dropdown-toggle btn btn-light"
-      id="filter-by-category-button"
-      type="button"
-    >
-      Filter by category
-    </button>
-  </div>
-</div>
-`;
-
 exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = `
 <div>
   <span
@@ -31,7 +13,7 @@ exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = 
     id="filter-button"
     type="button"
   >
-    foo
+    Produce
      
     <i
       class="fa fa-trash"
@@ -40,15 +22,148 @@ exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = 
 </div>
 `;
 
-exports[`CategoryFilter renders NoFilter when categories do not exist 1`] = `
+exports[`CategoryFilter renders Filtered when filter exists but categories is empty 1`] = `
 <div>
+  <span
+    id="filter-title"
+  >
+    Filtering by:
+  </span>
   <button
-    class="btn btn-light"
-    disabled=""
-    id="no-filter"
+    class="btn btn-outline-primary"
+    data-test-id="clear-filter"
+    id="filter-button"
     type="button"
   >
-    Filter by category
+    Produce
+     
+    <i
+      class="fa fa-trash"
+    />
   </button>
+</div>
+`;
+
+exports[`CategoryFilter renders Filtered when filter exists but categories is undefined 1`] = `
+<div>
+  <span
+    id="filter-title"
+  >
+    Filtering by:
+  </span>
+  <button
+    class="btn btn-outline-primary"
+    data-test-id="clear-filter"
+    id="filter-button"
+    type="button"
+  >
+    Produce
+     
+    <i
+      class="fa fa-trash"
+    />
+  </button>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories array contains only empty strings 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories array contains some valid categories 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories do not exist 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories exist but filter is empty string 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories exist but filter is undefined 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
+</div>
+`;
+
+exports[`CategoryFilter renders dropdown when categories is empty array 1`] = `
+<div>
+  <div
+    class="dropdown"
+  >
+    <button
+      aria-expanded="false"
+      class="dropdown-toggle btn btn-light"
+      id="filter-by-category-button"
+      type="button"
+    >
+      Filter by category
+    </button>
+  </div>
 </div>
 `;

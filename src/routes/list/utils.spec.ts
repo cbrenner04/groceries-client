@@ -1,465 +1,475 @@
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
+import { fetchList, fetchListToEdit, fetchListItemToEdit, itemName, type IFulfilledEditListData } from './utils';
 import axios from 'utils/api';
 import { EListType } from 'typings';
-
+import type { IListItem } from 'typings';
 import {
-  itemName,
-  mapIncludedCategories,
-  categorizeNotPurchasedItems,
-  sortItems,
-  fetchList,
-  fetchItemToEdit,
-  fetchItemsToEdit,
-} from './utils';
+  createList,
+  createListItem,
+  createField,
+  createListItemConfiguration,
+  createApiResponse,
+} from 'test-utils/factories';
+import { handleFailure } from '../../utils/handleFailure';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
+const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+
+jest.mock('react-toastify');
+jest.mock('../../utils/handleFailure', () => ({
+  handleFailure: jest.fn(),
 }));
 
-describe('utils', () => {
-  describe('itemName', () => {
-    it('returns correct title', () => {
-      expect(itemName({ id: 'id1', title: 'foo', author: 'bar' }, EListType.BOOK_LIST)).toBe('"foo" bar');
-      expect(itemName({ id: 'id1', title: 'foo' }, EListType.BOOK_LIST)).toBe('"foo"');
-      expect(itemName({ id: 'id1', author: 'foo' }, EListType.BOOK_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', quantity: 'foo', product: 'bar' }, EListType.GROCERY_LIST)).toBe('foo bar');
-      expect(itemName({ id: 'id1', quantity: 'foo' }, EListType.GROCERY_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', product: 'foo' }, EListType.GROCERY_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', title: 'foo', artist: 'bar', album: 'baz' }, EListType.MUSIC_LIST)).toBe(
-        '"foo" bar - baz',
-      );
-      expect(itemName({ id: 'id1', title: 'foo', artist: 'bar' }, EListType.MUSIC_LIST)).toBe('"foo" bar');
-      expect(itemName({ id: 'id1', artist: 'foo', album: 'bar' }, EListType.MUSIC_LIST)).toBe('foo - bar');
-      expect(itemName({ id: 'id1', title: 'foo', album: 'bar' }, EListType.MUSIC_LIST)).toBe('"foo" bar');
-      expect(itemName({ id: 'id1', title: 'foo' }, EListType.MUSIC_LIST)).toBe('"foo"');
-      expect(itemName({ id: 'id1', album: 'foo' }, EListType.MUSIC_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', artist: 'foo' }, EListType.MUSIC_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', content: 'foo' }, EListType.SIMPLE_LIST)).toBe('foo');
-      expect(itemName({ id: 'id1', task: 'foo' }, EListType.TO_DO_LIST)).toBe('foo');
+const mockNavigate = jest.fn();
+
+// Helper to create mock error with status
+const createError = (status: number): AxiosError => new AxiosError('Test error', String(status));
+
+describe('itemName', () => {
+  const createMockItem = (fields: { label: string; data: string }[]): IListItem => {
+    const mappedFields = fields.map((field, index) => createField(`field-${index}`, field.label, field.data, '1'));
+    return createListItem('1', false, mappedFields);
+  };
+
+  describe('BOOK_LIST', () => {
+    it('returns formatted title and author', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'The Great Gatsby' },
+        { label: 'author', data: 'F. Scott Fitzgerald' },
+      ]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby" F. Scott Fitzgerald');
+    });
+
+    it('handles missing title', () => {
+      const item = createMockItem([{ label: 'author', data: 'F. Scott Fitzgerald' }]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('F. Scott Fitzgerald');
+    });
+
+    it('handles missing author', () => {
+      const item = createMockItem([{ label: 'title', data: 'The Great Gatsby' }]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby"');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.BOOK_LIST)).toBe('');
     });
   });
 
-  describe('mapIncludedCategories', () => {
-    it('returns mapped categories', () => {
-      const items = [
-        { id: 'id1', category: 'foo', name: 'a' },
-        { id: 'id1', category: 'FOO', name: 'b' },
-        { id: 'id1', category: 'Foo', name: 'c' },
-        { id: 'id1', category: 'BAR', name: 'd' },
-        { id: 'id1', category: 'bar', name: 'e' },
-        { id: 'id1', category: 'Bar', name: 'f' },
-        { id: 'id1', category: '', name: 'g' },
-        { id: 'id1', category: undefined, name: 'h' },
-      ];
-      expect(mapIncludedCategories(items)).toStrictEqual(['', 'foo', 'bar']);
+  describe('GROCERY_LIST', () => {
+    it('returns formatted quantity and product', () => {
+      const item = createMockItem([
+        { label: 'quantity', data: '2' },
+        { label: 'product', data: 'Apples' },
+      ]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2 Apples');
+    });
+
+    it('handles missing quantity', () => {
+      const item = createMockItem([{ label: 'product', data: 'Apples' }]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('Apples');
+    });
+
+    it('handles missing product', () => {
+      const item = createMockItem([{ label: 'quantity', data: '2' }]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.GROCERY_LIST)).toBe('');
     });
   });
 
-  describe('categorizeNotPurchasedItems', () => {
-    it('returns categorized items', () => {
-      const items = [
-        { id: 'id1', category: 'foo', name: 'a' },
-        { id: 'id1', category: 'FOO', name: 'b' },
-        { id: 'id1', category: 'Foo', name: 'c' },
-        { id: 'id1', category: 'BAR', name: 'd' },
-        { id: 'id1', category: 'bar', name: 'e' },
-        { id: 'id1', category: 'Bar', name: 'f' },
-        { id: 'id1', category: '', name: 'g' },
-        { id: 'id1', category: undefined, name: 'h' },
-      ];
-      const categories = ['', 'foo'];
-      expect(categorizeNotPurchasedItems(items, categories)).toStrictEqual({
-        foo: [
-          { id: 'id1', category: 'foo', name: 'a' },
-          { id: 'id1', category: 'FOO', name: 'b' },
-          { id: 'id1', category: 'Foo', name: 'c' },
-        ],
-        bar: [
-          { id: 'id1', category: 'BAR', name: 'd' },
-          { id: 'id1', category: 'bar', name: 'e' },
-          { id: 'id1', category: 'Bar', name: 'f' },
-        ],
-        '': [
-          { id: 'id1', category: '', name: 'g' },
-          { id: 'id1', category: undefined, name: 'h' },
-        ],
-      });
+  describe('MUSIC_LIST', () => {
+    it('returns formatted title, artist, and album', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'artist', data: 'Queen' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen - A Night at the Opera');
+    });
+
+    it('handles missing title', () => {
+      const item = createMockItem([
+        { label: 'artist', data: 'Queen' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('Queen - A Night at the Opera');
+    });
+
+    it('handles missing artist', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'album', data: 'A Night at the Opera' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" A Night at the Opera');
+    });
+
+    it('handles missing album', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'Bohemian Rhapsody' },
+        { label: 'artist', data: 'Queen' },
+      ]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.MUSIC_LIST)).toBe('');
     });
   });
 
-  describe('sortItems', () => {
-    it('returns sorted items for BookList', () => {
-      const items = [
-        { id: 'id1', author: undefined, number_in_series: 1, title: 'foo' },
-        { id: 'id1', author: 'foo', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: 'bar', number_in_series: 2, title: 'baz' },
-        { id: 'id1', author: 'bar', number_in_series: 1, title: 'foobar' },
-        { id: 'id1', author: 'bar', number_in_series: undefined, title: 'foobaz' },
-        { id: 'id1', author: 'bar', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: '', number_in_series: undefined, title: 'foo' },
-      ];
-      expect(sortItems(EListType.BOOK_LIST, items)).toStrictEqual([
-        { id: 'id1', author: 'bar', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: 'bar', number_in_series: 1, title: 'foobar' },
-        { id: 'id1', author: 'bar', number_in_series: 2, title: 'baz' },
-        { id: 'id1', author: 'bar', number_in_series: undefined, title: 'foobaz' },
-        { id: 'id1', author: 'foo', number_in_series: 1, title: 'bar' },
-        { id: 'id1', author: undefined, number_in_series: 1, title: 'foo' },
-        { id: 'id1', author: '', number_in_series: undefined, title: 'foo' },
-      ]);
+  describe('SIMPLE_LIST', () => {
+    it('returns content field value', () => {
+      const item = createMockItem([{ label: 'content', data: 'Buy groceries' }]);
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('Buy groceries');
     });
 
-    it('returns sorted items for GroceryList', () => {
-      const items = [
-        { id: 'id1', product: undefined, quantity: 'foo' },
-        { id: 'id1', product: '', quantity: 'bar' },
-        { id: 'id1', product: 'foo', quantity: undefined },
-        { id: 'id1', product: 'foo', quantity: 'bar' },
-        { id: 'id1', product: 'foo', quantity: 'foo' },
-        { id: 'id1', product: 'bar', quantity: '' },
-        { id: 'id1', product: undefined, quantity: 'baz' },
-      ];
-      expect(sortItems(EListType.GROCERY_LIST, items)).toStrictEqual([
-        { id: 'id1', product: 'bar', quantity: '' },
-        { id: 'id1', product: 'foo', quantity: undefined },
-        { id: 'id1', product: 'foo', quantity: 'bar' },
-        { id: 'id1', product: 'foo', quantity: 'foo' },
-        { id: 'id1', product: undefined, quantity: 'foo' },
-        { id: 'id1', product: '', quantity: 'bar' },
-        { id: 'id1', product: undefined, quantity: 'baz' },
-      ]);
-    });
-
-    it('returns sorted items for MusicList', () => {
-      const items = [
-        { id: 'id1', artist: undefined, album: 'bar', title: 'foo' },
-        { id: 'id1', artist: 'foo', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: 'bar', album: 'foo', title: 'baz' },
-        { id: 'id1', artist: 'bar', album: 'bar', title: 'foobar' },
-        { id: 'id1', artist: 'bar', album: undefined, title: 'foobaz' },
-        { id: 'id1', artist: 'bar', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: '', album: undefined, title: 'foo' },
-      ];
-      expect(sortItems(EListType.MUSIC_LIST, items)).toStrictEqual([
-        { id: 'id1', artist: 'bar', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: 'bar', album: 'bar', title: 'foobar' },
-        { id: 'id1', artist: 'bar', album: 'foo', title: 'baz' },
-        { id: 'id1', artist: 'bar', album: undefined, title: 'foobaz' },
-        { id: 'id1', artist: 'foo', album: 'bar', title: 'bar' },
-        { id: 'id1', artist: undefined, album: 'bar', title: 'foo' },
-        { id: 'id1', artist: '', album: undefined, title: 'foo' },
-      ]);
-    });
-
-    it('returns sorted items for Simple list', () => {
-      const items = [
-        { id: 'id1', content: undefined },
-        { id: 'id1', content: 'baz' },
-        { id: 'id1', content: 'foo' },
-        { id: 'id1', content: 'bar' },
-        { id: 'id1', content: '' },
-      ];
-      expect(sortItems(EListType.SIMPLE_LIST, items)).toStrictEqual([
-        { id: 'id1', content: 'bar' },
-        { id: 'id1', content: 'baz' },
-        { id: 'id1', content: 'foo' },
-        { id: 'id1', content: undefined },
-        { id: 'id1', content: '' },
-      ]);
-    });
-
-    it('returns sorted items for ToDoList', () => {
-      const items = [
-        { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
-        { id: 'id1', due_by: '05/20/2020', assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '2', task: 'baz' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'foobar' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: undefined, task: 'foobaz' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
-      ];
-      expect(sortItems(EListType.TO_DO_LIST, items)).toStrictEqual([
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '1', task: 'foobar' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: '2', task: 'baz' },
-        { id: 'id1', due_by: '05/19/2020', assignee_id: undefined, task: 'foobaz' },
-        { id: 'id1', due_by: '05/20/2020', assignee_id: '1', task: 'bar' },
-        { id: 'id1', due_by: undefined, assignee_id: '1', task: 'foo' },
-        { id: 'id1', due_by: '', assignee_id: undefined, task: 'foo' },
-      ]);
+    it('handles missing content', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
     });
   });
 
-  describe('fetchList', () => {
-    const id = '1';
-    const navigate = jest.fn();
-
-    it('returns correct body on success', async () => {
-      axios.get = jest.fn().mockResolvedValue({
-        data: {
-          current_user_id: '1',
-          not_purchased_items: [],
-          purchased_items: [],
-          list: {
-            id: '1',
-          },
-          categories: [],
-          list_users: [
-            { id: '1', email: 'foo@example.com' },
-            { id: '2', email: 'bar@example.com' },
-          ],
-          permissions: 'read',
-          lists_to_update: [],
-        },
-      });
-
-      expect(await fetchList({ id, navigate })).toStrictEqual({
-        currentUserId: '1',
-        list: { id: '1' },
-        purchasedItems: [],
-        categories: [],
-        listUsers: [
-          { id: '1', email: 'foo@example.com' },
-          { id: '2', email: 'bar@example.com' },
-        ],
-        includedCategories: [''],
-        notPurchasedItems: { '': [] },
-        permissions: 'read',
-        lists: [],
-      });
-    });
-
-    it('redirects to /users/sign_in when 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-
-      await fetchList({ id, navigate });
-
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
-    });
-
-    it('redirects to /lists when 403', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
-
-      await fetchList({ id, navigate });
-
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith('/lists');
-    });
-
-    it('redirects to /lists when 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
-
-      await fetchList({ id, navigate });
-
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith('/lists');
-    });
-
-    it('displays generic toast when status is not 401, 403, 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
-
-      await fetchList({ id, navigate });
-
-      expect(toast).toHaveBeenCalledWith(
-        'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
+  describe('TO_DO_LIST', () => {
+    it('returns task with assignee and due date', () => {
+      const item = createMockItem([
+        { label: 'task', data: 'Complete project' },
+        { label: 'assignee_email', data: 'john@example.com' },
+        { label: 'due_by', data: '2024-01-15' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
+        'Complete project\nAssigned To: john@example.com\nDue By: January 15, 2024',
       );
     });
 
-    it('throws when request fails', () => {
-      axios.get = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-
-      expect(fetchList({ id, navigate })).rejects.toThrow();
-    });
-
-    it('throws when unknown error occurs', () => {
-      axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-
-      expect(fetchList({ id, navigate })).rejects.toThrow();
-    });
-  });
-
-  describe('fetchItemToEdit', () => {
-    const listId = '1';
-    const itemId = '1';
-    const navigate = jest.fn();
-
-    it('returns correct body on success', async () => {
-      axios.get = jest.fn().mockResolvedValue({
-        data: {
-          item: {
-            id: '1',
-            user_id: '1',
-          },
-          list: { id: '1', type: EListType.GROCERY_LIST },
-          categories: [],
-          list_users: [
-            { id: '1', email: 'foo@example.com' },
-            { id: '2', email: 'bar@example.com' },
-          ],
-        },
-      });
-
-      expect(await fetchItemToEdit({ itemId, listId, navigate })).toStrictEqual({
-        listUsers: [
-          { id: '1', email: 'foo@example.com' },
-          { id: '2', email: 'bar@example.com' },
-        ],
-        userId: '1',
-        list: {
-          id: '1',
-          type: EListType.GROCERY_LIST,
-          categories: [],
-        },
-        item: {
-          id: '1',
-          user_id: '1',
-        },
-      });
-    });
-
-    it('redirects to /users/sign_in when 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-
-      await fetchItemToEdit({ itemId, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
-    });
-
-    it('redirects to /lists when 403', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
-
-      await fetchItemToEdit({ itemId, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
-    });
-
-    it('redirects to /lists when 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
-
-      await fetchItemToEdit({ itemId, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
-    });
-
-    it('displays generic toast when status is not 401, 403, 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
-
-      await fetchItemToEdit({ itemId, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith(
-        'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
+    it('returns task with assignee_id when assignee_email is not present', () => {
+      const item = createMockItem([
+        { label: 'task', data: 'Complete project' },
+        { label: 'assignee_id', data: 'user123' },
+        { label: 'due_by', data: '2024-01-15' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
+        'Complete project\nAssigned To: user123\nDue By: January 15, 2024',
       );
     });
 
-    it('throws when request fails', () => {
-      axios.get = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-
-      expect(fetchItemToEdit({ itemId, listId, navigate })).rejects.toThrow();
+    it('returns task without assignee when neither assignee_email nor assignee_id is present', () => {
+      const item = createMockItem([
+        { label: 'task', data: 'Complete project' },
+        { label: 'due_by', data: '2024-01-15' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nDue By: January 15, 2024');
     });
 
-    it('throws when unknown error occurs', () => {
-      axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
-
-      expect(fetchItemToEdit({ itemId, listId, navigate })).rejects.toThrow();
-    });
-  });
-
-  describe('fetchItemsToEdit', () => {
-    const listId = '1';
-    const navigate = jest.fn();
-    const search = '?item_ids=1,2';
-
-    it('returns correct body on success', async () => {
-      axios.get = jest.fn().mockResolvedValue({
-        data: {
-          items: [
-            {
-              id: 1,
-              user_id: 1,
-            },
-          ],
-          list: { id: 1, type: EListType.GROCERY_LIST },
-          categories: [],
-          list_users: [
-            { id: 1, email: 'foo@example.com' },
-            { id: 2, email: 'bar@example.com' },
-          ],
-          lists: [{ id: 1, type: EListType.GROCERY_LIST, name: 'foobar' }],
-        },
-      });
-
-      expect(await fetchItemsToEdit({ search, listId, navigate })).toStrictEqual({
-        list_users: [
-          { id: 1, email: 'foo@example.com' },
-          { id: 2, email: 'bar@example.com' },
-        ],
-        list: { id: 1, type: EListType.GROCERY_LIST },
-        items: [
-          {
-            id: 1,
-            user_id: 1,
-          },
-        ],
-        categories: [],
-        lists: [{ id: 1, type: EListType.GROCERY_LIST, name: 'foobar' }],
-      });
-    });
-
-    it('redirects to /users/sign_in when 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-
-      await fetchItemsToEdit({ search, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
-    });
-
-    it('redirects to /lists when 403', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
-
-      await fetchItemsToEdit({ search, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('One or more items not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
-    });
-
-    it('redirects to /lists when 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
-
-      await fetchItemsToEdit({ search, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith('One or more items not found', { type: 'error' });
-      expect(navigate).toHaveBeenCalledWith(`/lists/${listId}`);
-    });
-
-    it('throws when status is not 401, 403, 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
-
-      await fetchItemsToEdit({ search, listId, navigate });
-
-      expect(toast).toHaveBeenCalledWith(
-        'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
+    it('returns task without due date when due_by is not present', () => {
+      const item = createMockItem([
+        { label: 'task', data: 'Complete project' },
+        { label: 'assignee_email', data: 'john@example.com' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
+        'Complete project\nAssigned To: john@example.com\nDue By: Invalid date',
       );
     });
 
-    it('throws when request fails', () => {
-      axios.get = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-
-      expect(fetchItemsToEdit({ search, listId, navigate })).rejects.toThrow();
+    it('returns only task when no other fields are present', () => {
+      const item = createMockItem([{ label: 'task', data: 'Complete project' }]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nDue By: Invalid date');
     });
 
-    it('throws when unknown error occurs', () => {
-      axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    it('handles missing task', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Due By: Invalid date');
+    });
+  });
 
-      expect(fetchItemsToEdit({ search, listId, navigate })).rejects.toThrow();
+  describe('default case', () => {
+    it('returns all field data joined with spaces', () => {
+      const item = createMockItem([
+        { label: 'field1', data: 'value1' },
+        { label: 'field2', data: 'value2' },
+        { label: 'field3', data: 'value3' },
+      ]);
+      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('value1 value2 value3');
+    });
+
+    it('handles empty fields', () => {
+      const item = createMockItem([]);
+      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('');
+    });
+  });
+
+  describe('edge cases', () => {
+    it('handles null fields', () => {
+      const item = {
+        ...createListItem('1'),
+        fields: null as unknown as IListItem['fields'],
+      };
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+    });
+
+    it('handles undefined fields', () => {
+      const item = {
+        ...createListItem('1'),
+        fields: undefined as unknown as IListItem['fields'],
+      };
+      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+    });
+
+    it('handles fields with null data', () => {
+      const item = createMockItem([
+        { label: 'content', data: null as unknown as string },
+        { label: 'task', data: 'Valid task' },
+      ]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Valid task\nDue By: Invalid date');
+    });
+  });
+});
+
+describe('fetchList', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns data on success', async () => {
+    const mockData = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('handles 401 error', async () => {
+    const error = createError(401);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles 403 error', async () => {
+    const error = createError(403);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles 404 error', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles generic error', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles missing data from server', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles invalid data structure - missing list', async () => {
+    const error = createError(500);
+    const { list, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles invalid data structure - missing not_completed_items', async () => {
+    const error = createError(500);
+    const { not_completed_items: notCompletedItems, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles invalid data structure - missing completed_items', async () => {
+    const error = createError(500);
+    const { completed_items: completedItems, ...mockData } = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('extracts categories from items with category fields', async () => {
+    const mockData = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result?.categories).toEqual(['foo', 'bar']);
+  });
+
+  it('deduplicates categories from items', async () => {
+    const mockData = createApiResponse();
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result?.categories).toEqual(['foo', 'bar']);
+  });
+});
+
+describe('fetchListToEdit', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns data on success', async () => {
+    const mockData: IFulfilledEditListData = {
+      id: '1',
+      name: 'Test List',
+      type: EListType.GROCERY_LIST,
+      completed: false,
+      refreshed: false,
+      list_item_configuration_id: null,
+      archived_at: null,
+    };
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('handles missing data from server', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      // rethrow: true,
+    });
+  });
+
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      // rethrow: true,
+    });
+  });
+});
+
+describe('fetchListItemToEdit', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns data on success', async () => {
+    const mockData = {
+      id: '1',
+      item: createListItem('1'),
+      list: createList(),
+      list_users: [],
+      list_item_configuration: createListItemConfiguration(),
+      list_item_field_configurations: [],
+    };
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('handles missing data from server', async () => {
+    const error = createError(404);
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+      // rethrow: true,
+    });
+  });
+
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+      // rethrow: true,
     });
   });
 });

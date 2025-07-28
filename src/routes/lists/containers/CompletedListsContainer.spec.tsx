@@ -141,6 +141,7 @@ describe('CompletedListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith('/v2/completed_lists/');
     expect(await findByTestId('list-id1')).toBeVisible();
     expect(queryByTestId('list-id2')).toBeNull();
 
@@ -201,11 +202,9 @@ describe('CompletedListsContainer', () => {
 
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(toast).toHaveBeenCalledWith(
-      'You may not be connected to the internet. Please check your connection. ' +
-        'Data may be incomplete and user actions may not persist.',
+      'Something went wrong. Data may be incomplete and user actions may not persist.',
       {
         type: 'error',
-        autoClose: 5000,
       },
     );
   });

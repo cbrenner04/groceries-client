@@ -203,7 +203,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/id3/edit"
+                    href="/lists/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -298,7 +298,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/id5/edit"
+                    href="/lists/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -808,7 +808,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/id3/edit"
+                    href="/lists/id3/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"
@@ -903,7 +903,7 @@ exports[`ListsContainer renders 1`] = `
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/id5/edit"
+                    href="/lists/id5/edit"
                   >
                     <i
                       class="fa fa-edit fa-2x text-warning"

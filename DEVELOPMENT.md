@@ -30,9 +30,9 @@ This document outlines the development standards, patterns, and guardrails for t
 
 ### Component Structure
 
-```
+```text
 src/
-├── components/          # Reusable UI components
+├── components/         # Reusable UI components
 ├── routes/             # Route-specific components
 ├── utils/              # Utility functions
 ├── typings/            # TypeScript type definitions
@@ -199,4 +199,4 @@ const response = await api.get('/v1/lists');
 const data = response.data;
 ```
 
-This document should be updated as the frontend codebase evolves and new patterns emerge. 
+This document should be updated as the frontend codebase evolves and new patterns emerge.

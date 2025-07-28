@@ -1,39 +1,39 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router';
 
-import { fetchItemToEdit } from './utils';
-import EditListItemForm from './containers/EditListItemForm';
-import Loading from '../../components/Loading';
-import UnknownError from '../error_pages/UnknownError';
-import type { IList, IListItem, IListUser } from '../../typings';
+import Loading from 'components/Loading';
 
-interface IFetchResponse {
-  list: IList;
-  item: IListItem;
-  listUsers: IListUser[];
-  userId: string;
-}
+import { fetchListItemToEdit, type IFulfilledEditListItemData } from './utils';
+import EditListItemForm from './containers/EditListItemForm';
+import UnknownError from '../error_pages/UnknownError';
 
 const EditListItem: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const { id, list_id: listId } = useParams();
+  const { list_id: listId, id } = useParams();
 
   return (
-    <Async promiseFn={fetchItemToEdit as unknown as PromiseFn<void>} itemId={id} listId={listId} navigate={navigate}>
+    <Async promiseFn={fetchListItemToEdit as unknown as PromiseFn<void>} navigate={navigate} list_id={listId} id={id}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: IFetchResponse): React.JSX.Element => (
-          <EditListItemForm
-            navigate={navigate}
-            listUsers={data.listUsers}
-            userId={data.userId}
-            list={data.list}
-            item={data.item}
-          />
-        )}
+        {(data: IFulfilledEditListItemData | undefined): ReactNode => {
+          // Handle the case where data might be undefined
+          if (!data) {
+            return <UnknownError />;
+          }
+
+          return (
+            <EditListItemForm
+              list={data.list}
+              item={data.item}
+              listUsers={data.list_users}
+              listItemConfiguration={data.list_item_configuration}
+              listItemFieldConfigurations={data.list_item_field_configurations}
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

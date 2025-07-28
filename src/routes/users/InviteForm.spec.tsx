@@ -5,12 +5,7 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-
 import InviteForm from './InviteForm';
-
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({

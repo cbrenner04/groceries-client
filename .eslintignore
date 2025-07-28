@@ -1,0 +1,9 @@
+build/
+coverage/
+craco.config.js
+node_modules/
+.git/
+coverage/
+scripts/
+.ruby-lsp/
+.github/
