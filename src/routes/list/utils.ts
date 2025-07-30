@@ -88,7 +88,6 @@ export function itemName(item: IListItem, listType: EListType): string {
       const assignee = fields.find((l: IListItemField) => l.label.includes('assignee'))?.data;
       const dueBy = fields.find((l: IListItemField) => l.label.includes('due'))?.data;
 
-      // Only show due date if it's a valid date
       const dueDateText = dueBy && dueBy.trim() !== '' ? `Due By: ${moment(dueBy).format('LL')}` : '';
       const assigneeText = assignee ? `Assigned To: ${assignee} ` : '';
 
