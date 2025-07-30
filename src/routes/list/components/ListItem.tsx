@@ -34,7 +34,7 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
     if (!formattedName) {
       return <span>Untitled Item</span>;
     }
-    return <span>{formattedName}</span>;
+    return <span className="list-item-content">{formattedName}</span>;
   };
   const multiSelectCheckbox = (item: IListItem): ReactNode | undefined =>
     multiSelect && (

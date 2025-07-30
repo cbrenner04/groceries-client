@@ -142,22 +142,16 @@ describe('itemName', () => {
         { label: 'due_by', data: '2024-01-15' },
       ]);
       expect(itemName(item, EListType.TO_DO_LIST)).toBe(
-        'Complete project\nAssigned To: john@example.com\nDue By: January 15, 2024',
+        'Complete project\nAssigned To: john@example.com Due By: January 15, 2024',
       );
     });
 
-    it('returns task with assignee_id when assignee_email is not present', () => {
-      const item = createMockItem([
-        { label: 'task', data: 'Complete project' },
-        { label: 'assignee_id', data: 'user123' },
-        { label: 'due_by', data: '2024-01-15' },
-      ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
-        'Complete project\nAssigned To: user123\nDue By: January 15, 2024',
-      );
+    it('returns task without assignee or due date when not present', () => {
+      const item = createMockItem([{ label: 'task', data: 'Complete project' }]);
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project');
     });
 
-    it('returns task without assignee when neither assignee_email nor assignee_id is present', () => {
+    it('returns task without assignee when not present', () => {
       const item = createMockItem([
         { label: 'task', data: 'Complete project' },
         { label: 'due_by', data: '2024-01-15' },
@@ -170,19 +164,12 @@ describe('itemName', () => {
         { label: 'task', data: 'Complete project' },
         { label: 'assignee_email', data: 'john@example.com' },
       ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
-        'Complete project\nAssigned To: john@example.com\nDue By: Invalid date',
-      );
-    });
-
-    it('returns only task when no other fields are present', () => {
-      const item = createMockItem([{ label: 'task', data: 'Complete project' }]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nDue By: Invalid date');
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nAssigned To: john@example.com');
     });
 
     it('handles missing task', () => {
       const item = createMockItem([]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Due By: Invalid date');
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('');
     });
   });
 
@@ -224,7 +211,7 @@ describe('itemName', () => {
         { label: 'content', data: null as unknown as string },
         { label: 'task', data: 'Valid task' },
       ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Valid task\nDue By: Invalid date');
+      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Valid task');
     });
   });
 });

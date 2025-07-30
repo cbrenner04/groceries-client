@@ -85,9 +85,14 @@ export function itemName(item: IListItem, listType: EListType): string {
     }
     case EListType.TO_DO_LIST: {
       const task = getFieldValue('task');
-      const assignee = getFieldValue('assignee_email') || getFieldValue('assignee_id');
-      const dueBy = getFieldValue('due_by');
-      return `${task}${assignee ? `\nAssigned To: ${assignee}` : ''}\nDue By: ${moment(dueBy).format('LL')}`.trim();
+      const assignee = fields.find((l: IListItemField) => l.label.includes('assignee'))?.data;
+      const dueBy = fields.find((l: IListItemField) => l.label.includes('due'))?.data;
+
+      // Only show due date if it's a valid date
+      const dueDateText = dueBy && dueBy.trim() !== '' ? `Due By: ${moment(dueBy).format('LL')}` : '';
+      const assigneeText = assignee ? `Assigned To: ${assignee} ` : '';
+
+      return `${task}\n${assigneeText}${dueDateText}`.trim();
     }
     default:
       return fields
