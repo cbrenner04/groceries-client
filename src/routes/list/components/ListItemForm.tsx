@@ -105,10 +105,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           // Find the field configuration that matches this field
           const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
           if (fieldConfig) {
+            const fieldValue = key === 'category' ? String(value).toLowerCase() : String(value);
             await axios.post(`/v2/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
               list_item_field: {
                 label: key,
-                data: String(value),
+                data: fieldValue,
                 list_item_field_configuration_id: fieldConfig.id,
               },
             });
@@ -118,23 +119,20 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       await Promise.all(fieldPromises);
 
-      // Step 4: Fetch the complete item with fields
-      const { data: completeItem } = await axios.get(`/v2/lists/${props.listId}/list_items/${newItem.id}`);
-
       // Create the item with fields from form data
       const itemWithFields = {
-        ...completeItem,
+        ...newItem,
         fields: Object.entries(formData)
           .filter(([, value]) => value !== '')
           .map(([key, value]) => ({
-            id: `temp-${Date.now()}-${key}`,
+            id: `temp-${Date.now()}-${key}`, // temp id which will be overwritten on next pull from the server
             label: key,
-            data: String(value),
-            list_item_field_configuration_id:
-              /* istanbul ignore next */
-              fieldConfigurations.find((config: IFieldConfiguration) => config.label === key)?.id || '',
+            data: key === 'category' ? capitalize(String(value)) : String(value),
+            list_item_field_configuration_id: fieldConfigurations.find(
+              (config: IFieldConfiguration) => config.label === key,
+            )?.id,
             user_id: props.userId,
-            list_item_id: completeItem.id,
+            list_item_id: newItem.id,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             archived_at: null,

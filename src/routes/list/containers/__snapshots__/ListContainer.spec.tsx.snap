@@ -104,7 +104,9 @@ exports[`ListContainer Category Filtering renders filtered items without categor
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
           <div
@@ -152,7 +154,9 @@ exports[`ListContainer Category Filtering renders filtered items without categor
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
           <div
@@ -217,7 +221,9 @@ exports[`ListContainer Category Filtering renders filtered items without categor
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
           <div
@@ -353,7 +359,9 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity no category not completed product
           </span>
           <div
@@ -410,7 +418,9 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
           <div
@@ -458,7 +468,9 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
           <div
@@ -515,7 +527,9 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity bar not completed product
           </span>
           <div
@@ -580,7 +594,9 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
           <div
@@ -716,7 +732,9 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity no category not completed product
           </span>
           <div
@@ -773,7 +791,9 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
           <div
@@ -821,7 +841,9 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
           <div
@@ -878,7 +900,9 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity bar not completed product
           </span>
           <div
@@ -943,7 +967,9 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
           <div
@@ -1079,7 +1105,9 @@ exports[`ListContainer Item Rendering does not render complete items when none e
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity no category not completed product
           </span>
           <div
@@ -1136,7 +1164,9 @@ exports[`ListContainer Item Rendering does not render complete items when none e
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
           <div
@@ -1184,7 +1214,9 @@ exports[`ListContainer Item Rendering does not render complete items when none e
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
           <div
@@ -1241,7 +1273,9 @@ exports[`ListContainer Item Rendering does not render complete items when none e
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity bar not completed product
           </span>
           <div
@@ -1406,7 +1440,9 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
           <div
@@ -1500,7 +1536,9 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity no category not completed product
           </span>
         </div>
@@ -1525,7 +1563,9 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
         </div>
@@ -1541,7 +1581,9 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
         </div>
@@ -1566,7 +1608,9 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity bar not completed product
           </span>
         </div>
@@ -1589,7 +1633,9 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
         </div>
@@ -1693,7 +1739,9 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity no category not completed product
           </span>
           <div
@@ -1750,7 +1798,9 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product
           </span>
           <div
@@ -1798,7 +1848,9 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity foo not completed product 2
           </span>
           <div
@@ -1855,7 +1907,9 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             not completed quantity bar not completed product
           </span>
           <div
@@ -1920,7 +1974,9 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
         <div
           class="col-sm-12 col-12"
         >
-          <span>
+          <span
+            class="list-item-content"
+          >
             completed quantity foo completed product
           </span>
           <div

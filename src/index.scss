@@ -79,7 +79,7 @@ body {
 .list-item-multi-divider {
   border-right: 1px solid lightgray;
   height: 100%;
-  
+
   @include media-breakpoint-down(xs) {
     margin-right: -22px;
   }
@@ -95,11 +95,15 @@ body {
   }
 }
 
+.list-item-content {
+  white-space: pre-line;
+}
+
 .list-item-buttons {
   @include media-breakpoint-up(xs) {
     margin-right: 2px;
   }
-  
+
   @include media-breakpoint-up(sm) {
     margin-right: 33px;
   }
@@ -126,7 +130,7 @@ body {
   @include media-breakpoint-down(sm) {
     margin-left: -2px;
   }
-  
+
   @include media-breakpoint-down(lg) {
     margin-left: -33px;
   }

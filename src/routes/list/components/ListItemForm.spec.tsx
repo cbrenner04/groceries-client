@@ -51,8 +51,7 @@ describe('ListItemForm', () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
-      .mockResolvedValueOnce({ data: fieldConfigurations }) // field config during submit
-      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+      .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
@@ -145,8 +144,7 @@ describe('ListItemForm', () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
-      .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
-      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+      .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
@@ -174,8 +172,7 @@ describe('ListItemForm', () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({ data: initialFieldConfigs }) // initial field config load
-      .mockResolvedValueOnce({ data: submissionFieldConfigs }) // different field config during submit
-      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+      .mockResolvedValueOnce({ data: submissionFieldConfigs }); // different field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
@@ -192,10 +189,9 @@ describe('ListItemForm', () => {
 
     await waitFor(() => {
       expect(mockHandleItemAddition).toHaveBeenCalled();
-      // Verify that the item was created with empty string for missing field config
       const callArgs = mockHandleItemAddition.mock.calls[0][0];
       expect(callArgs[0].fields).toHaveLength(1);
-      expect(callArgs[0].fields[0].list_item_field_configuration_id).toBe('');
+      expect(callArgs[0].fields[0].list_item_field_configuration_id).toBeUndefined();
     });
   });
 
@@ -209,8 +205,7 @@ describe('ListItemForm', () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
-      .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
-      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+      .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
@@ -329,8 +324,7 @@ describe('ListItemForm', () => {
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
-      .mockResolvedValueOnce({ data: fieldConfigs }) // field config during submit
-      .mockResolvedValueOnce({ data: { id: 'item-1' } }); // fetch complete item
+      .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
