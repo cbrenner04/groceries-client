@@ -6,12 +6,8 @@ const ONE_MINUTE = 60 * ONE_SECOND;
 const TEN_MINUTES = 10 * ONE_MINUTE;
 
 export default function usePolling(callback: () => void, delay: number | null): void {
-  const callbackRef = useRef<() => void>();
+  const callbackRef = useRef<() => void>(callback);
   const { isIdle } = useIdleTimer({ timeout: TEN_MINUTES });
-
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
 
   useEffect(() => {
     function tick(): void {
@@ -24,7 +20,7 @@ export default function usePolling(callback: () => void, delay: number | null): 
       // This helps React prioritize rendering and prevents concurrent rendering issues
       startTransition(() => {
         try {
-          callbackRef.current?.();
+          callbackRef.current();
         } catch (error) {
           /* istanbul ignore next */
           // Silently handle errors to prevent polling from breaking
