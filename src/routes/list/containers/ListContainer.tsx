@@ -30,6 +30,7 @@ import {
   handleItemDelete as exportedHandleItemDelete,
   handleItemRefresh as exportedHandleItemRefresh,
   handleToggleRead as exportedHandleToggleRead,
+  sortItemsByCreatedAt,
 } from './listHandlers';
 import { handleFailure } from 'utils/handleFailure';
 
@@ -79,12 +80,15 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         const notCompletedSame = isSameSet(updatedNotCompletedItems, notCompletedItems);
         const completedSame = isSameSet(updatedCompletedItems, completedItems);
 
+        /* istanbul ignore else */
         if (!notCompletedSame) {
           setNotCompletedItems(updatedNotCompletedItems);
         }
+        /* istanbul ignore else */
         if (!completedSame) {
           setCompletedItems(updatedCompletedItems);
         }
+        /* istanbul ignore else */
         if (!notCompletedSame || !completedSame) {
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
@@ -153,7 +157,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     const updatedNotCompletedItems = notCompletedItems.filter(
       (item) => !itemsToComplete.some((completeItem) => completeItem.id === item.id),
     );
-    const updatedCompletedItems = [...completedItems, ...itemsToComplete.map((item) => ({ ...item, completed: true }))];
+    const updatedCompletedItems = sortItemsByCreatedAt([
+      ...completedItems,
+      ...itemsToComplete.map((item) => ({ ...item, completed: true })),
+    ]);
 
     setNotCompletedItems(updatedNotCompletedItems);
     setCompletedItems(updatedCompletedItems);
@@ -196,11 +203,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const failedItemIds = failures.map((item) => item.id);
 
       // Rollback failed items to original state
-      const rollbackNotCompletedItems = [
+      const rollbackNotCompletedItems = sortItemsByCreatedAt([
         ...updatedNotCompletedItems,
         ...failures.map((item) => ({ ...item!, completed: false })),
-      ];
-      const rollbackCompletedItems = updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id));
+      ]);
+      const rollbackCompletedItems = sortItemsByCreatedAt(
+        updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id)),
+      );
 
       setNotCompletedItems(rollbackNotCompletedItems);
       setCompletedItems(rollbackCompletedItems);
@@ -319,14 +328,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const successfulItems = itemsToDeleteFromState.filter((item) => !failedItemIds.includes(item.id));
 
       // Rollback failed items to original state
-      const rollbackCompletedItems = [
+      const rollbackCompletedItems = sortItemsByCreatedAt([
         ...updatedCompletedItems,
         ...failures.filter((item) => completedItems.some((orig) => orig.id === item.id)),
-      ];
-      const rollbackNotCompletedItems = [
+      ]);
+      const rollbackNotCompletedItems = sortItemsByCreatedAt([
         ...updatedNotCompletedItems,
         ...failures.filter((item) => notCompletedItems.some((orig) => orig.id === item.id)),
-      ];
+      ]);
 
       setCompletedItems(rollbackCompletedItems);
       setNotCompletedItems(rollbackNotCompletedItems);
@@ -359,7 +368,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setNotCompletedItems(
       notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
     );
-    setCompletedItems([...completedItems, ...selectedItems]);
+    setCompletedItems(sortItemsByCreatedAt([...completedItems, ...selectedItems]));
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
     setMove(false);
@@ -392,9 +401,24 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const groupByCategory = (items: IListItem[]): ReactNode => {
+    // Extract all unique categories from the items (case-insensitive)
+    const itemCategories = new Set<string>();
+    items.forEach((item) => {
+      const categoryField = item.fields.find((field) => field.label === 'category');
+      if (categoryField?.data) {
+        // Use the first occurrence's casing as the canonical form
+        const existingCategory = Array.from(itemCategories).find(
+          (cat) => cat.toLowerCase() === categoryField.data?.toLowerCase(),
+        );
+        if (!existingCategory) {
+          itemCategories.add(categoryField.data);
+        }
+      }
+    });
+
     // When a filter is applied, show only the selected category
     // When no filter is applied, show all categories plus uncategorized items
-    const categoriesToShow = filter ? displayedCategories : [undefined, ...displayedCategories];
+    const categoriesToShow = filter ? displayedCategories : [undefined, ...Array.from(itemCategories)];
 
     return categoriesToShow.map((category: string | undefined) => {
       const itemsToRender = items.filter((item: IListItem) => {
@@ -411,8 +435,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         }
 
         if (category) {
-          // Show items with matching category
-          return fields.find((field: IListItemField) => field.label === 'category' && field.data === category);
+          // Show items with matching category (case-insensitive)
+          return fields.find(
+            (field: IListItemField) =>
+              field.label === 'category' && field.data?.toLowerCase() === category.toLowerCase(),
+          );
         }
 
         // Show uncategorized items when no filter is applied

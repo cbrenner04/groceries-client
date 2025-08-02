@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
-import { EListType } from 'typings';
+import { EListItemFieldType, EListType } from 'typings';
 import type { IListItem, IListItemField } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
 
@@ -26,7 +26,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 0,
-    data_type: 'free_text' as 'free_text',
+    data_type: EListItemFieldType.FREE_TEXT,
   },
   {
     id: 'field-2',
@@ -39,7 +39,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 1,
-    data_type: 'number' as 'number',
+    data_type: EListItemFieldType.NUMBER,
   },
 ];
 

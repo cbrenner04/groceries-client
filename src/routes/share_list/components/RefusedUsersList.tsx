@@ -13,8 +13,10 @@ export interface IRefusedUsersListProps {
 
 const RefusedUsersList: React.FC<IRefusedUsersListProps> = (props): React.JSX.Element => (
   <React.Fragment>
-    <h2>Refused</h2>
-    <ListGroup>
+    <Row className="m-0">
+      <h2 className="text-capitalize pe-0 w-auto">Refused</h2>
+    </Row>
+    <ListGroup className="mb-4">
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
           return '';

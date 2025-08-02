@@ -1,7 +1,9 @@
+import type { EListItemFieldType } from './index';
+
 export default interface IListItemField {
   id: string;
   list_item_field_configuration_id: string;
-  data: string;
+  data: string | undefined | null;
   archived_at: string | null;
   user_id: string;
   list_item_id: string;
@@ -9,5 +11,5 @@ export default interface IListItemField {
   updated_at: string | null;
   label: string;
   position: number;
-  data_type: 'boolean' | 'date_time' | 'free_text' | 'number';
+  data_type: EListItemFieldType;
 }

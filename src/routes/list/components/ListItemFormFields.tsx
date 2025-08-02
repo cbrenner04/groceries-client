@@ -1,13 +1,13 @@
 import React, { type ChangeEventHandler } from 'react';
 
-import type { IListItemField } from 'typings';
+import type { EListItemFieldType, IListItemField } from 'typings';
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
 
 export interface IListItemFormFieldsProps {
   fieldConfigurations: {
     id: string;
     label: string;
-    data_type: 'boolean' | 'date_time' | 'free_text' | 'number';
+    data_type: EListItemFieldType;
     position?: number;
   }[];
   fields: IListItemField[];
@@ -42,7 +42,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
           />
         );
       case 'date_time':
-        return <DateField key={config.id} {...commonProps} value={field ? field.data : ''} />;
+        return <DateField key={config.id} {...commonProps} value={field?.data ?? ''} />;
       case 'number':
         return (
           <NumberField
@@ -53,7 +53,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
         );
       case 'free_text':
       default:
-        return <TextField key={config.id} {...commonProps} value={field ? field.data : ''} />;
+        return <TextField key={config.id} {...commonProps} value={field?.data ?? ''} />;
     }
   };
 

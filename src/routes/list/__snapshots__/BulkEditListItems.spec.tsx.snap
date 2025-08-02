@@ -30,7 +30,7 @@ exports[`BulkEditListItems renders the Loading component when fetch request is p
       role="status"
     >
       <span
-        class="sr-only"
+        class="visually-hidden"
       >
         Loading...
       </span>

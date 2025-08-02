@@ -5,7 +5,7 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 
 import BulkEditListItems from './BulkEditListItems';
-import type { IListItem } from 'typings';
+import { EListItemFieldType, type IListItem } from 'typings';
 
 describe('BulkEditListItems', () => {
   const renderBulkEditListItems = (): RenderResult =>
@@ -75,7 +75,7 @@ describe('BulkEditListItems', () => {
             created_at: '2021-01-01',
             updated_at: '2021-01-01',
             position: 1,
-            data_type: 'number',
+            data_type: EListItemFieldType.NUMBER,
           },
           {
             id: 'field2',
@@ -88,7 +88,7 @@ describe('BulkEditListItems', () => {
             created_at: '2021-01-01',
             updated_at: '2021-01-01',
             position: 2,
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
           },
         ],
       },
@@ -113,7 +113,7 @@ describe('BulkEditListItems', () => {
             created_at: '2021-01-01',
             updated_at: '2021-01-01',
             position: 1,
-            data_type: 'number',
+            data_type: EListItemFieldType.NUMBER,
           },
           {
             id: 'field4',
@@ -126,7 +126,7 @@ describe('BulkEditListItems', () => {
             created_at: '2021-01-01',
             updated_at: '2021-01-01',
             position: 2,
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
           },
         ],
       },

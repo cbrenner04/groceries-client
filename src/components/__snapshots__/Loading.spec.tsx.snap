@@ -7,7 +7,7 @@ exports[`Loading renders the spinner 1`] = `
   role="status"
 >
   <span
-    class="sr-only"
+    class="visually-hidden"
   >
     Loading...
   </span>

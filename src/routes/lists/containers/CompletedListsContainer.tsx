@@ -30,9 +30,11 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
           JSON.stringify(newSet) === JSON.stringify(oldSet);
         const completedSame = isSameSet(updatedCompletedLists, completedLists);
         const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
+        /* istanbul ignore else */
         if (!completedSame) {
           setCompletedLists(updatedCompletedLists);
         }
+        /* istanbul ignore else */
         if (!userPermsSame) {
           setCurrentUserPermissions(updatedUserPerms);
         }

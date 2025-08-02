@@ -3,7 +3,7 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import type { IListItem, IListItemField } from 'typings';
+import { EListItemFieldType, type IListItem, type IListItemField } from 'typings';
 import MultiSelectMenu, { type IMultiSelectMenuProps } from './MultiSelectMenu';
 
 interface ISetupReturn extends RenderResult {
@@ -23,7 +23,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 0,
-    data_type: 'free_text' as 'free_text',
+    data_type: EListItemFieldType.FREE_TEXT,
   },
   {
     id: 'field-2',
@@ -36,7 +36,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 1,
-    data_type: 'number' as 'number',
+    data_type: EListItemFieldType.NUMBER,
   },
 ];
 

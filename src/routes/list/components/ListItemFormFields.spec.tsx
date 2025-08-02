@@ -4,6 +4,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import ListItemFormFields, { type IListItemFormFieldsProps } from './ListItemFormFields';
 import { createField } from 'test-utils/factories';
+import { EListItemFieldType } from 'typings';
 
 async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise<{
   props: IListItemFormFieldsProps;
@@ -15,25 +16,25 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
       {
         id: 'field1',
         label: 'title',
-        data_type: 'free_text',
+        data_type: EListItemFieldType.FREE_TEXT,
         position: 1,
       },
       {
         id: 'field2',
         label: 'completed',
-        data_type: 'boolean',
+        data_type: EListItemFieldType.BOOLEAN,
         position: 2,
       },
       {
         id: 'field3',
         label: 'due_date',
-        data_type: 'date_time',
+        data_type: EListItemFieldType.DATE_TIME,
         position: 3,
       },
       {
         id: 'field4',
         label: 'quantity',
-        data_type: 'number',
+        data_type: EListItemFieldType.NUMBER,
         position: 4,
       },
     ],
@@ -102,13 +103,13 @@ describe('ListItemFormFields', () => {
         {
           id: 'field1',
           label: 'product_name',
-          data_type: 'free_text',
+          data_type: EListItemFieldType.FREE_TEXT,
           position: 1,
         },
         {
           id: 'field2',
           label: 'is_urgent',
-          data_type: 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
           position: 2,
         },
       ],
@@ -168,7 +169,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'completed',
-            data_type: 'boolean',
+            data_type: EListItemFieldType.BOOLEAN,
             position: 1,
           },
         ],
@@ -184,7 +185,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'completed',
-            data_type: 'boolean',
+            data_type: EListItemFieldType.BOOLEAN,
             position: 1,
           },
         ],
@@ -200,7 +201,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'completed',
-            data_type: 'boolean',
+            data_type: EListItemFieldType.BOOLEAN,
             position: 1,
           },
         ],
@@ -218,7 +219,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'quantity',
-            data_type: 'number',
+            data_type: EListItemFieldType.NUMBER,
             position: 1,
           },
         ],
@@ -234,7 +235,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'quantity',
-            data_type: 'number',
+            data_type: EListItemFieldType.NUMBER,
             position: 1,
           },
         ],
@@ -250,7 +251,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'quantity',
-            data_type: 'number',
+            data_type: EListItemFieldType.NUMBER,
             position: 1,
           },
         ],
@@ -268,7 +269,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'due_date',
-            data_type: 'date_time',
+            data_type: EListItemFieldType.DATE_TIME,
             position: 1,
           },
         ],
@@ -284,7 +285,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'due_date',
-            data_type: 'date_time',
+            data_type: EListItemFieldType.DATE_TIME,
             position: 1,
           },
         ],
@@ -302,7 +303,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'title',
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
           },
         ],
@@ -318,7 +319,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'title',
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
           },
         ],
@@ -336,13 +337,13 @@ describe('ListItemFormFields', () => {
           {
             id: 'field2',
             label: 'second',
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
             position: 2,
           },
           {
             id: 'field1',
             label: 'first',
-            data_type: 'free_text',
+            data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
           },
         ],
@@ -365,7 +366,7 @@ describe('ListItemFormFields', () => {
           {
             id: 'field1',
             label: 'unknown_field',
-            data_type: 'unknown_type' as 'boolean' | 'date_time' | 'free_text' | 'number',
+            data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
           },
         ],

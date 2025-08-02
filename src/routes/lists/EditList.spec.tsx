@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 
 import EditList from './EditList';
 import axios from '../../utils/api';
+import * as utils from './utils';
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
@@ -30,6 +31,16 @@ describe('EditList', () => {
     axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
+  });
+
+  it('displays UnknownError when data is undefined', async () => {
+    // Mock the fetchListToEdit function to return undefined
+    jest.spyOn(utils, 'fetchListToEdit').mockResolvedValue(undefined);
+    const { container, findByRole } = setup();
+    await waitFor(() => expect(utils.fetchListToEdit).toHaveBeenCalledTimes(1));
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();

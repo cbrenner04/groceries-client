@@ -130,6 +130,25 @@ exports[`EditList displays UnknownError when an error occurs 1`] = `
 </div>
 `;
 
+exports[`EditList displays UnknownError when data is undefined 1`] = `
+<div>
+  <h1>
+    Something went wrong!
+  </h1>
+  <h2>
+    We are currently unable to render this page.
+  </h2>
+  <p>
+    Please check your connection and try to  
+    <button
+      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
+    >
+      refresh the page
+    </button>
+  </p>
+</div>
+`;
+
 exports[`EditList renders the Loading component when fetch request is pending 1`] = `
 <div>
   <div
@@ -141,7 +160,7 @@ exports[`EditList renders the Loading component when fetch request is pending 1`
       role="status"
     >
       <span
-        class="sr-only"
+        class="visually-hidden"
       >
         Loading...
       </span>

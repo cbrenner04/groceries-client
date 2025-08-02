@@ -105,7 +105,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           // Find the field configuration that matches this field
           const fieldConfig = fieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
           if (fieldConfig) {
-            const fieldValue = key === 'category' ? String(value).toLowerCase() : String(value);
+            const fieldValue = key === 'category' ? capitalize(String(value)) : String(value);
             await axios.post(`/v2/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
               list_item_field: {
                 label: key,

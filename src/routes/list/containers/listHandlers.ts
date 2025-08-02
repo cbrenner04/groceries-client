@@ -2,8 +2,17 @@ import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 import axios from '../../../utils/api';
 import update from 'immutability-helper';
-import type { IListItem } from 'typings';
+import { EListItemFieldType, type IListItem } from 'typings';
 import { handleFailure } from '../../../utils/handleFailure';
+
+// Sort items by created_at in ascending order to match server ordering
+export const sortItemsByCreatedAt = (items: IListItem[]): IListItem[] => {
+  return [...items].sort((a, b) => {
+    const dateA = new Date(a.created_at).getTime();
+    const dateB = new Date(b.created_at).getTime();
+    return dateA - dateB;
+  });
+};
 
 // handleAddItem
 export function handleAddItem(params: {
@@ -46,9 +55,11 @@ export function handleAddItem(params: {
     };
     const itemCategory = itemWithFields.fields.find((f) => f.label === 'category')?.data;
     if (itemWithFields.completed) {
-      setCompletedItems(update(completedItems, { $push: [itemWithFields] }));
+      const updatedCompletedItems = sortItemsByCreatedAt([...completedItems, itemWithFields]);
+      setCompletedItems(updatedCompletedItems);
     } else {
-      setNotCompletedItems(update(notCompletedItems, { $push: [itemWithFields] }));
+      const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, itemWithFields]);
+      setNotCompletedItems(updatedNotCompletedItems);
     }
     if (itemCategory && !categories.includes(itemCategory)) {
       const newCategories = [...categories, itemCategory];
@@ -313,7 +324,7 @@ export async function handleToggleRead(params: {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           position: 0,
-          data_type: 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
         });
       }
 

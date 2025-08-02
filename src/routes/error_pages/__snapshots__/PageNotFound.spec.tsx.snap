@@ -47,7 +47,7 @@ exports[`PageNotFound renders the Loading component when fetch request is pendin
       role="status"
     >
       <span
-        class="sr-only"
+        class="visually-hidden"
       >
         Loading...
       </span>

@@ -226,6 +226,7 @@ export async function fetchCompletedLists(fetchParams: {
       notFoundMessage: 'Failed to fetch completed lists',
       navigate: fetchParams.navigate,
       redirectURI: '/lists',
+      rethrow: true,
     });
   }
 }

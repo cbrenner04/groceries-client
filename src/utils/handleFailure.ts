@@ -30,7 +30,11 @@ export function handleFailure(params: {
       }
     }
   } else if (error.request) {
-    toast('Network error. Please check your connection.', { type: 'error' });
+    if (rethrow) {
+      throw error;
+    } else {
+      toast('Network error. Please check your connection.', { type: 'error' });
+    }
   } else {
     if (rethrow) {
       throw error;

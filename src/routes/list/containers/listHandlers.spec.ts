@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-import type { IListItemField, IListItem } from 'typings';
+import { type IListItemField, type IListItem, EListItemFieldType } from 'typings';
 import {
   handleAddItem,
   handleItemSelect,
@@ -51,7 +51,7 @@ function makeField(overrides: Partial<IListItemField> = {}): IListItemField {
     updated_at: null,
     label: 'category',
     position: overrides.position ?? 0,
-    data_type: overrides.data_type ?? 'free_text',
+    data_type: overrides.data_type ?? EListItemFieldType.FREE_TEXT,
     ...overrides,
   };
 }
@@ -642,7 +642,7 @@ describe('handleToggleRead', () => {
     mockAxios.get.mockResolvedValueOnce({ data: { list_item_configuration_id: 'list-config-1' } });
     // Mock the field configurations response
     mockAxios.get.mockResolvedValueOnce({
-      data: [{ id: 'read-config-1', label: 'read', data_type: 'boolean' }],
+      data: [{ id: 'read-config-1', label: 'read', data_type: EListItemFieldType.BOOLEAN }],
     });
     mockAxios.post.mockResolvedValueOnce({});
 
