@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router';
 import axios from 'utils/api';
 
 import Lists from './Lists';
+import * as utils from './utils';
 
 describe('Lists', () => {
   const renderLists = (): RenderResult =>
@@ -25,6 +26,16 @@ describe('Lists', () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderLists();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
+  });
+
+  it('displays UnknownError when data is undefined', async () => {
+    // Mock the fetchLists function to return undefined
+    jest.spyOn(utils, 'fetchLists').mockResolvedValue(undefined);
+    const { container, findByRole } = renderLists();
+    await waitFor(() => expect(utils.fetchLists).toHaveBeenCalledTimes(1));
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();

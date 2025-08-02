@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-import { EUserPermissions, type IListItem } from 'typings';
+import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
 import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
@@ -293,7 +293,7 @@ describe('ListContainer', () => {
               data: 'item with empty category',
               list_item_id: 'id4',
               position: 0,
-              data_type: 'free_text',
+              data_type: EListItemFieldType.FREE_TEXT,
             },
             {
               id: 'id4',
@@ -306,7 +306,7 @@ describe('ListContainer', () => {
               data: '1',
               list_item_id: 'id4',
               position: 1,
-              data_type: 'number',
+              data_type: EListItemFieldType.NUMBER,
             },
             {
               id: 'id4',
@@ -319,7 +319,7 @@ describe('ListContainer', () => {
               data: '',
               list_item_id: 'id4',
               position: 2,
-              data_type: 'free_text',
+              data_type: EListItemFieldType.FREE_TEXT,
             }, // Empty category data
           ],
         },
@@ -360,7 +360,7 @@ describe('ListContainer', () => {
               data: 'item without category field',
               list_item_id: 'id5',
               position: 0,
-              data_type: 'free_text',
+              data_type: EListItemFieldType.FREE_TEXT,
             },
             {
               id: 'id5',
@@ -373,7 +373,7 @@ describe('ListContainer', () => {
               data: '1',
               list_item_id: 'id5',
               position: 1,
-              data_type: 'number',
+              data_type: EListItemFieldType.NUMBER,
             },
             // No category field at all
           ],

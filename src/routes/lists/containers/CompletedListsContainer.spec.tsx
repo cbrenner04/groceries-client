@@ -208,4 +208,23 @@ describe('CompletedListsContainer', () => {
       },
     );
   });
+
+  it('fires network connectivity error toast when network error occurs in usePolling', async () => {
+    axios.get = jest.fn().mockRejectedValue({ request: {} });
+    setup();
+
+    await act(async () => {
+      jest.advanceTimersByTime(10000);
+    });
+
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(toast).toHaveBeenCalledWith(
+      'You may not be connected to the internet. Please check your connection. ' +
+        'Data may be incomplete and user actions may not persist.',
+      {
+        type: 'error',
+        autoClose: 5000,
+      },
+    );
+  });
 });

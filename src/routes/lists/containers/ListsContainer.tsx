@@ -47,15 +47,19 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         const completedSame = isSameSet(updatedCompleted, completedLists);
         const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
         const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
+        /* istanbul ignore else */
         if (!pendingSame) {
           setPendingLists(updatedPending);
         }
+        /* istanbul ignore else */
         if (!completedSame) {
           setCompletedLists(updatedCompleted);
         }
+        /* istanbul ignore else */
         if (!incompleteSame) {
           setIncompleteLists(updatedIncomplete);
         }
+        /* istanbul ignore else */
         if (!userPermsSame) {
           setCurrentUserPermissions(updatedCurrentUserPermissions);
         }

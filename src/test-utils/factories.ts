@@ -1,4 +1,4 @@
-import { EListType, EUserPermissions } from 'typings';
+import { EListItemFieldType, EListType, EUserPermissions } from 'typings';
 import type { IList, IListItemField, IListUser, IListItemConfiguration, IListItem } from 'typings';
 
 // Base date for consistent test data
@@ -37,7 +37,7 @@ export function createField(
     created_at: BASE_DATE,
     updated_at: BASE_DATE,
     position: overrides?.position !== undefined ? overrides.position : 0,
-    data_type: overrides?.data_type !== undefined ? overrides.data_type : 'free_text',
+    data_type: overrides?.data_type !== undefined ? overrides.data_type : EListItemFieldType.FREE_TEXT,
     ...overrides,
   };
 }

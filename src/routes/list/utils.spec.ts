@@ -1,7 +1,14 @@
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
-import { fetchList, fetchListToEdit, fetchListItemToEdit, itemName, type IFulfilledEditListData } from './utils';
+import {
+  fetchList,
+  fetchListToEdit,
+  fetchListItemToEdit,
+  fetchItemsToEdit,
+  itemName,
+  type IFulfilledEditListData,
+} from './utils';
 import axios from 'utils/api';
 import { EListType } from 'typings';
 import type { IListItem } from 'typings';
@@ -396,6 +403,34 @@ describe('fetchListToEdit', () => {
     });
   });
 
+  it('throws AxiosError when data is null', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
+  it('throws AxiosError when data is undefined', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'List not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
   it('handles error from server', async () => {
     const error = createError(500);
     axios.get = jest.fn().mockRejectedValue(error);
@@ -446,6 +481,34 @@ describe('fetchListItemToEdit', () => {
     });
   });
 
+  it('throws AxiosError when data is null', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
+  it('throws AxiosError when data is undefined', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'List item not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
   it('handles error from server', async () => {
     const error = createError(500);
     axios.get = jest.fn().mockRejectedValue(error);
@@ -457,6 +520,70 @@ describe('fetchListItemToEdit', () => {
       navigate: mockNavigate,
       redirectURI: '/lists/1/',
       // rethrow: true,
+    });
+  });
+});
+
+describe('fetchItemsToEdit', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns data on success', async () => {
+    const mockData = {
+      list: createList(),
+      lists: [createList()],
+      items: [createListItem('1')],
+      categories: ['category1'],
+      list_users: [],
+      list_item_configuration: createListItemConfiguration(),
+      list_item_field_configurations: [],
+    };
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
+    expect(result).toEqual(expect.objectContaining(mockData));
+    expect(toast).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('throws AxiosError when data is null', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: null });
+    const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'One or more items not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
+  it('throws AxiosError when data is undefined', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error: expect.any(AxiosError),
+      notFoundMessage: 'One or more items not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
+    });
+    const callArgs = mockHandleFailure.mock.calls[0][0];
+    expect(callArgs.error).toBeInstanceOf(AxiosError);
+  });
+
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = jest.fn().mockRejectedValue(error);
+    const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'One or more items not found',
+      navigate: mockNavigate,
+      redirectURI: '/lists/1/',
     });
   });
 });

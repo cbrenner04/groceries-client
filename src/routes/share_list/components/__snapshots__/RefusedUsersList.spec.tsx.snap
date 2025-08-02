@@ -2,11 +2,17 @@
 
 exports[`RefusedUsersList does not render refresh share button 1`] = `
 <div>
-  <h2>
-    Refused
-  </h2>
   <div
-    class="list-group"
+    class="m-0 row"
+  >
+    <h2
+      class="text-capitalize pe-0 w-auto"
+    >
+      Refused
+    </h2>
+  </div>
+  <div
+    class="mb-4 list-group"
   >
     <div
       data-test-id="refused-user-id2"
@@ -23,11 +29,17 @@ exports[`RefusedUsersList does not render refresh share button 1`] = `
 
 exports[`RefusedUsersList renders refresh share button 1`] = `
 <div>
-  <h2>
-    Refused
-  </h2>
   <div
-    class="list-group"
+    class="m-0 row"
+  >
+    <h2
+      class="text-capitalize pe-0 w-auto"
+    >
+      Refused
+    </h2>
+  </div>
+  <div
+    class="mb-4 list-group"
   >
     <div
       class="refused-list-list-group-item list-group-item"

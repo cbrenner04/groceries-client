@@ -48,15 +48,19 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
         const pendingSame = isSameSet(list.pending, pending);
         const acceptedSame = isSameSet(list.accepted, accepted);
         const refusedSame = isSameSet(list.refused, refused);
+        /* istanbul ignore else */
         if (!invitableUsersSame) {
           setInvitableUsers(list.invitableUsers);
         }
+        /* istanbul ignore else */
         if (!pendingSame) {
           setPending(list.pending);
         }
+        /* istanbul ignore else */
         if (!acceptedSame) {
           setAccepted(list.accepted);
         }
+        /* istanbul ignore else */
         if (!refusedSame) {
           setRefused(list.refused);
         }

@@ -23,7 +23,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 0,
-    data_type: 'free_text' as 'free_text',
+    data_type: EListItemFieldType.FREE_TEXT,
   },
   {
     id: '2',
@@ -36,7 +36,7 @@ const mockFields: IListItemField[] = [
     updated_at: null,
     archived_at: null,
     position: 1,
-    data_type: 'number' as 'number',
+    data_type: EListItemFieldType.NUMBER,
   },
 ];
 
@@ -153,7 +153,7 @@ describe('ListItem', () => {
           updated_at: '2023-01-01',
           archived_at: null,
           position: 2,
-          data_type: 'boolean' as 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
         },
       ],
     };
@@ -178,7 +178,7 @@ describe('ListItem', () => {
           updated_at: '2023-01-01',
           archived_at: null,
           position: 2,
-          data_type: 'boolean' as 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
         },
       ],
     };
@@ -256,7 +256,7 @@ describe('ListItem with read permissions', () => {
           updated_at: '2023-01-01',
           archived_at: null,
           position: 2,
-          data_type: 'boolean' as 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
         },
       ],
     };
@@ -281,7 +281,7 @@ describe('ListItem with read permissions', () => {
           updated_at: '2023-01-01',
           archived_at: null,
           position: 2,
-          data_type: 'boolean' as 'boolean',
+          data_type: EListItemFieldType.BOOLEAN,
         },
       ],
     };

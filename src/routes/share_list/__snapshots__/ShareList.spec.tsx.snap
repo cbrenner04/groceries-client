@@ -200,11 +200,17 @@ exports[`ShareList renders ShareList when data fetch is successful 1`] = `
         </div>
       </div>
     </div>
-    <h2>
-      Refused
-    </h2>
     <div
-      class="list-group"
+      class="m-0 row"
+    >
+      <h2
+        class="text-capitalize pe-0 w-auto"
+      >
+        Refused
+      </h2>
+    </div>
+    <div
+      class="mb-4 list-group"
     >
       <div
         class="refused-list-list-group-item list-group-item"
@@ -257,7 +263,7 @@ exports[`ShareList renders loading when data fetch is not complete 1`] = `
       role="status"
     >
       <span
-        class="sr-only"
+        class="visually-hidden"
       >
         Loading...
       </span>

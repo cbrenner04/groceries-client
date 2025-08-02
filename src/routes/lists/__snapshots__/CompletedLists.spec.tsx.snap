@@ -134,7 +134,7 @@ exports[`CompletedLists renders loading component when data is being fetched 1`]
       role="status"
     >
       <span
-        class="sr-only"
+        class="visually-hidden"
       >
         Loading...
       </span>
