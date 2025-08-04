@@ -1,4 +1,10 @@
 {
   "extends": ["config:recommended"],
-  "group": ["all"]
+  "packageRules": [
+    {
+      "matchDepTypes": ["dependencies", "devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "dependencies (non-major)"
+    }
+  ]
 }
