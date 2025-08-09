@@ -90,7 +90,8 @@ describe('ListItemForm', () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
 
-    expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
+    // Inline skeleton now shown instead of text
+    expect(await screen.findByRole('status', { busy: true })).toBeInTheDocument();
   });
 
   it('handles different field types', async () => {
@@ -354,8 +355,8 @@ describe('ListItemForm', () => {
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
 
-    // Should show loading message since field configurations are empty
-    expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
+    // Should show inline skeleton since field configurations are empty
+    expect(await screen.findByRole('status', { busy: true })).toBeInTheDocument();
   });
 
   it('handles 401 authentication error', async () => {
@@ -420,7 +421,7 @@ describe('ListItemForm', () => {
     axios.get = jest.fn().mockResolvedValue({ data: [] });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    expect(await screen.findByText('Loading field configurations...')).toBeInTheDocument();
+    expect(await screen.findByRole('status', { busy: true })).toBeInTheDocument();
   });
 
   it('renders only Add Item button when form is not shown', () => {
@@ -438,7 +439,7 @@ describe('ListItemForm', () => {
 
     // Wait for form to load
     await waitFor(() => {
-      expect(screen.getByText('Loading field configurations...')).toBeInTheDocument();
+      expect(screen.getByRole('status', { busy: true })).toBeInTheDocument();
     });
   });
 

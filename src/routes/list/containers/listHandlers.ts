@@ -312,6 +312,7 @@ export async function handleToggleRead(params: {
       const readField = item.fields.find((field) => field.label === 'read');
       if (readField) {
         readField.data = readField.data === 'true' ? 'false' : 'true';
+        readField.updated_at = new Date().toISOString();
       } else {
         item.fields.push({
           id: `read-${item.id}`,
@@ -331,12 +332,12 @@ export async function handleToggleRead(params: {
       if (item.completed) {
         const itemIndex = newCompletedItems.findIndex((completedItem) => item.id === completedItem.id);
         const newItems = [...newCompletedItems];
-        newItems[itemIndex] = item;
+        newItems[itemIndex] = { ...item, updated_at: new Date().toISOString() };
         newCompletedItems = newItems;
       } else {
         const itemIndex = newNotCompletedItems.findIndex((notCompletedItem) => item.id === notCompletedItem.id);
         const newItems = [...newNotCompletedItems];
-        newItems[itemIndex] = item;
+        newItems[itemIndex] = { ...item, updated_at: new Date().toISOString() };
         newNotCompletedItems = newItems;
       }
     });

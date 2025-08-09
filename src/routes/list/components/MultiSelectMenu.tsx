@@ -35,7 +35,7 @@ const MultiSelectMenu: React.FC<IMultiSelectMenuProps> = (props): React.JSX.Elem
           props.setMultiSelect(!props.isMultiSelect);
         }}
       >
-        {props.isMultiSelect ? 'Hide' : ''} Select
+        {props.isMultiSelect ? 'Hide Select' : 'Select'}
       </Button>
     </div>
   );

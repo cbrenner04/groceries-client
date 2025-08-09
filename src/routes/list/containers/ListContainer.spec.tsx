@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, waitFor, type RenderResult } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { toast } from 'react-toastify';
-import userEvent, { type UserEvent } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
@@ -17,8 +17,11 @@ jest.mock('react-router', () => ({
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
-interface ISetupReturn extends RenderResult {
-  user: UserEvent;
+type TestRenderResult = ReturnType<typeof render>;
+type TestUserEvent = ReturnType<typeof userEvent.setup>;
+
+interface ISetupReturn extends TestRenderResult {
+  user: TestUserEvent;
   props: IListContainerProps;
 }
 
@@ -49,6 +52,27 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
 describe('ListContainer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Reset axios instance methods to safe defaults between tests
+    axios.get = jest.fn().mockImplementation((url: string) => {
+      if (url.startsWith('/v2/lists/')) {
+        return Promise.resolve({
+          data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+        });
+      }
+      if (url.includes('list_item_field_configurations')) {
+        return Promise.resolve({ data: [] });
+      }
+      return Promise.resolve({ data: {} });
+    });
+    axios.post = jest.fn().mockResolvedValue({ data: {} });
+    axios.put = jest.fn().mockResolvedValue({ data: {} });
+    axios.delete = jest.fn().mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    // Ensure no test leaves fake timers enabled
+    jest.useRealTimers();
   });
 
   describe('Polling', () => {
@@ -64,7 +88,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -72,7 +96,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -104,7 +128,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -112,7 +136,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -129,7 +153,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith(
@@ -147,7 +171,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith(
@@ -160,11 +184,11 @@ describe('ListContainer', () => {
   });
 
   describe('Permissions', () => {
-    it('renders ListForm when user has write permissions', async () => {
+    it('renders Add Item button (form collapsed) when user has write permissions', async () => {
       const { container, findByTestId } = setup({ permissions: EUserPermissions.WRITE });
 
       expect(container).toMatchSnapshot();
-      expect(await findByTestId('list-item-form')).toBeVisible();
+      expect(await findByTestId('add-item-button')).toBeVisible();
     });
 
     it('does not render ListForm when user has read permissions', () => {

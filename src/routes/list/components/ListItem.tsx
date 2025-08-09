@@ -109,4 +109,32 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   );
 };
 
-export default ListItem;
+export const memoCompare = (prev: IListItemProps, next: IListItemProps): boolean => {
+  if (prev.pending !== next.pending) {
+    return false;
+  }
+  if (prev.multiSelect !== next.multiSelect) {
+    return false;
+  }
+  if (prev.permissions !== next.permissions) {
+    return false;
+  }
+  if (prev.listType !== next.listType) {
+    return false;
+  }
+  if (prev.selectedItems.length !== next.selectedItems.length) {
+    return false;
+  }
+  if (prev.item.id !== next.item.id) {
+    return false;
+  }
+  if (prev.item.completed !== next.item.completed) {
+    return false;
+  }
+  if (prev.item.updated_at !== next.item.updated_at) {
+    return false;
+  }
+  return true;
+};
+
+export default React.memo(ListItem, memoCompare);

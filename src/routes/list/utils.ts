@@ -24,6 +24,8 @@ export interface IFulfilledListData {
   lists_to_update: IList[];
   list_item_configuration: IListItemConfiguration;
   categories: string[];
+  // Optional preloaded configs to remove first-open flicker
+  list_item_field_configurations?: IListItemFieldConfiguration[];
 }
 
 export interface IFulfilledEditListData {

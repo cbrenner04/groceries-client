@@ -18,6 +18,7 @@ export interface IListItemFormProps {
   handleItemAddition: (data: IListItem[]) => void;
   categories?: string[];
   listItemConfiguration?: IListItemConfiguration;
+  preloadedFieldConfigurations?: IFieldConfiguration[];
 }
 
 interface IFieldConfiguration {
@@ -33,13 +34,20 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [formData, setFormData] = useState({} as IListItemDataRecord);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
-  const [fieldConfigurations, setFieldConfigurations] = useState([] as IFieldConfiguration[]);
+  const [fieldConfigurations, setFieldConfigurations] = useState(
+    (props.preloadedFieldConfigurations ?? []) as IFieldConfiguration[],
+  );
 
   // Load field configurations when form is shown
   const loadFieldConfigurations = async (): Promise<void> => {
     try {
       if (!props.listItemConfiguration?.id) {
         // No configuration available, field configurations will remain empty
+        return;
+      }
+
+      // If preloaded, don't refetch on first open
+      if (fieldConfigurations.length > 0) {
         return;
       }
 
@@ -176,7 +184,16 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     }
 
     if (fieldConfigurations.length === 0) {
-      return <p>Loading field configurations...</p>;
+      // Small inline skeleton to avoid flashing text
+      return (
+        <div role="status" aria-busy="true" aria-live="polite">
+          <div className="placeholder-glow">
+            <span className="placeholder col-6" />
+            <span className="placeholder col-4" />
+            <span className="placeholder col-8" />
+          </div>
+        </div>
+      );
     }
 
     return fieldConfigurations.map((config: IFieldConfiguration) => {

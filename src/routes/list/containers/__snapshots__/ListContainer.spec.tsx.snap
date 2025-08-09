@@ -28,9 +28,25 @@ exports[`ListContainer Category Filtering renders filtered items without categor
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -82,7 +98,7 @@ exports[`ListContainer Category Filtering renders filtered items without categor
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -205,7 +221,7 @@ exports[`ListContainer Category Filtering renders filtered items without categor
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div
@@ -293,9 +309,25 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -342,7 +374,7 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -578,7 +610,7 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div
@@ -666,9 +698,25 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -715,7 +763,7 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -951,7 +999,7 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div
@@ -1039,9 +1087,25 @@ exports[`ListContainer Item Rendering does not render complete items when none e
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -1088,7 +1152,7 @@ exports[`ListContainer Item Rendering does not render complete items when none e
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -1324,7 +1388,7 @@ exports[`ListContainer Item Rendering does not render complete items when none e
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div
@@ -1361,9 +1425,25 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -1410,7 +1490,7 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -1424,7 +1504,7 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div
@@ -1645,7 +1725,7 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
 </div>
 `;
 
-exports[`ListContainer Permissions renders ListForm when user has write permissions 1`] = `
+exports[`ListContainer Permissions renders Add Item button (form collapsed) when user has write permissions 1`] = `
 <div>
   <a
     class="float-end"
@@ -1673,9 +1753,25 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
     data-test-id="list-item-form"
     id="form-collapse"
   >
-    <p>
-      Loading field configurations...
-    </p>
+    <div
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <div
+        class="placeholder-glow"
+      >
+        <span
+          class="placeholder col-6"
+        />
+        <span
+          class="placeholder col-4"
+        />
+        <span
+          class="placeholder col-8"
+        />
+      </div>
+    </div>
     <div
       class="d-grid gap-2 mt-3"
     >
@@ -1722,7 +1818,7 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <br />
@@ -1958,7 +2054,7 @@ exports[`ListContainer Permissions renders ListForm when user has write permissi
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
   <div

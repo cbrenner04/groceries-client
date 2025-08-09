@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from 'react';
+import React, { useState, useEffect, type ReactNode } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -33,6 +33,7 @@ import {
   sortItemsByCreatedAt,
 } from './listHandlers';
 import { handleFailure } from 'utils/handleFailure';
+import axios from 'utils/api';
 
 export interface IListContainerProps {
   userId: string;
@@ -44,6 +45,7 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
+  preloadedFieldConfigurations?: { id: string; label: string; data_type: string; position: number }[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -61,7 +63,37 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [copy, setCopy] = useState(false);
   const [move, setMove] = useState(false);
+  const [preloadedFieldConfigurations, setPreloadedFieldConfigurations] = useState(
+    props.preloadedFieldConfigurations ?? [],
+  );
   const navigate = useNavigate();
+
+  // Prefetch field configurations once to remove first-open flicker
+  useEffect(() => {
+    async function prefetch(): Promise<void> {
+      // Allow tests to disable prefetch to keep axios.get call counts stable
+      if (process.env.REACT_APP_PREFETCH_ON_MOUNT === 'false') {
+        return;
+      }
+      if (preloadedFieldConfigurations.length > 0) {
+        return;
+      }
+      if (!props.listItemConfiguration?.id) {
+        return;
+      }
+      try {
+        const { data } = await axios.get(
+          `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+        );
+        const ordered = data.sort((a: { position: number }, b: { position: number }) => a.position - b.position);
+        setPreloadedFieldConfigurations(ordered);
+      } catch (_err) {
+        // ignore, form will fetch on open
+      }
+    }
+    void prefetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.listItemConfiguration?.id]);
 
   // Add polling for real-time updates
   usePolling(async () => {
@@ -74,11 +106,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           categories: updatedCategories,
         } = fetchResponse;
 
-        const isSameSet = (newSet: IListItem[], oldSet: IListItem[]): boolean =>
-          JSON.stringify(newSet) === JSON.stringify(oldSet);
-
-        const notCompletedSame = isSameSet(updatedNotCompletedItems, notCompletedItems);
-        const completedSame = isSameSet(updatedCompletedItems, completedItems);
+        // Compare by ids and updated_at to avoid deep equality costs
+        const signature = (items: IListItem[]): string =>
+          items.map((i) => `${i.id}:${i.updated_at ?? ''}:${i.completed ? '1' : '0'}`).join('|');
+        const notCompletedSame = signature(updatedNotCompletedItems) === signature(notCompletedItems);
+        const completedSame = signature(updatedCompletedItems) === signature(completedItems);
 
         /* istanbul ignore else */
         if (!notCompletedSame) {
@@ -90,11 +122,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         }
         /* istanbul ignore else */
         if (!notCompletedSame || !completedSame) {
+          // Update categories but preserve active filter selection
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
-          /* istanbul ignore else */
           if (!filter) {
             setDisplayedCategories(updatedCategories);
+          } else if (filter && !updatedCategories.some((c) => c.toLowerCase() === filter.toLowerCase())) {
+            // Active category no longer exists: keep filter visible but show empty state
+            setDisplayedCategories([filter]);
           }
         }
       }
@@ -105,7 +140,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         autoClose: 5000,
       });
     }
-  }, 3000);
+  }, 5000);
 
   const handleAddItem = (newItems: IListItem[]): void => {
     exportedHandleAddItem({
@@ -406,12 +441,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     items.forEach((item) => {
       const categoryField = item.fields.find((field) => field.label === 'category');
       if (categoryField?.data) {
-        // Use the first occurrence's casing as the canonical form
-        const existingCategory = Array.from(itemCategories).find(
-          (cat) => cat.toLowerCase() === categoryField.data?.toLowerCase(),
+        const existing = Array.from(itemCategories).find(
+          (cat) => cat.toLowerCase() === categoryField.data!.toLowerCase(),
         );
-        if (!existingCategory) {
-          itemCategories.add(categoryField.data);
+        if (!existing) {
+          itemCategories.add(categoryField.data!);
         }
       }
     });
@@ -509,6 +543,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           categories={props.categories}
           navigate={navigate}
           listItemConfiguration={props.listItemConfiguration}
+          preloadedFieldConfigurations={preloadedFieldConfigurations}
         />
       ) : (
         <p>You only have permission to read this list</p>
