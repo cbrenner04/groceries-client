@@ -18,6 +18,8 @@ try {
 
 // Stabilize axios.get counts in tests by disabling prefetch on mount by default
 process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+// Disable idle prefetch by default to keep axios.get counts deterministic in tests
+process.env.REACT_APP_PREFETCH_IDLE = 'false';
 
 jest.mock('axios', () => ({
   AxiosError: jest.fn().mockImplementation(

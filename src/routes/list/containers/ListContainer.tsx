@@ -96,10 +96,81 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.listItemConfiguration?.id]);
 
+  // Idle-time prefetch to further reduce first-open flicker
+  useEffect(() => {
+    // Allow tests or environments to disable idle prefetch
+    if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
+      return;
+    }
+    if (preloadedFieldConfigurations !== undefined) {
+      return;
+    }
+    if (!props.listItemConfiguration?.id) {
+      return;
+    }
+
+    const configId = props.listItemConfiguration.id!;
+
+    const cancelledRef = { current: false };
+    let idleHandle: number | null = null;
+    let timeoutHandle: number | null = null;
+
+    const runPrefetch = async (): Promise<void> => {
+      if (cancelledRef.current) {
+        return;
+      }
+      try {
+        const { data } = await axios.get(`/list_item_configurations/${configId}/list_item_field_configurations`);
+        // Check again after async operation in case component unmounted
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (cancelledRef.current) {
+          return;
+        }
+        const ordered = data.sort((a: { position: number }, b: { position: number }) => a.position - b.position);
+        setPreloadedFieldConfigurations(ordered);
+      } catch (_err) {
+        // ignore, form will fetch on open
+      }
+    };
+
+    const schedule = (): void => {
+      const ric: ((cb: () => void) => number) | undefined =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (globalThis as any).requestIdleCallback || undefined;
+
+      if (typeof ric === 'function') {
+        idleHandle = ric(() => {
+          void runPrefetch();
+        });
+      } else {
+        // Fallback after a short delay
+        timeoutHandle = window.setTimeout(() => {
+          void runPrefetch();
+        }, 1500);
+      }
+    };
+
+    schedule();
+
+    return () => {
+      cancelledRef.current = true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cic: ((id: number) => void) | undefined = (globalThis as any).cancelIdleCallback || undefined;
+      if (idleHandle !== null && typeof cic === 'function') {
+        cic(idleHandle);
+      }
+      if (timeoutHandle !== null) {
+        clearTimeout(timeoutHandle);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.listItemConfiguration?.id, preloadedFieldConfigurations]);
+
   // Add polling for real-time updates
   usePolling(async () => {
     try {
-      const fetchResponse = await fetchList({ id: props.list.id!, navigate });
+      const controller = new AbortController();
+      const fetchResponse = await fetchList({ id: props.list.id!, navigate, signal: controller.signal });
       if (fetchResponse) {
         const {
           not_completed_items: updatedNotCompletedItems,
@@ -142,6 +213,39 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       });
     }
   }, 5000);
+
+  // Immediate sync on visibility regain
+  useEffect(() => {
+    function handleVisibility(): void {
+      if (document.visibilityState === 'visible') {
+        void (async (): Promise<void> => {
+          try {
+            const controller = new AbortController();
+            const fetchResponse = await fetchList({ id: props.list.id!, navigate, signal: controller.signal });
+            if (fetchResponse) {
+              const {
+                not_completed_items: updatedNotCompletedItems,
+                completed_items: updatedCompletedItems,
+                categories: updatedCategories,
+              } = fetchResponse;
+              setNotCompletedItems(updatedNotCompletedItems);
+              setCompletedItems(updatedCompletedItems);
+              setCategories(updatedCategories);
+              setIncludedCategories(updatedCategories);
+              if (!filter) {
+                setDisplayedCategories(updatedCategories);
+              }
+            }
+          } catch (_err) {
+            // ignore; polling error path handles user feedback
+          }
+        })();
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.list.id, filter]);
 
   const handleAddItem = (newItems: IListItem[]): void => {
     exportedHandleAddItem({

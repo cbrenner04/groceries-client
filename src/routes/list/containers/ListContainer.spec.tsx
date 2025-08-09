@@ -181,6 +181,54 @@ describe('ListContainer', () => {
 
       jest.useRealTimers();
     });
+
+    it('syncs immediately when tab becomes visible', async () => {
+      jest.useFakeTimers();
+
+      // First hidden, then visible
+      Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+
+      const firstResponse = createApiResponse(
+        [createListItem('id1', false, [createField('id1', 'product', 'item new', 'id1')])],
+        [],
+      );
+      const secondResponse = createApiResponse(
+        [],
+        [createListItem('id1', true, [createField('id1', 'product', 'item new', 'id1')])],
+      );
+
+      axios.get = jest
+        .fn()
+        .mockResolvedValueOnce({ data: firstResponse })
+        .mockResolvedValueOnce({ data: secondResponse });
+
+      const { findByText } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Move time once while hidden: polling should not fire
+      await advanceTimersByTime(5000);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
+
+      // Make the tab visible and dispatch event to trigger immediate sync
+      Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+      document.dispatchEvent(new Event('visibilitychange'));
+
+      // Immediate sync should fetch once (firstResponse)
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+        'data-test-class',
+        'non-completed-item',
+      );
+
+      // Next poll tick should fetch again (secondResponse)
+      await advanceTimersByTime(5000);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
+
+      jest.useRealTimers();
+    });
   });
 
   describe('Permissions', () => {
@@ -425,6 +473,71 @@ describe('ListContainer', () => {
       expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
+    });
+  });
+
+  describe('Prefetch and undefined UI states', () => {
+    const originalIdlePrefetch = process.env.REACT_APP_PREFETCH_IDLE;
+
+    afterEach(() => {
+      process.env.REACT_APP_PREFETCH_IDLE = originalIdlePrefetch;
+      // allow cleanup of test shim
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (global as any).requestIdleCallback;
+    });
+
+    it('idle-prefetches field configurations when enabled and avoids refetch on first open', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // Make idle callback fire immediately
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({
+            data: [
+              { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+              { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+            ],
+          });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { findByLabelText, findByTestId, user } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait for idle prefetch to complete before opening form to avoid a race
+      await waitFor(() => {
+        const calls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+        expect(calls.length).toBe(1);
+      });
+
+      // Open the form; fields should already be available without triggering another configs fetch
+      await user.click(await findByTestId('add-item-button'));
+      await waitFor(async () => expect(await findByLabelText('Quantity')).toBeVisible());
+
+      // Still a single configs fetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(1);
+    });
+
+    it('does not render the string "undefined" for items missing name fields', async () => {
+      const unnamedItem: IListItem = createListItem('id_unnamed', false, [
+        createField('id_cat', 'category', 'foo', 'id_unnamed'),
+      ]);
+      const { findByText, queryByText } = setup({ notCompletedItems: [unnamedItem] });
+
+      expect(await findByText('Untitled Item')).toBeVisible();
+      expect(queryByText(/undefined/i)).toBeNull();
     });
   });
 

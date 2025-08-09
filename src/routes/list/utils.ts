@@ -106,9 +106,10 @@ export function itemName(item: IListItem, listType: EListType): string {
 export async function fetchList(fetchParams: {
   id: string;
   navigate: (url: string) => void;
+  signal?: AbortSignal;
 }): Promise<IFulfilledListData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`);
+    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`, { signal: fetchParams.signal });
 
     // Add defensive checks for undefined data
     if (!data) {
