@@ -63,9 +63,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [copy, setCopy] = useState(false);
   const [move, setMove] = useState(false);
-  const [preloadedFieldConfigurations, setPreloadedFieldConfigurations] = useState(
-    props.preloadedFieldConfigurations ?? [],
-  );
+  const [preloadedFieldConfigurations, setPreloadedFieldConfigurations] = useState<
+    { id: string; label: string; data_type: string; position: number }[] | undefined
+  >(props.preloadedFieldConfigurations);
   const navigate = useNavigate();
 
   // Prefetch field configurations once to remove first-open flicker
@@ -75,7 +75,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       if (process.env.REACT_APP_PREFETCH_ON_MOUNT === 'false') {
         return;
       }
-      if (preloadedFieldConfigurations.length > 0) {
+      // If we've already attempted prefetch (even if empty), do not refetch here
+      if (preloadedFieldConfigurations !== undefined) {
         return;
       }
       if (!props.listItemConfiguration?.id) {

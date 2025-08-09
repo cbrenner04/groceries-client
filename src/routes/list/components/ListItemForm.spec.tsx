@@ -417,11 +417,17 @@ describe('ListItemForm', () => {
     });
   });
 
-  it('shows loading message when field configurations are empty', async () => {
+  it('shows definitive no-config message after empty configurations are fetched', async () => {
     axios.get = jest.fn().mockResolvedValue({ data: [] });
     render(<ListItemForm {...defaultProps} />);
     fireEvent.click(screen.getByText('Add Item'));
-    expect(await screen.findByRole('status', { busy: true })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "This list doesn't have a field configuration set up. Please contact support to fix this issue.",
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('renders only Add Item button when form is not shown', () => {

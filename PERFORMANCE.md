@@ -23,9 +23,8 @@ This document captures what we are doing to improve perceived performance, reduc
 ### To-do (prioritized)
 
 1) Eliminate remaining first-open form flicker universally
-- Only show “no config” warning after configs have been fetched and verified to be empty
-- Ensure prefetch runs before open where possible; consider prefetch on route transition and while idle
-- Keep the inline skeleton as stopgap; verify proper aria-busy semantics
+- Prefetch while idle to maximize chance fields are ready before first open
+- Keep current inline skeleton as fallback; aria-busy semantics already in place
 
 2) Remove transient “undefined” UI states
 - Normalize list/list-item shapes before render; ensure safe defaults for all fields

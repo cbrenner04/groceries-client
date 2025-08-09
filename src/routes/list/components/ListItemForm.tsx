@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEventHandler, type FormEventHandler } from 'react';
+import React, { useEffect, useState, type ChangeEventHandler, type FormEventHandler } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import update from 'immutability-helper';
@@ -37,6 +37,19 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [fieldConfigurations, setFieldConfigurations] = useState(
     (props.preloadedFieldConfigurations ?? []) as IFieldConfiguration[],
   );
+  // Track whether configurations have been loaded (to avoid early "no config" flash)
+  const [fieldConfigsLoaded, setFieldConfigsLoaded] = useState<boolean>(
+    props.preloadedFieldConfigurations !== undefined,
+  );
+
+  // Sync with preloaded configurations from parent when they arrive
+  useEffect(() => {
+    if (props.preloadedFieldConfigurations !== undefined) {
+      setFieldConfigurations(props.preloadedFieldConfigurations as IFieldConfiguration[]);
+      setFieldConfigsLoaded(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.preloadedFieldConfigurations]);
 
   // Load field configurations when form is shown
   const loadFieldConfigurations = async (): Promise<void> => {
@@ -56,6 +69,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       );
       const orderedData = data.sort((a: IFieldConfiguration, b: IFieldConfiguration) => a.position - b.position);
       setFieldConfigurations(orderedData);
+      setFieldConfigsLoaded(true);
     } catch (err) {
       // Silently fail - field configurations will be empty
       /* istanbul ignore next */
@@ -183,8 +197,8 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       return <p>This list doesn&apos;t have a field configuration set up. Please contact support to fix this issue.</p>;
     }
 
-    if (fieldConfigurations.length === 0) {
-      // Small inline skeleton to avoid flashing text
+    // While loading (including error case), show skeleton to avoid warning flicker
+    if (!fieldConfigsLoaded) {
       return (
         <div role="status" aria-busy="true" aria-live="polite">
           <div className="placeholder-glow">
@@ -194,6 +208,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           </div>
         </div>
       );
+    }
+
+    // Loaded but empty → show definitive "no config" message
+    if (fieldConfigurations.length === 0) {
+      return <p>This list doesn&apos;t have a field configuration set up. Please contact support to fix this issue.</p>;
     }
 
     return fieldConfigurations.map((config: IFieldConfiguration) => {
