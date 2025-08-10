@@ -63,22 +63,22 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     ],
     incompleteLists: [
       {
-        id: 'id3',
+        id: 'id5',
         name: 'baz',
         type: EListType.MUSIC_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id3',
+        users_list_id: 'id5',
         owner_id: 'id1',
         refreshed: false,
       },
       {
-        id: 'id5',
+        id: 'id6',
         name: 'foobar',
         type: EListType.TO_DO_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id5',
+        users_list_id: 'id6',
         owner_id: 'id1',
         refreshed: false,
       },
@@ -86,9 +86,9 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     currentUserPermissions: {
       id1: 'write',
       id2: 'write',
-      id3: 'write',
+      id5: 'write',
       id4: 'read',
-      id5: 'read',
+      id6: 'read',
     } as TUserPermissions,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -341,7 +341,7 @@ describe('ListsContainer', () => {
   it('creates list on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
-        id: 'id6',
+        id: 'id7',
         name: 'new list',
         type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
@@ -359,7 +359,7 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
-    expect(await findByTestId('list-id6')).toHaveTextContent('new list');
+    expect(await findByTestId('list-id7')).toHaveTextContent('new list');
   });
 
   it('redirects to login when submit response is 401', async () => {

@@ -14,7 +14,7 @@ import {
   type IListItem,
 } from 'typings';
 import { capitalize } from 'utils/format';
-import { usePolling } from 'hooks';
+import { usePolling, useNavigationFocus } from 'hooks';
 
 import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
@@ -32,7 +32,10 @@ import {
   handleToggleRead as exportedHandleToggleRead,
   sortItemsByCreatedAt,
 } from './listHandlers';
+import type { IFulfilledListData } from '../utils';
 import { handleFailure } from 'utils/handleFailure';
+import { listDeduplicator } from 'utils/requestDeduplication';
+import { listCache } from 'utils/lightweightCache';
 import axios from 'utils/api';
 
 export interface IListContainerProps {
@@ -166,40 +169,43 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.listItemConfiguration?.id, preloadedFieldConfigurations]);
 
-  // Add polling for real-time updates
+  // Add polling for real-time updates with request deduplication
   usePolling(async () => {
     try {
-      const controller = new AbortController();
-      const fetchResponse = await fetchList({ id: props.list.id!, navigate, signal: controller.signal });
+      const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
+        fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
+      );
+
       if (fetchResponse) {
         const {
           not_completed_items: updatedNotCompletedItems,
           completed_items: updatedCompletedItems,
           categories: updatedCategories,
-        } = fetchResponse;
+        } = fetchResponse as IFulfilledListData;
 
-        // Compare by ids and updated_at to avoid deep equality costs
-        const signature = (items: IListItem[]): string =>
-          items.map((i) => `${i.id}:${i.updated_at ?? ''}:${i.completed ? '1' : '0'}`).join('|');
-        const notCompletedSame = signature(updatedNotCompletedItems) === signature(notCompletedItems);
-        const completedSame = signature(updatedCompletedItems) === signature(completedItems);
+        // Use lightweight cache to avoid re-render churn for identical data
+        const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
+        const completedCacheKey = `list-${props.list.id}-completed`;
+        const categoriesCacheKey = `list-${props.list.id}-categories`;
 
-        /* istanbul ignore else */
-        if (!notCompletedSame) {
+        const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
+        const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
+        const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+
+        // Only update state if data has actually changed
+        if (notCompletedResult.hasChanged) {
           setNotCompletedItems(updatedNotCompletedItems);
         }
-        /* istanbul ignore else */
-        if (!completedSame) {
+        if (completedResult.hasChanged) {
           setCompletedItems(updatedCompletedItems);
         }
-        /* istanbul ignore else */
-        if (!notCompletedSame || !completedSame) {
+        if (notCompletedResult.hasChanged || completedResult.hasChanged || categoriesResult.hasChanged) {
           // Update categories but preserve active filter selection
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
           if (!filter) {
             setDisplayedCategories(updatedCategories);
-          } else if (filter && !updatedCategories.some((c) => c.toLowerCase() === filter.toLowerCase())) {
+          } else if (filter && !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())) {
             // Active category no longer exists: keep filter visible but show empty state
             setDisplayedCategories([filter]);
           }
@@ -213,6 +219,48 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       });
     }
   }, 5000);
+
+  // Immediate sync on navigation focus
+  useNavigationFocus(async () => {
+    try {
+      const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}-focus`, () =>
+        fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
+      );
+
+      if (fetchResponse) {
+        const {
+          not_completed_items: updatedNotCompletedItems,
+          completed_items: updatedCompletedItems,
+          categories: updatedCategories,
+        } = fetchResponse as IFulfilledListData;
+
+        // Use cache to avoid unnecessary state updates
+        const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
+        const completedCacheKey = `list-${props.list.id}-completed`;
+        const categoriesCacheKey = `list-${props.list.id}-categories`;
+
+        const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
+        const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
+        const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+
+        if (notCompletedResult.hasChanged) {
+          setNotCompletedItems(updatedNotCompletedItems);
+        }
+        if (completedResult.hasChanged) {
+          setCompletedItems(updatedCompletedItems);
+        }
+        if (categoriesResult.hasChanged) {
+          setCategories(updatedCategories);
+          setIncludedCategories(updatedCategories);
+          if (!filter) {
+            setDisplayedCategories(updatedCategories);
+          }
+        }
+      }
+    } catch (_err) {
+      // ignore; polling error path handles user feedback
+    }
+  });
 
   // Immediate sync on visibility regain
   useEffect(() => {
@@ -228,12 +276,28 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 completed_items: updatedCompletedItems,
                 categories: updatedCategories,
               } = fetchResponse;
-              setNotCompletedItems(updatedNotCompletedItems);
-              setCompletedItems(updatedCompletedItems);
-              setCategories(updatedCategories);
-              setIncludedCategories(updatedCategories);
-              if (!filter) {
-                setDisplayedCategories(updatedCategories);
+
+              // Use cache to avoid unnecessary state updates
+              const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
+              const completedCacheKey = `list-${props.list.id}-completed`;
+              const categoriesCacheKey = `list-${props.list.id}-categories`;
+
+              const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
+              const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
+              const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+
+              if (notCompletedResult.hasChanged) {
+                setNotCompletedItems(updatedNotCompletedItems);
+              }
+              if (completedResult.hasChanged) {
+                setCompletedItems(updatedCompletedItems);
+              }
+              if (categoriesResult.hasChanged) {
+                setCategories(updatedCategories);
+                setIncludedCategories(updatedCategories);
+                if (!filter) {
+                  setDisplayedCategories(updatedCategories);
+                }
               }
             }
           } catch (_err) {

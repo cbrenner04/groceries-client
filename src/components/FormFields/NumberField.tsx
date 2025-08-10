@@ -11,7 +11,12 @@ export interface INumberFieldProps {
 const NumberField: React.FC<INumberFieldProps> = (props): React.JSX.Element => (
   <Form.Group controlId={props.name} className="mb-3">
     <Form.Label>{props.label}</Form.Label>
-    <Form.Control type="number" value={props.value ?? ''} onChange={props.handleChange} name={props.name} />
+    <Form.Control
+      type="number"
+      value={props.value !== undefined ? props.value : ''}
+      onChange={props.handleChange}
+      name={props.name}
+    />
   </Form.Group>
 );
 

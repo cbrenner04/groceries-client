@@ -48,7 +48,13 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
           <NumberField
             key={config.id}
             {...commonProps}
-            value={field?.data !== undefined ? Number(field.data) : undefined}
+            value={
+              field?.data !== undefined && field.data !== null && field.data !== ''
+                ? Number(field.data)
+                : field?.data === ''
+                  ? 0
+                  : undefined
+            }
           />
         );
       case 'free_text':

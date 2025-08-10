@@ -39,14 +39,15 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   );
   // Track whether configurations have been loaded (to avoid early "no config" flash)
   const [fieldConfigsLoaded, setFieldConfigsLoaded] = useState<boolean>(
-    props.preloadedFieldConfigurations !== undefined,
+    props.preloadedFieldConfigurations !== undefined && props.preloadedFieldConfigurations.length > 0,
   );
 
   // Sync with preloaded configurations from parent when they arrive
   useEffect(() => {
     if (props.preloadedFieldConfigurations !== undefined) {
       setFieldConfigurations(props.preloadedFieldConfigurations as IFieldConfiguration[]);
-      setFieldConfigsLoaded(true);
+      // Only mark as loaded if we actually have configurations, otherwise keep showing skeleton
+      setFieldConfigsLoaded(props.preloadedFieldConfigurations.length > 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.preloadedFieldConfigurations]);
@@ -69,6 +70,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       );
       const orderedData = data.sort((a: IFieldConfiguration, b: IFieldConfiguration) => a.position - b.position);
       setFieldConfigurations(orderedData);
+      // Always mark as loaded after fetch attempt, even if empty
       setFieldConfigsLoaded(true);
     } catch (err) {
       // Silently fail - field configurations will be empty
@@ -240,16 +242,19 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
               handleChange={setData}
             />
           );
-        case 'number':
+        case 'number': {
+          const numberValue = formData[fieldName];
+          const safeNumberValue = numberValue !== '' ? Number(numberValue) : undefined;
           return (
             <NumberField
               key={config.id}
               name={fieldName}
               label={capitalize(config.label)}
-              value={formData[fieldName] as number}
+              value={safeNumberValue}
               handleChange={setData}
             />
           );
+        }
         case 'free_text':
         default:
           return (

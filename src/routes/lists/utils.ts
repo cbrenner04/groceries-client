@@ -18,7 +18,7 @@ function handleFailure(error: unknown, navigate: (url: string) => void): void {
   }
 }
 
-interface IFetchListsReturn {
+export interface IFetchListsReturn {
   userId: string;
   completedLists: IList[];
   currentUserPermissions: TUserPermissions;

@@ -5,16 +5,15 @@ import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';
-import { usePolling } from 'hooks';
+import { usePolling, useNavigationFocus } from 'hooks';
 import type { IList, TUserPermissions } from 'typings';
 
 import ListForm from '../components/ListForm';
-import { fetchLists, sortLists, failure } from '../utils';
+import { fetchLists, sortLists, failure, type IFetchListsReturn } from '../utils';
+import { listsDeduplicator } from 'utils/requestDeduplication';
+import { listsCache } from 'utils/lightweightCache';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
-
-const isSameSet = (newSet: TUserPermissions | IList[], oldSet: TUserPermissions | IList[]): boolean =>
-  JSON.stringify(newSet) === JSON.stringify(oldSet);
 
 export interface IListsContainerProps {
   userId: string;
@@ -34,7 +33,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   usePolling(async () => {
     try {
-      const lists = await fetchLists({ navigate });
+      const lists = await listsDeduplicator.execute('lists', () => fetchLists({ navigate }));
       /* istanbul ignore else */
       if (lists) {
         const {
@@ -42,25 +41,30 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           completedLists: updatedCompleted,
           incompleteLists: updatedIncomplete,
           currentUserPermissions: updatedCurrentUserPermissions,
-        } = lists;
-        const pendingSame = isSameSet(updatedPending, pendingLists);
-        const completedSame = isSameSet(updatedCompleted, completedLists);
-        const incompleteSame = isSameSet(updatedIncomplete, incompleteLists);
-        const userPermsSame = isSameSet(updatedCurrentUserPermissions, currentUserPermissions);
-        /* istanbul ignore else */
-        if (!pendingSame) {
+        } = lists as IFetchListsReturn;
+
+        // Use lightweight cache to avoid re-render churn for identical data
+        const pendingCacheKey = 'lists-pending';
+        const completedCacheKey = 'lists-completed';
+        const incompleteCacheKey = 'lists-incomplete';
+        const permissionsCacheKey = 'lists-permissions';
+
+        const pendingResult = listsCache.get(pendingCacheKey, updatedPending);
+        const completedResult = listsCache.get(completedCacheKey, updatedCompleted);
+        const incompleteResult = listsCache.get(incompleteCacheKey, updatedIncomplete);
+        const permissionsResult = listsCache.get(permissionsCacheKey, updatedCurrentUserPermissions);
+
+        // Only update state if data has actually changed
+        if (pendingResult.hasChanged) {
           setPendingLists(updatedPending);
         }
-        /* istanbul ignore else */
-        if (!completedSame) {
+        if (completedResult.hasChanged) {
           setCompletedLists(updatedCompleted);
         }
-        /* istanbul ignore else */
-        if (!incompleteSame) {
+        if (incompleteResult.hasChanged) {
           setIncompleteLists(updatedIncomplete);
         }
-        /* istanbul ignore else */
-        if (!userPermsSame) {
+        if (permissionsResult.hasChanged) {
           setCurrentUserPermissions(updatedCurrentUserPermissions);
         }
       }
@@ -72,6 +76,27 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       });
     }
   }, 10000);
+
+  // Immediate sync on navigation focus
+  useNavigationFocus(async () => {
+    try {
+      const lists = await listsDeduplicator.execute('lists-focus', () => fetchLists({ navigate }));
+      if (lists) {
+        const {
+          pendingLists: updatedPending,
+          completedLists: updatedCompleted,
+          incompleteLists: updatedIncomplete,
+          currentUserPermissions: updatedCurrentUserPermissions,
+        } = lists as IFetchListsReturn;
+        setPendingLists(updatedPending);
+        setCompletedLists(updatedCompleted);
+        setIncompleteLists(updatedIncomplete);
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+      }
+    } catch (_err) {
+      // ignore; polling error path handles user feedback
+    }
+  });
 
   const handleFormSubmit = async (list: IList): Promise<void> => {
     setPending(true);
