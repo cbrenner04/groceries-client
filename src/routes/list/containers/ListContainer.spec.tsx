@@ -760,15 +760,7 @@ describe('ListContainer', () => {
       delete (global as any).requestIdleCallback;
     });
 
-    it('idle-prefetches field configurations when enabled and avoids refetch on first open', async () => {
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
-      // Make idle callback fire immediately
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
-        cb();
-        return 1;
-      };
-
+    it('uses preloaded field configurations without making API calls', async () => {
       const getSpy = jest.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
@@ -787,21 +779,21 @@ describe('ListContainer', () => {
       });
       axios.get = getSpy;
 
-      const { findByLabelText, findByTestId, user } = setup({ permissions: EUserPermissions.WRITE });
-
-      // Wait for idle prefetch to complete before opening form to avoid a race
-      await waitFor(() => {
-        const calls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
-        expect(calls.length).toBe(1);
+      const { findByLabelText, findByTestId, user } = setup({ 
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: [
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+        ],
       });
 
-      // Open the form; fields should already be available without triggering another configs fetch
+      // Open the form; fields should already be available from preloaded configurations
       await user.click(await findByTestId('add-item-button'));
       await waitFor(async () => expect(await findByLabelText('Quantity')).toBeVisible());
 
-      // Still a single configs fetch
+      // No field configuration API calls should be made since data is preloaded
       const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
-      expect(configCalls.length).toBe(1);
+      expect(configCalls.length).toBe(0);
     });
 
     it('does not prefetch on mount when disabled via environment variable', async () => {
@@ -1010,14 +1002,7 @@ describe('ListContainer', () => {
       expect(configCalls.length).toBe(0);
     });
 
-    it('handles errors gracefully during idle prefetch', async () => {
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
-        cb();
-        return 1;
-      };
-
+    it('renders gracefully with preloaded field configurations and no API calls', async () => {
       const getSpy = jest.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.reject(new Error('Network error'));
@@ -1031,8 +1016,11 @@ describe('ListContainer', () => {
       });
       axios.get = getSpy;
 
-      // Should not throw or crash the component
-      const { container } = setup({ permissions: EUserPermissions.WRITE });
+      // Should not throw or crash the component with preloaded configurations
+      const { container } = setup({ 
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
 
       // Wait for any async operations
       await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
@@ -1040,9 +1028,9 @@ describe('ListContainer', () => {
       // Component should still render normally
       expect(container).toBeInTheDocument();
 
-      // Should have attempted the prefetch (both mount and idle prefetch may run)
+      // No field configuration API calls should be made since data is preloaded
       const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
-      expect(configCalls.length).toBeGreaterThanOrEqual(1);
+      expect(configCalls.length).toBe(0);
     });
 
     it('handles component re-renders gracefully', async () => {

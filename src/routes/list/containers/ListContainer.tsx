@@ -36,7 +36,6 @@ import type { IFulfilledListData } from '../utils';
 import { handleFailure } from 'utils/handleFailure';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { listCache } from 'utils/lightweightCache';
-import { getFieldConfigurations, prefetchFieldConfigurationsIdle } from 'utils/fieldConfigCache';
 
 export interface IListContainerProps {
   userId: string;
@@ -71,75 +70,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   >(props.preloadedFieldConfigurations);
   const navigate = useNavigate();
 
-  // Prefetch field configurations once to remove first-open flicker
-  useEffect(() => {
-    /* istanbul ignore next */
-    async function prefetch(): Promise<void> {
-      // Allow tests to disable prefetch to keep axios.get call counts stable
-      if (process.env.REACT_APP_PREFETCH_ON_MOUNT === 'false') {
-        return;
-      }
-      // If we've already attempted prefetch (even if empty), do not refetch here
-      if (preloadedFieldConfigurations !== undefined) {
-        return;
-      }
-      if (!props.listItemConfiguration?.id) {
-        return;
-      }
-      try {
-        const fieldConfigs = await getFieldConfigurations(props.listItemConfiguration.id);
-        const mappedConfigs = fieldConfigs.map((config) => ({
-          id: config.id,
-          label: config.label,
-          data_type: config.data_type,
-          position: config.position ?? 0,
-        }));
-        setPreloadedFieldConfigurations(mappedConfigs);
-      } catch (_err) {
-        // ignore, form will fetch on open
-      }
-    }
-    void prefetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.listItemConfiguration?.id]);
+  // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
 
-  // Idle-time prefetch to further reduce first-open flicker
-  useEffect(() => {
-    // Allow tests or environments to disable idle prefetch
-    if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
-      return;
-    }
-    if (preloadedFieldConfigurations !== undefined) {
-      return;
-    }
-    if (!props.listItemConfiguration?.id) {
-      return;
-    }
-
-    const configId = props.listItemConfiguration.id;
-
-    const runPrefetch = async (): Promise<void> => {
-      try {
-        await prefetchFieldConfigurationsIdle(configId);
-        // Use the cached data to update state
-        const cachedConfigs = await getFieldConfigurations(configId);
-        const mappedConfigs = cachedConfigs.map((config) => ({
-          id: config.id,
-          label: config.label,
-          data_type: config.data_type,
-          position: config.position ?? 0,
-        }));
-        setPreloadedFieldConfigurations(mappedConfigs);
-      } catch (_err) {
-        // ignore, form will fetch on open
-      }
-    };
-
-    void runPrefetch();
-
-    // No cleanup needed as the cache handles abort signals internally
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.listItemConfiguration?.id, preloadedFieldConfigurations]);
+  // Note: Idle prefetch is also eliminated since field configurations are preloaded with list data
 
   // Add polling for real-time updates with request deduplication
   usePolling(
