@@ -72,7 +72,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         id: config.id,
         label: config.label,
         data_type: config.data_type,
-        position: config.position ?? 0,
+        position: config.position,
       }));
       setFieldConfigurations(mappedConfigs);
       // Always mark as loaded after fetch attempt, even if empty

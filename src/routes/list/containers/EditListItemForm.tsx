@@ -43,7 +43,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
       created_at: '',
       updated_at: '',
       archived_at: null,
-      position: config.position ?? 0,
+      position: config.position,
       data_type: config.data_type,
     };
   });
