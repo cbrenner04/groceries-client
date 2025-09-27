@@ -262,6 +262,32 @@ describe('BulkEditListItemsForm', () => {
     });
   });
 
+  it('handles toggling clear field off removes field from update', async () => {
+    const { getByText, user } = renderComponent();
+
+    // Click clear checkbox to enter clear mode
+    const clearCheckbox = document.querySelector('input[id="clear_product"]')!;
+    await user.click(clearCheckbox);
+
+    // Click clear checkbox again to exit clear mode
+    await user.click(clearCheckbox);
+
+    await user.click(getByText('Update Items'));
+
+    // When clear is toggled off, the field should not be included in the update
+    // since it has no data and is not marked for clearing
+    await waitFor(() => {
+      expect(mockAxios.put).toHaveBeenCalledWith(
+        '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        expect.objectContaining({
+          list_items: expect.objectContaining({
+            fields_to_update: [], // No fields should be updated
+          }),
+        }),
+      );
+    });
+  });
+
   it('handles 401 error response', async () => {
     const axiosError = {
       response: { status: 401 },

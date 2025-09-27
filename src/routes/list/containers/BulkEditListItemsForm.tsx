@@ -72,9 +72,18 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   const handleClearField = (label: string): void => {
     setFieldUpdates((prev) =>
-      prev.map((field) =>
-        field.label === label ? { ...field, clear: !field.clear, data: field.clear ? field.data : '' } : field,
-      ),
+      prev.map((field) => {
+        if (field.label !== label) {
+          return field;
+        }
+
+        const toggledClearState = !field.clear;
+        return {
+          ...field,
+          clear: toggledClearState,
+          data: toggledClearState ? '' : field.data, // Empty data when entering clear mode
+        };
+      }),
     );
   };
 

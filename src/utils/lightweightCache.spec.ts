@@ -144,11 +144,16 @@ describe('LightweightCache', () => {
     it('removes expired entries', () => {
       const cache = createCache<string>({ maxAge: 1000 });
 
+      // Create first entry at time 1000
       cache.get('key1', 'value1');
+      expect(cache.getStats().size).toBe(1);
+
+      // Advance time and create second entry at time 1500
+      (Date.now as jest.Mock).mockReturnValue(1500);
       cache.get('key2', 'value2');
       expect(cache.getStats().size).toBe(2);
 
-      // Advance time past expiration for one entry
+      // Advance time to 2500 - key1 is 1500ms old (expired), key2 is 1000ms old (still valid)
       (Date.now as jest.Mock).mockReturnValue(2500);
 
       cache.cleanup();

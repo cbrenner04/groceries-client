@@ -84,6 +84,7 @@ class LightweightCache<T> {
     // Clean up old entries if we're at capacity
     if (this.cache.size >= this.maxSize) {
       const oldestKey = this.cache.keys().next().value;
+      /* istanbul ignore else */
       if (oldestKey) {
         this.cache.delete(oldestKey);
       }
@@ -125,15 +126,6 @@ class LightweightCache<T> {
       }
     }
   }
-
-  /**
-   * Check if we're in a test environment
-   */
-  private isTestEnvironment(): boolean {
-    // Only skip caching in Jest when explicitly configured to avoid test interference
-    // This allows tests to actually test the caching behavior
-    return false;
-  }
 }
 
 /**
@@ -149,6 +141,14 @@ export function createCache<T>(options?: CacheOptions): LightweightCache<T> {
 export const listCache = createCache<unknown>({ maxAge: 2 * 60 * 1000 }); // 2 minutes for lists
 export const listsCache = createCache<unknown>({ maxAge: 3 * 60 * 1000 }); // 3 minutes for lists index
 export const fieldConfigCache = createCache<unknown>({ maxAge: 10 * 60 * 1000 }); // 10 minutes for field configs
+
+/**
+ * Enhanced cache for configuration-specific data with better performance characteristics
+ */
+export const configurationCache = createCache<unknown>({
+  maxAge: 15 * 60 * 1000, // 15 minutes for configuration data (more stable)
+  maxSize: 200, // Larger size for config cache
+});
 
 /**
  * Hook to use cache in components

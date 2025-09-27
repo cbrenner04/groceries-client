@@ -1,5 +1,5 @@
-import { useEffect, useRef, startTransition, useMemo } from 'react';
-import { useIdleTimer } from 'react-idle-timer';
+import { useEffect, useRef, startTransition } from 'react';
+import { type IIdleTimer, useIdleTimer } from 'react-idle-timer';
 
 const ONE_SECOND = 1000;
 const ONE_MINUTE = 60 * ONE_SECOND;
@@ -25,11 +25,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
     backoffDelay: 0,
   });
 
-  // Be defensive: some environments may mock the hook improperly
-  const idleTimer = useIdleTimer({ timeout: TEN_MINUTES }) as unknown as { isIdle?: () => boolean } | undefined;
-  const isIdleFn = useMemo<() => boolean>(() => {
-    return typeof idleTimer?.isIdle === 'function' ? (idleTimer.isIdle as () => boolean) : (): boolean => false;
-  }, [idleTimer]);
+  const idleTimer: IIdleTimer = useIdleTimer({ timeout: TEN_MINUTES });
 
   // Keep latest callback
   useEffect(() => {
@@ -39,7 +35,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
   useEffect(() => {
     function tick(): void {
       /* istanbul ignore next */
-      if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && isIdleFn()) {
+      if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && idleTimer.isIdle()) {
         return;
       }
 
@@ -109,5 +105,5 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
         clearInterval(id);
       };
     }
-  }, [delay, isIdleFn]);
+  }, [delay, idleTimer]);
 }

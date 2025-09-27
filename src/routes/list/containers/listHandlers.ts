@@ -4,6 +4,7 @@ import axios from '../../../utils/api';
 import update from 'immutability-helper';
 import { EListItemFieldType, type IListItem } from 'typings';
 import { handleFailure } from '../../../utils/handleFailure';
+import { getFieldConfigurations } from '../../../utils/fieldConfigCache';
 
 // Sort items by created_at in ascending order to match server ordering
 export const sortItemsByCreatedAt = (items: IListItem[]): IListItem[] => {
@@ -137,6 +138,7 @@ export async function handleItemDelete(params: {
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
   showToast?: boolean;
+  skipStateUpdate?: boolean;
 }): Promise<void> {
   const {
     item,
@@ -150,18 +152,21 @@ export async function handleItemDelete(params: {
     setPending,
     navigate,
     showToast = true,
+    skipStateUpdate = false,
   } = params;
   setPending(true);
   try {
     await axios.delete(`/v2/lists/${listId}/list_items/${item.id}`);
-    if (item.completed) {
-      setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
-    } else {
-      setNotCompletedItems(notCompletedItems.filter((notCompletedItem) => notCompletedItem.id !== item.id));
-    }
-    setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
-    if (showToast) {
-      toast('Item deleted successfully.', { type: 'info' });
+    if (!skipStateUpdate) {
+      if (item.completed) {
+        setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
+      } else {
+        setNotCompletedItems(notCompletedItems.filter((notCompletedItem) => notCompletedItem.id !== item.id));
+      }
+      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
+      if (showToast) {
+        toast('Item deleted successfully.', { type: 'info' });
+      }
     }
   } catch (err) {
     handleFailure({
@@ -186,7 +191,8 @@ export async function handleItemRefresh(params: {
   setNotCompletedItems: (v: IListItem[]) => void;
   setPending: (v: boolean) => void;
   navigate?: (url: string) => void;
-}): Promise<void> {
+  skipStateUpdate?: boolean;
+}): Promise<IListItem> {
   const {
     item,
     listId,
@@ -196,19 +202,15 @@ export async function handleItemRefresh(params: {
     setNotCompletedItems,
     setPending,
     navigate,
+    skipStateUpdate = false,
   } = params;
   setPending(true);
   try {
-    // Create a new item with the same data but completed: false
+    // Step 1: Create a new list item with basic data (no fields)
     const newItemData = {
       list_item: {
         completed: false,
         refreshed: false,
-        fields: item.fields.map((field) => ({
-          list_item_field_configuration_id: field.list_item_field_configuration_id,
-          data: field.data,
-          label: field.label,
-        })),
       },
     };
 
@@ -219,20 +221,49 @@ export async function handleItemRefresh(params: {
       }),
     ]);
 
-    // Remove the old item from completed items
-    setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
+    const newItemId = newItemResponse.data.id;
 
-    // Add the new item to not completed items
-    const newItem = {
-      ...newItemResponse.data,
+    // Step 2: Create each field individually using the same API pattern as normal item creation
+    const fieldCreationPromises = item.fields.map((field) => {
+      if (field.data && field.data.trim() !== '') {
+        return axios.post(`/v2/lists/${listId}/list_items/${newItemId}/list_item_fields`, {
+          list_item_field: {
+            label: field.label,
+            data: field.data,
+            list_item_field_configuration_id: field.list_item_field_configuration_id,
+          },
+        });
+      }
+      return Promise.resolve(null);
+    });
+
+    // Wait for all fields to be created
+    await Promise.all(fieldCreationPromises);
+
+    // Step 3: Fetch the complete item with all its fields
+    const { data: completeNewItem } = await axios.get(`/v2/lists/${listId}/list_items/${newItemId}`);
+
+    // Defensive programming: ensure the item has proper field data
+    const finalNewItem = {
+      ...completeNewItem,
       fields:
-        Array.isArray(newItemResponse.data.fields) && newItemResponse.data.fields.length > 0
-          ? newItemResponse.data.fields
-          : item.fields,
+        Array.isArray(completeNewItem.fields) && completeNewItem.fields.length > 0
+          ? completeNewItem.fields
+          : item.fields, // Fallback to original item fields if server response is incomplete
     };
-    setNotCompletedItems(update(notCompletedItems, { $push: [newItem] }));
 
-    toast('Item refreshed successfully.', { type: 'info' });
+    // Only update state if not skipping (for optimistic updates)
+    if (!skipStateUpdate) {
+      // Remove the old item from completed items
+      setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));
+
+      // Add the complete new item to not completed items
+      setNotCompletedItems(update(notCompletedItems, { $push: [finalNewItem] }));
+
+      toast('Item refreshed successfully.', { type: 'info' });
+    }
+
+    return finalNewItem;
   } catch (err) {
     handleFailure({
       error: err as AxiosError,
@@ -240,6 +271,7 @@ export async function handleItemRefresh(params: {
       navigate,
       redirectURI: '/lists',
     });
+    throw err; // Re-throw the error so the caller can handle it
   } finally {
     setPending(false);
   }
@@ -287,10 +319,8 @@ export async function handleToggleRead(params: {
       // Create new field - we need to get the field configuration first
       // Get the list to find its configuration ID
       const { data: list } = await axios.get(`/v2/lists/${listId}`);
-      const { data: fieldConfigurations } = await axios.get(
-        `/list_item_configurations/${list.list_item_configuration_id}/list_item_field_configurations`,
-      );
-      const readConfig = fieldConfigurations.find((config: { label: string }) => config.label === 'read');
+      const fieldConfigurations = await getFieldConfigurations(list.list_item_configuration_id);
+      const readConfig = fieldConfigurations.find((config) => config.label === 'read');
       /* istanbul ignore else */
       if (readConfig) {
         return axios.post(`/v2/lists/${listId}/list_items/${item.id}/list_item_fields`, {

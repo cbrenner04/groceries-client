@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 
 import { formatDate } from 'utils/format';
 import listIconClass from 'utils/list_icon';
+import { prefetchListOnHover, cancelListHoverPrefetch } from 'utils/listPrefetch';
 import type { IList } from 'typings';
 
 export interface IListProps {
@@ -39,7 +40,12 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
   );
 
   const listNameElement = props.includeLinkToList ? (
-    <Link to={`/lists/${props.list.id}`} className="router-link">
+    <Link
+      to={`/lists/${props.list.id}`}
+      className="router-link"
+      onMouseEnter={(): void => prefetchListOnHover(props.list.id!)}
+      onMouseLeave={(): void => cancelListHoverPrefetch(props.list.id!)}
+    >
       {listName}
     </Link>
   ) : (

@@ -239,6 +239,44 @@ describe('ListItem', () => {
       expect(memoCompare(base, { ...base, selectedItems: [mockItem] })).toBe(false);
       expect(memoCompare(base, { ...base, item: { ...base.item, updated_at: new Date().toISOString() } })).toBe(false);
     });
+
+    it('re-renders when multiSelect changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, multiSelect: true })).toBe(false);
+      expect(memoCompare({ ...base, multiSelect: true }, { ...base, multiSelect: false })).toBe(false);
+    });
+
+    it('re-renders when permissions change', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, permissions: EUserPermissions.READ })).toBe(false);
+      expect(
+        memoCompare({ ...base, permissions: EUserPermissions.READ }, { ...base, permissions: EUserPermissions.WRITE }),
+      ).toBe(false);
+    });
+
+    it('re-renders when listType changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, listType: EListType.BOOK_LIST })).toBe(false);
+      expect(
+        memoCompare({ ...base, listType: EListType.BOOK_LIST }, { ...base, listType: EListType.GROCERY_LIST }),
+      ).toBe(false);
+    });
+
+    it('re-renders when item.id changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, item: { ...base.item, id: 'different-id' } })).toBe(false);
+    });
+
+    it('re-renders when item.completed changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, item: { ...base.item, completed: true } })).toBe(false);
+      expect(
+        memoCompare(
+          { ...base, item: { ...base.item, completed: true } },
+          { ...base, item: { ...base.item, completed: false } },
+        ),
+      ).toBe(false);
+    });
   });
 });
 

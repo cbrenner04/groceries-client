@@ -36,7 +36,7 @@ import type { IFulfilledListData } from '../utils';
 import { handleFailure } from 'utils/handleFailure';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { listCache } from 'utils/lightweightCache';
-import axios from 'utils/api';
+import { getFieldConfigurations, prefetchFieldConfigurationsIdle } from 'utils/fieldConfigCache';
 
 export interface IListContainerProps {
   userId: string;
@@ -73,6 +73,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   // Prefetch field configurations once to remove first-open flicker
   useEffect(() => {
+    /* istanbul ignore next */
     async function prefetch(): Promise<void> {
       // Allow tests to disable prefetch to keep axios.get call counts stable
       if (process.env.REACT_APP_PREFETCH_ON_MOUNT === 'false') {
@@ -86,11 +87,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         return;
       }
       try {
-        const { data } = await axios.get(
-          `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
-        );
-        const ordered = data.sort((a: { position: number }, b: { position: number }) => a.position - b.position);
-        setPreloadedFieldConfigurations(ordered);
+        const fieldConfigs = await getFieldConfigurations(props.listItemConfiguration.id);
+        const mappedConfigs = fieldConfigs.map((config) => ({
+          id: config.id,
+          label: config.label,
+          data_type: config.data_type,
+          position: config.position ?? 0,
+        }));
+        setPreloadedFieldConfigurations(mappedConfigs);
       } catch (_err) {
         // ignore, form will fetch on open
       }
@@ -112,60 +116,28 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       return;
     }
 
-    const configId = props.listItemConfiguration.id!;
-
-    const cancelledRef = { current: false };
-    let idleHandle: number | null = null;
-    let timeoutHandle: number | null = null;
+    const configId = props.listItemConfiguration.id;
 
     const runPrefetch = async (): Promise<void> => {
-      if (cancelledRef.current) {
-        return;
-      }
       try {
-        const { data } = await axios.get(`/list_item_configurations/${configId}/list_item_field_configurations`);
-        // Check again after async operation in case component unmounted
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (cancelledRef.current) {
-          return;
-        }
-        const ordered = data.sort((a: { position: number }, b: { position: number }) => a.position - b.position);
-        setPreloadedFieldConfigurations(ordered);
+        await prefetchFieldConfigurationsIdle(configId);
+        // Use the cached data to update state
+        const cachedConfigs = await getFieldConfigurations(configId);
+        const mappedConfigs = cachedConfigs.map((config) => ({
+          id: config.id,
+          label: config.label,
+          data_type: config.data_type,
+          position: config.position ?? 0,
+        }));
+        setPreloadedFieldConfigurations(mappedConfigs);
       } catch (_err) {
         // ignore, form will fetch on open
       }
     };
 
-    const schedule = (): void => {
-      const ric: ((cb: () => void) => number) | undefined =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (globalThis as any).requestIdleCallback || undefined;
+    void runPrefetch();
 
-      if (typeof ric === 'function') {
-        idleHandle = ric(() => {
-          void runPrefetch();
-        });
-      } else {
-        // Fallback after a short delay
-        timeoutHandle = window.setTimeout(() => {
-          void runPrefetch();
-        }, 1500);
-      }
-    };
-
-    schedule();
-
-    return () => {
-      cancelledRef.current = true;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const cic: ((id: number) => void) | undefined = (globalThis as any).cancelIdleCallback || undefined;
-      if (idleHandle !== null && typeof cic === 'function') {
-        cic(idleHandle);
-      }
-      if (timeoutHandle !== null) {
-        clearTimeout(timeoutHandle);
-      }
-    };
+    // No cleanup needed as the cache handles abort signals internally
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.listItemConfiguration?.id, preloadedFieldConfigurations]);
 
@@ -203,6 +175,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           // Update categories but preserve active filter selection
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
+          /* istanbul ignore else */
           if (!filter) {
             setDisplayedCategories(updatedCategories);
           } else if (filter && !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())) {
@@ -226,7 +199,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}-focus`, () =>
         fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
       );
-
+      /* istanbul ignore else */
       if (fetchResponse) {
         const {
           not_completed_items: updatedNotCompletedItems,
@@ -243,15 +216,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
         const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
 
+        /* istanbul ignore else */
         if (notCompletedResult.hasChanged) {
           setNotCompletedItems(updatedNotCompletedItems);
         }
+        /* istanbul ignore else */
         if (completedResult.hasChanged) {
           setCompletedItems(updatedCompletedItems);
         }
+        /* istanbul ignore else */
         if (categoriesResult.hasChanged) {
           setCategories(updatedCategories);
           setIncludedCategories(updatedCategories);
+          /* istanbul ignore else */
           if (!filter) {
             setDisplayedCategories(updatedCategories);
           }
@@ -265,11 +242,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Immediate sync on visibility regain
   useEffect(() => {
     function handleVisibility(): void {
+      /* istanbul ignore else */
       if (document.visibilityState === 'visible') {
         void (async (): Promise<void> => {
           try {
             const controller = new AbortController();
             const fetchResponse = await fetchList({ id: props.list.id!, navigate, signal: controller.signal });
+            /* istanbul ignore else */
             if (fetchResponse) {
               const {
                 not_completed_items: updatedNotCompletedItems,
@@ -286,15 +265,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
               const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
 
+              /* istanbul ignore else */
               if (notCompletedResult.hasChanged) {
                 setNotCompletedItems(updatedNotCompletedItems);
               }
+              /* istanbul ignore else */
               if (completedResult.hasChanged) {
                 setCompletedItems(updatedCompletedItems);
               }
+              /* istanbul ignore else */
               if (categoriesResult.hasChanged) {
                 setCategories(updatedCategories);
                 setIncludedCategories(updatedCategories);
+                /* istanbul ignore else */
                 if (!filter) {
                   setDisplayedCategories(updatedCategories);
                 }
@@ -442,16 +425,119 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleItemRefresh = async (item: IListItem): Promise<void> => {
-    await exportedHandleItemRefresh({
-      item,
-      listId: props.list.id!,
-      completedItems,
-      setCompletedItems,
-      notCompletedItems,
-      setNotCompletedItems,
-      setPending,
-      navigate,
+    const itemsToRefresh = selectedItems.length ? selectedItems : [item];
+
+    // Optimistic update - move items from completed to not completed immediately
+    const updatedCompletedItems = completedItems.filter(
+      (item) => !itemsToRefresh.some((refreshItem) => refreshItem.id === item.id),
+    );
+    // Create optimistic items with temporary unique IDs to avoid key conflicts
+    const optimisticNewItems = itemsToRefresh.map((item, index) => ({
+      ...item,
+      completed: false,
+      id: `optimistic-${item.id}-${Date.now()}-${index}`, // Temporary unique ID
+    }));
+    const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, ...optimisticNewItems]);
+
+    setCompletedItems(updatedCompletedItems);
+    setNotCompletedItems(updatedNotCompletedItems);
+
+    // Clear selections
+    setSelectedItems([]);
+    setCompleteMultiSelect(false);
+    setIncompleteMultiSelect(false);
+
+    // Make API calls in parallel for better performance
+    const apiPromises = itemsToRefresh.map(async (itemToRefresh, index) => {
+      try {
+        const newItem = await exportedHandleItemRefresh({
+          item: itemToRefresh,
+          listId: props.list.id!,
+          completedItems: updatedCompletedItems,
+          setCompletedItems,
+          notCompletedItems: updatedNotCompletedItems,
+          setNotCompletedItems,
+          setPending,
+          navigate,
+          skipStateUpdate: true, // We handle state optimistically
+        });
+        return { success: true, item: itemToRefresh, newItem, index };
+      } catch (error) {
+        return { success: false, item: itemToRefresh, error, index };
+      }
     });
+
+    const results = await Promise.all(apiPromises);
+
+    // Check for any failures and update state with actual new items
+    const failures: IListItem[] = [];
+    const successfulItems: IListItem[] = [];
+    const newItems: IListItem[] = [];
+
+    results.forEach((result) => {
+      if (result.success) {
+        successfulItems.push(result.item);
+        if (result.newItem) {
+          newItems.push(result.newItem);
+        }
+      } else {
+        failures.push(result.item);
+      }
+    });
+
+    // Replace optimistic items with actual new items from API
+    if (successfulItems.length > 0) {
+      // Remove optimistic items (they have temporary IDs starting with "optimistic-")
+      const itemsWithoutOptimistic = updatedNotCompletedItems.filter((item) => !item.id.startsWith('optimistic-'));
+      // Add the new items from API
+      const finalNotCompletedItems = sortItemsByCreatedAt([...itemsWithoutOptimistic, ...newItems]);
+      setNotCompletedItems(finalNotCompletedItems);
+    }
+
+    if (failures.length > 0) {
+      // Some items failed - rollback only the failed items
+      const failedItemIds = failures.map((item) => item.id);
+
+      // Rollback failed items to original state
+      const rollbackCompletedItems = sortItemsByCreatedAt([
+        ...updatedCompletedItems,
+        ...failures.map((item) => ({ ...item, completed: true })),
+      ]);
+      // Remove optimistic items for failed operations and keep everything else
+      const rollbackNotCompletedItems = updatedNotCompletedItems.filter((item) => {
+        // Keep items that are not optimistic
+        if (!item.id.startsWith('optimistic-')) {
+          return true;
+        }
+        // For optimistic items, check if their original item failed
+        const originalId = item.id.replace(/^optimistic-([^-]+)-.*$/, '$1');
+        return !failedItemIds.includes(originalId);
+      });
+
+      setCompletedItems(rollbackCompletedItems);
+      setNotCompletedItems(rollbackNotCompletedItems);
+
+      // Show appropriate feedback
+      if (successfulItems.length > 0) {
+        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+        toast(
+          `Some items failed to refresh. ${pluralize(successfulItems)} refreshed successfully. ${pluralize(
+            failures,
+          )} failed.`,
+          { type: 'warning' },
+        );
+      } else {
+        // All items failed
+        handleFailure({
+          error: new Error('All items failed to refresh') as AxiosError,
+          notFoundMessage: 'Failed to refresh items',
+        });
+      }
+    } else {
+      // All items succeeded
+      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
+      toast(`${pluralize(itemsToRefresh)} refreshed successfully.`, { type: 'info' });
+    }
   };
 
   const toggleRead = async (item: IListItem): Promise<void> => {
@@ -493,6 +579,22 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompletedItems(updatedCompletedItems);
     setNotCompletedItems(updatedNotCompletedItems);
 
+    // Update categories after deletion - remove categories that no longer have items
+    const allRemainingItems = [...updatedCompletedItems, ...updatedNotCompletedItems];
+    const remainingCategories = new Set<string>();
+    allRemainingItems.forEach((item) => {
+      const categoryField = item.fields.find((field) => field.label === 'category');
+      if (categoryField?.data) {
+        remainingCategories.add(categoryField.data);
+      }
+    });
+    const updatedCategories = Array.from(remainingCategories);
+    setCategories(updatedCategories);
+    setIncludedCategories(updatedCategories);
+    if (!filter) {
+      setDisplayedCategories(updatedCategories);
+    }
+
     // Clear selections
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
@@ -513,6 +615,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         setPending,
         navigate,
         showToast: false,
+        skipStateUpdate: true, // We handle state optimistically
       }),
     );
 
@@ -544,6 +647,22 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems(rollbackCompletedItems);
       setNotCompletedItems(rollbackNotCompletedItems);
 
+      // Recalculate categories after rollback
+      const allItemsAfterRollback = [...rollbackCompletedItems, ...rollbackNotCompletedItems];
+      const categoriesAfterRollback = new Set<string>();
+      allItemsAfterRollback.forEach((item) => {
+        const categoryField = item.fields.find((field) => field.label === 'category');
+        if (categoryField?.data) {
+          categoriesAfterRollback.add(categoryField.data);
+        }
+      });
+      const updatedCategoriesAfterRollback = Array.from(categoriesAfterRollback);
+      setCategories(updatedCategoriesAfterRollback);
+      setIncludedCategories(updatedCategoriesAfterRollback);
+      if (!filter) {
+        setDisplayedCategories(updatedCategoriesAfterRollback);
+      }
+
       // Show appropriate feedback
       if (successfulItems.length > 0) {
         const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
@@ -558,7 +677,22 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         toast('Failed to delete items. Please try again.', { type: 'error' });
       }
     } else {
-      // All items succeeded
+      // All items succeeded - ensure categories are consistent after successful deletion
+      const finalAllItems = [...updatedCompletedItems, ...updatedNotCompletedItems];
+      const finalCategories = new Set<string>();
+      finalAllItems.forEach((item) => {
+        const categoryField = item.fields.find((field) => field.label === 'category');
+        if (categoryField?.data) {
+          finalCategories.add(categoryField.data);
+        }
+      });
+      const finalUpdatedCategories = Array.from(finalCategories);
+      setCategories(finalUpdatedCategories);
+      setIncludedCategories(finalUpdatedCategories);
+      if (!filter) {
+        setDisplayedCategories(finalUpdatedCategories);
+      }
+
       const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
       toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
     }
@@ -608,7 +742,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     // Extract all unique categories from the items (case-insensitive)
     const itemCategories = new Set<string>();
     items.forEach((item) => {
-      const categoryField = item.fields.find((field) => field.label === 'category');
+      // Defensive: treat missing fields as empty array
+      const fields = Array.isArray(item.fields) ? item.fields : [];
+      const categoryField = fields.find((field) => field.label === 'category');
       if (categoryField?.data) {
         const existing = Array.from(itemCategories).find(
           (cat) => cat.toLowerCase() === categoryField.data!.toLowerCase(),

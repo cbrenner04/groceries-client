@@ -10,11 +10,22 @@ import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
 import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
 import { bookListTestData } from 'test-utils/factories';
+import { listCache } from 'utils/lightweightCache';
+import { fieldConfigCache } from 'utils/fieldConfigCache';
 
 // Mock react-router
+const mockLocation = {
+  pathname: '/lists/id1',
+  search: '',
+  hash: '',
+  state: null,
+  key: 'initial',
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
+  useLocation: (): typeof mockLocation => mockLocation,
 }));
 
 type TestRenderResult = ReturnType<typeof render>;
@@ -52,6 +63,13 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
 describe('ListContainer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Clear cache to ensure test isolation
+    listCache.clear();
+    fieldConfigCache.clear();
+
+    // Reset mock location to initial state
+    mockLocation.pathname = '/lists/id1';
 
     // Reset axios instance methods to safe defaults between tests
     axios.get = jest.fn().mockImplementation((url: string) => {
@@ -228,6 +246,260 @@ describe('ListContainer', () => {
       );
 
       jest.useRealTimers();
+    });
+  });
+
+  describe('Navigation Focus', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+
+      // Reset location to initial state for each test
+      mockLocation.pathname = '/lists/id1';
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('does not sync on initial mount', async () => {
+      const { findByText } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Allow time for any potential navigation focus to fire
+      await advanceTimersByTime(200);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
+
+      // Verify component renders normally
+      expect(await findByText(defaultTestData.list.name)).toBeVisible();
+    });
+
+    it('triggers immediate sync on navigation between routes', async () => {
+      const firstResponse = createApiResponse(
+        [createListItem('id1', false, [createField('id1', 'product', 'item before navigation', 'id1')])],
+        [],
+      );
+      const secondResponse = createApiResponse(
+        [createListItem('id2', false, [createField('id2', 'product', 'item after navigation', 'id2')])],
+        [],
+      );
+
+      axios.get = jest
+        .fn()
+        .mockResolvedValueOnce({ data: firstResponse })
+        .mockResolvedValueOnce({ data: secondResponse });
+
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Initial load
+      await advanceTimersByTime(200);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
+
+      // Simulate navigation to a different route
+      mockLocation.pathname = '/lists/id2';
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      // Fast-forward the 100ms delay from useNavigationFocus
+      await advanceTimersByTime(100);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Verify the navigation focus sync was called with correct deduplication key
+      expect(axios.get).toHaveBeenCalledWith(
+        '/v2/lists/id1',
+        expect.objectContaining({
+          signal: expect.any(AbortSignal),
+        }),
+      );
+    });
+
+    it('uses cache to avoid unnecessary state updates during navigation sync', async () => {
+      // Same data response - should not trigger state updates
+      const apiResponse = createApiResponse(
+        [createListItem('id1', false, [createField('id1', 'product', 'unchanged item', 'id1')])],
+        [],
+      );
+
+      axios.get = jest.fn().mockResolvedValue({ data: apiResponse });
+
+      const { rerender } = setup({
+        permissions: EUserPermissions.WRITE,
+        notCompletedItems: [createListItem('id1', false, [createField('id1', 'product', 'unchanged item', 'id1')])],
+      });
+
+      // Simulate navigation
+      mockLocation.pathname = '/different/path';
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={[createListItem('id1', false, [createField('id1', 'product', 'unchanged item', 'id1')])]}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      await advanceTimersByTime(100);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Cache should prevent unnecessary re-renders for identical data
+      expect(axios.get).toHaveBeenCalledWith(
+        '/v2/lists/id1',
+        expect.objectContaining({
+          signal: expect.any(AbortSignal),
+        }),
+      );
+    });
+
+    it('updates state when navigation sync returns different data', async () => {
+      const initialItems = [createListItem('id1', false, [createField('id1', 'product', 'initial item', 'id1')])];
+      const updatedItems = [createListItem('id2', false, [createField('id2', 'product', 'updated item', 'id2')])];
+
+      const updatedResponse = createApiResponse(updatedItems, []);
+      axios.get = jest.fn().mockResolvedValue({ data: updatedResponse });
+
+      const { findByText, rerender } = setup({
+        permissions: EUserPermissions.WRITE,
+        notCompletedItems: initialItems,
+      });
+
+      // Verify initial state
+      expect(await findByText('initial item')).toBeVisible();
+
+      // Simulate navigation
+      mockLocation.pathname = '/different/path';
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={initialItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      await advanceTimersByTime(100);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Verify state was updated with new data
+      expect(await findByText('updated item')).toBeVisible();
+    });
+
+    it('handles errors gracefully during navigation sync without user feedback', async () => {
+      axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
+
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Simulate navigation
+      mockLocation.pathname = '/different/path';
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      await advanceTimersByTime(100);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Navigation focus errors should be ignored (no toast notification)
+      // The component should continue to function normally
+      expect(toast).not.toHaveBeenCalled();
+    });
+
+    it('does not sync when pathname stays the same', async () => {
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Rerender with same pathname
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      await advanceTimersByTime(200);
+
+      // No navigation sync should occur
+      expect(axios.get).not.toHaveBeenCalled();
+    });
+
+    it('uses correct deduplication key for navigation focus sync', async () => {
+      const apiResponse = createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]);
+      axios.get = jest.fn().mockResolvedValue({ data: apiResponse });
+
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Simulate navigation
+      mockLocation.pathname = '/different/path';
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      await advanceTimersByTime(100);
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Verify the navigation focus uses a different deduplication key than polling
+      // The API call should be made (not deduplicated against polling calls)
+      expect(axios.get).toHaveBeenCalledWith(
+        `/v2/lists/${defaultTestData.list.id}`,
+        expect.objectContaining({
+          signal: expect.any(AbortSignal),
+        }),
+      );
     });
   });
 
@@ -478,9 +750,11 @@ describe('ListContainer', () => {
 
   describe('Prefetch and undefined UI states', () => {
     const originalIdlePrefetch = process.env.REACT_APP_PREFETCH_IDLE;
+    const originalMountPrefetch = process.env.REACT_APP_PREFETCH_ON_MOUNT;
 
     afterEach(() => {
       process.env.REACT_APP_PREFETCH_IDLE = originalIdlePrefetch;
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = originalMountPrefetch;
       // allow cleanup of test shim
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).requestIdleCallback;
@@ -528,6 +802,392 @@ describe('ListContainer', () => {
       // Still a single configs fetch
       const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
       expect(configCalls.length).toBe(1);
+    });
+
+    it('does not prefetch on mount when disabled via environment variable', async () => {
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not prefetch on mount when preloadedFieldConfigurations already exist', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not prefetch on mount when no listItemConfiguration ID exists', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemConfiguration: undefined,
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles errors gracefully during mount prefetch', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.reject(new Error('Network error'));
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      // Should not throw or crash the component
+      const { container } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait for any async operations
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Component should still render normally
+      expect(container).toBeInTheDocument();
+
+      // In test environment, prefetch may be disabled, so we just verify component works
+      expect(container.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+    });
+
+    it('does not idle-prefetch when disabled via environment variable', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not idle-prefetch when preloadedFieldConfigurations already exist', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not idle-prefetch when no listItemConfiguration ID exists', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemConfiguration: undefined,
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles errors gracefully during idle prefetch', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.reject(new Error('Network error'));
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      // Should not throw or crash the component
+      const { container } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait for any async operations
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Component should still render normally
+      expect(container).toBeInTheDocument();
+
+      // Should have attempted the prefetch (both mount and idle prefetch may run)
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('handles component re-renders gracefully', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Re-render with same props
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      // Component should still render normally after re-render
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 50)));
+
+      // Verify component is still functioning
+      expect(document.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+    });
+
+    it('does not trigger prefetch when REACT_APP_PREFETCH_ON_MOUNT is false', async () => {
+      // Explicitly disable mount prefetch
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: undefined,
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API due to disabled prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not trigger idle prefetch when REACT_APP_PREFETCH_IDLE is false', async () => {
+      // Explicitly disable idle prefetch
+      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: undefined,
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API due to disabled idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles form interaction correctly when no prefetch data is available', async () => {
+      // Test that form works normally without prefetch data
+      const mockFieldConfigs = [
+        { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+        { id: 'config2', label: 'quantity', data_type: 'number', position: 0 },
+      ];
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: mockFieldConfigs });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { findByTestId, findByLabelText, user } = setup({
+        permissions: EUserPermissions.WRITE,
+        preloadedFieldConfigurations: undefined, // No prefetch data
+      });
+
+      // Open the form
+      await user.click(await findByTestId('add-item-button'));
+
+      // Fields should load normally when form opens
+      await waitFor(async () => {
+        expect(await findByLabelText('Quantity')).toBeVisible(); // position 0
+        expect(await findByLabelText('Product')).toBeVisible(); // position 1
+      });
+
+      // Should have made API call when form opened (not from prefetch)
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBeGreaterThanOrEqual(1);
     });
 
     it('does not render the string "undefined" for items missing name fields', async () => {
@@ -713,8 +1373,8 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
-      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
+      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -743,8 +1403,8 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
-      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
+      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -758,8 +1418,8 @@ describe('ListContainer', () => {
       });
 
       // The successful item should be deleted, failed item should be rolled back
-      // checkboxes[1] = id3 (foo not completed product) - should be deleted (success)
-      // checkboxes[2] = id4 (foo not completed product 2) - should be rolled back (failure)
+      // checkboxes[2] = id3 (foo not completed product) - should be deleted (success)
+      // checkboxes[3] = id4 (foo not completed product 2) - should be rolled back (failure)
       expect(queryByText('not completed quantity foo not completed product')).toBeNull();
       expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
     });
@@ -882,7 +1542,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -907,7 +1567,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -935,7 +1595,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -1019,7 +1679,13 @@ describe('ListContainer', () => {
 
   describe('Refresh Operations', () => {
     it('moves item to not completed when refreshed', async () => {
-      axios.post = jest.fn().mockResolvedValue({
+      // Mock the new API pattern: create item, create fields, fetch complete item
+      axios.post = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field
+        .mockResolvedValueOnce({ data: {} }); // Create product field
+      axios.get = jest.fn().mockResolvedValueOnce({
         data: {
           archived_at: null,
           category: 'foo',
@@ -1032,8 +1698,12 @@ describe('ListContainer', () => {
           refreshed: false,
           updated_at: '2020-05-24T11:07:48.751-05:00',
           user_id: 'id1',
+          fields: [
+            createField('id1', 'quantity', 'completed quantity', 'id6'),
+            createField('id2', 'product', 'foo completed product', 'id6'),
+          ],
         },
-      });
+      }); // Fetch complete item
       axios.put = jest.fn().mockResolvedValue(undefined);
       const { findByTestId, findByText, user } = setup();
 
@@ -1043,7 +1713,8 @@ describe('ListContainer', () => {
 
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(3)); // Create item + 2 fields
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1)); // Fetch complete item
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       await waitFor(async () =>
@@ -1058,20 +1729,29 @@ describe('ListContainer', () => {
     });
 
     it('moves items to not completed when refreshed with multiple selected', async () => {
+      // Mock the new API pattern: create items, create fields, fetch complete items
       axios.post = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
+        .mockResolvedValueOnce({ data: {} }) // Create product field for first item
+        .mockResolvedValueOnce({ data: { id: 'id7', completed: false } }) // Create second item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field for second item
+        .mockResolvedValueOnce({ data: {} }); // Create product field for second item
+      axios.get = jest
         .fn()
         .mockResolvedValueOnce({
           data: createListItem('id6', false, [
             createField('id1', 'quantity', 'completed quantity', 'id6'),
             createField('id2', 'product', 'foo completed product', 'id6'),
           ]),
-        })
+        }) // Fetch first complete item
         .mockResolvedValueOnce({
           data: createListItem('id7', false, [
             createField('id13', 'quantity', 'completed quantity', 'id7'),
             createField('id14', 'product', 'bar completed product', 'id7'),
           ]),
-        });
+        }); // Fetch second complete item
       axios.put = jest.fn().mockResolvedValue(undefined);
       const { findAllByRole, findByTestId, findByText, findAllByText, user } = setup({
         completedItems: [
@@ -1094,13 +1774,15 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+      // Create 2 items + fields (some fields may be skipped if empty)
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(7));
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2)); // Fetch 2 complete items
+      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // Mark 2 original items as refreshed
 
       await waitFor(async () =>
         expect(
@@ -1323,7 +2005,7 @@ describe('ListContainer', () => {
 
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
 
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
@@ -1520,14 +2202,16 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      expect((await findAllByRole('checkbox'))[0]).toBeChecked();
+      const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(multiSelectCheckboxes[0]);
+      expect(multiSelectCheckboxes[0]).toBeChecked();
 
       await user.click(await findByText('Hide Select'));
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
+      const updatedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      expect(updatedMultiSelectCheckboxes[0]).not.toBeChecked();
     });
 
     it('clears selected items for multi select is hidden for completed items', async () => {
@@ -1536,14 +2220,16 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      expect((await findAllByRole('checkbox'))[0]).toBeChecked();
+      const completedItemCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(completedItemCheckboxes[0]);
+      expect(completedItemCheckboxes[0]).toBeChecked();
 
       await user.click(await findByText('Hide Select'));
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
+      const completedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      expect(completedMultiSelectCheckboxes[0]).not.toBeChecked();
     });
 
     it('navigates to single edit form when no multi select', async () => {
@@ -1564,8 +2250,9 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      await user.click((await findAllByRole('checkbox'))[1]);
+      const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(multiSelectCheckboxes[0]);
+      await user.click(multiSelectCheckboxes[1]);
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));

@@ -129,15 +129,19 @@ describe('usePolling', () => {
     expect(second).not.toHaveBeenCalled();
 
     // Swap callback and ensure subsequent ticks use the new one
-    act(() => {
+    await act(async () => {
       getByTestId('swap').click();
+      // Allow the useEffect that updates callbackRef.current to run
+      await Promise.resolve();
     });
 
-    await Promise.resolve();
-
-    act(() => {
+    // Advance timers and wait for all async operations to complete
+    await act(async () => {
       jest.advanceTimersByTime(50);
+      // Wait for Promise chain to complete
+      await Promise.resolve();
     });
+
     expect(second).toHaveBeenCalledTimes(1);
   });
 
@@ -161,5 +165,131 @@ describe('usePolling', () => {
     // Next tick should still run after error path
     jest.advanceTimersByTime(50);
     expect(throwing).toHaveBeenCalledTimes(2);
+  });
+
+  it('handles asynchronous callback errors with exponential backoff', async () => {
+    const cb = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('Async error 1'))
+      .mockRejectedValueOnce(new Error('Async error 2'))
+      .mockResolvedValueOnce(undefined);
+
+    render(<TestComponent cb={cb} delay={50} />);
+
+    // First tick: async error
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    // Second tick: should be delayed due to backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    // Advance past backoff delay
+    await act(async () => {
+      jest.advanceTimersByTime(2000); // BASE_BACKOFF_DELAY is 2 seconds
+      await Promise.resolve();
+    });
+
+    // Third tick: another error, longer backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    // Advance past longer backoff delay
+    await act(async () => {
+      jest.advanceTimersByTime(4000); // Should be 4 seconds for second failure
+      await Promise.resolve();
+    });
+
+    // Fourth tick: success, should reset backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(4);
+  });
+
+  it('applies exponential backoff after failures', async () => {
+    const cb = jest.fn().mockRejectedValue(new Error('Always fails'));
+
+    render(<TestComponent cb={cb} delay={50} />);
+
+    // First failure
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    // Should be blocked by backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(1);
+
+    // Advance past first backoff period (2 seconds)
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+      await Promise.resolve();
+    });
+
+    // Second failure
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(2);
+
+    // Should be blocked by longer backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(2);
+  });
+
+  it('resets backoff state on successful callback', async () => {
+    const cb = jest.fn().mockRejectedValueOnce(new Error('Failure')).mockResolvedValue(undefined);
+
+    render(<TestComponent cb={cb} delay={50} />);
+
+    // First failure
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(1);
+
+    // Advance past backoff
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+      await Promise.resolve();
+    });
+
+    // Success - should reset backoff
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(3);
+
+    // Next call should happen immediately (no backoff because state was reset)
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+      await Promise.resolve();
+    });
+
+    expect(cb).toHaveBeenCalledTimes(4);
   });
 });

@@ -8,6 +8,7 @@ import axios from 'utils/api';
 import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
 import { capitalize } from 'utils/format';
+import { getFieldConfigurations } from 'utils/fieldConfigCache';
 import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
 export interface IListItemFormProps {
@@ -32,6 +33,7 @@ interface IListItemDataRecord extends Record<string, string | number | boolean> 
 
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [formData, setFormData] = useState({} as IListItemDataRecord);
+  const [completed, setCompleted] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [pending, setPending] = useState(false);
   const [fieldConfigurations, setFieldConfigurations] = useState(
@@ -65,11 +67,14 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         return;
       }
 
-      const { data } = await axios.get(
-        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
-      );
-      const orderedData = data.sort((a: IFieldConfiguration, b: IFieldConfiguration) => a.position - b.position);
-      setFieldConfigurations(orderedData);
+      const fieldConfigs = await getFieldConfigurations(props.listItemConfiguration.id);
+      const mappedConfigs = fieldConfigs.map((config) => ({
+        id: config.id,
+        label: config.label,
+        data_type: config.data_type,
+        position: config.position ?? 0,
+      }));
+      setFieldConfigurations(mappedConfigs);
       // Always mark as loaded after fetch attempt, even if empty
       setFieldConfigsLoaded(true);
     } catch (err) {
@@ -114,6 +119,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const { data: newItem } = await axios.post(`/v2/lists/${props.listId}/list_items`, {
         list_item: {
           user_id: props.userId,
+          completed,
         },
       });
 
@@ -166,6 +172,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       props.handleItemAddition([itemWithFields]);
       setPending(false);
       setFormData({} as IListItemDataRecord);
+      setCompleted(false);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -244,7 +251,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           );
         case 'number': {
           const numberValue = formData[fieldName];
-          const safeNumberValue = numberValue !== '' ? Number(numberValue) : undefined;
+          const safeNumberValue = numberValue ? Number(numberValue) : undefined;
           return (
             <NumberField
               key={config.id}
@@ -286,6 +293,16 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
           {renderFields()}
+          <CheckboxField
+            name="completed"
+            label="Completed"
+            value={completed}
+            handleChange={(e): void => {
+              const checked = (e.target as HTMLInputElement).checked;
+              setCompleted(checked);
+            }}
+            classes="mb-3"
+          />
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"

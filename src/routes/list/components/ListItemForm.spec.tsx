@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'utils/api';
 import { toast } from 'react-toastify';
 import ListItemForm from './ListItemForm';
+import { fieldConfigCache } from 'utils/fieldConfigCache';
 
 const mockHandleItemAddition = jest.fn();
 const mockNavigate = jest.fn();
@@ -36,6 +37,7 @@ const defaultProps = {
 describe('ListItemForm', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    fieldConfigCache.clear();
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
   });
 
@@ -44,6 +46,49 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add Item'));
     expect(await screen.findByLabelText('Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
+  });
+
+  it('renders completed checkbox', async () => {
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    expect(await screen.findByLabelText('Completed')).toBeInTheDocument();
+    expect(screen.getByLabelText('Completed')).not.toBeChecked();
+  });
+
+  it('submits completed status when checkbox is checked', async () => {
+    // Mock all the axios calls that happen during form submission
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
+      .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
+      .mockResolvedValue({}); // create item fields
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Apples' } });
+
+    // Check the completed checkbox
+    fireEvent.click(screen.getByLabelText('Completed'));
+
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    // Wait for form submission
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith('/v2/lists/list-1/list_items', {
+        list_item: {
+          user_id: 'user-1',
+          completed: true,
+        },
+      });
+    });
+
+    // Verify the completed checkbox is reset after successful submission
+    await waitFor(() => {
+      expect(screen.getByLabelText('Completed')).not.toBeChecked();
+    });
   });
 
   it('handles input and submits form', async () => {

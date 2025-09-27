@@ -48,6 +48,27 @@ exports[`ListContainer Category Filtering renders filtered items without categor
       </div>
     </div>
     <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
+      </div>
+    </div>
+    <div
       class="d-grid gap-2 mt-3"
     >
       <button
@@ -326,6 +347,27 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
         <span
           class="placeholder col-8"
         />
+      </div>
+    </div>
+    <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
       </div>
     </div>
     <div
@@ -718,6 +760,27 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
       </div>
     </div>
     <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
+      </div>
+    </div>
+    <div
       class="d-grid gap-2 mt-3"
     >
       <button
@@ -1107,6 +1170,27 @@ exports[`ListContainer Item Rendering does not render complete items when none e
       </div>
     </div>
     <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
+      </div>
+    </div>
+    <div
       class="d-grid gap-2 mt-3"
     >
       <button
@@ -1445,6 +1529,27 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
       </div>
     </div>
     <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
+      </div>
+    </div>
+    <div
       class="d-grid gap-2 mt-3"
     >
       <button
@@ -1770,6 +1875,27 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
         <span
           class="placeholder col-8"
         />
+      </div>
+    </div>
+    <div
+      class="mb-3 mb-3"
+    >
+      <div
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <label
+          class="form-check-label"
+          for="completed"
+          title=""
+        >
+          Completed
+        </label>
       </div>
     </div>
     <div

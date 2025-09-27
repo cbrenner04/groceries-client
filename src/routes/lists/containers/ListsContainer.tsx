@@ -12,6 +12,7 @@ import ListForm from '../components/ListForm';
 import { fetchLists, sortLists, failure, type IFetchListsReturn } from '../utils';
 import { listsDeduplicator } from 'utils/requestDeduplication';
 import { listsCache } from 'utils/lightweightCache';
+import { prefetchListsIdle } from 'utils/listPrefetch';
 import PendingLists from '../components/PendingLists';
 import AcceptedLists from '../components/AcceptedLists';
 
@@ -97,6 +98,26 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       // ignore; polling error path handles user feedback
     }
   });
+
+  // Idle prefetch for visible lists to improve navigation performance
+  React.useEffect(() => {
+    // Allow tests to disable idle prefetch
+    if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
+      return;
+    }
+
+    // Get all visible list IDs for prefetching
+    const allVisibleLists = [...pendingLists, ...incompleteLists];
+    const listIds = allVisibleLists
+      .slice(0, 5) // Limit to first 5 lists to avoid overwhelming
+      .map((list) => list.id!)
+      .filter(Boolean);
+
+    if (listIds.length > 0) {
+      // Prefetch during idle time
+      void prefetchListsIdle(listIds);
+    }
+  }, [pendingLists, incompleteLists]);
 
   const handleFormSubmit = async (list: IList): Promise<void> => {
     setPending(true);

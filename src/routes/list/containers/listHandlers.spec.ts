@@ -453,10 +453,21 @@ describe('handleItemDelete', () => {
 
 describe('handleItemRefresh', () => {
   it('refreshes item', async () => {
-    const testItem = makeItem({ id: 'test-id' });
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [makeField({ data: 'Test Product', label: 'product' })],
+    });
     const otherItem = makeItem({ id: 'other-id' });
+
+    // Mock the three API calls: mark old item as refreshed, create new item, create fields, fetch complete item
     mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
-    mockAxios.post.mockResolvedValueOnce({ data: { ...testItem, completed: false } });
+    mockAxios.post
+      .mockResolvedValueOnce({ data: { id: 'new-item-id', completed: false } }) // Create new item
+      .mockResolvedValueOnce({ data: {} }); // Create field
+    mockAxios.get.mockResolvedValueOnce({
+      data: { id: 'new-item-id', completed: false, fields: testItem.fields },
+    }); // Fetch complete item
+
     const setCompleted = jest.fn();
     const setNotCompleted = jest.fn();
     const setPending = jest.fn();
@@ -469,17 +480,41 @@ describe('handleItemRefresh', () => {
       setNotCompletedItems: setNotCompleted,
       setPending,
     });
+
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: { refreshed: true },
+    });
+    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items', {
+      list_item: { completed: false, refreshed: false },
+    });
+    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id/list_item_fields', {
+      list_item_field: {
+        label: 'product',
+        data: 'Test Product',
+        list_item_field_configuration_id: 'config1',
+      },
+    });
+    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id');
+
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
   });
 
-  it('preserves original fields when API returns minimal response', async () => {
-    const testItem = makeItem({ id: 'test-id' });
+  it('handles item with no fields', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [], // No fields to refresh
+    });
     const otherItem = makeItem({ id: 'other-id' });
-    // API returns minimal response without fields
-    mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', refreshed: true, completed: false } });
-    mockAxios.post.mockResolvedValueOnce({ data: { id: 'test-id', completed: false } });
+
+    // Mock the API calls: mark old item as refreshed, create new item, fetch complete item (no field creation needed)
+    mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
+    mockAxios.post.mockResolvedValueOnce({ data: { id: 'new-item-id', completed: false } }); // Create new item
+    mockAxios.get.mockResolvedValueOnce({
+      data: { id: 'new-item-id', completed: false, fields: [] },
+    }); // Fetch complete item
+
     const setCompleted = jest.fn();
     const setNotCompleted = jest.fn();
     const setPending = jest.fn();
@@ -492,8 +527,108 @@ describe('handleItemRefresh', () => {
       setNotCompletedItems: setNotCompleted,
       setPending,
     });
+
+    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+      list_item: { refreshed: true },
+    });
+    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items', {
+      list_item: { completed: false, refreshed: false },
+    });
+    // Should not create any fields since item has no fields
+    expect(mockAxios.post).toHaveBeenCalledTimes(1); // Only the item creation call
+    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id');
+
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+  });
+
+  it('skips fields with empty data', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [
+        makeField({ data: 'Test Product', label: 'product' }),
+        makeField({ data: '', label: 'category' }), // Empty field should be skipped
+        makeField({ data: '  ', label: 'notes' }), // Whitespace-only field should be skipped
+      ],
+    });
+
+    // Mock the API calls
+    mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
+    mockAxios.post.mockResolvedValueOnce({ data: { id: 'new-item-id', completed: false } }); // Create new item
+    mockAxios.post.mockResolvedValueOnce({ data: {} }); // Create field (only one call expected)
+    mockAxios.get.mockResolvedValueOnce({
+      data: { id: 'new-item-id', completed: false, fields: [testItem.fields[0]] },
+    }); // Fetch complete item
+
+    const setCompleted = jest.fn();
+    const setNotCompleted = jest.fn();
+    const setPending = jest.fn();
+    await handleItemRefresh({
+      item: testItem,
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems: setCompleted,
+      notCompletedItems: [],
+      setNotCompletedItems: setNotCompleted,
+      setPending,
+    });
+
+    // Should only create one field (the one with actual data)
+    expect(mockAxios.post).toHaveBeenCalledTimes(2); // Item creation + one field creation
+    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id/list_item_fields', {
+      list_item_field: {
+        label: 'product',
+        data: 'Test Product',
+        list_item_field_configuration_id: 'config1',
+      },
+    });
+
+    expect(setCompleted).toHaveBeenCalled();
+    expect(setNotCompleted).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+  });
+
+  it('preserves original fields when server returns incomplete item data', async () => {
+    const testItem = makeItem({
+      id: 'test-id',
+      fields: [
+        makeField({ data: 'Test Product', label: 'product' }),
+        makeField({ data: 'Test Category', label: 'category' }),
+      ],
+    });
+
+    // Mock API: create item, create fields, but server returns incomplete item (no fields)
+    mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
+    mockAxios.post.mockResolvedValueOnce({ data: { id: 'new-item-id', completed: false } }); // Create item
+    mockAxios.post.mockResolvedValueOnce({ data: {} }); // Create product field
+    mockAxios.post.mockResolvedValueOnce({ data: {} }); // Create category field
+    mockAxios.get.mockResolvedValueOnce({
+      data: { id: 'new-item-id', completed: false, fields: [] }, // Server returns item without fields
+    });
+
+    const setCompleted = jest.fn();
+    const setNotCompleted = jest.fn();
+    const setPending = jest.fn();
+    await handleItemRefresh({
+      item: testItem,
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems: setCompleted,
+      notCompletedItems: [],
+      setNotCompletedItems: setNotCompleted,
+      setPending,
+    });
+
+    // Should fallback to using original item fields
+    expect(setNotCompleted).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: 'new-item-id',
+        completed: false,
+        fields: testItem.fields, // Should use original fields as fallback
+      }),
+    ]);
+
     expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
   });
 
@@ -501,16 +636,18 @@ describe('handleItemRefresh', () => {
     const error = new Error('fail') as AxiosError;
     mockAxios.put.mockRejectedValueOnce(error);
     const setPending = jest.fn();
-    await handleItemRefresh({
-      item,
-      listId: '1',
-      completedItems: [item],
-      setCompletedItems: jest.fn(),
-      notCompletedItems: [],
-      setNotCompletedItems: jest.fn(),
-      setPending,
-      navigate: mockNavigate,
-    });
+    await expect(
+      handleItemRefresh({
+        item,
+        listId: '1',
+        completedItems: [item],
+        setCompletedItems: jest.fn(),
+        notCompletedItems: [],
+        setNotCompletedItems: jest.fn(),
+        setPending,
+        navigate: mockNavigate,
+      }),
+    ).rejects.toThrow('fail');
     expect(mockHandleFailure).toHaveBeenCalledWith({
       error,
       notFoundMessage: 'Failed to refresh item',
@@ -667,6 +804,7 @@ describe('handleToggleRead', () => {
     expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1');
     expect(mockAxios.get).toHaveBeenCalledWith(
       '/list_item_configurations/list-config-1/list_item_field_configurations',
+      { signal: undefined },
     );
     expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields', {
       list_item_field: {
