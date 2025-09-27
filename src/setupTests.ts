@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 import { cleanup, configure } from '@testing-library/react';
 import { TextEncoder } from 'util';
 import type { AxiosError, AxiosResponse } from 'axios';
+import type { EListItemFieldType, IListItem, IListItemField } from 'typings';
 
 // This is necessary now that react-router is using TextEncoder internally but JSDOM doesn't have it
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
@@ -13,6 +14,7 @@ import type { AxiosError, AxiosResponse } from 'axios';
 global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
 // Ensure polling considers the document visible in JSDOM; allow tests to override
+// Polling checks for visibility state to avoid unnecessary work when tab is hidden
 try {
   Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
 } catch (_err) {
@@ -67,255 +69,74 @@ jest.mock('axios', () => ({
       // Default list show endpoint used by list page and polling
       if (url.startsWith('/v2/lists/')) {
         const now = new Date().toISOString();
-        const nonCompletedItem = {
-          id: 'id2',
-          refreshed: false,
-          completed: false,
+
+        // Helper to create mock field
+        const mockField = (
+          itemId: string,
+          label: string,
+          data: string,
+          position: number,
+          fieldId: string,
+        ): IListItemField => ({
+          id: fieldId,
+          list_item_field_configuration_id: fieldId,
+          data,
           archived_at: null,
+          list_item_id: itemId,
+          label,
           user_id: 'id1',
-          list_id: 'id1',
           created_at: now,
           updated_at: now,
-          fields: [
-            {
-              id: 'id2',
-              list_item_field_configuration_id: 'id2',
-              data: 'not completed quantity',
-              archived_at: null,
-              list_item_id: 'id2',
-              label: 'quantity',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 0,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id3',
-              list_item_field_configuration_id: 'id3',
-              data: 'no category not completed product',
-              archived_at: null,
-              list_item_id: 'id2',
-              label: 'product',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 1,
-              data_type: 'free_text',
-            },
-          ],
-        };
+          position,
+          data_type: 'free_text' as EListItemFieldType,
+        });
 
-        const nonCompletedItemFoo1 = {
-          id: 'id3',
-          refreshed: false,
-          completed: false,
-          archived_at: null,
-          user_id: 'id1',
-          list_id: 'id1',
-          created_at: now,
-          updated_at: now,
-          fields: [
-            {
-              id: 'id4',
-              list_item_field_configuration_id: 'id4',
-              data: 'not completed quantity',
-              archived_at: null,
-              list_item_id: 'id3',
-              label: 'quantity',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 0,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id5',
-              list_item_field_configuration_id: 'id5',
-              data: 'foo not completed product',
-              archived_at: null,
-              list_item_id: 'id3',
-              label: 'product',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 1,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id6',
-              list_item_field_configuration_id: 'id6',
-              data: 'foo',
-              archived_at: null,
-              list_item_id: 'id3',
-              label: 'category',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 2,
-              data_type: 'free_text',
-            },
-          ],
-        };
-
-        const nonCompletedItemFoo2 = {
-          id: 'id4',
-          refreshed: false,
-          completed: false,
-          archived_at: null,
-          user_id: 'id1',
-          list_id: 'id1',
-          created_at: now,
-          updated_at: now,
-          fields: [
-            {
-              id: 'id7',
-              list_item_field_configuration_id: 'id7',
-              data: 'not completed quantity',
-              archived_at: null,
-              list_item_id: 'id4',
-              label: 'quantity',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 0,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id8',
-              list_item_field_configuration_id: 'id8',
-              data: 'foo not completed product 2',
-              archived_at: null,
-              list_item_id: 'id4',
-              label: 'product',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 1,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id9',
-              list_item_field_configuration_id: 'id9',
-              data: 'foo',
-              archived_at: null,
-              list_item_id: 'id4',
-              label: 'category',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 2,
-              data_type: 'free_text',
-            },
-          ],
-        };
-
-        const nonCompletedItemBar = {
-          id: 'id5',
-          refreshed: false,
-          completed: false,
-          archived_at: null,
-          user_id: 'id1',
-          list_id: 'id1',
-          created_at: now,
-          updated_at: now,
-          fields: [
-            {
-              id: 'id10',
-              list_item_field_configuration_id: 'id10',
-              data: 'not completed quantity',
-              archived_at: null,
-              list_item_id: 'id5',
-              label: 'quantity',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 0,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id11',
-              list_item_field_configuration_id: 'id11',
-              data: 'bar not completed product',
-              archived_at: null,
-              list_item_id: 'id5',
-              label: 'product',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 1,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id12',
-              list_item_field_configuration_id: 'id12',
-              data: 'bar',
-              archived_at: null,
-              list_item_id: 'id5',
-              label: 'category',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 2,
-              data_type: 'free_text',
-            },
-          ],
-        };
-
-        const completedItem = {
-          id: 'id1',
-          refreshed: false,
-          completed: true,
-          archived_at: null,
-          user_id: 'id1',
-          list_id: 'id1',
-          created_at: now,
-          updated_at: now,
-          fields: [
-            {
-              id: 'id1',
-              list_item_field_configuration_id: 'id1',
-              data: 'completed quantity',
-              archived_at: null,
-              list_item_id: 'id1',
-              label: 'quantity',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 0,
-              data_type: 'free_text',
-            },
-            {
-              id: 'id2',
-              list_item_field_configuration_id: 'id2',
-              data: 'foo completed product',
-              archived_at: null,
-              list_item_id: 'id1',
-              label: 'product',
-              user_id: 'id1',
-              created_at: now,
-              updated_at: now,
-              position: 1,
-              data_type: 'free_text',
-            },
-          ],
-        };
-
-        const list = {
-          id: 'id1',
-          name: 'foo',
-          type: 'GroceryList',
-          created_at: now,
-          completed: false,
-          owner_id: 'id1',
-          refreshed: false,
+        // Helper to create mock list item
+        const mockListItem = (
+          id: string,
+          completed: boolean,
+          quantity: string,
+          product: string,
+          category?: string,
+        ): IListItem => {
+          const fields = [
+            mockField(id, 'quantity', quantity, 0, `field_${id}_1`),
+            mockField(id, 'product', product, 1, `field_${id}_2`),
+          ];
+          if (category) {
+            fields.push(mockField(id, 'category', category, 2, `field_${id}_3`));
+          }
+          return {
+            id,
+            refreshed: false,
+            completed,
+            archived_at: null,
+            user_id: 'id1',
+            list_id: 'id1',
+            created_at: now,
+            updated_at: now,
+            fields,
+          };
         };
 
         const data = {
           current_user_id: 'id1',
-          not_completed_items: [nonCompletedItem, nonCompletedItemFoo1, nonCompletedItemFoo2, nonCompletedItemBar],
-          completed_items: [completedItem],
-          list,
+          not_completed_items: [
+            mockListItem('id2', false, 'not completed quantity', 'no category not completed product'),
+            mockListItem('id3', false, 'not completed quantity', 'foo not completed product', 'foo'),
+            mockListItem('id4', false, 'not completed quantity', 'foo not completed product 2', 'foo'),
+            mockListItem('id5', false, 'not completed quantity', 'bar not completed product', 'bar'),
+          ],
+          completed_items: [mockListItem('id1', true, 'completed quantity', 'foo completed product')],
+          list: {
+            id: 'id1',
+            name: 'foo',
+            type: 'GroceryList',
+            created_at: now,
+            completed: false,
+            owner_id: 'id1',
+            refreshed: false,
+          },
           categories: ['foo', 'bar'],
           list_users: [{ id: 'id1', email: 'foo@example.com' }],
           permissions: 'write',

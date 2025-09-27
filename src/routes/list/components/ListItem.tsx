@@ -109,6 +109,9 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   );
 };
 
+// prevents re-renders when only irrelevant props change
+// select prop monitoring to check for props that actually affect visual output
+// can have significant performance benefits with large lists
 export const memoCompare = (prev: IListItemProps, next: IListItemProps): boolean => {
   if (prev.pending !== next.pending) {
     return false;

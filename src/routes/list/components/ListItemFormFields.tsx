@@ -32,31 +32,12 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
     switch (config.data_type) {
       case 'boolean':
         return (
-          <CheckboxField
-            key={config.id}
-            name={config.label}
-            label={config.label.charAt(0).toUpperCase() + config.label.slice(1)}
-            value={field ? field.data === 'true' : false}
-            handleChange={props.setFormData}
-            classes="mb-3"
-          />
+          <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="mb-3" />
         );
       case 'date_time':
         return <DateField key={config.id} {...commonProps} value={field?.data ?? ''} />;
       case 'number':
-        return (
-          <NumberField
-            key={config.id}
-            {...commonProps}
-            value={
-              field?.data !== undefined && field.data !== null && field.data !== ''
-                ? Number(field.data)
-                : field?.data === ''
-                  ? 0
-                  : undefined
-            }
-          />
-        );
+        return <NumberField key={config.id} {...commonProps} value={field?.data ? Number(field.data) : undefined} />;
       case 'free_text':
       default:
         return <TextField key={config.id} {...commonProps} value={field?.data ?? ''} />;

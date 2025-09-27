@@ -7,14 +7,10 @@ import {
   fetchListItemToEdit,
   fetchItemsToEdit,
   itemName,
-  normalizeListItem,
-  normalizeList,
-  normalizeListItemField,
   type IFulfilledEditListData,
 } from './utils';
 import axios from 'utils/api';
-import { EListType, EListItemFieldType } from 'typings';
-import type { IListItem, IList, IListItemField } from 'typings';
+import { EListType, type IListItem } from 'typings';
 import {
   createList,
   createListItem,
@@ -588,119 +584,5 @@ describe('fetchItemsToEdit', () => {
       navigate: mockNavigate,
       redirectURI: '/lists/1/',
     });
-  });
-});
-
-describe('normalizeListItem', () => {
-  it('normalizes list item with undefined fields', () => {
-    const item = {
-      ...createListItem('1'),
-      fields: undefined as unknown as IListItem['fields'],
-      archived_at: undefined as unknown as string | null,
-      updated_at: undefined as unknown as string | null,
-    };
-    const normalized = normalizeListItem(item);
-    expect(normalized.fields).toEqual([]);
-    expect(normalized.archived_at).toBeNull();
-    expect(normalized.updated_at).toBeNull();
-  });
-
-  it('normalizes list item with null fields', () => {
-    const item = {
-      ...createListItem('1'),
-      fields: null as unknown as IListItem['fields'],
-      archived_at: null,
-      updated_at: null,
-    };
-    const normalized = normalizeListItem(item);
-    expect(normalized.fields).toEqual([]);
-    expect(normalized.archived_at).toBeNull();
-    expect(normalized.updated_at).toBeNull();
-  });
-
-  it('preserves valid list item data', () => {
-    const item = createListItem('1');
-    const normalized = normalizeListItem(item);
-    expect(normalized).toEqual(item);
-  });
-});
-
-describe('normalizeList', () => {
-  it('normalizes list with undefined optional fields', () => {
-    const list: IList = {
-      name: 'Test List',
-      type: EListType.GROCERY_LIST,
-      id: undefined,
-      created_at: undefined,
-      completed: undefined,
-      users_list_id: undefined,
-      owner_id: undefined,
-      refreshed: undefined,
-      categories: undefined,
-    };
-    const normalized = normalizeList(list);
-    expect(normalized.id).toBe('');
-    expect(normalized.created_at).toBe('');
-    expect(normalized.completed).toBe(false);
-    expect(normalized.users_list_id).toBe('');
-    expect(normalized.owner_id).toBe('');
-    expect(normalized.refreshed).toBe(false);
-    expect(normalized.categories).toEqual([]);
-  });
-
-  it('preserves valid list data', () => {
-    const list: IList = {
-      name: 'Test List',
-      type: EListType.GROCERY_LIST,
-      id: '123',
-      created_at: '2023-01-01',
-      completed: true,
-      users_list_id: '456',
-      owner_id: '789',
-      refreshed: true,
-      categories: ['Produce', 'Dairy'],
-    };
-    const normalized = normalizeList(list);
-    expect(normalized).toEqual(list);
-  });
-});
-
-describe('normalizeListItemField', () => {
-  it('normalizes field with undefined data', () => {
-    const field: IListItemField = {
-      id: '1',
-      list_item_field_configuration_id: 'config1',
-      data: undefined as unknown as string | undefined | null,
-      archived_at: undefined as unknown as string | null,
-      user_id: 'user1',
-      list_item_id: 'item1',
-      created_at: '2023-01-01',
-      updated_at: undefined as unknown as string | null,
-      label: 'test',
-      position: 1,
-      data_type: EListItemFieldType.FREE_TEXT,
-    };
-    const normalized = normalizeListItemField(field);
-    expect(normalized.data).toBe('');
-    expect(normalized.archived_at).toBeNull();
-    expect(normalized.updated_at).toBeNull();
-  });
-
-  it('preserves valid field data', () => {
-    const field: IListItemField = {
-      id: '1',
-      list_item_field_configuration_id: 'config1',
-      data: 'test data',
-      archived_at: null,
-      user_id: 'user1',
-      list_item_id: 'item1',
-      created_at: '2023-01-01',
-      updated_at: null,
-      label: 'test',
-      position: 1,
-      data_type: EListItemFieldType.FREE_TEXT,
-    };
-    const normalized = normalizeListItemField(field);
-    expect(normalized).toEqual(field);
   });
 });

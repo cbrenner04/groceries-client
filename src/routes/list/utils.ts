@@ -103,37 +103,6 @@ export function itemName(item: IListItem, listType: EListType): string {
   }
 }
 
-export function normalizeListItem(item: IListItem): IListItem {
-  return {
-    ...item,
-    fields: Array.isArray(item.fields) ? item.fields : [],
-    archived_at: item.archived_at ?? null,
-    updated_at: item.updated_at ?? null,
-  };
-}
-
-export function normalizeList(list: IList): IList {
-  return {
-    ...list,
-    id: list.id ?? '',
-    created_at: list.created_at ?? '',
-    completed: list.completed ?? false,
-    users_list_id: list.users_list_id ?? '',
-    owner_id: list.owner_id ?? '',
-    refreshed: list.refreshed ?? false,
-    categories: Array.isArray(list.categories) ? list.categories : [],
-  };
-}
-
-export function normalizeListItemField(field: IListItemField): IListItemField {
-  return {
-    ...field,
-    data: field.data ?? '',
-    archived_at: field.archived_at ?? null,
-    updated_at: field.updated_at ?? null,
-  };
-}
-
 export async function fetchList(fetchParams: {
   id: string;
   navigate: (url: string) => void;

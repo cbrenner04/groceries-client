@@ -127,6 +127,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   );
 
   // Immediate sync on navigation focus
+  // This helps to reduce perceived staleness when users navigate between routes
+  // Reduces unnecessary re-renders and prevents request storms
   useNavigationFocus(async () => {
     try {
       const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}-focus`, () =>
