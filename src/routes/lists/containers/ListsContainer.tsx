@@ -32,51 +32,54 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
-  usePolling(async () => {
-    try {
-      const lists = await listsDeduplicator.execute('lists', () => fetchLists({ navigate }));
-      /* istanbul ignore else */
-      if (lists) {
-        const {
-          pendingLists: updatedPending,
-          completedLists: updatedCompleted,
-          incompleteLists: updatedIncomplete,
-          currentUserPermissions: updatedCurrentUserPermissions,
-        } = lists as IFetchListsReturn;
+  usePolling(
+    async () => {
+      try {
+        const lists = await listsDeduplicator.execute('lists', () => fetchLists({ navigate }));
+        /* istanbul ignore else */
+        if (lists) {
+          const {
+            pendingLists: updatedPending,
+            completedLists: updatedCompleted,
+            incompleteLists: updatedIncomplete,
+            currentUserPermissions: updatedCurrentUserPermissions,
+          } = lists as IFetchListsReturn;
 
-        // Use lightweight cache to avoid re-render churn for identical data
-        const pendingCacheKey = 'lists-pending';
-        const completedCacheKey = 'lists-completed';
-        const incompleteCacheKey = 'lists-incomplete';
-        const permissionsCacheKey = 'lists-permissions';
+          // Use lightweight cache to avoid re-render churn for identical data
+          const pendingCacheKey = 'lists-pending';
+          const completedCacheKey = 'lists-completed';
+          const incompleteCacheKey = 'lists-incomplete';
+          const permissionsCacheKey = 'lists-permissions';
 
-        const pendingResult = listsCache.get(pendingCacheKey, updatedPending);
-        const completedResult = listsCache.get(completedCacheKey, updatedCompleted);
-        const incompleteResult = listsCache.get(incompleteCacheKey, updatedIncomplete);
-        const permissionsResult = listsCache.get(permissionsCacheKey, updatedCurrentUserPermissions);
+          const pendingResult = listsCache.get(pendingCacheKey, updatedPending);
+          const completedResult = listsCache.get(completedCacheKey, updatedCompleted);
+          const incompleteResult = listsCache.get(incompleteCacheKey, updatedIncomplete);
+          const permissionsResult = listsCache.get(permissionsCacheKey, updatedCurrentUserPermissions);
 
-        // Only update state if data has actually changed
-        if (pendingResult.hasChanged) {
-          setPendingLists(updatedPending);
+          // Only update state if data has actually changed
+          if (pendingResult.hasChanged) {
+            setPendingLists(updatedPending);
+          }
+          if (completedResult.hasChanged) {
+            setCompletedLists(updatedCompleted);
+          }
+          if (incompleteResult.hasChanged) {
+            setIncompleteLists(updatedIncomplete);
+          }
+          if (permissionsResult.hasChanged) {
+            setCurrentUserPermissions(updatedCurrentUserPermissions);
+          }
         }
-        if (completedResult.hasChanged) {
-          setCompletedLists(updatedCompleted);
-        }
-        if (incompleteResult.hasChanged) {
-          setIncompleteLists(updatedIncomplete);
-        }
-        if (permissionsResult.hasChanged) {
-          setCurrentUserPermissions(updatedCurrentUserPermissions);
-        }
+      } catch (err: unknown) {
+        const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+          type: 'error',
+          autoClose: 5000,
+        });
       }
-    } catch (err: unknown) {
-      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-        type: 'error',
-        autoClose: 5000,
-      });
-    }
-  }, 10000);
+    },
+    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
+  );
 
   // Immediate sync on navigation focus
   useNavigationFocus(async () => {

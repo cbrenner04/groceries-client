@@ -42,30 +42,25 @@ This document captures what we are doing to improve perceived performance, reduc
 ### To-do (prioritized)
 
 1) Rendering and interaction performance
-- Consider list virtualization for very long lists
-- Stabilize handler identities with useCallback where beneficial (measure first)
-- Split `ListContainer` where appropriate to isolate re-renders (measure first)
-
+   - Consider list virtualization for very long lists
+   - Stabilize handler identities with useCallback where beneficial (measure first)
+   - Split `ListContainer` where appropriate to isolate re-renders (measure first)
 2) Error and toast UX
-- De-duplicate toasts across polling and action handlers
-- Standardize autoClose durations and wording for network vs server errors
-
+   - De-duplicate toasts across polling and action handlers
+   - Standardize autoClose durations and wording for network vs server errors
 3) Mobile Safari focus
-- Verify visibility/idle guards behave on iOS
-- Audit long-task sources (expensive maps/sorts); move them off hot paths
-- Consider dynamic import for heavy, rarely used subroutes/components
-
+   - Verify visibility/idle guards behave on iOS
+   - Audit long-task sources (expensive maps/sorts); move them off hot paths
+   - Consider dynamic import for heavy, rarely used subroutes/components
 4) Monitoring and budgets
-- Add lightweight timings around poll/merge/apply phases; emit to console in dev and to logs in prod
-- Run Lighthouse and set budgets; add bundle analyzer and identify top wins
-
+   - Add lightweight timings around poll/merge/apply phases; emit to console in dev and to logs in prod
+   - Run Lighthouse and set budgets; add bundle analyzer and identify top wins
 5) Data/API opportunities (service)
-- Endpoint to deliver field configurations bundle with stable ordering
-- ETag/Cache-Control for lists and configs; gzip/brotli ensured
-
+   - Endpoint to deliver field configurations bundle with stable ordering
+   - ETag/Cache-Control for lists and configs; gzip/brotli ensured
 6) Test coverage
-- Visibility/idle guard tests across browsers (JSDOM simulations already in place)
-- Regression tests for category filter persistence across polls
+   - Visibility/idle guard tests across browsers (JSDOM simulations already in place)
+   - Regression tests for category filter persistence across polls
 
 ### Success criteria
 

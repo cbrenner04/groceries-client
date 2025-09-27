@@ -20,33 +20,36 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const navigate = useNavigate();
 
-  usePolling(async () => {
-    try {
-      const lists = await fetchCompletedLists({ navigate });
-      /* istanbul ignore else */
-      if (lists) {
-        const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } = lists;
-        const isSameSet = (newSet: IList[] | TUserPermissions, oldSet: IList[] | TUserPermissions): boolean =>
-          JSON.stringify(newSet) === JSON.stringify(oldSet);
-        const completedSame = isSameSet(updatedCompletedLists, completedLists);
-        const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
+  usePolling(
+    async () => {
+      try {
+        const lists = await fetchCompletedLists({ navigate });
         /* istanbul ignore else */
-        if (!completedSame) {
-          setCompletedLists(updatedCompletedLists);
+        if (lists) {
+          const { completedLists: updatedCompletedLists, currentUserPermissions: updatedUserPerms } = lists;
+          const isSameSet = (newSet: IList[] | TUserPermissions, oldSet: IList[] | TUserPermissions): boolean =>
+            JSON.stringify(newSet) === JSON.stringify(oldSet);
+          const completedSame = isSameSet(updatedCompletedLists, completedLists);
+          const userPermsSame = isSameSet(updatedUserPerms, currentUserPermissions);
+          /* istanbul ignore else */
+          if (!completedSame) {
+            setCompletedLists(updatedCompletedLists);
+          }
+          /* istanbul ignore else */
+          if (!userPermsSame) {
+            setCurrentUserPermissions(updatedUserPerms);
+          }
         }
-        /* istanbul ignore else */
-        if (!userPermsSame) {
-          setCurrentUserPermissions(updatedUserPerms);
-        }
+      } catch (err: unknown) {
+        const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+          type: 'error',
+          autoClose: 5000,
+        });
       }
-    } catch (err: unknown) {
-      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-        type: 'error',
-        autoClose: 5000,
-      });
-    }
-  }, 10000);
+    },
+    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
+  );
 
   return (
     <React.Fragment>

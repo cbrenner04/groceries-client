@@ -34,45 +34,48 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const [refused, setRefused] = useState(props.refused);
   const navigate = useNavigate();
 
-  usePolling(async () => {
-    try {
-      const list = await fetchData({
-        listId: props.listId,
-        navigate: navigate,
-      });
-      /* istanbul ignore else */
-      if (list) {
-        const isSameSet = (newSet: IListUser[] | IUsersList[], oldSet: IListUser[] | IUsersList[]): boolean =>
-          JSON.stringify(newSet) === JSON.stringify(oldSet);
-        const invitableUsersSame = isSameSet(list.invitableUsers, invitableUsers);
-        const pendingSame = isSameSet(list.pending, pending);
-        const acceptedSame = isSameSet(list.accepted, accepted);
-        const refusedSame = isSameSet(list.refused, refused);
+  usePolling(
+    async () => {
+      try {
+        const list = await fetchData({
+          listId: props.listId,
+          navigate: navigate,
+        });
         /* istanbul ignore else */
-        if (!invitableUsersSame) {
-          setInvitableUsers(list.invitableUsers);
+        if (list) {
+          const isSameSet = (newSet: IListUser[] | IUsersList[], oldSet: IListUser[] | IUsersList[]): boolean =>
+            JSON.stringify(newSet) === JSON.stringify(oldSet);
+          const invitableUsersSame = isSameSet(list.invitableUsers, invitableUsers);
+          const pendingSame = isSameSet(list.pending, pending);
+          const acceptedSame = isSameSet(list.accepted, accepted);
+          const refusedSame = isSameSet(list.refused, refused);
+          /* istanbul ignore else */
+          if (!invitableUsersSame) {
+            setInvitableUsers(list.invitableUsers);
+          }
+          /* istanbul ignore else */
+          if (!pendingSame) {
+            setPending(list.pending);
+          }
+          /* istanbul ignore else */
+          if (!acceptedSame) {
+            setAccepted(list.accepted);
+          }
+          /* istanbul ignore else */
+          if (!refusedSame) {
+            setRefused(list.refused);
+          }
         }
-        /* istanbul ignore else */
-        if (!pendingSame) {
-          setPending(list.pending);
-        }
-        /* istanbul ignore else */
-        if (!acceptedSame) {
-          setAccepted(list.accepted);
-        }
-        /* istanbul ignore else */
-        if (!refusedSame) {
-          setRefused(list.refused);
-        }
+      } catch (err: unknown) {
+        const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+          type: 'error',
+          autoClose: 5000,
+        });
       }
-    } catch (err: unknown) {
-      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-        type: 'error',
-        autoClose: 5000,
-      });
-    }
-  }, 5000);
+    },
+    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
+  );
 
   const failure = (err: unknown): void => {
     const error = err as AxiosError;

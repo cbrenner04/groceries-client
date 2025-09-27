@@ -7,6 +7,9 @@ import { cleanup, configure } from '@testing-library/react';
 import { TextEncoder } from 'util';
 import type { AxiosError, AxiosResponse } from 'axios';
 
+// This is necessary now that react-router is using TextEncoder internally but JSDOM doesn't have it
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+// @ts-ignore
 global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
 // Ensure polling considers the document visible in JSDOM; allow tests to override
@@ -15,11 +18,6 @@ try {
 } catch (_err) {
   // ignore if already defined/configured by the environment
 }
-
-// Stabilize axios.get counts in tests by disabling prefetch on mount by default
-process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
-// Disable idle prefetch by default to keep axios.get counts deterministic in tests
-process.env.REACT_APP_PREFETCH_IDLE = 'false';
 
 jest.mock('axios', () => ({
   AxiosError: jest.fn().mockImplementation(

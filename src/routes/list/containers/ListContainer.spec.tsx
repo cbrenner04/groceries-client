@@ -106,7 +106,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -114,7 +114,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -146,7 +146,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -154,7 +154,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -171,7 +171,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith(
@@ -189,7 +189,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(toast).toHaveBeenCalledWith(
@@ -223,7 +223,7 @@ describe('ListContainer', () => {
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
       // Move time once while hidden: polling should not fire
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
 
       // Make the tab visible and dispatch event to trigger immediate sync
@@ -238,7 +238,7 @@ describe('ListContainer', () => {
       );
 
       // Next poll tick should fetch again (secondResponse)
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
         'data-test-class',
@@ -2309,12 +2309,19 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      // The move operation should remove the selected items from the not completed list
+      // The move operation should remove the selected items from the list
       // The handleMove function in the component should be called after the modal completes
-      // Let's check that the items are still visible since the move happens in the callback
-      expect(getByText('not completed quantity no category not completed product')).toBeVisible();
+      // After move, the selected items should no longer be visible in the current list
+      // Checkboxes [1] and [2] correspond to:
+      // [1] = "not completed quantity no category not completed product" (id2)
+      // [2] = "not completed quantity foo not completed product" (id3)
+      await waitFor(() => {
+        expect(() => getByText('not completed quantity no category not completed product')).toThrow();
+        expect(() => getByText('not completed quantity foo not completed product')).toThrow();
+      });
+
+      // Items that were not selected should still be visible
       expect(getByText('not completed quantity bar not completed product')).toBeVisible();
-      expect(getByText('not completed quantity foo not completed product')).toBeVisible();
       expect(getByText('not completed quantity foo not completed product 2')).toBeVisible();
     });
 

@@ -142,56 +142,59 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   }, [props.listItemConfiguration?.id, preloadedFieldConfigurations]);
 
   // Add polling for real-time updates with request deduplication
-  usePolling(async () => {
-    try {
-      const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
-        fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
-      );
+  usePolling(
+    async () => {
+      try {
+        const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
+          fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
+        );
 
-      if (fetchResponse) {
-        const {
-          not_completed_items: updatedNotCompletedItems,
-          completed_items: updatedCompletedItems,
-          categories: updatedCategories,
-        } = fetchResponse as IFulfilledListData;
+        if (fetchResponse) {
+          const {
+            not_completed_items: updatedNotCompletedItems,
+            completed_items: updatedCompletedItems,
+            categories: updatedCategories,
+          } = fetchResponse as IFulfilledListData;
 
-        // Use lightweight cache to avoid re-render churn for identical data
-        const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
-        const completedCacheKey = `list-${props.list.id}-completed`;
-        const categoriesCacheKey = `list-${props.list.id}-categories`;
+          // Use lightweight cache to avoid re-render churn for identical data
+          const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
+          const completedCacheKey = `list-${props.list.id}-completed`;
+          const categoriesCacheKey = `list-${props.list.id}-categories`;
 
-        const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
-        const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
-        const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+          const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
+          const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
+          const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
 
-        // Only update state if data has actually changed
-        if (notCompletedResult.hasChanged) {
-          setNotCompletedItems(updatedNotCompletedItems);
-        }
-        if (completedResult.hasChanged) {
-          setCompletedItems(updatedCompletedItems);
-        }
-        if (notCompletedResult.hasChanged || completedResult.hasChanged || categoriesResult.hasChanged) {
-          // Update categories but preserve active filter selection
-          setCategories(updatedCategories);
-          setIncludedCategories(updatedCategories);
-          /* istanbul ignore else */
-          if (!filter) {
-            setDisplayedCategories(updatedCategories);
-          } else if (filter && !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())) {
-            // Active category no longer exists: keep filter visible but show empty state
-            setDisplayedCategories([filter]);
+          // Only update state if data has actually changed
+          if (notCompletedResult.hasChanged) {
+            setNotCompletedItems(updatedNotCompletedItems);
+          }
+          if (completedResult.hasChanged) {
+            setCompletedItems(updatedCompletedItems);
+          }
+          if (notCompletedResult.hasChanged || completedResult.hasChanged || categoriesResult.hasChanged) {
+            // Update categories but preserve active filter selection
+            setCategories(updatedCategories);
+            setIncludedCategories(updatedCategories);
+            /* istanbul ignore else */
+            if (!filter) {
+              setDisplayedCategories(updatedCategories);
+            } else if (filter && !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())) {
+              // Active category no longer exists: keep filter visible but show empty state
+              setDisplayedCategories([filter]);
+            }
           }
         }
+      } catch (_err) {
+        const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
+          type: 'error',
+          autoClose: 5000,
+        });
       }
-    } catch (_err) {
-      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-        type: 'error',
-        autoClose: 5000,
-      });
-    }
-  }, 5000);
+    },
+    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
+  );
 
   // Immediate sync on navigation focus
   useNavigationFocus(async () => {
@@ -702,11 +705,31 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     if (!move) {
       return;
     }
-    // Remove items from not completed and add to completed
+    // Remove items from both not completed and completed since they've been moved to another list
     setNotCompletedItems(
       notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
     );
-    setCompletedItems(sortItemsByCreatedAt([...completedItems, ...selectedItems]));
+    setCompletedItems(completedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)));
+
+    // Update categories after move - remove categories that no longer have items
+    const remainingItems = [
+      ...notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
+      ...completedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
+    ];
+    const remainingCategories = new Set<string>();
+    remainingItems.forEach((item) => {
+      const categoryField = item.fields.find((field) => field.label === 'category');
+      if (categoryField?.data) {
+        remainingCategories.add(categoryField.data);
+      }
+    });
+    const updatedCategories = Array.from(remainingCategories);
+    setCategories(updatedCategories);
+    setIncludedCategories(updatedCategories);
+    if (!filter) {
+      setDisplayedCategories(updatedCategories);
+    }
+
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
     setMove(false);
