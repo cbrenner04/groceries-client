@@ -779,9 +779,9 @@ describe('ListContainer', () => {
       });
       axios.get = getSpy;
 
-      const { findByLabelText, findByTestId, user } = setup({ 
+      const { findByLabelText, findByTestId, user } = setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: [
+        listItemFieldConfigurations: [
           { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
           { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
         ],
@@ -822,7 +822,7 @@ describe('ListContainer', () => {
       expect(configCalls.length).toBe(0);
     });
 
-    it('does not prefetch on mount when preloadedFieldConfigurations already exist', async () => {
+    it('does not prefetch on mount when listItemFieldConfigurations already exist', async () => {
       const getSpy = jest.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
@@ -838,7 +838,7 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
       });
 
       // Wait a moment to ensure any potential prefetch would have fired
@@ -934,7 +934,7 @@ describe('ListContainer', () => {
       expect(configCalls.length).toBe(0);
     });
 
-    it('does not idle-prefetch when preloadedFieldConfigurations already exist', async () => {
+    it('does not idle-prefetch when listItemFieldConfigurations already exist', async () => {
       process.env.REACT_APP_PREFETCH_IDLE = 'true';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).requestIdleCallback = (cb: () => void): number => {
@@ -957,7 +957,7 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
       });
 
       // Wait a moment to ensure any potential idle prefetch would have fired
@@ -1017,9 +1017,9 @@ describe('ListContainer', () => {
       axios.get = getSpy;
 
       // Should not throw or crash the component with preloaded configurations
-      const { container } = setup({ 
+      const { container } = setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
       });
 
       // Wait for any async operations
@@ -1092,7 +1092,7 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: undefined,
+        listItemFieldConfigurations: undefined,
       });
 
       // Wait a moment to ensure any potential prefetch would have fired
@@ -1128,7 +1128,7 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: undefined,
+        listItemFieldConfigurations: undefined,
       });
 
       // Wait a moment to ensure any potential idle prefetch would have fired
@@ -1161,7 +1161,7 @@ describe('ListContainer', () => {
 
       const { findByTestId, findByLabelText, user } = setup({
         permissions: EUserPermissions.WRITE,
-        preloadedFieldConfigurations: undefined, // No prefetch data
+        listItemFieldConfigurations: undefined, // No prefetch data
       });
 
       // Open the form

@@ -35,7 +35,7 @@ const List = (): React.JSX.Element => {
               listsToUpdate={data.lists_to_update}
               listItemConfiguration={data.list_item_configuration}
               // Prefetch field configs at list load for smoother first expand
-              preloadedFieldConfigurations={data.list_item_field_configurations}
+              listItemFieldConfigurations={data.list_item_field_configurations}
             />
           );
         }}

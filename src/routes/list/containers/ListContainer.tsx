@@ -47,7 +47,7 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
-  preloadedFieldConfigurations?: { id: string; label: string; data_type: string; position: number }[];
+  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number }[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -65,9 +65,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [copy, setCopy] = useState(false);
   const [move, setMove] = useState(false);
-  const [preloadedFieldConfigurations, setPreloadedFieldConfigurations] = useState<
-    { id: string; label: string; data_type: string; position: number }[] | undefined
-  >(props.preloadedFieldConfigurations);
   const navigate = useNavigate();
 
   // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
@@ -804,7 +801,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           categories={props.categories}
           navigate={navigate}
           listItemConfiguration={props.listItemConfiguration}
-          preloadedFieldConfigurations={preloadedFieldConfigurations}
+          preloadedFieldConfigurations={props.listItemFieldConfigurations}
         />
       ) : (
         <p>You only have permission to read this list</p>
