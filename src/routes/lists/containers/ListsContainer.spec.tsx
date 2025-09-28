@@ -1,7 +1,6 @@
 import React from 'react';
 import { act, render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
@@ -12,6 +11,9 @@ import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 jest.mock('react-toastify', () => ({
   toast: jest.fn(),
 }));
+
+// Mock the new toast utilities
+const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -320,13 +322,9 @@ describe('ListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith(
+    expect(mockShowToast.error).toHaveBeenCalledWith(
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
-      {
-        type: 'error',
-        autoClose: 5000,
-      },
     );
     jest.useRealTimers();
   });
@@ -358,7 +356,7 @@ describe('ListsContainer', () => {
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
     expect(await findByTestId('list-id7')).toHaveTextContent('new list');
   });
 
@@ -371,7 +369,7 @@ describe('ListsContainer', () => {
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -384,7 +382,7 @@ describe('ListsContainer', () => {
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when request fails', async () => {
@@ -396,7 +394,7 @@ describe('ListsContainer', () => {
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when unknown error occurs', async () => {
@@ -408,6 +406,6 @@ describe('ListsContainer', () => {
     await user.click(await findByText('Create List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

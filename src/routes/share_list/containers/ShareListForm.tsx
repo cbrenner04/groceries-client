@@ -2,7 +2,7 @@ import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import update from 'immutability-helper';
 import { Form, ListGroup } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import { EmailField } from 'components/FormFields';
@@ -68,10 +68,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
         }
       } catch (err: unknown) {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-          type: 'error',
-          autoClose: 5000,
-        });
+        showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
@@ -81,28 +78,28 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     const error = err as AxiosError;
     if (error.response) {
       if (error.response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        showToast.error('You must sign in');
         navigate('/users/sign_in');
       } else if (error.response.status === 403) {
-        toast('You do not have permission to take that action', { type: 'error' });
+        showToast.error('You do not have permission to take that action');
         navigate('/lists');
       } else if (error.response.status === 404) {
-        toast('User not found', { type: 'error' });
+        showToast.error('User not found');
       } else {
         if ((error.response.data as Record<string, string>).responseText) {
-          toast((error.response.data as Record<string, string>).responseText, { type: 'error' });
+          showToast.error((error.response.data as Record<string, string>).responseText);
         } else {
           const responseTextKeys = Object.keys(error.response.data as Record<string, string>);
           const responseErrors = responseTextKeys.map(
             (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          toast(responseErrors.join(' and '), { type: 'error' });
+          showToast.error(responseErrors.join(' and '));
         }
       }
     } else if (error.request) {
-      toast('Something went wrong', { type: 'error' });
+      showToast.error('Something went wrong');
     } else {
-      toast(error.message, { type: 'error' });
+      showToast.error(error.message);
     }
   };
 
@@ -116,7 +113,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
       const newPending = update(pending, { $push: [data] });
       setPending(newPending);
       setNewEmail('');
-      toast(`"${props.name}" has been successfully shared with ${newEmail}.`, { type: 'info' });
+      showToast.info(`"${props.name}" has been successfully shared with ${newEmail}.`);
     } catch (error) {
       failure(error);
     }
@@ -148,7 +145,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
       });
 
       setPending(newPending);
-      toast(`"${props.name}" has been successfully shared with ${user.email}.`, { type: 'info' });
+      showToast.info(`"${props.name}" has been successfully shared with ${user.email}.`);
     } catch (error) {
       failure(error);
     }

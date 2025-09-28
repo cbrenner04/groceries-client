@@ -188,6 +188,16 @@ jest.mock('react-toastify', () => {
   };
 });
 
+// Global mock for our new toast utility
+jest.mock('./utils/toast', () => ({
+  showToast: {
+    info: jest.fn(),
+    error: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+  },
+}));
+
 // Provide a stable mock for react-idle-timer used by usePolling
 jest.mock('react-idle-timer', () => ({
   useIdleTimer: (): { isIdle: () => boolean } => ({ isIdle: () => false }),

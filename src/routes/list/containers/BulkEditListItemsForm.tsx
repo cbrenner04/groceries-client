@@ -1,6 +1,6 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState, useCallback } from 'react';
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -112,16 +112,16 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         },
       });
 
-      toast('Items successfully updated', { type: 'info' });
+      showToast.info('Items successfully updated');
       props.navigate(`/lists/${props.list.id}`);
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
           props.navigate('/users/sign_in');
         } else if ([403, 404].includes(error.response.status!)) {
-          toast('Some items not found', { type: 'error' });
+          showToast.error('Some items not found');
           props.navigate(`/lists/${props.list.id}`);
         } else {
           const keys = Object.keys(error.response.data!);
@@ -134,12 +134,12 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           } else {
             joinString = ' and ';
           }
-          toast(responseErrors.join(joinString), { type: 'error' });
+          showToast.error(responseErrors.join(joinString));
         }
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
     }
   };

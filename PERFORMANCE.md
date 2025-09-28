@@ -1,82 +1,70 @@
-# Client UX performance and stability plan
+# Client UX Performance and Stability
 
-This document captures what we are doing to improve perceived performance, reduce UI flicker, and make list interactions predictably fast while the data model has evolved.
+This document tracks performance improvements to eliminate UI flicker, optimize list interactions, and ensure predictable UX under polling.
 
-## What we’re aiming for
+## Objectives
 
 - Fast, predictable list UX under polling
-- No first-open flicker in the list item form
+- No first-open flicker in list item forms
 - Stable controls and test IDs regardless of background fetches
-- Minimal re-renders when nothing meaningful changed
-- Clear, non-duplicated toasts for network/server errors
+- Minimal re-renders when data unchanged
+- Clear, non-duplicated error toasts
 
-## Game Plan
+## Completed Improvements
 
-### Improvements already made
+### Core Performance Optimizations
 
-- Prefetch list-item field configurations (when enabled) so the form opens with fields and without a "no config" flash; inlined a lightweight skeleton as a fallback
-- Idle-time prefetch of field configurations (behind `REACT_APP_PREFETCH_IDLE`) to further reduce first-open flicker; tests keep it disabled for deterministic axios counts
-- Polling hardened with idle/visibility/in-flight guards and signature-based change detection to avoid churn when data is unchanged
-- Immediate sync fetch on visibility regain to reduce perceived staleness
-- Request cancellation: AbortSignal support wired through polling and fetch utilities; cleanup on unmount prevents stale requests
-- Kept category filter stable across polls; preserves selection and buckets intelligently
-- Multi-select label fixed to "Select/Hide Select" to avoid text matcher issues; ensured menus render under WRITE
-- `ListItem` memoized with a focused comparator to avoid unnecessary re-renders
-- Error UX: only show the generic network toast on true network errors; server errors are routed through centralized failure handling
-- Test harness reliability: provided stable axios instance mocks, visibility state, and disabled prefetch on mount by default in tests to keep counts stable; snapshots updated
-- "Undefined" UI states: `itemName` guarded and UI renders "Untitled Item" when missing; added test to assert no visible "undefined"
-- `REACT_APP_PREFETCH_ON_MOUNT`: enable in production to reduce first-open flicker; defaulted off in tests to keep axios.get counts deterministic
-- `REACT_APP_PREFETCH_IDLE`: enable in production to prefetch field configurations during idle; defaulted off in tests for stable axios counts
-- Polling respects tab visibility and can honor idleness when `REACT_APP_USE_IDLE_TIMER=true`
-- Enable idle prefetch in production to maximize chance fields are ready before first open
-- Form flicker elimination: Enhanced skeleton fallback implementation with proper state initialization and edge case handling for empty configurations
-- First-open form flicker eliminated universally: Enhanced skeleton fallback implementation to handle empty array vs undefined scenarios, fixed state initialization logic to prevent unnecessary flicker, improved useEffect handling for preloaded configurations, all existing tests continue to pass
-- Number field value handling: Fixed ListItemFormFields and BulkEditListItemsFormFields to properly handle empty string values by converting them to 0 for number inputs, ensuring consistent UI behavior and test reliability
-- Test coverage improvements: Added test for idle prefetch path and "no undefined" rendering; fixed ListItemFormFields number field value handling tests; all tests now passing (76 test suites, 765 tests)
-- Polling behavior refinements: Immediate sync fetch on navigation focus via useNavigationFocus hook; AbortSignal support wired through polling and fetch utilities with cleanup on unmount; polling infrastructure hardened and tested
-- Enhanced caching strategy: Added dedicated field configuration cache service with configuration ID-based caching, 10-minute TTL, and test-environment detection; implemented opportunistic list prefetching on hover and during idle time with requestIdleCallback support; enhanced lightweight cache with configuration-specific settings for better performance characteristics
-- Field configuration caching: Implemented dedicated cache service with configuration ID-based caching, 10-minute TTL, request deduplication, and idle prefetching support; integrated throughout ListContainer and ListItemForm with test-environment detection
-- Opportunistic list prefetching: Added hover-based prefetching (300ms delay) and idle-time prefetching for visible lists; implemented dedicated listPrefetch service with 5-minute cache TTL and AbortSignal support for proper cleanup
-- Enhanced lightweight client cache: Extended existing cache system with configuration-specific settings (15-minute TTL, 200 item capacity) for stable configuration data
-- **Rendering and interaction performance optimizations**: Implemented comprehensive handler memoization with `useCallback` for all ListItem handlers (`handleItemSelect`, `handleItemEdit`, `handleItemComplete`, `handleItemRefresh`, `handleDelete`, `toggleRead`) to prevent unnecessary re-renders of potentially hundreds of list items; split ListContainer into `NotCompletedItemsSection` and `CompletedItemsSection` components for isolated re-renders; assessed list virtualization and determined current memoization optimizations address primary performance concerns without the complexity of virtualization; all 98 existing tests continue to pass
+- **Handler memoization**: All ListItem handlers (`handleItemSelect`, `handleItemEdit`, `handleItemComplete`, `handleItemRefresh`, `handleDelete`, `toggleRead`) memoized with `useCallback` to prevent unnecessary re-renders across potentially hundreds of list items
+- **Component isolation**: Split ListContainer into `NotCompletedItemsSection` and `CompletedItemsSection` with React.memo for independent re-rendering
+- **ListItem memoization**: Focused comparator prevents re-renders on irrelevant state changes
 
-#### Technical Details: Handler Memoization Analysis
+### Flicker Elimination
 
-- **High Impact**: 6 handlers passed to every ListItem component (potentially 100s of instances)
-  - `handleItemSelect`, `handleItemComplete`, `handleItemEdit`, `handleDelete`, `handleItemRefresh`, `toggleRead`
-  - Each memoized with proper dependency arrays to prevent re-creation on unrelated state changes
-- **Medium Impact**: Category filter handlers (`handleCategoryFilter`, `handleClearFilter`) memoized for CategoryFilter component
-- **Component Splitting**: Created `NotCompletedItemsSection` and `CompletedItemsSection` with React.memo
-  - Isolated re-renders: completed items changes don't trigger not-completed section re-renders and vice versa
-  - Moved `groupByCategory` logic to `NotCompletedItemsSection` with proper memoization
-- **List Virtualization Assessment**: Deferred implementation
-  - Current memoization addresses primary performance concerns
-  - No evidence of performance issues with typical list sizes
-  - Complex category grouping makes virtualization more challenging
+- **Field configuration prefetching**: Prefetch on mount (`REACT_APP_PREFETCH_ON_MOUNT`) and during idle (`REACT_APP_PREFETCH_IDLE`) with enhanced skeleton fallback
+- **Form state handling**: Fixed initialization logic for empty vs undefined configurations; proper number field value handling (empty string → 0)
+- **UI guards**: "Untitled Item" fallback for missing `itemName`; no visible "undefined" states
 
-### To-do (prioritized)
+### Polling & Caching
 
-1) Error and toast UX
-   - De-duplicate toasts across polling and action handlers
-   - Standardize autoClose durations and wording for network vs server errors
-2) Mobile Safari focus
-   - Verify visibility/idle guards behave on iOS
-   - Audit long-task sources (expensive maps/sorts); move them off hot paths
-   - Consider dynamic import for heavy, rarely used subroutes/components
-3) Monitoring and budgets
-   - Add lightweight timings around poll/merge/apply phases; emit to console in dev and to logs in prod
-   - Run Lighthouse and set budgets; add bundle analyzer and identify top wins
-4) Data/API opportunities (service)
-   - Endpoint to deliver field configurations bundle with stable ordering
-   - ETag/Cache-Control for lists and configs; gzip/brotli ensured
-5) Test coverage
-   - Visibility/idle guard tests across browsers (JSDOM simulations already in place)
-   - Regression tests for category filter persistence across polls
+- **Intelligent polling**: 5-second intervals with idle/visibility/in-flight guards; signature-based change detection prevents unnecessary updates
+- **Request management**: AbortSignal support throughout; cleanup on unmount prevents stale requests
+- **Multi-layer caching**:
+  - Field configurations: 10-minute TTL with request deduplication
+  - List prefetching: 5-minute TTL with hover (300ms delay) and idle triggers
+  - Enhanced lightweight cache: 15-minute TTL, 200 item capacity
 
-### Success criteria
+### Error Handling & UX
 
-- No visible "undefined" or config warning flicker on first form open
-- Polling does not cause UI shifts when data is unchanged
-- List interactions (complete/refresh/delete/add) feel instant and remain consistent under ongoing polling
-- Handler identity stability prevents unnecessary ListItem re-renders
-- Component isolation allows independent re-rendering of completed vs not-completed sections
+- **Toast deduplication**: 3-second window prevents duplicate notifications
+- **Standardized durations**: Error (5000ms), warning (3000ms), success/info (2000ms)
+- **Network vs server errors**: Centralized failure handling with appropriate toast routing
+- **Multi-select stability**: Fixed "Select/Hide Select" text; ensured menus render under WRITE permissions
+
+### Infrastructure
+
+- **Category filter stability**: Preserved across polls with intelligent bucketing
+- **Test reliability**: Stable axios mocks, visibility state handling, deterministic prefetch behavior
+- **Navigation focus**: Immediate sync fetch on tab regain via `useNavigationFocus` hook
+
+## Remaining Tasks
+
+1. **Mobile Safari optimization**
+   - Verify visibility/idle guards on iOS
+   - Audit expensive operations (maps/sorts) on hot paths
+   - Consider dynamic imports for heavy components
+
+2. **Monitoring & budgets**
+   - Add performance timings for poll/merge/apply phases
+   - Lighthouse audits and bundle analysis
+
+3. **API optimizations** (service-side)
+   - Field configuration bundle endpoint with stable ordering
+   - ETag/Cache-Control headers; compression verification
+
+## Success Metrics
+
+- ✅ No form flicker on first open
+- ✅ Polling doesn't cause UI shifts when data unchanged
+- ✅ List interactions feel instant under ongoing polling
+- ✅ Handler stability prevents unnecessary ListItem re-renders
+- ✅ Component isolation enables independent section re-rendering

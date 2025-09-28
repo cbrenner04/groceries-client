@@ -1,6 +1,6 @@
 import React, { useEffect, useState, type ChangeEventHandler, type FormEventHandler } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import update from 'immutability-helper';
 import { type AxiosError } from 'axios';
 
@@ -110,7 +110,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
     try {
       if (!props.listItemConfiguration?.id) {
-        toast('No field configuration available for this list. Please contact support.', { type: 'error' });
+        showToast.error('No field configuration available for this list. Please contact support.');
         setPending(false);
         return;
       }
@@ -177,24 +177,24 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
           props.navigate('/users/sign_in');
         } else if ([403, 404].includes(error.response.status!)) {
-          toast('List not found', { type: 'error' });
+          showToast.error('List not found');
           props.navigate('/lists');
         } else if (error.response.status === 422) {
           const responseTextKeys = Object.keys(error.response.data!);
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          toast(responseErrors.join(' and '), { type: 'error' });
+          showToast.error(responseErrors.join(' and '));
         } else {
-          toast('Something went wrong. Data may be incomplete and user actions may not persist.', { type: 'error' });
+          showToast.error('Something went wrong. Data may be incomplete and user actions may not persist.');
         }
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
       setPending(false);
     }

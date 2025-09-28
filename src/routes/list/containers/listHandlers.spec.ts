@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 import { type IListItemField, type IListItem, EListItemFieldType } from 'typings';
 import {
@@ -27,7 +26,9 @@ jest.mock('../../../utils/api', () => ({
 }));
 jest.mock('../../../utils/handleFailure');
 
-const mockToast = toast as jest.MockedFunction<typeof toast>;
+// Mock the toast utilities
+
+const mockToastUtil = jest.requireMock('../../../utils/toast').showToast;
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
@@ -372,7 +373,7 @@ describe('handleItemDelete', () => {
     });
     expect(setNotCompleted).toHaveBeenCalled();
     expect(setSelected).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item deleted successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item successfully deleted.');
   });
 
   it('deletes completed item', async () => {
@@ -396,7 +397,7 @@ describe('handleItemDelete', () => {
     });
     expect(setCompleted).toHaveBeenCalled();
     expect(setSelected).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item deleted successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item successfully deleted.');
   });
 
   it('handles error', async () => {
@@ -447,7 +448,7 @@ describe('handleItemDelete', () => {
     });
     expect(setNotCompleted).toHaveBeenCalled();
     expect(setSelected).toHaveBeenCalled();
-    expect(mockToast).not.toHaveBeenCalled();
+    expect(mockToastUtil.info).not.toHaveBeenCalled();
   });
 });
 
@@ -498,7 +499,7 @@ describe('handleItemRefresh', () => {
 
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item refreshed successfully.');
   });
 
   it('handles item with no fields', async () => {
@@ -540,7 +541,7 @@ describe('handleItemRefresh', () => {
 
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item refreshed successfully.');
   });
 
   it('skips fields with empty data', async () => {
@@ -586,7 +587,7 @@ describe('handleItemRefresh', () => {
 
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item refreshed successfully.');
   });
 
   it('preserves original fields when server returns incomplete item data', async () => {
@@ -629,7 +630,7 @@ describe('handleItemRefresh', () => {
       }),
     ]);
 
-    expect(mockToast).toHaveBeenCalledWith('Item refreshed successfully.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item refreshed successfully.');
   });
 
   it('handles error', async () => {
@@ -700,7 +701,7 @@ describe('handleToggleRead', () => {
     expect(setSelectedItems).toHaveBeenCalledWith([]);
     expect(setIncompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(mockToast).toHaveBeenCalledWith('Item successfully updated.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item successfully updated.');
   });
 
   it('toggles read status for multiple items with existing read fields', async () => {
@@ -766,7 +767,7 @@ describe('handleToggleRead', () => {
     expect(setSelectedItems).toHaveBeenCalledWith([]);
     expect(setIncompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(mockToast).toHaveBeenCalledWith('Items successfully updated.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Items successfully updated.');
   });
 
   it('creates read field when it does not exist', async () => {
@@ -813,7 +814,7 @@ describe('handleToggleRead', () => {
       },
     });
     expect(setCompletedItems).toHaveBeenCalled();
-    expect(mockToast).toHaveBeenCalledWith('Item successfully updated.', { type: 'info' });
+    expect(mockToastUtil.info).toHaveBeenCalledWith('Item successfully updated.');
   });
 
   it('updates both completed and not completed items correctly', async () => {

@@ -1,15 +1,20 @@
-import { toast } from 'react-toastify';
+import { showToast } from './toast';
 import type { AxiosError } from 'axios';
 import { handleFailure } from './handleFailure';
 
-// Mock react-toastify
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
+// Mock toast utility
+jest.mock('./toast', () => ({
+  showToast: {
+    info: jest.fn(),
+    error: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+  },
 }));
 
 describe('handleFailure', () => {
   const mockNavigate = jest.fn();
-  const mockToast = toast as jest.MockedFunction<typeof toast>;
+  const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -29,7 +34,7 @@ describe('handleFailure', () => {
         navigate: mockNavigate,
       });
 
-      expect(mockToast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -45,7 +50,7 @@ describe('handleFailure', () => {
         notFoundMessage: 'Not found',
       });
 
-      expect(mockToast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
@@ -64,7 +69,7 @@ describe('handleFailure', () => {
         navigate: mockNavigate,
       });
 
-      expect(mockToast).toHaveBeenCalledWith('Resource not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Resource not found');
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -82,7 +87,7 @@ describe('handleFailure', () => {
         redirectURI: '/home',
       });
 
-      expect(mockToast).toHaveBeenCalledWith('Page not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Page not found');
       expect(mockNavigate).toHaveBeenCalledWith('/home');
     });
 
@@ -98,7 +103,7 @@ describe('handleFailure', () => {
         notFoundMessage: 'Resource not found',
       });
 
-      expect(mockToast).toHaveBeenCalledWith('Resource not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Resource not found');
       expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
@@ -117,9 +122,8 @@ describe('handleFailure', () => {
         navigate: mockNavigate,
       });
 
-      expect(mockToast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
@@ -138,9 +142,8 @@ describe('handleFailure', () => {
         redirectURI: '/error',
       });
 
-      expect(mockToast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
       expect(mockNavigate).toHaveBeenCalledWith('/error');
     });
@@ -157,9 +160,8 @@ describe('handleFailure', () => {
         notFoundMessage: 'Not found',
       });
 
-      expect(mockToast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
       expect(mockNavigate).not.toHaveBeenCalled();
     });
@@ -177,7 +179,7 @@ describe('handleFailure', () => {
         navigate: mockNavigate,
       });
 
-      expect(mockToast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
       expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
@@ -194,7 +196,7 @@ describe('handleFailure', () => {
         });
       }).toThrow('Test error');
 
-      expect(mockToast).not.toHaveBeenCalled();
+      expect(mockShowToast.error).not.toHaveBeenCalled();
     });
 
     it('should show default error message when rethrow is false', () => {
@@ -206,9 +208,8 @@ describe('handleFailure', () => {
         rethrow: false,
       });
 
-      expect(mockToast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -220,9 +221,8 @@ describe('handleFailure', () => {
         notFoundMessage: 'Not found',
       });
 
-      expect(mockToast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });

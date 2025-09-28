@@ -1,7 +1,8 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+
+import { showToast } from '../../utils/toast';
 
 import { EmailField } from 'components/FormFields';
 import axios from 'utils/api';
@@ -21,9 +22,7 @@ const NewPassword: React.FC = (): React.JSX.Element => {
     } catch {
       // noop
     } finally {
-      toast(`If ${email} is in our system, you will receive an email shortly with reset instructions.`, {
-        type: 'info',
-      });
+      showToast.info(`If ${email} is in our system, you will receive an email shortly with reset instructions.`);
       navigate('/users/sign_in');
     }
   };

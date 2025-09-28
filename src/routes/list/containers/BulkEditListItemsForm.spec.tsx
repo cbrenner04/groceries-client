@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { userEvent as user, type UserEvent } from '@testing-library/user-event';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -19,10 +19,9 @@ import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkE
 
 // Mock dependencies
 jest.mock('utils/api');
-jest.mock('react-toastify');
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockToast = toast as jest.MockedFunction<typeof toast>;
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 describe('BulkEditListItemsForm', () => {
   const mockNavigate = jest.fn();
@@ -203,7 +202,7 @@ describe('BulkEditListItemsForm', () => {
       });
     });
 
-    expect(mockToast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
     expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
   });
 
@@ -299,7 +298,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
   });
@@ -315,7 +314,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Some items not found');
       expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
@@ -331,7 +330,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('Some items not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Some items not found');
       expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
@@ -350,7 +349,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('name cannot be blank and quantity must be a number', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('name cannot be blank and quantity must be a number');
     });
   });
 
@@ -365,7 +364,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
   });
 
@@ -380,7 +379,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith('Unexpected error', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Unexpected error');
     });
   });
 

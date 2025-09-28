@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import axios from 'utils/api';
 import EditInvite from './EditInvite';
 import { MemoryRouter } from 'react-router';
+
+import { showToast } from '../../utils/toast';
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -36,7 +37,7 @@ describe('EditInvite', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Password successfully updated', { type: 'info' });
+    expect(showToast.info).toHaveBeenCalledWith('Password successfully updated');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -49,7 +50,7 @@ describe('EditInvite', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors on failed request', async () => {
@@ -61,7 +62,7 @@ describe('EditInvite', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors on unknown error', async () => {
@@ -73,6 +74,6 @@ describe('EditInvite', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { showToast as toastUtil } from '../../../utils/toast';
 import type { AxiosError } from 'axios';
 import axios from '../../../utils/api';
 import update from 'immutability-helper';
@@ -72,7 +72,7 @@ export function handleAddItem(params: {
         setDisplayedCategories(newCategories);
       }
     }
-    toast('Item successfully added.', { type: 'info' });
+    toastUtil.info('Item successfully added.');
   } catch (err) {
     handleFailure({ error: err as AxiosError, notFoundMessage: 'Failed to add item', navigate, redirectURI: '/lists' });
   } finally {
@@ -165,7 +165,7 @@ export async function handleItemDelete(params: {
       }
       setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.id !== item.id));
       if (showToast) {
-        toast('Item deleted successfully.', { type: 'info' });
+        toastUtil.info('Item successfully deleted.');
       }
     }
   } catch (err) {
@@ -260,7 +260,7 @@ export async function handleItemRefresh(params: {
       // Add the complete new item to not completed items
       setNotCompletedItems(update(notCompletedItems, { $push: [finalNewItem] }));
 
-      toast('Item refreshed successfully.', { type: 'info' });
+      toastUtil.info('Item refreshed successfully.');
     }
 
     return finalNewItem;
@@ -379,7 +379,7 @@ export async function handleToggleRead(params: {
     setCompleteMultiSelect(false);
 
     const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-    toast(`${pluralize(items)} successfully updated.`, { type: 'info' });
+    toastUtil.info(`${pluralize(items)} successfully updated.`);
   } catch (error) {
     handleFailure({
       error: error as AxiosError,

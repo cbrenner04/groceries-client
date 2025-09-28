@@ -1,17 +1,16 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import { EListType } from 'typings';
 
 import PendingLists, { type IPendingListsProps } from './PendingLists';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -124,7 +123,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List successfully accepted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully accepted.');
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
       props.incompleteLists[0],
       props.incompleteLists[1],
@@ -145,7 +144,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(2));
 
-    expect(toast).toHaveBeenCalledWith('List successfully accepted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Lists successfully accepted.');
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
       props.incompleteLists[0],
       props.incompleteLists[1],
@@ -165,7 +164,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -176,7 +175,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors on 404 from list accept', async () => {
@@ -186,7 +185,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when error not 401, 403, 404 from list accept', async () => {
@@ -196,7 +195,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when request fails from list accept', async () => {
@@ -206,7 +205,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when known failure from list accept', async () => {
@@ -216,7 +215,7 @@ describe('PendingLists', () => {
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('does not reject list when confirm modal is cleared', async () => {
@@ -229,7 +228,8 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('clear-reject'));
     await waitFor(() => expect(queryByTestId('clear-reject')).toBeNull());
 
-    expect(toast).not.toHaveBeenCalled();
+    expect(mockShowToast.info).not.toHaveBeenCalled();
+    expect(mockShowToast.error).not.toHaveBeenCalled();
     expect(axios.patch).not.toHaveBeenCalled();
   });
 
@@ -243,7 +243,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(queryByTestId('confirm-reject')).toBeNull());
 
-    expect(toast).toHaveBeenCalledWith('List successfully rejected.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully rejected.');
     expect(axios.patch).toHaveBeenCalledTimes(1);
     expect(props.setPendingLists).toHaveBeenCalledWith([props.pendingLists[1]]);
   });
@@ -264,7 +264,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(queryByTestId('confirm-reject')).toBeNull());
 
-    expect(toast).toHaveBeenCalledWith('Lists successfully rejected.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Lists successfully rejected.');
     expect(axios.patch).toHaveBeenCalledTimes(2);
     expect(props.setPendingLists).toHaveBeenCalledWith([]);
   });
@@ -279,7 +279,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -293,7 +293,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when reject fails with 404', async () => {
@@ -306,7 +306,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when reject fails with error other than 401, 403, 404', async () => {
@@ -319,7 +319,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when reject fails to send request', async () => {
@@ -332,7 +332,7 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when reject unknown error occurs', async () => {
@@ -345,6 +345,6 @@ describe('PendingLists', () => {
     await user.click(await findByTestId('confirm-reject'));
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

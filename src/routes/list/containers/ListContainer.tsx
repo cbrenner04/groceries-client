@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
@@ -106,12 +106,16 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             }
           }
         }
-      } catch (_err) {
-        const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-          type: 'error',
-          autoClose: 5000,
-        });
+      } catch (err) {
+        const error = err as AxiosError;
+        if (error.response) {
+          // Server error
+          showToast.error('Something went wrong. Data may be incomplete and user actions may not persist.');
+        } else {
+          // Network error
+          const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+          showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
+        }
       }
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
@@ -337,11 +341,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         // Show appropriate feedback
         if (successfulItems.length > 0) {
           const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-          toast(
+          showToast.warning(
             `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
               failures,
             )} failed.`,
-            { type: 'warning' },
           );
         } else {
           // All items failed
@@ -353,7 +356,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       } else {
         // All items succeeded
         const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        toast(`${pluralize(itemsToComplete)} marked as completed.`, { type: 'info' });
+        showToast.info(`${pluralize(itemsToComplete)} marked as completed.`);
       }
     },
     [
@@ -467,11 +470,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         // Show appropriate feedback
         if (successfulItems.length > 0) {
           const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-          toast(
+          showToast.warning(
             `Some items failed to refresh. ${pluralize(successfulItems)} refreshed successfully. ${pluralize(
               failures,
             )} failed.`,
-            { type: 'warning' },
           );
         } else {
           // All items failed
@@ -483,7 +485,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       } else {
         // All items succeeded
         const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        toast(`${pluralize(itemsToRefresh)} refreshed successfully.`, { type: 'info' });
+        showToast.info(`${pluralize(itemsToRefresh)} refreshed successfully.`);
       }
     },
     [
@@ -643,15 +645,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       // Show appropriate feedback
       if (successfulItems.length > 0) {
         const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        toast(
+        showToast.warning(
           `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
             failures,
           )} failed.`,
-          { type: 'warning' },
         );
       } else {
         // All items failed
-        toast('Failed to delete items. Please try again.', { type: 'error' });
+        showToast.error('Failed to delete items. Please try again.');
       }
     } else {
       // All items succeeded - ensure categories are consistent after successful deletion
@@ -671,7 +672,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       }
 
       const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
+      showToast.info(`${pluralize(itemsToDeleteFromState)} successfully deleted.`);
     }
   };
 

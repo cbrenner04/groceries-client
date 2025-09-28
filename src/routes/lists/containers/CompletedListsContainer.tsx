@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 
 import TitlePopover from 'components/TitlePopover';
 import { usePolling } from 'hooks';
@@ -42,10 +42,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
         }
       } catch (err: unknown) {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-          type: 'error',
-          autoClose: 5000,
-        });
+        showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),

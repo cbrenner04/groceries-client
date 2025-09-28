@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent from '@testing-library/user-event';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
@@ -12,6 +12,14 @@ import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
 import { bookListTestData } from 'test-utils/factories';
 import { listCache } from 'utils/lightweightCache';
 import { fieldConfigCache } from 'utils/fieldConfigCache';
+
+// Create reference for test expectations
+const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
+
+// Also mock react-toastify for backward compatibility in tests that still reference it
+jest.mock('react-toastify', () => ({
+  toast: jest.fn(),
+}));
 
 // Mock react-router
 const mockLocation = {
@@ -174,10 +182,9 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'You may not be connected to the internet. Please check your connection. ' +
           'Data may be incomplete and user actions may not persist.',
-        { autoClose: 5000, type: 'error' },
       );
 
       jest.useRealTimers();
@@ -185,16 +192,17 @@ describe('ListContainer', () => {
 
     it('shows toast with server error', async () => {
       jest.useFakeTimers();
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+      const serverError = new Error('Server Error') as unknown as AxiosError;
+      serverError.response = { status: 500 } as unknown as AxiosResponse;
+      axios.get = jest.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
 
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
 
       jest.useRealTimers();
@@ -436,7 +444,7 @@ describe('ListContainer', () => {
 
       // Navigation focus errors should be ignored (no toast notification)
       // The component should continue to function normally
-      expect(toast).not.toHaveBeenCalled();
+      expect(mockShowToast.error).not.toHaveBeenCalled();
     });
 
     it('does not sync when pathname stays the same', async () => {
@@ -1222,7 +1230,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -1235,7 +1243,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to delete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete item');
     });
 
     it('handles 404 on delete', async () => {
@@ -1247,7 +1255,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to delete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete item');
     });
 
     it('handles not 401, 403, 404 on delete', async () => {
@@ -1259,9 +1267,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1274,7 +1281,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on delete', async () => {
@@ -1286,9 +1293,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1308,7 +1314,7 @@ describe('ListContainer', () => {
 
       expect(queryByText('not completed quantity bar not completed product')).toBeNull();
       expect(queryByText('Bar')).toBeNull();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes item, hides modal, does not remove category when item is not last of category', async () => {
@@ -1327,7 +1333,7 @@ describe('ListContainer', () => {
 
       expect(queryByText('not completed quantity foo not completed product')).toBeNull();
       expect(await findByText('Foo')).toBeVisible();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes item, hides modal, when item is in completed', async () => {
@@ -1346,7 +1352,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('completed quantity foo completed product')).toBeNull();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes all items when multiple are selected', async () => {
@@ -1401,9 +1407,9 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
 
       // Should show warning toast about partial failure
-      expect(toast).toHaveBeenCalledWith('Some items failed to delete. Item deleted successfully. Item failed.', {
-        type: 'warning',
-      });
+      expect(mockShowToast.warning).toHaveBeenCalledWith(
+        'Some items failed to delete. Item deleted successfully. Item failed.',
+      );
 
       // The successful item should be deleted, failed item should be rolled back
       // checkboxes[2] = id3 (foo not completed product) - should be deleted (success)
@@ -1435,7 +1441,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
 
       // Should show error toast for complete failure
-      expect(toast).toHaveBeenCalledWith('Failed to delete items. Please try again.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete items. Please try again.');
 
       // All items should be rolled back to their original state
       expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
@@ -1563,9 +1569,9 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
       // Should show warning toast about partial failure
-      expect(toast).toHaveBeenCalledWith('Some items failed to complete. Item completed successfully. Item failed.', {
-        type: 'warning',
-      });
+      expect(mockShowToast.warning).toHaveBeenCalledWith(
+        'Some items failed to complete. Item completed successfully. Item failed.',
+      );
 
       // The successful item should remain in completed, failed item should be rolled back to not completed
       expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
@@ -1604,7 +1610,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -1615,7 +1621,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to complete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to complete item');
     });
 
     it('handles 404 on complete', async () => {
@@ -1625,7 +1631,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to complete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to complete item');
     });
 
     it('handles not 401, 403, 404 on complete', async () => {
@@ -1635,9 +1641,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1648,7 +1653,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on complete', async () => {
@@ -1658,9 +1663,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });
@@ -1794,7 +1798,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -1808,7 +1812,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Failed to refresh item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to refresh item');
     });
 
     it('handles 404 on refresh', async () => {
@@ -1821,7 +1825,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Failed to refresh item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to refresh item');
     });
 
     it('handles not 401, 403, 404 on refresh', async () => {
@@ -1834,9 +1838,8 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1850,7 +1853,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on refresh', async () => {
@@ -1863,9 +1866,8 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });
@@ -2028,7 +2030,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -2050,7 +2052,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
     });
 
     it('handles 404 on read', async () => {
@@ -2071,7 +2073,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
     });
 
     it('handles not 401, 403, 404 on read', async () => {
@@ -2092,9 +2094,8 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -2116,7 +2117,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on read', async () => {
@@ -2137,9 +2138,8 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });

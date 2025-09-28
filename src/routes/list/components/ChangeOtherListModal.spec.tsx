@@ -1,13 +1,16 @@
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
+
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EListType } from 'typings';
 import type { IListItem, IListItemField } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
+
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;
@@ -174,7 +177,7 @@ describe('ChangeOtherListModal', () => {
     expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
-    expect(toast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
 
   it('handleSubmit with new list name', async () => {
@@ -198,7 +201,7 @@ describe('ChangeOtherListModal', () => {
     expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
-    expect(toast).toHaveBeenCalledWith('Items successfully updated', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
 
   it('shows error toast when neither existing list nor new list name is provided', async () => {
@@ -206,7 +209,7 @@ describe('ChangeOtherListModal', () => {
 
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('Please select an existing list or enter a new list name', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Please select an existing list or enter a new list name');
     expect(axios.put).not.toHaveBeenCalled();
   });
 
@@ -221,7 +224,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
   });
 
   it('handles 404 error response', async () => {
@@ -235,7 +238,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('One or more items were not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('One or more items were not found');
   });
 
   it('handles 403 error response', async () => {
@@ -249,7 +252,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('You do not have permission to perform this action', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You do not have permission to perform this action');
   });
 
   it('handles generic error response', async () => {
@@ -263,7 +266,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('Failed to update items. Please try again.', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Failed to update items. Please try again.');
   });
 
   it('handles network error', async () => {
@@ -277,7 +280,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
   });
 
   it('handles unexpected error', async () => {
@@ -289,7 +292,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(toast).toHaveBeenCalledWith('An unexpected error occurred. Please try again.', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('An unexpected error occurred. Please try again.');
   });
 
   it('cancel', async () => {

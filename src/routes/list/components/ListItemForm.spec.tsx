@@ -1,12 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'utils/api';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import ListItemForm from './ListItemForm';
 import { fieldConfigCache } from 'utils/fieldConfigCache';
 
 const mockHandleItemAddition = jest.fn();
 const mockNavigate = jest.fn();
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
@@ -126,7 +127,7 @@ describe('ListItemForm', () => {
 
     fireEvent.click(screen.getByText('Add New Item'));
 
-    await waitFor(() => expect(toast).toHaveBeenCalled());
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
   });
 
   it('handles field configuration loading failure', async () => {
@@ -330,9 +331,9 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('No field configuration available for this list. Please contact support.', {
-        type: 'error',
-      });
+      expect(mockShowToast.error).toHaveBeenCalledWith(
+        'No field configuration available for this list. Please contact support.',
+      );
     });
   });
 
@@ -414,7 +415,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
   });
@@ -429,7 +430,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
   });
@@ -444,7 +445,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
   });
 
@@ -458,7 +459,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('Generic error', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Generic error');
     });
   });
 
@@ -530,7 +531,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('name cannot be blank and quantity must be positive', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('name cannot be blank and quantity must be positive');
     });
   });
 
@@ -548,7 +549,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
   });
 
@@ -565,7 +566,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith('Generic error message', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Generic error message');
     });
   });
 

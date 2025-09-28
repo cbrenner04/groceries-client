@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import update from 'immutability-helper';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
@@ -72,10 +72,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         }
       } catch (err: unknown) {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-        toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-          type: 'error',
-          autoClose: 5000,
-        });
+        showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
@@ -132,7 +129,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       const updatedIncompleteLists = update(incompleteLists, { $push: [data] });
       setIncompleteLists(sortLists(updatedIncompleteLists));
       setPending(false);
-      toast('List successfully added.', { type: 'info' });
+      showToast.info('List successfully added.');
     } catch (error) {
       failure(error, navigate, setPending);
     }

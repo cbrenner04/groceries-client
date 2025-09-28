@@ -1,7 +1,8 @@
 import React, { useState, type ChangeEventHandler, type Dispatch, type FormEvent, type SetStateAction } from 'react';
 import { Button, ButtonGroup, Form, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
+
+import { showToast } from '../../../utils/toast';
 
 import { SelectField, TextField } from 'components/FormFields';
 import type { IList, IListItem } from 'typings';
@@ -44,7 +45,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
 
     // Validate that either an existing list is selected or a new list name is provided
     if (!existingList && !newListName) {
-      toast('Please select an existing list or enter a new list name', { type: 'error' });
+      showToast.error('Please select an existing list or enter a new list name');
       return;
     }
 
@@ -66,23 +67,23 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
       props.setCompleteMultiSelect(false);
       props.setIncompleteMultiSelect(false);
       props.handleMove();
-      toast('Items successfully updated', { type: 'info' });
+      showToast.info('Items successfully updated');
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
       if (axiosError.response) {
         if (axiosError.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
         } else if (axiosError.response.status === 404) {
-          toast('One or more items were not found', { type: 'error' });
+          showToast.error('One or more items were not found');
         } else if (axiosError.response.status === 403) {
-          toast('You do not have permission to perform this action', { type: 'error' });
+          showToast.error('You do not have permission to perform this action');
         } else {
-          toast('Failed to update items. Please try again.', { type: 'error' });
+          showToast.error('Failed to update items. Please try again.');
         }
       } else if (axiosError.request) {
-        toast('Network error. Please check your connection.', { type: 'error' });
+        showToast.error('Network error. Please check your connection.');
       } else {
-        toast('An unexpected error occurred. Please try again.', { type: 'error' });
+        showToast.error('An unexpected error occurred. Please try again.');
       }
     }
   };

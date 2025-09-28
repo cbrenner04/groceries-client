@@ -1,12 +1,13 @@
 import React from 'react';
 import { act, render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
@@ -196,13 +197,9 @@ describe('ShareListForm', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith(
+    expect(mockShowToast.error).toHaveBeenCalledWith(
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
-      {
-        type: 'error',
-        autoClose: 5000,
-      },
     );
     jest.useRealTimers();
   });
@@ -223,9 +220,9 @@ describe('ShareListForm', () => {
 
     expect(await findByTestId('pending-user-id6')).toHaveTextContent('foobaz@example.com');
     expect(await findByTestId('pending-user-id6')).toHaveTextContent('write');
-    expect(toast).toHaveBeenCalledWith(`"${props.name}" has been successfully shared with foobaz@example.com.`, {
-      type: 'info',
-    });
+    expect(mockShowToast.info).toHaveBeenCalledWith(
+      `"${props.name}" has been successfully shared with foobaz@example.com.`,
+    );
   });
 
   it('redirects to login on 401 response from form submission', async () => {
@@ -240,7 +237,7 @@ describe('ShareListForm', () => {
     await user.click(await findByText('Share List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -256,7 +253,7 @@ describe('ShareListForm', () => {
     await user.click(await findByText('Share List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('displays error on failed request from form submit', async () => {
@@ -271,7 +268,7 @@ describe('ShareListForm', () => {
     await user.click(await findByText('Share List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('displays error on unknown error from form submit', async () => {
@@ -286,7 +283,7 @@ describe('ShareListForm', () => {
     await user.click(await findByText('Share List'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('adds user to list when selected', async () => {
@@ -300,9 +297,9 @@ describe('ShareListForm', () => {
 
     expect(await findByTestId('pending-user-id1')).toHaveTextContent('foo@example.com');
     expect(await findByTestId('pending-user-id1')).toHaveTextContent('write');
-    expect(toast).toHaveBeenCalledWith(`"${props.name}" has been successfully shared with foo@example.com.`, {
-      type: 'info',
-    });
+    expect(mockShowToast.info).toHaveBeenCalledWith(
+      `"${props.name}" has been successfully shared with foo@example.com.`,
+    );
   });
 
   it('redirects to login on 401 response from selecting user', async () => {
@@ -313,7 +310,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -325,7 +322,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You do not have permission to take that action');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -337,7 +334,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('User not found');
   });
 
   it('shows errors on error outside 401, 403, and 404 response from selecting user', async () => {
@@ -348,7 +345,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo');
   });
 
   it('displays error on failed request from selecting user', async () => {
@@ -359,7 +356,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('displays error on unknown error from selecting user', async () => {
@@ -370,7 +367,7 @@ describe('ShareListForm', () => {
     await user.click((await findByTestId('invite-user-id1')).children[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   describe('toggles permissions', () => {
@@ -408,7 +405,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -420,7 +417,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You do not have permission to take that action');
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -432,7 +429,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('User not found');
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
@@ -443,7 +440,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
     });
 
     it('displays error on failed request from toggling permissions', async () => {
@@ -454,7 +451,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
@@ -465,7 +462,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('toggle-permissions'))[1]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
     });
   });
 
@@ -491,7 +488,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -503,7 +500,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You do not have permission to take that action');
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -515,7 +512,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('User not found');
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
@@ -526,7 +523,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
     });
 
     it('displays error on failed request from toggling permissions', async () => {
@@ -537,7 +534,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
@@ -548,7 +545,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('refresh-share'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
     });
   });
 
@@ -608,7 +605,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -620,7 +617,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You do not have permission to take that action', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You do not have permission to take that action');
       expect(mockNavigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -632,7 +629,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('User not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('User not found');
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
@@ -643,7 +640,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
     });
 
     it('displays error on failed request from toggling permissions', async () => {
@@ -654,7 +651,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
@@ -665,7 +662,7 @@ describe('ShareListForm', () => {
       await user.click((await findAllByTestId('remove-share'))[0]);
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
     });
   });
 });

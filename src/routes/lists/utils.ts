@@ -1,5 +1,6 @@
-import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import type { EListType, IList, TUserPermissions } from 'typings';
@@ -11,7 +12,7 @@ function handleFailure(error: unknown, navigate: (url: string) => void): void {
   const err = error as AxiosError;
   // any other status code is super unlikely for these routes and will just be caught and render generic UnknownError
   if (err.response?.status === 401) {
-    toast('You must sign in', { type: 'error' });
+    showToast.error('You must sign in');
     navigate('/users/sign_in');
   } else {
     throw new Error(JSON.stringify(err));
@@ -84,10 +85,10 @@ export async function fetchListToEdit(fetchParams: {
     const err = error as AxiosError;
     if (err.response) {
       if (err.response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        showToast.error('You must sign in');
         fetchParams.navigate('/users/sign_in');
       } else if ([403, 404].includes(err.response.status)) {
-        toast('List not found', { type: 'error' });
+        showToast.error('List not found');
         fetchParams.navigate('/lists');
       } else {
         // any other errors will just be caught and render the generic UnknownError
@@ -104,22 +105,22 @@ export function failure(error: unknown, navigate: (url: string) => void, setPend
   const err = error as AxiosError;
   if (err.response) {
     if (err.response.status === 401) {
-      toast('You must sign in', { type: 'error' });
+      showToast.error('You must sign in');
       navigate('/users/sign_in');
     } else if ([403, 404].includes(err.response.status)) {
-      toast('List not found', { type: 'error' });
+      showToast.error('List not found');
     } else {
       setPending(false);
       const responseTextKeys = Object.keys(err.response.data!);
       const responseErrors = responseTextKeys.map(
         (key) => `${key} ${(err.response?.data as Record<string, string>)[key]}`,
       );
-      toast(responseErrors.join(' and '), { type: 'error' });
+      showToast.error(responseErrors.join(' and '));
     }
   } else {
     setPending(false);
     const toastMessage = err.request ? 'Something went wrong' : err.message;
-    toast(toastMessage, { type: 'error' });
+    showToast.error(toastMessage);
   }
 }
 
