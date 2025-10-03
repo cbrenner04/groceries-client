@@ -44,7 +44,13 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
     }
   };
 
-  return <React.Fragment>{props.fieldConfigurations.map((config) => renderField(config))}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {props.fieldConfigurations
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+        .map((config) => renderField(config))}
+    </React.Fragment>
+  );
 };
 
 export default ListItemFormFields;

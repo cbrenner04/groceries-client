@@ -46,6 +46,12 @@ This document tracks performance improvements to eliminate UI flicker, optimize 
 - **Test reliability**: Stable axios mocks, visibility state handling, deterministic prefetch behavior
 - **Navigation focus**: Immediate sync fetch on tab regain via `useNavigationFocus` hook
 
+### API Optimizations (Service-Side)
+
+- **Field configuration bundle endpoint**: Single optimized endpoint (`/bundle`) with stable ordering replaces multiple individual requests; reduces network overhead
+- **ETag/Cache-Control headers**: Conditional requests with ETags based on configuration ID and timestamps; 10-minute cache TTL with `304 Not Modified` responses
+- **Compression middleware**: Rack::Deflater enables gzip/deflate compression for all API responses; includes verification script
+
 ## Remaining Tasks
 
 1. **Mobile Safari optimization**
@@ -56,10 +62,6 @@ This document tracks performance improvements to eliminate UI flicker, optimize 
 2. **Monitoring & budgets**
    - Add performance timings for poll/merge/apply phases
    - Lighthouse audits and bundle analysis
-
-3. **API optimizations** (service-side)
-   - Field configuration bundle endpoint with stable ordering
-   - ETag/Cache-Control headers; compression verification
 
 ## Success Metrics
 

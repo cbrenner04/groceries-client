@@ -43,7 +43,7 @@ describe('FieldConfigurationCache', () => {
       const result = await fieldConfigCache.get('config-123');
 
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        '/list_item_configurations/config-123/list_item_field_configurations',
+        '/list_item_configurations/config-123/list_item_field_configurations/bundle',
         { signal: undefined },
       );
       expect(result).toEqual(mockFieldConfigs);
@@ -63,20 +63,21 @@ describe('FieldConfigurationCache', () => {
       expect(result).toEqual(mockFieldConfigs);
     });
 
-    it('sorts field configurations by position', async () => {
-      const unsortedConfigs = [
-        { id: '2', label: 'notes', data_type: EListItemFieldType.FREE_TEXT, position: 3 },
+    it('receives field configurations already sorted by position from bundle endpoint', async () => {
+      const sortedConfigs = [
         { id: '1', label: 'category', data_type: 'string', position: 1 },
         { id: '3', label: 'quantity', data_type: 'number', position: 2 },
+        { id: '2', label: 'notes', data_type: EListItemFieldType.FREE_TEXT, position: 3 },
       ];
 
-      mockedAxios.get.mockResolvedValueOnce({ data: unsortedConfigs });
+      mockedAxios.get.mockResolvedValueOnce({ data: sortedConfigs });
 
       const result = await fieldConfigCache.get('config-123');
 
       expect(result[0].position).toBe(1);
       expect(result[1].position).toBe(2);
       expect(result[2].position).toBe(3);
+      expect(result).toEqual(sortedConfigs); // Data should be returned as-is from bundle endpoint
     });
 
     it('deduplicates concurrent requests for same config ID', async () => {
@@ -114,7 +115,7 @@ describe('FieldConfigurationCache', () => {
       await fieldConfigCache.get('config-123', { signal: abortController.signal });
 
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        '/list_item_configurations/config-123/list_item_field_configurations',
+        '/list_item_configurations/config-123/list_item_field_configurations/bundle',
         { signal: abortController.signal },
       );
     });
@@ -154,7 +155,7 @@ describe('FieldConfigurationCache', () => {
       await fieldConfigCache.prefetch('config-123');
 
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        '/list_item_configurations/config-123/list_item_field_configurations',
+        '/list_item_configurations/config-123/list_item_field_configurations/bundle',
         { signal: undefined },
       );
       expect(fieldConfigCache.getStats().size).toBe(1);
@@ -203,7 +204,7 @@ describe('FieldConfigurationCache', () => {
       await fieldConfigCache.prefetch('config-123', abortController.signal);
 
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        '/list_item_configurations/config-123/list_item_field_configurations',
+        '/list_item_configurations/config-123/list_item_field_configurations/bundle',
         { signal: abortController.signal },
       );
     });

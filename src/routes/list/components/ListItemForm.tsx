@@ -224,57 +224,59 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       return <p>This list doesn&apos;t have a field configuration set up. Please contact support to fix this issue.</p>;
     }
 
-    return fieldConfigurations.map((config: IFieldConfiguration) => {
-      const fieldName = config.label;
-      const fieldValue = (formData[fieldName] as string) || '';
+    return fieldConfigurations
+      .sort((a, b) => a.position - b.position)
+      .map((config: IFieldConfiguration) => {
+        const fieldName = config.label;
+        const fieldValue = (formData[fieldName] as string) || '';
 
-      switch (config.data_type) {
-        case 'boolean':
-          return (
-            <CheckboxField
-              key={config.id}
-              name={fieldName}
-              label={capitalize(config.label)}
-              value={(formData[fieldName] as boolean) || false}
-              handleChange={setData}
-            />
-          );
-        case 'date_time':
-          return (
-            <DateField
-              key={config.id}
-              name={fieldName}
-              label={capitalize(config.label)}
-              value={fieldValue}
-              handleChange={setData}
-            />
-          );
-        case 'number': {
-          const numberValue = formData[fieldName];
-          const safeNumberValue = numberValue ? Number(numberValue) : undefined;
-          return (
-            <NumberField
-              key={config.id}
-              name={fieldName}
-              label={capitalize(config.label)}
-              value={safeNumberValue}
-              handleChange={setData}
-            />
-          );
+        switch (config.data_type) {
+          case 'boolean':
+            return (
+              <CheckboxField
+                key={config.id}
+                name={fieldName}
+                label={capitalize(config.label)}
+                value={(formData[fieldName] as boolean) || false}
+                handleChange={setData}
+              />
+            );
+          case 'date_time':
+            return (
+              <DateField
+                key={config.id}
+                name={fieldName}
+                label={capitalize(config.label)}
+                value={fieldValue}
+                handleChange={setData}
+              />
+            );
+          case 'number': {
+            const numberValue = formData[fieldName];
+            const safeNumberValue = numberValue ? Number(numberValue) : undefined;
+            return (
+              <NumberField
+                key={config.id}
+                name={fieldName}
+                label={capitalize(config.label)}
+                value={safeNumberValue}
+                handleChange={setData}
+              />
+            );
+          }
+          case 'free_text':
+          default:
+            return (
+              <TextField
+                key={config.id}
+                name={fieldName}
+                label={capitalize(config.label)}
+                value={fieldValue}
+                handleChange={setData}
+              />
+            );
         }
-        case 'free_text':
-        default:
-          return (
-            <TextField
-              key={config.id}
-              name={fieldName}
-              label={capitalize(config.label)}
-              value={fieldValue}
-              handleChange={setData}
-            />
-          );
-      }
-    });
+      });
   };
 
   return (

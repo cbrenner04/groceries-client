@@ -354,8 +354,8 @@ describe('ListItemFormFields', () => {
       });
 
       const fields = screen.getAllByRole('textbox');
-      expect(fields[0]).toHaveValue('Second Field');
-      expect(fields[1]).toHaveValue('First Field');
+      expect(fields[0]).toHaveValue('First Field');
+      expect(fields[1]).toHaveValue('Second Field');
     });
   });
 

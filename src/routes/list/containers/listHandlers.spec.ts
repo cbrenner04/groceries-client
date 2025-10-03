@@ -804,7 +804,7 @@ describe('handleToggleRead', () => {
 
     expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1');
     expect(mockAxios.get).toHaveBeenCalledWith(
-      '/list_item_configurations/list-config-1/list_item_field_configurations',
+      '/list_item_configurations/list-config-1/list_item_field_configurations/bundle',
       { signal: undefined },
     );
     expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields', {

@@ -144,12 +144,12 @@ class FieldConfigurationCache {
   }
 
   private async fetchFromAPI(configId: string, signal?: AbortSignal): Promise<IListItemFieldConfiguration[]> {
-    const { data } = await axios.get(`/list_item_configurations/${configId}/list_item_field_configurations`, {
+    const { data } = await axios.get(`/list_item_configurations/${configId}/list_item_field_configurations/bundle`, {
       signal,
     });
 
-    // Sort by position to ensure consistent ordering
-    return data.sort((a: IListItemFieldConfiguration, b: IListItemFieldConfiguration) => a.position! - b.position!);
+    // Data is already sorted by position from the bundle endpoint
+    return data;
   }
 
   private setCacheEntry(configId: string, data: IListItemFieldConfiguration[]): void {
