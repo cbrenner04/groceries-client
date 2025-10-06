@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler } from 'react';
+import React, { useMemo, type ChangeEventHandler } from 'react';
 
 import type { EListItemFieldType, IListItemField } from 'typings';
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
@@ -17,6 +17,11 @@ export interface IListItemFormFieldsProps {
 }
 
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element => {
+  // Pre-sort field configurations to avoid repeated sorting on each render
+  const sortedFieldConfigurations = useMemo(() => {
+    return [...props.fieldConfigurations].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  }, [props.fieldConfigurations]);
+
   // Helper to find the value for a given config
   const getFieldValue = (configLabel: string): IListItemField | undefined => {
     return props.fields.find((field) => field.label === configLabel);
@@ -44,13 +49,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
     }
   };
 
-  return (
-    <React.Fragment>
-      {props.fieldConfigurations
-        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-        .map((config) => renderField(config))}
-    </React.Fragment>
-  );
+  return <React.Fragment>{sortedFieldConfigurations.map((config) => renderField(config))}</React.Fragment>;
 };
 
 export default ListItemFormFields;

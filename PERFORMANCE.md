@@ -52,16 +52,32 @@ This document tracks performance improvements to eliminate UI flicker, optimize 
 - **ETag/Cache-Control headers**: Conditional requests with ETags based on configuration ID and timestamps; 10-minute cache TTL with `304 Not Modified` responses
 - **Compression middleware**: Rack::Deflater enables gzip/deflate compression for all API responses; includes verification script
 
+### Mobile Safari Performance Optimizations
+
+- **Field sorting optimization**: Pre-sort field configurations with `useMemo` in `ListItemForm` and `ListItemFormFields` to avoid repeated sorting on each render
+- **List item sorting optimization**: Memoized `sortItemsByCreatedAt` with intelligent caching based on item IDs and creation timestamps; includes cache size limits to prevent memory leaks
+
+### Dynamic Imports & Code Splitting
+
+- **Route-level splitting**: Lazy-loaded `BulkEditListItems`, `EditList`, `ShareList` (administrative/infrequent features) with intelligent preloading during idle time
+- **Component-level splitting**: Heavy form components (`BulkEditListItemsForm`, `EditListForm`) wrapped with lazy loading and Suspense fallbacks
+- **Modal components**: `ChangeOtherListModal`, `MergeModal` and other complex modals dynamically imported to reduce initial bundle size
+- **Preloading strategy**: Components preloaded during idle time using `requestIdleCallback` for better perceived performance
+
+### iOS Safari Specific Enhancements
+
+- **Enhanced visibility detection**: Aggressive tab freezing with immediate cleanup when tab becomes hidden; polling suspended during background state
+- **Memory pressure handling**: Automatic memory cleanup on high usage (>80% threshold); garbage collection hints and component state clearing
+- **Touch performance optimization**: Passive event listeners for touch events to improve scroll performance and reduce main thread blocking
+- **Network retry logic**: Exponential backoff retry mechanism for poor mobile connections with configurable retry limits and delays
+- **Performance monitoring**: Real-time tracking of poll/merge/apply phases with detailed timing metrics and console logging
+
 ## Remaining Tasks
 
-1. **Mobile Safari optimization**
-   - Verify visibility/idle guards on iOS
-   - Audit expensive operations (maps/sorts) on hot paths
-   - Consider dynamic imports for heavy components
-
-2. **Monitoring & budgets**
-   - Add performance timings for poll/merge/apply phases
+1. **Monitoring & budgets**
    - Lighthouse audits and bundle analysis
+   - Performance budget enforcement
+   - Real-world performance metrics collection
 
 ## Success Metrics
 

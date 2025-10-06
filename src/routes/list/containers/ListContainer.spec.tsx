@@ -12,6 +12,7 @@ import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
 import { bookListTestData } from 'test-utils/factories';
 import { listCache } from 'utils/lightweightCache';
 import { fieldConfigCache } from 'utils/fieldConfigCache';
+import { sortingCache } from './listHandlers';
 
 // Create reference for test expectations
 const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
@@ -75,6 +76,9 @@ describe('ListContainer', () => {
     // Clear cache to ensure test isolation
     listCache.clear();
     fieldConfigCache.clear();
+
+    // Clear sorting cache to prevent test pollution
+    sortingCache.clear();
 
     // Reset mock location to initial state
     mockLocation.pathname = '/lists/id1';

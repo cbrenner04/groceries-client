@@ -59,7 +59,7 @@ export function setupListContainer(suppliedProps?: Partial<IListContainerProps>)
 
   const component = render(
     <MemoryRouter>
-      <div data-testid="list-container-wrapper">
+      <div data-test-id="list-container-wrapper">
         {/* We'll need to import the actual component here */}
         {/* <ListContainer {...props} /> */}
       </div>
@@ -84,6 +84,24 @@ export async function waitForApiCall(apiMock: jest.Mock, callCount = 1): Promise
   });
 }
 
+// Helper for wrapping async operations in act
+export async function actAsync<T>(asyncFn: () => Promise<T>): Promise<T> {
+  let result: T;
+  await act(async () => {
+    result = await asyncFn();
+  });
+  return result!;
+}
+
+// Helper for wrapping synchronous operations in act
+export function actSync<T>(fn: () => T): T {
+  let result: T;
+  act(() => {
+    result = fn();
+  });
+  return result!;
+}
+
 // Helper for common test assertions
 export const testHelpers = {
   // Check if an element has the correct test class
@@ -106,8 +124,8 @@ export const testHelpers = {
 export const userInteractions = {
   // Click an element and wait for it to be visible
   clickAndWaitForVisible: async (user: UserEvent, element: HTMLElement): Promise<void> => {
-    await user.click(element);
-    await act(async () => {
+    await actAsync(async () => {
+      await user.click(element);
       // Wait for any async operations to complete
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
@@ -115,11 +133,15 @@ export const userInteractions = {
 
   // Type text into an input field
   typeText: async (user: UserEvent, input: HTMLElement, text: string): Promise<void> => {
-    await user.type(input, text);
+    await actAsync(async () => {
+      await user.type(input, text);
+    });
   },
 
   // Select options from a dropdown
   selectOption: async (user: UserEvent, select: HTMLElement, value: string): Promise<void> => {
-    await user.selectOptions(select, [value]);
+    await actAsync(async () => {
+      await user.selectOptions(select, [value]);
+    });
   },
 };

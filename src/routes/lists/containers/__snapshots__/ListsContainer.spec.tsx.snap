@@ -925,6 +925,21 @@ exports[`ListsContainer renders 1`] = `
         </div>
       </div>
     </div>
+    <div
+      id="loader"
+    >
+      <div
+        class="spinner-border"
+        id="spinner"
+        role="status"
+      >
+        <span
+          class="visually-hidden"
+        >
+          Loading...
+        </span>
+      </div>
+    </div>
   </div>
   <div
     class="mb-4"
@@ -1103,6 +1118,21 @@ exports[`ListsContainer renders 1`] = `
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div
+      id="loader"
+    >
+      <div
+        class="spinner-border"
+        id="spinner"
+        role="status"
+      >
+        <span
+          class="visually-hidden"
+        >
+          Loading...
+        </span>
       </div>
     </div>
   </div>

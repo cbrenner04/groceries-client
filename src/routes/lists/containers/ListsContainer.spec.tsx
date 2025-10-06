@@ -354,7 +354,9 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
     expect(await findByTestId('list-id7')).toHaveTextContent('new list');
@@ -367,7 +369,9 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -380,7 +384,9 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
@@ -392,7 +398,9 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
@@ -404,7 +412,9 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });

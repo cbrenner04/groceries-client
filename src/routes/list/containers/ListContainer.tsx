@@ -6,10 +6,12 @@ import { type AxiosError } from 'axios';
 import ConfirmModal from 'components/ConfirmModal';
 import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
 import { usePolling, useNavigationFocus } from 'hooks';
+import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
+import { usePerformanceMonitoring } from 'utils/performanceMonitoring';
 
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
-import ChangeOtherListModal from '../components/ChangeOtherListModal';
+import ChangeOtherListModal from '../components/LazyChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
 import { fetchList } from '../utils';
@@ -48,6 +50,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [completedItems, setCompletedItems] = useState(props.completedItems);
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
+
+  // Mobile Safari optimizations
+  const { isVisible, isLowMemory, cleanup: registerCleanup } = useMobileSafariOptimizations();
+  const { startPoll, endPoll, startMerge, endMerge, startApply, endApply, complete } = usePerformanceMonitoring();
   const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -65,10 +71,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Add polling for real-time updates with request deduplication
   usePolling(
     async () => {
+      // Skip polling if tab is not visible or low memory (Mobile Safari optimization)
+      if (!isVisible || isLowMemory) {
+        return;
+      }
+
+      startPoll();
       try {
         const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
           fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
         );
+
+        endPoll();
+        startMerge();
 
         if (fetchResponse) {
           const {
@@ -85,6 +100,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
           const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
           const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+
+          endMerge();
+          startApply();
 
           // Only update state if data has actually changed
           if (notCompletedResult.hasChanged) {
@@ -105,6 +123,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               setDisplayedCategories([filter]);
             }
           }
+
+          endApply();
+          complete();
         }
       } catch (err) {
         const error = err as AxiosError;
@@ -120,6 +141,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
   );
+
+  // Register cleanup functions for memory management
+  useEffect(() => {
+    const cleanupFn = (): void => {
+      // Clear any pending requests
+      setPending(false);
+      // Clear selected items to free memory
+      setSelectedItems([]);
+      // Clear items to delete
+      setItemsToDelete([]);
+    };
+    registerCleanup(cleanupFn);
+  }, [registerCleanup]);
 
   // Immediate sync on navigation focus
   // This helps to reduce perceived staleness when users navigate between routes

@@ -9,12 +9,16 @@ import Lists from './routes/lists/Lists';
 import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
-import ShareList from './routes/share_list/ShareList';
 import PageNotFound from './routes/error_pages/PageNotFound';
 import List from './routes/list/List';
-import EditList from './routes/list/EditList';
 import EditListItem from './routes/list/EditListItem';
-import BulkEditListItems from './routes/list/BulkEditListItems';
+
+// Lazy load heavy administrative/infrequent components for better Mobile Safari performance
+import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
+
+const ShareList = createLazyComponent(() => import('./routes/share_list/ShareList'));
+const EditList = createLazyComponent(() => import('./routes/list/EditList'));
+const BulkEditListItems = createLazyComponent(() => import('./routes/list/BulkEditListItems'));
 
 interface IUser {
   accessToken: string;
@@ -34,6 +38,13 @@ export default function AppRouter(): React.JSX.Element {
       const { 'access-token': accessToken, client, uid } = storedUser;
       setUser({ accessToken, client, uid });
     }
+  }, []);
+
+  // Preload heavy components during idle time for better perceived performance
+  useEffect(() => {
+    preloadComponent(() => import('./routes/share_list/ShareList'));
+    preloadComponent(() => import('./routes/list/EditList'));
+    preloadComponent(() => import('./routes/list/BulkEditListItems'));
   }, []);
 
   const signInUser = (accessToken: string, client: string, uid: string): void => {

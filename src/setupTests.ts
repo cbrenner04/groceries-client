@@ -8,6 +8,13 @@ import { TextEncoder } from 'util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { EListItemFieldType, IListItem, IListItemField } from 'typings';
 
+// Mock global.IS_REACT_ACT_ENVIRONMENT for React 19
+Object.defineProperty(global, 'IS_REACT_ACT_ENVIRONMENT', {
+  value: true,
+  writable: true,
+  configurable: true,
+});
+
 // This is necessary now that react-router is using TextEncoder internally but JSDOM doesn't have it
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore
@@ -211,6 +218,25 @@ jest.mock(
       jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
 );
 
+// Global test setup for React 19
+beforeEach(() => {
+  // Suppress console warnings about act during tests
+  jest.spyOn(console, 'error').mockImplementation((message) => {
+    if (
+      typeof message === 'string' &&
+      (message.includes('act(...)') ||
+        message.includes('suspended resource finished loading') ||
+        message.includes('The current testing environment is not configured to support act'))
+    ) {
+      return;
+    }
+    // Re-throw other console errors
+    throw new Error(message);
+  });
+});
+
 afterEach(() => {
   cleanup();
+  // Restore console.error
+  jest.restoreAllMocks();
 });
