@@ -155,11 +155,8 @@ class FieldConfigurationCache {
   private setCacheEntry(configId: string, data: IListItemFieldConfiguration[]): void {
     // Clean up if at capacity
     if (this.cache.size >= this.maxSize) {
-      const oldestKey = this.cache.keys().next().value;
-      /* istanbul ignore else */
-      if (oldestKey) {
-        this.cache.delete(oldestKey);
-      }
+      const oldestKey = this.cache.keys().next().value!;
+      this.cache.delete(oldestKey);
     }
 
     this.cache.set(configId, {

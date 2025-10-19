@@ -77,17 +77,14 @@ class LightweightCache<T> {
   /**
    * Set a cache entry
    */
-  private set(key: string, data: T): void {
+  set(key: string, data: T): void {
     const now = Date.now();
     const hash = this.generateHash(data);
 
     // Clean up old entries if we're at capacity
     if (this.cache.size >= this.maxSize) {
-      const oldestKey = this.cache.keys().next().value;
-      /* istanbul ignore else */
-      if (oldestKey) {
-        this.cache.delete(oldestKey);
-      }
+      const oldestKey = this.cache.keys().next().value!;
+      this.cache.delete(oldestKey);
     }
 
     this.cache.set(key, {
@@ -95,6 +92,26 @@ class LightweightCache<T> {
       timestamp: now,
       hash,
     });
+  }
+
+  /**
+   * Retrieve cached data without comparison logic
+   * @param key Cache key
+   * @returns Cached data if exists and not expired, null otherwise
+   */
+  retrieve(key: string): T | null {
+    const now = Date.now();
+    const entry = this.cache.get(key);
+
+    // Return null if no entry or expired
+    if (!entry || now - entry.timestamp > this.maxAge) {
+      if (entry) {
+        this.cache.delete(key);
+      }
+      return null;
+    }
+
+    return entry.data;
   }
 
   /**

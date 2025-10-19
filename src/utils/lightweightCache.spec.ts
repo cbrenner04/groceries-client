@@ -127,6 +127,78 @@ describe('LightweightCache', () => {
     });
   });
 
+  describe('set method', () => {
+    it('sets a value in the cache', () => {
+      const cache = createCache<string>();
+
+      cache.set('key1', 'value1');
+      expect(cache.getStats().size).toBe(1);
+    });
+
+    it('overwrites existing values', () => {
+      const cache = createCache<string>();
+
+      cache.set('key1', 'value1');
+      cache.set('key1', 'value2');
+      expect(cache.getStats().size).toBe(1);
+
+      const retrieved = cache.retrieve('key1');
+      expect(retrieved).toBe('value2');
+    });
+
+    it('respects max size limit', () => {
+      const cache = createCache<string>({ maxSize: 2 });
+
+      cache.set('key1', 'value1');
+      cache.set('key2', 'value2');
+      cache.set('key3', 'value3');
+
+      expect(cache.getStats().size).toBe(2);
+    });
+  });
+
+  describe('retrieve method', () => {
+    it('retrieves cached value', () => {
+      const cache = createCache<string>();
+
+      cache.set('key1', 'value1');
+      const retrieved = cache.retrieve('key1');
+
+      expect(retrieved).toBe('value1');
+    });
+
+    it('returns null for non-existent key', () => {
+      const cache = createCache<string>();
+
+      const retrieved = cache.retrieve('nonexistent');
+      expect(retrieved).toBeNull();
+    });
+
+    it('returns null for expired entry', () => {
+      const cache = createCache<string>({ maxAge: 1000 });
+
+      cache.set('key1', 'value1');
+      expect(cache.retrieve('key1')).toBe('value1');
+
+      // Advance time past expiration
+      (Date.now as jest.Mock).mockReturnValue(2500);
+
+      const retrieved = cache.retrieve('key1');
+      expect(retrieved).toBeNull();
+      expect(cache.getStats().size).toBe(0); // Expired entry should be deleted
+    });
+
+    it('works with complex objects', () => {
+      const cache = createCache<{ id: number; name: string }>();
+      const data = { id: 1, name: 'test' };
+
+      cache.set('key1', data);
+      const retrieved = cache.retrieve('key1');
+
+      expect(retrieved).toEqual(data);
+    });
+  });
+
   describe('clear method', () => {
     it('clears all cached entries', () => {
       const cache = createCache<string>();

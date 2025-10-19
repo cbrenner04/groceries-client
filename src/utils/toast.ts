@@ -60,6 +60,11 @@ const showToastWithDeduplication = (
   // Show toast and track it
   const toastId = toast[type](message, config);
   activeToasts.set(deduplicationKey, { timestamp: now, toastId });
+
+  // Schedule automatic cleanup after deduplication window to prevent memory leaks
+  setTimeout(() => {
+    activeToasts.delete(deduplicationKey);
+  }, DEDUPLICATION_WINDOW);
 };
 
 // Custom toast functions with deduplication and consistent configuration

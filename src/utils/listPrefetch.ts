@@ -46,7 +46,7 @@ class ListPrefetcher {
         if (result) {
           // Cache the result for later use
           const cacheKey = `list-${listId}`;
-          listPrefetchCache.get(cacheKey, result);
+          listPrefetchCache.set(cacheKey, result);
         }
       } finally {
         this.pendingPrefetches.delete(listId);
@@ -62,19 +62,7 @@ class ListPrefetcher {
    */
   getPrefetchedList(listId: string): IFulfilledListData | null {
     const cacheKey = `list-${listId}`;
-    try {
-      // Check if we have valid cached data
-      const testData = {} as IFulfilledListData;
-      const cached = listPrefetchCache.get(cacheKey, testData);
-
-      // Return cached data only if it exists and is different from our test data
-      if (cached.cachedData && cached.cachedData !== testData) {
-        return cached.cachedData;
-      }
-      return null;
-    } catch {
-      return null;
-    }
+    return listPrefetchCache.retrieve(cacheKey);
   }
 
   /**
