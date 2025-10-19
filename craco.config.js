@@ -32,7 +32,7 @@ module.exports = {
       webpackConfig.performance = {
         hints: 'warning',
         maxEntrypointSize: 819200, // 800KB for main bundle
-        maxAssetSize: 512000, // 500KB for individual assets (vendor chunks)
+        maxAssetSize: 819200, // 800KB for individual assets (vendor chunks)
       };
 
       // Ensure source maps are disabled for lighthouse builds
