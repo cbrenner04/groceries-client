@@ -29,6 +29,9 @@ describe('batchUpdates', () => {
     });
 
     it('handles errors in individual updates gracefully', () => {
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
+
       const mockStartTransition = startTransition as jest.MockedFunction<typeof startTransition>;
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {
         // Mock implementation
@@ -50,6 +53,7 @@ describe('batchUpdates', () => {
       expect(consoleSpy).toHaveBeenCalledWith('State update error:', expect.any(Error));
 
       consoleSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
     });
   });
 
@@ -68,6 +72,9 @@ describe('batchUpdates', () => {
     });
 
     it('handles errors in state update gracefully', () => {
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
+
       const mockStartTransition = startTransition as jest.MockedFunction<typeof startTransition>;
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {
         // Mock implementation
@@ -87,6 +94,7 @@ describe('batchUpdates', () => {
       expect(consoleSpy).toHaveBeenCalledWith('State update failed:', expect.any(Error));
 
       consoleSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
     });
 
     it('handles function-based state updates', () => {

@@ -50,7 +50,7 @@ describe('Filtered', () => {
   it('renders trash icon', async () => {
     const { container } = setup();
 
-    const trashIcon = container.querySelector('.fa.fa-trash');
+    const trashIcon = container.querySelector('svg');
     expect(trashIcon).toBeInTheDocument();
   });
 
@@ -132,6 +132,6 @@ describe('Filtered', () => {
 
     const button = await findByRole('button');
     expect(button.textContent).toContain('Produce');
-    expect(button.innerHTML).toContain('fa-trash');
+    expect(button.innerHTML).toContain('<svg');
   });
 });

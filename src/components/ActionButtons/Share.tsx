@@ -1,5 +1,6 @@
 import React, { type CSSProperties } from 'react';
 import { Link } from 'react-router';
+import { UsersIcon } from '../icons';
 
 interface IShareProps {
   to: string;
@@ -20,7 +21,7 @@ const Share: React.FC<IShareProps> = (props): React.JSX.Element => {
       style={updatedStyles}
       aria-disabled={props.disabled}
     >
-      <i className="fa fa-users fa-2x text-primary" />
+      <UsersIcon size="2x" className="text-primary" data-test-id="users-icon" />
     </Link>
   );
 };

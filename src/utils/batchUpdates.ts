@@ -11,8 +11,10 @@ export function batchStateUpdates(updates: (() => void)[]): void {
         update();
       } catch (error) {
         // Silently handle individual update errors
-        // eslint-disable-next-line no-console
-        console.warn('State update error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.warn('State update error:', error);
+        }
       }
     });
   });
@@ -27,8 +29,10 @@ export function safeStateUpdate<T>(setState: (value: T | ((prev: T) => T)) => vo
     try {
       setState(value);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('State update failed:', error);
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.warn('State update failed:', error);
+      }
     }
   });
 }

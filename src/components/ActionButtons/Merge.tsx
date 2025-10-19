@@ -1,5 +1,6 @@
 import React, { type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
+import { CompressIcon } from '../icons';
 
 interface IMergeProps {
   handleClick: MouseEventHandler;
@@ -15,7 +16,7 @@ const Merge: React.FC<IMergeProps> = (props): React.JSX.Element => (
     data-test-id={props.testID}
     disabled={props.disabled}
   >
-    <i className="fa fa-compress-alt fa-2x text-warning" />
+    <CompressIcon size="2x" className="text-warning" data-test-id="compress-icon" />
   </Button>
 );
 

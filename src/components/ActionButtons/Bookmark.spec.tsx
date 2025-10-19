@@ -33,7 +33,8 @@ describe('Bookmark', () => {
       const { bookmark } = await setup({ read: true });
 
       expect(bookmark).toMatchSnapshot();
-      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('fas'));
+      // SVG icon (solid version when read=true)
+      expect(bookmark.querySelector('svg')).toBeInTheDocument();
     });
   });
 
@@ -42,7 +43,8 @@ describe('Bookmark', () => {
       const { bookmark } = await setup({ read: false });
 
       expect(bookmark).toMatchSnapshot();
-      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('far'));
+      // SVG icon (outline version when read=false)
+      expect(bookmark.querySelector('svg')).toBeInTheDocument();
     });
   });
 

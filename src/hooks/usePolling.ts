@@ -81,7 +81,10 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
 
               // Silently handle errors to prevent polling from breaking
               /* istanbul ignore next */
-              console.warn('Polling callback error:', error); // eslint-disable-line no-console
+              if (process.env.NODE_ENV === 'development') {
+                // eslint-disable-next-line no-console
+                console.warn('Polling callback error:', error);
+              }
             })
             .finally(() => {
               stateRef.current.isRunning = false;
@@ -93,7 +96,10 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
           stateRef.current.isRunning = false;
 
           /* istanbul ignore next */
-          console.warn('Polling callback error:', error); // eslint-disable-line no-console
+          if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.warn('Polling callback error:', error);
+          }
         }
       });
     }
