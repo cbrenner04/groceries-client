@@ -44,6 +44,11 @@ module.exports = {
         // CRA minifies correctly; lighthouse sometimes reports false positives
         'unminified-css': ['warn', { maxLength: 3 }],
         'unminified-javascript': ['warn', { maxLength: 2 }],
+        // React apps typically have some render-blocking CSS
+        'render-blocking-resources': ['warn', { maxLength: 1 }],
+        'render-blocking-insight': ['warn', { maxLength: 1 }],
+        // Network dependency tree is minimal for SPA
+        'network-dependency-tree-insight': 'off',
       },
     },
     upload: {

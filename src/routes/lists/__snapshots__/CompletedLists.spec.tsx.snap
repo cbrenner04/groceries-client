@@ -200,7 +200,7 @@ exports[`CompletedLists renders unknown error when error occurs 1`] = `
   <p>
     Please check your connection and try to  
     <button
-      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 123, 255); text-decoration: none;"
+      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 86, 179); text-decoration: none;"
     >
       refresh the page
     </button>

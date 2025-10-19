@@ -10,7 +10,7 @@ const UnknownError: React.FC = (): React.JSX.Element => {
     display: 'inline',
     margin: 0,
     padding: 0,
-    color: hover ? '#0056b3' : '#007bff',
+    color: hover ? '#003d82' : '#0056b3',
     textDecoration: hover ? 'underline' : 'none',
   };
 

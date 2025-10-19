@@ -35,11 +35,6 @@ module.exports = {
         maxAssetSize: 819200, // 800KB for individual assets (vendor chunks)
       };
 
-      // Ensure source maps are disabled for lighthouse builds
-      if (process.env.REACT_APP_API_BASE === 'http://localhost:3300') {
-        webpackConfig.devtool = false;
-      }
-
       return webpackConfig;
     }
   }
