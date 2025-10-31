@@ -5,9 +5,8 @@ import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
 import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
-import { usePolling, useNavigationFocus } from 'hooks';
+import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
-import { usePerformanceMonitoring } from 'utils/performanceMonitoring';
 
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
@@ -53,7 +52,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   // Mobile Safari optimizations
   const { isVisible, isLowMemory, cleanup: registerCleanup } = useMobileSafariOptimizations();
-  const { startPoll, endPoll, startMerge, endMerge, startApply, endApply, complete } = usePerformanceMonitoring();
   const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -76,14 +74,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         return;
       }
 
-      startPoll();
       try {
         const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
           fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
         );
-
-        endPoll();
-        startMerge();
 
         if (fetchResponse) {
           const {
@@ -100,9 +94,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
           const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
           const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
-
-          endMerge();
-          startApply();
 
           // Only update state if data has actually changed
           if (notCompletedResult.hasChanged) {
@@ -123,9 +114,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               setDisplayedCategories([filter]);
             }
           }
-
-          endApply();
-          complete();
         }
       } catch (err) {
         const error = err as AxiosError;
@@ -154,109 +142,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     };
     registerCleanup(cleanupFn);
   }, [registerCleanup]);
-
-  // Immediate sync on navigation focus
-  // This helps to reduce perceived staleness when users navigate between routes
-  // Reduces unnecessary re-renders and prevents request storms
-  useNavigationFocus(async () => {
-    try {
-      const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}-focus`, () =>
-        fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
-      );
-      /* istanbul ignore else */
-      if (fetchResponse) {
-        const {
-          not_completed_items: updatedNotCompletedItems,
-          completed_items: updatedCompletedItems,
-          categories: updatedCategories,
-        } = fetchResponse as IFulfilledListData;
-
-        // Use cache to avoid unnecessary state updates
-        const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
-        const completedCacheKey = `list-${props.list.id}-completed`;
-        const categoriesCacheKey = `list-${props.list.id}-categories`;
-
-        const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
-        const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
-        const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
-
-        /* istanbul ignore else */
-        if (notCompletedResult.hasChanged) {
-          setNotCompletedItems(updatedNotCompletedItems);
-        }
-        /* istanbul ignore else */
-        if (completedResult.hasChanged) {
-          setCompletedItems(updatedCompletedItems);
-        }
-        /* istanbul ignore else */
-        if (categoriesResult.hasChanged) {
-          setCategories(updatedCategories);
-          setIncludedCategories(updatedCategories);
-          /* istanbul ignore else */
-          if (!filter) {
-            setDisplayedCategories(updatedCategories);
-          }
-        }
-      }
-    } catch (_err) {
-      // ignore; polling error path handles user feedback
-    }
-  });
-
-  // Immediate sync on visibility regain
-  useEffect(() => {
-    function handleVisibility(): void {
-      /* istanbul ignore else */
-      if (document.visibilityState === 'visible') {
-        void (async (): Promise<void> => {
-          try {
-            const controller = new AbortController();
-            const fetchResponse = await fetchList({ id: props.list.id!, navigate, signal: controller.signal });
-            /* istanbul ignore else */
-            if (fetchResponse) {
-              const {
-                not_completed_items: updatedNotCompletedItems,
-                completed_items: updatedCompletedItems,
-                categories: updatedCategories,
-              } = fetchResponse;
-
-              // Use cache to avoid unnecessary state updates
-              const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
-              const completedCacheKey = `list-${props.list.id}-completed`;
-              const categoriesCacheKey = `list-${props.list.id}-categories`;
-
-              const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
-              const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
-              const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
-
-              /* istanbul ignore else */
-              if (notCompletedResult.hasChanged) {
-                setNotCompletedItems(updatedNotCompletedItems);
-              }
-              /* istanbul ignore else */
-              if (completedResult.hasChanged) {
-                setCompletedItems(updatedCompletedItems);
-              }
-              /* istanbul ignore else */
-              if (categoriesResult.hasChanged) {
-                setCategories(updatedCategories);
-                setIncludedCategories(updatedCategories);
-                /* istanbul ignore else */
-                if (!filter) {
-                  setDisplayedCategories(updatedCategories);
-                }
-              }
-            }
-          } catch (_err) {
-            // ignore; polling error path handles user feedback
-          }
-        })();
-      }
-    }
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.list.id, filter]);
 
   const handleAddItem = (newItems: IListItem[]): void => {
     exportedHandleAddItem({
@@ -772,19 +657,21 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   return (
     <React.Fragment>
-      <ChangeOtherListModal
-        show={copy || move}
-        setShow={copy ? setCopy : setMove}
-        copy={copy}
-        move={move}
-        currentList={props.list}
-        lists={props.listsToUpdate}
-        items={selectedItems}
-        setSelectedItems={setSelectedItems}
-        setIncompleteMultiSelect={setIncompleteMultiSelect}
-        setCompleteMultiSelect={setCompleteMultiSelect}
-        handleMove={handleMove}
-      />
+      {(copy || move) && (
+        <ChangeOtherListModal
+          show={copy || move}
+          setShow={copy ? setCopy : setMove}
+          copy={copy}
+          move={move}
+          currentList={props.list}
+          lists={props.listsToUpdate}
+          items={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setIncompleteMultiSelect={setIncompleteMultiSelect}
+          setCompleteMultiSelect={setCompleteMultiSelect}
+          handleMove={handleMove}
+        />
+      )}
       <Link to="/lists" className="float-end">
         Back to lists
       </Link>

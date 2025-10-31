@@ -1,11 +1,4 @@
-import {
-  listPrefetcher,
-  prefetchList,
-  prefetchListOnHover,
-  cancelListHoverPrefetch,
-  prefetchListsIdle,
-  getPrefetchedList,
-} from './listPrefetch';
+import { listPrefetcher, prefetchList, prefetchListsIdle, getPrefetchedList } from './listPrefetch';
 import { fetchList } from '../routes/list/utils';
 import type { IFulfilledListData } from '../routes/list/utils';
 
@@ -173,54 +166,6 @@ describe('ListPrefetcher', () => {
     });
   });
 
-  describe('prefetchOnHover', () => {
-    it('prefetches after hover delay', async () => {
-      mockFetchList.mockResolvedValueOnce(mockListData);
-
-      listPrefetcher.prefetchOnHover('list-1', 300);
-
-      // Fast-forward time
-      jest.advanceTimersByTime(300);
-      jest.runOnlyPendingTimers();
-
-      // Allow promise resolution
-      await jest.runAllTimers();
-
-      expect(mockFetchList).toHaveBeenCalledTimes(1);
-    });
-
-    it('cancels previous hover timeout when called again', async () => {
-      mockFetchList.mockResolvedValueOnce(mockListData);
-
-      // Start first hover
-      listPrefetcher.prefetchOnHover('list-1', 300);
-
-      // Start second hover before first completes
-      listPrefetcher.prefetchOnHover('list-1', 300);
-
-      // Fast-forward past first timeout
-      jest.advanceTimersByTime(250);
-      expect(mockFetchList).not.toHaveBeenCalled();
-
-      // Fast-forward past second timeout
-      jest.advanceTimersByTime(100);
-      jest.runOnlyPendingTimers();
-
-      // Should only be called once
-      expect(mockFetchList).toHaveBeenCalledTimes(1);
-    });
-
-    it('does not prefetch if canceled', async () => {
-      listPrefetcher.prefetchOnHover('list-1', 300);
-      listPrefetcher.cancelHoverPrefetch('list-1');
-
-      jest.advanceTimersByTime(400);
-      jest.runOnlyPendingTimers();
-
-      expect(mockFetchList).not.toHaveBeenCalled();
-    });
-  });
-
   describe('prefetchIdle', () => {
     it('prefetches lists during idle time', async () => {
       mockFetchList.mockResolvedValueOnce(mockListData).mockResolvedValueOnce({
@@ -283,20 +228,18 @@ describe('ListPrefetcher', () => {
   });
 
   describe('clear', () => {
-    it('clears all caches and timeouts', async () => {
+    it('clears all caches and pending requests', async () => {
       mockFetchList.mockResolvedValueOnce(mockListData);
 
-      // Create some cached data and hover timeouts
+      // Create some cached data
       await listPrefetcher.prefetchList('list-1');
-      listPrefetcher.prefetchOnHover('list-2', 1000);
 
       expect(listPrefetcher.getStats().cacheSize).toBe(1);
-      expect(listPrefetcher.getStats().hoverTimeouts).toBe(1);
 
       listPrefetcher.clear();
 
       expect(listPrefetcher.getStats().cacheSize).toBe(0);
-      expect(listPrefetcher.getStats().hoverTimeouts).toBe(0);
+      expect(listPrefetcher.getStats().pendingPrefetches).toBe(0);
     });
   });
 
@@ -307,22 +250,6 @@ describe('ListPrefetcher', () => {
       await prefetchList('list-1', { priority: 'high' });
 
       expect(mockFetchList).toHaveBeenCalledTimes(1);
-    });
-
-    it('prefetchListOnHover calls prefetcher.prefetchOnHover', () => {
-      jest.spyOn(listPrefetcher, 'prefetchOnHover');
-
-      prefetchListOnHover('list-1', 500);
-
-      expect(listPrefetcher.prefetchOnHover).toHaveBeenCalledWith('list-1', 500);
-    });
-
-    it('cancelListHoverPrefetch calls prefetcher.cancelHoverPrefetch', () => {
-      jest.spyOn(listPrefetcher, 'cancelHoverPrefetch');
-
-      cancelListHoverPrefetch('list-1');
-
-      expect(listPrefetcher.cancelHoverPrefetch).toHaveBeenCalledWith('list-1');
     });
 
     it('prefetchListsIdle calls prefetcher.prefetchIdle', async () => {

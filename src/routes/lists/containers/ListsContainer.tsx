@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';
-import { usePolling, useNavigationFocus } from 'hooks';
+import { usePolling } from 'hooks';
 import type { IList, TUserPermissions } from 'typings';
 
 import ListForm from '../components/ListForm';
@@ -77,27 +77,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     },
     parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
   );
-
-  // Immediate sync on navigation focus
-  useNavigationFocus(async () => {
-    try {
-      const lists = await listsDeduplicator.execute('lists-focus', () => fetchLists({ navigate }));
-      if (lists) {
-        const {
-          pendingLists: updatedPending,
-          completedLists: updatedCompleted,
-          incompleteLists: updatedIncomplete,
-          currentUserPermissions: updatedCurrentUserPermissions,
-        } = lists as IFetchListsReturn;
-        setPendingLists(updatedPending);
-        setCompletedLists(updatedCompleted);
-        setIncompleteLists(updatedIncomplete);
-        setCurrentUserPermissions(updatedCurrentUserPermissions);
-      }
-    } catch (_err) {
-      // ignore; polling error path handles user feedback
-    }
-  });
 
   // Idle prefetch for visible lists to improve navigation performance
   React.useEffect(() => {

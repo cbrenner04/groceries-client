@@ -153,19 +153,23 @@ export function createCache<T>(options?: CacheOptions): LightweightCache<T> {
 }
 
 /**
- * Global cache instances for common data types
+ * Unified cache instance for all application data
+ * Uses key prefixes for namespacing:
+ * - `list-{id}-{type}` for list items
+ * - `lists-{type}` for lists index
+ * - `field-config-{id}` for field configurations
+ * - `prefetch-list-{id}` for prefetched lists
  */
-export const listCache = createCache<unknown>({ maxAge: 2 * 60 * 1000 }); // 2 minutes for lists
-export const listsCache = createCache<unknown>({ maxAge: 3 * 60 * 1000 }); // 3 minutes for lists index
-export const fieldConfigCache = createCache<unknown>({ maxAge: 10 * 60 * 1000 }); // 10 minutes for field configs
-
-/**
- * Enhanced cache for configuration-specific data with better performance characteristics
- */
-export const configurationCache = createCache<unknown>({
-  maxAge: 15 * 60 * 1000, // 15 minutes for configuration data (more stable)
-  maxSize: 200, // Larger size for config cache
+export const unifiedCache = createCache<unknown>({
+  maxAge: 5 * 60 * 1000, // 5 minutes - balanced TTL for freshness and performance
+  maxSize: 100, // Reasonable limit for all cached data
 });
+
+// Legacy exports for backward compatibility during migration
+export const listCache = unifiedCache;
+export const listsCache = unifiedCache;
+export const fieldConfigCache = unifiedCache;
+export const configurationCache = unifiedCache;
 
 /**
  * Hook to use cache in components

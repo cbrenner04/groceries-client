@@ -226,7 +226,8 @@ beforeEach(() => {
       typeof message === 'string' &&
       (message.includes('act(...)') ||
         message.includes('suspended resource finished loading') ||
-        message.includes('The current testing environment is not configured to support act'))
+        message.includes('The current testing environment is not configured to support act') ||
+        message.includes('A component suspended inside an `act` scope'))
     ) {
       return;
     }

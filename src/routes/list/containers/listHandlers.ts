@@ -6,51 +6,17 @@ import { EListItemFieldType, type IListItem } from 'typings';
 import { handleFailure } from '../../../utils/handleFailure';
 import { getFieldConfigurations } from '../../../utils/fieldConfigCache';
 
-// Cache for memoized sorting results
-export const sortingCache = new Map<string, IListItem[]>();
-const CACHE_SIZE_LIMIT = 50; // Limit cache size to prevent memory leaks
-
-// Generate cache key based on items' IDs and created_at only (updated_at can change frequently)
-const generateSortCacheKey = (items: IListItem[]): string => {
-  return items
-    .map((item) => `${item.id}:${item.created_at}`)
-    .sort() // Sort to ensure consistent key regardless of input order
-    .join('|');
-};
-
-// Sort items by created_at in ascending order to match server ordering (memoized)
+// Sort items by created_at in ascending order to match server ordering
 export const sortItemsByCreatedAt = (items: IListItem[]): IListItem[] => {
-  if (items.length === 0) {
-    return [];
+  if (items.length <= 1) {
+    return items.length === 0 ? [] : [...items];
   }
 
-  if (items.length === 1) {
-    return [...items];
-  }
-
-  const cacheKey = generateSortCacheKey(items);
-
-  // Check cache first
-  if (sortingCache.has(cacheKey)) {
-    return sortingCache.get(cacheKey)!;
-  }
-
-  // Sort items
-  const sortedItems = [...items].sort((a, b) => {
+  return [...items].sort((a, b) => {
     const dateA = new Date(a.created_at).getTime();
     const dateB = new Date(b.created_at).getTime();
     return dateA - dateB;
   });
-
-  // Cache the result (with size limit to prevent memory leaks)
-  if (sortingCache.size >= CACHE_SIZE_LIMIT) {
-    // Remove oldest entry (first key)
-    const firstKey = sortingCache.keys().next().value;
-    sortingCache.delete(firstKey);
-  }
-
-  sortingCache.set(cacheKey, sortedItems);
-  return sortedItems;
 };
 
 // handleAddItem

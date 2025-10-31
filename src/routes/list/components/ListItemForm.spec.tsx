@@ -3,7 +3,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'utils/api';
 import { showToast } from '../../../utils/toast';
 import ListItemForm from './ListItemForm';
-import { fieldConfigCache } from 'utils/fieldConfigCache';
+import { clearFieldConfigCache } from 'utils/fieldConfigCache';
+import { unifiedCache } from 'utils/lightweightCache';
 
 const mockHandleItemAddition = jest.fn();
 const mockNavigate = jest.fn();
@@ -38,7 +39,8 @@ const defaultProps = {
 describe('ListItemForm', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    fieldConfigCache.clear();
+    unifiedCache.clear(); // Clear unified cache (fieldConfigCache uses it)
+    clearFieldConfigCache(); // Clear pending requests
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigurations });
   });
 
@@ -278,6 +280,8 @@ describe('ListItemForm', () => {
   });
 
   it('sorts field configurations by position', async () => {
+    unifiedCache.clear(); // Clear unified cache before this test
+    clearFieldConfigCache(); // Clear pending requests
     const unsortedFieldConfigs = [
       { id: '3', label: 'third', data_type: 'free_text', position: 3 },
       { id: '1', label: 'first', data_type: 'free_text', position: 1 },
