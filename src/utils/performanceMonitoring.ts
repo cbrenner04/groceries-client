@@ -1,4 +1,5 @@
 import type { Metric } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
 
 // ============================================================================
 // Web Vitals Tracking
@@ -93,14 +94,12 @@ function getRatingColor(rating: 'good' | 'needs-improvement' | 'poor'): string {
  * Initialize Web Vitals monitoring
  * Call this once on app initialization
  */
-export async function initWebVitalsMonitoring(): Promise<void> {
+export function initWebVitalsMonitoring(): void {
   if (typeof window === 'undefined') {
     return;
   }
 
   try {
-    const { onCLS, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
-
     // Track all Core Web Vitals
     onCLS(reportWebVitals);
     onFCP(reportWebVitals);

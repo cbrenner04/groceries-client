@@ -250,6 +250,89 @@ describe('LightweightCache', () => {
     });
   });
 
+  describe('LRU eviction strategy', () => {
+    it('evicts least recently used entries', () => {
+      const cache = createCache<string>({ maxSize: 3 });
+
+      // Fill the cache
+      cache.set('key1', 'value1');
+      cache.set('key2', 'value2');
+      cache.set('key3', 'value3');
+
+      // Access key1 to make it most recently used
+      cache.retrieve('key1');
+
+      // Add a new entry - should evict key2 (least recently used)
+      cache.set('key4', 'value4');
+
+      expect(cache.retrieve('key1')).toBe('value1'); // Still in cache
+      expect(cache.retrieve('key2')).toBeNull(); // Evicted
+      expect(cache.retrieve('key3')).toBe('value3'); // Still in cache
+      expect(cache.retrieve('key4')).toBe('value4'); // New entry
+    });
+
+    it('maintains LRU order when accessing entries via get', () => {
+      const cache = createCache<string>({ maxSize: 3 });
+
+      cache.set('key1', 'value1');
+      cache.set('key2', 'value2');
+      cache.set('key3', 'value3');
+
+      // Access key2 via get (should move it to end)
+      cache.get('key2', 'value2');
+
+      // Add new entry - should evict key1 (least recently used)
+      cache.set('key4', 'value4');
+
+      expect(cache.retrieve('key1')).toBeNull(); // Evicted
+      expect(cache.retrieve('key2')).toBe('value2'); // Still in cache
+      expect(cache.retrieve('key3')).toBe('value3'); // Still in cache
+      expect(cache.retrieve('key4')).toBe('value4'); // New entry
+    });
+
+    it('handles bulk operations efficiently', () => {
+      const cache = createCache<string>({ maxSize: 3 });
+
+      // Fill the cache
+      cache.set('key1', 'value1');
+      cache.set('key2', 'value2');
+      cache.set('key3', 'value3');
+
+      // Bulk add - should evict multiple entries
+      cache.set('key4', 'value4');
+      cache.set('key5', 'value5');
+      cache.set('key6', 'value6');
+
+      // Only the last 3 entries should remain
+      expect(cache.retrieve('key1')).toBeNull();
+      expect(cache.retrieve('key2')).toBeNull();
+      expect(cache.retrieve('key3')).toBeNull();
+      expect(cache.retrieve('key4')).toBe('value4');
+      expect(cache.retrieve('key5')).toBe('value5');
+      expect(cache.retrieve('key6')).toBe('value6');
+      expect(cache.getStats().size).toBe(3);
+    });
+
+    it('updates existing entries without affecting LRU order', () => {
+      const cache = createCache<string>({ maxSize: 3 });
+
+      cache.set('key1', 'value1');
+      cache.set('key2', 'value2');
+      cache.set('key3', 'value3');
+
+      // Update key1 - should move it to end (most recently used)
+      cache.set('key1', 'value1-updated');
+
+      // Add new entry - should evict key2 (least recently used)
+      cache.set('key4', 'value4');
+
+      expect(cache.retrieve('key1')).toBe('value1-updated'); // Still in cache
+      expect(cache.retrieve('key2')).toBeNull(); // Evicted
+      expect(cache.retrieve('key3')).toBe('value3'); // Still in cache
+      expect(cache.retrieve('key4')).toBe('value4'); // New entry
+    });
+  });
+
   describe('edge cases', () => {
     it('handles non-serializable data gracefully', () => {
       const cache = createCache<unknown>();

@@ -38,6 +38,15 @@ class LightweightCache<T> {
   }
 
   /**
+   * Move an entry to the end of the cache (most recently used)
+   * This maintains LRU ordering
+   */
+  private moveToEnd(key: string, entry: CacheEntry<T>): void {
+    this.cache.delete(key);
+    this.cache.set(key, entry);
+  }
+
+  /**
    * Check if data has changed and update cache if needed
    * @param key Cache key
    * @param data New data to compare
@@ -64,8 +73,9 @@ class LightweightCache<T> {
     // Check if data has changed
     const newHash = this.generateHash(data);
     if (entry.hash === newHash) {
-      // Data is identical, update timestamp to keep entry fresh
+      // Data is identical, update timestamp and move to end (most recently used)
       entry.timestamp = now;
+      this.moveToEnd(key, entry);
       return { hasChanged: false, cachedData: entry.data };
     }
 
@@ -81,8 +91,15 @@ class LightweightCache<T> {
     const now = Date.now();
     const hash = this.generateHash(data);
 
-    // Clean up old entries if we're at capacity
-    if (this.cache.size >= this.maxSize) {
+    // If updating existing entry, remove it first to maintain LRU order
+    const existing = this.cache.get(key);
+    if (existing) {
+      this.cache.delete(key);
+    }
+
+    // Evict least recently used entries if we're at capacity
+    // For bulk operations, evict enough entries to accommodate new data
+    while (this.cache.size >= this.maxSize) {
       const oldestKey = this.cache.keys().next().value!;
       this.cache.delete(oldestKey);
     }
@@ -111,6 +128,9 @@ class LightweightCache<T> {
       return null;
     }
 
+    // Update timestamp and move to end (most recently used)
+    entry.timestamp = now;
+    this.moveToEnd(key, entry);
     return entry.data;
   }
 

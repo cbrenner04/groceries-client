@@ -1,7 +1,10 @@
 import { toast, type ToastOptions } from 'react-toastify';
 
 // Toast deduplication state
-const activeToasts = new Map<string, { timestamp: number; toastId: ReturnType<typeof toast> }>();
+const activeToasts = new Map<
+  string,
+  { timestamp: number; toastId: ReturnType<typeof toast>; timeoutId: ReturnType<typeof setTimeout> }
+>();
 const DEDUPLICATION_WINDOW = 3000; // 3 seconds
 
 // Default configurations for different toast types
@@ -29,6 +32,7 @@ const clearExpiredToasts = (): void => {
   const now = Date.now();
   for (const [key, value] of activeToasts.entries()) {
     if (now - value.timestamp > DEDUPLICATION_WINDOW) {
+      clearTimeout(value.timeoutId);
       activeToasts.delete(key);
     }
   }
@@ -46,7 +50,10 @@ const showToastWithDeduplication = (
   const now = Date.now();
 
   // Check if same toast was shown recently
-  if (activeToasts.has(deduplicationKey)) {
+  const existingToast = activeToasts.get(deduplicationKey);
+  if (existingToast) {
+    // Clear any existing timeout to prevent memory leaks
+    clearTimeout(existingToast.timeoutId);
     return; // Skip duplicate toast
   }
 
@@ -59,12 +66,13 @@ const showToastWithDeduplication = (
 
   // Show toast and track it
   const toastId = toast[type](message, config);
-  activeToasts.set(deduplicationKey, { timestamp: now, toastId });
 
   // Schedule automatic cleanup after deduplication window to prevent memory leaks
-  setTimeout(() => {
+  const timeoutId = setTimeout(() => {
     activeToasts.delete(deduplicationKey);
   }, DEDUPLICATION_WINDOW);
+
+  activeToasts.set(deduplicationKey, { timestamp: now, toastId, timeoutId });
 };
 
 // Custom toast functions with deduplication and consistent configuration

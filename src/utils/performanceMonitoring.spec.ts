@@ -1,6 +1,21 @@
 import { reportWebVitals, initWebVitalsMonitoring } from './performanceMonitoring';
 import type { Metric } from 'web-vitals';
 
+// Mock web-vitals module
+const mockOnCLS = jest.fn();
+const mockOnFCP = jest.fn();
+const mockOnLCP = jest.fn();
+const mockOnTTFB = jest.fn();
+const mockOnINP = jest.fn();
+
+jest.mock('web-vitals', () => ({
+  onCLS: (...args: unknown[]): void => mockOnCLS(...args),
+  onFCP: (...args: unknown[]): void => mockOnFCP(...args),
+  onLCP: (...args: unknown[]): void => mockOnLCP(...args),
+  onTTFB: (...args: unknown[]): void => mockOnTTFB(...args),
+  onINP: (...args: unknown[]): void => mockOnINP(...args),
+}));
+
 // Mock console methods
 const mockConsoleLog = jest.fn();
 const mockConsoleError = jest.fn();
@@ -18,6 +33,11 @@ Object.defineProperty(console, 'error', {
 describe('performanceMonitoring', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockOnCLS.mockClear();
+    mockOnFCP.mockClear();
+    mockOnLCP.mockClear();
+    mockOnTTFB.mockClear();
+    mockOnINP.mockClear();
   });
 
   describe('reportWebVitals', () => {
@@ -134,54 +154,100 @@ describe('performanceMonitoring', () => {
   });
 
   describe('initWebVitalsMonitoring', () => {
-    it('initializes web vitals monitoring', async () => {
-      const mockOnCLS = jest.fn();
-      const mockOnFCP = jest.fn();
-      const mockOnLCP = jest.fn();
-      const mockOnTTFB = jest.fn();
-      const mockOnINP = jest.fn();
+    it('initializes web vitals monitoring', () => {
+      initWebVitalsMonitoring();
 
-      jest.doMock('web-vitals', () => ({
-        onCLS: mockOnCLS,
-        onFCP: mockOnFCP,
-        onLCP: mockOnLCP,
-        onTTFB: mockOnTTFB,
-        onINP: mockOnINP,
-      }));
-
-      await initWebVitalsMonitoring();
-
-      // The function should not throw an error
-      expect(true).toBe(true);
+      // Verify all web vitals functions were called
+      expect(mockOnCLS).toHaveBeenCalledWith(reportWebVitals);
+      expect(mockOnFCP).toHaveBeenCalledWith(reportWebVitals);
+      expect(mockOnLCP).toHaveBeenCalledWith(reportWebVitals);
+      expect(mockOnTTFB).toHaveBeenCalledWith(reportWebVitals);
+      expect(mockOnINP).toHaveBeenCalledWith(reportWebVitals);
     });
 
-    it('handles errors gracefully in development', async () => {
+    it('handles errors gracefully in development', () => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
 
-      // Mock import to throw error
-      jest.doMock('web-vitals', () => {
-        throw new Error('Failed to load web-vitals');
+      // Suppress console.error re-throwing from setupTests.ts
+      // eslint-disable-next-line no-console
+      const originalConsoleError = console.error;
+      const consoleErrorMock = jest.fn();
+      // eslint-disable-next-line no-console
+      console.error = consoleErrorMock;
+
+      // Mock to throw error when functions are called
+      mockOnCLS.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnFCP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnLCP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnTTFB.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnINP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
       });
 
-      await initWebVitalsMonitoring();
+      initWebVitalsMonitoring();
 
-      // Should handle error gracefully
-      expect(true).toBe(true);
+      // Should handle error gracefully and log in development
+      expect(consoleErrorMock).toHaveBeenCalled();
+
+      // eslint-disable-next-line no-console
+      console.error = originalConsoleError;
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('handles errors silently in production', () => {
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'production';
+
+      // Mock to throw error when functions are called
+      mockOnCLS.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnFCP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnLCP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnTTFB.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+      mockOnINP.mockImplementation(() => {
+        throw new Error('Failed to initialize');
+      });
+
+      initWebVitalsMonitoring();
+
+      // Should not throw and should not log in production
+      expect(mockConsoleError).not.toHaveBeenCalled();
 
       process.env.NODE_ENV = originalEnv;
     });
 
-    it('handles errors silently in production', async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+    it('does nothing when window is undefined', () => {
+      const originalWindow = global.window;
+      // Delete window to simulate SSR environment
+      // @ts-expect-error - intentionally deleting for test
+      delete global.window;
 
-      await initWebVitalsMonitoring();
+      initWebVitalsMonitoring();
 
-      // Should not throw and should not log in production
-      expect(true).toBe(true);
+      // Should not call any web vitals functions
+      expect(mockOnCLS).not.toHaveBeenCalled();
+      expect(mockOnFCP).not.toHaveBeenCalled();
+      expect(mockOnLCP).not.toHaveBeenCalled();
+      expect(mockOnTTFB).not.toHaveBeenCalled();
+      expect(mockOnINP).not.toHaveBeenCalled();
 
-      process.env.NODE_ENV = originalEnv;
+      global.window = originalWindow;
     });
   });
 });
