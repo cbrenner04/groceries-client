@@ -92,16 +92,6 @@ export const showToast = {
   warning: (message: string, options?: ToastOptions): void => {
     showToastWithDeduplication('warning', message, options);
   },
-
-  // For backward compatibility
-  default: (message: string, options?: ToastOptions): void => {
-    const config = {
-      ...defaultConfig,
-      autoClose: options?.autoClose ?? durationConfig.info,
-      ...options,
-    };
-    toast(message, config);
-  },
 };
 
 // Export the original toast for advanced usage

@@ -90,23 +90,6 @@ describe('Toast Utility', () => {
     });
   });
 
-  it('should call toast.default (backward compatibility) with correct parameters', () => {
-    const message = 'Default message';
-    toastUtils.showToast.default(message);
-
-    expect(toast).toHaveBeenCalledWith(message, {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      pauseOnFocusLoss: false,
-      rtl: false,
-      theme: 'colored',
-    });
-  });
-
   it('should merge custom options with defaults', () => {
     const message = 'Custom message';
     const customOptions = { autoClose: 5000 };

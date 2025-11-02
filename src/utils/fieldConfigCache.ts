@@ -76,12 +76,13 @@ export async function prefetchFieldConfigurations(configId: string, signal?: Abo
  * Prefetch configurations during idle time
  */
 export async function prefetchFieldConfigurationsIdle(configId: string): Promise<void> {
+  const PREFETCH_IDLE_DELAY_MS = 100;
   return new Promise<void>((resolve) => {
     // Use setTimeout for consistent behavior across environments
     setTimeout(async () => {
       await prefetchFieldConfigurations(configId);
       resolve();
-    }, 100);
+    }, PREFETCH_IDLE_DELAY_MS);
   });
 }
 

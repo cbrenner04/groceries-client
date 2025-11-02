@@ -24,6 +24,8 @@ export interface IListsContainerProps {
   currentUserPermissions: TUserPermissions;
 }
 
+const MAX_PREFETCH_LISTS = 5;
+
 const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Element => {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
   const [completedLists, setCompletedLists] = useState(props.completedLists);
@@ -88,7 +90,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     // Get all visible list IDs for prefetching
     const allVisibleLists = [...pendingLists, ...incompleteLists];
     const listIds = allVisibleLists
-      .slice(0, 5) // Limit to first 5 lists to avoid overwhelming
+      .slice(0, MAX_PREFETCH_LISTS) // Limit to first 5 lists to avoid overwhelming
       .map((list) => list.id!)
       .filter(Boolean);
 

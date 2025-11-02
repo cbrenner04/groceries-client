@@ -10,9 +10,12 @@ interface CacheEntry<T> {
 }
 
 interface CacheOptions {
-  maxAge?: number; // milliseconds, default 5 minutes
-  maxSize?: number; // maximum number of entries, default 100
+  maxAge?: number; // milliseconds
+  maxSize?: number; // maximum number of entries
 }
+
+const DEFAULT_CACHE_TTL_MS = 5 * 60 * 1000;
+const DEFAULT_CACHE_SIZE = 100;
 
 class LightweightCache<T> {
   private cache = new Map<string, CacheEntry<T>>();
@@ -20,8 +23,8 @@ class LightweightCache<T> {
   private readonly maxSize: number;
 
   constructor(options: CacheOptions = {}) {
-    this.maxAge = options.maxAge ?? 5 * 60 * 1000; // 5 minutes default
-    this.maxSize = options.maxSize ?? 100;
+    this.maxAge = options.maxAge ?? DEFAULT_CACHE_TTL_MS;
+    this.maxSize = options.maxSize ?? DEFAULT_CACHE_SIZE;
   }
 
   /**
@@ -181,8 +184,8 @@ export function createCache<T>(options?: CacheOptions): LightweightCache<T> {
  * - `prefetch-list-{id}` for prefetched lists
  */
 export const unifiedCache = createCache<unknown>({
-  maxAge: 5 * 60 * 1000, // 5 minutes - balanced TTL for freshness and performance
-  maxSize: 100, // Reasonable limit for all cached data
+  maxAge: DEFAULT_CACHE_TTL_MS, // 5 minutes - balanced TTL for freshness and performance
+  maxSize: DEFAULT_CACHE_SIZE, // Reasonable limit for all cached data
 });
 
 // Legacy exports for backward compatibility during migration
