@@ -11,7 +11,8 @@ const Filtered: React.FC<IFilteredProps> = (props): React.JSX.Element => (
   <React.Fragment>
     <span id="filter-title">Filtering by:</span>
     <Button data-test-id="clear-filter" variant="outline-primary" id="filter-button" onClick={props.handleClearFilter}>
-      {props.filter === 'uncategorized' ? 'Uncategorized' : props.filter} <TrashIcon size="sm" />
+      {props.filter === 'uncategorized' ? 'Uncategorized' : props.filter}
+      <TrashIcon size="sm" data-test-id="trash-icon" />
     </Button>
   </React.Fragment>
 );

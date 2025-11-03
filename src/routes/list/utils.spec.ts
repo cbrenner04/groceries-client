@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
 import {
@@ -22,7 +21,6 @@ import { handleFailure } from '../../utils/handleFailure';
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
-jest.mock('react-toastify');
 jest.mock('../../utils/handleFailure', () => ({
   handleFailure: jest.fn(),
 }));
@@ -232,7 +230,6 @@ describe('fetchList', () => {
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
-    expect(toast).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -384,7 +381,6 @@ describe('fetchListToEdit', () => {
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
-    expect(toast).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -462,7 +458,6 @@ describe('fetchListItemToEdit', () => {
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
-    expect(toast).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -541,7 +536,6 @@ describe('fetchItemsToEdit', () => {
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
-    expect(toast).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 

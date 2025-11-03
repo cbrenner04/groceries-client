@@ -8,10 +8,6 @@ import { EListType, type TUserPermissions } from 'typings';
 
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
-
 // Mock the new toast utilities
 const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
 

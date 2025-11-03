@@ -10,7 +10,7 @@ import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations
 
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
-import ChangeOtherListModal from '../components/LazyChangeOtherListModal';
+import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
 import { fetchList } from '../utils';
@@ -23,9 +23,11 @@ import {
   handleItemRefresh as exportedHandleItemRefresh,
   handleToggleRead as exportedHandleToggleRead,
   sortItemsByCreatedAt,
+  executeBulkOperations,
+  pluralize,
+  extractCategoriesFromItems,
 } from './listHandlers';
 import type { IFulfilledListData } from '../utils';
-import { handleFailure } from 'utils/handleFailure';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { listCache } from 'utils/lightweightCache';
 
@@ -213,42 +215,30 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setIncompleteMultiSelect(false);
       setCompleteMultiSelect(false);
 
-      // Make API calls in parallel for better performance
-      const apiPromises = itemsToComplete.map(async (selectedItem) => {
-        try {
-          await exportedHandleItemComplete({
-            item: selectedItem,
+      // Execute operations in parallel
+      const results = await executeBulkOperations(itemsToComplete, {
+        executeOperation: (itemToComplete) =>
+          exportedHandleItemComplete({
+            item: itemToComplete,
             listId: props.list.id!,
             setPending,
             navigate,
-          });
-          return { success: true, item: selectedItem };
-        } catch (error) {
-          return { success: false, item: selectedItem, error };
-        }
+          }),
+        successMessage: (items) => `${pluralize(items)} marked as completed.`,
+        failureMessage: (successful, failed) =>
+          `Some items failed to complete. ${pluralize(successful)} completed successfully. ` +
+          `${pluralize(failed)} failed.`,
+        allFailureMessage: 'Failed to complete items',
+        navigate,
       });
 
-      const results = await Promise.all(apiPromises);
-
-      // Check for any failures
-      const failures: IListItem[] = [];
-      const successfulItems: IListItem[] = [];
-      results.forEach((result) => {
-        if (result.success) {
-          successfulItems.push(result.item);
-        } else {
-          failures.push(result.item);
-        }
-      });
-
+      // Rollback failed items
+      const failures = results.filter((r) => !r.success).map((r) => r.item);
       if (failures.length > 0) {
-        // Some items failed - rollback only the failed items
         const failedItemIds = failures.map((item) => item.id);
-
-        // Rollback failed items to original state
         const rollbackNotCompletedItems = sortItemsByCreatedAt([
           ...updatedNotCompletedItems,
-          ...failures.map((item) => ({ ...item!, completed: false })),
+          ...failures.map((item) => ({ ...item, completed: false })),
         ]);
         const rollbackCompletedItems = sortItemsByCreatedAt(
           updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id)),
@@ -256,26 +246,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
         setNotCompletedItems(rollbackNotCompletedItems);
         setCompletedItems(rollbackCompletedItems);
-
-        // Show appropriate feedback
-        if (successfulItems.length > 0) {
-          const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-          showToast.warning(
-            `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
-              failures,
-            )} failed.`,
-          );
-        } else {
-          // All items failed
-          handleFailure({
-            error: new Error('All items failed to complete') as AxiosError,
-            notFoundMessage: 'Failed to complete items',
-          });
-        }
-      } else {
-        // All items succeeded
-        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        showToast.info(`${pluralize(itemsToComplete)} marked as completed.`);
       }
     },
     [
@@ -316,10 +286,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompleteMultiSelect(false);
       setIncompleteMultiSelect(false);
 
-      // Make API calls in parallel for better performance
-      const apiPromises = itemsToRefresh.map(async (itemToRefresh, index) => {
-        try {
-          const newItem = await exportedHandleItemRefresh({
+      // Execute operations in parallel
+      const results = await executeBulkOperations<IListItem>(itemsToRefresh, {
+        executeOperation: (itemToRefresh) =>
+          exportedHandleItemRefresh({
             item: itemToRefresh,
             listId: props.list.id!,
             completedItems: updatedCompletedItems,
@@ -329,82 +299,41 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             setPending,
             navigate,
             skipStateUpdate: true, // We handle state optimistically
-          });
-          return { success: true, item: itemToRefresh, newItem, index };
-        } catch (error) {
-          return { success: false, item: itemToRefresh, error, index };
-        }
-      });
-
-      const results = await Promise.all(apiPromises);
-
-      // Check for any failures and update state with actual new items
-      const failures: IListItem[] = [];
-      const successfulItems: IListItem[] = [];
-      const newItems: IListItem[] = [];
-
-      results.forEach((result) => {
-        if (result.success) {
-          successfulItems.push(result.item);
-          if (result.newItem) {
-            newItems.push(result.newItem);
-          }
-        } else {
-          failures.push(result.item);
-        }
+          }),
+        successMessage: (items) => `${pluralize(items)} refreshed successfully.`,
+        failureMessage: (successful, failed) =>
+          `Some items failed to refresh. ${pluralize(successful)} refreshed successfully. ${pluralize(failed)} failed.`,
+        allFailureMessage: 'Failed to refresh items',
+        navigate,
       });
 
       // Replace optimistic items with actual new items from API
-      if (successfulItems.length > 0) {
-        // Remove optimistic items (they have temporary IDs starting with "optimistic-")
+      const successfulResults = results.filter((r) => r.success && r.result);
+      if (successfulResults.length > 0) {
+        const newItems = successfulResults.map((r) => r.result!);
         const itemsWithoutOptimistic = updatedNotCompletedItems.filter((item) => !item.id.startsWith('optimistic-'));
-        // Add the new items from API
         const finalNotCompletedItems = sortItemsByCreatedAt([...itemsWithoutOptimistic, ...newItems]);
         setNotCompletedItems(finalNotCompletedItems);
       }
 
+      // Rollback failed items
+      const failures = results.filter((r) => !r.success).map((r) => r.item);
       if (failures.length > 0) {
-        // Some items failed - rollback only the failed items
         const failedItemIds = failures.map((item) => item.id);
-
-        // Rollback failed items to original state
         const rollbackCompletedItems = sortItemsByCreatedAt([
           ...updatedCompletedItems,
           ...failures.map((item) => ({ ...item, completed: true })),
         ]);
-        // Remove optimistic items for failed operations and keep everything else
         const rollbackNotCompletedItems = updatedNotCompletedItems.filter((item) => {
-          // Keep items that are not optimistic
           if (!item.id.startsWith('optimistic-')) {
             return true;
           }
-          // For optimistic items, check if their original item failed
           const originalId = item.id.replace(/^optimistic-([^-]+)-.*$/, '$1');
           return !failedItemIds.includes(originalId);
         });
 
         setCompletedItems(rollbackCompletedItems);
         setNotCompletedItems(rollbackNotCompletedItems);
-
-        // Show appropriate feedback
-        if (successfulItems.length > 0) {
-          const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-          showToast.warning(
-            `Some items failed to refresh. ${pluralize(successfulItems)} refreshed successfully. ${pluralize(
-              failures,
-            )} failed.`,
-          );
-        } else {
-          // All items failed
-          handleFailure({
-            error: new Error('All items failed to refresh') as AxiosError,
-            notFoundMessage: 'Failed to refresh items',
-          });
-        }
-      } else {
-        // All items succeeded
-        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        showToast.info(`${pluralize(itemsToRefresh)} refreshed successfully.`);
       }
     },
     [
@@ -477,21 +406,17 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompletedItems(updatedCompletedItems);
     setNotCompletedItems(updatedNotCompletedItems);
 
-    // Update categories after deletion - remove categories that no longer have items
-    const allRemainingItems = [...updatedCompletedItems, ...updatedNotCompletedItems];
-    const remainingCategories = new Set<string>();
-    allRemainingItems.forEach((item) => {
-      const categoryField = item.fields.find((field) => field.label === 'category');
-      if (categoryField?.data) {
-        remainingCategories.add(categoryField.data);
+    // Update categories after deletion
+    const updateCategories = (items: IListItem[]): void => {
+      const updatedCategories = extractCategoriesFromItems(items);
+      setCategories(updatedCategories);
+      setIncludedCategories(updatedCategories);
+      if (!filter) {
+        setDisplayedCategories(updatedCategories);
       }
-    });
-    const updatedCategories = Array.from(remainingCategories);
-    setCategories(updatedCategories);
-    setIncludedCategories(updatedCategories);
-    if (!filter) {
-      setDisplayedCategories(updatedCategories);
-    }
+    };
+
+    updateCategories([...updatedCompletedItems, ...updatedNotCompletedItems]);
 
     // Clear selections
     setSelectedItems([]);
@@ -499,40 +424,34 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompleteMultiSelect(false);
     setItemsToDelete([]);
 
-    // Make API calls in parallel for better performance
-    const apiPromises = itemsToDeleteFromState.map((item) =>
-      exportedHandleItemDelete({
-        item,
-        listId: props.list.id!,
-        completedItems: updatedCompletedItems,
-        setCompletedItems,
-        notCompletedItems: updatedNotCompletedItems,
-        setNotCompletedItems,
-        selectedItems: [],
-        setSelectedItems,
-        setPending,
-        navigate,
-        showToast: false,
-        skipStateUpdate: true, // We handle state optimistically
-      }),
-    );
-
-    const results = await Promise.allSettled(apiPromises);
-
-    // Check for any failures
-    const failures: IListItem[] = [];
-    results.forEach((result, index) => {
-      if (result.status === 'rejected') {
-        failures.push(itemsToDeleteFromState[index]);
-      }
+    // Execute operations in parallel
+    const results = await executeBulkOperations(itemsToDeleteFromState, {
+      executeOperation: (item) =>
+        exportedHandleItemDelete({
+          item,
+          listId: props.list.id!,
+          completedItems: updatedCompletedItems,
+          setCompletedItems,
+          notCompletedItems: updatedNotCompletedItems,
+          setNotCompletedItems,
+          selectedItems: [],
+          setSelectedItems,
+          setPending,
+          navigate,
+          showToast: false,
+          skipStateUpdate: true, // We handle state optimistically
+        }),
+      successMessage: (items) => `${pluralize(items)} successfully deleted.`,
+      failureMessage: (successful, failed) =>
+        `Some items failed to delete. ${pluralize(successful)} deleted successfully. ${pluralize(failed)} failed.`,
+      allFailureMessage: 'Failed to delete items',
+      allFailureToastMessage: 'Failed to delete items. Please try again.',
+      navigate,
     });
 
+    // Rollback failed items
+    const failures = results.filter((r) => !r.success).map((r) => r.item);
     if (failures.length > 0) {
-      // Some items failed - rollback only the failed items
-      const failedItemIds = failures.map((item) => item.id);
-      const successfulItems = itemsToDeleteFromState.filter((item) => !failedItemIds.includes(item.id));
-
-      // Rollback failed items to original state
       const rollbackCompletedItems = sortItemsByCreatedAt([
         ...updatedCompletedItems,
         ...failures.filter((item) => completedItems.some((orig) => orig.id === item.id)),
@@ -544,54 +463,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setCompletedItems(rollbackCompletedItems);
       setNotCompletedItems(rollbackNotCompletedItems);
-
-      // Recalculate categories after rollback
-      const allItemsAfterRollback = [...rollbackCompletedItems, ...rollbackNotCompletedItems];
-      const categoriesAfterRollback = new Set<string>();
-      allItemsAfterRollback.forEach((item) => {
-        const categoryField = item.fields.find((field) => field.label === 'category');
-        if (categoryField?.data) {
-          categoriesAfterRollback.add(categoryField.data);
-        }
-      });
-      const updatedCategoriesAfterRollback = Array.from(categoriesAfterRollback);
-      setCategories(updatedCategoriesAfterRollback);
-      setIncludedCategories(updatedCategoriesAfterRollback);
-      if (!filter) {
-        setDisplayedCategories(updatedCategoriesAfterRollback);
-      }
-
-      // Show appropriate feedback
-      if (successfulItems.length > 0) {
-        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        showToast.warning(
-          `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
-            failures,
-          )} failed.`,
-        );
-      } else {
-        // All items failed
-        showToast.error('Failed to delete items. Please try again.');
-      }
+      updateCategories([...rollbackCompletedItems, ...rollbackNotCompletedItems]);
     } else {
-      // All items succeeded - ensure categories are consistent after successful deletion
-      const finalAllItems = [...updatedCompletedItems, ...updatedNotCompletedItems];
-      const finalCategories = new Set<string>();
-      finalAllItems.forEach((item) => {
-        const categoryField = item.fields.find((field) => field.label === 'category');
-        if (categoryField?.data) {
-          finalCategories.add(categoryField.data);
-        }
-      });
-      const finalUpdatedCategories = Array.from(finalCategories);
-      setCategories(finalUpdatedCategories);
-      setIncludedCategories(finalUpdatedCategories);
-      if (!filter) {
-        setDisplayedCategories(finalUpdatedCategories);
-      }
-
-      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      showToast.info(`${pluralize(itemsToDeleteFromState)} successfully deleted.`);
+      // All succeeded - ensure categories are consistent
+      updateCategories([...updatedCompletedItems, ...updatedNotCompletedItems]);
     }
   };
 
@@ -600,24 +475,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       return;
     }
     // Remove items from both not completed and completed since they've been moved to another list
-    setNotCompletedItems(
-      notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !selectedItems.some((selected) => selected.id === item.id),
     );
-    setCompletedItems(completedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)));
+    const updatedCompletedItems = completedItems.filter(
+      (item) => !selectedItems.some((selected) => selected.id === item.id),
+    );
 
-    // Update categories after move - remove categories that no longer have items
-    const remainingItems = [
-      ...notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
-      ...completedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
-    ];
-    const remainingCategories = new Set<string>();
-    remainingItems.forEach((item) => {
-      const categoryField = item.fields.find((field) => field.label === 'category');
-      if (categoryField?.data) {
-        remainingCategories.add(categoryField.data);
-      }
-    });
-    const updatedCategories = Array.from(remainingCategories);
+    setNotCompletedItems(updatedNotCompletedItems);
+    setCompletedItems(updatedCompletedItems);
+
+    // Update categories after move
+    const updatedCategories = extractCategoriesFromItems([...updatedNotCompletedItems, ...updatedCompletedItems]);
     setCategories(updatedCategories);
     setIncludedCategories(updatedCategories);
     if (!filter) {

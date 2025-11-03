@@ -29,22 +29,35 @@ export const createLazyComponent = <P extends object>(
 
 /**
  * Preloads a component for better perceived performance
+ * Uses requestIdleCallback to defer loading until the browser is idle
  * @param importFn - Function that returns a dynamic import
  */
 export const preloadComponent = (importFn: () => Promise<{ default: ComponentType }>): void => {
-  // Use requestIdleCallback for non-blocking preloading
+  const DEFAULT_PRELOAD_TIMEOUT = 100;
+  const DEFAULT_PRELOAD_IDLE_TIMEOUT = 2000;
+
   if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
-      importFn().catch(() => {
-        // Silently handle preload failures
-      });
-    });
+    requestIdleCallback(
+      () => {
+        importFn().catch((error) => {
+          // Only log errors in development to avoid noise in production
+          if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.warn('Failed to preload component:', error);
+          }
+        });
+      },
+      { timeout: DEFAULT_PRELOAD_IDLE_TIMEOUT }, // Fallback timeout to ensure it eventually runs
+    );
   } else {
-    // Fallback for browsers without requestIdleCallback
+    // Fallback: Use a small delay to allow other critical work to complete
     setTimeout(() => {
-      importFn().catch(() => {
-        // Silently handle preload failures
+      importFn().catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.warn('Failed to preload component:', error);
+        }
       });
-    }, 0);
+    }, DEFAULT_PRELOAD_TIMEOUT);
   }
 };

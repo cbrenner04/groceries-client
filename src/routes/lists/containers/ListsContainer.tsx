@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
 import { Link, useNavigate } from 'react-router';
@@ -81,7 +81,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   );
 
   // Idle prefetch for visible lists to improve navigation performance
-  React.useEffect(() => {
+  useEffect(() => {
     // Allow tests to disable idle prefetch
     if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
       return;

@@ -14,9 +14,9 @@ exports[`CategoryFilter renders Filtered when categories and filter exist 1`] = 
     type="button"
   >
     Produce
-     
     <svg
       aria-hidden="true"
+      data-test-id="trash-icon"
       fill="currentColor"
       focusable="false"
       height="14"
@@ -48,9 +48,9 @@ exports[`CategoryFilter renders Filtered when filter exists but categories is em
     type="button"
   >
     Produce
-     
     <svg
       aria-hidden="true"
+      data-test-id="trash-icon"
       fill="currentColor"
       focusable="false"
       height="14"
@@ -82,9 +82,9 @@ exports[`CategoryFilter renders Filtered when filter exists but categories is un
     type="button"
   >
     Produce
-     
     <svg
       aria-hidden="true"
+      data-test-id="trash-icon"
       fill="currentColor"
       focusable="false"
       height="14"

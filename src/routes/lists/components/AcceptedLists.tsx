@@ -10,7 +10,7 @@ import ConfirmModal from 'components/ConfirmModal';
 import type { IList, TUserPermissions } from 'typings';
 
 import { sortLists, failure, pluralize } from '../utils';
-import MergeModal from './LazyMergeModal';
+import MergeModal from './MergeModal';
 import List from './List';
 import CompleteListButtons from './CompleteListButtons';
 import IncompleteListButtons from './IncompleteListButtons';

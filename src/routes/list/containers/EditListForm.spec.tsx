@@ -1,16 +1,14 @@
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { toast } from 'react-toastify';
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
+import { showToast } from 'utils/toast';
 
 import EditListForm, { type IEditListFormProps } from './EditListForm';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -112,7 +110,7 @@ describe('EditListForm', () => {
         refreshed: false,
       },
     });
-    expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully updated');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -160,7 +158,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -175,7 +173,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -190,7 +188,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -211,7 +209,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('name cannot be blank and type is not included in the list', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('name cannot be blank and type is not included in the list');
   });
 
   it('displays generic error when request fails', async () => {
@@ -225,7 +223,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('displays error message when unknown error occurs', async () => {
@@ -239,7 +237,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('Network error', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Network error');
   });
 
   it('redirects to lists page when Cancel is clicked', async () => {

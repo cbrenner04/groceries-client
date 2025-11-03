@@ -105,9 +105,9 @@ exports[`ListContainer Category Filtering renders filtered items without categor
         type="button"
       >
         foo
-         
         <svg
           aria-hidden="true"
+          data-test-id="trash-icon"
           fill="currentColor"
           focusable="false"
           height="14"

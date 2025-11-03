@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import Loading from 'components/Loading';
 
 import { fetchItemsToEdit, type IFulfilledBulkEditItemsData } from './utils';
-import BulkEditListItemsForm from './containers/LazyBulkEditListItemsForm';
+import BulkEditListItemsForm from './containers/BulkEditListItemsForm';
 import UnknownError from '../error_pages/UnknownError';
 
 const BulkEditListItems: React.FC = (): React.JSX.Element => {

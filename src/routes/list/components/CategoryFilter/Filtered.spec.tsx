@@ -48,10 +48,9 @@ describe('Filtered', () => {
   });
 
   it('renders trash icon', async () => {
-    const { container } = setup();
+    const { findByTestId } = setup();
 
-    const trashIcon = container.querySelector('svg');
-    expect(trashIcon).toBeInTheDocument();
+    expect(await findByTestId('trash-icon')).toBeInTheDocument();
   });
 
   it('has proper button styling', async () => {
@@ -128,10 +127,10 @@ describe('Filtered', () => {
   });
 
   it('has proper button content structure', async () => {
-    const { findByRole } = setup();
+    const { findByRole, findByTestId } = setup();
 
     const button = await findByRole('button');
     expect(button.textContent).toContain('Produce');
-    expect(button.innerHTML).toContain('<svg');
+    expect(await findByTestId('trash-icon')).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
-import { toast } from 'react-toastify';
 import { type AxiosError } from 'axios';
 
 import axios from '../../utils/api';
+import { showToast } from '../../utils/toast';
 import { type IListUser, type IUsersList } from 'typings';
 
 interface IFetchDataReturn {
@@ -25,7 +25,7 @@ export async function fetchData(fetchParams: {
       (acceptedList: IUsersList) => acceptedList.user.id === data.current_user_id,
     );
     if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
-      toast('List not found', { type: 'error' });
+      showToast.error('List not found');
       fetchParams.navigate('/lists');
       return;
     }
@@ -43,11 +43,11 @@ export async function fetchData(fetchParams: {
     const error = err as AxiosError;
     if (error.response) {
       if (error.response.status === 401) {
-        toast('You must sign in', { type: 'error' });
+        showToast.error('You must sign in');
         fetchParams.navigate('/users/sign_in');
         return;
       } else if ([403, 404].includes(error.response.status)) {
-        toast('List not found', { type: 'error' });
+        showToast.error('List not found');
         fetchParams.navigate('/lists');
         return;
       }

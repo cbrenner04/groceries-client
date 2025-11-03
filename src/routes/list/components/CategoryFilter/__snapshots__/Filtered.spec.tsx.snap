@@ -14,9 +14,9 @@ exports[`Filtered renders with filter name in button 1`] = `
     type="button"
   >
     Produce
-     
     <svg
       aria-hidden="true"
+      data-test-id="trash-icon"
       fill="currentColor"
       focusable="false"
       height="14"

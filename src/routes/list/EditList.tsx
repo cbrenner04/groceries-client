@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import Loading from 'components/Loading';
 
 import { fetchListToEdit, type IFulfilledEditListData } from './utils';
-import EditListForm from './containers/LazyEditListForm';
+import EditListForm from './containers/EditListForm';
 import UnknownError from '../error_pages/UnknownError';
 
 const EditList: React.FC = (): React.JSX.Element => {

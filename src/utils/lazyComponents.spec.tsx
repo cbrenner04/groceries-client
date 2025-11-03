@@ -113,7 +113,7 @@ describe('lazyComponents', () => {
     });
 
     it('should use requestIdleCallback when available', () => {
-      const mockRequestIdleCallback = jest.fn((callback) => {
+      const mockRequestIdleCallback = jest.fn((callback, options) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
@@ -123,6 +123,7 @@ describe('lazyComponents', () => {
       preloadComponent(importFn);
 
       expect(mockRequestIdleCallback).toHaveBeenCalledTimes(1);
+      expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function), { timeout: 2000 });
       expect(importFn).toHaveBeenCalledTimes(1);
     });
 
@@ -139,44 +140,82 @@ describe('lazyComponents', () => {
       preloadComponent(importFn);
 
       expect(mockSetTimeout).toHaveBeenCalledTimes(1);
-      expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 0);
+      expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 100);
       expect(importFn).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle import errors in requestIdleCallback', () => {
+    it('should handle import errors in requestIdleCallback', async () => {
       const mockRequestIdleCallback = jest.fn((callback) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
 
       const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
 
       preloadComponent(importFn);
 
       expect(mockRequestIdleCallback).toHaveBeenCalledTimes(1);
       expect(importFn).toHaveBeenCalledTimes(1);
 
+      // Wait for async error handling
+      await waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to preload component:', expect.any(Error));
+      });
+
       consoleSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
     });
 
-    it('should handle import errors in setTimeout fallback', () => {
+    it('should handle import errors in setTimeout fallback', async () => {
       delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
-      const mockSetTimeout = jest.fn((callback) => {
-        callback();
-        return 1;
+      const mockSetTimeout = jest.fn((callback, delay) => {
+        // Use real setTimeout to avoid conflicts with waitFor
+        return originalSetTimeout(callback, delay);
       });
       window.setTimeout = mockSetTimeout as unknown as typeof window.setTimeout;
 
       const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'development';
 
       preloadComponent(importFn);
 
       expect(mockSetTimeout).toHaveBeenCalledTimes(1);
-      expect(importFn).toHaveBeenCalledTimes(1);
+      expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 100);
+
+      // Wait for async error handling (setTimeout + promise rejection)
+      await waitFor(() => {
+        expect(importFn).toHaveBeenCalledTimes(1);
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to preload component:', expect.any(Error));
+      });
 
       consoleSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('should not log errors in production mode', () => {
+      const mockRequestIdleCallback = jest.fn((callback) => {
+        callback({ didTimeout: false, timeRemaining: () => 5 });
+      });
+      window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
+
+      const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'production';
+
+      preloadComponent(importFn);
+
+      expect(mockRequestIdleCallback).toHaveBeenCalledTimes(1);
+      expect(importFn).toHaveBeenCalledTimes(1);
+      expect(consoleSpy).not.toHaveBeenCalled();
+
+      consoleSpy.mockRestore();
+      process.env.NODE_ENV = originalEnv;
     });
   });
 });
