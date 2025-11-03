@@ -91,7 +91,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     const allVisibleLists = [...pendingLists, ...incompleteLists];
     const listIds = allVisibleLists
       .slice(0, MAX_PREFETCH_LISTS) // Limit to first 5 lists to avoid overwhelming
-      .filter((list): list is IList & { id: string } => Boolean(list.id))
+      .filter((list): list is IList & { id: string } => typeof list.id === 'string' && list.id.length > 0)
       .map((list) => list.id);
 
     if (listIds.length > 0) {
