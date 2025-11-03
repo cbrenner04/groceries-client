@@ -11,6 +11,13 @@ interface PrefetchOptions {
   priority?: 'high' | 'low';
 }
 
+/**
+ * No-op navigation function for prefetch operations
+ */
+const dummyNavigate = (): void => {
+  // No-op for prefetch
+};
+
 class ListPrefetcher {
   private pendingPrefetches = new Map<string, Promise<IFulfilledListData | undefined>>();
 
@@ -104,10 +111,6 @@ class ListPrefetcher {
   private async fetchAndCacheList(listId: string, signal?: AbortSignal): Promise<IFulfilledListData | undefined> {
     // Use the existing fetchList utility but with navigation that won't actually navigate
     // since this is just for prefetching
-    const dummyNavigate = (): void => {
-      // No-op for prefetch
-    };
-
     return fetchList({ id: listId, navigate: dummyNavigate, signal });
   }
 }

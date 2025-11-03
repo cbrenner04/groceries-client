@@ -9,12 +9,27 @@ interface PendingRequest<T> {
   timestamp: number;
 }
 
+/**
+ * Request deduplicator that prevents overlapping API calls by caching pending requests.
+ *
+ * By default, requests are deduplicated for 30 seconds after they start. Requests made
+ * within this window will share the same promise. After the timeout expires, a new
+ * request will be made even if a previous one is still pending.
+ *
+ * Consider adjusting the timeout when:
+ * - API calls typically take longer than 30 seconds (increase timeout)
+ * - You need more frequent updates for rapidly changing data (decrease timeout)
+ * - You have very slow network conditions and want to prevent duplicate requests for longer (increase timeout)
+ */
 class RequestDeduplicator<T> {
   private pendingRequests = new Map<string, PendingRequest<T>>();
   private readonly requestTimeout: number;
 
+  /**
+   * @param requestTimeout Time in milliseconds before a pending request is considered expired.
+   *                       Defaults to 30000ms (30 seconds).
+   */
   constructor(requestTimeout = 30000) {
-    // 30 second default timeout
     this.requestTimeout = requestTimeout;
   }
 

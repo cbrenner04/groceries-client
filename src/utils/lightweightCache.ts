@@ -103,8 +103,15 @@ class LightweightCache<T> {
     // Evict least recently used entries if we're at capacity
     // For bulk operations, evict enough entries to accommodate new data
     while (this.cache.size >= this.maxSize) {
-      const oldestKey = this.cache.keys().next().value!;
-      this.cache.delete(oldestKey);
+      const iteratorResult = this.cache.keys().next();
+      // Safe to assert: while loop condition ensures cache.size >= maxSize >= 1,
+      // so the iterator will always have a value
+      if (!iteratorResult.done) {
+        this.cache.delete(iteratorResult.value);
+      } else {
+        // Fallback: should never happen, but guard against edge cases
+        break;
+      }
     }
 
     this.cache.set(key, {

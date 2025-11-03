@@ -1,10 +1,7 @@
 import { toast, type ToastOptions } from 'react-toastify';
 
 // Toast deduplication state
-const activeToasts = new Map<
-  string,
-  { timestamp: number; toastId: ReturnType<typeof toast>; timeoutId: ReturnType<typeof setTimeout> }
->();
+const activeToasts = new Map<string, { timestamp: number; timeoutId: ReturnType<typeof setTimeout> }>();
 const DEDUPLICATION_WINDOW = 3000; // 3 seconds
 
 // Default configurations for different toast types
@@ -65,14 +62,14 @@ const showToastWithDeduplication = (
   };
 
   // Show toast and track it
-  const toastId = toast[type](message, config);
+  toast[type](message, config);
 
   // Schedule automatic cleanup after deduplication window to prevent memory leaks
   const timeoutId = setTimeout(() => {
     activeToasts.delete(deduplicationKey);
   }, DEDUPLICATION_WINDOW);
 
-  activeToasts.set(deduplicationKey, { timestamp: now, toastId, timeoutId });
+  activeToasts.set(deduplicationKey, { timestamp: now, timeoutId });
 };
 
 // Custom toast functions with deduplication and consistent configuration

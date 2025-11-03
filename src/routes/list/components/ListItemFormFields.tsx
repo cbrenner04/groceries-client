@@ -8,7 +8,7 @@ export interface IListItemFormFieldsProps {
     id: string;
     label: string;
     data_type: EListItemFieldType;
-    position?: number;
+    position: number;
   }[];
   fields: IListItemField[];
   setFormData: ChangeEventHandler<HTMLInputElement>;
@@ -18,9 +18,7 @@ export interface IListItemFormFieldsProps {
 
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element => {
   // Sort field configurations by position
-  const sortedFieldConfigurations = [...props.fieldConfigurations].sort(
-    (a, b) => (a.position ?? 0) - (b.position ?? 0),
-  );
+  const sortedFieldConfigurations = [...props.fieldConfigurations].sort((a, b) => a.position - b.position);
 
   // Helper to find the value for a given config
   const getFieldValue = (configLabel: string): IListItemField | undefined => {

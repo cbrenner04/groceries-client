@@ -19,6 +19,7 @@ jest.mock('react-toastify', () => {
 
 describe('Toast Utility', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     jest.clearAllMocks();
   });
 
@@ -109,17 +110,6 @@ describe('Toast Utility', () => {
   });
 
   describe('Toast deduplication', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      // Reset deduplication state by calling a helper function
-      jest.clearAllTimers();
-      jest.useFakeTimers();
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
     it('should prevent duplicate toasts within deduplication window', () => {
       const message = 'Duplicate error';
 
