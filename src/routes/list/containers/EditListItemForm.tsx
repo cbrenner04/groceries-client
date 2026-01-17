@@ -1,6 +1,6 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -43,7 +43,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
       created_at: '',
       updated_at: '',
       archived_at: null,
-      position: config.position ?? 0,
+      position: config.position,
       data_type: config.data_type,
     };
   });
@@ -90,17 +90,17 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           // If no id and data is empty, do nothing
         }),
       );
-      toast('Item successfully updated', { type: 'info' });
+      showToast.info('Item successfully updated');
       // TODO: why aren't we using navigate?
       window.location.href = `/lists/${props.list.id}`;
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
           window.location.href = '/users/sign_in';
         } else if ([403, 404].includes(error.response.status)) {
-          toast('Item not found', { type: 'error' });
+          showToast.error('Item not found');
           window.location.href = `/lists/${props.list.id}`;
         } else {
           const keys = Object.keys(error.response.data!);
@@ -111,12 +111,12 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           } else {
             joinString = ' and ';
           }
-          toast(responseErrors.join(joinString), { type: 'error' });
+          showToast.error(responseErrors.join(joinString));
         }
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
     }
   };

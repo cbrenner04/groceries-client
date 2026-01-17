@@ -1,8 +1,9 @@
 import React, { useState, type ChangeEventHandler, type ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { useNavigate } from 'react-router';
+
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import ConfirmModal from 'components/ConfirmModal';
@@ -84,7 +85,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
       resetMultiSelect();
       setListsToDelete([]);
       setPending(false);
-      toast(`${pluralize(listsToDelete.length)} successfully deleted.`, { type: 'info' });
+      showToast.info(`${pluralize(listsToDelete.length)} successfully deleted.`);
     } catch (error: unknown) {
       failure(error, navigate, setPending);
     }
@@ -118,7 +119,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
       resetMultiSelect();
       setListsToMerge([]);
       setPending(false);
-      toast('Lists successfully merged.', { type: 'info' });
+      showToast.info('Lists successfully merged.');
     } catch (err) {
       failure(err, navigate, setPending);
     }
@@ -147,7 +148,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         props.setCompletedLists(sortLists(updatedCompletedLists));
         resetMultiSelect();
         setPending(false);
-        toast(`${pluralize(filteredLists.length)} successfully completed.`, { type: 'info' });
+        showToast.info(`${pluralize(filteredLists.length)} successfully completed.`);
       })
       .catch((error) => {
         failure(error, navigate, setPending);
@@ -181,7 +182,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
         }
         resetMultiSelect();
         setPending(false);
-        toast(`${pluralize(ownedLists.length)} successfully refreshed.`, { type: 'info' });
+        showToast.info(`${pluralize(ownedLists.length)} successfully refreshed.`);
       })
       .catch((error) => {
         failure(error, navigate, setPending);

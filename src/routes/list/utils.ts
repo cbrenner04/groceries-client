@@ -24,6 +24,8 @@ export interface IFulfilledListData {
   lists_to_update: IList[];
   list_item_configuration: IListItemConfiguration;
   categories: string[];
+  // Optional preloaded configs to remove first-open flicker
+  list_item_field_configurations?: IListItemFieldConfiguration[];
 }
 
 export interface IFulfilledEditListData {
@@ -104,9 +106,10 @@ export function itemName(item: IListItem, listType: EListType): string {
 export async function fetchList(fetchParams: {
   id: string;
   navigate: (url: string) => void;
+  signal?: AbortSignal;
 }): Promise<IFulfilledListData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`);
+    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`, { signal: fetchParams.signal });
 
     // Add defensive checks for undefined data
     if (!data) {

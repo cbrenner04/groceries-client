@@ -6,9 +6,23 @@ exports[`Bookmark when read is false renders the bookmark outline 1`] = `
   data-test-id="foo"
   type="button"
 >
-  <i
-    class="far fa-bookmark fa-2x text-secondary"
-  />
+  <svg
+    aria-hidden="true"
+    class="text-secondary"
+    data-test-id="unread-bookmark-icon"
+    fill="currentColor"
+    focusable="false"
+    height="32"
+    role="img"
+    style="display: inline-block; vertical-align: middle;"
+    viewBox="0 0 512 512"
+    width="32"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M48 0C21.5 0 0 21.5 0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48zM64 48H320V447.1L192 361.7 64 447.1V48z"
+    />
+  </svg>
 </button>
 `;
 
@@ -18,8 +32,22 @@ exports[`Bookmark when read is true renders the filled in bookmark 1`] = `
   data-test-id="foo"
   type="button"
 >
-  <i
-    class="fas fa-bookmark fa-2x text-secondary"
-  />
+  <svg
+    aria-hidden="true"
+    class="text-secondary"
+    data-test-id="read-bookmark-icon"
+    fill="currentColor"
+    focusable="false"
+    height="32"
+    role="img"
+    style="display: inline-block; vertical-align: middle;"
+    viewBox="0 0 512 512"
+    width="32"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"
+    />
+  </svg>
 </button>
 `;

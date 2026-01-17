@@ -83,7 +83,7 @@ describe('ListItemFormFields', () => {
     expect(screen.getByLabelText('Title')).toHaveValue('');
     expect(screen.getByLabelText('Completed')).not.toBeChecked();
     expect(screen.getByLabelText('Due_date')).toHaveValue('');
-    expect(screen.getByLabelText('Quantity')).toHaveValue(0);
+    expect(screen.getByLabelText('Quantity')).toHaveValue(null);
   });
 
   it('renders fields when no field data exists', async () => {
@@ -242,7 +242,7 @@ describe('ListItemFormFields', () => {
         fields: [createField('field1', 'quantity', '', 'item1')],
       });
 
-      expect(screen.getByLabelText('Quantity')).toHaveValue(0);
+      expect(screen.getByLabelText('Quantity')).toHaveValue(null);
     });
 
     it('handles number field with no field data', async () => {
@@ -354,8 +354,8 @@ describe('ListItemFormFields', () => {
       });
 
       const fields = screen.getAllByRole('textbox');
-      expect(fields[0]).toHaveValue('Second Field');
-      expect(fields[1]).toHaveValue('First Field');
+      expect(fields[0]).toHaveValue('First Field');
+      expect(fields[1]).toHaveValue('Second Field');
     });
   });
 

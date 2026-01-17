@@ -1,6 +1,6 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
@@ -31,26 +31,26 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
     };
     try {
       await axios.put(`/v2/lists/${props.listId}`, { list });
-      toast('List successfully updated', { type: 'info' });
+      showToast.info('List successfully updated');
       navigate('/lists');
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
           navigate('/users/sign_in');
         } else if ([403, 404].includes(error.response.status)) {
-          toast('List not found', { type: 'error' });
+          showToast.error('List not found');
           navigate('/lists');
         } else {
           const keys = Object.keys(error.response.data!);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
-          toast(responseErrors.join(' and '), { type: 'error' });
+          showToast.error(responseErrors.join(' and '));
         }
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
     }
   };

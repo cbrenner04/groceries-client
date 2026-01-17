@@ -1,11 +1,11 @@
 import React from 'react';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
-import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import AppRouter from './AppRouter';
 import { ToastContainer } from 'react-toastify';
+import { initWebVitalsMonitoring } from './utils/performanceMonitoring';
 
 const root: Root = createRoot(document.getElementById('root') as Element);
 root.render(
@@ -26,3 +26,6 @@ root.render(
     <AppRouter />
   </React.StrictMode>,
 );
+
+// Initialize Web Vitals monitoring
+initWebVitalsMonitoring();

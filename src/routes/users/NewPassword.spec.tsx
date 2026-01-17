@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import NewPassword from './NewPassword';
@@ -39,9 +40,8 @@ describe('NewPassword', () => {
     await user.click(await findByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith(
+    expect(showToast.info).toHaveBeenCalledWith(
       'If foo@example.com is in our system, you will receive an email shortly with reset instructions.',
-      { type: 'info' },
     );
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
@@ -54,9 +54,8 @@ describe('NewPassword', () => {
     await user.click(await findByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith(
+    expect(showToast.info).toHaveBeenCalledWith(
       'If foo@example.com is in our system, you will receive an email shortly with reset instructions.',
-      { type: 'info' },
     );
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });

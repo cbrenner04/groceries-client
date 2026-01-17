@@ -1,26 +1,18 @@
-import React, { useState, type ReactNode } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
-import {
-  EUserPermissions,
-  type IList,
-  type IListItemConfiguration,
-  type IListItemField,
-  type IListUser,
-  type IListItem,
-} from 'typings';
-import { capitalize } from 'utils/format';
+import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
 import { usePolling } from 'hooks';
+import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
 
-import ListItem from '../components/ListItem';
 import ListItemForm from '../components/ListItemForm';
 import CategoryFilter from '../components/CategoryFilter';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
-import MultiSelectMenu from '../components/MultiSelectMenu';
+import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
+import CompletedItemsSection from '../components/CompletedItemsSection';
 import { fetchList } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
@@ -31,8 +23,13 @@ import {
   handleItemRefresh as exportedHandleItemRefresh,
   handleToggleRead as exportedHandleToggleRead,
   sortItemsByCreatedAt,
+  executeBulkOperations,
+  pluralize,
+  extractCategoriesFromItems,
 } from './listHandlers';
-import { handleFailure } from 'utils/handleFailure';
+import type { IFulfilledListData } from '../utils';
+import { listDeduplicator } from 'utils/requestDeduplication';
+import { listCache } from 'utils/lightweightCache';
 
 export interface IListContainerProps {
   userId: string;
@@ -44,6 +41,7 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
+  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number }[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -53,6 +51,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [completedItems, setCompletedItems] = useState(props.completedItems);
   const [categories, setCategories] = useState(props.categories);
   const [filter, setFilter] = useState('');
+
+  // Mobile Safari optimizations
+  const { isVisible, isLowMemory, cleanup: registerCleanup } = useMobileSafariOptimizations();
   const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -63,49 +64,86 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [move, setMove] = useState(false);
   const navigate = useNavigate();
 
-  // Add polling for real-time updates
-  usePolling(async () => {
-    try {
-      const fetchResponse = await fetchList({ id: props.list.id!, navigate });
-      if (fetchResponse) {
-        const {
-          not_completed_items: updatedNotCompletedItems,
-          completed_items: updatedCompletedItems,
-          categories: updatedCategories,
-        } = fetchResponse;
+  // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
 
-        const isSameSet = (newSet: IListItem[], oldSet: IListItem[]): boolean =>
-          JSON.stringify(newSet) === JSON.stringify(oldSet);
+  // Note: Idle prefetch is also eliminated since field configurations are preloaded with list data
 
-        const notCompletedSame = isSameSet(updatedNotCompletedItems, notCompletedItems);
-        const completedSame = isSameSet(updatedCompletedItems, completedItems);
+  // Add polling for real-time updates with request deduplication
+  usePolling(
+    async () => {
+      // Skip polling if tab is not visible or low memory (Mobile Safari optimization)
+      if (!isVisible || isLowMemory) {
+        return;
+      }
 
-        /* istanbul ignore else */
-        if (!notCompletedSame) {
-          setNotCompletedItems(updatedNotCompletedItems);
-        }
-        /* istanbul ignore else */
-        if (!completedSame) {
-          setCompletedItems(updatedCompletedItems);
-        }
-        /* istanbul ignore else */
-        if (!notCompletedSame || !completedSame) {
-          setCategories(updatedCategories);
-          setIncludedCategories(updatedCategories);
-          /* istanbul ignore else */
-          if (!filter) {
-            setDisplayedCategories(updatedCategories);
+      try {
+        const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
+          fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
+        );
+
+        if (fetchResponse) {
+          const {
+            not_completed_items: updatedNotCompletedItems,
+            completed_items: updatedCompletedItems,
+            categories: updatedCategories,
+          } = fetchResponse as IFulfilledListData;
+
+          // Use lightweight cache to avoid re-render churn for identical data
+          const notCompletedCacheKey = `list-${props.list.id}-not-completed`;
+          const completedCacheKey = `list-${props.list.id}-completed`;
+          const categoriesCacheKey = `list-${props.list.id}-categories`;
+
+          const notCompletedResult = listCache.get(notCompletedCacheKey, updatedNotCompletedItems);
+          const completedResult = listCache.get(completedCacheKey, updatedCompletedItems);
+          const categoriesResult = listCache.get(categoriesCacheKey, updatedCategories);
+
+          // Only update state if data has actually changed
+          if (notCompletedResult.hasChanged) {
+            setNotCompletedItems(updatedNotCompletedItems);
+          }
+          if (completedResult.hasChanged) {
+            setCompletedItems(updatedCompletedItems);
+          }
+          if (notCompletedResult.hasChanged || completedResult.hasChanged || categoriesResult.hasChanged) {
+            // Update categories but preserve active filter selection
+            setCategories(updatedCategories);
+            setIncludedCategories(updatedCategories);
+            /* istanbul ignore else */
+            if (!filter) {
+              setDisplayedCategories(updatedCategories);
+            } else if (filter && !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())) {
+              // Active category no longer exists: keep filter visible but show empty state
+              setDisplayedCategories([filter]);
+            }
           }
         }
+      } catch (err) {
+        const error = err as AxiosError;
+        if (error.response) {
+          // Server error
+          showToast.error('Something went wrong. Data may be incomplete and user actions may not persist.');
+        } else {
+          // Network error
+          const errorMessage = 'You may not be connected to the internet. Please check your connection.';
+          showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
+        }
       }
-    } catch (_err) {
-      const errorMessage = 'You may not be connected to the internet. Please check your connection.';
-      toast(`${errorMessage} Data may be incomplete and user actions may not persist.`, {
-        type: 'error',
-        autoClose: 5000,
-      });
-    }
-  }, 3000);
+    },
+    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
+  );
+
+  // Register cleanup functions for memory management
+  useEffect(() => {
+    const cleanupFn = (): void => {
+      // Clear any pending requests
+      setPending(false);
+      // Clear selected items to free memory
+      setSelectedItems([]);
+      // Clear items to delete
+      setItemsToDelete([]);
+    };
+    registerCleanup(cleanupFn);
+  }, [registerCleanup]);
 
   const handleAddItem = (newItems: IListItem[]): void => {
     exportedHandleAddItem({
@@ -127,134 +165,210 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   };
 
-  const handleItemSelect = (item: IListItem): void => {
-    exportedHandleItemSelect({
-      item,
-      selectedItems,
-      setSelectedItems,
-    });
-  };
-
-  const handleItemEdit = (item: IListItem): void => {
-    if (selectedItems.length > 1) {
-      // Bulk edit - navigate with selected item IDs
-      const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
-      navigate(`/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
-    } else {
-      // Single edit
-      exportedHandleItemEdit({
+  const handleItemSelect = useCallback(
+    (item: IListItem): void => {
+      exportedHandleItemSelect({
         item,
-        listId: props.list.id!,
-        navigate,
+        selectedItems,
+        setSelectedItems,
       });
-    }
-  };
+    },
+    [selectedItems],
+  );
 
-  const handleItemComplete = async (item: IListItem): Promise<void> => {
-    const itemsToComplete = selectedItems.length ? selectedItems : [item];
-
-    // Optimistic update - move items to completed immediately
-    const updatedNotCompletedItems = notCompletedItems.filter(
-      (item) => !itemsToComplete.some((completeItem) => completeItem.id === item.id),
-    );
-    const updatedCompletedItems = sortItemsByCreatedAt([
-      ...completedItems,
-      ...itemsToComplete.map((item) => ({ ...item, completed: true })),
-    ]);
-
-    setNotCompletedItems(updatedNotCompletedItems);
-    setCompletedItems(updatedCompletedItems);
-
-    // Clear selections
-    setSelectedItems([]);
-    setIncompleteMultiSelect(false);
-    setCompleteMultiSelect(false);
-
-    // Make API calls in parallel for better performance
-    const apiPromises = itemsToComplete.map(async (selectedItem) => {
-      try {
-        await exportedHandleItemComplete({
-          item: selectedItem,
+  const handleItemEdit = useCallback(
+    (item: IListItem): void => {
+      if (selectedItems.length > 1) {
+        // Bulk edit - navigate with selected item IDs
+        const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
+        navigate(`/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
+      } else {
+        // Single edit
+        exportedHandleItemEdit({
+          item,
           listId: props.list.id!,
-          setPending,
           navigate,
         });
-        return { success: true, item: selectedItem };
-      } catch (error) {
-        return { success: false, item: selectedItem, error };
       }
-    });
+    },
+    [selectedItems, props.list.id, navigate],
+  );
 
-    const results = await Promise.all(apiPromises);
+  const handleItemComplete = useCallback(
+    async (item: IListItem): Promise<void> => {
+      const itemsToComplete = selectedItems.length ? selectedItems : [item];
 
-    // Check for any failures
-    const failures: IListItem[] = [];
-    const successfulItems: IListItem[] = [];
-    results.forEach((result) => {
-      if (result.success) {
-        successfulItems.push(result.item);
-      } else {
-        failures.push(result.item);
-      }
-    });
-
-    if (failures.length > 0) {
-      // Some items failed - rollback only the failed items
-      const failedItemIds = failures.map((item) => item.id);
-
-      // Rollback failed items to original state
-      const rollbackNotCompletedItems = sortItemsByCreatedAt([
-        ...updatedNotCompletedItems,
-        ...failures.map((item) => ({ ...item!, completed: false })),
-      ]);
-      const rollbackCompletedItems = sortItemsByCreatedAt(
-        updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id)),
+      // Optimistic update - move items to completed immediately
+      const updatedNotCompletedItems = notCompletedItems.filter(
+        (item) => !itemsToComplete.some((completeItem) => completeItem.id === item.id),
       );
+      const updatedCompletedItems = sortItemsByCreatedAt([
+        ...completedItems,
+        ...itemsToComplete.map((item) => ({ ...item, completed: true })),
+      ]);
 
-      setNotCompletedItems(rollbackNotCompletedItems);
-      setCompletedItems(rollbackCompletedItems);
+      setNotCompletedItems(updatedNotCompletedItems);
+      setCompletedItems(updatedCompletedItems);
 
-      // Show appropriate feedback
-      if (successfulItems.length > 0) {
-        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        toast(
-          `Some items failed to complete. ${pluralize(successfulItems)} completed successfully. ${pluralize(
-            failures,
-          )} failed.`,
-          { type: 'warning' },
+      // Clear selections
+      setSelectedItems([]);
+      setIncompleteMultiSelect(false);
+      setCompleteMultiSelect(false);
+
+      // Execute operations in parallel
+      const results = await executeBulkOperations(itemsToComplete, {
+        executeOperation: (itemToComplete) =>
+          exportedHandleItemComplete({
+            item: itemToComplete,
+            listId: props.list.id!,
+            setPending,
+            navigate,
+          }),
+        successMessage: (items) => `${pluralize(items)} marked as completed.`,
+        failureMessage: (successful, failed) =>
+          `Some items failed to complete. ${pluralize(successful)} completed successfully. ` +
+          `${pluralize(failed)} failed.`,
+        allFailureMessage: 'Failed to complete items',
+        navigate,
+      });
+
+      // Rollback failed items
+      const failures = results.filter((r) => !r.success).map((r) => r.item);
+      if (failures.length > 0) {
+        const failedItemIds = failures.map((item) => item.id);
+        const rollbackNotCompletedItems = sortItemsByCreatedAt([
+          ...updatedNotCompletedItems,
+          ...failures.map((item) => ({ ...item, completed: false })),
+        ]);
+        const rollbackCompletedItems = sortItemsByCreatedAt(
+          updatedCompletedItems.filter((item) => !failedItemIds.includes(item.id)),
         );
-      } else {
-        // All items failed
-        handleFailure({
-          error: new Error('All items failed to complete') as AxiosError,
-          notFoundMessage: 'Failed to complete items',
-        });
+
+        setNotCompletedItems(rollbackNotCompletedItems);
+        setCompletedItems(rollbackCompletedItems);
       }
-    } else {
-      // All items succeeded
-      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      toast(`${pluralize(itemsToComplete)} marked as completed.`, { type: 'info' });
-    }
-  };
-
-  const handleItemRefresh = async (item: IListItem): Promise<void> => {
-    await exportedHandleItemRefresh({
-      item,
-      listId: props.list.id!,
-      completedItems,
-      setCompletedItems,
+    },
+    [
+      selectedItems,
       notCompletedItems,
+      completedItems,
       setNotCompletedItems,
-      setPending,
+      setCompletedItems,
+      setSelectedItems,
+      setIncompleteMultiSelect,
+      setCompleteMultiSelect,
+      props.list.id,
       navigate,
-    });
-  };
+    ],
+  );
 
-  const toggleRead = async (item: IListItem): Promise<void> => {
-    const items = selectedItems.length ? selectedItems : [item];
-    await exportedHandleToggleRead({
-      items,
-      listId: props.list.id!,
+  const handleItemRefresh = useCallback(
+    async (item: IListItem): Promise<void> => {
+      const itemsToRefresh = selectedItems.length ? selectedItems : [item];
+
+      // Optimistic update - move items from completed to not completed immediately
+      const updatedCompletedItems = completedItems.filter(
+        (item) => !itemsToRefresh.some((refreshItem) => refreshItem.id === item.id),
+      );
+      // Create optimistic items with temporary unique IDs to avoid key conflicts
+      const optimisticNewItems = itemsToRefresh.map((item, index) => ({
+        ...item,
+        completed: false,
+        id: `optimistic-${item.id}-${Date.now()}-${index}`, // Temporary unique ID
+      }));
+      const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, ...optimisticNewItems]);
+
+      setCompletedItems(updatedCompletedItems);
+      setNotCompletedItems(updatedNotCompletedItems);
+
+      // Clear selections
+      setSelectedItems([]);
+      setCompleteMultiSelect(false);
+      setIncompleteMultiSelect(false);
+
+      // Execute operations in parallel
+      const results = await executeBulkOperations<IListItem>(itemsToRefresh, {
+        executeOperation: (itemToRefresh) =>
+          exportedHandleItemRefresh({
+            item: itemToRefresh,
+            listId: props.list.id!,
+            completedItems: updatedCompletedItems,
+            setCompletedItems,
+            notCompletedItems: updatedNotCompletedItems,
+            setNotCompletedItems,
+            setPending,
+            navigate,
+            skipStateUpdate: true, // We handle state optimistically
+          }),
+        successMessage: (items) => `${pluralize(items)} refreshed successfully.`,
+        failureMessage: (successful, failed) =>
+          `Some items failed to refresh. ${pluralize(successful)} refreshed successfully. ${pluralize(failed)} failed.`,
+        allFailureMessage: 'Failed to refresh items',
+        navigate,
+      });
+
+      // Replace optimistic items with actual new items from API
+      const successfulResults = results.filter((r) => r.success && r.result);
+      if (successfulResults.length > 0) {
+        const newItems = successfulResults.map((r) => r.result!);
+        const itemsWithoutOptimistic = updatedNotCompletedItems.filter((item) => !item.id.startsWith('optimistic-'));
+        const finalNotCompletedItems = sortItemsByCreatedAt([...itemsWithoutOptimistic, ...newItems]);
+        setNotCompletedItems(finalNotCompletedItems);
+      }
+
+      // Rollback failed items
+      const failures = results.filter((r) => !r.success).map((r) => r.item);
+      if (failures.length > 0) {
+        const failedItemIds = failures.map((item) => item.id);
+        const rollbackCompletedItems = sortItemsByCreatedAt([
+          ...updatedCompletedItems,
+          ...failures.map((item) => ({ ...item, completed: true })),
+        ]);
+        const rollbackNotCompletedItems = updatedNotCompletedItems.filter((item) => {
+          if (!item.id.startsWith('optimistic-')) {
+            return true;
+          }
+          const originalId = item.id.replace(/^optimistic-([^-]+)-.*$/, '$1');
+          return !failedItemIds.includes(originalId);
+        });
+
+        setCompletedItems(rollbackCompletedItems);
+        setNotCompletedItems(rollbackNotCompletedItems);
+      }
+    },
+    [
+      selectedItems,
+      completedItems,
+      notCompletedItems,
+      setCompletedItems,
+      setNotCompletedItems,
+      setSelectedItems,
+      setCompleteMultiSelect,
+      setIncompleteMultiSelect,
+      props.list.id,
+      navigate,
+    ],
+  );
+
+  const toggleRead = useCallback(
+    async (item: IListItem): Promise<void> => {
+      const items = selectedItems.length ? selectedItems : [item];
+      await exportedHandleToggleRead({
+        items,
+        listId: props.list.id!,
+        completedItems,
+        setCompletedItems,
+        notCompletedItems,
+        setNotCompletedItems,
+        setSelectedItems,
+        setIncompleteMultiSelect,
+        setCompleteMultiSelect,
+        navigate,
+      });
+    },
+    [
+      selectedItems,
+      props.list.id,
       completedItems,
       setCompletedItems,
       notCompletedItems,
@@ -263,15 +377,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setIncompleteMultiSelect,
       setCompleteMultiSelect,
       navigate,
-    });
-  };
+    ],
+  );
 
   // Multi-select and bulk operation handlers
-  const handleDelete = (item: IListItem): void => {
-    const items = selectedItems.length ? selectedItems : [item];
-    setItemsToDelete(items);
-    setShowDeleteConfirm(true);
-  };
+  const handleDelete = useCallback(
+    (item: IListItem): void => {
+      const items = selectedItems.length ? selectedItems : [item];
+      setItemsToDelete(items);
+      setShowDeleteConfirm(true);
+    },
+    [selectedItems],
+  );
 
   const handleDeleteConfirm = async (): Promise<void> => {
     setShowDeleteConfirm(false);
@@ -289,45 +406,52 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     setCompletedItems(updatedCompletedItems);
     setNotCompletedItems(updatedNotCompletedItems);
 
+    // Update categories after deletion
+    const updateCategories = (items: IListItem[]): void => {
+      const updatedCategories = extractCategoriesFromItems(items);
+      setCategories(updatedCategories);
+      setIncludedCategories(updatedCategories);
+      if (!filter) {
+        setDisplayedCategories(updatedCategories);
+      }
+    };
+
+    updateCategories([...updatedCompletedItems, ...updatedNotCompletedItems]);
+
     // Clear selections
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
     setCompleteMultiSelect(false);
     setItemsToDelete([]);
 
-    // Make API calls in parallel for better performance
-    const apiPromises = itemsToDeleteFromState.map((item) =>
-      exportedHandleItemDelete({
-        item,
-        listId: props.list.id!,
-        completedItems: updatedCompletedItems,
-        setCompletedItems,
-        notCompletedItems: updatedNotCompletedItems,
-        setNotCompletedItems,
-        selectedItems: [],
-        setSelectedItems,
-        setPending,
-        navigate,
-        showToast: false,
-      }),
-    );
-
-    const results = await Promise.allSettled(apiPromises);
-
-    // Check for any failures
-    const failures: IListItem[] = [];
-    results.forEach((result, index) => {
-      if (result.status === 'rejected') {
-        failures.push(itemsToDeleteFromState[index]);
-      }
+    // Execute operations in parallel
+    const results = await executeBulkOperations(itemsToDeleteFromState, {
+      executeOperation: (item) =>
+        exportedHandleItemDelete({
+          item,
+          listId: props.list.id!,
+          completedItems: updatedCompletedItems,
+          setCompletedItems,
+          notCompletedItems: updatedNotCompletedItems,
+          setNotCompletedItems,
+          selectedItems: [],
+          setSelectedItems,
+          setPending,
+          navigate,
+          showToast: false,
+          skipStateUpdate: true, // We handle state optimistically
+        }),
+      successMessage: (items) => `${pluralize(items)} successfully deleted.`,
+      failureMessage: (successful, failed) =>
+        `Some items failed to delete. ${pluralize(successful)} deleted successfully. ${pluralize(failed)} failed.`,
+      allFailureMessage: 'Failed to delete items',
+      allFailureToastMessage: 'Failed to delete items. Please try again.',
+      navigate,
     });
 
+    // Rollback failed items
+    const failures = results.filter((r) => !r.success).map((r) => r.item);
     if (failures.length > 0) {
-      // Some items failed - rollback only the failed items
-      const failedItemIds = failures.map((item) => item.id);
-      const successfulItems = itemsToDeleteFromState.filter((item) => !failedItemIds.includes(item.id));
-
-      // Rollback failed items to original state
       const rollbackCompletedItems = sortItemsByCreatedAt([
         ...updatedCompletedItems,
         ...failures.filter((item) => completedItems.some((orig) => orig.id === item.id)),
@@ -339,24 +463,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setCompletedItems(rollbackCompletedItems);
       setNotCompletedItems(rollbackNotCompletedItems);
-
-      // Show appropriate feedback
-      if (successfulItems.length > 0) {
-        const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-        toast(
-          `Some items failed to delete. ${pluralize(successfulItems)} deleted successfully. ${pluralize(
-            failures,
-          )} failed.`,
-          { type: 'warning' },
-        );
-      } else {
-        // All items failed
-        toast('Failed to delete items. Please try again.', { type: 'error' });
-      }
+      updateCategories([...rollbackCompletedItems, ...rollbackNotCompletedItems]);
     } else {
-      // All items succeeded
-      const pluralize = (items: IListItem[]): string => (items.length > 1 ? 'Items' : 'Item');
-      toast(`${pluralize(itemsToDeleteFromState)} successfully deleted.`, { type: 'info' });
+      // All succeeded - ensure categories are consistent
+      updateCategories([...updatedCompletedItems, ...updatedNotCompletedItems]);
     }
   };
 
@@ -364,11 +474,25 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     if (!move) {
       return;
     }
-    // Remove items from not completed and add to completed
-    setNotCompletedItems(
-      notCompletedItems.filter((item) => !selectedItems.some((selected) => selected.id === item.id)),
+    // Remove items from both not completed and completed since they've been moved to another list
+    const updatedNotCompletedItems = notCompletedItems.filter(
+      (item) => !selectedItems.some((selected) => selected.id === item.id),
     );
-    setCompletedItems(sortItemsByCreatedAt([...completedItems, ...selectedItems]));
+    const updatedCompletedItems = completedItems.filter(
+      (item) => !selectedItems.some((selected) => selected.id === item.id),
+    );
+
+    setNotCompletedItems(updatedNotCompletedItems);
+    setCompletedItems(updatedCompletedItems);
+
+    // Update categories after move
+    const updatedCategories = extractCategoriesFromItems([...updatedNotCompletedItems, ...updatedCompletedItems]);
+    setCategories(updatedCategories);
+    setIncludedCategories(updatedCategories);
+    if (!filter) {
+      setDisplayedCategories(updatedCategories);
+    }
+
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
     setMove(false);
@@ -390,111 +514,33 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   // Category filter handlers
-  const handleCategoryFilter = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleCategoryFilter = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
     setFilter(event.target.name);
     setDisplayedCategories([event.target.name]);
-  };
+  }, []);
 
-  const handleClearFilter = (): void => {
+  const handleClearFilter = useCallback((): void => {
     setFilter('');
     setDisplayedCategories(includedCategories);
-  };
-
-  const groupByCategory = (items: IListItem[]): ReactNode => {
-    // Extract all unique categories from the items (case-insensitive)
-    const itemCategories = new Set<string>();
-    items.forEach((item) => {
-      const categoryField = item.fields.find((field) => field.label === 'category');
-      if (categoryField?.data) {
-        // Use the first occurrence's casing as the canonical form
-        const existingCategory = Array.from(itemCategories).find(
-          (cat) => cat.toLowerCase() === categoryField.data?.toLowerCase(),
-        );
-        if (!existingCategory) {
-          itemCategories.add(categoryField.data);
-        }
-      }
-    });
-
-    // When a filter is applied, show only the selected category
-    // When no filter is applied, show all categories plus uncategorized items
-    const categoriesToShow = filter ? displayedCategories : [undefined, ...Array.from(itemCategories)];
-
-    return categoriesToShow.map((category: string | undefined) => {
-      const itemsToRender = items.filter((item: IListItem) => {
-        // Defensive: treat missing fields as empty array
-        const fields = Array.isArray(item.fields) ? item.fields : [];
-
-        if (category === 'uncategorized') {
-          // Show items with no category field or empty category data
-          const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
-          return (
-            !hasCategoryField ||
-            fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
-          );
-        }
-
-        if (category) {
-          // Show items with matching category (case-insensitive)
-          return fields.find(
-            (field: IListItemField) =>
-              field.label === 'category' && field.data?.toLowerCase() === category.toLowerCase(),
-          );
-        }
-
-        // Show uncategorized items when no filter is applied
-        const hasCategoryField = fields.find((field: IListItemField) => field.label === 'category');
-        return (
-          !hasCategoryField ||
-          fields.find((field: IListItemField) => field.label === 'category' && (!field.data || field.data === ''))
-        );
-      });
-
-      if (itemsToRender.length === 0) {
-        return null;
-      }
-      return (
-        <React.Fragment key={`${category ?? 'uncategorized'}-wrapper`}>
-          {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
-          <ListGroup className="mb-3" key={category ?? 'uncategorized'}>
-            {itemsToRender.map((item: IListItem) => (
-              <ListItem
-                key={item.id}
-                item={item}
-                permissions={props.permissions}
-                selectedItems={selectedItems}
-                pending={pending}
-                listType={props.list.type}
-                handleItemSelect={handleItemSelect}
-                handleItemComplete={handleItemComplete}
-                handleItemEdit={handleItemEdit}
-                handleItemDelete={handleDelete}
-                handleItemRefresh={handleItemRefresh}
-                toggleItemRead={toggleRead}
-                multiSelect={incompleteMultiSelect}
-              />
-            ))}
-          </ListGroup>
-        </React.Fragment>
-      );
-    });
-  };
+  }, [includedCategories]);
 
   return (
     <React.Fragment>
-      <ChangeOtherListModal
-        show={copy || move}
-        setShow={copy ? setCopy : setMove}
-        copy={copy}
-        move={move}
-        currentList={props.list}
-        lists={props.listsToUpdate}
-        items={selectedItems}
-        setSelectedItems={setSelectedItems}
-        setIncompleteMultiSelect={setIncompleteMultiSelect}
-        setCompleteMultiSelect={setCompleteMultiSelect}
-        handleMove={handleMove}
-      />
+      {(copy || move) && (
+        <ChangeOtherListModal
+          show={copy || move}
+          setShow={copy ? setCopy : setMove}
+          copy={copy}
+          move={move}
+          currentList={props.list}
+          lists={props.listsToUpdate}
+          items={selectedItems}
+          setSelectedItems={setSelectedItems}
+          setIncompleteMultiSelect={setIncompleteMultiSelect}
+          setCompleteMultiSelect={setCompleteMultiSelect}
+          handleMove={handleMove}
+        />
+      )}
       <Link to="/lists" className="float-end">
         Back to lists
       </Link>
@@ -509,6 +555,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           categories={props.categories}
           navigate={navigate}
           listItemConfiguration={props.listItemConfiguration}
+          preloadedFieldConfigurations={props.listItemFieldConfigurations}
         />
       ) : (
         <p>You only have permission to read this list</p>
@@ -525,49 +572,45 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           />
         </div>
       </div>
-      {props.permissions === EUserPermissions.WRITE && (
-        <MultiSelectMenu
-          setCopy={setCopy}
-          setMove={setMove}
-          isMultiSelect={incompleteMultiSelect}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
-          setMultiSelect={setIncompleteMultiSelect}
-        />
-      )}
-      <br />
-      {groupByCategory(notCompletedItems)}
+      <NotCompletedItemsSection
+        notCompletedItems={notCompletedItems}
+        permissions={props.permissions}
+        selectedItems={selectedItems}
+        pending={pending}
+        listType={props.list.type}
+        filter={filter}
+        displayedCategories={displayedCategories}
+        incompleteMultiSelect={incompleteMultiSelect}
+        setCopy={setCopy}
+        setMove={setMove}
+        setSelectedItems={setSelectedItems}
+        setIncompleteMultiSelect={setIncompleteMultiSelect}
+        handleItemSelect={handleItemSelect}
+        handleItemComplete={handleItemComplete}
+        handleItemEdit={handleItemEdit}
+        handleItemDelete={handleDelete}
+        handleItemRefresh={handleItemRefresh}
+        toggleItemRead={toggleRead}
+      />
 
-      <h2>Completed Items</h2>
-      {props.permissions === EUserPermissions.WRITE && (
-        <MultiSelectMenu
-          setCopy={setCopy}
-          setMove={setMove}
-          isMultiSelect={completeMultiSelect}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
-          setMultiSelect={setCompleteMultiSelect}
-        />
-      )}
-      <ListGroup className="mb-3">
-        {completedItems.map((item: IListItem) => (
-          <ListItem
-            key={item.id}
-            item={item}
-            permissions={props.permissions}
-            selectedItems={selectedItems}
-            pending={pending}
-            listType={props.list.type}
-            handleItemSelect={handleItemSelect}
-            handleItemComplete={handleItemComplete}
-            handleItemEdit={handleItemEdit}
-            handleItemDelete={handleDelete}
-            handleItemRefresh={handleItemRefresh}
-            toggleItemRead={toggleRead}
-            multiSelect={completeMultiSelect}
-          />
-        ))}
-      </ListGroup>
+      <CompletedItemsSection
+        completedItems={completedItems}
+        permissions={props.permissions}
+        selectedItems={selectedItems}
+        pending={pending}
+        listType={props.list.type}
+        completeMultiSelect={completeMultiSelect}
+        setCopy={setCopy}
+        setMove={setMove}
+        setSelectedItems={setSelectedItems}
+        setCompleteMultiSelect={setCompleteMultiSelect}
+        handleItemSelect={handleItemSelect}
+        handleItemComplete={handleItemComplete}
+        handleItemEdit={handleItemEdit}
+        handleItemDelete={handleDelete}
+        handleItemRefresh={handleItemRefresh}
+        toggleItemRead={toggleRead}
+      />
       <ConfirmModal
         action="delete"
         body={deleteConfirmationModalBody()}

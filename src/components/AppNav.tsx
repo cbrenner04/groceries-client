@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
+
+import { showToast } from '../utils/toast';
 
 import axios from 'utils/api';
 import { UserContext } from 'AppRouter';
@@ -21,7 +22,7 @@ const AppNav: React.FC<IAppNavProps> = (props): React.JSX.Element => {
       // noop
     }
     props.signOutUser();
-    toast('Log out successful', { type: 'info' });
+    showToast.info('Log out successful');
     navigate('/users/sign_in');
   };
 

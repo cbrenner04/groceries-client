@@ -8,6 +8,7 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,14 +16,25 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build:production
       - run: npm run test:ci
+      
+      # Bundle size tracking for all builds
+      - name: Analyze bundle size
+        run: du -sh build/static/js/*.js && du -sh build/static/css/*.css
+      
+      # Full Lighthouse audit only on merge to master or manual trigger
+      - name: Run Lighthouse CI
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun

@@ -1,5 +1,6 @@
 import React, { type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
+import { BookmarkIcon } from '../icons';
 
 export interface IBookmarkProps {
   handleClick: MouseEventHandler;
@@ -9,7 +10,12 @@ export interface IBookmarkProps {
 
 const Bookmark: React.FC<IBookmarkProps> = (props): React.JSX.Element => (
   <Button variant="link" onClick={props.handleClick} className="p-0 me-3" data-test-id={props.testID}>
-    <i className={`${props.read ? 'fas' : 'far'} fa-bookmark fa-2x text-secondary`} />
+    <BookmarkIcon
+      solid={props.read}
+      size="2x"
+      className="text-secondary"
+      data-test-id={`${props.read ? 'read' : 'unread'}-bookmark-icon`}
+    />
   </Button>
 );
 

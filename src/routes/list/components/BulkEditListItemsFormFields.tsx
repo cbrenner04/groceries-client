@@ -14,7 +14,7 @@ export interface IBulkEditListItemsFormFieldsProps {
     id: string;
     label: string;
     data_type: 'boolean' | 'date_time' | 'free_text' | 'number';
-    position?: number;
+    position: number;
   }[];
   fieldUpdates: IFieldUpdate[];
   handleFieldChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -86,9 +86,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
     <React.Fragment>
       <div>Update attributes for all items.</div>
       <br />
-      {props.fieldConfigurations
-        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-        .map((config) => renderField(config))}
+      {props.fieldConfigurations.sort((a, b) => a.position - b.position).map((config) => renderField(config))}
     </React.Fragment>
   );
 };
