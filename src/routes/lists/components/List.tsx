@@ -4,7 +4,7 @@ import update from 'immutability-helper';
 import { Link } from 'react-router';
 
 import { formatDate } from 'utils/format';
-import listIconClass from 'utils/list_icon';
+import listIcon from './listIcon';
 import type { IList } from 'typings';
 
 export interface IListProps {
@@ -33,7 +33,7 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
 
   const listName = (
     <h5 className="mb-1">
-      <i className={`fa ${listIconClass(props.list.type)} text-secondary me-3`} />
+      {listIcon(props.list.type)}
       {props.listName}
     </h5>
   );

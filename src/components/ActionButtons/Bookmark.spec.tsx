@@ -1,11 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import Bookmark, { type IBookmarkProps } from './Bookmark';
 
 async function setup(suppliedProps?: Partial<IBookmarkProps>): Promise<{
   bookmark: HTMLElement;
+  findByTestId: RenderResult['findByTestId'];
   handleClick: jest.Mock;
   user: UserEvent;
 }> {
@@ -21,28 +22,31 @@ async function setup(suppliedProps?: Partial<IBookmarkProps>): Promise<{
     ...suppliedProps,
   };
 
-  const { findByRole } = render(<Bookmark {...props} />);
+  const component = render(<Bookmark {...props} />);
+  const { findByRole, findByTestId } = component;
   const bookmark = await findByRole('button');
 
-  return { bookmark, handleClick, user };
+  return { bookmark, findByTestId, handleClick, user };
 }
 
 describe('Bookmark', () => {
   describe('when read is true', () => {
     it('renders the filled in bookmark', async () => {
-      const { bookmark } = await setup({ read: true });
+      const { bookmark, findByTestId } = await setup({ read: true });
 
       expect(bookmark).toMatchSnapshot();
-      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('fas'));
+      // SVG icon (solid version when read=true)
+      expect(await findByTestId('read-bookmark-icon')).toBeInTheDocument();
     });
   });
 
   describe('when read is false', () => {
     it('renders the bookmark outline', async () => {
-      const { bookmark } = await setup({ read: false });
+      const { bookmark, findByTestId } = await setup({ read: false });
 
       expect(bookmark).toMatchSnapshot();
-      expect(bookmark.firstChild).toHaveAttribute('class', expect.stringContaining('far'));
+      // SVG icon (outline version when read=false)
+      expect(await findByTestId('unread-bookmark-icon')).toBeInTheDocument();
     });
   });
 

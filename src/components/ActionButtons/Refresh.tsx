@@ -1,5 +1,6 @@
 import React, { type CSSProperties, type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
+import { RedoIcon } from '../icons';
 
 interface IRefreshProps {
   handleClick: MouseEventHandler;
@@ -18,7 +19,7 @@ const Refresh: React.FC<IRefreshProps> = (props): React.JSX.Element => (
     style={props.style ?? {}}
     disabled={props.disabled ?? false}
   >
-    <i className="fa fa-redo fa-2x text-primary" />
+    <RedoIcon size="2x" className="text-primary" data-test-id="redo-icon" />
   </Button>
 );
 

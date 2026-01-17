@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
-import { toast } from 'react-toastify';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import EditPassword from './EditPassword';
@@ -42,7 +43,7 @@ describe('EditPassword', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Password successfully updated', { type: 'info' });
+    expect(showToast.info).toHaveBeenCalledWith('Password successfully updated');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -55,7 +56,7 @@ describe('EditPassword', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors on failed request', async () => {
@@ -67,7 +68,7 @@ describe('EditPassword', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors on unknown error', async () => {
@@ -79,6 +80,6 @@ describe('EditPassword', () => {
     await user.click(await findByText('Set my password'));
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

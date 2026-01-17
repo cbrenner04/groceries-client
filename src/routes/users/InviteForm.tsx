@@ -1,8 +1,9 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
+
+import { showToast } from '../../utils/toast';
 
 import { EmailField } from 'components/FormFields';
 import axios from 'utils/api';
@@ -16,25 +17,25 @@ const InviteForm: React.FC = (): React.JSX.Element => {
     event.preventDefault();
     try {
       await axios.post('/auth/invitation', { email });
-      toast(`${email} successfully invited`, { type: 'info' });
+      showToast.info(`${email} successfully invited`);
       navigate('/lists');
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
-          toast('You must sign in', { type: 'error' });
+          showToast.error('You must sign in');
           navigate('/users/sign_in');
         } else {
           const responseTextKeys = Object.keys(error.response.data!);
           const responseErrors = responseTextKeys.map(
             (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          toast(responseErrors.join(' and '), { type: 'error' });
+          showToast.error(responseErrors.join(' and '));
         }
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
     }
   };

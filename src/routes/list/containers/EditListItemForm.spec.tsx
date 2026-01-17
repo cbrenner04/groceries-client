@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -17,12 +17,9 @@ import EditListItemForm from './EditListItemForm';
 
 // Mock dependencies
 jest.mock('utils/api');
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockToast = toast as jest.MockedFunction<typeof toast>;
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 // Helper function to get the form element
 const getForm = (): HTMLFormElement => {
@@ -178,7 +175,7 @@ describe('EditListItemForm', () => {
             list_item_field_configuration_id: 'field-config2',
           },
         });
-        expect(mockToast).toHaveBeenCalledWith('Item successfully updated', { type: 'info' });
+        expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully updated');
         expect(mockLocation.href).toBe('/lists/123');
       });
     });
@@ -263,7 +260,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
         expect(mockLocation.href).toBe('/users/sign_in');
       });
     });
@@ -281,7 +278,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
         expect(mockLocation.href).toBe('/lists/123');
       });
     });
@@ -299,7 +296,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
         expect(mockLocation.href).toBe('/lists/123');
       });
     });
@@ -323,9 +320,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('quantity must be greater than 0 and product cannot be blank', {
-          type: 'error',
-        });
+        expect(mockShowToast.error).toHaveBeenCalledWith('quantity must be greater than 0 and product cannot be blank');
       });
     });
 
@@ -349,7 +344,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('title cannot be blank or author cannot be blank', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('title cannot be blank or author cannot be blank');
       });
     });
 
@@ -366,7 +361,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
       });
     });
 
@@ -383,7 +378,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith('Unexpected error occurred', { type: 'error' });
+        expect(mockShowToast.error).toHaveBeenCalledWith('Unexpected error occurred');
       });
     });
   });

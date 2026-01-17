@@ -33,9 +33,22 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
             <h5
               class="mb-1"
             >
-              <i
-                class="fa fa-shopping-bag text-secondary me-3"
-              />
+              <svg
+                aria-hidden="true"
+                class="text-secondary me-3"
+                fill="currentColor"
+                focusable="false"
+                height="20"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
+                />
+              </svg>
               foo
             </h5>
           </div>
@@ -93,9 +106,22 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
             <h5
               class="mb-1"
             >
-              <i
-                class="fa fa-shopping-bag text-secondary me-3"
-              />
+              <svg
+                aria-hidden="true"
+                class="text-secondary me-3"
+                fill="currentColor"
+                focusable="false"
+                height="20"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
+                />
+              </svg>
               foo
             </h5>
           </div>
@@ -142,9 +168,22 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
             <h5
               class="mb-1"
             >
-              <i
-                class="fa fa-shopping-bag text-secondary me-3"
-              />
+              <svg
+                aria-hidden="true"
+                class="text-secondary me-3"
+                fill="currentColor"
+                focusable="false"
+                height="20"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
+                />
+              </svg>
               foo
             </h5>
           </div>
@@ -196,9 +235,22 @@ exports[`List does render Link when includeLinkToList is true 1`] = `
               <h5
                 class="mb-1"
               >
-                <i
-                  class="fa fa-shopping-bag text-secondary me-3"
-                />
+                <svg
+                  aria-hidden="true"
+                  class="text-secondary me-3"
+                  fill="currentColor"
+                  focusable="false"
+                  height="20"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
+                  />
+                </svg>
                 foo
               </h5>
             </a>

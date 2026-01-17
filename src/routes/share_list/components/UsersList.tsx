@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Trash } from 'components/ActionButtons';
+import { AngleDoubleDownIcon, AngleDoubleUpIcon } from 'components/icons';
 import TitlePopover from 'components/TitlePopover';
 import type { IUsersList } from 'typings';
 
@@ -46,13 +47,11 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
                   <ButtonGroup className="float-end">
                     <Button
                       variant="link"
-                      className="p-0 me-4"
+                      className="p-0 me-4 text-warning"
                       onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
                       data-test-id="toggle-permissions"
                     >
-                      <i
-                        className={`fas fa-angle-double-${permissions === 'write' ? 'down' : 'up'} fa-2x text-warning`}
-                      />
+                      {permissions === 'write' ? <AngleDoubleDownIcon size="2x" /> : <AngleDoubleUpIcon size="2x" />}
                     </Button>
                     <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />
                   </ButtonGroup>

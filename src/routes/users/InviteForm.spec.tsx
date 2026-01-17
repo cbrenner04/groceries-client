@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
-import { toast } from 'react-toastify';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import InviteForm from './InviteForm';
@@ -39,7 +40,7 @@ describe('InviteForm', () => {
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo@example.com successfully invited', { type: 'info' });
+    expect(showToast.info).toHaveBeenCalledWith('foo@example.com successfully invited');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -51,7 +52,7 @@ describe('InviteForm', () => {
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -63,7 +64,7 @@ describe('InviteForm', () => {
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('handles failed to send request from invite user request', async () => {
@@ -74,7 +75,7 @@ describe('InviteForm', () => {
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('handles unknown error from invite user request', async () => {
@@ -85,7 +86,7 @@ describe('InviteForm', () => {
     await user.click((await findAllByRole('button'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(showToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('goes back to lists on Cancel', async () => {

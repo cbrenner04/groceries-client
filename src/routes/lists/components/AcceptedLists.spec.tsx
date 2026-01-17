@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
@@ -10,9 +11,7 @@ import { EListType } from 'typings';
 
 import AcceptedLists, { type IAcceptedListsProps } from './AcceptedLists';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -113,7 +112,8 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('clear-delete'));
     await waitFor(() => expect(queryByTestId('clear-delete')).toBeNull());
 
-    expect(toast).not.toHaveBeenCalled();
+    expect(mockShowToast.info).not.toHaveBeenCalled();
+    expect(mockShowToast.error).not.toHaveBeenCalled();
     expect(axios.delete).not.toHaveBeenCalled();
   });
 
@@ -127,7 +127,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully deleted.');
     expect(axios.delete).toHaveBeenCalledTimes(1);
     expect(axios.patch).not.toHaveBeenCalled();
     expect(props.setIncompleteLists).toHaveBeenCalledWith([props.incompleteLists[1]]);
@@ -143,7 +143,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully deleted.');
     expect(axios.delete).toHaveBeenCalledTimes(1);
     expect(axios.patch).not.toHaveBeenCalled();
     expect(props.setCompletedLists).toHaveBeenCalledWith([props.completedLists[1]]);
@@ -160,7 +160,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-    expect(toast).toHaveBeenCalledWith('List successfully deleted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully deleted.');
     expect(axios.patch).toHaveBeenCalledTimes(1);
     expect(axios.delete).not.toHaveBeenCalled();
     expect(props.setCompletedLists).toHaveBeenCalledWith([props.completedLists[0]]);
@@ -185,7 +185,7 @@ describe('AcceptedLists', () => {
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1)); // For owned list
     await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1)); // For non-owned list
 
-    expect(toast).toHaveBeenCalledWith('Lists successfully deleted.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('Lists successfully deleted.');
     expect(props.setIncompleteLists).toHaveBeenCalledWith([]);
   });
 
@@ -199,7 +199,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -213,7 +213,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when delete fails with 404', async () => {
@@ -226,7 +226,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when delete fails with error other than 401, 403, 404', async () => {
@@ -239,7 +239,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when delete fails to send request', async () => {
@@ -252,7 +252,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when delete unknown error occurs', async () => {
@@ -265,7 +265,7 @@ describe('AcceptedLists', () => {
     await user.click(await findByTestId('confirm-delete'));
     await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('completes list', async () => {
@@ -275,7 +275,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully completed.');
     expect(props.setCompletedLists).toHaveBeenCalledWith([
       props.completedLists[0],
       props.completedLists[1],
@@ -297,7 +297,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1)); // 1 list user doesn't own
 
-    expect(toast).toHaveBeenCalledWith('List successfully completed.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully completed.');
     expect(props.setCompletedLists).toHaveBeenCalledWith([
       props.completedLists[0],
       props.completedLists[1],
@@ -312,7 +312,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -323,7 +323,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors on 404 from list completion', async () => {
@@ -333,7 +333,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when error not 401, 403, 404 from list completion', async () => {
@@ -343,7 +343,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when request fails from list completion', async () => {
@@ -353,7 +353,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when known failure from list completion', async () => {
@@ -363,7 +363,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('refreshes list on lists page', async () => {
@@ -383,7 +383,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully refreshed.');
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
       props.incompleteLists[0],
       props.incompleteLists[1],
@@ -408,7 +408,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully refreshed.');
     expect(props.setIncompleteLists).not.toHaveBeenCalled();
   });
 
@@ -436,7 +436,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1)); // only owns 1 list
 
-    expect(toast).toHaveBeenCalledWith('List successfully refreshed.', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully refreshed.');
     expect(props.setIncompleteLists).toHaveBeenCalledWith([
       props.incompleteLists[0],
       props.incompleteLists[1],
@@ -451,7 +451,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -462,7 +462,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors on 404 from list refresh', async () => {
@@ -472,7 +472,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when error not 401, 403, 404 from list refresh', async () => {
@@ -482,7 +482,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when request fails from list refresh', async () => {
@@ -492,7 +492,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when known failure from list refresh', async () => {
@@ -502,7 +502,7 @@ describe('AcceptedLists', () => {
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
   it('shows merge button when multi select and more than 1 list is selected', async () => {
@@ -611,7 +611,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -683,7 +683,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when merge fails with 404', async () => {
@@ -708,7 +708,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
   });
 
   it('shows errors when merge fails with error other than 401, 403, 404', async () => {
@@ -733,7 +733,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when merge fails to send request', async () => {
@@ -758,7 +758,7 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when merge unknown error occurs', async () => {
@@ -783,6 +783,6 @@ describe('AcceptedLists', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

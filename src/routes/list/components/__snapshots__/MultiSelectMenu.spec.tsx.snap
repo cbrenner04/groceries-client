@@ -9,7 +9,7 @@ exports[`MultiSelectMenu renders when isMultiSelect is false 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-       Select
+      Select
     </button>
   </div>
 </div>
@@ -42,8 +42,7 @@ exports[`MultiSelectMenu renders when isMultiSelect is true 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      Hide
-       Select
+      Hide Select
     </button>
   </div>
 </div>
@@ -76,8 +75,7 @@ exports[`MultiSelectMenu renders with empty selected items array 1`] = `
       class="mx-auto float-end btn btn-link"
       type="button"
     >
-      Hide
-       Select
+      Hide Select
     </button>
   </div>
 </div>

@@ -1,12 +1,9 @@
-import { toast } from 'react-toastify';
-
 import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './utils';
 import axios from '../../utils/api';
 import { EListType } from '../../typings';
+import { showToast } from '../../utils/toast';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 describe('utils', () => {
   const navigate = jest.fn();
@@ -204,7 +201,7 @@ describe('utils', () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
       await fetchLists({ navigate });
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -286,7 +283,7 @@ describe('utils', () => {
       axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
       await fetchCompletedLists({ navigate });
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -319,7 +316,7 @@ describe('utils', () => {
 
       await fetchListToEdit({ id, navigate });
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -328,7 +325,7 @@ describe('utils', () => {
 
       await fetchListToEdit({ id, navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -337,7 +334,7 @@ describe('utils', () => {
 
       await fetchListToEdit({ id, navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 

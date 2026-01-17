@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, waitFor, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import PageNotFound from './PageNotFound';
 
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
@@ -35,7 +37,7 @@ describe('PageNotFound', () => {
 
     expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
 
     (axios.get as jest.Mock).mockClear();

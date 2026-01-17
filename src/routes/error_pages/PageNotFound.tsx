@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useNavigate, type NavigateFunction } from 'react-router';
 import Async, { type PromiseFn } from 'react-async';
-import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import Loading from 'components/Loading';
@@ -14,7 +15,7 @@ const fetchData = async (fetchParams: { navigate: NavigateFunction }): Promise<v
     await axios.get('/auth/validate_token');
   } catch (err: unknown) {
     if ((err as AxiosError).response?.status === 401) {
-      toast('You must sign in', { type: 'error' });
+      showToast.error('You must sign in');
       fetchParams.navigate('/users/sign_in');
     }
     // any other errors will just be caught and render the generic UnknownError

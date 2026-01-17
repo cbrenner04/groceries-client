@@ -11,6 +11,10 @@
 # production
 /build
 
+# performance monitoring
+bundle-stats.json
+.lighthouseci
+
 # misc
 .DS_Store
 .env.local
