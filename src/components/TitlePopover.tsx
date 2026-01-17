@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { OverlayTrigger, Popover, Row } from 'react-bootstrap';
 import { type OverlayTriggerRenderProps } from 'react-bootstrap/esm/OverlayTrigger';
+import { QuestionCircleIcon } from './icons';
 
 interface ITitlePopoverProps {
   message: ReactNode;
@@ -21,11 +22,15 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
     {(overlayProps: OverlayTriggerRenderProps): React.JSX.Element => (
       <Row className="m-0">
         <h2 className="text-capitalize pe-0 w-auto">{props.title}</h2>
-        <i
+        <button
           {...overlayProps}
-          className="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          type="button"
+          className="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
           data-test-id={`${props.title}-popover`}
-        />
+          style={{ cursor: 'pointer', lineHeight: 1 }}
+        >
+          <QuestionCircleIcon size="sm" />
+        </button>
       </Row>
     )}
   </OverlayTrigger>

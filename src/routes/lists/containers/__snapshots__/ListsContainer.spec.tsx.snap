@@ -114,10 +114,28 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
           >
             Incomplete
           </h2>
-          <i
-            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          <button
+            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
             data-test-id="Incomplete-popover"
-          />
+            style="cursor: pointer; line-height: 1;"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       <button
@@ -130,100 +148,6 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
     <div
       class="list-group"
     >
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="incomplete-list"
-        data-test-id="list-id3"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id3"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
-                    baz
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020, 12:00:00 am
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-check fa-2x text-success"
-                    />
-                  </button>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id3/users_lists"
-                  >
-                    <i
-                      class="fa fa-users fa-2x text-primary"
-                    />
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id3/edit"
-                  >
-                    <i
-                      class="fa fa-edit fa-2x text-warning"
-                    />
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
         class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
@@ -249,9 +173,185 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M512 56c0-30.9-25.1-56-56-56s-56 25.1-56 56V365.4c-9.4-5.4-20.3-8.7-32-8.7c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64V153.3L384 128v229.4c-9.4-5.4-20.3-8.7-32-8.7c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64V32c0-17.7 14.3-32 32-32s32 14.3 32 32V56z"
+                      />
+                    </svg>
+                    baz
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="col-lg-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class=" pe-lg-3 col-lg-2"
+              >
+                <div
+                  class="float-end btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-success"
+                      data-test-id="check-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                      />
+                    </svg>
+                  </button>
+                  <a
+                    aria-disabled="false"
+                    class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
+                    data-test-id="incomplete-list-share"
+                    href="/id5/users_lists"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="users-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    aria-disabled="false"
+                    class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
+                    data-test-id="incomplete-list-edit"
+                    href="/lists/id5/edit"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-warning"
+                      data-test-id="edit-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                      />
+                    </svg>
+                  </a>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="accepted-list list-list-group-item list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-id6"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-sm-12 col-12"
+          >
+            <div
+              class=" pt-1 row"
+            >
+              <div
+                class="col-lg-6"
+              >
+                <a
+                  class="router-link"
+                  data-discover="true"
+                  href="/lists/id6"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"
+                      />
+                    </svg>
                     foobar
                   </h5>
                 </a>
@@ -277,41 +377,97 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
-                    <i
-                      class="fa fa-check fa-2x text-success"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-success"
+                      data-test-id="check-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                      />
+                    </svg>
                   </button>
                   <a
                     aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
                     data-discover="true"
                     data-test-id="incomplete-list-share"
-                    href="/id5/users_lists"
+                    href="/id6/users_lists"
                     style="pointer-events: none;"
                   >
-                    <i
-                      class="fa fa-users fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="users-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"
+                      />
+                    </svg>
                   </a>
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
+                    href="/lists/id6/edit"
                   >
-                    <i
-                      class="fa fa-edit fa-2x text-warning"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-warning"
+                      data-test-id="edit-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                      />
+                    </svg>
                   </a>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -338,10 +494,28 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
           >
             Completed
           </h2>
-          <i
-            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          <button
+            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
             data-test-id="Completed-popover"
-          />
+            style="cursor: pointer; line-height: 1;"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       <button
@@ -379,9 +553,22 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
+                      />
+                    </svg>
                     bar
                   </h5>
                 </a>
@@ -407,18 +594,46 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
-                    <i
-                      class="fa fa-redo fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="redo-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -451,9 +666,22 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
+                      />
+                    </svg>
                     bar
                   </h5>
                 </a>
@@ -480,18 +708,46 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                     disabled=""
                     type="button"
                   >
-                    <i
-                      class="fa fa-redo fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="redo-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -618,10 +874,28 @@ exports[`ListsContainer renders 1`] = `
           >
             Pending
           </h2>
-          <i
-            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          <button
+            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
             data-test-id="Pending-popover"
-          />
+            style="cursor: pointer; line-height: 1;"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       <button
@@ -654,9 +928,22 @@ exports[`ListsContainer renders 1`] = `
                 <h5
                   class="mb-1"
                 >
-                  <i
-                    class="fa fa-shopping-bag text-secondary me-3"
-                  />
+                  <svg
+                    aria-hidden="true"
+                    class="text-secondary me-3"
+                    fill="currentColor"
+                    focusable="false"
+                    height="20"
+                    role="img"
+                    style="display: inline-block; vertical-align: middle;"
+                    viewBox="0 0 512 512"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
+                    />
+                  </svg>
                   foo
                 </h5>
               </div>
@@ -681,18 +968,46 @@ exports[`ListsContainer renders 1`] = `
                     data-test-id="pending-list-accept"
                     type="button"
                   >
-                    <i
-                      class="fa fa-check fa-2x text-success"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-success"
+                      data-test-id="check-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="pending-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -719,10 +1034,28 @@ exports[`ListsContainer renders 1`] = `
           >
             Incomplete
           </h2>
-          <i
-            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          <button
+            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
             data-test-id="Incomplete-popover"
-          />
+            style="cursor: pointer; line-height: 1;"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       <button
@@ -735,100 +1068,6 @@ exports[`ListsContainer renders 1`] = `
     <div
       class="list-group"
     >
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="incomplete-list"
-        data-test-id="list-id3"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id3"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    <i
-                      class="fa fa-music text-secondary me-3"
-                    />
-                    baz
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020, 12:00:00 am
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-check fa-2x text-success"
-                    />
-                  </button>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id3/users_lists"
-                  >
-                    <i
-                      class="fa fa-users fa-2x text-primary"
-                    />
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id3/edit"
-                  >
-                    <i
-                      class="fa fa-edit fa-2x text-warning"
-                    />
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
         class="accepted-list list-list-group-item list-group-item"
         data-test-class="incomplete-list"
@@ -854,9 +1093,185 @@ exports[`ListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-list text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M512 56c0-30.9-25.1-56-56-56s-56 25.1-56 56V365.4c-9.4-5.4-20.3-8.7-32-8.7c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64V153.3L384 128v229.4c-9.4-5.4-20.3-8.7-32-8.7c-35.3 0-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64V32c0-17.7 14.3-32 32-32s32 14.3 32 32V56z"
+                      />
+                    </svg>
+                    baz
+                  </h5>
+                </a>
+              </div>
+              <div
+                class="col-lg-4"
+              >
+                <small
+                  class="text-muted"
+                >
+                  May 31 2020, 12:00:00 am
+                </small>
+              </div>
+              <div
+                class=" pe-lg-3 col-lg-2"
+              >
+                <div
+                  class="float-end btn-group"
+                  role="group"
+                >
+                  <button
+                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    data-test-id="incomplete-list-complete"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-success"
+                      data-test-id="check-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                      />
+                    </svg>
+                  </button>
+                  <a
+                    aria-disabled="false"
+                    class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
+                    data-test-id="incomplete-list-share"
+                    href="/id5/users_lists"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="users-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    aria-disabled="false"
+                    class="p-0 me-3 list-button-enabled"
+                    data-discover="true"
+                    data-test-id="incomplete-list-edit"
+                    href="/lists/id5/edit"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-warning"
+                      data-test-id="edit-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                      />
+                    </svg>
+                  </a>
+                  <button
+                    class="p-0 btn btn-link"
+                    data-test-id="incomplete-list-trash"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="accepted-list list-list-group-item list-group-item"
+        data-test-class="incomplete-list"
+        data-test-id="list-id6"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-sm-12 col-12"
+          >
+            <div
+              class=" pt-1 row"
+            >
+              <div
+                class="col-lg-6"
+              >
+                <a
+                  class="router-link"
+                  data-discover="true"
+                  href="/lists/id6"
+                >
+                  <h5
+                    class="mb-1"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"
+                      />
+                    </svg>
                     foobar
                   </h5>
                 </a>
@@ -882,41 +1297,97 @@ exports[`ListsContainer renders 1`] = `
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
-                    <i
-                      class="fa fa-check fa-2x text-success"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-success"
+                      data-test-id="check-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                      />
+                    </svg>
                   </button>
                   <a
                     aria-disabled="true"
                     class="p-0 me-3 list-button-disabled"
                     data-discover="true"
                     data-test-id="incomplete-list-share"
-                    href="/id5/users_lists"
+                    href="/id6/users_lists"
                     style="pointer-events: none;"
                   >
-                    <i
-                      class="fa fa-users fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="users-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"
+                      />
+                    </svg>
                   </a>
                   <a
                     aria-disabled="false"
                     class="p-0 me-3 list-button-enabled"
                     data-discover="true"
                     data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
+                    href="/lists/id6/edit"
                   >
-                    <i
-                      class="fa fa-edit fa-2x text-warning"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-warning"
+                      data-test-id="edit-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                      />
+                    </svg>
                   </a>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -943,10 +1414,28 @@ exports[`ListsContainer renders 1`] = `
           >
             Completed
           </h2>
-          <i
-            class="far fa-question-circle float-end text-secondary ps-0 w-auto"
+          <button
+            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
             data-test-id="Completed-popover"
-          />
+            style="cursor: pointer; line-height: 1;"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       <button
@@ -984,9 +1473,22 @@ exports[`ListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
+                      />
+                    </svg>
                     bar
                   </h5>
                 </a>
@@ -1012,18 +1514,46 @@ exports[`ListsContainer renders 1`] = `
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
-                    <i
-                      class="fa fa-redo fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="redo-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -1056,9 +1586,22 @@ exports[`ListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <i
-                      class="fa fa-book text-secondary me-3"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-secondary me-3"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
+                      />
+                    </svg>
                     bar
                   </h5>
                 </a>
@@ -1085,18 +1628,46 @@ exports[`ListsContainer renders 1`] = `
                     disabled=""
                     type="button"
                   >
-                    <i
-                      class="fa fa-redo fa-2x text-primary"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-primary"
+                      data-test-id="redo-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="p-0 btn btn-link"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
-                    <i
-                      class="fa fa-trash fa-2x text-danger"
-                    />
+                    <svg
+                      aria-hidden="true"
+                      class="text-danger"
+                      data-test-id="trash-icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="32"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="32"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>

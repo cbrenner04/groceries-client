@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
@@ -24,7 +24,10 @@ describe('CompletedLists', () => {
   it('renders unknown error when error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = setup();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    });
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
@@ -51,7 +54,10 @@ describe('CompletedLists', () => {
       },
     });
     const { container, findByTestId } = setup();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    });
 
     expect(axios.get).toHaveBeenCalledWith('/v2/completed_lists/');
     expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');

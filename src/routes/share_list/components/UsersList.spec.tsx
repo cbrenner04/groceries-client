@@ -85,9 +85,9 @@ describe('UsersList', () => {
   });
 
   it('toggles user permissions', async () => {
-    const { findAllByRole, props, user } = setup(true);
+    const { findAllByTestId, props, user } = setup(true);
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.click((await findAllByTestId('toggle-permissions'))[0]);
 
     // the first user in the list is the signed in user and is therefore not displayed
     const firstDisplayedUser = props.users[1];
@@ -98,10 +98,10 @@ describe('UsersList', () => {
     );
   });
 
-  it('toggles user permissions', async () => {
-    const { findAllByRole, props, user } = setup(true);
+  it('removes share', async () => {
+    const { findAllByTestId, props, user } = setup(true);
 
-    await user.click((await findAllByRole('button'))[1]);
+    await user.click((await findAllByTestId('remove-share'))[0]);
 
     // the first user in the list is the signed in user and is therefore not displayed
     const firstDisplayedUser = props.users[1];

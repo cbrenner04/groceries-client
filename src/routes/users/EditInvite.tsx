@@ -1,8 +1,9 @@
 import React, { type FormEvent, type ChangeEvent, useState } from 'react';
 import queryString from 'query-string';
-import { toast } from 'react-toastify';
 import { useNavigate, useLocation } from 'react-router';
 import { type AxiosError } from 'axios';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 
@@ -23,7 +24,7 @@ const EditInvite: React.FC = (): React.JSX.Element => {
     };
     try {
       await axios.put('/auth/invitation', user);
-      toast('Password successfully updated', { type: 'info' });
+      showToast.info('Password successfully updated');
       navigate('/users/sign_in');
     } catch (err: unknown) {
       const error = err as AxiosError;
@@ -32,11 +33,11 @@ const EditInvite: React.FC = (): React.JSX.Element => {
         const responseErrors = responseTextKeys.map(
           (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
         );
-        toast(responseErrors.join(' and '), { type: 'error' });
+        showToast.error(responseErrors.join(' and '));
       } else if (error.request) {
-        toast('Something went wrong', { type: 'error' });
+        showToast.error('Something went wrong');
       } else {
-        toast(error.message, { type: 'error' });
+        showToast.error(error.message);
       }
     }
   };

@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { showToast } from './toast';
 import type { AxiosError } from 'axios';
 
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Data may be incomplete and user actions may not persist.';
@@ -14,17 +14,17 @@ export function handleFailure(params: {
 
   if (error.response) {
     if (error.response.status === 401) {
-      toast('You must sign in', { type: 'error' });
+      showToast.error('You must sign in');
       if (navigate) {
         navigate('/users/sign_in');
       }
     } else if ([403, 404].includes(error.response.status)) {
-      toast(notFoundMessage, { type: 'error' });
+      showToast.error(notFoundMessage);
       if (navigate) {
         navigate(redirectURI);
       }
     } else {
-      toast(DEFAULT_ERROR_MESSAGE, { type: 'error' });
+      showToast.error(DEFAULT_ERROR_MESSAGE);
       if (navigate) {
         navigate(redirectURI);
       }
@@ -33,13 +33,13 @@ export function handleFailure(params: {
     if (rethrow) {
       throw error;
     } else {
-      toast('Network error. Please check your connection.', { type: 'error' });
+      showToast.error('Network error. Please check your connection.');
     }
   } else {
     if (rethrow) {
       throw error;
     } else {
-      toast(DEFAULT_ERROR_MESSAGE, { type: 'error' });
+      showToast.error(DEFAULT_ERROR_MESSAGE);
     }
   }
 }

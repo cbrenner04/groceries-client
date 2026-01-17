@@ -10,7 +10,7 @@ describe('UnknownError', () => {
     const button = getByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(button.style.color).toBe('rgb(0, 123, 255)');
+    expect(button.style.color).toBe('rgb(0, 86, 179)');
     expect(button.style.textDecoration).toBe('none');
   });
 
@@ -22,12 +22,12 @@ describe('UnknownError', () => {
     await user.hover(button);
 
     expect(container).toMatchSnapshot();
-    expect(button.style.color).toBe('rgb(0, 86, 179)');
+    expect(button.style.color).toBe('rgb(0, 61, 130)');
     expect(button.style.textDecoration).toBe('underline');
 
     await user.unhover(button);
 
-    expect(button.style.color).toBe('rgb(0, 123, 255)');
+    expect(button.style.color).toBe('rgb(0, 86, 179)');
     expect(button.style.textDecoration).toBe('none');
   });
 

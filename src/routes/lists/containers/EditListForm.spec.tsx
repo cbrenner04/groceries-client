@@ -1,15 +1,13 @@
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 
 import EditListForm, { type IEditListFormProps } from './EditListForm';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -79,7 +77,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('List successfully updated', { type: 'info' });
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully updated');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -90,7 +88,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -101,7 +99,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -112,7 +110,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -132,7 +130,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('foo bar and baz foobar', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and baz foobar');
   });
 
   it('displays toast when error in sending request', async () => {
@@ -145,7 +143,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('displays toast when unknown error', async () => {
@@ -158,7 +156,7 @@ describe('EditListForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith('request failed', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('request failed');
   });
 
   it('goes back to lists on Cancel', async () => {

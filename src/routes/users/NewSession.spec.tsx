@@ -1,8 +1,9 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+
+import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import NewSession, { type INewSessionProps } from './NewSession';
@@ -81,7 +82,7 @@ describe('NewSession', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(props.signInUser).toHaveBeenCalledWith('foo', 'bar', 1);
-    expect(toast).toHaveBeenCalledWith('Welcome foo@example.com!', { type: 'info' });
+    expect(showToast.info).toHaveBeenCalledWith('Welcome foo@example.com!');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
@@ -99,9 +100,7 @@ describe('NewSession', () => {
     await user.click(await findByRole('button'));
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong. Please check your credentials and try again.', {
-      type: 'error',
-    });
+    expect(showToast.error).toHaveBeenCalledWith('Something went wrong. Please check your credentials and try again.');
     expect(mockNavigate).not.toHaveBeenCalled();
     expect(spy).not.toHaveBeenCalled();
   });
