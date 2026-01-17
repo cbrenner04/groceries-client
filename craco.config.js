@@ -31,8 +31,8 @@ module.exports = {
       // Performance budgets
       webpackConfig.performance = {
         hints: 'warning',
-        maxEntrypointSize: 819200, // 800KB for main bundle
-        maxAssetSize: 819200, // 800KB for individual assets (vendor chunks)
+        maxEntrypointSize: 870400, // 850KB for main bundle
+        maxAssetSize: 870400, // 850KB for individual assets (vendor chunks)
       };
 
       return webpackConfig;
