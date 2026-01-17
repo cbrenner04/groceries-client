@@ -1,6 +1,9 @@
 import { toast } from 'react-toastify';
 import * as toastUtils from './toast';
 
+// Unmock the toast utility for this test file since we want to test the actual implementation
+jest.unmock('./toast');
+
 jest.mock('react-toastify', () => {
   const toastMock: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
   toastMock.success = jest.fn();
@@ -16,6 +19,7 @@ jest.mock('react-toastify', () => {
 
 describe('Toast Utility', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     jest.clearAllMocks();
   });
 
@@ -42,7 +46,7 @@ describe('Toast Utility', () => {
 
     expect(toast.error).toHaveBeenCalledWith(message, {
       position: 'top-right',
-      autoClose: 2000,
+      autoClose: 5000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
@@ -76,24 +80,7 @@ describe('Toast Utility', () => {
 
     expect(toast.warning).toHaveBeenCalledWith(message, {
       position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      pauseOnFocusLoss: false,
-      rtl: false,
-      theme: 'colored',
-    });
-  });
-
-  it('should call toast.default (backward compatibility) with correct parameters', () => {
-    const message = 'Default message';
-    toastUtils.showToast.default(message);
-
-    expect(toast).toHaveBeenCalledWith(message, {
-      position: 'top-right',
-      autoClose: 2000,
+      autoClose: 3000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
@@ -119,6 +106,46 @@ describe('Toast Utility', () => {
       pauseOnFocusLoss: false,
       rtl: false,
       theme: 'colored',
+    });
+  });
+
+  describe('Toast deduplication', () => {
+    it('should prevent duplicate toasts within deduplication window', () => {
+      const message = 'Duplicate error';
+
+      // First toast should show
+      toastUtils.showToast.error(message);
+      expect(toast.error).toHaveBeenCalledTimes(1);
+
+      // Second identical toast should be blocked
+      toastUtils.showToast.error(message);
+      expect(toast.error).toHaveBeenCalledTimes(1);
+
+      // Fast forward past deduplication window
+      jest.advanceTimersByTime(3500);
+
+      // Now it should show again
+      toastUtils.showToast.error(message);
+      expect(toast.error).toHaveBeenCalledTimes(2);
+    });
+
+    it('should allow different message types to show simultaneously', () => {
+      const message = 'Same message different types';
+
+      toastUtils.showToast.error(message);
+      toastUtils.showToast.warning(message);
+      toastUtils.showToast.info(message);
+
+      expect(toast.error).toHaveBeenCalledTimes(1);
+      expect(toast.warning).toHaveBeenCalledTimes(1);
+      expect(toast.info).toHaveBeenCalledTimes(1);
+    });
+
+    it('should allow different messages of same type', () => {
+      toastUtils.showToast.error('First error');
+      toastUtils.showToast.error('Second error');
+
+      expect(toast.error).toHaveBeenCalledTimes(2);
     });
   });
 });

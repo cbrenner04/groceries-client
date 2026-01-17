@@ -1,11 +1,9 @@
-import { toast } from 'react-toastify';
+import { showToast } from '../../utils/toast';
 
 import { fetchData } from './utils';
 import axios from '../../utils/api';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 describe('utils', () => {
   describe('fetchData', () => {
@@ -63,7 +61,7 @@ describe('utils', () => {
 
       await fetchData({ listId: '1', navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -88,7 +86,7 @@ describe('utils', () => {
 
       await fetchData({ listId: '1', navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -97,7 +95,7 @@ describe('utils', () => {
 
       await fetchData({ listId: '1', navigate });
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(navigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -106,7 +104,7 @@ describe('utils', () => {
 
       await fetchData({ listId: '1', navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
@@ -115,7 +113,7 @@ describe('utils', () => {
 
       await fetchData({ listId: '1', navigate });
 
-      expect(toast).toHaveBeenCalledWith('List not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 

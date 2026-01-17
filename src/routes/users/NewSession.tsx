@@ -2,7 +2,8 @@ import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Form } from 'react-bootstrap';
 import Async, { type PromiseFn } from 'react-async';
-import { toast } from 'react-toastify';
+
+import { showToast } from '../../utils/toast';
 
 import { CheckboxField, EmailField, PasswordField } from 'components/FormFields';
 import axios from 'utils/api';
@@ -38,10 +39,10 @@ const NewSession: React.FC<INewSessionProps> = (props): React.JSX.Element => {
     try {
       const response = await axios.post('/auth/sign_in', user);
       props.signInUser(response.headers['access-token'], response.headers.client, response.data.data.uid);
-      toast(`Welcome ${email}!`, { type: 'info' });
+      showToast.info(`Welcome ${email}!`);
       navigate('/lists');
     } catch {
-      toast('Something went wrong. Please check your credentials and try again.', { type: 'error' });
+      showToast.error('Something went wrong. Please check your credentials and try again.');
     }
   };
 

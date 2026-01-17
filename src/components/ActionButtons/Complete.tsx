@@ -1,5 +1,6 @@
 import React, { type CSSProperties, type MouseEventHandler } from 'react';
 import { Button } from 'react-bootstrap';
+import { CheckIcon } from '../icons';
 
 interface ICompleteProps {
   handleClick: MouseEventHandler;
@@ -18,7 +19,7 @@ const Complete: React.FC<ICompleteProps> = (props): React.JSX.Element => (
     disabled={props.disabled ?? false}
     style={props.style ?? {}}
   >
-    <i className="fa fa-check fa-2x text-success" />
+    <CheckIcon size="2x" className="text-success" data-test-id="check-icon" />
   </Button>
 );
 

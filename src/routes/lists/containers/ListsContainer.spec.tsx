@@ -1,7 +1,6 @@
 import React from 'react';
 import { act, render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
@@ -9,9 +8,8 @@ import { EListType, type TUserPermissions } from 'typings';
 
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+// Mock the new toast utilities
+const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -63,22 +61,22 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     ],
     incompleteLists: [
       {
-        id: 'id3',
+        id: 'id5',
         name: 'baz',
         type: EListType.MUSIC_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id3',
+        users_list_id: 'id5',
         owner_id: 'id1',
         refreshed: false,
       },
       {
-        id: 'id5',
+        id: 'id6',
         name: 'foobar',
         type: EListType.TO_DO_LIST,
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id5',
+        users_list_id: 'id6',
         owner_id: 'id1',
         refreshed: false,
       },
@@ -86,9 +84,9 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     currentUserPermissions: {
       id1: 'write',
       id2: 'write',
-      id3: 'write',
+      id5: 'write',
       id4: 'read',
-      id5: 'read',
+      id6: 'read',
     } as TUserPermissions,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -320,13 +318,9 @@ describe('ListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith(
+    expect(mockShowToast.error).toHaveBeenCalledWith(
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
-      {
-        type: 'error',
-        autoClose: 5000,
-      },
     );
     jest.useRealTimers();
   });
@@ -341,7 +335,7 @@ describe('ListsContainer', () => {
   it('creates list on form submit', async () => {
     axios.post = jest.fn().mockResolvedValue({
       data: {
-        id: 'id6',
+        id: 'id7',
         name: 'new list',
         type: EListType.BOOK_LIST,
         created_at: new Date('05/31/2020').toISOString(),
@@ -356,10 +350,12 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
-    expect(toast).toHaveBeenCalledWith('List successfully added.', { type: 'info' });
-    expect(await findByTestId('list-id6')).toHaveTextContent('new list');
+    expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
+    expect(await findByTestId('list-id7')).toHaveTextContent('new list');
   });
 
   it('redirects to login when submit response is 401', async () => {
@@ -369,9 +365,11 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
-    expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
@@ -382,9 +380,11 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
-    expect(toast).toHaveBeenCalledWith('foo bar and foobar foobaz', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
 
   it('shows errors when request fails', async () => {
@@ -394,9 +394,11 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
-    expect(toast).toHaveBeenCalledWith('Something went wrong', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('shows errors when unknown error occurs', async () => {
@@ -406,8 +408,10 @@ describe('ListsContainer', () => {
     await user.type(await findByLabelText('Name'), 'new list');
     await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
     await user.click(await findByText('Create List'));
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
 
-    expect(toast).toHaveBeenCalledWith('failed to send request', { type: 'error' });
+    expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 });

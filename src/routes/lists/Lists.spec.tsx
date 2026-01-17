@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult, waitFor } from '@testing-library/react';
+import { render, type RenderResult, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
@@ -25,7 +25,10 @@ describe('Lists', () => {
   it('renders unknown error when error occurs', async () => {
     axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderLists();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    });
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
@@ -35,7 +38,10 @@ describe('Lists', () => {
     // Mock the fetchLists function to return undefined
     jest.spyOn(utils, 'fetchLists').mockResolvedValue(undefined);
     const { container, findByRole } = renderLists();
-    await waitFor(() => expect(utils.fetchLists).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await waitFor(() => expect(utils.fetchLists).toHaveBeenCalledTimes(1));
+    });
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
@@ -95,7 +101,10 @@ describe('Lists', () => {
     });
 
     const { container, findByTestId } = renderLists();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    });
 
     expect(await findByTestId('list-id1')).toHaveAttribute('data-test-class', 'completed-list');
     expect(await findByTestId('list-id2')).toHaveAttribute('data-test-class', 'incomplete-list');

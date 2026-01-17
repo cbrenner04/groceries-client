@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ListGroup, ButtonGroup } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import update from 'immutability-helper';
 import { useNavigate } from 'react-router';
+
+import { showToast } from '../../../utils/toast';
 
 import TitlePopover from 'components/TitlePopover';
 import ConfirmModal from 'components/ConfirmModal';
@@ -65,7 +66,7 @@ const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element =>
         resetMultiSelect();
         setPending(false);
       }
-      toast(`${pluralize(listsToReject.length)} successfully accepted.`, { type: 'info' });
+      showToast.info(`${pluralize(listsToAccept.length)} successfully accepted.`);
     } catch (error) {
       failure(error, navigate, setPending);
     }
@@ -98,7 +99,7 @@ const PendingLists: React.FC<IPendingListsProps> = (props): React.JSX.Element =>
         setListsToReject([]);
         setPending(false);
       }
-      toast(`${pluralize(listsToReject.length)} successfully rejected.`, { type: 'info' });
+      showToast.info(`${pluralize(listsToReject.length)} successfully rejected.`);
     } catch (error) {
       failure(error, navigate, setPending);
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ListItem from './ListItem';
+import ListItem, { memoCompare } from './ListItem';
 import type { IListItem, IListItemField } from 'typings';
 import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
 
@@ -214,6 +214,69 @@ describe('ListItem', () => {
   it('does not render bookmark button for non-book lists', () => {
     render(<ListItem {...defaultProps} />);
     expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
+  });
+
+  describe('memoization comparator', () => {
+    it('does not re-render when non-compared props change', () => {
+      const prev = { ...defaultProps };
+      const next = {
+        ...prev,
+        handleItemEdit: jest.fn(),
+        item: {
+          ...prev.item,
+          fields: [...prev.item.fields, { ...prev.item.fields[0], id: '99', label: 'extra', data: 'foo' }],
+          updated_at: prev.item.updated_at,
+        },
+        selectedItems: [...prev.selectedItems],
+      };
+
+      expect(memoCompare(prev, next)).toBe(true);
+    });
+
+    it('re-renders when compared props change (pending, updated_at)', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, pending: true })).toBe(false);
+      expect(memoCompare(base, { ...base, selectedItems: [mockItem] })).toBe(false);
+      expect(memoCompare(base, { ...base, item: { ...base.item, updated_at: new Date().toISOString() } })).toBe(false);
+    });
+
+    it('re-renders when multiSelect changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, multiSelect: true })).toBe(false);
+      expect(memoCompare({ ...base, multiSelect: true }, { ...base, multiSelect: false })).toBe(false);
+    });
+
+    it('re-renders when permissions change', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, permissions: EUserPermissions.READ })).toBe(false);
+      expect(
+        memoCompare({ ...base, permissions: EUserPermissions.READ }, { ...base, permissions: EUserPermissions.WRITE }),
+      ).toBe(false);
+    });
+
+    it('re-renders when listType changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, listType: EListType.BOOK_LIST })).toBe(false);
+      expect(
+        memoCompare({ ...base, listType: EListType.BOOK_LIST }, { ...base, listType: EListType.GROCERY_LIST }),
+      ).toBe(false);
+    });
+
+    it('re-renders when item.id changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, item: { ...base.item, id: 'different-id' } })).toBe(false);
+    });
+
+    it('re-renders when item.completed changes', () => {
+      const base = { ...defaultProps };
+      expect(memoCompare(base, { ...base, item: { ...base.item, completed: true } })).toBe(false);
+      expect(
+        memoCompare(
+          { ...base, item: { ...base.item, completed: true } },
+          { ...base, item: { ...base.item, completed: false } },
+        ),
+      ).toBe(false);
+    });
   });
 });
 

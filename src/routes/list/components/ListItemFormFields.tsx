@@ -8,7 +8,7 @@ export interface IListItemFormFieldsProps {
     id: string;
     label: string;
     data_type: EListItemFieldType;
-    position?: number;
+    position: number;
   }[];
   fields: IListItemField[];
   setFormData: ChangeEventHandler<HTMLInputElement>;
@@ -17,6 +17,9 @@ export interface IListItemFormFieldsProps {
 }
 
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element => {
+  // Sort field configurations by position
+  const sortedFieldConfigurations = [...props.fieldConfigurations].sort((a, b) => a.position - b.position);
+
   // Helper to find the value for a given config
   const getFieldValue = (configLabel: string): IListItemField | undefined => {
     return props.fields.find((field) => field.label === configLabel);
@@ -32,32 +35,19 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
     switch (config.data_type) {
       case 'boolean':
         return (
-          <CheckboxField
-            key={config.id}
-            name={config.label}
-            label={config.label.charAt(0).toUpperCase() + config.label.slice(1)}
-            value={field ? field.data === 'true' : false}
-            handleChange={props.setFormData}
-            classes="mb-3"
-          />
+          <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="mb-3" />
         );
       case 'date_time':
         return <DateField key={config.id} {...commonProps} value={field?.data ?? ''} />;
       case 'number':
-        return (
-          <NumberField
-            key={config.id}
-            {...commonProps}
-            value={field?.data !== undefined ? Number(field.data) : undefined}
-          />
-        );
+        return <NumberField key={config.id} {...commonProps} value={field?.data ? Number(field.data) : undefined} />;
       case 'free_text':
       default:
         return <TextField key={config.id} {...commonProps} value={field?.data ?? ''} />;
     }
   };
 
-  return <React.Fragment>{props.fieldConfigurations.map((config) => renderField(config))}</React.Fragment>;
+  return <React.Fragment>{sortedFieldConfigurations.map((config) => renderField(config))}</React.Fragment>;
 };
 
 export default ListItemFormFields;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
+import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
@@ -9,9 +9,7 @@ import { EListType } from 'typings';
 
 import CompletedListsContainer from './CompletedListsContainer';
 
-jest.mock('react-toastify', () => ({
-  toast: jest.fn(),
-}));
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 function setup(): RenderResult {
   const props = {
@@ -201,11 +199,8 @@ describe('CompletedListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith(
+    expect(mockShowToast.error).toHaveBeenCalledWith(
       'Something went wrong. Data may be incomplete and user actions may not persist.',
-      {
-        type: 'error',
-      },
     );
   });
 
@@ -218,13 +213,9 @@ describe('CompletedListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(toast).toHaveBeenCalledWith(
+    expect(mockShowToast.error).toHaveBeenCalledWith(
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
-      {
-        type: 'error',
-        autoClose: 5000,
-      },
     );
   });
 });

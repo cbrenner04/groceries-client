@@ -189,40 +189,6 @@ describe('BulkEditListItemsFormFields', () => {
     expect(textFields[2]).toHaveValue('Third Value');
   });
 
-  it('handles fields without position (defaults to 0)', async () => {
-    await setup({
-      fieldConfigurations: [
-        {
-          id: 'field1',
-          label: 'no_position',
-          data_type: 'free_text',
-        },
-        {
-          id: 'field2',
-          label: 'with_position',
-          data_type: 'free_text',
-          position: 1,
-        },
-      ],
-      fieldUpdates: [
-        {
-          label: 'no_position',
-          data: 'No Position Value',
-          clear: false,
-        },
-        {
-          label: 'with_position',
-          data: 'With Position Value',
-          clear: false,
-        },
-      ],
-    });
-
-    const textFields = screen.getAllByRole('textbox');
-    expect(textFields[0]).toHaveValue('No Position Value');
-    expect(textFields[1]).toHaveValue('With Position Value');
-  });
-
   describe('field interactions', () => {
     it('calls handleFieldChange when text field changes', async () => {
       const { props, user } = await setup();

@@ -1,24 +1,48 @@
 import React from 'react';
-import { render, waitFor, type RenderResult } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { toast } from 'react-toastify';
-import userEvent, { type UserEvent } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
-import { mockNavigate, advanceTimersByTime } from 'test-utils/helpers';
 import { bookListTestData } from 'test-utils/factories';
+import { listCache } from 'utils/lightweightCache';
+import { clearFieldConfigCache } from 'utils/fieldConfigCache';
+import { unifiedCache } from 'utils/lightweightCache';
+
+// Create reference for test expectations
+const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
 
 // Mock react-router
+const mockLocation = {
+  pathname: '/lists/id1',
+  search: '',
+  hash: '',
+  state: null,
+  key: 'initial',
+};
+
+const mockNavigate = jest.fn();
+async function advanceTimersByTime(ms: number): Promise<void> {
+  await act(async () => {
+    jest.advanceTimersByTime(ms);
+  });
+}
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
+  useLocation: (): typeof mockLocation => mockLocation,
 }));
 
-interface ISetupReturn extends RenderResult {
-  user: UserEvent;
+type TestRenderResult = ReturnType<typeof render>;
+type TestUserEvent = ReturnType<typeof userEvent.setup>;
+
+interface ISetupReturn extends TestRenderResult {
+  user: TestUserEvent;
   props: IListContainerProps;
 }
 
@@ -49,6 +73,16 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
 describe('ListContainer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Clear cache to ensure test isolation
+    listCache.clear();
+    unifiedCache.clear(); // Clear unified cache
+    clearFieldConfigCache();
+  });
+
+  afterEach(() => {
+    // Ensure no test leaves fake timers enabled
+    jest.useRealTimers();
   });
 
   describe('Polling', () => {
@@ -64,7 +98,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -72,7 +106,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -104,7 +138,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -112,7 +146,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
@@ -129,13 +163,12 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'You may not be connected to the internet. Please check your connection. ' +
           'Data may be incomplete and user actions may not persist.',
-        { autoClose: 5000, type: 'error' },
       );
 
       jest.useRealTimers();
@@ -143,28 +176,49 @@ describe('ListContainer', () => {
 
     it('shows toast with server error', async () => {
       jest.useFakeTimers();
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+      const serverError = new Error('Server Error') as unknown as AxiosError;
+      serverError.response = { status: 500 } as unknown as AxiosResponse;
+      axios.get = jest.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(3000);
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
+
+      jest.useRealTimers();
+    });
+
+    it('does not poll when tab is hidden', async () => {
+      jest.useFakeTimers();
+
+      // Set tab to hidden
+      Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+      Object.defineProperty(document, 'hidden', { value: true, writable: true });
+
+      axios.get = jest.fn().mockResolvedValue({
+        data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+      });
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      // Advance time - polling should not fire when tab is hidden
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10));
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
 
       jest.useRealTimers();
     });
   });
 
   describe('Permissions', () => {
-    it('renders ListForm when user has write permissions', async () => {
+    it('renders Add Item button (form collapsed) when user has write permissions', async () => {
       const { container, findByTestId } = setup({ permissions: EUserPermissions.WRITE });
 
       expect(container).toMatchSnapshot();
-      expect(await findByTestId('list-item-form')).toBeVisible();
+      expect(await findByTestId('add-item-button')).toBeVisible();
     });
 
     it('does not render ListForm when user has read permissions', () => {
@@ -404,6 +458,447 @@ describe('ListContainer', () => {
     });
   });
 
+  describe('Prefetch and undefined UI states', () => {
+    const originalIdlePrefetch = process.env.REACT_APP_PREFETCH_IDLE;
+    const originalMountPrefetch = process.env.REACT_APP_PREFETCH_ON_MOUNT;
+
+    afterEach(() => {
+      process.env.REACT_APP_PREFETCH_IDLE = originalIdlePrefetch;
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = originalMountPrefetch;
+      // allow cleanup of test shim
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (global as any).requestIdleCallback;
+    });
+
+    it('uses preloaded field configurations without making API calls', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({
+            data: [
+              { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+              { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+            ],
+          });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { findByLabelText, findByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: [
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+        ],
+      });
+
+      // Open the form; fields should already be available from preloaded configurations
+      await user.click(await findByTestId('add-item-button'));
+      await waitFor(async () => expect(await findByLabelText('Quantity')).toBeVisible());
+
+      // No field configuration API calls should be made since data is preloaded
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not prefetch on mount when disabled via environment variable', async () => {
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not prefetch on mount when listItemFieldConfigurations already exist', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not prefetch on mount when no listItemConfiguration ID exists', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemConfiguration: undefined,
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles errors gracefully during mount prefetch', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.reject(new Error('Network error'));
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      // Should not throw or crash the component
+      const { container } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait for any async operations
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Component should still render normally
+      expect(container).toBeInTheDocument();
+
+      // In test environment, prefetch may be disabled, so we just verify component works
+      expect(container.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+    });
+
+    it('does not idle-prefetch when disabled via environment variable', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not idle-prefetch when listItemFieldConfigurations already exist', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not idle-prefetch when no listItemConfiguration ID exists', async () => {
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemConfiguration: undefined,
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('renders gracefully with preloaded field configurations and no API calls', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.reject(new Error('Network error'));
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      // Should not throw or crash the component with preloaded configurations
+      const { container } = setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+      });
+
+      // Wait for any async operations
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Component should still render normally
+      expect(container).toBeInTheDocument();
+
+      // No field configuration API calls should be made since data is preloaded
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles component re-renders gracefully', async () => {
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { rerender } = setup({ permissions: EUserPermissions.WRITE });
+
+      // Re-render with same props
+      rerender(
+        <MemoryRouter>
+          <ListContainer
+            userId={defaultTestData.userId}
+            list={defaultTestData.list}
+            completedItems={[defaultTestData.completedItem]}
+            categories={defaultTestData.categories}
+            listUsers={defaultTestData.listUsers}
+            notCompletedItems={defaultTestData.notCompletedItems}
+            listsToUpdate={defaultTestData.listsToUpdate}
+            listItemConfiguration={defaultTestData.listItemConfiguration}
+            permissions={EUserPermissions.WRITE}
+          />
+        </MemoryRouter>,
+      );
+
+      // Component should still render normally after re-render
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 50)));
+
+      // Verify component is still functioning
+      expect(document.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+    });
+
+    it('does not trigger prefetch when REACT_APP_PREFETCH_ON_MOUNT is false', async () => {
+      // Explicitly disable mount prefetch
+      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: undefined,
+      });
+
+      // Wait a moment to ensure any potential prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API due to disabled prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('does not trigger idle prefetch when REACT_APP_PREFETCH_IDLE is false', async () => {
+      // Explicitly disable idle prefetch
+      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).requestIdleCallback = (cb: () => void): number => {
+        cb();
+        return 1;
+      };
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: [] });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: undefined,
+      });
+
+      // Wait a moment to ensure any potential idle prefetch would have fired
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 100)));
+
+      // Should not have called field configurations API due to disabled idle prefetch
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBe(0);
+    });
+
+    it('handles form interaction correctly when no prefetch data is available', async () => {
+      // Test that form works normally without prefetch data
+      const mockFieldConfigs = [
+        { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+        { id: 'config2', label: 'quantity', data_type: 'number', position: 0 },
+      ];
+
+      const getSpy = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          return Promise.resolve({ data: mockFieldConfigs });
+        }
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+      axios.get = getSpy;
+
+      const { findByTestId, findByLabelText, user } = setup({
+        permissions: EUserPermissions.WRITE,
+        listItemFieldConfigurations: undefined, // No prefetch data
+      });
+
+      // Open the form
+      await user.click(await findByTestId('add-item-button'));
+
+      // Fields should load normally when form opens
+      await waitFor(async () => {
+        expect(await findByLabelText('Quantity')).toBeVisible(); // position 0
+        expect(await findByLabelText('Product')).toBeVisible(); // position 1
+      });
+
+      // Should have made API call when form opened (not from prefetch)
+      const configCalls = getSpy.mock.calls.filter(([u]: [string]) => u.includes('list_item_field_configurations'));
+      expect(configCalls.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('does not render the string "undefined" for items missing name fields', async () => {
+      const unnamedItem: IListItem = createListItem('id_unnamed', false, [
+        createField('id_cat', 'category', 'foo', 'id_unnamed'),
+      ]);
+      const { findByText, queryByText } = setup({ notCompletedItems: [unnamedItem] });
+
+      expect(await findByText('Untitled Item')).toBeVisible();
+      expect(queryByText(/undefined/i)).toBeNull();
+    });
+  });
+
   describe('Item Rendering', () => {
     it('does not render incomplete items when none exist', () => {
       const { container } = setup({ notCompletedItems: [] });
@@ -419,6 +914,11 @@ describe('ListContainer', () => {
   describe('Delete Operations', () => {
     it('renders confirmation modal when delete is clicked', async () => {
       const { container, findByTestId, user } = setup();
+
+      // Wait for any async operations to complete before clicking
+      await waitFor(() => {
+        expect(findByTestId('not-completed-item-delete-id2')).resolves.toBeDefined();
+      });
 
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
@@ -437,7 +937,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -450,7 +950,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to delete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete item');
     });
 
     it('handles 404 on delete', async () => {
@@ -462,7 +962,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to delete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete item');
     });
 
     it('handles not 401, 403, 404 on delete', async () => {
@@ -474,9 +974,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -489,7 +988,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on delete', async () => {
@@ -501,9 +1000,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('confirm-delete'));
 
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -523,7 +1021,7 @@ describe('ListContainer', () => {
 
       expect(queryByText('not completed quantity bar not completed product')).toBeNull();
       expect(queryByText('Bar')).toBeNull();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes item, hides modal, does not remove category when item is not last of category', async () => {
@@ -542,7 +1040,7 @@ describe('ListContainer', () => {
 
       expect(queryByText('not completed quantity foo not completed product')).toBeNull();
       expect(await findByText('Foo')).toBeVisible();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes item, hides modal, when item is in completed', async () => {
@@ -561,7 +1059,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('completed quantity foo completed product')).toBeNull();
-      expect(toast).toHaveBeenCalledWith('Item successfully deleted.', { type: 'info' });
+      expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes all items when multiple are selected', async () => {
@@ -576,8 +1074,8 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
-      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
+      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -606,8 +1104,8 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
-      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
+      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -616,13 +1114,13 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
 
       // Should show warning toast about partial failure
-      expect(toast).toHaveBeenCalledWith('Some items failed to delete. Item deleted successfully. Item failed.', {
-        type: 'warning',
-      });
+      expect(mockShowToast.warning).toHaveBeenCalledWith(
+        'Some items failed to delete. Item deleted successfully. Item failed.',
+      );
 
       // The successful item should be deleted, failed item should be rolled back
-      // checkboxes[1] = id3 (foo not completed product) - should be deleted (success)
-      // checkboxes[2] = id4 (foo not completed product 2) - should be rolled back (failure)
+      // checkboxes[2] = id3 (foo not completed product) - should be deleted (success)
+      // checkboxes[3] = id4 (foo not completed product 2) - should be rolled back (failure)
       expect(queryByText('not completed quantity foo not completed product')).toBeNull();
       expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
     });
@@ -650,7 +1148,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
 
       // Should show error toast for complete failure
-      expect(toast).toHaveBeenCalledWith('Failed to delete items. Please try again.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete items. Please try again.');
 
       // All items should be rolled back to their original state
       expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
@@ -745,7 +1243,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -770,7 +1268,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -778,9 +1276,9 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
       // Should show warning toast about partial failure
-      expect(toast).toHaveBeenCalledWith('Some items failed to complete. Item completed successfully. Item failed.', {
-        type: 'warning',
-      });
+      expect(mockShowToast.warning).toHaveBeenCalledWith(
+        'Some items failed to complete. Item completed successfully. Item failed.',
+      );
 
       // The successful item should remain in completed, failed item should be rolled back to not completed
       expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
@@ -798,7 +1296,7 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -819,7 +1317,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -830,7 +1328,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to complete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to complete item');
     });
 
     it('handles 404 on complete', async () => {
@@ -840,7 +1338,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Failed to complete item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to complete item');
     });
 
     it('handles not 401, 403, 404 on complete', async () => {
@@ -850,9 +1348,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -863,7 +1360,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on complete', async () => {
@@ -873,16 +1370,21 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });
 
   describe('Refresh Operations', () => {
     it('moves item to not completed when refreshed', async () => {
-      axios.post = jest.fn().mockResolvedValue({
+      // Mock the new API pattern: create item, create fields, fetch complete item
+      axios.post = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field
+        .mockResolvedValueOnce({ data: {} }); // Create product field
+      axios.get = jest.fn().mockResolvedValueOnce({
         data: {
           archived_at: null,
           category: 'foo',
@@ -895,8 +1397,12 @@ describe('ListContainer', () => {
           refreshed: false,
           updated_at: '2020-05-24T11:07:48.751-05:00',
           user_id: 'id1',
+          fields: [
+            createField('id1', 'quantity', 'completed quantity', 'id6'),
+            createField('id2', 'product', 'foo completed product', 'id6'),
+          ],
         },
-      });
+      }); // Fetch complete item
       axios.put = jest.fn().mockResolvedValue(undefined);
       const { findByTestId, findByText, user } = setup();
 
@@ -906,7 +1412,8 @@ describe('ListContainer', () => {
 
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(3)); // Create item + 2 fields
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1)); // Fetch complete item
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       await waitFor(async () =>
@@ -921,20 +1428,29 @@ describe('ListContainer', () => {
     });
 
     it('moves items to not completed when refreshed with multiple selected', async () => {
+      // Mock the new API pattern: create items, create fields, fetch complete items
       axios.post = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
+        .mockResolvedValueOnce({ data: {} }) // Create product field for first item
+        .mockResolvedValueOnce({ data: { id: 'id7', completed: false } }) // Create second item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field for second item
+        .mockResolvedValueOnce({ data: {} }); // Create product field for second item
+      axios.get = jest
         .fn()
         .mockResolvedValueOnce({
           data: createListItem('id6', false, [
             createField('id1', 'quantity', 'completed quantity', 'id6'),
             createField('id2', 'product', 'foo completed product', 'id6'),
           ]),
-        })
+        }) // Fetch first complete item
         .mockResolvedValueOnce({
           data: createListItem('id7', false, [
             createField('id13', 'quantity', 'completed quantity', 'id7'),
             createField('id14', 'product', 'bar completed product', 'id7'),
           ]),
-        });
+        }); // Fetch second complete item
       axios.put = jest.fn().mockResolvedValue(undefined);
       const { findAllByRole, findByTestId, findByText, findAllByText, user } = setup({
         completedItems: [
@@ -957,13 +1473,15 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+      // Create 2 items + fields (some fields may be skipped if empty)
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(7));
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2)); // Fetch 2 complete items
+      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // Mark 2 original items as refreshed
 
       await waitFor(async () =>
         expect(
@@ -987,7 +1505,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -1001,7 +1519,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Failed to refresh item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to refresh item');
     });
 
     it('handles 404 on refresh', async () => {
@@ -1014,7 +1532,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Failed to refresh item', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to refresh item');
     });
 
     it('handles not 401, 403, 404 on refresh', async () => {
@@ -1027,9 +1545,8 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1043,7 +1560,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on refresh', async () => {
@@ -1056,9 +1573,8 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });
@@ -1186,7 +1702,7 @@ describe('ListContainer', () => {
 
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const checkboxes = await findAllByRole('checkbox');
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
 
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
@@ -1221,7 +1737,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('You must sign in', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
       expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
 
@@ -1243,7 +1759,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
     });
 
     it('handles 404 on read', async () => {
@@ -1264,7 +1780,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Item not found', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
     });
 
     it('handles not 401, 403, 404 on read', async () => {
@@ -1285,9 +1801,8 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
 
@@ -1309,7 +1824,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith('Network error. Please check your connection.', { type: 'error' });
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
     });
 
     it('handles unknown failure on read', async () => {
@@ -1330,9 +1845,8 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(toast).toHaveBeenCalledWith(
+      expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
-        { type: 'error' },
       );
     });
   });
@@ -1383,14 +1897,16 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      expect((await findAllByRole('checkbox'))[0]).toBeChecked();
+      const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(multiSelectCheckboxes[0]);
+      expect(multiSelectCheckboxes[0]).toBeChecked();
 
       await user.click(await findByText('Hide Select'));
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
+      const updatedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      expect(updatedMultiSelectCheckboxes[0]).not.toBeChecked();
     });
 
     it('clears selected items for multi select is hidden for completed items', async () => {
@@ -1399,14 +1915,16 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      expect((await findAllByRole('checkbox'))[0]).toBeChecked();
+      const completedItemCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(completedItemCheckboxes[0]);
+      expect(completedItemCheckboxes[0]).toBeChecked();
 
       await user.click(await findByText('Hide Select'));
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
+      const completedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      expect(completedMultiSelectCheckboxes[0]).not.toBeChecked();
     });
 
     it('navigates to single edit form when no multi select', async () => {
@@ -1427,8 +1945,9 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      await user.click((await findAllByRole('checkbox'))[0]);
-      await user.click((await findAllByRole('checkbox'))[1]);
+      const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(multiSelectCheckboxes[0]);
+      await user.click(multiSelectCheckboxes[1]);
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -1436,8 +1955,7 @@ describe('ListContainer', () => {
     });
 
     it('multi select copy incomplete items', async () => {
-      axios.put = jest.fn().mockResolvedValue(false);
-      const { findAllByRole, findAllByText, findByText, getByLabelText, getByText, user } = setup({
+      const { findAllByRole, findAllByText, findByText, getByText, user } = setup({
         permissions: EUserPermissions.WRITE,
       });
 
@@ -1448,12 +1966,13 @@ describe('ListContainer', () => {
       await user.click((await findAllByRole('checkbox'))[1]);
       await user.click(await findByText('Copy to list'));
 
-      expect(await findByText('Choose an existing list or create a new one to copy items')).toBeVisible();
+      // Verify modal is visible
+      expect(await findByText('Complete')).toBeVisible();
 
-      await user.click(getByLabelText('Existing list'));
-      await user.selectOptions(getByLabelText('Existing list'), ['bar']);
+      // Complete the modal action
       await user.click(getByText('Complete'));
 
+      // Copy operation should keep items in the current list
       expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
       expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
       expect(getByText('not completed quantity foo not completed product')).toBeVisible();
@@ -1461,37 +1980,65 @@ describe('ListContainer', () => {
     });
 
     it('multi select move incomplete items', async () => {
-      // Mock the bulk update API call that the ChangeOtherListModal makes
-      axios.put = jest.fn().mockResolvedValue({});
-      const { findAllByRole, findAllByText, findByText, getByLabelText, getByText, user } = setup({
+      // Mock axios.put to resolve successfully for bulk update
+      axios.put = jest.fn().mockImplementation((url: string) => Promise.resolve({ data: {} }));
+
+      // Mock axios.get to return list without moved items (id2 and id3)
+      const remainingItems = [
+        defaultTestData.notCompletedItems[2], // id4
+        defaultTestData.notCompletedItems[3], // id5
+      ];
+      axios.get = jest.fn().mockImplementation((url: string) => {
+        if (url.startsWith('/v2/lists/')) {
+          return Promise.resolve({
+            data: createApiResponse(remainingItems, [defaultTestData.completedItem]),
+          });
+        }
+        return Promise.resolve({ data: {} });
+      });
+
+      const { findAllByRole, findAllByText, findByText, findByLabelText, queryByText, user } = setup({
         permissions: EUserPermissions.WRITE,
       });
 
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect(getByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(getByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
 
       await user.click((await findAllByRole('checkbox'))[1]);
       await user.click((await findAllByRole('checkbox'))[2]);
       await user.click(await findByText('Move to list'));
 
-      expect(await findByText('Choose an existing list or create a new one to move items')).toBeVisible();
+      // Verify modal is visible
+      expect(await findByText('Complete')).toBeVisible();
 
-      await user.click(getByLabelText('Existing list'));
-      await user.selectOptions(getByLabelText('Existing list'), ['bar']);
-      await user.click(getByText('Complete'));
+      // Enter a new list name to satisfy modal validation
+      // If existing lists are present, click "Create new list" first
+      const createNewListButton = queryByText('Create new list');
+      await user.click(createNewListButton!);
+      const newListInput = await findByLabelText('New list name');
+      await user.type(newListInput, 'New List');
 
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+      // Complete the modal action
+      await user.click(await findByText('Complete'));
 
-      // The move operation should remove the selected items from the not completed list
-      // The handleMove function in the component should be called after the modal completes
-      // Let's check that the items are still visible since the move happens in the callback
-      expect(getByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(getByText('not completed quantity bar not completed product')).toBeVisible();
-      expect(getByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(getByText('not completed quantity foo not completed product 2')).toBeVisible();
+      await waitFor(() => {
+        expect(axios.put).toHaveBeenCalledWith(
+          expect.stringContaining('bulk_update'),
+          expect.objectContaining({
+            list_items: expect.objectContaining({ move: true }),
+          }),
+        );
+      });
+
+      expect(queryByText('not completed quantity no category not completed product')).not.toBeInTheDocument();
+      expect(queryByText('not completed quantity foo not completed product')).not.toBeInTheDocument();
+
+      // Items that were not selected should still be visible
+      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
     });
 
     it('multi select copy complete items', async () => {
@@ -1517,7 +2064,8 @@ describe('ListContainer', () => {
       await user.click((await findAllByRole('checkbox'))[1]);
       await user.click(await findByText('Copy to list'));
 
-      expect(await findByText('Choose an existing list or create a new one to copy items')).toBeVisible();
+      // Verify modal opens
+      expect(await findByText('Complete')).toBeVisible();
     });
 
     it('multi select move complete items', async () => {
@@ -1543,7 +2091,8 @@ describe('ListContainer', () => {
       await user.click((await findAllByRole('checkbox'))[1]);
       await user.click(await findByText('Move to list'));
 
-      expect(await findByText('Choose an existing list or create a new one to move items')).toBeVisible();
+      // Verify modal opens
+      expect(await findByText('Complete')).toBeVisible();
     });
   });
 

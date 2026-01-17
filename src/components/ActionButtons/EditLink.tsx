@@ -1,5 +1,6 @@
 import React, { type CSSProperties } from 'react';
 import { Link } from 'react-router';
+import { EditIcon } from '../icons';
 
 interface IEditLinkProps {
   to: string;
@@ -20,7 +21,7 @@ const EditLink: React.FC<IEditLinkProps> = (props): React.JSX.Element => {
       data-test-id={props.testID}
       aria-disabled={props.disabled ?? false}
     >
-      <i className="fa fa-edit fa-2x text-warning" />
+      <EditIcon size="2x" className="text-warning" data-test-id="edit-icon" />
     </Link>
   );
 };
