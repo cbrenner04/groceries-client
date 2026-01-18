@@ -64,8 +64,13 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
     event.preventDefault();
     try {
       // Update, create, or archive each field as needed
+      const normalizedFields = fields.map((field) => ({
+        ...field,
+        data: typeof field.data === 'string' ? field.data.trimEnd() : field.data,
+      }));
+
       await Promise.all(
-        fields.map(async (field) => {
+        normalizedFields.map(async (field) => {
           /* istanbul ignore else */
           if (field.id && field.data === '') {
             // Archive (delete) the field if cleared

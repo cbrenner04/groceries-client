@@ -144,6 +144,23 @@ describe('handleAddItem', () => {
     expect(setCategories).not.toHaveBeenCalled();
   });
 
+  it('trims trailing whitespace before adding category', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'Fresh  ', '1')] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+      navigate: mockNavigate,
+    });
+    expect(setCategories).toHaveBeenCalledWith(['ExistingCategory', 'Fresh']);
+  });
+
   it('handles error', () => {
     const setCompletedItems = jest.fn(() => {
       throw new Error('fail');

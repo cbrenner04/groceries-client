@@ -180,6 +180,25 @@ describe('EditListItemForm', () => {
       });
     });
 
+    it('trims trailing whitespace before updating fields', async () => {
+      render(<EditListItemForm {...defaultProps} />);
+
+      const productInput = screen.getByLabelText('Product') as HTMLInputElement;
+      fireEvent.change(productInput, { target: { value: 'Apples  ' } });
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields/field2', {
+          list_item_field: {
+            data: 'Apples',
+            list_item_field_configuration_id: 'field-config2',
+          },
+        });
+      });
+    });
+
     it('creates new fields when data is provided for placeholder fields', async () => {
       const itemWithMissingFields = createListItem('456', false, [
         createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),

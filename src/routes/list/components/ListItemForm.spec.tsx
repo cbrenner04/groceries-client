@@ -121,6 +121,35 @@ describe('ListItemForm', () => {
     );
   });
 
+  it('trims trailing whitespace before submitting fields', async () => {
+    const fieldConfigsWithCategory = [{ id: '1', label: 'category', data_type: 'free_text' }];
+
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigsWithCategory }) // initial field config load
+      .mockResolvedValueOnce({ data: fieldConfigsWithCategory }); // field config during submit
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
+      .mockResolvedValue({}); // create item fields
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    fireEvent.change(await screen.findByLabelText('Category'), { target: { value: 'produce  ' } });
+
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith('/v2/lists/list-1/list_items/item-1/list_item_fields', {
+        list_item_field: {
+          label: 'category',
+          data: 'Produce',
+          list_item_field_configuration_id: '1',
+        },
+      });
+    });
+  });
+
   it('shows error toast on API error', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
     render(<ListItemForm {...defaultProps} />);

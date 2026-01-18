@@ -361,6 +361,17 @@ describe('fetchList', () => {
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['foo', 'bar']);
   });
+
+  it('trims trailing whitespace from categories', async () => {
+    const notCompletedItems = [
+      createListItem('id1', false, [createField('id1', 'category', 'foo  ', 'id1')]),
+      createListItem('id2', false, [createField('id2', 'category', 'bar', 'id2')]),
+    ];
+    const mockData = createApiResponse(notCompletedItems, []);
+    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchList({ id: '1', navigate: mockNavigate });
+    expect(result?.categories).toEqual(['foo', 'bar']);
+  });
 });
 
 describe('fetchListToEdit', () => {

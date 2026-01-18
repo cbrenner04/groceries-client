@@ -123,10 +123,10 @@ export async function fetchList(fetchParams: {
 
     const categories = data.not_completed_items
       .concat(data.completed_items)
-      .map((item: IListItem) => {
-        return item.fields.find((field: IListItemField) => field.label === 'category')?.data;
-      })
-      .filter(Boolean)
+      .map((item: IListItem) => item.fields.find((field: IListItemField) => field.label === 'category')?.data)
+      .filter((value): value is string => typeof value === 'string')
+      .map((value) => value.trimEnd())
+      .filter((value) => value !== '')
       .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
     data.categories = categories;
 
