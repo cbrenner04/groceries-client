@@ -1,4 +1,4 @@
-import { formatDate, formatDueBy, prettyDueBy, capitalize, prettyListType } from './format';
+import { formatDate, formatDueBy, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType } from './format';
 
 describe('format', () => {
   describe('formatDate', () => {
@@ -36,6 +36,12 @@ describe('format', () => {
   describe('prettyListType', () => {
     it('returns pretty form of input', () => {
       expect(prettyListType('groceryList')).toBe('grocery List');
+    });
+  });
+
+  describe('normalizeCategoryKey', () => {
+    it('normalizes category keys for comparison', () => {
+      expect(normalizeCategoryKey('Produce  ')).toBe('produce');
     });
   });
 });

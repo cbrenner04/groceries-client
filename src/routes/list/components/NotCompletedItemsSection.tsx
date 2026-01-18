@@ -3,7 +3,7 @@ import { ListGroup } from 'react-bootstrap';
 
 import type { IListItem, EListType } from 'typings';
 import { EUserPermissions } from 'typings';
-import { capitalize } from 'utils/format';
+import { capitalize, normalizeCategoryKey } from 'utils/format';
 
 import ListItem from './ListItem';
 import MultiSelectMenu from './MultiSelectMenu';
@@ -39,11 +39,14 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
         const fields = Array.isArray(item.fields) ? item.fields : [];
         const categoryField = fields.find((field) => field.label === 'category');
         if (categoryField?.data) {
-          const existing = Array.from(itemCategories).find(
-            (cat) => cat.toLowerCase() === categoryField.data!.toLowerCase(),
-          );
+          const normalizedCategory = categoryField.data.trimEnd();
+          if (normalizedCategory === '') {
+            return;
+          }
+          const normalizedKey = normalizeCategoryKey(normalizedCategory);
+          const existing = Array.from(itemCategories).find((cat) => normalizeCategoryKey(cat) === normalizedKey);
           if (!existing) {
-            itemCategories.add(categoryField.data!);
+            itemCategories.add(normalizedCategory);
           }
         }
       });
@@ -62,14 +65,17 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
             const hasCategoryField = fields.find((field) => field.label === 'category');
             return (
               !hasCategoryField ||
-              fields.find((field) => field.label === 'category' && (!field.data || field.data === ''))
+              fields.find((field) => field.label === 'category' && (!field.data || field.data.trimEnd() === ''))
             );
           }
 
           if (category) {
             // Show items with matching category (case-insensitive)
             return fields.find(
-              (field) => field.label === 'category' && field.data?.toLowerCase() === category.toLowerCase(),
+              (field) =>
+                field.label === 'category' &&
+                field.data &&
+                normalizeCategoryKey(field.data) === normalizeCategoryKey(category),
             );
           }
 
@@ -77,7 +83,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
           const hasCategoryField = fields.find((field) => field.label === 'category');
           return (
             !hasCategoryField ||
-            fields.find((field) => field.label === 'category' && (!field.data || field.data === ''))
+            fields.find((field) => field.label === 'category' && (!field.data || field.data.trimEnd() === ''))
           );
         });
 

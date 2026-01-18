@@ -110,6 +110,23 @@ describe('handleAddItem', () => {
     expect(setCategories).not.toHaveBeenCalled();
   });
 
+  it('does not add category when item category matches existing category with different case', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'produce', '1')] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['Produce'],
+      setCategories,
+      navigate: mockNavigate,
+    });
+    expect(setCategories).not.toHaveBeenCalled();
+  });
+
   it('does not add category when item has no category field', () => {
     const setCategories = jest.fn();
     handleAddItem({
@@ -142,6 +159,23 @@ describe('handleAddItem', () => {
       navigate: mockNavigate,
     });
     expect(setCategories).not.toHaveBeenCalled();
+  });
+
+  it('trims trailing whitespace before adding category', () => {
+    const setCategories = jest.fn();
+    handleAddItem({
+      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'Fresh  ', '1')] }],
+      pending: false,
+      setPending: mockSetPending,
+      completedItems: [],
+      setCompletedItems: mockSet,
+      notCompletedItems: [],
+      setNotCompletedItems: mockSet,
+      categories: ['ExistingCategory'],
+      setCategories,
+      navigate: mockNavigate,
+    });
+    expect(setCategories).toHaveBeenCalledWith(['ExistingCategory', 'Fresh']);
   });
 
   it('handles error', () => {

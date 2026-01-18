@@ -133,8 +133,13 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
       );
 
+      const normalizedEntries = Object.entries(formData).map(([key, value]) => {
+        const normalizedValue = typeof value === 'string' ? value.trimEnd() : value;
+        return [key, normalizedValue] as const;
+      });
+
       // Step 3: Add fields to the list item using the correct configuration IDs
-      const fieldPromises = Object.entries(formData).map(async ([key, value]) => {
+      const fieldPromises = normalizedEntries.map(async ([key, value]) => {
         /* istanbul ignore else */
         if (value !== '') {
           // Find the field configuration that matches this field
@@ -158,7 +163,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       // Use the fetched fieldConfigurations (not state) to ensure we have the latest configs
       const itemWithFields = {
         ...newItem,
-        fields: Object.entries(formData)
+        fields: normalizedEntries
           .filter(([, value]) => value !== '')
           .map(([key, value]) => ({
             id: `temp-${Date.now()}-${key}`, // temp id which will be overwritten on next pull from the server

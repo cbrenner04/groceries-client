@@ -3,6 +3,7 @@ import type { AxiosError } from 'axios';
 import { type IListItem } from 'typings';
 import { handleFailure } from '../../../../utils/handleFailure';
 import { sortItemsByCreatedAt } from './sortItemsByCreatedAt';
+import { normalizeCategoryKey } from '../../../../utils/format';
 
 export function handleAddItem(params: {
   newItems: IListItem[];
@@ -43,6 +44,11 @@ export function handleAddItem(params: {
       fields: newItem.fields,
     };
     const itemCategory = itemWithFields.fields.find((f) => f.label === 'category')?.data;
+    const normalizedCategory = itemCategory?.trimEnd();
+    const categoryExists =
+      normalizedCategory !== undefined
+        ? categories.some((category) => normalizeCategoryKey(category) === normalizeCategoryKey(normalizedCategory))
+        : false;
     if (itemWithFields.completed) {
       const updatedCompletedItems = sortItemsByCreatedAt([...completedItems, itemWithFields]);
       setCompletedItems(updatedCompletedItems);
@@ -50,8 +56,8 @@ export function handleAddItem(params: {
       const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, itemWithFields]);
       setNotCompletedItems(updatedNotCompletedItems);
     }
-    if (itemCategory && !categories.includes(itemCategory)) {
-      const newCategories = [...categories, itemCategory];
+    if (normalizedCategory && !categoryExists) {
+      const newCategories = [...categories, normalizedCategory];
       setCategories(newCategories);
       if (setIncludedCategories) {
         setIncludedCategories(newCategories);
