@@ -9,6 +9,7 @@ const capitalize = (category: string): string => {
   const withSpaces = category.replace(/_/g, ' ');
   return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 };
+const normalizeCategoryKey = (category: string): string => category.trimEnd().toLowerCase();
 const prettyListType = (listType: string): string => listType.replace(/([A-Z])/g, ($1) => ` ${$1.toUpperCase()}`);
 
-export { formatDate, formatDueBy, prettyDueBy, capitalize, prettyListType };
+export { formatDate, formatDueBy, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType };

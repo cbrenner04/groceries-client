@@ -13,6 +13,7 @@ import type {
 } from 'typings';
 import { EListType } from 'typings';
 import moment from 'moment';
+import { normalizeCategoryKey } from '../../utils/format';
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -121,13 +122,22 @@ export async function fetchList(fetchParams: {
       throw new AxiosError('Invalid data structure received from server', '500');
     }
 
-    const categories = data.not_completed_items
-      .concat(data.completed_items)
-      .map((item: IListItem) => item.fields.find((field: IListItemField) => field.label === 'category')?.data)
-      .filter((value): value is string => typeof value === 'string')
-      .map((value) => value.trimEnd())
-      .filter((value) => value !== '')
-      .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
+    const categoriesMap = new Map<string, string>();
+    data.not_completed_items.concat(data.completed_items).forEach((item: IListItem) => {
+      const rawCategory = item.fields.find((field: IListItemField) => field.label === 'category')?.data;
+      if (typeof rawCategory !== 'string') {
+        return;
+      }
+      const trimmedCategory = rawCategory.trimEnd();
+      if (trimmedCategory === '') {
+        return;
+      }
+      const key = normalizeCategoryKey(trimmedCategory);
+      if (!categoriesMap.has(key)) {
+        categoriesMap.set(key, trimmedCategory);
+      }
+    });
+    const categories = Array.from(categoriesMap.values());
     data.categories = categories;
 
     return data;
