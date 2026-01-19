@@ -44,7 +44,7 @@
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "lint": "eslint --ext .ts,.tsx src/",
     "test": "craco test",
-    "test:ci": "npm run lint && CI=true npm test -- --coverage",
+    "test:ci": "tsc --noEmit && npm run lint && CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
     "analyze": "ANALYZE=true npm run build:production",
