@@ -480,7 +480,7 @@ describe('ListContainer', () => {
             ],
           });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -513,7 +513,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -537,7 +537,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -564,7 +564,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -591,7 +591,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.reject(new Error('Network error'));
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -625,7 +625,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -656,7 +656,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -690,7 +690,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -717,7 +717,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.reject(new Error('Network error'));
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -748,7 +748,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -791,7 +791,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -827,7 +827,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: [] });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -860,7 +860,7 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({ data: mockFieldConfigs });
         }
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
           });
@@ -1989,7 +1989,7 @@ describe('ListContainer', () => {
         defaultTestData.notCompletedItems[3], // id5
       ];
       axios.get = jest.fn().mockImplementation((url: string) => {
-        if (url.startsWith('/v2/lists/')) {
+        if (url.startsWith('/lists/')) {
           return Promise.resolve({
             data: createApiResponse(remainingItems, [defaultTestData.completedItem]),
           });

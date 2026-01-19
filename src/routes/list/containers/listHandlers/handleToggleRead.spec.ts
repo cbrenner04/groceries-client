@@ -65,7 +65,7 @@ describe('handleToggleRead', () => {
       setCompleteMultiSelect,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields/read-field-1', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id/list_item_fields/read-field-1', {
       list_item_field: {
         data: 'true',
         list_item_field_configuration_id: 'read-config-1',
@@ -132,13 +132,13 @@ describe('handleToggleRead', () => {
     });
 
     expect(mockAxios.put).toHaveBeenCalledTimes(2);
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-1/list_item_fields/read-field-1', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id-1/list_item_fields/read-field-1', {
       list_item_field: {
         data: 'false',
         list_item_field_configuration_id: 'read-config-1',
       },
     });
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id-2/list_item_fields/read-field-2', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id-2/list_item_fields/read-field-2', {
       list_item_field: {
         data: 'true',
         list_item_field_configuration_id: 'read-config-2',
@@ -191,8 +191,8 @@ describe('handleToggleRead', () => {
       setCompleteMultiSelect,
     });
 
-    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1');
-    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id/list_item_fields', {
+    expect(mockAxios.get).toHaveBeenCalledWith('/lists/1');
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items/test-id/list_item_fields', {
       list_item_field: {
         data: 'true',
         list_item_field_configuration_id: 'read-config-1',

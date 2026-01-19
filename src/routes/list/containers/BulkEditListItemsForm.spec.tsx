@@ -192,7 +192,7 @@ describe('BulkEditListItemsForm', () => {
     await user.click(getByText('Update Items'));
 
     await waitFor(() => {
-      expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2', {
+      expect(mockAxios.put).toHaveBeenCalledWith('/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2', {
         item_ids: 'item-1,item-2',
         list_id: 'list-1',
         list_items: {
@@ -218,7 +218,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => {
       expect(mockAxios.put).toHaveBeenCalledWith(
-        '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
             fields_to_update: expect.arrayContaining([
@@ -245,7 +245,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => {
       expect(mockAxios.put).toHaveBeenCalledWith(
-        '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
             fields_to_update: expect.arrayContaining([
@@ -277,7 +277,7 @@ describe('BulkEditListItemsForm', () => {
     // since it has no data and is not marked for clearing
     await waitFor(() => {
       expect(mockAxios.put).toHaveBeenCalledWith(
-        '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
             fields_to_update: [], // No fields should be updated
@@ -400,7 +400,7 @@ describe('BulkEditListItemsForm', () => {
 
     await waitFor(() => {
       expect(mockAxios.put).toHaveBeenCalledWith(
-        '/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
         expect.objectContaining({
           list_items: expect.objectContaining({
             fields_to_update: [],

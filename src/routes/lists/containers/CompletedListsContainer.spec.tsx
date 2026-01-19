@@ -139,7 +139,7 @@ describe('CompletedListsContainer', () => {
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(axios.get).toHaveBeenCalledWith('/v2/completed_lists/');
+    expect(axios.get).toHaveBeenCalledWith('/completed_lists/');
     expect(await findByTestId('list-id1')).toBeVisible();
     expect(queryByTestId('list-id2')).toBeNull();
 

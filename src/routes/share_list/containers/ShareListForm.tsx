@@ -121,7 +121,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
 
   const handleSelectUser = async (user: IListUser): Promise<void> => {
     try {
-      const { data } = await axios.post(`/v2/lists/${props.listId}/users_lists`, {
+      const { data } = await axios.post(`/lists/${props.listId}/users_lists`, {
         users_list: {
           user_id: user.id,
           list_id: props.listId,
@@ -154,7 +154,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const togglePermission = async (id: string, currentPermission: string, status: string): Promise<void> => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
-      await axios.patch(`/v2/lists/${props.listId}/users_lists/${id}`, {
+      await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
         users_list: {
           permissions,
         },
@@ -181,7 +181,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
     if (usersList) {
       const { user } = usersList;
       try {
-        const { data } = await axios.patch(`/v2/lists/${props.listId}/users_lists/${id}`, {
+        const { data } = await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
           users_list: {
             has_accepted: null,
             permissions: 'write',
@@ -206,8 +206,8 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
 
   const removeShare = async (id: string): Promise<void> => {
     try {
-      await axios.delete(`/v2/lists/${props.listId}/users_lists/${id}`);
-      const { data } = await axios.get(`/v2/lists/${props.listId}/users_lists`);
+      await axios.delete(`/lists/${props.listId}/users_lists/${id}`);
+      const { data } = await axios.get(`/lists/${props.listId}/users_lists`);
       setAccepted(data.accepted);
       setInvitableUsers(data.invitable_users);
       setPending(data.pending);

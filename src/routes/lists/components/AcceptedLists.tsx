@@ -59,10 +59,10 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
       const requests = listsToDelete.map(async (list) => {
         // If user owns the list, delete it completely
         if (props.userId === list.owner_id) {
-          await axios.delete(`/v2/lists/${list.id}`);
+          await axios.delete(`/lists/${list.id}`);
         } else {
           // If user doesn't own the list, just refuse the share
-          await axios.patch(`/v2/lists/${list.id}/users_lists/${list.users_list_id}`, {
+          await axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
             users_list: { has_accepted: false },
           });
         }
@@ -105,7 +105,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     setPending(true);
     const listIds = listsToMerge.map((l) => l.id).join(',');
     try {
-      const { data } = await axios.post('/v2/lists/merge_lists', {
+      const { data } = await axios.post('/lists/merge_lists', {
         merge_lists: { list_ids: listIds, new_list_name: mergeName },
       });
       // it is unnecessary to update incompleteLists and currentUserPermissions when on completed list page
@@ -131,7 +131,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     const ownedLists = lists.filter((l) => props.userId === l.owner_id);
     const filteredLists = ownedLists.filter((l) => !l.completed);
     const filteredListsIds = filteredLists.map((l) => l.id);
-    const updateRequests = filteredLists.map((l) => axios.put(`/v2/lists/${l.id}`, { list: { completed: true } }));
+    const updateRequests = filteredLists.map((l) => axios.put(`/lists/${l.id}`, { list: { completed: true } }));
 
     setPending(true);
     Promise.all(updateRequests)
@@ -161,7 +161,7 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
     ownedLists.forEach((lList) => {
       lList.refreshed = true;
     });
-    const refreshRequests = ownedLists.map((l) => axios.post(`/v2/lists/${l.id}/refresh_list`, {}));
+    const refreshRequests = ownedLists.map((l) => axios.post(`/lists/${l.id}/refresh_list`, {}));
 
     setPending(true);
     Promise.all(refreshRequests)

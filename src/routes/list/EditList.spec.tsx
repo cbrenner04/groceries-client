@@ -183,7 +183,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(axios.get).toHaveBeenCalledWith('/v2/lists/123/edit');
+    expect(axios.get).toHaveBeenCalledWith('/lists/123/edit');
   });
 
   it('passes correct props to EditListForm when data is available', async () => {

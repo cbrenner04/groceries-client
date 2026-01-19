@@ -74,10 +74,10 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           /* istanbul ignore else */
           if (field.id && field.data === '') {
             // Archive (delete) the field if cleared
-            await axios.delete(`/v2/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`);
+            await axios.delete(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`);
           } else if (field.id && field.data !== '') {
             // Update existing field
-            await axios.put(`/v2/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`, {
+            await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,
@@ -85,7 +85,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
             });
           } else if (!field.id && field.data !== '') {
             // Create new field
-            await axios.post(`/v2/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`, {
+            await axios.post(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,

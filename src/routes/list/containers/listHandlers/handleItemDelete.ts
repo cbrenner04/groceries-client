@@ -34,7 +34,7 @@ export async function handleItemDelete(params: {
   } = params;
   setPending(true);
   try {
-    await axios.delete(`/v2/lists/${listId}/list_items/${item.id}`);
+    await axios.delete(`/lists/${listId}/list_items/${item.id}`);
     if (!skipStateUpdate) {
       if (item.completed) {
         setCompletedItems(completedItems.filter((completedItem) => completedItem.id !== item.id));

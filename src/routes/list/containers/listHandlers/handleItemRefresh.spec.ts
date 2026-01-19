@@ -77,20 +77,20 @@ describe('handleItemRefresh', () => {
       setPending,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id', {
       list_item: { refreshed: true },
     });
-    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items', {
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items', {
       list_item: { completed: false, refreshed: false },
     });
-    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id/list_item_fields', {
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items/new-item-id/list_item_fields', {
       list_item_field: {
         label: 'product',
         data: 'Test Product',
         list_item_field_configuration_id: 'config1',
       },
     });
-    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id');
+    expect(mockAxios.get).toHaveBeenCalledWith('/lists/1/list_items/new-item-id');
 
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
@@ -129,15 +129,15 @@ describe('handleItemRefresh', () => {
       setPending,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id', {
       list_item: { refreshed: true },
     });
-    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items', {
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items', {
       list_item: { completed: false, refreshed: false },
     });
     // Should not create any fields since item has no fields
     expect(mockAxios.post).toHaveBeenCalledTimes(1); // Only the item creation call
-    expect(mockAxios.get).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id');
+    expect(mockAxios.get).toHaveBeenCalledWith('/lists/1/list_items/new-item-id');
 
     expect(setCompleted).toHaveBeenCalled();
     expect(setNotCompleted).toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe('handleItemRefresh', () => {
 
     // Should only create one field (the one with actual data)
     expect(mockAxios.post).toHaveBeenCalledTimes(2); // Item creation + one field creation
-    expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/1/list_items/new-item-id/list_item_fields', {
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items/new-item-id/list_item_fields', {
       list_item_field: {
         label: 'product',
         data: 'Test Product',
