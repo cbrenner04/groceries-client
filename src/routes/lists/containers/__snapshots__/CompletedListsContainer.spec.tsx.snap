@@ -89,22 +89,6 @@ exports[`CompletedListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="text-secondary me-3"
-                      fill="currentColor"
-                      focusable="false"
-                      height="20"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM96 192c0-17.7 14.3-32 32-32s32 14.3 32 32c0 53 43 96 96 96s96-43 96-96c0-17.7 14.3-32 32-32s32 14.3 32 32c0 70.7-57.3 128-128 128s-128-57.3-128-128z"
-                      />
-                    </svg>
                     foo
                   </h5>
                 </a>
@@ -202,22 +186,6 @@ exports[`CompletedListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="text-secondary me-3"
-                      fill="currentColor"
-                      focusable="false"
-                      height="20"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
-                      />
-                    </svg>
                     bar
                   </h5>
                 </a>
@@ -315,22 +283,6 @@ exports[`CompletedListsContainer renders 1`] = `
                   <h5
                     class="mb-1"
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="text-secondary me-3"
-                      fill="currentColor"
-                      focusable="false"
-                      height="20"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384V32H96zM64 224c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zM224 448H96c-53 0-96-43-96-96V96C0 43 43 0 96 0H512c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H256V448z"
-                      />
-                    </svg>
                     baz
                   </h5>
                 </a>

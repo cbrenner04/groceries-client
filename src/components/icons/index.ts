@@ -1,16 +1,11 @@
 export { Icon } from './Icon';
 export { AngleDoubleDownIcon } from './AngleDoubleDownIcon';
 export { AngleDoubleUpIcon } from './AngleDoubleUpIcon';
-export { BookIcon } from './BookIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { CheckIcon } from './CheckIcon';
 export { CompressIcon } from './CompressIcon';
 export { EditIcon } from './EditIcon';
-export { FileIcon } from './FileIcon';
-export { ListIcon } from './ListIcon';
-export { MusicIcon } from './MusicIcon';
 export { QuestionCircleIcon } from './QuestionCircleIcon';
 export { RedoIcon } from './RedoIcon';
-export { ShoppingBagIcon } from './ShoppingBagIcon';
 export { TrashIcon } from './TrashIcon';
 export { UsersIcon } from './UsersIcon';
