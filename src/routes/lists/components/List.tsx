@@ -4,7 +4,6 @@ import update from 'immutability-helper';
 import { Link } from 'react-router';
 
 import { formatDate } from 'utils/format';
-import listIcon from './listIcon';
 import type { IList } from 'typings';
 
 export interface IListProps {
@@ -31,12 +30,7 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
     props.setSelectedLists(updatedLists);
   };
 
-  const listName = (
-    <h5 className="mb-1">
-      {listIcon(props.list.type)}
-      {props.listName}
-    </h5>
-  );
+  const listName = <h5 className="mb-1">{props.listName}</h5>;
 
   const listNameElement = props.includeLinkToList ? (
     <Link to={`/lists/${props.list.id}`} className="router-link">
