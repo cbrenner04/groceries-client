@@ -12,7 +12,7 @@ export async function handleItemComplete(params: {
   const { item, listId, setPending, navigate } = params;
   setPending(true);
   try {
-    await axios.put(`/v2/lists/${listId}/list_items/${item.id}`, { list_item: { completed: true } });
+    await axios.put(`/lists/${listId}/list_items/${item.id}`, { list_item: { completed: true } });
   } catch (err) {
     handleFailure({
       error: err as AxiosError,

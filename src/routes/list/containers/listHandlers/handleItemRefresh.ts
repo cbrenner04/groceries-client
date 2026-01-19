@@ -38,8 +38,8 @@ export async function handleItemRefresh(params: {
     };
 
     const [newItemResponse] = await Promise.all([
-      axios.post(`/v2/lists/${listId}/list_items`, newItemData),
-      axios.put(`/v2/lists/${listId}/list_items/${item.id}`, {
+      axios.post(`/lists/${listId}/list_items`, newItemData),
+      axios.put(`/lists/${listId}/list_items/${item.id}`, {
         list_item: { refreshed: true },
       }),
     ]);
@@ -49,7 +49,7 @@ export async function handleItemRefresh(params: {
     // Step 2: Create each field individually using the same API pattern as normal item creation
     const fieldCreationPromises = item.fields.map((field) => {
       if (field.data && field.data.trim() !== '') {
-        return axios.post(`/v2/lists/${listId}/list_items/${newItemId}/list_item_fields`, {
+        return axios.post(`/lists/${listId}/list_items/${newItemId}/list_item_fields`, {
           list_item_field: {
             label: field.label,
             data: field.data,
@@ -64,7 +64,7 @@ export async function handleItemRefresh(params: {
     await Promise.all(fieldCreationPromises);
 
     // Step 3: Fetch the complete item with all its fields
-    const { data: completeNewItem } = await axios.get(`/v2/lists/${listId}/list_items/${newItemId}`);
+    const { data: completeNewItem } = await axios.get(`/lists/${listId}/list_items/${newItemId}`);
 
     // Defensive programming: ensure the item has proper field data
     const finalNewItem = {

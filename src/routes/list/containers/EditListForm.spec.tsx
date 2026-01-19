@@ -102,7 +102,7 @@ describe('EditListForm', () => {
     await user.click(getByText('Update List'));
 
     expect(mockPut).toHaveBeenCalledTimes(1);
-    expect(mockPut).toHaveBeenCalledWith('/v2/lists/id1', {
+    expect(mockPut).toHaveBeenCalledWith('/lists/id1', {
       list: {
         name: 'Test List',
         completed: false,
@@ -137,7 +137,7 @@ describe('EditListForm', () => {
     // Submit form
     await user.click(getByText('Update List'));
 
-    expect(mockPut).toHaveBeenCalledWith('/v2/lists/id1', {
+    expect(mockPut).toHaveBeenCalledWith('/lists/id1', {
       list: {
         name: 'Updated Name',
         completed: true,

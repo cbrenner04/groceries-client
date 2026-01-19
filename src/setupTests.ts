@@ -55,7 +55,7 @@ jest.mock('axios', () => {
   const createMockInstance = (): Partial<jest.Mocked<typeof axios>> => {
     const mockGet = jest.fn().mockImplementation((url: string) => {
       // Default list show endpoint - uses factories for consistency
-      if (url.startsWith('/v2/lists/')) {
+      if (url.startsWith('/lists/')) {
         // Use require inside mock factory to access test utilities
         const { createApiResponse } = require('test-utils/factories');
         return Promise.resolve({ data: createApiResponse() });

@@ -49,7 +49,7 @@ describe('BulkEditListItems', () => {
 
     renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-    expect(axios.get).toHaveBeenCalledWith('/v2/lists/123/list_items/bulk_update?item_ids=1,2,3');
+    expect(axios.get).toHaveBeenCalledWith('/lists/123/list_items/bulk_update?item_ids=1,2,3');
   });
 
   it('renders the form with items when API call is successful', async () => {

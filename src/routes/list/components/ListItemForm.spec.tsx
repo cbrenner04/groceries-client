@@ -80,7 +80,7 @@ describe('ListItemForm', () => {
 
     // Wait for form submission
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('/v2/lists/list-1/list_items', {
+      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items', {
         list_item: {
           user_id: 'user-1',
           completed: true,
@@ -140,7 +140,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('/v2/lists/list-1/list_items/item-1/list_item_fields', {
+      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items/item-1/list_item_fields', {
         list_item_field: {
           label: 'category',
           data: 'Produce',
@@ -171,7 +171,7 @@ describe('ListItemForm', () => {
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('/v2/lists/list-1/list_items/item-1/list_item_fields', {
+      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items/item-1/list_item_fields', {
         list_item_field: {
           label: 'packed',
           data: 'true',

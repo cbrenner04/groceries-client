@@ -43,7 +43,7 @@ describe('handleItemComplete', () => {
       setPending,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id', {
       list_item: { completed: true },
     });
     expect(setPending).toHaveBeenCalledWith(true);
@@ -66,7 +66,7 @@ describe('handleItemComplete', () => {
       setPending,
     });
 
-    expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/1/list_items/test-id', {
+    expect(mockAxios.put).toHaveBeenCalledWith('/lists/1/list_items/test-id', {
       list_item: { completed: true },
     });
     expect(setPending).toHaveBeenCalledWith(true);

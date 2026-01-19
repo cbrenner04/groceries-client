@@ -103,7 +103,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         item_ids: field.itemIds,
       }));
 
-      await axios.put(`/v2/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
+      await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         item_ids: itemIds,
         list_id: props.list.id,
         list_items: {

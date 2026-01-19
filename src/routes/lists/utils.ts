@@ -31,7 +31,7 @@ export async function fetchLists(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFetchListsReturn | undefined> {
   try {
-    const { data } = await axios.get('/v2/lists/');
+    const { data } = await axios.get('/lists/');
     const pendingLists = sortLists(data.pending_lists);
     const completedLists = sortLists(data.accepted_lists.completed_lists);
     const incompleteLists = sortLists(data.accepted_lists.not_completed_lists);
@@ -74,7 +74,7 @@ export async function fetchListToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFetchListToEditReturn | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.id}/edit`);
+    const { data } = await axios.get(`/lists/${fetchParams.id}/edit`);
     return {
       listId: data.id,
       name: data.name,

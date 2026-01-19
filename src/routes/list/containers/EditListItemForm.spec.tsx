@@ -163,13 +163,13 @@ describe('EditListItemForm', () => {
 
       await waitFor(() => {
         expect(mockAxios.put).toHaveBeenCalledTimes(2);
-        expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields/field1', {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1', {
           list_item_field: {
             data: '2',
             list_item_field_configuration_id: 'field-config1',
           },
         });
-        expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields/field2', {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field2', {
           list_item_field: {
             data: 'Apples',
             list_item_field_configuration_id: 'field-config2',
@@ -190,7 +190,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockAxios.put).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields/field2', {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field2', {
           list_item_field: {
             data: 'Apples',
             list_item_field_configuration_id: 'field-config2',
@@ -216,7 +216,7 @@ describe('EditListItemForm', () => {
       await waitFor(() => {
         expect(mockAxios.put).toHaveBeenCalledTimes(1); // Update quantity
         expect(mockAxios.post).toHaveBeenCalledTimes(1); // Create product
-        expect(mockAxios.post).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields', {
+        expect(mockAxios.post).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields', {
           list_item_field: {
             data: 'New Product',
             list_item_field_configuration_id: 'field-config2',
@@ -236,7 +236,7 @@ describe('EditListItemForm', () => {
 
       await waitFor(() => {
         expect(mockAxios.delete).toHaveBeenCalledTimes(1);
-        expect(mockAxios.delete).toHaveBeenCalledWith('/v2/lists/123/list_items/456/list_item_fields/field1');
+        expect(mockAxios.delete).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1');
         expect(mockAxios.put).toHaveBeenCalledTimes(1); // Only product field
       });
     });

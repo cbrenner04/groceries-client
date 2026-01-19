@@ -59,7 +59,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
 
     try {
       // Use V2 API endpoint for bulk updates
-      await axios.put(`/v2/lists/${props.currentList.id}/list_items/bulk_update?item_ids=${itemIds}`, {
+      await axios.put(`/lists/${props.currentList.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         list_items: putData,
       });
       props.setShow(false);

@@ -110,7 +110,7 @@ export async function fetchList(fetchParams: {
   signal?: AbortSignal;
 }): Promise<IFulfilledListData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.id}`, { signal: fetchParams.signal });
+    const { data } = await axios.get(`/lists/${fetchParams.id}`, { signal: fetchParams.signal });
 
     // Add defensive checks for undefined data
     if (!data) {
@@ -157,7 +157,7 @@ export async function fetchListToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFulfilledEditListData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.id}/edit`);
+    const { data } = await axios.get(`/lists/${fetchParams.id}/edit`);
 
     // Add defensive checks for undefined data
     if (!data) {
@@ -181,7 +181,7 @@ export async function fetchListItemToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFulfilledEditListItemData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/${fetchParams.id}/edit`);
+    const { data } = await axios.get(`/lists/${fetchParams.list_id}/list_items/${fetchParams.id}/edit`);
 
     // Add defensive checks for undefined data
     if (!data) {
@@ -205,7 +205,7 @@ export async function fetchItemsToEdit(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<IFulfilledBulkEditItemsData | undefined> {
   try {
-    const { data } = await axios.get(`/v2/lists/${fetchParams.list_id}/list_items/bulk_update${fetchParams.search}`);
+    const { data } = await axios.get(`/lists/${fetchParams.list_id}/list_items/bulk_update${fetchParams.search}`);
 
     // Add defensive checks for undefined data
     if (!data) {
@@ -227,7 +227,7 @@ export async function fetchCompletedLists(fetchParams: {
   navigate: (url: string) => void;
 }): Promise<{ userId: string; completedLists: IList[]; currentUserPermissions: TUserPermissions } | undefined> {
   try {
-    const { data } = await axios.get('/v2/completed_lists/');
+    const { data } = await axios.get('/completed_lists/');
     return {
       userId: data.current_user_id,
       completedLists: data.completed_lists,

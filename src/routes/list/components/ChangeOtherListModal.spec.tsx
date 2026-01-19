@@ -164,7 +164,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(axios.put).toHaveBeenCalledWith('/v2/lists/list-1/list_items/bulk_update?item_ids=item-1', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/list-1/list_items/bulk_update?item_ids=item-1', {
       list_items: {
         copy: true,
         existing_list_id: 'list-2',
@@ -188,7 +188,7 @@ describe('ChangeOtherListModal', () => {
     await user.type(getByLabelText('New list name'), 'New List Name');
     await user.click(getByText('Complete'));
 
-    expect(axios.put).toHaveBeenCalledWith('/v2/lists/list-1/list_items/bulk_update?item_ids=item-1', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/list-1/list_items/bulk_update?item_ids=item-1', {
       list_items: {
         copy: false,
         existing_list_id: undefined,
@@ -356,7 +356,7 @@ describe('ChangeOtherListModal', () => {
     await user.selectOptions(getByLabelText('Existing list'), ['Existing List']);
     await user.click(getByText('Complete'));
 
-    expect(axios.put).toHaveBeenCalledWith('/v2/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2', {
+    expect(axios.put).toHaveBeenCalledWith('/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2', {
       list_items: {
         copy: true,
         existing_list_id: 'list-2',

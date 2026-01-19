@@ -36,7 +36,7 @@ export async function handleToggleRead(params: {
 
     if (readField) {
       // Update existing field
-      return axios.put(`/v2/lists/${listId}/list_items/${item.id}/list_item_fields/${readField.id}`, {
+      return axios.put(`/lists/${listId}/list_items/${item.id}/list_item_fields/${readField.id}`, {
         list_item_field: {
           data: isRead.toString(),
           list_item_field_configuration_id: readField.list_item_field_configuration_id,
@@ -45,12 +45,12 @@ export async function handleToggleRead(params: {
     } else {
       // Create new field - we need to get the field configuration first
       // Get the list to find its configuration ID
-      const { data: list } = await axios.get(`/v2/lists/${listId}`);
+      const { data: list } = await axios.get(`/lists/${listId}`);
       const fieldConfigurations = await getFieldConfigurations(list.list_item_configuration_id);
       const readConfig = fieldConfigurations.find((config) => config.label === 'read');
       /* istanbul ignore else */
       if (readConfig) {
-        return axios.post(`/v2/lists/${listId}/list_items/${item.id}/list_item_fields`, {
+        return axios.post(`/lists/${listId}/list_items/${item.id}/list_item_fields`, {
           list_item_field: {
             data: isRead.toString(),
             list_item_field_configuration_id: readConfig.id,

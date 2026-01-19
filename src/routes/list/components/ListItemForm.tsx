@@ -121,7 +121,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       }
 
       // Step 1: Create the list item
-      const { data: newItem } = await axios.post(`/v2/lists/${props.listId}/list_items`, {
+      const { data: newItem } = await axios.post(`/lists/${props.listId}/list_items`, {
         list_item: {
           user_id: props.userId,
           completed,
@@ -146,7 +146,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           const fieldConfig = fetchedFieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
           if (fieldConfig) {
             const fieldValue = key === 'category' ? capitalize(String(value)) : String(value);
-            await axios.post(`/v2/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
+            await axios.post(`/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
               list_item_field: {
                 label: key,
                 data: fieldValue,

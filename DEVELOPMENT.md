@@ -195,7 +195,7 @@ async function setup(): Promise<{
 ```typescript
 import api from 'utils/api';
 
-const response = await api.get('/v1/lists');
+const response = await api.get('/v2/lists');
 const data = response.data;
 ```
 
