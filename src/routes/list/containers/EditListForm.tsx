@@ -12,7 +12,6 @@ import ListFormFields from '../components/ListFormFields';
 export interface IEditListFormProps {
   listId: string;
   name: string;
-  type: string;
   completed: boolean;
   archivedAt: string | null;
   refreshed: boolean;
@@ -22,18 +21,12 @@ export interface IEditListFormProps {
 const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
-  const [type, setType] = useState(props.type);
   const [refreshed, setRefreshed] = useState(props.refreshed);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const list = {
-      name,
-      completed,
-      type,
-      refreshed,
-    };
+    const list = { name, completed, refreshed };
     try {
       await axios.put(`/lists/${props.listId}`, { list });
       showToast.info('List successfully updated');
@@ -67,11 +60,9 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListFormFields
           name={name}
-          type={type}
           completed={completed}
           refreshed={refreshed}
           handleNameChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-          handleTypeChange={(event: ChangeEvent<HTMLInputElement>): void => setType(event.target.value)}
           handleCompletedChange={(): void => setCompleted(!completed)}
           handleRefreshedChange={(): void => setRefreshed(!refreshed)}
           editForm

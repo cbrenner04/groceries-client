@@ -1457,7 +1457,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
+            createField('id3', 'read', 'true', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
           createListItem('id2', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
@@ -1603,7 +1603,7 @@ describe('ListContainer', () => {
         notCompletedItems: [
           createListItem('id2', false, [
             createField('id1', 'title', 'Test Book Title', 'id2'),
-            createField('id2', 'read', 'true', 'id2'),
+            createField('id2', 'read', 'true', 'id2', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
         completedItems: [],
@@ -1626,7 +1626,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'true', 'id1'), // item is read, so unread button should be visible
+            createField('id3', 'read', 'true', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1648,17 +1648,17 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'true', 'id1'), // item is read, so unread button should be visible
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
 
-      await user.click(await findByTestId('completed-item-unread-id1'));
+      await user.click(await findByTestId('completed-item-read-id1'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(await findByTestId('completed-item-read-id1')).toBeVisible();
-      expect(queryByTestId('completed-item-unread-id1')).toBeNull();
+      expect(await findByTestId('completed-item-unread-id1')).toBeVisible();
+      expect(queryByTestId('completed-item-read-id1')).toBeNull();
     });
 
     it('toggles read on multiple items when selected', async () => {
@@ -1676,24 +1676,24 @@ describe('ListContainer', () => {
           createListItem('id2', false, [
             createField('id1', 'title', 'Book Title 1', 'id2'),
             createField('id2', 'author', 'Author 1', 'id2'),
-            createField('id10', 'read', 'true', 'id2'),
+            createField('id10', 'read', 'true', 'id2', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
           createListItem('id3', false, [
             createField('id3', 'title', 'Book Title 2', 'id3'),
             createField('id4', 'author', 'Author 2', 'id3'),
-            createField('id11', 'read', 'true', 'id3'),
+            createField('id11', 'read', 'true', 'id3', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
           createListItem('id4', false, [
             createField('id5', 'title', 'Book Title 3', 'id4'),
             createField('id6', 'author', 'Author 3', 'id4'),
-            createField('id12', 'read', 'true', 'id4'),
+            createField('id12', 'read', 'true', 'id4', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
         completedItems: [
           createListItem('id5', true, [
             createField('id7', 'title', 'Completed Book Title', 'id5'),
             createField('id8', 'author', 'Completed Author', 'id5'),
-            createField('id9', 'read', 'false', 'id5'),
+            createField('id9', 'read', 'false', 'id5', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1727,7 +1727,8 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // item is unread, so read button should be visible
+            // item is unread, so read button should be visible
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1750,7 +1751,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1771,7 +1772,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1792,7 +1793,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1815,7 +1816,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -1836,7 +1837,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'title', 'Completed Book Title', 'id1'),
             createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
+            createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
         ],
       });
@@ -2048,7 +2049,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
+            createField('id3', 'read', 'true', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),
@@ -2075,7 +2076,7 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
+            createField('id3', 'read', 'true', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),

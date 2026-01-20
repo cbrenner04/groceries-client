@@ -11,7 +11,6 @@ import UnknownError from '../error_pages/UnknownError';
 interface IEditListData {
   listId: string;
   name: string;
-  type: string;
   completed: boolean;
 }
 
@@ -31,7 +30,7 @@ const EditList: React.FC = (): React.JSX.Element => {
             return <UnknownError />;
           }
 
-          return <EditListForm listId={data.listId} name={data.name} completed={data.completed} type={data.type} />;
+          return <EditListForm listId={data.listId} name={data.name} completed={data.completed} />;
         }}
       </Async.Fulfilled>
       <Async.Rejected>

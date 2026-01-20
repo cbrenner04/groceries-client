@@ -25,39 +25,29 @@ exports[`ListFormFields renders edit form 1`] = `
   >
     <label
       class="form-label"
-      for="type"
+      for="list_item_configuration_id"
     >
-      Type
+      Template
     </label>
     <select
       class="form-control"
-      id="type"
-      name="type"
+      id="list_item_configuration_id"
+      name="list_item_configuration_id"
     >
       <option
-        value="BookList"
+        value="config-1"
       >
-        books
+        grocery list template
       </option>
       <option
-        value="GroceryList"
+        value="config-2"
       >
-        groceries
+        book list template
       </option>
       <option
-        value="MusicList"
+        value="config-3"
       >
-        music
-      </option>
-      <option
-        value="SimpleList"
-      >
-        simple
-      </option>
-      <option
-        value="ToDoList"
-      >
-        to-do
+        music list template
       </option>
     </select>
   </div>
@@ -110,39 +100,29 @@ exports[`ListFormFields renders new form 1`] = `
   >
     <label
       class="form-label"
-      for="type"
+      for="list_item_configuration_id"
     >
-      Type
+      Template
     </label>
     <select
       class="form-control"
-      id="type"
-      name="type"
+      id="list_item_configuration_id"
+      name="list_item_configuration_id"
     >
       <option
-        value="BookList"
+        value="config-1"
       >
-        books
+        grocery list template
       </option>
       <option
-        value="GroceryList"
+        value="config-2"
       >
-        groceries
+        book list template
       </option>
       <option
-        value="MusicList"
+        value="config-3"
       >
-        music
-      </option>
-      <option
-        value="SimpleList"
-      >
-        simple
-      </option>
-      <option
-        value="ToDoList"
-      >
-        to-do
+        music list template
       </option>
     </select>
   </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ListItem, { memoCompare } from './ListItem';
 import type { IListItem, IListItemField } from 'typings';
-import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
+import { EUserPermissions, EListItemFieldType } from 'typings';
 
 const mockHandleItemSelect = jest.fn();
 const mockHandleItemRefresh = jest.fn();
@@ -57,7 +57,6 @@ const defaultProps = {
   permissions: EUserPermissions.WRITE,
   pending: false,
   selectedItems: [],
-  listType: EListType.GROCERY_LIST,
   handleItemSelect: mockHandleItemSelect,
   handleItemRefresh: mockHandleItemRefresh,
   handleItemComplete: mockHandleItemComplete,
@@ -137,7 +136,7 @@ describe('ListItem', () => {
     expect(completeButton).toBeDisabled();
   });
 
-  it('renders bookmark button for book lists when item is not completed', () => {
+  it('renders bookmark button when item has boolean read field and is not completed', () => {
     const bookItem = {
       ...mockItem,
       fields: [
@@ -157,11 +156,11 @@ describe('ListItem', () => {
         },
       ],
     };
-    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    render(<ListItem {...defaultProps} item={bookItem} />);
     expect(screen.getByTestId('not-completed-item-read-item-1')).toBeInTheDocument();
   });
 
-  it('renders bookmark button for book lists when item is completed', () => {
+  it('renders bookmark button when item has boolean read field and is completed', () => {
     const completedBookItem = {
       ...mockItem,
       completed: true,
@@ -182,11 +181,11 @@ describe('ListItem', () => {
         },
       ],
     };
-    render(<ListItem {...defaultProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
+    render(<ListItem {...defaultProps} item={completedBookItem} />);
     expect(screen.getByTestId('completed-item-unread-item-1')).toBeInTheDocument();
   });
 
-  it('handles bookmark button click for book lists', () => {
+  it('handles bookmark button click when read field is present', () => {
     const bookItem = {
       ...mockItem,
       fields: [
@@ -206,7 +205,7 @@ describe('ListItem', () => {
         },
       ],
     };
-    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    render(<ListItem {...defaultProps} item={bookItem} />);
     fireEvent.click(screen.getByTestId('not-completed-item-read-item-1'));
     expect(mockToggleItemRead).toHaveBeenCalledWith(bookItem);
   });
@@ -254,14 +253,6 @@ describe('ListItem', () => {
       ).toBe(false);
     });
 
-    it('re-renders when listType changes', () => {
-      const base = { ...defaultProps };
-      expect(memoCompare(base, { ...base, listType: EListType.BOOK_LIST })).toBe(false);
-      expect(
-        memoCompare({ ...base, listType: EListType.BOOK_LIST }, { ...base, listType: EListType.GROCERY_LIST }),
-      ).toBe(false);
-    });
-
     it('re-renders when item.id changes', () => {
       const base = { ...defaultProps };
       expect(memoCompare(base, { ...base, item: { ...base.item, id: 'different-id' } })).toBe(false);
@@ -303,7 +294,7 @@ describe('ListItem with read permissions', () => {
     expect(screen.queryByTestId('completed-item-refresh-item-1')).not.toBeInTheDocument();
   });
 
-  it('does not render bookmark button for book lists with read permissions', () => {
+  it('does not render bookmark button with read permissions even when read field exists', () => {
     const bookItem = {
       ...mockItem,
       fields: [
@@ -323,11 +314,11 @@ describe('ListItem with read permissions', () => {
         },
       ],
     };
-    render(<ListItem {...readOnlyProps} item={bookItem} listType={EListType.BOOK_LIST} />);
+    render(<ListItem {...readOnlyProps} item={bookItem} />);
     expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
   });
 
-  it('does not render bookmark button for completed book items with read permissions', () => {
+  it('does not render bookmark button for completed items with read permissions', () => {
     const completedBookItem = {
       ...mockItem,
       completed: true,
@@ -348,7 +339,7 @@ describe('ListItem with read permissions', () => {
         },
       ],
     };
-    render(<ListItem {...readOnlyProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
+    render(<ListItem {...readOnlyProps} item={completedBookItem} />);
     expect(screen.queryByTestId('completed-item-unread-item-1')).not.toBeInTheDocument();
   });
 

@@ -1,9 +1,8 @@
 import React, { type ReactNode } from 'react';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { EUserPermissions } from 'typings';
+import { EListItemFieldType, EUserPermissions } from 'typings';
 import type { IListItem } from 'typings';
-import { EListType } from 'typings';
 import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
 import { itemName } from '../utils';
 
@@ -13,7 +12,6 @@ export interface IListItemProps {
   permissions: EUserPermissions;
   pending: boolean;
   selectedItems: IListItem[];
-  listType: EListType;
   handleItemSelect: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => void;
@@ -25,12 +23,17 @@ export interface IListItemProps {
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   const multiSelect = props.multiSelect ?? false;
 
+  // Field-driven: show read toggle if there's a boolean field with 'read' label
+  const hasReadField = props.item.fields.some(
+    (f) => f.label.toLowerCase() === 'read' && f.data_type === EListItemFieldType.BOOLEAN,
+  );
+
   const getReadStatus = (): boolean => {
     return props.item.fields.find((field) => field.label === 'read')?.data === 'true';
   };
 
   const itemTitle = (): ReactNode => {
-    const formattedName = itemName(props.item, props.listType);
+    const formattedName = itemName(props.item);
     if (!formattedName) {
       return <span>Untitled Item</span>;
     }
@@ -62,7 +65,7 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
             <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
               {props.item.completed ? (
                 <>
-                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                  {hasReadField && props.toggleItemRead && (
                     <Bookmark
                       handleClick={(): void => props.toggleItemRead!(props.item)}
                       read={getReadStatus()}
@@ -77,7 +80,7 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
                 </>
               ) : (
                 <>
-                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
+                  {hasReadField && props.toggleItemRead && (
                     <Bookmark
                       handleClick={(): void => props.toggleItemRead!(props.item)}
                       read={getReadStatus()}
@@ -120,9 +123,6 @@ export const memoCompare = (prev: IListItemProps, next: IListItemProps): boolean
     return false;
   }
   if (prev.permissions !== next.permissions) {
-    return false;
-  }
-  if (prev.listType !== next.listType) {
     return false;
   }
   if (prev.selectedItems.length !== next.selectedItems.length) {

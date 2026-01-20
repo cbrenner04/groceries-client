@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { EListType, EUserPermissions } from 'typings';
+import { EUserPermissions } from 'typings';
 import { createField, createListItem } from 'test-utils/factories';
 
 import NotCompletedItemsSection from './NotCompletedItemsSection';
@@ -15,7 +15,6 @@ const baseProps = {
   permissions: EUserPermissions.READ,
   selectedItems: [],
   pending: false,
-  listType: EListType.GROCERY_LIST,
   filter: '',
   displayedCategories: [],
   incompleteMultiSelect: false,

@@ -6,7 +6,6 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import {
-  EListType,
   EListItemFieldType,
   type IList,
   type IListUser,
@@ -29,7 +28,7 @@ describe('BulkEditListItemsForm', () => {
   const mockList: IList = {
     id: 'list-1',
     name: 'Test List',
-    type: EListType.GROCERY_LIST,
+    list_item_configuration_id: 'config-1',
     owner_id: 'user-1',
     created_at: '2023-01-01T00:00:00Z',
   };

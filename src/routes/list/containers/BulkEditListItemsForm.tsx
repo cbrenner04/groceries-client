@@ -5,13 +5,12 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-import {
-  EListType,
-  type IListItem,
-  type IList,
-  type IListUser,
-  type IListItemConfiguration,
-  type IListItemFieldConfiguration,
+import type {
+  IListItem,
+  IList,
+  IListUser,
+  IListItemConfiguration,
+  IListItemFieldConfiguration,
 } from 'typings';
 
 import { itemName } from '../utils';
@@ -128,13 +127,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          let joinString;
-          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
-            joinString = ' or ';
-          } else {
-            joinString = ' and ';
-          }
-          showToast.error(responseErrors.join(joinString));
+          showToast.error(responseErrors.join(' and '));
         }
       } else if (error.request) {
         showToast.error('Something went wrong');
@@ -146,7 +139,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit {props.items.map((itemData) => itemName(itemData, props.list.type)).join(', ')}</h1>
+      <h1>Edit {props.items.map((itemData) => itemName(itemData)).join(', ')}</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
@@ -154,7 +147,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           fieldUpdates={fieldUpdates}
           handleFieldChange={handleFieldChange}
           handleClearField={handleClearField}
-          listType={props.list.type}
         />
         <FormSubmission
           submitText="Update Items"

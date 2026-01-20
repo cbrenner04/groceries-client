@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router';
 import axios from 'utils/api';
 import TitlePopover from 'components/TitlePopover';
 import { usePolling } from 'hooks';
-import type { IList, TUserPermissions } from 'typings';
+import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 import ListForm from '../components/ListForm';
 import { fetchLists, sortLists, failure, type IFetchListsReturn } from '../utils';
@@ -22,6 +22,7 @@ export interface IListsContainerProps {
   completedLists: IList[];
   incompleteLists: IList[];
   currentUserPermissions: TUserPermissions;
+  listItemConfigurations: IListItemConfiguration[];
 }
 
 const MAX_PREFETCH_LISTS = 5;
@@ -31,6 +32,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [completedLists, setCompletedLists] = useState(props.completedLists);
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
+  const [listItemConfigurations, setListItemConfigurations] = useState(props.listItemConfigurations);
   const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
@@ -45,6 +47,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             completedLists: updatedCompleted,
             incompleteLists: updatedIncomplete,
             currentUserPermissions: updatedCurrentUserPermissions,
+            listItemConfigurations: updatedListItemConfigurations,
           } = lists as IFetchListsReturn;
 
           // Use lightweight cache to avoid re-render churn for identical data
@@ -52,11 +55,13 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           const completedCacheKey = 'lists-completed';
           const incompleteCacheKey = 'lists-incomplete';
           const permissionsCacheKey = 'lists-permissions';
+          const configurationsCacheKey = 'lists-configurations';
 
           const pendingResult = listsCache.get(pendingCacheKey, updatedPending);
           const completedResult = listsCache.get(completedCacheKey, updatedCompleted);
           const incompleteResult = listsCache.get(incompleteCacheKey, updatedIncomplete);
           const permissionsResult = listsCache.get(permissionsCacheKey, updatedCurrentUserPermissions);
+          const configurationsResult = listsCache.get(configurationsCacheKey, updatedListItemConfigurations);
 
           // Only update state if data has actually changed
           if (pendingResult.hasChanged) {
@@ -70,6 +75,9 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           }
           if (permissionsResult.hasChanged) {
             setCurrentUserPermissions(updatedCurrentUserPermissions);
+          }
+          if (configurationsResult.hasChanged) {
+            setListItemConfigurations(updatedListItemConfigurations);
           }
         }
       } catch (err: unknown) {
@@ -119,7 +127,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   return (
     <React.Fragment>
       <h1>Lists</h1>
-      <ListForm onFormSubmit={handleFormSubmit} pending={pending} />
+      <ListForm onFormSubmit={handleFormSubmit} pending={pending} configurations={listItemConfigurations} />
       <hr className="mb-4" />
       {pendingLists.length > 0 && ( // cannot just check length as it will render 0
         <PendingLists

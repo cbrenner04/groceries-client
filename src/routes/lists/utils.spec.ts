@@ -1,6 +1,5 @@
 import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './utils';
 import axios from '../../utils/api';
-import { EListType } from '../../typings';
 import { showToast } from '../../utils/toast';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
@@ -15,7 +14,7 @@ describe('utils', () => {
           {
             id: 'id1',
             name: 'foo',
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             completed: false,
             owner_id: 'id1',
             refreshed: false,
@@ -24,7 +23,7 @@ describe('utils', () => {
           {
             id: 'id1',
             name: 'foo',
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             completed: false,
             owner_id: 'id1',
             refreshed: false,
@@ -33,7 +32,7 @@ describe('utils', () => {
           {
             id: 'id1',
             name: 'foo',
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             completed: false,
             owner_id: 'id1',
             refreshed: false,
@@ -44,7 +43,7 @@ describe('utils', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           completed: false,
           owner_id: 'id1',
           refreshed: false,
@@ -53,7 +52,7 @@ describe('utils', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           completed: false,
           owner_id: 'id1',
           refreshed: false,
@@ -62,7 +61,7 @@ describe('utils', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           completed: false,
           owner_id: 'id1',
           refreshed: false,
@@ -84,7 +83,7 @@ describe('utils', () => {
                 users_list_id: 1,
                 name: 'foo',
                 user_id: 1,
-                type: EListType.GROCERY_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: true,
                 refreshed: false,
@@ -97,7 +96,7 @@ describe('utils', () => {
                 users_list_id: 2,
                 name: 'bar',
                 user_id: 1,
-                type: 'BookList',
+                list_item_configuration_id: 'config-2',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -111,7 +110,7 @@ describe('utils', () => {
               users_list_id: 3,
               name: 'foo',
               user_id: 1,
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -122,7 +121,7 @@ describe('utils', () => {
               users_list_id: 4,
               name: 'foo',
               user_id: 1,
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -134,18 +133,24 @@ describe('utils', () => {
             2: 'write',
             3: 'write',
           },
+          list_item_configurations: [
+            { id: 'config-1', name: 'grocery list template' },
+          ],
         },
       });
 
       expect(await fetchLists({ navigate })).toStrictEqual({
         userId: 1,
+        listItemConfigurations: [
+          { id: 'config-1', name: 'grocery list template' },
+        ],
         pendingLists: [
           {
             id: 3,
             users_list_id: 3,
             name: 'foo',
             user_id: 1,
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -156,7 +161,7 @@ describe('utils', () => {
             users_list_id: 4,
             name: 'foo',
             user_id: 1,
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -169,7 +174,7 @@ describe('utils', () => {
             users_list_id: 1,
             name: 'foo',
             user_id: 1,
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: true,
             refreshed: false,
@@ -182,7 +187,7 @@ describe('utils', () => {
             users_list_id: 2,
             name: 'bar',
             user_id: 1,
-            type: 'BookList',
+            list_item_configuration_id: 'config-2',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -223,7 +228,7 @@ describe('utils', () => {
               users_list_id: 1,
               name: 'foo',
               user_id: 1,
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -234,7 +239,7 @@ describe('utils', () => {
               users_list_id: 2,
               name: 'foo',
               user_id: 1,
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -254,7 +259,7 @@ describe('utils', () => {
             users_list_id: 1,
             name: 'foo',
             user_id: 1,
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: true,
             refreshed: false,
@@ -265,7 +270,7 @@ describe('utils', () => {
             users_list_id: 2,
             name: 'foo',
             user_id: 1,
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: true,
             refreshed: false,
@@ -300,14 +305,14 @@ describe('utils', () => {
 
     it('returns correct body on success', async () => {
       axios.get = jest.fn().mockResolvedValue({
-        data: { owner_id: 1, id: 1, name: 'foo', completed: false, type: EListType.GROCERY_LIST },
+        data: { owner_id: 1, id: 1, name: 'foo', completed: false, list_item_configuration_id: 'config-1' },
       });
 
       expect(await fetchListToEdit({ id, navigate })).toStrictEqual({
         listId: 1,
         name: 'foo',
         completed: false,
-        type: EListType.GROCERY_LIST,
+        list_item_configuration_id: 'config-1',
       });
     });
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import { EListType } from 'typings';
 import ListFormFields, { type IListFormFieldsProps } from './ListFormFields';
 
 async function setup(suppliedProps?: Partial<IListFormFieldsProps>): Promise<{
@@ -12,11 +11,9 @@ async function setup(suppliedProps?: Partial<IListFormFieldsProps>): Promise<{
   const user = userEvent.setup();
   const defaultProps: IListFormFieldsProps = {
     name: 'Test List',
-    type: EListType.GROCERY_LIST,
     completed: false,
     refreshed: false,
     handleNameChange: jest.fn(),
-    handleTypeChange: jest.fn(),
     handleCompletedChange: jest.fn(),
     handleRefreshedChange: jest.fn(),
     editForm: false,
@@ -34,33 +31,6 @@ describe('ListFormFields', () => {
 
       expect(nameField).toBeInTheDocument();
       expect(nameField).toHaveValue(props.name);
-    });
-
-    it('renders type field with correct value', async () => {
-      const { props } = await setup();
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toBeInTheDocument();
-      expect(typeField).toHaveValue(props.type);
-    });
-
-    it('renders all list type options', async () => {
-      await setup();
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toHaveDisplayValue('groceries');
-
-      // Check that all options are present
-      const options = Array.from(typeField.querySelectorAll('option'));
-      expect(options).toHaveLength(5);
-      expect(options.map((opt) => opt.value)).toEqual([
-        EListType.BOOK_LIST,
-        EListType.GROCERY_LIST,
-        EListType.MUSIC_LIST,
-        EListType.SIMPLE_LIST,
-        EListType.TO_DO_LIST,
-      ]);
-      expect(options.map((opt) => opt.textContent)).toEqual(['books', 'groceries', 'music', 'simple', 'to-do']);
     });
 
     it('does not render checkbox fields when editForm is false', async () => {
@@ -105,15 +75,6 @@ describe('ListFormFields', () => {
       await user.type(nameField, 'a');
 
       expect(props.handleNameChange).toHaveBeenCalled();
-    });
-
-    it('calls handleTypeChange when type field changes', async () => {
-      const { props, user } = await setup();
-      const typeField = screen.getByLabelText('Type');
-
-      await user.selectOptions(typeField, EListType.BOOK_LIST);
-
-      expect(props.handleTypeChange).toHaveBeenCalled();
     });
 
     it('calls handleCompletedChange when completed checkbox changes', async () => {
@@ -161,7 +122,6 @@ describe('ListFormFields', () => {
       });
       const completedField = screen.getByLabelText('Completed');
 
-      // Should not throw an error when clicking
       await user.click(completedField);
       expect(completedField).toBeInTheDocument();
     });
@@ -173,43 +133,8 @@ describe('ListFormFields', () => {
       });
       const refreshedField = screen.getByLabelText('Refreshed');
 
-      // Should not throw an error when clicking
       await user.click(refreshedField);
       expect(refreshedField).toBeInTheDocument();
-    });
-  });
-
-  describe('different list types', () => {
-    it('renders book list type correctly', async () => {
-      await setup({ type: EListType.BOOK_LIST });
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toHaveValue(EListType.BOOK_LIST);
-      expect(typeField).toHaveDisplayValue('books');
-    });
-
-    it('renders music list type correctly', async () => {
-      await setup({ type: EListType.MUSIC_LIST });
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toHaveValue(EListType.MUSIC_LIST);
-      expect(typeField).toHaveDisplayValue('music');
-    });
-
-    it('renders simple list type correctly', async () => {
-      await setup({ type: EListType.SIMPLE_LIST });
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toHaveValue(EListType.SIMPLE_LIST);
-      expect(typeField).toHaveDisplayValue('simple');
-    });
-
-    it('renders to-do list type correctly', async () => {
-      await setup({ type: EListType.TO_DO_LIST });
-      const typeField = screen.getByLabelText('Type');
-
-      expect(typeField).toHaveValue(EListType.TO_DO_LIST);
-      expect(typeField).toHaveDisplayValue('to-do');
     });
   });
 
@@ -218,7 +143,6 @@ describe('ListFormFields', () => {
       await setup({ editForm: true });
 
       expect(screen.getByLabelText('Name')).toBeInTheDocument();
-      expect(screen.getByLabelText('Type')).toBeInTheDocument();
       expect(screen.getByLabelText('Completed')).toBeInTheDocument();
       expect(screen.getByLabelText('Refreshed')).toBeInTheDocument();
     });
@@ -236,11 +160,9 @@ describe('ListFormFields', () => {
       const { container } = render(
         <ListFormFields
           name="Test List"
-          type={EListType.GROCERY_LIST}
           completed={false}
           refreshed={false}
           handleNameChange={jest.fn()}
-          handleTypeChange={jest.fn()}
           editForm={false}
         />,
       );
@@ -252,11 +174,9 @@ describe('ListFormFields', () => {
       const { container } = render(
         <ListFormFields
           name="Test List"
-          type={EListType.GROCERY_LIST}
           completed={true}
           refreshed={true}
           handleNameChange={jest.fn()}
-          handleTypeChange={jest.fn()}
           handleCompletedChange={jest.fn()}
           handleRefreshedChange={jest.fn()}
           editForm={true}

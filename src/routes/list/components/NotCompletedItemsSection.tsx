@@ -1,7 +1,7 @@
 import React, { useCallback, type ReactNode } from 'react';
 import { ListGroup } from 'react-bootstrap';
 
-import type { IListItem, EListType } from 'typings';
+import type { IListItem } from 'typings';
 import { EUserPermissions } from 'typings';
 import { capitalize, normalizeCategoryKey } from 'utils/format';
 
@@ -13,7 +13,6 @@ export interface INotCompletedItemsSectionProps {
   permissions: EUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
-  listType: EListType;
   filter: string;
   displayedCategories: string[];
   incompleteMultiSelect: boolean;
@@ -101,7 +100,6 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
                   permissions={props.permissions}
                   selectedItems={props.selectedItems}
                   pending={props.pending}
-                  listType={props.listType}
                   handleItemSelect={props.handleItemSelect}
                   handleItemComplete={props.handleItemComplete}
                   handleItemEdit={props.handleItemEdit}
@@ -122,7 +120,6 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       props.permissions,
       props.selectedItems,
       props.pending,
-      props.listType,
       props.handleItemSelect,
       props.handleItemComplete,
       props.handleItemEdit,

@@ -6,29 +6,22 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-
-import ListFormFields from '../components/ListFormFields';
+import { CheckboxField, TextField } from 'components/FormFields';
 
 export interface IEditListFormProps {
   listId: string;
   name: string;
-  type: string;
   completed: boolean;
 }
 
 const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
-  const [type, setType] = useState(props.type);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const list = {
-      name,
-      completed,
-      type,
-    };
+    const list = { name, completed };
     try {
       await axios.put(`/lists/${props.listId}`, { list });
       showToast.info('List successfully updated');
@@ -60,14 +53,19 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
       <h1>Edit {name}</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
-        <ListFormFields
-          name={name}
-          type={type}
-          completed={completed}
-          handleNameChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-          handleTypeChange={(event: ChangeEvent<HTMLInputElement>): void => setType(event.target.value)}
-          handleCompletedChange={(): void => setCompleted(!completed)}
-          editForm
+        <TextField
+          name="name"
+          label="Name"
+          value={name}
+          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+          placeholder="My super cool list"
+        />
+        <CheckboxField
+          name="completed"
+          label="Completed"
+          value={completed}
+          handleChange={(): void => setCompleted(!completed)}
+          classes="mb-3"
         />
         <FormSubmission
           submitText="Update List"

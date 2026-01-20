@@ -30,47 +30,6 @@ exports[`EditList displays EditList 1`] = `
       />
     </div>
     <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="type"
-      >
-        Type
-      </label>
-      <select
-        class="form-control"
-        id="type"
-        name="type"
-      >
-        <option
-          value="BookList"
-        >
-          books
-        </option>
-        <option
-          value="GroceryList"
-        >
-          groceries
-        </option>
-        <option
-          value="MusicList"
-        >
-          music
-        </option>
-        <option
-          value="SimpleList"
-        >
-          simple
-        </option>
-        <option
-          value="ToDoList"
-        >
-          to-do
-        </option>
-      </select>
-    </div>
-    <div
       class="mb-3 mb-3"
     >
       <div

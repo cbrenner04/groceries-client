@@ -3,7 +3,6 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import { EListType } from 'typings';
 
 import IncompleteListButtons, { type IIncompleteListButtonsProps } from './IncompleteListButtons';
 
@@ -20,7 +19,7 @@ function setup(suppliedProps?: Partial<IIncompleteListButtonsProps>, listOwnerId
       id: 'id1',
       owner_id: listOwnerId,
       name: 'foo',
-      type: EListType.GROCERY_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: 'some date',
       completed: false,
       refreshed: false,
@@ -72,7 +71,7 @@ describe('IncompleteListButtons', () => {
           id: 'id1',
           owner_id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -81,7 +80,7 @@ describe('IncompleteListButtons', () => {
           id: 'id2',
           owner_id: 'id1',
           name: 'bar',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -101,7 +100,7 @@ describe('IncompleteListButtons', () => {
           id: 'id1',
           owner_id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -110,7 +109,7 @@ describe('IncompleteListButtons', () => {
           id: 'id2',
           owner_id: 'id1',
           name: 'bar',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -138,7 +137,7 @@ describe('IncompleteListButtons', () => {
           id: 'id1',
           owner_id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,
@@ -147,7 +146,7 @@ describe('IncompleteListButtons', () => {
           id: 'id2',
           owner_id: 'id1',
           name: 'bar',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: 'some date',
           completed: false,
           refreshed: false,

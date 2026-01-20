@@ -11,7 +11,6 @@ import type {
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
-import { EListType } from 'typings';
 import moment from 'moment';
 import { normalizeCategoryKey } from '../../utils/format';
 
@@ -33,7 +32,6 @@ export interface IFulfilledEditListData {
   id: string;
   name: string;
   completed: boolean;
-  type: EListType;
   archived_at: string | null;
   refreshed: boolean;
   list_item_configuration_id: string | null;
@@ -58,7 +56,7 @@ export interface IFulfilledBulkEditItemsData {
   list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
-export function itemName(item: IListItem, listType: EListType): string {
+export function itemName(item: IListItem): string {
   const fields = Array.isArray(item.fields) ? item.fields : [];
 
   const getFieldValue = (label: string): string => {
@@ -66,42 +64,54 @@ export function itemName(item: IListItem, listType: EListType): string {
     return field?.data ?? '';
   };
 
-  switch (listType) {
-    case EListType.BOOK_LIST: {
-      const title = getFieldValue('title');
-      const author = getFieldValue('author');
-      return `${title ? `"${title}"` : ''} ${author}`.trim();
-    }
-    case EListType.GROCERY_LIST: {
-      const quantity = getFieldValue('quantity');
-      const product = getFieldValue('product');
-      return `${quantity} ${product}`.trim();
-    }
-    case EListType.MUSIC_LIST: {
-      const title = getFieldValue('title');
-      const artist = getFieldValue('artist');
-      const album = getFieldValue('album');
-      return `${title ? `"${title}"` : ''} ${artist}${artist && album ? ' - ' : ''}${album}`.trim();
-    }
-    case EListType.SIMPLE_LIST: {
-      return getFieldValue('content');
-    }
-    case EListType.TO_DO_LIST: {
-      const task = getFieldValue('task');
-      const assignee = fields.find((l: IListItemField) => l.label.includes('assignee'))?.data;
-      const dueBy = fields.find((l: IListItemField) => l.label.includes('due'))?.data;
+  const hasField = (label: string): boolean => fields.some((f) => f.label === label && f.data);
 
-      const dueDateText = dueBy && dueBy.trim() !== '' ? `Due By: ${moment(dueBy).format('LL')}` : '';
-      const assigneeText = assignee ? `Assigned To: ${assignee} ` : '';
-
-      return `${task}\n${assigneeText}${dueDateText}`.trim();
-    }
-    default:
-      return fields
-        .map((f) => f.data)
-        .join(' ')
-        .trim();
+  // Book pattern: has author field
+  if (hasField('author')) {
+    const title = getFieldValue('title');
+    const author = getFieldValue('author');
+    return `${title ? `"${title}"` : ''} ${author}`.trim();
   }
+
+  // Music pattern: has artist field
+  if (hasField('artist')) {
+    const title = getFieldValue('title');
+    const artist = getFieldValue('artist');
+    const album = getFieldValue('album');
+    return `${title ? `"${title}"` : ''} ${artist}${artist && album ? ' - ' : ''}${album}`.trim();
+  }
+
+  // Grocery pattern: has product field
+  if (hasField('product')) {
+    const quantity = getFieldValue('quantity');
+    const product = getFieldValue('product');
+    return `${quantity} ${product}`.trim();
+  }
+
+  // To-do pattern: has task field
+  if (hasField('task')) {
+    const task = getFieldValue('task');
+    const assignee = fields.find((l: IListItemField) => l.label.includes('assignee'))?.data;
+    const dueBy = fields.find((l: IListItemField) => l.label.includes('due'))?.data;
+
+    const dueDateText = dueBy && dueBy.trim() !== '' ? `Due By: ${moment(dueBy).format('LL')}` : '';
+    const assigneeText = assignee ? `Assigned To: ${assignee} ` : '';
+
+    return `${task}\n${assigneeText}${dueDateText}`.trim();
+  }
+
+  // Simple pattern: has content field
+  if (hasField('content')) {
+    return getFieldValue('content');
+  }
+
+  // Fallback: join all non-category fields
+  return fields
+    .filter((f) => f.label !== 'category')
+    .map((f) => f.data)
+    .filter(Boolean)
+    .join(' ')
+    .trim();
 }
 
 export async function fetchList(fetchParams: {

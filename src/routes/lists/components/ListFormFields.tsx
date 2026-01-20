@@ -1,19 +1,25 @@
 import React, { type ChangeEventHandler } from 'react';
 
 import { CheckboxField, SelectField, TextField } from 'components/FormFields';
-import { EListType } from 'typings';
+import type { IListItemConfiguration } from 'typings';
 
 export interface IListFormFieldsProps {
   name: string;
-  type: string;
+  configurationId: string;
+  configurations: IListItemConfiguration[];
   completed: boolean;
   handleNameChange: ChangeEventHandler;
-  handleTypeChange: ChangeEventHandler;
+  handleConfigurationChange: ChangeEventHandler;
   handleCompletedChange?: ChangeEventHandler;
   editForm: boolean;
 }
 
 const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Element => {
+  const configurationOptions = props.configurations.map((config) => ({
+    value: config.id,
+    label: config.name,
+  }));
+
   return (
     <React.Fragment>
       <TextField
@@ -24,17 +30,11 @@ const ListFormFields: React.FC<IListFormFieldsProps> = (props): React.JSX.Elemen
         placeholder="My super cool list"
       />
       <SelectField
-        name="type"
-        label="Type"
-        value={props.type}
-        handleChange={props.handleTypeChange}
-        options={[
-          { value: EListType.BOOK_LIST, label: 'books' },
-          { value: EListType.GROCERY_LIST, label: 'groceries' },
-          { value: EListType.MUSIC_LIST, label: 'music' },
-          { value: EListType.SIMPLE_LIST, label: 'simple' },
-          { value: EListType.TO_DO_LIST, label: 'to-do' },
-        ]}
+        name="list_item_configuration_id"
+        label="Template"
+        value={props.configurationId}
+        handleChange={props.handleConfigurationChange}
+        options={configurationOptions}
         blankOption={false}
       />
       {props.editForm && (

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import { EListType } from 'typings';
 
 import Lists, { type IListsProps } from './Lists';
 
@@ -44,7 +43,7 @@ describe('Lists', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: new Date('05/27/2020').toISOString(),
           completed: true,
           users_list_id: 'id1',

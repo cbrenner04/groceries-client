@@ -3,7 +3,6 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-import { EListType } from 'typings';
 
 import List, { type IListProps } from './List';
 
@@ -23,7 +22,7 @@ function setup(suppliedProps?: Partial<IListProps>): ISetupReturn {
     list: {
       id: 'id1',
       name: 'foo',
-      type: EListType.GROCERY_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: new Date('05/27/2020').toISOString(),
       completed: true,
       users_list_id: 'id1',
@@ -76,7 +75,7 @@ describe('List', () => {
         {
           id: 'id1',
           name: 'foo',
-          type: EListType.GROCERY_LIST,
+          list_item_configuration_id: 'config-1',
           created_at: new Date('05/27/2020').toISOString(),
           completed: true,
           users_list_id: 'id1',

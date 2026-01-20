@@ -26,11 +26,10 @@ function setup(): ISetupReturn {
   const props: IEditListFormProps = {
     listId: 'id1',
     name: 'Test List',
-    type: 'GroceryList',
     completed: false,
     archivedAt: null,
     refreshed: false,
-    listItemConfigurationId: null,
+    listItemConfigurationId: 'config-1',
   };
   const component = render(
     <MemoryRouter>
@@ -51,7 +50,6 @@ describe('EditListForm', () => {
 
     expect(getByText('Edit Test List')).toBeInTheDocument();
     expect(getByLabelText('Name')).toHaveValue('Test List');
-    expect(getByLabelText('Type')).toHaveValue('GroceryList');
     expect(getByLabelText('Completed')).not.toBeChecked();
     expect(getByLabelText('Refreshed')).not.toBeChecked();
   });
@@ -64,15 +62,6 @@ describe('EditListForm', () => {
     await user.type(nameInput, 'Updated List Name');
 
     expect(nameInput).toHaveValue('Updated List Name');
-  });
-
-  it('updates type when changed', async () => {
-    const { getByLabelText, user } = setup();
-
-    const typeSelect = getByLabelText('Type');
-    await user.selectOptions(typeSelect, 'BookList');
-
-    expect(typeSelect).toHaveValue('BookList');
   });
 
   it('updates completed when changed', async () => {
@@ -106,7 +95,6 @@ describe('EditListForm', () => {
       list: {
         name: 'Test List',
         completed: false,
-        type: 'GroceryList',
         refreshed: false,
       },
     });
@@ -125,9 +113,6 @@ describe('EditListForm', () => {
     await user.clear(nameInput);
     await user.type(nameInput, 'Updated Name');
 
-    const typeSelect = getByLabelText('Type');
-    await user.selectOptions(typeSelect, 'BookList');
-
     const completedCheckbox = getByLabelText('Completed');
     await user.click(completedCheckbox);
 
@@ -141,7 +126,6 @@ describe('EditListForm', () => {
       list: {
         name: 'Updated Name',
         completed: true,
-        type: 'BookList',
         refreshed: true,
       },
     });
@@ -252,11 +236,10 @@ describe('EditListForm', () => {
     const props: IEditListFormProps = {
       listId: 'id1',
       name: 'Completed List',
-      type: 'GroceryList',
       completed: true,
       archivedAt: null,
       refreshed: true,
-      listItemConfigurationId: null,
+      listItemConfigurationId: 'config-1',
     };
 
     const { getByLabelText } = render(
@@ -267,26 +250,6 @@ describe('EditListForm', () => {
 
     expect(getByLabelText('Completed')).toBeChecked();
     expect(getByLabelText('Refreshed')).toBeChecked();
-  });
-
-  it('renders with different list types', () => {
-    const props: IEditListFormProps = {
-      listId: 'id1',
-      name: 'Book List',
-      type: 'BookList',
-      completed: false,
-      archivedAt: null,
-      refreshed: false,
-      listItemConfigurationId: null,
-    };
-
-    const { getByLabelText } = render(
-      <MemoryRouter>
-        <EditListForm {...props} />
-      </MemoryRouter>,
-    );
-
-    expect(getByLabelText('Type')).toHaveValue('BookList');
   });
 
   it('prevents default form submission behavior', async () => {

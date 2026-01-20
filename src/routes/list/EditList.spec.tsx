@@ -6,7 +6,6 @@ import { AxiosError } from 'axios';
 
 import { UserContext } from '../../AppRouter';
 import { handleFailure } from '../../utils/handleFailure';
-import { EListType } from 'typings';
 
 import EditList from './EditList';
 
@@ -36,10 +35,9 @@ const mockEditListData = {
   id: '123',
   name: 'Test List',
   completed: false,
-  type: EListType.GROCERY_LIST,
+  list_item_configuration_id: 'config-1',
   archived_at: null,
   refreshed: false,
-  list_item_configuration_id: '1',
 };
 
 // Helper function to render the EditList component with consistent setup
@@ -138,7 +136,7 @@ describe('EditList', () => {
   it('handles different list types', async () => {
     const bookListData = {
       ...mockEditListData,
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
     };
     axios.get = jest.fn().mockResolvedValue({ data: bookListData });
     await act(async () => {

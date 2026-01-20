@@ -93,8 +93,8 @@ const AcceptedLists: React.FC<IAcceptedListsProps> = (props): React.JSX.Element 
 
   const handleMerge = (): void => {
     // just using the first list selected arbitrarily
-    const listType = selectedLists[0].type;
-    const filteredLists = selectedLists.filter((l) => l.type === listType);
+    const configId = selectedLists[0].list_item_configuration_id;
+    const filteredLists = selectedLists.filter((l) => l.list_item_configuration_id === configId);
     setListsToMerge(filteredLists);
     setShowMergeModal(true);
   };

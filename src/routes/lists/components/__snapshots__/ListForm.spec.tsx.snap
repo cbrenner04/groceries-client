@@ -38,39 +38,19 @@ exports[`ListForm renders 1`] = `
     >
       <label
         class="form-label"
-        for="type"
+        for="list_item_configuration_id"
       >
-        Type
+        Template
       </label>
       <select
         class="form-control"
-        id="type"
-        name="type"
+        id="list_item_configuration_id"
+        name="list_item_configuration_id"
       >
         <option
-          value="BookList"
+          value="config-1"
         >
-          books
-        </option>
-        <option
-          value="GroceryList"
-        >
-          groceries
-        </option>
-        <option
-          value="MusicList"
-        >
-          music
-        </option>
-        <option
-          value="SimpleList"
-        >
-          simple
-        </option>
-        <option
-          value="ToDoList"
-        >
-          to-do
+          grocery list template
         </option>
       </select>
     </div>

@@ -1,4 +1,3 @@
-export { default as EListType } from './EListType';
 export { default as IListItemConfiguration } from './IListItemConfiguration';
 export { default as IListItemField } from './IListItemField';
 export { default as IListItemFieldConfiguration } from './IListItemFieldConfiguration';

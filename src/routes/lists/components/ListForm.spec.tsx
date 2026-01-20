@@ -11,9 +11,19 @@ interface ISetupReturn extends RenderResult {
 
 function setup(suppliedProps?: Partial<IListFormProps>): ISetupReturn {
   const user = userEvent.setup();
-  const defaultProps = {
+  const defaultProps: IListFormProps = {
     pending: false,
     onFormSubmit: jest.fn(),
+    configurations: [
+      {
+        id: 'config-1',
+        name: 'grocery list template',
+        user_id: 'user-1',
+        created_at: '',
+        updated_at: '',
+        archived_at: null,
+      },
+    ],
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ListForm {...props} />);
@@ -57,12 +67,31 @@ describe('ListForm', () => {
     expect(await findByLabelText('Name')).toHaveValue('foo');
   });
 
-  it('changes the value in the type field', async () => {
-    const { findByLabelText, user } = setup();
+  it('changes the value in the template field', async () => {
+    const { findByLabelText, user } = setup({
+      configurations: [
+        {
+          id: 'config-1',
+          name: 'grocery list template',
+          user_id: 'user-1',
+          created_at: '',
+          updated_at: '',
+          archived_at: null,
+        },
+        {
+          id: 'config-2',
+          name: 'music list template',
+          user_id: 'user-1',
+          created_at: '',
+          updated_at: '',
+          archived_at: null,
+        },
+      ],
+    });
 
-    await user.selectOptions(await findByLabelText('Type'), 'MusicList');
+    await user.selectOptions(await findByLabelText('Template'), 'music list template');
 
-    expect(await findByLabelText('Type')).toHaveValue('MusicList');
+    expect(await findByLabelText('Template')).toHaveValue('config-2');
   });
 
   it('calls props.onFormSubmit when form is submitted', async () => {
@@ -70,12 +99,11 @@ describe('ListForm', () => {
     const { findByLabelText, findAllByRole, props, user } = setup({ onFormSubmit });
 
     await user.type(await findByLabelText('Name'), 'foo');
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
     await user.click((await findAllByRole('button'))[1]);
 
     await waitFor(() => expect(props.onFormSubmit).toHaveBeenCalledTimes(1));
 
-    expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', type: 'BookList' });
+    expect(onFormSubmit).toHaveBeenCalledWith({ name: 'foo', list_item_configuration_id: 'config-1' });
   });
 
   it('disables submit when in pending state', async () => {

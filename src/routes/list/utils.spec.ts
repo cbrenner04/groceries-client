@@ -9,7 +9,7 @@ import {
   type IFulfilledEditListData,
 } from './utils';
 import axios from 'utils/api';
-import { EListType, type IListItem } from 'typings';
+import type { IListItem } from 'typings';
 import {
   createList,
   createListItem,
@@ -36,64 +36,58 @@ describe('itemName', () => {
     return createListItem('1', false, mappedFields);
   };
 
-  describe('BOOK_LIST', () => {
+  describe('book pattern (author field present)', () => {
     it('returns formatted title and author', () => {
       const item = createMockItem([
         { label: 'title', data: 'The Great Gatsby' },
         { label: 'author', data: 'F. Scott Fitzgerald' },
       ]);
-      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby" F. Scott Fitzgerald');
+      expect(itemName(item)).toBe('"The Great Gatsby" F. Scott Fitzgerald');
     });
 
     it('handles missing title', () => {
       const item = createMockItem([{ label: 'author', data: 'F. Scott Fitzgerald' }]);
-      expect(itemName(item, EListType.BOOK_LIST)).toBe('F. Scott Fitzgerald');
+      expect(itemName(item)).toBe('F. Scott Fitzgerald');
     });
 
-    it('handles missing author', () => {
-      const item = createMockItem([{ label: 'title', data: 'The Great Gatsby' }]);
-      expect(itemName(item, EListType.BOOK_LIST)).toBe('"The Great Gatsby"');
-    });
-
-    it('handles empty fields', () => {
-      const item = createMockItem([]);
-      expect(itemName(item, EListType.BOOK_LIST)).toBe('');
+    it('handles missing author data but author field present', () => {
+      const item = createMockItem([
+        { label: 'title', data: 'The Great Gatsby' },
+        { label: 'author', data: '' },
+      ]);
+      // Falls through to fallback since author has no data
+      expect(itemName(item)).toBe('The Great Gatsby');
     });
   });
 
-  describe('GROCERY_LIST', () => {
+  describe('grocery pattern (product field present)', () => {
     it('returns formatted quantity and product', () => {
       const item = createMockItem([
         { label: 'quantity', data: '2' },
         { label: 'product', data: 'Apples' },
       ]);
-      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2 Apples');
+      expect(itemName(item)).toBe('2 Apples');
     });
 
     it('handles missing quantity', () => {
       const item = createMockItem([{ label: 'product', data: 'Apples' }]);
-      expect(itemName(item, EListType.GROCERY_LIST)).toBe('Apples');
+      expect(itemName(item)).toBe('Apples');
     });
 
     it('handles missing product', () => {
       const item = createMockItem([{ label: 'quantity', data: '2' }]);
-      expect(itemName(item, EListType.GROCERY_LIST)).toBe('2');
-    });
-
-    it('handles empty fields', () => {
-      const item = createMockItem([]);
-      expect(itemName(item, EListType.GROCERY_LIST)).toBe('');
+      expect(itemName(item)).toBe('2');
     });
   });
 
-  describe('MUSIC_LIST', () => {
+  describe('music pattern (artist field present)', () => {
     it('returns formatted title, artist, and album', () => {
       const item = createMockItem([
         { label: 'title', data: 'Bohemian Rhapsody' },
         { label: 'artist', data: 'Queen' },
         { label: 'album', data: 'A Night at the Opera' },
       ]);
-      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen - A Night at the Opera');
+      expect(itemName(item)).toBe('"Bohemian Rhapsody" Queen - A Night at the Opera');
     });
 
     it('handles missing title', () => {
@@ -101,15 +95,7 @@ describe('itemName', () => {
         { label: 'artist', data: 'Queen' },
         { label: 'album', data: 'A Night at the Opera' },
       ]);
-      expect(itemName(item, EListType.MUSIC_LIST)).toBe('Queen - A Night at the Opera');
-    });
-
-    it('handles missing artist', () => {
-      const item = createMockItem([
-        { label: 'title', data: 'Bohemian Rhapsody' },
-        { label: 'album', data: 'A Night at the Opera' },
-      ]);
-      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" A Night at the Opera');
+      expect(itemName(item)).toBe('Queen - A Night at the Opera');
     });
 
     it('handles missing album', () => {
@@ -117,42 +103,30 @@ describe('itemName', () => {
         { label: 'title', data: 'Bohemian Rhapsody' },
         { label: 'artist', data: 'Queen' },
       ]);
-      expect(itemName(item, EListType.MUSIC_LIST)).toBe('"Bohemian Rhapsody" Queen');
-    });
-
-    it('handles empty fields', () => {
-      const item = createMockItem([]);
-      expect(itemName(item, EListType.MUSIC_LIST)).toBe('');
+      expect(itemName(item)).toBe('"Bohemian Rhapsody" Queen');
     });
   });
 
-  describe('SIMPLE_LIST', () => {
+  describe('simple pattern (content field present)', () => {
     it('returns content field value', () => {
       const item = createMockItem([{ label: 'content', data: 'Buy groceries' }]);
-      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('Buy groceries');
-    });
-
-    it('handles missing content', () => {
-      const item = createMockItem([]);
-      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+      expect(itemName(item)).toBe('Buy groceries');
     });
   });
 
-  describe('TO_DO_LIST', () => {
+  describe('task pattern (task field present)', () => {
     it('returns task with assignee and due date', () => {
       const item = createMockItem([
         { label: 'task', data: 'Complete project' },
         { label: 'assignee_email', data: 'john@example.com' },
         { label: 'due_by', data: '2024-01-15' },
       ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe(
-        'Complete project\nAssigned To: john@example.com Due By: January 15, 2024',
-      );
+      expect(itemName(item)).toBe('Complete project\nAssigned To: john@example.com Due By: January 15, 2024');
     });
 
     it('returns task without assignee or due date when not present', () => {
       const item = createMockItem([{ label: 'task', data: 'Complete project' }]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project');
+      expect(itemName(item)).toBe('Complete project');
     });
 
     it('returns task without assignee when not present', () => {
@@ -160,7 +134,7 @@ describe('itemName', () => {
         { label: 'task', data: 'Complete project' },
         { label: 'due_by', data: '2024-01-15' },
       ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nDue By: January 15, 2024');
+      expect(itemName(item)).toBe('Complete project\nDue By: January 15, 2024');
     });
 
     it('returns task without due date when due_by is not present', () => {
@@ -168,28 +142,23 @@ describe('itemName', () => {
         { label: 'task', data: 'Complete project' },
         { label: 'assignee_email', data: 'john@example.com' },
       ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Complete project\nAssigned To: john@example.com');
-    });
-
-    it('handles missing task', () => {
-      const item = createMockItem([]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('');
+      expect(itemName(item)).toBe('Complete project\nAssigned To: john@example.com');
     });
   });
 
-  describe('default case', () => {
-    it('returns all field data joined with spaces', () => {
+  describe('fallback case', () => {
+    it('returns all non-category field data joined with spaces', () => {
       const item = createMockItem([
         { label: 'field1', data: 'value1' },
         { label: 'field2', data: 'value2' },
-        { label: 'field3', data: 'value3' },
+        { label: 'category', data: 'should be excluded' },
       ]);
-      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('value1 value2 value3');
+      expect(itemName(item)).toBe('value1 value2');
     });
 
     it('handles empty fields', () => {
       const item = createMockItem([]);
-      expect(itemName(item, 'UNKNOWN_TYPE' as EListType)).toBe('');
+      expect(itemName(item)).toBe('');
     });
   });
 
@@ -199,7 +168,7 @@ describe('itemName', () => {
         ...createListItem('1'),
         fields: null as unknown as IListItem['fields'],
       };
-      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
+      expect(itemName(item)).toBe('');
     });
 
     it('handles undefined fields', () => {
@@ -207,15 +176,7 @@ describe('itemName', () => {
         ...createListItem('1'),
         fields: undefined as unknown as IListItem['fields'],
       };
-      expect(itemName(item, EListType.SIMPLE_LIST)).toBe('');
-    });
-
-    it('handles fields with null data', () => {
-      const item = createMockItem([
-        { label: 'content', data: null as unknown as string },
-        { label: 'task', data: 'Valid task' },
-      ]);
-      expect(itemName(item, EListType.TO_DO_LIST)).toBe('Valid task');
+      expect(itemName(item)).toBe('');
     });
   });
 });
@@ -405,10 +366,9 @@ describe('fetchListToEdit', () => {
     const mockData: IFulfilledEditListData = {
       id: '1',
       name: 'Test List',
-      type: EListType.GROCERY_LIST,
       completed: false,
       refreshed: false,
-      list_item_configuration_id: null,
+      list_item_configuration_id: 'config-1',
       archived_at: null,
     };
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
