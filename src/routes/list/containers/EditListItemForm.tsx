@@ -14,7 +14,6 @@ import type {
 } from 'typings';
 
 import ListItemFormFields from '../components/ListItemFormFields';
-import { itemName } from '../utils';
 
 export interface IEditListItemFormProps {
   list: IList;
@@ -121,7 +120,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
 
   return (
     <React.Fragment>
-      <h1>Edit {itemName(props.item)}</h1>
+      <h1>Edit Item</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields

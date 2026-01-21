@@ -13,7 +13,6 @@ import type {
   IListItemFieldConfiguration,
 } from 'typings';
 
-import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
 
 export interface IBulkEditListItemsFormProps {
@@ -139,7 +138,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit {props.items.map((itemData) => itemName(itemData)).join(', ')}</h1>
+      <h1>Edit Items</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields

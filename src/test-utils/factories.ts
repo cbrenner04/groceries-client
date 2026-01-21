@@ -168,27 +168,6 @@ export const defaultTestData = {
   userId: 'id1',
 };
 
-// Book list specific test data
-export const bookListTestData = {
-  list: createList('id1', 'foo', 'book-config-id'),
-
-  notCompletedItems: [
-    createListItem('id2', false, [
-      createField('id1', 'title', 'Test Book Title', 'id2'),
-      createField('id2', 'author', 'Test Author', 'id2'),
-      createField('id3', 'read', 'false', 'id2', { data_type: EListItemFieldType.BOOLEAN }),
-    ]),
-  ],
-
-  completedItems: [
-    createListItem('id1', true, [
-      createField('id1', 'title', 'Completed Book Title', 'id1'),
-      createField('id2', 'author', 'Completed Author', 'id1'),
-      createField('id3', 'read', 'false', 'id1', { data_type: EListItemFieldType.BOOLEAN }),
-    ]),
-  ],
-};
-
 // Helper to create API response data
 export function createApiResponse(
   notCompletedItems: IListItem[] = defaultTestData.notCompletedItems,

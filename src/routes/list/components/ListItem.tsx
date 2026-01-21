@@ -1,9 +1,9 @@
 import React, { type ReactNode } from 'react';
 import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { EListItemFieldType, EUserPermissions } from 'typings';
+import { EUserPermissions } from 'typings';
 import type { IListItem } from 'typings';
-import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
+import { Complete, EditButton, Refresh, Trash } from 'components/ActionButtons';
 import { itemName } from '../utils';
 
 export interface IListItemProps {
@@ -17,20 +17,10 @@ export interface IListItemProps {
   handleItemComplete: (item: IListItem) => void;
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
-  toggleItemRead?: (item: IListItem) => void;
 }
 
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   const multiSelect = props.multiSelect ?? false;
-
-  // Field-driven: show read toggle if there's a boolean field with 'read' label
-  const hasReadField = props.item.fields.some(
-    (f) => f.label.toLowerCase() === 'read' && f.data_type === EListItemFieldType.BOOLEAN,
-  );
-
-  const getReadStatus = (): boolean => {
-    return props.item.fields.find((field) => field.label === 'read')?.data === 'true';
-  };
 
   const itemTitle = (): ReactNode => {
     const formattedName = itemName(props.item);
@@ -64,35 +54,17 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
           {props.permissions === EUserPermissions.WRITE && (
             <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
               {props.item.completed ? (
-                <>
-                  {hasReadField && props.toggleItemRead && (
-                    <Bookmark
-                      handleClick={(): void => props.toggleItemRead!(props.item)}
-                      read={getReadStatus()}
-                      testID={`completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
-                    />
-                  )}
-                  <Refresh
-                    handleClick={(): void => props.handleItemRefresh(props.item)}
-                    testID={`completed-item-refresh-${props.item.id}`}
-                    disabled={props.pending}
-                  />
-                </>
+                <Refresh
+                  handleClick={(): void => props.handleItemRefresh(props.item)}
+                  testID={`completed-item-refresh-${props.item.id}`}
+                  disabled={props.pending}
+                />
               ) : (
-                <>
-                  {hasReadField && props.toggleItemRead && (
-                    <Bookmark
-                      handleClick={(): void => props.toggleItemRead!(props.item)}
-                      read={getReadStatus()}
-                      testID={`not-completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
-                    />
-                  )}
-                  <Complete
-                    handleClick={(): void => props.handleItemComplete(props.item)}
-                    testID={`not-completed-item-complete-${props.item.id}`}
-                    disabled={props.pending}
-                  />
-                </>
+                <Complete
+                  handleClick={(): void => props.handleItemComplete(props.item)}
+                  testID={`not-completed-item-complete-${props.item.id}`}
+                  disabled={props.pending}
+                />
               )}
               <EditButton
                 handleClick={(): void => props.handleItemEdit(props.item)}

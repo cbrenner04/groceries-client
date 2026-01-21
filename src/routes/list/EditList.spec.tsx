@@ -77,7 +77,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
     expect(screen.getByText('Update List')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
@@ -129,7 +129,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -143,7 +143,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -157,7 +157,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -171,7 +171,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -191,7 +191,7 @@ describe('EditList', () => {
     });
 
     // Verify the form is rendered with correct data
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
     expect(screen.getByText('Update List')).toBeInTheDocument();
   });

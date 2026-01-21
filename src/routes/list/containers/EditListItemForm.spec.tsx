@@ -86,7 +86,7 @@ describe('EditListItemForm', () => {
   describe('Rendering', () => {
     it('renders the form with correct title', () => {
       render(<EditListItemForm {...defaultProps} />);
-      expect(screen.getByText('Edit 2 Apples')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
     });
 
     it('renders form fields with correct labels and values', () => {
@@ -454,7 +454,7 @@ describe('EditListItemForm', () => {
         />,
       );
 
-      expect(screen.getByText('Edit "Test Book" Test Author')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
       expect(screen.getByLabelText('Title')).toBeInTheDocument();
       expect(screen.getByLabelText('Author')).toBeInTheDocument();
     });
@@ -499,7 +499,7 @@ describe('EditListItemForm', () => {
         />,
       );
 
-      expect(screen.getByText('Edit "Test Song" Test Artist')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
       expect(screen.getByLabelText('Title')).toBeInTheDocument();
       expect(screen.getByLabelText('Artist')).toBeInTheDocument();
     });

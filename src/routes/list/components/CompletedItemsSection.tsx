@@ -22,7 +22,6 @@ export interface ICompletedItemsSectionProps {
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => Promise<void>;
-  toggleItemRead?: (item: IListItem) => Promise<void>;
 }
 
 const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): React.JSX.Element => {
@@ -52,7 +51,6 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
             handleItemEdit={props.handleItemEdit}
             handleItemDelete={props.handleItemDelete}
             handleItemRefresh={props.handleItemRefresh}
-            toggleItemRead={props.toggleItemRead}
             multiSelect={props.completeMultiSelect}
           />
         ))}

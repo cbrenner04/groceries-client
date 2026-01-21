@@ -3,8 +3,7 @@
 exports[`EditList displays EditList 1`] = `
 <div>
   <h1>
-    Edit 
-    foo
+    Edit List
   </h1>
   <br />
   <form

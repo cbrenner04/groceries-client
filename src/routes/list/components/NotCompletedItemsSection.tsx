@@ -25,7 +25,6 @@ export interface INotCompletedItemsSectionProps {
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => Promise<void>;
-  toggleItemRead?: (item: IListItem) => Promise<void>;
 }
 
 const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (props): React.JSX.Element => {
@@ -105,7 +104,6 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
                   handleItemEdit={props.handleItemEdit}
                   handleItemDelete={props.handleItemDelete}
                   handleItemRefresh={props.handleItemRefresh}
-                  toggleItemRead={props.toggleItemRead}
                   multiSelect={props.incompleteMultiSelect}
                 />
               ))}
@@ -125,7 +123,6 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       props.handleItemEdit,
       props.handleItemDelete,
       props.handleItemRefresh,
-      props.toggleItemRead,
       props.incompleteMultiSelect,
     ],
   );

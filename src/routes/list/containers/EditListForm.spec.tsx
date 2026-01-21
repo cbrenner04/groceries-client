@@ -48,7 +48,7 @@ describe('EditListForm', () => {
   it('renders with correct initial values', () => {
     const { getByText, getByLabelText } = setup();
 
-    expect(getByText('Edit Test List')).toBeInTheDocument();
+    expect(getByText('Edit List')).toBeInTheDocument();
     expect(getByLabelText('Name')).toHaveValue('Test List');
     expect(getByLabelText('Completed')).not.toBeChecked();
     expect(getByLabelText('Refreshed')).not.toBeChecked();

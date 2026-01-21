@@ -50,7 +50,7 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
 
   return (
     <React.Fragment>
-      <h1>Edit {name}</h1>
+      <h1>Edit List</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <TextField

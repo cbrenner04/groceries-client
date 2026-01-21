@@ -111,7 +111,7 @@ describe('EditListItem', () => {
     });
 
     // Check that the form title is rendered
-    expect(await screen.findByText('Edit 2 Apples')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
 
     // Check that form fields are rendered
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
@@ -190,7 +190,7 @@ describe('EditListItem', () => {
     });
 
     // Verify that the form receives the correct props by checking the rendered content
-    expect(await screen.findByText('Edit 2 Apples')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
 
     // Check that the form fields have the correct initial values
     const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
@@ -215,7 +215,7 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
 
-    expect(await screen.findByText('Edit "Test Book" Test Author')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
   });
 
   it('handles empty item fields gracefully', async () => {
@@ -229,6 +229,6 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
 
-    expect(await screen.findByText('Edit')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
   });
 });

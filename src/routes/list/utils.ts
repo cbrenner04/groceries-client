@@ -11,7 +11,7 @@ import type {
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
-import moment from 'moment';
+import { EListItemFieldType } from 'typings';
 import { normalizeCategoryKey } from '../../utils/format';
 
 export interface IFulfilledListData {
@@ -57,58 +57,18 @@ export interface IFulfilledBulkEditItemsData {
 }
 
 export function itemName(item: IListItem): string {
-  const fields = Array.isArray(item.fields) ? item.fields : [];
-
-  const getFieldValue = (label: string): string => {
-    const field = fields.find((f) => f.label === label);
-    return field?.data ?? '';
-  };
-
-  const hasField = (label: string): boolean => fields.some((f) => f.label === label && f.data);
-
-  // Book pattern: has author field
-  if (hasField('author')) {
-    const title = getFieldValue('title');
-    const author = getFieldValue('author');
-    return `${title ? `"${title}"` : ''} ${author}`.trim();
+  if (!Array.isArray(item.fields) || item.fields.length === 0) {
+    return '';
   }
 
-  // Music pattern: has artist field
-  if (hasField('artist')) {
-    const title = getFieldValue('title');
-    const artist = getFieldValue('artist');
-    const album = getFieldValue('album');
-    return `${title ? `"${title}"` : ''} ${artist}${artist && album ? ' - ' : ''}${album}`.trim();
-  }
-
-  // Grocery pattern: has product field
-  if (hasField('product')) {
-    const quantity = getFieldValue('quantity');
-    const product = getFieldValue('product');
-    return `${quantity} ${product}`.trim();
-  }
-
-  // To-do pattern: has task field
-  if (hasField('task')) {
-    const task = getFieldValue('task');
-    const assignee = fields.find((l: IListItemField) => l.label.includes('assignee'))?.data;
-    const dueBy = fields.find((l: IListItemField) => l.label.includes('due'))?.data;
-
-    const dueDateText = dueBy && dueBy.trim() !== '' ? `Due By: ${moment(dueBy).format('LL')}` : '';
-    const assigneeText = assignee ? `Assigned To: ${assignee} ` : '';
-
-    return `${task}\n${assigneeText}${dueDateText}`.trim();
-  }
-
-  // Simple pattern: has content field
-  if (hasField('content')) {
-    return getFieldValue('content');
-  }
-
-  // Fallback: join all non-category fields
-  return fields
+  return item.fields
     .filter((f) => f.label !== 'category')
-    .map((f) => f.data)
+    .map((f) => {
+      if (f.data_type === EListItemFieldType.BOOLEAN) {
+        return f.data != null ? `${f.label}: ${f.data}` : null;
+      }
+      return f.data;
+    })
     .filter(Boolean)
     .join(' ')
     .trim();

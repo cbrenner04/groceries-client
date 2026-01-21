@@ -161,10 +161,10 @@ describe('BulkEditListItemsForm', () => {
     mockAxios.put = jest.fn().mockResolvedValue({});
   });
 
-  it('renders the form with item names in the title', () => {
+  it('renders the form with generic title', () => {
     const { getByText } = renderComponent();
 
-    expect(getByText('Edit 5 Apples, 3 Bananas')).toBeInTheDocument();
+    expect(getByText('Edit Items')).toBeInTheDocument();
   });
 
   it('initializes field updates with common values when all items have the same value', () => {
