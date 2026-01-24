@@ -120,6 +120,28 @@ describe('itemName', () => {
     item.fields[1].data = null;
     expect(itemName(item)).toBe('Test Title Test Author');
   });
+
+  it('formats boolean fields with actual boolean true', () => {
+    const item = createMockItem([
+      { label: 'title', data: 'Test Title' },
+      { label: 'read', data: 'true' },
+      { label: 'author', data: 'Test Author' },
+    ]);
+    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
+    (item.fields[1] as { data: unknown }).data = true;
+    expect(itemName(item)).toBe('Test Title read: true Test Author');
+  });
+
+  it('formats boolean fields with actual boolean false', () => {
+    const item = createMockItem([
+      { label: 'title', data: 'Test Title' },
+      { label: 'read', data: 'false' },
+      { label: 'author', data: 'Test Author' },
+    ]);
+    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
+    (item.fields[1] as { data: unknown }).data = false;
+    expect(itemName(item)).toBe('Test Title read: false Test Author');
+  });
 });
 
 describe('fetchList', () => {

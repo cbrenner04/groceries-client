@@ -2,7 +2,6 @@ import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-
 import CompleteListButtons, { type ICompleteListButtonsProps } from './CompleteListButtons';
 
 interface ISetupReturn extends RenderResult {

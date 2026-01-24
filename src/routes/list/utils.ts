@@ -11,8 +11,9 @@ import type {
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
-import { EListItemFieldType } from 'typings';
 import { normalizeCategoryKey } from '../../utils/format';
+
+import { isBooleanFieldConfig } from './fieldHelpers';
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -64,8 +65,9 @@ export function itemName(item: IListItem): string {
   return item.fields
     .filter((f) => f.label !== 'category')
     .map((f) => {
-      if (f.data_type === EListItemFieldType.BOOLEAN) {
-        return f.data != null ? `${f.label}: ${f.data}` : null;
+      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
+      if (isBoolean) {
+        return f.data !== undefined && f.data !== null ? `${f.label}: ${f.data}` : null;
       }
       return f.data;
     })

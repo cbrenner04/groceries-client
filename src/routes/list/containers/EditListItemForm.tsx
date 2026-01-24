@@ -5,13 +5,7 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-import type {
-  IListItem,
-  IList,
-  IListUser,
-  IListItemConfiguration,
-  IListItemFieldConfiguration,
-} from 'typings';
+import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import ListItemFormFields from '../components/ListItemFormFields';
 

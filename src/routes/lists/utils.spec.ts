@@ -133,17 +133,13 @@ describe('utils', () => {
             2: 'write',
             3: 'write',
           },
-          list_item_configurations: [
-            { id: 'config-1', name: 'grocery list template' },
-          ],
+          list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
         },
       });
 
       expect(await fetchLists({ navigate })).toStrictEqual({
         userId: 1,
-        listItemConfigurations: [
-          { id: 'config-1', name: 'grocery list template' },
-        ],
+        listItemConfigurations: [{ id: 'config-1', name: 'grocery list template' }],
         pendingLists: [
           {
             id: 3,

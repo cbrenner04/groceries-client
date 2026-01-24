@@ -11,6 +11,8 @@ import { capitalize } from 'utils/format';
 import { getFieldConfigurations } from 'utils/fieldConfigCache';
 import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
+import { isBooleanFieldConfig } from '../fieldHelpers';
+
 export interface IListItemFormProps {
   navigate: (path: string) => void;
   userId: string;
@@ -29,7 +31,7 @@ interface IFieldConfiguration {
   position: number;
 }
 
-interface IListItemDataRecord extends Record<string, string | number | boolean> {}
+interface IListItemDataRecord extends Record<string, string | number | boolean | undefined | null> {}
 
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [formData, setFormData] = useState({} as IListItemDataRecord);
@@ -133,51 +135,63 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
       );
 
-      const normalizedEntries = Object.entries(formData).map(([key, value]) => {
-        const normalizedValue = typeof value === 'string' ? value.trimEnd() : value;
-        return [key, normalizedValue] as const;
-      });
+      const entriesToSend: [string, string | number | boolean][] = [];
+      for (const config of fetchedFieldConfigurations as IFieldConfiguration[]) {
+        const raw = formData[config.label];
+        if (isBooleanFieldConfig(config)) {
+          const bool = typeof raw === 'boolean' ? raw : false;
+          entriesToSend.push([config.label, bool]);
+        } else if (raw != null) {
+          const normalized = typeof raw === 'string' ? raw.trimEnd() : raw;
+          if (normalized !== '') {
+            entriesToSend.push([config.label, normalized]);
+          }
+        }
+      }
+
+      const keysToSend = new Set(entriesToSend.map(([k]) => k));
+      const formDataOnly = (Object.entries(formData) as [string, string | number | boolean][])
+        .map(([k, v]) => [k, typeof v === 'string' ? v.trimEnd() : v] as const)
+        .filter(([k, v]) => !keysToSend.has(k) && (v as unknown) != null && v !== '');
+      const allEntriesForItem = [...entriesToSend, ...formDataOnly];
 
       // Step 3: Add fields to the list item using the correct configuration IDs
-      const fieldPromises = normalizedEntries.map(async ([key, value]) => {
-        /* istanbul ignore else */
-        if (value !== '') {
-          // Find the field configuration that matches this field
-          const fieldConfig = fetchedFieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
-          if (fieldConfig) {
-            const fieldValue = key === 'category' ? capitalize(String(value)) : String(value);
-            await axios.post(`/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
-              list_item_field: {
-                label: key,
-                data: fieldValue,
-                list_item_field_configuration_id: fieldConfig.id,
-              },
-            });
-          }
+      const fieldPromises = entriesToSend.map(async ([key, value]) => {
+        const fieldConfig = fetchedFieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
+        if (fieldConfig) {
+          const fieldValue = key === 'category' ? capitalize(String(value)) : String(value);
+          await axios.post(`/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
+            list_item_field: {
+              label: key,
+              data: fieldValue,
+              list_item_field_configuration_id: fieldConfig.id,
+            },
+          });
         }
       });
 
       await Promise.all(fieldPromises);
 
-      // Create the item with fields from form data
-      // Use the fetched fieldConfigurations (not state) to ensure we have the latest configs
       const itemWithFields = {
         ...newItem,
-        fields: normalizedEntries
-          .filter(([, value]) => value !== '')
-          .map(([key, value]) => ({
-            id: `temp-${Date.now()}-${key}`, // temp id which will be overwritten on next pull from the server
+        fields: allEntriesForItem.map(([key, value]) => {
+          const config = fetchedFieldConfigurations.find(
+            (c: IFieldConfiguration) => c.label === key,
+          ) as IFieldConfiguration | undefined;
+          return {
+            id: `temp-${Date.now()}-${key}`,
             label: key,
             data: key === 'category' ? capitalize(String(value)) : String(value),
-            list_item_field_configuration_id: fetchedFieldConfigurations.find(
-              (config: IFieldConfiguration) => config.label === key,
-            )?.id,
+            list_item_field_configuration_id: config?.id,
+            data_type: config?.data_type ?? 'free_text',
+            position: config?.position ?? 0,
             user_id: props.userId,
             list_item_id: newItem.id,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             archived_at: null,
-          })),
+          };
+        }),
       };
 
       props.handleItemAddition([itemWithFields]);

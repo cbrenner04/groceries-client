@@ -3,7 +3,6 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
-
 import List, { type IListProps } from './List';
 
 interface ISetupReturn extends RenderResult {
