@@ -7,7 +7,6 @@ import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
-import { EListType } from 'typings';
 
 import AcceptedLists, { type IAcceptedListsProps } from './AcceptedLists';
 
@@ -42,7 +41,7 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
       {
         id: 'id2',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id2',
@@ -52,7 +51,7 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
       {
         id: 'id4',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id4',
@@ -65,7 +64,7 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
       {
         id: 'id3',
         name: 'baz',
-        type: EListType.MUSIC_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id3',
@@ -75,7 +74,7 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
       {
         id: 'id5',
         name: 'foobar',
-        type: EListType.TO_DO_LIST,
+        list_item_configuration_id: 'config-2',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id5',
@@ -370,7 +369,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id7',
       name: 'new list',
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -395,7 +394,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id6',
       name: 'new list',
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -416,7 +415,7 @@ describe('AcceptedLists', () => {
     const newList = {
       id: 'id6',
       name: 'new list',
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: new Date('05/31/2020').toISOString(),
       owner_id: 'id1',
       completed: false,
@@ -553,7 +552,7 @@ describe('AcceptedLists', () => {
       name: 'a',
       owner_id: 'id1',
       refreshed: false,
-      type: EListType.MUSIC_LIST,
+      list_item_configuration_id: 'config-1',
       updated_at: '2020-08-03T08:42:13.331-05:00',
       user_id: 'id1',
       users_list_id: 'id29',
@@ -625,7 +624,7 @@ describe('AcceptedLists', () => {
       name: 'a',
       owner_id: 'id1',
       refreshed: false,
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
       updated_at: '2020-08-03T08:42:13.331-05:00',
       user_id: 'id1',
       users_list_id: 'id29',

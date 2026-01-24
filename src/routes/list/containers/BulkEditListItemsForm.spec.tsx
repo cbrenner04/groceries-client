@@ -6,7 +6,6 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import {
-  EListType,
   EListItemFieldType,
   type IList,
   type IListUser,
@@ -16,6 +15,7 @@ import {
 } from 'typings';
 
 import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkEditListItemsForm';
+import * as fieldHelpers from '../fieldHelpers';
 
 // Mock dependencies
 jest.mock('utils/api');
@@ -29,7 +29,7 @@ describe('BulkEditListItemsForm', () => {
   const mockList: IList = {
     id: 'list-1',
     name: 'Test List',
-    type: EListType.GROCERY_LIST,
+    list_item_configuration_id: 'config-1',
     owner_id: 'user-1',
     created_at: '2023-01-01T00:00:00Z',
   };
@@ -162,10 +162,10 @@ describe('BulkEditListItemsForm', () => {
     mockAxios.put = jest.fn().mockResolvedValue({});
   });
 
-  it('renders the form with item names in the title', () => {
+  it('renders the form with generic title', () => {
     const { getByText } = renderComponent();
 
-    expect(getByText('Edit 5 Apples, 3 Bananas')).toBeInTheDocument();
+    expect(getByText('Edit Items')).toBeInTheDocument();
   });
 
   it('initializes field updates with common values when all items have the same value', () => {
@@ -232,6 +232,27 @@ describe('BulkEditListItemsForm', () => {
         }),
       );
     });
+  });
+
+  it('does not update state when parseBulkFieldChange returns null (clear_ handled by handleClearField)', async () => {
+    jest.spyOn(fieldHelpers, 'parseBulkFieldChange').mockReturnValue(null);
+    const { getByLabelText, getByText, user } = renderComponent();
+
+    await user.clear(getByLabelText('Product'));
+    await user.type(getByLabelText('Product'), 'Updated Product');
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockAxios.put).toHaveBeenCalledWith(
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        expect.objectContaining({
+          list_items: expect.objectContaining({
+            fields_to_update: [],
+          }),
+        }),
+      );
+    });
+    jest.restoreAllMocks();
   });
 
   it('handles clear field functionality', async () => {

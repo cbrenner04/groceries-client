@@ -154,8 +154,8 @@ describe('BulkEditListItems', () => {
     // Wait for the API call to complete and form to render
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    // Check that the heading is rendered with item names
-    const heading = await findByText('Edit 5 Apples, 3 Bananas');
+    // Check that the heading is rendered
+    const heading = await findByText('Edit Items');
     expect(heading).toBeTruthy();
 
     // Check that the form is rendered

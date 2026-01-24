@@ -29,7 +29,6 @@ const EditList: React.FC = (): React.JSX.Element => {
               listId={data.id}
               name={data.name}
               completed={data.completed}
-              type={data.type}
               archivedAt={data.archived_at}
               refreshed={data.refreshed}
               listItemConfigurationId={data.list_item_configuration_id}

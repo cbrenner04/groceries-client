@@ -12,7 +12,6 @@ export interface IListItemFormFieldsProps {
   }[];
   fields: IListItemField[];
   setFormData: ChangeEventHandler<HTMLInputElement>;
-  listType: string;
   editForm: boolean;
 }
 

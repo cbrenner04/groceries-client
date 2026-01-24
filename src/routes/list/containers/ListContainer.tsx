@@ -21,7 +21,6 @@ import {
   handleItemComplete as exportedHandleItemComplete,
   handleItemDelete as exportedHandleItemDelete,
   handleItemRefresh as exportedHandleItemRefresh,
-  handleToggleRead as exportedHandleToggleRead,
   sortItemsByCreatedAt,
   executeBulkOperations,
   pluralize,
@@ -350,36 +349,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     ],
   );
 
-  const toggleRead = useCallback(
-    async (item: IListItem): Promise<void> => {
-      const items = selectedItems.length ? selectedItems : [item];
-      await exportedHandleToggleRead({
-        items,
-        listId: props.list.id!,
-        completedItems,
-        setCompletedItems,
-        notCompletedItems,
-        setNotCompletedItems,
-        setSelectedItems,
-        setIncompleteMultiSelect,
-        setCompleteMultiSelect,
-        navigate,
-      });
-    },
-    [
-      selectedItems,
-      props.list.id,
-      completedItems,
-      setCompletedItems,
-      notCompletedItems,
-      setNotCompletedItems,
-      setSelectedItems,
-      setIncompleteMultiSelect,
-      setCompleteMultiSelect,
-      navigate,
-    ],
-  );
-
   // Multi-select and bulk operation handlers
   const handleDelete = useCallback(
     (item: IListItem): void => {
@@ -577,7 +546,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         permissions={props.permissions}
         selectedItems={selectedItems}
         pending={pending}
-        listType={props.list.type}
         filter={filter}
         displayedCategories={displayedCategories}
         incompleteMultiSelect={incompleteMultiSelect}
@@ -590,7 +558,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         handleItemEdit={handleItemEdit}
         handleItemDelete={handleDelete}
         handleItemRefresh={handleItemRefresh}
-        toggleItemRead={toggleRead}
       />
 
       <CompletedItemsSection
@@ -598,7 +565,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         permissions={props.permissions}
         selectedItems={selectedItems}
         pending={pending}
-        listType={props.list.type}
         completeMultiSelect={completeMultiSelect}
         setCopy={setCopy}
         setMove={setMove}
@@ -609,7 +575,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         handleItemEdit={handleItemEdit}
         handleItemDelete={handleDelete}
         handleItemRefresh={handleItemRefresh}
-        toggleItemRead={toggleRead}
       />
       <ConfirmModal
         action="delete"

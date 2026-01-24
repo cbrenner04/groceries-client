@@ -5,17 +5,15 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-import {
-  EListType,
-  type IListItem,
-  type IList,
-  type IListUser,
-  type IListItemConfiguration,
-  type IListItemFieldConfiguration,
-} from 'typings';
+import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
-import { itemName } from '../utils';
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
+import {
+  buildBulkUpdateFieldsPayload,
+  getInitialBulkFieldUpdates,
+  parseBulkFieldChange,
+  type IBulkFieldUpdate,
+} from '../fieldHelpers';
 
 export interface IBulkEditListItemsFormProps {
   navigate: (url: string) => void;
@@ -28,81 +26,45 @@ export interface IBulkEditListItemsFormProps {
   listItemFieldConfigurations: IListItemFieldConfiguration[];
 }
 
-interface IFieldUpdate {
-  id: string;
-  label: string;
-  data: string;
-  clear: boolean;
-  itemIds: string[];
-}
-
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
-  const getInitialFieldUpdates = useCallback(() => {
-    // Initialize field updates based on common values across all items
-    return props.listItemFieldConfigurations.map((config) => {
-      const fieldValues = props.items.map((itemData) => {
-        const field = itemData.fields.find((f) => f.label === config.label);
-        return {
-          id: field?.id ?? '',
-          data: field?.data ?? '',
-        };
-      });
-
-      // If all items have the same value for this field, use that value
-      const uniqueDataValues = [...new Set(fieldValues.map((fv) => fv.data))];
-      const commonValue = uniqueDataValues.length === 1 ? uniqueDataValues[0] : '';
-
-      return {
-        id: config.id,
-        label: config.label,
-        data: commonValue,
-        clear: false,
-
-        itemIds: props.items.map((item) => item.id),
-      };
-    });
-  }, [props.listItemFieldConfigurations, props.items]);
-
-  const [fieldUpdates, setFieldUpdates] = useState<IFieldUpdate[]>(getInitialFieldUpdates);
+  const getInitial = useCallback(
+    () => getInitialBulkFieldUpdates(props.listItemFieldConfigurations, props.items),
+    [props.listItemFieldConfigurations, props.items],
+  );
+  const [fieldUpdates, setFieldUpdates] = useState<IBulkFieldUpdate[]>(getInitial);
 
   const handleFieldChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
-    const { name, value } = event.target;
-    setFieldUpdates((prev) => prev.map((field) => (field.label === name ? { ...field, data: value } : field)));
+    const parsed = parseBulkFieldChange(event, props.listItemFieldConfigurations);
+    if (!parsed) {
+      return;
+    }
+
+    setFieldUpdates((prev) =>
+      prev.map((f) => (f.label === parsed.label ? { ...f, data: parsed.data } : f)),
+    );
   };
 
   const handleClearField = (label: string): void => {
     setFieldUpdates((prev) =>
-      prev.map((field) => {
-        if (field.label !== label) {
-          return field;
+      prev.map((f) => {
+        if (f.label !== label) {
+          return f;
         }
-
-        const toggledClearState = !field.clear;
-        return {
-          ...field,
-          clear: toggledClearState,
-          data: toggledClearState ? '' : field.data, // Empty data when entering clear mode
-        };
+        const clear = !f.clear;
+        return { ...f, clear, data: clear ? '' : f.data };
       }),
     );
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event): Promise<void> => {
     event.preventDefault();
-
     const itemIds = props.items.map((item) => item.id).join(',');
+    const fieldsToUpdateData = buildBulkUpdateFieldsPayload(
+      props.listItemFieldConfigurations,
+      fieldUpdates,
+    );
 
     try {
-      // Filter out fields that are empty and not marked for clearing
-      const filteredFields = fieldUpdates.filter((field) => field.data || field.clear);
-
-      // Group field IDs and data together as expected by the service
-      const fieldsToUpdateData = filteredFields.map((field) => ({
-        data: field.clear ? '' : field.data,
-        label: field.label,
-        item_ids: field.itemIds,
-      }));
-
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         item_ids: itemIds,
         list_id: props.list.id,
@@ -128,13 +90,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );
-          let joinString;
-          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
-            joinString = ' or ';
-          } else {
-            joinString = ' and ';
-          }
-          showToast.error(responseErrors.join(joinString));
+          showToast.error(responseErrors.join(' and '));
         }
       } else if (error.request) {
         showToast.error('Something went wrong');
@@ -146,7 +102,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit {props.items.map((itemData) => itemName(itemData, props.list.type)).join(', ')}</h1>
+      <h1>Edit Items</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
@@ -154,7 +110,6 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           fieldUpdates={fieldUpdates}
           handleFieldChange={handleFieldChange}
           handleClearField={handleClearField}
-          listType={props.list.type}
         />
         <FormSubmission
           submitText="Update Items"

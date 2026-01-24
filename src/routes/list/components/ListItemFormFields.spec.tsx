@@ -45,7 +45,6 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
       createField('field4', 'quantity', '5', 'item1'),
     ],
     setFormData: jest.fn(),
-    listType: 'grocery',
     editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };

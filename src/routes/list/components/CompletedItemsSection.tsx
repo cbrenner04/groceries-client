@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 
-import type { IListItem, EListType } from 'typings';
+import type { IListItem } from 'typings';
 import { EUserPermissions } from 'typings';
 
 import ListItem from './ListItem';
@@ -12,7 +12,6 @@ export interface ICompletedItemsSectionProps {
   permissions: EUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
-  listType: EListType;
   completeMultiSelect: boolean;
   setCopy: (value: boolean) => void;
   setMove: (value: boolean) => void;
@@ -23,7 +22,6 @@ export interface ICompletedItemsSectionProps {
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => Promise<void>;
-  toggleItemRead?: (item: IListItem) => Promise<void>;
 }
 
 const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): React.JSX.Element => {
@@ -48,13 +46,11 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
             permissions={props.permissions}
             selectedItems={props.selectedItems}
             pending={props.pending}
-            listType={props.listType}
             handleItemSelect={props.handleItemSelect}
             handleItemComplete={props.handleItemComplete}
             handleItemEdit={props.handleItemEdit}
             handleItemDelete={props.handleItemDelete}
             handleItemRefresh={props.handleItemRefresh}
-            toggleItemRead={props.toggleItemRead}
             multiSelect={props.completeMultiSelect}
           />
         ))}

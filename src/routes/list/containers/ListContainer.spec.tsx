@@ -8,7 +8,6 @@ import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
-import { bookListTestData } from 'test-utils/factories';
 import { listCache } from 'utils/lightweightCache';
 import { clearFieldConfigCache } from 'utils/fieldConfigCache';
 import { unifiedCache } from 'utils/lightweightCache';
@@ -388,7 +387,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item with empty category data
-      expect(await findByText('1 item with empty category')).toBeVisible();
+      expect(await findByText('item with empty category 1')).toBeVisible();
     });
 
     it('handles items with missing category field as uncategorized', async () => {
@@ -443,7 +442,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item without category field
-      expect(await findByText('1 item without category field')).toBeVisible();
+      expect(await findByText('item without category field 1')).toBeVisible();
     });
 
     it('shows all categories and uncategorized when no filter is applied', async () => {
@@ -1457,7 +1456,6 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
           ]),
           createListItem('id2', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
@@ -1479,7 +1477,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
       // Create 2 items + fields (some fields may be skipped if empty)
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(7));
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(6));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2)); // Fetch 2 complete items
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // Mark 2 original items as refreshed
 
@@ -1571,278 +1569,6 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith(
-        'Something went wrong. Data may be incomplete and user actions may not persist.',
-      );
-    });
-  });
-
-  describe('Read Operations', () => {
-    it('toggles read when item not completed', async () => {
-      axios.put = jest.fn().mockResolvedValue({});
-      const { findByTestId, queryByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: bookListTestData.notCompletedItems,
-        completedItems: [],
-      });
-
-      await user.click(await findByTestId('not-completed-item-read-id2'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(await findByTestId('not-completed-item-unread-id2')).toBeVisible();
-      expect(queryByTestId('not-completed-item-read-id2')).toBeNull();
-    });
-
-    it('toggles unread when item not completed', async () => {
-      axios.put = jest.fn().mockResolvedValue({});
-      const { findByTestId, queryByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [
-          createListItem('id2', false, [
-            createField('id1', 'title', 'Test Book Title', 'id2'),
-            createField('id2', 'read', 'true', 'id2'),
-          ]),
-        ],
-        completedItems: [],
-      });
-
-      await user.click(await findByTestId('not-completed-item-unread-id2'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(await findByTestId('not-completed-item-read-id2')).toBeVisible();
-      expect(queryByTestId('not-completed-item-unread-id2')).toBeNull();
-    });
-
-    it('toggles read when item completed', async () => {
-      axios.put = jest.fn().mockResolvedValue({});
-      const { findByTestId, queryByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'true', 'id1'), // item is read, so unread button should be visible
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-unread-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(await findByTestId('completed-item-read-id1')).toBeVisible();
-      expect(queryByTestId('completed-item-unread-id1')).toBeNull();
-    });
-
-    it('toggles unread when item completed', async () => {
-      axios.put = jest.fn().mockResolvedValue({});
-      const { findByTestId, queryByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'true', 'id1'), // item is read, so unread button should be visible
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-unread-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(await findByTestId('completed-item-read-id1')).toBeVisible();
-      expect(queryByTestId('completed-item-unread-id1')).toBeNull();
-    });
-
-    it('toggles read on multiple items when selected', async () => {
-      axios.put = jest.fn().mockResolvedValue({});
-      axios.get = jest
-        .fn()
-        .mockResolvedValue({ data: { list_item_configuration_id: 'list-config-1' } })
-        .mockResolvedValue({ data: [{ id: 'read-config-1', label: 'read', data_type: 'boolean' }] });
-      axios.post = jest.fn().mockResolvedValue({});
-
-      // All notCompletedItems have a 'read' field
-      const { findAllByRole, findAllByText, findByTestId, findByText, queryByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [
-          createListItem('id2', false, [
-            createField('id1', 'title', 'Book Title 1', 'id2'),
-            createField('id2', 'author', 'Author 1', 'id2'),
-            createField('id10', 'read', 'true', 'id2'),
-          ]),
-          createListItem('id3', false, [
-            createField('id3', 'title', 'Book Title 2', 'id3'),
-            createField('id4', 'author', 'Author 2', 'id3'),
-            createField('id11', 'read', 'true', 'id3'),
-          ]),
-          createListItem('id4', false, [
-            createField('id5', 'title', 'Book Title 3', 'id4'),
-            createField('id6', 'author', 'Author 3', 'id4'),
-            createField('id12', 'read', 'true', 'id4'),
-          ]),
-        ],
-        completedItems: [
-          createListItem('id5', true, [
-            createField('id7', 'title', 'Completed Book Title', 'id5'),
-            createField('id8', 'author', 'Completed Author', 'id5'),
-            createField('id9', 'read', 'false', 'id5'),
-          ]),
-        ],
-      });
-
-      await user.click((await findAllByText('Select'))[0]);
-
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-
-      await user.click(checkboxes[0]);
-      await user.click(checkboxes[1]);
-      await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-unread-id2'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(3));
-      expect(await findByTestId('not-completed-item-read-id2')).toBeVisible();
-      expect(queryByTestId('not-completed-item-unread-id2')).toBeNull();
-      expect(await findByTestId('not-completed-item-read-id3')).toBeVisible();
-      expect(queryByTestId('not-completed-item-unread-id3')).toBeNull();
-      expect(await findByTestId('not-completed-item-read-id4')).toBeVisible();
-      expect(queryByTestId('not-completed-item-unread-id4')).toBeNull();
-    });
-
-    it('handles 401 on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // item is unread, so read button should be visible
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-      await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
-      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
-    });
-
-    it('handles 403 on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
-    });
-
-    it('handles 404 on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
-    });
-
-    it('handles not 401, 403, 404 on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith(
-        'Something went wrong. Data may be incomplete and user actions may not persist.',
-      );
-    });
-
-    it('handles failed request on read', async () => {
-      axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-
-      expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
-    });
-
-    it('handles unknown failure on read', async () => {
-      axios.put = jest.fn().mockRejectedValue(new Error('failed to send request'));
-      const { findByTestId, user } = setup({
-        list: bookListTestData.list,
-        notCompletedItems: [],
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'title', 'Completed Book Title', 'id1'),
-            createField('id2', 'author', 'Completed Author', 'id1'),
-            createField('id3', 'read', 'false', 'id1'), // ensure 'read' is 'false'
-          ]),
-        ],
-      });
-
-      await user.click(await findByTestId('completed-item-read-id1'));
-
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -2048,7 +1774,6 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),
@@ -2075,7 +1800,6 @@ describe('ListContainer', () => {
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
             createField('id2', 'product', 'foo completed product', 'id1'),
-            createField('id3', 'read', 'true', 'id1'),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),
@@ -2151,7 +1875,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(4));
 
-      expect(await findByText('new quantity new product')).toBeVisible();
+      expect(await findByText('new product new quantity')).toBeVisible();
     });
 
     it('adds an item when category does not exist', async () => {
@@ -2208,7 +1932,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(4));
 
-      expect(await findByText('new quantity new product')).toBeVisible();
+      expect(await findByText('new product new quantity')).toBeVisible();
       expect(await findByText('New category')).toBeVisible();
     });
 
@@ -2262,7 +1986,7 @@ describe('ListContainer', () => {
 
       // The new item should not be visible because it's in a different category (bar)
       // and we're filtering by 'foo'
-      expect(queryByText('new quantity new product')).toBeNull();
+      expect(queryByText('new product new quantity')).toBeNull();
     });
   });
 });

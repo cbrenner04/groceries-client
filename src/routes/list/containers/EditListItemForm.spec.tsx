@@ -11,7 +11,7 @@ import {
   createListItemConfiguration,
   createField,
 } from 'test-utils/factories';
-import { EListType, EListItemFieldType } from 'typings';
+import { EListItemFieldType } from 'typings';
 
 import EditListItemForm from './EditListItemForm';
 
@@ -38,7 +38,7 @@ Object.defineProperty(window, 'location', {
 });
 
 describe('EditListItemForm', () => {
-  const mockList = createList('123', 'Test List', EListType.GROCERY_LIST);
+  const mockList = createList('123', 'Test List', 'config-grocery');
   const mockItem = createListItem('456', false, [
     createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
     createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
@@ -86,7 +86,7 @@ describe('EditListItemForm', () => {
   describe('Rendering', () => {
     it('renders the form with correct title', () => {
       render(<EditListItemForm {...defaultProps} />);
-      expect(screen.getByText('Edit 2 Apples')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
     });
 
     it('renders form fields with correct labels and values', () => {
@@ -344,7 +344,7 @@ describe('EditListItemForm', () => {
     });
 
     it('handles validation errors for book lists', async () => {
-      const bookList = createList('123', 'Book List', EListType.BOOK_LIST);
+      const bookList = createList('123', 'Book List', 'config-book');
       const validationError = {
         response: {
           status: 422,
@@ -363,7 +363,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockShowToast.error).toHaveBeenCalledWith('title cannot be blank or author cannot be blank');
+        expect(mockShowToast.error).toHaveBeenCalledWith('title cannot be blank and author cannot be blank');
       });
     });
 
@@ -415,7 +415,7 @@ describe('EditListItemForm', () => {
 
   describe('Different List Types', () => {
     it('renders book list items correctly', () => {
-      const bookList = createList('123', 'Book List', EListType.BOOK_LIST);
+      const bookList = createList('123', 'Book List', 'config-book');
       const bookItem = createListItem('456', false, [
         createField('field1', 'title', 'Test Book', '456', { list_item_field_configuration_id: 'field-config1' }),
         createField('field2', 'author', 'Test Author', '456', { list_item_field_configuration_id: 'field-config2' }),
@@ -454,13 +454,13 @@ describe('EditListItemForm', () => {
         />,
       );
 
-      expect(screen.getByText('Edit "Test Book" Test Author')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
       expect(screen.getByLabelText('Title')).toBeInTheDocument();
       expect(screen.getByLabelText('Author')).toBeInTheDocument();
     });
 
     it('renders music list items correctly', () => {
-      const musicList = createList('123', 'Music List', EListType.MUSIC_LIST);
+      const musicList = createList('123', 'Music List', 'config-music');
       const musicItem = createListItem('456', false, [
         createField('field1', 'title', 'Test Song', '456', { list_item_field_configuration_id: 'field-config1' }),
         createField('field2', 'artist', 'Test Artist', '456', { list_item_field_configuration_id: 'field-config2' }),
@@ -499,7 +499,7 @@ describe('EditListItemForm', () => {
         />,
       );
 
-      expect(screen.getByText('Edit "Test Song" Test Artist')).toBeInTheDocument();
+      expect(screen.getByText('Edit Item')).toBeInTheDocument();
       expect(screen.getByLabelText('Title')).toBeInTheDocument();
       expect(screen.getByLabelText('Artist')).toBeInTheDocument();
     });

@@ -58,7 +58,7 @@ describe('Lists', () => {
               users_list_id: 'id1',
               name: 'foo',
               user_id: 'id1',
-              type: 'GroceryList',
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -71,7 +71,7 @@ describe('Lists', () => {
               users_list_id: 'id2',
               name: 'bar',
               user_id: 'id1',
-              type: 'BookList',
+              list_item_configuration_id: 'config-2',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -85,7 +85,7 @@ describe('Lists', () => {
             users_list_id: 'id3',
             name: 'foo',
             user_id: 'id1',
-            type: 'GroceryList',
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -97,6 +97,10 @@ describe('Lists', () => {
           id2: 'write',
           id3: 'write',
         },
+        list_item_configurations: [
+          { id: 'config-1', name: 'grocery list template' },
+          { id: 'config-2', name: 'book list template' },
+        ],
       },
     });
 

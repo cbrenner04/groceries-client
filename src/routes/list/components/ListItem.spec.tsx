@@ -2,14 +2,13 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ListItem, { memoCompare } from './ListItem';
 import type { IListItem, IListItemField } from 'typings';
-import { EUserPermissions, EListType, EListItemFieldType } from 'typings';
+import { EUserPermissions, EListItemFieldType } from 'typings';
 
 const mockHandleItemSelect = jest.fn();
 const mockHandleItemRefresh = jest.fn();
 const mockHandleItemComplete = jest.fn();
 const mockHandleItemEdit = jest.fn();
 const mockHandleItemDelete = jest.fn();
-const mockToggleItemRead = jest.fn();
 
 const mockFields: IListItemField[] = [
   {
@@ -57,13 +56,11 @@ const defaultProps = {
   permissions: EUserPermissions.WRITE,
   pending: false,
   selectedItems: [],
-  listType: EListType.GROCERY_LIST,
   handleItemSelect: mockHandleItemSelect,
   handleItemRefresh: mockHandleItemRefresh,
   handleItemComplete: mockHandleItemComplete,
   handleItemEdit: mockHandleItemEdit,
   handleItemDelete: mockHandleItemDelete,
-  toggleItemRead: mockToggleItemRead,
 };
 
 describe('ListItem', () => {
@@ -73,7 +70,7 @@ describe('ListItem', () => {
 
   it('renders item fields correctly', () => {
     render(<ListItem {...defaultProps} />);
-    expect(screen.getByText('3 Apples')).toBeInTheDocument();
+    expect(screen.getByText('Apples 3')).toBeInTheDocument();
   });
 
   it('renders action buttons for write permissions', () => {
@@ -137,85 +134,6 @@ describe('ListItem', () => {
     expect(completeButton).toBeDisabled();
   });
 
-  it('renders bookmark button for book lists when item is not completed', () => {
-    const bookItem = {
-      ...mockItem,
-      fields: [
-        ...mockFields,
-        {
-          id: '3',
-          label: 'read',
-          data: 'false',
-          list_item_field_configuration_id: '3',
-          user_id: '1',
-          list_item_id: '1',
-          created_at: '2023-01-01',
-          updated_at: '2023-01-01',
-          archived_at: null,
-          position: 2,
-          data_type: EListItemFieldType.BOOLEAN,
-        },
-      ],
-    };
-    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
-    expect(screen.getByTestId('not-completed-item-read-item-1')).toBeInTheDocument();
-  });
-
-  it('renders bookmark button for book lists when item is completed', () => {
-    const completedBookItem = {
-      ...mockItem,
-      completed: true,
-      fields: [
-        ...mockFields,
-        {
-          id: '3',
-          label: 'read',
-          data: 'true',
-          list_item_field_configuration_id: '3',
-          user_id: '1',
-          list_item_id: '1',
-          created_at: '2023-01-01',
-          updated_at: '2023-01-01',
-          archived_at: null,
-          position: 2,
-          data_type: EListItemFieldType.BOOLEAN,
-        },
-      ],
-    };
-    render(<ListItem {...defaultProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
-    expect(screen.getByTestId('completed-item-unread-item-1')).toBeInTheDocument();
-  });
-
-  it('handles bookmark button click for book lists', () => {
-    const bookItem = {
-      ...mockItem,
-      fields: [
-        ...mockFields,
-        {
-          id: '3',
-          label: 'read',
-          data: 'false',
-          list_item_field_configuration_id: '3',
-          user_id: '1',
-          list_item_id: '1',
-          created_at: '2023-01-01',
-          updated_at: '2023-01-01',
-          archived_at: null,
-          position: 2,
-          data_type: EListItemFieldType.BOOLEAN,
-        },
-      ],
-    };
-    render(<ListItem {...defaultProps} item={bookItem} listType={EListType.BOOK_LIST} />);
-    fireEvent.click(screen.getByTestId('not-completed-item-read-item-1'));
-    expect(mockToggleItemRead).toHaveBeenCalledWith(bookItem);
-  });
-
-  it('does not render bookmark button for non-book lists', () => {
-    render(<ListItem {...defaultProps} />);
-    expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
-  });
-
   describe('memoization comparator', () => {
     it('does not re-render when non-compared props change', () => {
       const prev = { ...defaultProps };
@@ -251,14 +169,6 @@ describe('ListItem', () => {
       expect(memoCompare(base, { ...base, permissions: EUserPermissions.READ })).toBe(false);
       expect(
         memoCompare({ ...base, permissions: EUserPermissions.READ }, { ...base, permissions: EUserPermissions.WRITE }),
-      ).toBe(false);
-    });
-
-    it('re-renders when listType changes', () => {
-      const base = { ...defaultProps };
-      expect(memoCompare(base, { ...base, listType: EListType.BOOK_LIST })).toBe(false);
-      expect(
-        memoCompare({ ...base, listType: EListType.BOOK_LIST }, { ...base, listType: EListType.GROCERY_LIST }),
       ).toBe(false);
     });
 
@@ -303,58 +213,9 @@ describe('ListItem with read permissions', () => {
     expect(screen.queryByTestId('completed-item-refresh-item-1')).not.toBeInTheDocument();
   });
 
-  it('does not render bookmark button for book lists with read permissions', () => {
-    const bookItem = {
-      ...mockItem,
-      fields: [
-        ...mockFields,
-        {
-          id: '3',
-          label: 'read',
-          data: 'false',
-          list_item_field_configuration_id: '3',
-          user_id: '1',
-          list_item_id: '1',
-          created_at: '2023-01-01',
-          updated_at: '2023-01-01',
-          archived_at: null,
-          position: 2,
-          data_type: EListItemFieldType.BOOLEAN,
-        },
-      ],
-    };
-    render(<ListItem {...readOnlyProps} item={bookItem} listType={EListType.BOOK_LIST} />);
-    expect(screen.queryByTestId('not-completed-item-read-item-1')).not.toBeInTheDocument();
-  });
-
-  it('does not render bookmark button for completed book items with read permissions', () => {
-    const completedBookItem = {
-      ...mockItem,
-      completed: true,
-      fields: [
-        ...mockFields,
-        {
-          id: '3',
-          label: 'read',
-          data: 'true',
-          list_item_field_configuration_id: '3',
-          user_id: '1',
-          list_item_id: '1',
-          created_at: '2023-01-01',
-          updated_at: '2023-01-01',
-          archived_at: null,
-          position: 2,
-          data_type: EListItemFieldType.BOOLEAN,
-        },
-      ],
-    };
-    render(<ListItem {...readOnlyProps} item={completedBookItem} listType={EListType.BOOK_LIST} />);
-    expect(screen.queryByTestId('completed-item-unread-item-1')).not.toBeInTheDocument();
-  });
-
   it('still renders item content for read permissions', () => {
     render(<ListItem {...readOnlyProps} />);
-    expect(screen.getByText('3 Apples')).toBeInTheDocument();
+    expect(screen.getByText('Apples 3')).toBeInTheDocument();
   });
 
   it('still shows multi-select checkbox when multiSelect is true for read permissions', () => {

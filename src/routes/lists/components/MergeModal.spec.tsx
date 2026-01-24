@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import MergeModal from './MergeModal';
-import { EListType } from 'typings';
 
 const defaultProps = {
   showModal: true,
@@ -13,8 +12,8 @@ const defaultProps = {
   handleMergeConfirm: jest.fn(),
   handleMergeNameChange: jest.fn(),
   selectedLists: [
-    { id: '1', name: 'Test List 1', type: EListType.GROCERY_LIST },
-    { id: '2', name: 'Test List 2', type: EListType.GROCERY_LIST },
+    { id: '1', name: 'Test List 1', list_item_configuration_id: 'config-1' },
+    { id: '2', name: 'Test List 2', list_item_configuration_id: 'config-1' },
   ],
 };
 
@@ -83,39 +82,39 @@ describe('MergeModal', () => {
     expect(props.handleMergeNameChange).toHaveBeenCalled();
   });
 
-  it('shows warning when lists of different types are selected', async () => {
+  it('shows warning when lists of different configurations are selected', async () => {
     const { findByText } = setup({
       selectedLists: [
-        { id: '1', name: 'Grocery List', type: EListType.GROCERY_LIST },
-        { id: '2', name: 'Book List', type: EListType.BOOK_LIST },
+        { id: '1', name: 'Grocery List', list_item_configuration_id: 'config-1' },
+        { id: '2', name: 'Book List', list_item_configuration_id: 'config-2' },
       ],
     });
 
     expect(await findByText(/Only lists of the same type can be merged/)).toBeVisible();
-    expect(await findByText(/while other types will be excluded/)).toBeVisible();
+    expect(await findByText(/Some lists will be excluded/)).toBeVisible();
   });
 
-  it('shows detailed breakdown when lists of different types are selected', async () => {
+  it('shows detailed breakdown when lists of different configurations are selected', async () => {
     const { findByText } = setup({
       selectedLists: [
-        { id: '1', name: 'Grocery List 1', type: EListType.GROCERY_LIST },
-        { id: '2', name: 'Grocery List 2', type: EListType.GROCERY_LIST },
-        { id: '3', name: 'Book List', type: EListType.BOOK_LIST },
+        { id: '1', name: 'Grocery List 1', list_item_configuration_id: 'config-1' },
+        { id: '2', name: 'Grocery List 2', list_item_configuration_id: 'config-1' },
+        { id: '3', name: 'Book List', list_item_configuration_id: 'config-2' },
       ],
     });
 
     expect(await findByText('Lists to be merged (2):')).toBeVisible();
     expect(await findByText('Lists excluded (1):')).toBeVisible();
-    expect(await findByText('Grocery List 1 (GroceryList)')).toBeVisible();
-    expect(await findByText('Grocery List 2 (GroceryList)')).toBeVisible();
-    expect(await findByText('Book List (BookList)')).toBeVisible();
+    expect(await findByText('Grocery List 1')).toBeVisible();
+    expect(await findByText('Grocery List 2')).toBeVisible();
+    expect(await findByText('Book List')).toBeVisible();
   });
 
   it('does not show warning when all lists are the same type', async () => {
     const { queryByText } = setup({
       selectedLists: [
-        { id: '1', name: 'Grocery List 1', type: EListType.GROCERY_LIST },
-        { id: '2', name: 'Grocery List 2', type: EListType.GROCERY_LIST },
+        { id: '1', name: 'Grocery List 1', list_item_configuration_id: 'config-1' },
+        { id: '2', name: 'Grocery List 2', list_item_configuration_id: 'config-1' },
       ],
     });
 

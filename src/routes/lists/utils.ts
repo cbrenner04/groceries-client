@@ -3,7 +3,7 @@ import { type AxiosError } from 'axios';
 import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
-import type { EListType, IList, TUserPermissions } from 'typings';
+import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 export const sortLists = (lists: IList[]): IList[] =>
   lists.sort((a, b) => Number(new Date(b.created_at!)) - Number(new Date(a.created_at!)));
@@ -25,6 +25,7 @@ export interface IFetchListsReturn {
   currentUserPermissions: TUserPermissions;
   pendingLists: IList[];
   incompleteLists: IList[];
+  listItemConfigurations: IListItemConfiguration[];
 }
 
 export async function fetchLists(fetchParams: {
@@ -41,6 +42,7 @@ export async function fetchLists(fetchParams: {
       completedLists,
       incompleteLists,
       currentUserPermissions: data.current_list_permissions,
+      listItemConfigurations: data.list_item_configurations,
     };
   } catch (error) {
     handleFailure(error, fetchParams.navigate);
@@ -66,7 +68,7 @@ interface IFetchListToEditReturn {
   listId: string;
   name: string;
   completed: boolean;
-  type: EListType;
+  list_item_configuration_id: string;
 }
 
 export async function fetchListToEdit(fetchParams: {
@@ -79,7 +81,7 @@ export async function fetchListToEdit(fetchParams: {
       listId: data.id,
       name: data.name,
       completed: data.completed,
-      type: data.type as EListType,
+      list_item_configuration_id: data.list_item_configuration_id,
     };
   } catch (error: unknown) {
     const err = error as AxiosError;

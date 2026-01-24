@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
-import { EListType, type TUserPermissions } from 'typings';
+import type { TUserPermissions } from 'typings';
 
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
@@ -29,7 +29,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       {
         id: 'id1',
         name: 'foo',
-        type: EListType.GROCERY_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id1',
@@ -41,7 +41,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       {
         id: 'id2',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id2',
@@ -51,7 +51,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       {
         id: 'id4',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id4',
@@ -63,7 +63,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       {
         id: 'id5',
         name: 'baz',
-        type: EListType.MUSIC_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id5',
@@ -73,7 +73,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       {
         id: 'id6',
         name: 'foobar',
-        type: EListType.TO_DO_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id6',
@@ -88,6 +88,24 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       id4: 'read',
       id6: 'read',
     } as TUserPermissions,
+    listItemConfigurations: [
+      {
+        id: 'config-1',
+        name: 'grocery list template',
+        user_id: 'id1',
+        created_at: '',
+        updated_at: '',
+        archived_at: null,
+      },
+      {
+        id: 'config-2',
+        name: 'book list template',
+        user_id: 'id1',
+        created_at: '',
+        updated_at: '',
+        archived_at: null,
+      },
+    ],
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -121,7 +139,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id1',
                 name: 'foo',
                 user_id: 'id1',
-                type: EListType.GROCERY_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: true,
                 refreshed: false,
@@ -134,7 +152,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id2',
                 name: 'bar',
                 user_id: 'id1',
-                type: EListType.BOOK_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -148,7 +166,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id3',
               name: 'foo',
               user_id: 'id1',
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -160,6 +178,7 @@ describe('ListsContainer', () => {
             id2: 'write',
             id3: 'write',
           },
+          list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
         },
       })
       .mockResolvedValueOnce({
@@ -172,7 +191,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id1',
                 name: 'foo',
                 user_id: 'id1',
-                type: EListType.GROCERY_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: true,
                 refreshed: false,
@@ -183,7 +202,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id3',
                 name: 'foo',
                 user_id: 'id1',
-                type: EListType.GROCERY_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -196,7 +215,7 @@ describe('ListsContainer', () => {
                 users_list_id: 'id2',
                 name: 'bar',
                 user_id: 'id1',
-                type: EListType.BOOK_LIST,
+                list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
                 completed: false,
                 refreshed: false,
@@ -210,6 +229,7 @@ describe('ListsContainer', () => {
             id2: 'write',
             id3: 'write',
           },
+          list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
         },
       });
 
@@ -246,7 +266,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id1',
               name: 'foo',
               user_id: 'id1',
-              type: EListType.GROCERY_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: true,
               refreshed: false,
@@ -259,7 +279,7 @@ describe('ListsContainer', () => {
               users_list_id: 'id2',
               name: 'bar',
               user_id: 'id1',
-              type: EListType.BOOK_LIST,
+              list_item_configuration_id: 'config-1',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
               refreshed: false,
@@ -273,7 +293,7 @@ describe('ListsContainer', () => {
             users_list_id: 'id3',
             name: 'foo',
             user_id: 'id1',
-            type: EListType.GROCERY_LIST,
+            list_item_configuration_id: 'config-1',
             created_at: new Date('05/31/2020').toISOString(),
             completed: false,
             refreshed: false,
@@ -285,6 +305,7 @@ describe('ListsContainer', () => {
           id2: 'write',
           id3: 'write',
         },
+        list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
       },
     });
 
@@ -337,7 +358,7 @@ describe('ListsContainer', () => {
       data: {
         id: 'id7',
         name: 'new list',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
@@ -348,7 +369,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByTestId, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
+    await user.selectOptions(await findByLabelText('Template'), 'book list template');
     await user.click(await findByText('Create List'));
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -363,7 +384,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
+    await user.selectOptions(await findByLabelText('Template'), 'book list template');
     await user.click(await findByText('Create List'));
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -378,7 +399,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
+    await user.selectOptions(await findByLabelText('Template'), 'book list template');
     await user.click(await findByText('Create List'));
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -392,7 +413,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
+    await user.selectOptions(await findByLabelText('Template'), 'book list template');
     await user.click(await findByText('Create List'));
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -406,7 +427,7 @@ describe('ListsContainer', () => {
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Type'), EListType.BOOK_LIST);
+    await user.selectOptions(await findByLabelText('Template'), 'book list template');
     await user.click(await findByText('Create List'));
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));

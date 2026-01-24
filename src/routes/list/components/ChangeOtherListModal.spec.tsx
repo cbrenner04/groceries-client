@@ -6,7 +6,7 @@ import { type AxiosError } from 'axios';
 import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
-import { EListItemFieldType, EListType } from 'typings';
+import { EListItemFieldType } from 'typings';
 import type { IListItem, IListItemField } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
 
@@ -68,7 +68,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
     currentList: {
       id: 'list-1',
       name: 'Current List',
-      type: EListType.GROCERY_LIST,
+      list_item_configuration_id: 'config-1',
       created_at: new Date('2023-01-01').toISOString(),
       completed: false,
       owner_id: 'user-1',
@@ -79,7 +79,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
       {
         id: 'list-2',
         name: 'Existing List',
-        type: EListType.GROCERY_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('2023-01-01').toISOString(),
         completed: false,
         owner_id: 'user-1',

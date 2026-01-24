@@ -181,6 +181,34 @@ describe('ListItemForm', () => {
     });
   });
 
+  it('defaults boolean field to false when checkbox is not touched', async () => {
+    const fieldConfigsWithCheckbox = [{ id: '1', label: 'read', data_type: 'boolean' }];
+
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox })
+      .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox });
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } })
+      .mockResolvedValue({});
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    await screen.findByLabelText('Read');
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items/item-1/list_item_fields', {
+        list_item_field: {
+          label: 'read',
+          data: 'false',
+          list_item_field_configuration_id: '1',
+        },
+      });
+    });
+  });
+
   it('shows error toast on API error', async () => {
     axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { error: 'fail' } } });
     render(<ListItemForm {...defaultProps} />);
@@ -413,6 +441,33 @@ describe('ListItemForm', () => {
     fireEvent.change(numberField, { target: { value: '42', type: 'number', name: 'quantity' } });
 
     expect(numberField).toHaveValue(42);
+  });
+
+  it('submits with number field and sends numeric value', async () => {
+    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number' }];
+    axios.get = jest
+      .fn()
+      .mockResolvedValueOnce({ data: fieldConfigs })
+      .mockResolvedValueOnce({ data: fieldConfigs });
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } })
+      .mockResolvedValue({});
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    const numberField = await screen.findByLabelText('Quantity');
+    fireEvent.change(numberField, { target: { value: '42', type: 'number', name: 'quantity' } });
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith(
+        expect.stringContaining('list_item_fields'),
+        expect.objectContaining({
+          list_item_field: expect.objectContaining({ data: '42' }),
+        }),
+      );
+    });
   });
 
   it('handles text input changes correctly', async () => {

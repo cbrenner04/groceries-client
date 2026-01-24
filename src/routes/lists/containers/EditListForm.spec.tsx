@@ -49,16 +49,6 @@ describe('EditListForm', () => {
     expect(await findByLabelText('Name')).toHaveValue('a');
   });
 
-  it('updates type when changed', async () => {
-    const { findByLabelText, user } = setup();
-
-    expect(await findByLabelText('Type')).toHaveValue('GroceryList');
-
-    await user.selectOptions(await findByLabelText('Type'), 'BookList');
-
-    expect(await findByLabelText('Type')).toHaveValue('BookList');
-  });
-
   it('updates completed when changed', async () => {
     const { findByLabelText, user } = setup();
 

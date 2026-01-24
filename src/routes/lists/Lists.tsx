@@ -3,7 +3,7 @@ import Async, { type PromiseFn } from 'react-async';
 import { useNavigate } from 'react-router';
 
 import Loading from 'components/Loading';
-import type { IList, TUserPermissions } from 'typings';
+import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
@@ -15,6 +15,7 @@ interface IFulfilledLists {
   completedLists: IList[];
   incompleteLists: IList[];
   currentUserPermissions: TUserPermissions;
+  listItemConfigurations: IListItemConfiguration[];
 }
 
 const Lists: React.FC = (): React.JSX.Element => {
@@ -39,6 +40,7 @@ const Lists: React.FC = (): React.JSX.Element => {
               completedLists={data.completedLists}
               incompleteLists={data.incompleteLists}
               currentUserPermissions={data.currentUserPermissions}
+              listItemConfigurations={data.listItemConfigurations}
             />
           );
         }}

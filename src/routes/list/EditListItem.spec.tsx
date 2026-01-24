@@ -13,7 +13,6 @@ import {
   createListItemConfiguration,
   createField,
 } from '../../test-utils/factories';
-import { EListType } from '../../typings';
 
 import EditListItem from './EditListItem';
 
@@ -45,7 +44,7 @@ const mockEditListItemData = {
     createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
     createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
   ]),
-  list: createList('123', 'Test List', EListType.GROCERY_LIST),
+  list: createList('123', 'Test List', 'config-grocery'),
   list_users: [createListUser('user1', 'test@example.com')],
   list_item_configuration: createListItemConfiguration('config1', 'Default Configuration'),
   list_item_field_configurations: [
@@ -112,7 +111,7 @@ describe('EditListItem', () => {
     });
 
     // Check that the form title is rendered
-    expect(await screen.findByText('Edit 2 Apples')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
 
     // Check that form fields are rendered
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
@@ -191,7 +190,7 @@ describe('EditListItem', () => {
     });
 
     // Verify that the form receives the correct props by checking the rendered content
-    expect(await screen.findByText('Edit 2 Apples')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
 
     // Check that the form fields have the correct initial values
     const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
@@ -204,7 +203,7 @@ describe('EditListItem', () => {
   it('handles different list types correctly', async () => {
     const bookListData = {
       ...mockEditListItemData,
-      list: createList('123', 'Book List', EListType.BOOK_LIST),
+      list: createList('123', 'Book List', 'config-book'),
       item: createListItem('456', false, [
         createField('field1', 'title', 'Test Book', '456'),
         createField('field2', 'author', 'Test Author', '456'),
@@ -216,7 +215,7 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
 
-    expect(await screen.findByText('Edit "Test Book" Test Author')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
   });
 
   it('handles empty item fields gracefully', async () => {
@@ -230,6 +229,6 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
 
-    expect(await screen.findByText('Edit')).toBeInTheDocument();
+    expect(await screen.findByText('Edit Item')).toBeInTheDocument();
   });
 });

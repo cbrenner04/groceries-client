@@ -5,17 +5,9 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
-import {
-  EListType,
-  type IListItem,
-  type IList,
-  type IListUser,
-  type IListItemConfiguration,
-  type IListItemFieldConfiguration,
-} from 'typings';
+import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import ListItemFormFields from '../components/ListItemFormFields';
-import { itemName } from '../utils';
 
 export interface IEditListItemFormProps {
   list: IList;
@@ -110,13 +102,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         } else {
           const keys = Object.keys(error.response.data!);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
-          let joinString;
-          if (props.list.type === EListType.BOOK_LIST || props.list.type === EListType.MUSIC_LIST) {
-            joinString = ' or ';
-          } else {
-            joinString = ' and ';
-          }
-          showToast.error(responseErrors.join(joinString));
+          showToast.error(responseErrors.join(' and '));
         }
       } else if (error.request) {
         showToast.error('Something went wrong');
@@ -128,14 +114,13 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
 
   return (
     <React.Fragment>
-      <h1>Edit {itemName(props.item, props.list.type)}</h1>
+      <h1>Edit Item</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
           fields={fields}
           setFormData={setData}
-          listType={props.list.type}
           editForm
         />
         <FormSubmission

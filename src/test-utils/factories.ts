@@ -1,4 +1,4 @@
-import { EListItemFieldType, EListType, EUserPermissions } from 'typings';
+import { EListItemFieldType, EUserPermissions } from 'typings';
 import type { IList, IListItemField, IListUser, IListItemConfiguration, IListItem } from 'typings';
 
 // Base date for consistent test data
@@ -67,13 +67,13 @@ export function createListItem(
 export function createList(
   id = 'id1',
   name = 'foo',
-  type: EListType = EListType.GROCERY_LIST,
+  listItemConfigurationId = 'config-id1',
   overrides?: Partial<IList>,
 ): IList {
   return {
     id,
     name,
-    type,
+    list_item_configuration_id: listItemConfigurationId,
     created_at: BASE_DATE,
     completed: false,
     owner_id: 'id1',
@@ -166,27 +166,6 @@ export const defaultTestData = {
 
   // Default user ID
   userId: 'id1',
-};
-
-// Book list specific test data
-export const bookListTestData = {
-  list: createList('id1', 'foo', EListType.BOOK_LIST),
-
-  notCompletedItems: [
-    createListItem('id2', false, [
-      createField('id1', 'title', 'Test Book Title', 'id2'),
-      createField('id2', 'author', 'Test Author', 'id2'),
-      createField('id3', 'read', 'false', 'id2'),
-    ]),
-  ],
-
-  completedItems: [
-    createListItem('id1', true, [
-      createField('id1', 'title', 'Completed Book Title', 'id1'),
-      createField('id2', 'author', 'Completed Author', 'id1'),
-      createField('id3', 'read', 'false', 'id1'),
-    ]),
-  ],
 };
 
 // Helper to create API response data

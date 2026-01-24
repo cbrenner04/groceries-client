@@ -16,11 +16,13 @@ export interface IMergeModalProps {
 
 const MergeModal: React.FC<IMergeModalProps> = (props): React.JSX.Element => {
   const selectedLists = props.selectedLists ?? [];
-  const listTypes = [...new Set(selectedLists.map((list) => list.type))];
-  const hasMultipleTypes = listTypes.length > 1;
-  const primaryType = listTypes[0];
-  const listsOfPrimaryType = selectedLists.filter((list) => list.type === primaryType);
-  const excludedLists = selectedLists.filter((list) => list.type !== primaryType);
+  const configurationIds = [...new Set(selectedLists.map((list) => list.list_item_configuration_id))];
+  const hasMultipleConfigurations = configurationIds.length > 1;
+  const primaryConfigurationId = configurationIds[0];
+  const listsOfPrimaryConfiguration = selectedLists.filter(
+    (list) => list.list_item_configuration_id === primaryConfigurationId,
+  );
+  const excludedLists = selectedLists.filter((list) => list.list_item_configuration_id !== primaryConfigurationId);
 
   return (
     <Modal show={props.showModal} onHide={props.clearModal}>
@@ -28,29 +30,24 @@ const MergeModal: React.FC<IMergeModalProps> = (props): React.JSX.Element => {
         <Modal.Title>Merge {`"${props.listNames}"`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {hasMultipleTypes && (
+        {hasMultipleConfigurations && (
           <Alert variant="warning" className="mb-3">
-            <strong>Note:</strong> Only lists of the same type can be merged. Lists of type{' '}
-            <strong>{primaryType}</strong> will be merged, while other types will be excluded.
+            <strong>Note:</strong> Only lists of the same type can be merged. Some lists will be excluded.
           </Alert>
         )}
 
-        {hasMultipleTypes && excludedLists.length > 0 && (
+        {hasMultipleConfigurations && excludedLists.length > 0 && (
           <Alert variant="info" className="mb-3">
-            <strong>Lists to be merged ({listsOfPrimaryType.length}):</strong>
+            <strong>Lists to be merged ({listsOfPrimaryConfiguration.length}):</strong>
             <ul className="mb-0 mt-2">
-              {listsOfPrimaryType.map((list) => (
-                <li key={list.id}>
-                  {list.name} ({list.type})
-                </li>
+              {listsOfPrimaryConfiguration.map((list) => (
+                <li key={list.id}>{list.name}</li>
               ))}
             </ul>
             <strong className="mt-2 d-block">Lists excluded ({excludedLists.length}):</strong>
             <ul className="mb-0 mt-2">
               {excludedLists.map((list) => (
-                <li key={list.id}>
-                  {list.name} ({list.type})
-                </li>
+                <li key={list.id}>{list.name}</li>
               ))}
             </ul>
           </Alert>

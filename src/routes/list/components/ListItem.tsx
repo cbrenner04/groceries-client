@@ -3,8 +3,7 @@ import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { EUserPermissions } from 'typings';
 import type { IListItem } from 'typings';
-import { EListType } from 'typings';
-import { Complete, EditButton, Refresh, Trash, Bookmark } from 'components/ActionButtons';
+import { Complete, EditButton, Refresh, Trash } from 'components/ActionButtons';
 import { itemName } from '../utils';
 
 export interface IListItemProps {
@@ -13,24 +12,18 @@ export interface IListItemProps {
   permissions: EUserPermissions;
   pending: boolean;
   selectedItems: IListItem[];
-  listType: EListType;
   handleItemSelect: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => void;
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
-  toggleItemRead?: (item: IListItem) => void;
 }
 
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   const multiSelect = props.multiSelect ?? false;
 
-  const getReadStatus = (): boolean => {
-    return props.item.fields.find((field) => field.label === 'read')?.data === 'true';
-  };
-
   const itemTitle = (): ReactNode => {
-    const formattedName = itemName(props.item, props.listType);
+    const formattedName = itemName(props.item);
     if (!formattedName) {
       return <span>Untitled Item</span>;
     }
@@ -61,35 +54,17 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
           {props.permissions === EUserPermissions.WRITE && (
             <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
               {props.item.completed ? (
-                <>
-                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
-                    <Bookmark
-                      handleClick={(): void => props.toggleItemRead!(props.item)}
-                      read={getReadStatus()}
-                      testID={`completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
-                    />
-                  )}
-                  <Refresh
-                    handleClick={(): void => props.handleItemRefresh(props.item)}
-                    testID={`completed-item-refresh-${props.item.id}`}
-                    disabled={props.pending}
-                  />
-                </>
+                <Refresh
+                  handleClick={(): void => props.handleItemRefresh(props.item)}
+                  testID={`completed-item-refresh-${props.item.id}`}
+                  disabled={props.pending}
+                />
               ) : (
-                <>
-                  {props.listType === EListType.BOOK_LIST && props.toggleItemRead && (
-                    <Bookmark
-                      handleClick={(): void => props.toggleItemRead!(props.item)}
-                      read={getReadStatus()}
-                      testID={`not-completed-item-${getReadStatus() ? 'unread' : 'read'}-${props.item.id}`}
-                    />
-                  )}
-                  <Complete
-                    handleClick={(): void => props.handleItemComplete(props.item)}
-                    testID={`not-completed-item-complete-${props.item.id}`}
-                    disabled={props.pending}
-                  />
-                </>
+                <Complete
+                  handleClick={(): void => props.handleItemComplete(props.item)}
+                  testID={`not-completed-item-complete-${props.item.id}`}
+                  disabled={props.pending}
+                />
               )}
               <EditButton
                 handleClick={(): void => props.handleItemEdit(props.item)}
@@ -120,9 +95,6 @@ export const memoCompare = (prev: IListItemProps, next: IListItemProps): boolean
     return false;
   }
   if (prev.permissions !== next.permissions) {
-    return false;
-  }
-  if (prev.listType !== next.listType) {
     return false;
   }
   if (prev.selectedItems.length !== next.selectedItems.length) {

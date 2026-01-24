@@ -6,7 +6,6 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
-import { EListType } from 'typings';
 
 import PendingLists, { type IPendingListsProps } from './PendingLists';
 
@@ -31,7 +30,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id1',
         name: 'foo',
-        type: EListType.GROCERY_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id2',
@@ -41,7 +40,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id2',
         name: 'foo',
-        type: EListType.GROCERY_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id3',
@@ -54,7 +53,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id3',
         name: 'baz',
-        type: EListType.MUSIC_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id14',
@@ -64,7 +63,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id4',
         name: 'foobar',
-        type: EListType.TO_DO_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
         users_list_id: 'id6',
@@ -77,7 +76,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id5',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id7',
@@ -87,7 +86,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
       {
         id: 'id6',
         name: 'bar',
-        type: EListType.BOOK_LIST,
+        list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: true,
         users_list_id: 'id9',

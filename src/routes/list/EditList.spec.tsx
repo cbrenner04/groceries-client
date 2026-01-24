@@ -6,7 +6,6 @@ import { AxiosError } from 'axios';
 
 import { UserContext } from '../../AppRouter';
 import { handleFailure } from '../../utils/handleFailure';
-import { EListType } from 'typings';
 
 import EditList from './EditList';
 
@@ -36,10 +35,9 @@ const mockEditListData = {
   id: '123',
   name: 'Test List',
   completed: false,
-  type: EListType.GROCERY_LIST,
+  list_item_configuration_id: 'config-1',
   archived_at: null,
   refreshed: false,
-  list_item_configuration_id: '1',
 };
 
 // Helper function to render the EditList component with consistent setup
@@ -79,7 +77,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
     expect(screen.getByText('Update List')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
@@ -131,21 +129,21 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
   it('handles different list types', async () => {
     const bookListData = {
       ...mockEditListData,
-      type: EListType.BOOK_LIST,
+      list_item_configuration_id: 'config-1',
     };
     axios.get = jest.fn().mockResolvedValue({ data: bookListData });
     await act(async () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -159,7 +157,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -173,7 +171,7 @@ describe('EditList', () => {
       renderEditList();
     });
 
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
   });
 
@@ -193,7 +191,7 @@ describe('EditList', () => {
     });
 
     // Verify the form is rendered with correct data
-    expect(await screen.findByText('Edit Test List')).toBeInTheDocument();
+    expect(await screen.findByText('Edit List')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test List')).toBeInTheDocument();
     expect(screen.getByText('Update List')).toBeInTheDocument();
   });

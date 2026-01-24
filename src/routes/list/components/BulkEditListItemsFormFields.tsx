@@ -19,7 +19,6 @@ export interface IBulkEditListItemsFormFieldsProps {
   fieldUpdates: IFieldUpdate[];
   handleFieldChange: React.ChangeEventHandler<HTMLInputElement>;
   handleClearField: (label: string) => void;
-  listType: string;
 }
 
 const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> = (props): React.JSX.Element => {

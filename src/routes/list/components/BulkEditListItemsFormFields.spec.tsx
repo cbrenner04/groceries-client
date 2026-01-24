@@ -60,7 +60,6 @@ async function setup(suppliedProps?: Partial<IBulkEditListItemsFormFieldsProps>)
     ],
     handleFieldChange: jest.fn(),
     handleClearField: jest.fn(),
-    listType: 'grocery',
   };
   const props = { ...defaultProps, ...suppliedProps };
   render(<BulkEditListItemsFormFields {...props} />);
