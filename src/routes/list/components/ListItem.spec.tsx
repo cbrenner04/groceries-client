@@ -73,7 +73,32 @@ describe('ListItem', () => {
   it('renders primary field as title and secondary fields below', () => {
     render(<ListItem {...defaultProps} />);
     expect(screen.getByText('Apples')).toBeInTheDocument();
-    expect(screen.getByText('quantity: 3')).toBeInTheDocument();
+    expect(screen.getAllByText('Quantity: 3').length).toBeGreaterThan(0);
+  });
+
+  it('renders multiple secondary fields as separate spans', () => {
+    const fieldsWithMultiple = [
+      ...mockFields,
+      {
+        id: '3',
+        label: 'notes',
+        data: 'organic',
+        list_item_field_configuration_id: '3',
+        user_id: '1',
+        list_item_id: '1',
+        created_at: new Date().toISOString(),
+        updated_at: null,
+        archived_at: null,
+        position: 2,
+        data_type: EListItemFieldType.FREE_TEXT,
+        primary: false,
+      },
+    ];
+    const itemWithMultiple = { ...mockItem, fields: fieldsWithMultiple };
+    render(<ListItem {...defaultProps} item={itemWithMultiple} />);
+    expect(screen.getByText('Apples')).toBeInTheDocument();
+    expect(screen.getAllByText('Quantity: 3').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Notes: organic').length).toBeGreaterThan(0);
   });
 
   it('renders action buttons for write permissions', () => {
@@ -219,7 +244,7 @@ describe('ListItem with read permissions', () => {
   it('still renders item content for read permissions', () => {
     render(<ListItem {...readOnlyProps} />);
     expect(screen.getByText('Apples')).toBeInTheDocument();
-    expect(screen.getByText('quantity: 3')).toBeInTheDocument();
+    expect(screen.getAllByText('Quantity: 3').length).toBeGreaterThan(0);
   });
 
   it('still shows multi-select checkbox when multiSelect is true for read permissions', () => {

@@ -85,27 +85,50 @@ describe('itemName', () => {
     const item = createListItem('1', false, fields);
     expect(itemName(item)).toBe('');
   });
+
+  it('uses first primary field when multiple primary fields exist', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1', { primary: true }),
+      createField('2', 'name', 'Red Apples', '1', { primary: true }),
+      createField('3', 'quantity', '5', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(itemName(item)).toBe('Apples');
+  });
+
+  it('falls back to first non-category field when primary field has no data', () => {
+    const fields = [
+      createField('1', 'product', '', '1', { primary: true }),
+      createField('2', 'quantity', '5', '1', { primary: false }),
+      createField('3', 'category', 'produce', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(itemName(item)).toBe('5');
+  });
 });
 
 describe('secondaryFieldsDisplay', () => {
-  it('returns non-primary, non-category fields as label: value', () => {
+  it('returns non-primary, non-category fields as array of label/value objects', () => {
     const fields = [
       createField('1', 'product', 'Apples', '1', { primary: true }),
       createField('2', 'quantity', '5 lbs', '1', { primary: false }),
       createField('3', 'category', 'produce', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toBe('quantity: 5 lbs');
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'quantity', value: '5 lbs' }]);
   });
 
-  it('joins multiple secondary fields with spaces', () => {
+  it('returns multiple secondary fields as array', () => {
     const fields = [
       createField('1', 'title', 'The Great Gatsby', '1', { primary: true }),
       createField('2', 'author', 'F. Scott Fitzgerald', '1', { primary: false }),
       createField('3', 'year', '1925', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toBe('author: F. Scott Fitzgerald year: 1925');
+    expect(secondaryFieldsDisplay(item)).toEqual([
+      { label: 'author', value: 'F. Scott Fitzgerald' },
+      { label: 'year', value: '1925' },
+    ]);
   });
 
   it('excludes fields with empty data', () => {
@@ -115,12 +138,12 @@ describe('secondaryFieldsDisplay', () => {
       createField('3', 'notes', 'organic', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toBe('notes: organic');
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'notes', value: 'organic' }]);
   });
 
   it('handles empty fields array', () => {
     const item = createListItem('1', false, []);
-    expect(secondaryFieldsDisplay(item)).toBe('');
+    expect(secondaryFieldsDisplay(item)).toEqual([]);
   });
 
   it('handles null fields', () => {
@@ -128,7 +151,7 @@ describe('secondaryFieldsDisplay', () => {
       ...createListItem('1'),
       fields: null as unknown as IListItem['fields'],
     };
-    expect(secondaryFieldsDisplay(item)).toBe('');
+    expect(secondaryFieldsDisplay(item)).toEqual([]);
   });
 
   it('shows boolean fields with true value', () => {
@@ -137,7 +160,7 @@ describe('secondaryFieldsDisplay', () => {
       createField('2', 'read', 'true', '1', { primary: false, data_type: EListItemFieldType.BOOLEAN }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toBe('read: true');
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'read', value: 'true' }]);
   });
 
   it('excludes boolean fields with false value for cleaner display', () => {
@@ -147,7 +170,47 @@ describe('secondaryFieldsDisplay', () => {
       createField('3', 'author', 'Test Author', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toBe('author: Test Author');
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'author', value: 'Test Author' }]);
+  });
+
+  it('excludes fallback primary field (first non-category) when no primary is set', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1'),
+      createField('2', 'quantity', '5 lbs', '1'),
+      createField('3', 'category', 'produce', '1'),
+    ];
+    const item = createListItem('1', false, fields);
+    // product is used as fallback primary, so it should not appear in secondary fields
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'quantity', value: '5 lbs' }]);
+  });
+
+  it('excludes all primary fields when multiple primary fields exist', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1', { primary: true }),
+      createField('2', 'name', 'Red Apples', '1', { primary: true }),
+      createField('3', 'quantity', '5 lbs', '1', { primary: false }),
+      createField('4', 'notes', 'organic', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    // Both primary fields should be excluded from secondary fields
+    expect(secondaryFieldsDisplay(item)).toEqual([
+      { label: 'quantity', value: '5 lbs' },
+      { label: 'notes', value: 'organic' },
+    ]);
+  });
+
+  it('handles no primary field and excludes fallback from secondary fields', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1'),
+      createField('2', 'quantity', '5 lbs', '1'),
+      createField('3', 'notes', 'organic', '1'),
+    ];
+    const item = createListItem('1', false, fields);
+    // product is used as fallback primary, so it should not appear in secondary fields
+    expect(secondaryFieldsDisplay(item)).toEqual([
+      { label: 'quantity', value: '5 lbs' },
+      { label: 'notes', value: 'organic' },
+    ]);
   });
 });
 

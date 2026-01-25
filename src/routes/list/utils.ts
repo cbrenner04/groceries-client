@@ -62,24 +62,48 @@ export function itemName(item: IListItem): string {
     return '';
   }
 
-  // Find the primary field first
-  const primaryField = item.fields.find((f) => f.primary === true);
-  if (primaryField?.data) {
-    return String(primaryField.data);
+  // Find the first primary field (if multiple exist, use the first one)
+  const primaryFields = item.fields.filter((f) => f.primary === true);
+  if (primaryFields.length > 0) {
+    const firstPrimary = primaryFields[0];
+    if (firstPrimary?.data) {
+      return String(firstPrimary.data);
+    }
   }
 
-  // Fallback to first non-category field if no primary is set
-  const firstField = item.fields.find((f) => f.label !== 'category');
+  // Fallback to first non-category, non-primary field if no primary is set or primary has no data
+  const firstField = item.fields.find((f) => f.label !== 'category' && f.primary !== true);
   return firstField?.data ? String(firstField.data) : '';
 }
 
-export function secondaryFieldsDisplay(item: IListItem): string {
+export function secondaryFieldsDisplay(item: IListItem): Array<{ label: string; value: string }> {
   if (!Array.isArray(item.fields) || item.fields.length === 0) {
-    return '';
+    return [];
   }
 
+  // Determine which field is used as the title (primary or fallback)
+  const primaryFields = item.fields.filter((f) => f.primary === true);
+  const hasPrimaryField = primaryFields.length > 0 && primaryFields[0]?.data;
+  const fallbackPrimaryField = hasPrimaryField
+    ? null
+    : item.fields.find((f) => f.label !== 'category');
+
   return item.fields
-    .filter((f) => f.label !== 'category' && f.primary !== true)
+    .filter((f) => {
+      // Exclude category fields
+      if (f.label === 'category') {
+        return false;
+      }
+      // Exclude ALL primary fields (defensive: handle multiple primary fields)
+      if (f.primary === true) {
+        return false;
+      }
+      // Exclude the fallback primary field (first non-category) if no primary is set
+      if (fallbackPrimaryField && f.id === fallbackPrimaryField.id) {
+        return false;
+      }
+      return true;
+    })
     .map((f) => {
       if (!f.data && f.data !== false) {
         return null;
@@ -89,11 +113,9 @@ export function secondaryFieldsDisplay(item: IListItem): string {
       if (isBoolean && (f.data === 'false' || f.data === false)) {
         return null;
       }
-      return `${f.label}: ${f.data}`;
+      return { label: f.label, value: String(f.data) };
     })
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+    .filter((f): f is { label: string; value: string } => f !== null);
 }
 
 export async function fetchList(fetchParams: {

@@ -100,7 +100,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -108,7 +108,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -140,7 +140,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -148,7 +148,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'completed-item',
       );
@@ -1072,7 +1072,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
       expect(
-        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click(await findByTestId('completed-item-delete-id1'));
@@ -1202,8 +1202,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, user } = setup();
 
       expect(
-        (await findByText('no category not completed product')).parentElement?.parentElement?.parentElement
-          ?.parentElement,
+        (await findByText('no category not completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'non-completed-item');
 
       await user.click(await findByTestId('not-completed-item-complete-id2'));
@@ -1211,15 +1210,14 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       expect(
-        (await findByText('no category not completed product')).parentElement?.parentElement?.parentElement
-          ?.parentElement,
+        (await findByText('no category not completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'completed-item');
     });
 
     it('moves item to completed and clears filter when item is last of category', async () => {
       const completedItem = createListItem('id5', true, [
         createField('id10', 'quantity', 'not completed quantity', 'id5'),
-        createField('id11', 'product', 'bar not completed product', 'id5'),
+        createField('id11', 'product', 'bar not completed product', 'id5', { primary: true }),
         createField('id12', 'category', 'bar', 'id5'),
       ]);
       axios.put = jest.fn().mockResolvedValue({ data: completedItem });
@@ -1234,7 +1232,7 @@ describe('ListContainer', () => {
 
       expect(await findByTestId('clear-filter')).toBeVisible();
       expect(
-        (await findByText('bar not completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('bar not completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'non-completed-item');
 
       await user.click(await findByTestId('not-completed-item-complete-id5'));
@@ -1245,7 +1243,7 @@ describe('ListContainer', () => {
       expect(await findByTestId('clear-filter')).toBeVisible();
       // The item should now be in completed state
       expect(
-        (await findByText('bar not completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('bar not completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'completed-item');
     });
 
@@ -1429,7 +1427,7 @@ describe('ListContainer', () => {
       const { findByTestId, findByText, user } = setup();
 
       expect(
-        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click(await findByTestId('completed-item-refresh-id1'));
@@ -1440,12 +1438,12 @@ describe('ListContainer', () => {
 
       await waitFor(async () =>
         expect(
-          (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+          (await findByText('foo completed product')).closest('[data-test-class]'),
         ).toHaveAttribute('data-test-class', 'non-completed-item'),
       );
 
       expect(
-        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'non-completed-item');
     });
 
@@ -1488,7 +1486,7 @@ describe('ListContainer', () => {
       });
 
       expect(
-        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click((await findAllByText('Select'))[1]);
@@ -1506,12 +1504,12 @@ describe('ListContainer', () => {
 
       await waitFor(async () =>
         expect(
-          (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+          (await findByText('foo completed product')).closest('[data-test-class]'),
         ).toHaveAttribute('data-test-class', 'non-completed-item'),
       );
 
       expect(
-        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).closest('[data-test-class]'),
       ).toHaveAttribute('data-test-class', 'non-completed-item');
     });
 
@@ -1877,11 +1875,11 @@ describe('ListContainer', () => {
         completedItems: [
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1'),
+            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),
-            createField('id14', 'product', 'bar completed product', 'id6'),
+            createField('id14', 'product', 'bar completed product', 'id6', { primary: true }),
           ]),
         ],
       });
@@ -1903,11 +1901,11 @@ describe('ListContainer', () => {
         completedItems: [
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1'),
+            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
           ]),
           createListItem('id6', true, [
             createField('id13', 'quantity', 'completed quantity', 'id6'),
-            createField('id14', 'product', 'bar completed product', 'id6'),
+            createField('id14', 'product', 'bar completed product', 'id6', { primary: true }),
           ]),
         ],
       });
