@@ -63,7 +63,7 @@ export function buildBulkUpdateFieldsPayload(
     }
 
     if (isBooleanFieldConfig(config)) {
-      const data = update.clear ? '' : (update.data === 'true' ? 'true' : 'false');
+      const data = update.clear ? '' : update.data === 'true' ? 'true' : 'false';
       result.push({ data, label: config.label, item_ids: update.itemIds });
     } else if (update.data || update.clear) {
       const data = update.clear ? '' : update.data;

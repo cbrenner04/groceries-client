@@ -44,7 +44,7 @@ export function handleAddItem(params: {
       fields: newItem.fields,
     };
     const itemCategory = itemWithFields.fields.find((f) => f.label === 'category')?.data;
-    const normalizedCategory = itemCategory?.trimEnd();
+    const normalizedCategory = itemCategory ? String(itemCategory).trimEnd() : undefined;
     const categoryExists =
       normalizedCategory !== undefined
         ? categories.some((category) => normalizeCategoryKey(category) === normalizeCategoryKey(normalizedCategory))

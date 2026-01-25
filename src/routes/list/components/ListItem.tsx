@@ -4,7 +4,7 @@ import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 import { EUserPermissions } from 'typings';
 import type { IListItem } from 'typings';
 import { Complete, EditButton, Refresh, Trash } from 'components/ActionButtons';
-import { itemName } from '../utils';
+import { itemName, secondaryFieldsDisplay } from '../utils';
 
 export interface IListItemProps {
   item: IListItem;
@@ -22,12 +22,79 @@ export interface IListItemProps {
 const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
   const multiSelect = props.multiSelect ?? false;
 
+  const capitalizeLabel = (label: string): string => {
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  };
+
   const itemTitle = (): ReactNode => {
     const formattedName = itemName(props.item);
+    const secondaryFields = secondaryFieldsDisplay(props.item);
     if (!formattedName) {
       return <span>Untitled Item</span>;
     }
-    return <span className="list-item-content">{formattedName}</span>;
+    return (
+      <div className="list-item-content">
+        <div className="d-flex align-items-start justify-content-between">
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="flex-grow-1">
+                <div>{formattedName}</div>
+                {secondaryFields.length > 0 && (
+                  <div className="list-item-secondary text-muted d-none d-md-block"
+                       style={{ fontSize: '0.85em', marginTop: '0.25rem' }}>
+                    {secondaryFields.map((field, index) => (
+                      <span key={index}>
+                        {index > 0 && <span className="mx-2">•</span>}
+                        <span>{capitalizeLabel(field.label)}: {field.value}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {props.permissions === EUserPermissions.WRITE && (
+                <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} ms-3`}>
+                  {props.item.completed ? (
+                    <Refresh
+                      handleClick={(): void => props.handleItemRefresh(props.item)}
+                      testID={`completed-item-refresh-${props.item.id}`}
+                      disabled={props.pending}
+                    />
+                  ) : (
+                    <Complete
+                      handleClick={(): void => props.handleItemComplete(props.item)}
+                      testID={`not-completed-item-complete-${props.item.id}`}
+                      disabled={props.pending}
+                    />
+                  )}
+                  <EditButton
+                    handleClick={(): void => props.handleItemEdit(props.item)}
+                    testID={`${props.item.completed ? '' : 'not-'}completed-item-edit-${props.item.id}`}
+                    disabled={props.pending}
+                  />
+                  <Trash
+                    handleClick={(): void => props.handleItemDelete(props.item)}
+                    testID={`${props.item.completed ? '' : 'not-'}completed-item-delete-${props.item.id}`}
+                    disabled={props.pending}
+                  />
+                </ButtonGroup>
+              )}
+            </div>
+          </div>
+        </div>
+        {secondaryFields.length > 0 && (
+          <div className="list-item-secondary text-muted d-block d-md-none mt-1"
+               style={{ fontSize: '0.85em' }}
+               data-test-id="list-item-secondary-fields-mobile">
+            {secondaryFields.map((field, index) => (
+              <span key={index}>
+                {index > 0 && <span className="mx-2">•</span>}
+                <span>{capitalizeLabel(field.label)}: {field.value}</span>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
   const multiSelectCheckbox = (item: IListItem): ReactNode | undefined =>
     multiSelect && (
@@ -51,33 +118,6 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
         {multiSelectCheckbox(props.item)}
         <Col xs={multiSelect ? 10 : 12} sm={multiSelect ? 11 : 12}>
           {itemTitle()}
-          {props.permissions === EUserPermissions.WRITE && (
-            <ButtonGroup className={`${multiSelect ? 'list-item-buttons' : ''} float-end`}>
-              {props.item.completed ? (
-                <Refresh
-                  handleClick={(): void => props.handleItemRefresh(props.item)}
-                  testID={`completed-item-refresh-${props.item.id}`}
-                  disabled={props.pending}
-                />
-              ) : (
-                <Complete
-                  handleClick={(): void => props.handleItemComplete(props.item)}
-                  testID={`not-completed-item-complete-${props.item.id}`}
-                  disabled={props.pending}
-                />
-              )}
-              <EditButton
-                handleClick={(): void => props.handleItemEdit(props.item)}
-                testID={`${props.item.completed ? '' : 'not-'}completed-item-edit-${props.item.id}`}
-                disabled={props.pending}
-              />
-              <Trash
-                handleClick={(): void => props.handleItemDelete(props.item)}
-                testID={`${props.item.completed ? '' : 'not-'}completed-item-delete-${props.item.id}`}
-                disabled={props.pending}
-              />
-            </ButtonGroup>
-          )}
         </Col>
       </Row>
     </ListGroup.Item>

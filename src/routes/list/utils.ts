@@ -62,18 +62,60 @@ export function itemName(item: IListItem): string {
     return '';
   }
 
+  // Find the first primary field (if multiple exist, use the first one)
+  const primaryFields = item.fields.filter((f) => f.primary === true);
+  if (primaryFields.length > 0) {
+    const firstPrimary = primaryFields[0];
+    if (firstPrimary?.data) {
+      return String(firstPrimary.data);
+    }
+  }
+
+  // Fallback to first non-category, non-primary field if no primary is set or primary has no data
+  const firstField = item.fields.find((f) => f.label !== 'category' && f.primary !== true);
+  return firstField?.data ? String(firstField.data) : '';
+}
+
+export function secondaryFieldsDisplay(item: IListItem): Array<{ label: string; value: string }> {
+  if (!Array.isArray(item.fields) || item.fields.length === 0) {
+    return [];
+  }
+
+  // Determine which field is used as the title (primary or fallback)
+  const primaryFields = item.fields.filter((f) => f.primary === true);
+  const hasPrimaryField = primaryFields.length > 0 && primaryFields[0]?.data;
+  const fallbackPrimaryField = hasPrimaryField
+    ? null
+    : item.fields.find((f) => f.label !== 'category');
+
   return item.fields
-    .filter((f) => f.label !== 'category')
-    .map((f) => {
-      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
-      if (isBoolean) {
-        return f.data !== undefined && f.data !== null ? `${f.label}: ${f.data}` : null;
+    .filter((f) => {
+      // Exclude category fields
+      if (f.label === 'category') {
+        return false;
       }
-      return f.data;
+      // Exclude ALL primary fields (defensive: handle multiple primary fields)
+      if (f.primary === true) {
+        return false;
+      }
+      // Exclude the fallback primary field (first non-category) if no primary is set
+      if (fallbackPrimaryField && f.id === fallbackPrimaryField.id) {
+        return false;
+      }
+      return true;
     })
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+    .map((f) => {
+      if (!f.data && f.data !== false) {
+        return null;
+      }
+      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
+      // For booleans, only show if true (skip false values for cleaner display)
+      if (isBoolean && (f.data === 'false' || f.data === false)) {
+        return null;
+      }
+      return { label: f.label, value: String(f.data) };
+    })
+    .filter((f): f is { label: string; value: string } => f !== null);
 }
 
 export async function fetchList(fetchParams: {

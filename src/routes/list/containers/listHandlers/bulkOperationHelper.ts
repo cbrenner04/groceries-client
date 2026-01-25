@@ -77,7 +77,7 @@ export function extractCategoriesFromItems(items: IListItem[]): string[] {
   items.forEach((item) => {
     const categoryField = item.fields.find((field) => field.label === 'category');
     if (categoryField?.data) {
-      categories.add(categoryField.data);
+      categories.add(String(categoryField.data));
     }
   });
   return Array.from(categories);

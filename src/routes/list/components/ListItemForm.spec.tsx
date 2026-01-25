@@ -15,8 +15,8 @@ jest.mock('react-router', () => ({
 }));
 
 const fieldConfigurations = [
-  { id: '1', label: 'name', data_type: 'free_text' },
-  { id: '2', label: 'quantity', data_type: 'number' },
+  { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false },
+  { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
 ];
 
 const listItemConfiguration = {
@@ -122,7 +122,9 @@ describe('ListItemForm', () => {
   });
 
   it('trims trailing whitespace before submitting fields', async () => {
-    const fieldConfigsWithCategory = [{ id: '1', label: 'category', data_type: 'free_text' }];
+    const fieldConfigsWithCategory = [
+      { id: '1', label: 'category', data_type: 'free_text', position: 1, primary: false },
+    ];
 
     axios.get = jest
       .fn()
@@ -232,10 +234,10 @@ describe('ListItemForm', () => {
 
   it('handles different field types', async () => {
     const fieldConfigsWithTypes = [
-      { id: '1', label: 'name', data_type: 'free_text' },
-      { id: '2', label: 'quantity', data_type: 'number' },
-      { id: '3', label: 'completed', data_type: 'boolean' },
-      { id: '4', label: 'due_date', data_type: 'date_time' },
+      { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false },
+      { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
+      { id: '3', label: 'completed', data_type: 'boolean', position: 3, primary: false },
+      { id: '4', label: 'due_date', data_type: 'date_time', position: 4, primary: false },
     ];
 
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigsWithTypes });
@@ -276,7 +278,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles field configuration not found during submission', async () => {
-    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
 
     axios.get = jest
       .fn()
@@ -303,8 +305,16 @@ describe('ListItemForm', () => {
 
   it('handles field configuration not found during itemWithFields creation', async () => {
     // Mock different field configs for initial load vs submission
-    const initialFieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
-    const submissionFieldConfigs = [{ id: '2', label: 'quantity', data_type: 'number' }]; // Different config
+    const initialFieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
+    const submissionFieldConfigs = [
+      {
+        id: '2',
+        label: 'quantity',
+        data_type: 'number',
+        position: 1,
+        primary: false,
+      },
+    ]; // Different config
 
     axios.get = jest
       .fn()
@@ -334,9 +344,9 @@ describe('ListItemForm', () => {
 
   it('filters out empty fields when creating item with fields', async () => {
     const fieldConfigs = [
-      { id: '1', label: 'name', data_type: 'free_text' },
-      { id: '2', label: 'description', data_type: 'free_text' },
-      { id: '3', label: 'quantity', data_type: 'number' },
+      { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false },
+      { id: '2', label: 'description', data_type: 'free_text', position: 2, primary: false },
+      { id: '3', label: 'quantity', data_type: 'number', position: 3, primary: false },
     ];
 
     axios.get = jest
@@ -371,9 +381,9 @@ describe('ListItemForm', () => {
     unifiedCache.clear(); // Clear unified cache before this test
     clearFieldConfigCache(); // Clear pending requests
     const unsortedFieldConfigs = [
-      { id: '3', label: 'third', data_type: 'free_text', position: 3 },
-      { id: '1', label: 'first', data_type: 'free_text', position: 1 },
-      { id: '2', label: 'second', data_type: 'free_text', position: 2 },
+      { id: '3', label: 'third', data_type: 'free_text', position: 3, primary: false },
+      { id: '1', label: 'first', data_type: 'free_text', position: 1, primary: false },
+      { id: '2', label: 'second', data_type: 'free_text', position: 2, primary: false },
     ];
 
     axios.get = jest.fn().mockResolvedValue({ data: unsortedFieldConfigs });
@@ -430,7 +440,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles number input changes correctly', async () => {
-    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number' }];
+    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number', position: 1, primary: false }];
 
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigs });
 
@@ -444,11 +454,8 @@ describe('ListItemForm', () => {
   });
 
   it('submits with number field and sends numeric value', async () => {
-    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number' }];
-    axios.get = jest
-      .fn()
-      .mockResolvedValueOnce({ data: fieldConfigs })
-      .mockResolvedValueOnce({ data: fieldConfigs });
+    const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number', position: 1, primary: false }];
+    axios.get = jest.fn().mockResolvedValueOnce({ data: fieldConfigs }).mockResolvedValueOnce({ data: fieldConfigs });
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } })
@@ -471,7 +478,7 @@ describe('ListItemForm', () => {
   });
 
   it('handles text input changes correctly', async () => {
-    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
 
     axios.get = jest.fn().mockResolvedValue({ data: fieldConfigs });
 
@@ -485,7 +492,7 @@ describe('ListItemForm', () => {
   });
 
   it('resets form data after successful submission', async () => {
-    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text' }];
+    const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
 
     axios.get = jest
       .fn()
@@ -714,5 +721,92 @@ describe('ListItemForm', () => {
     // The Add Item button should be visible again (form collapsed)
     expect(screen.getByText('Add Item')).toBeInTheDocument();
     expect(screen.getByText('Add Item')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  describe('primary field sorting', () => {
+    it('sorts primary field before non-primary fields', async () => {
+      const configsWithPrimary = [
+        { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
+        { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: true },
+      ];
+      axios.get = jest.fn().mockResolvedValue({ data: configsWithPrimary });
+
+      const { container } = render(<ListItemForm {...defaultProps} />);
+      fireEvent.click(screen.getByText('Add Item'));
+
+      await screen.findByLabelText('Name');
+      // Query all inputs by name attribute to get both text and number inputs
+      const allInputs = container.querySelectorAll('[name]');
+      const nameIndex = Array.from(allInputs).findIndex((el) => el.getAttribute('name') === 'name');
+      const quantityIndex = Array.from(allInputs).findIndex((el) => el.getAttribute('name') === 'quantity');
+      
+      // Primary field (name) should appear before quantity in DOM order
+      expect(nameIndex).toBeGreaterThanOrEqual(0);
+      expect(quantityIndex).toBeGreaterThanOrEqual(0);
+      expect(nameIndex).toBeLessThan(quantityIndex);
+    });
+
+    it('sorts non-primary field after primary field', async () => {
+      const configsWithPrimary = [
+        { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: true },
+        { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
+      ];
+      axios.get = jest.fn().mockResolvedValue({ data: configsWithPrimary });
+
+      const { container } = render(<ListItemForm {...defaultProps} />);
+      fireEvent.click(screen.getByText('Add Item'));
+
+      await screen.findByLabelText('Name');
+      // Query all inputs by name attribute
+      const nameField = container.querySelector('[name="name"]');
+      const quantityField = container.querySelector('[name="quantity"]');
+      
+      // Primary field (name) should appear first
+      expect(nameField).toBeInTheDocument();
+      expect(quantityField).toBeInTheDocument();
+      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it('sorts by position when both fields are primary', async () => {
+      const configsBothPrimary = [
+        { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: true },
+        { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: true },
+      ];
+      axios.get = jest.fn().mockResolvedValue({ data: configsBothPrimary });
+
+      const { container } = render(<ListItemForm {...defaultProps} />);
+      fireEvent.click(screen.getByText('Add Item'));
+
+      await screen.findByLabelText('Name');
+      // Query all inputs by name attribute
+      const nameField = container.querySelector('[name="name"]');
+      const quantityField = container.querySelector('[name="quantity"]');
+      
+      // Should sort by position when both are primary
+      expect(nameField).toBeInTheDocument();
+      expect(quantityField).toBeInTheDocument();
+      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it('sorts by position when neither field is primary', async () => {
+      const configsNoPrimary = [
+        { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
+        { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false },
+      ];
+      axios.get = jest.fn().mockResolvedValue({ data: configsNoPrimary });
+
+      const { container } = render(<ListItemForm {...defaultProps} />);
+      fireEvent.click(screen.getByText('Add Item'));
+
+      await screen.findByLabelText('Name');
+      // Query all inputs by name attribute
+      const nameField = container.querySelector('[name="name"]');
+      const quantityField = container.querySelector('[name="quantity"]');
+      
+      // Should sort by position when neither is primary
+      expect(nameField).toBeInTheDocument();
+      expect(quantityField).toBeInTheDocument();
+      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
   });
 });

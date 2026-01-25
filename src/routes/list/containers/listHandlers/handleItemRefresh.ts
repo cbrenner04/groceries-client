@@ -48,7 +48,7 @@ export async function handleItemRefresh(params: {
 
     // Step 2: Create each field individually using the same API pattern as normal item creation
     const fieldCreationPromises = item.fields.map((field) => {
-      if (field.data && field.data.trim() !== '') {
+      if (field.data && String(field.data).trim() !== '') {
         return axios.post(`/lists/${listId}/list_items/${newItemId}/list_item_fields`, {
           list_item_field: {
             label: field.label,
