@@ -37,7 +37,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
         const fields = Array.isArray(item.fields) ? item.fields : [];
         const categoryField = fields.find((field) => field.label === 'category');
         if (categoryField?.data) {
-          const normalizedCategory = categoryField.data.trimEnd();
+          const normalizedCategory = String(categoryField.data).trimEnd();
           if (normalizedCategory === '') {
             return;
           }
@@ -63,7 +63,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
             const hasCategoryField = fields.find((field) => field.label === 'category');
             return (
               !hasCategoryField ||
-              fields.find((field) => field.label === 'category' && (!field.data || field.data.trimEnd() === ''))
+              fields.find((field) => field.label === 'category' && (!field.data || String(field.data).trimEnd() === ''))
             );
           }
 
@@ -73,7 +73,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
               (field) =>
                 field.label === 'category' &&
                 field.data &&
-                normalizeCategoryKey(field.data) === normalizeCategoryKey(category),
+                normalizeCategoryKey(String(field.data)) === normalizeCategoryKey(category),
             );
           }
 
@@ -81,7 +81,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
           const hasCategoryField = fields.find((field) => field.label === 'category');
           return (
             !hasCategoryField ||
-            fields.find((field) => field.label === 'category' && (!field.data || field.data.trimEnd() === ''))
+            fields.find((field) => field.label === 'category' && (!field.data || String(field.data).trimEnd() === ''))
           );
         });
 

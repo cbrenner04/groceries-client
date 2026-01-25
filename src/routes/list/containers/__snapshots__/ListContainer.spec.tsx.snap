@@ -156,7 +156,15 @@ exports[`ListContainer Category Filtering renders filtered items without categor
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -248,7 +256,15 @@ exports[`ListContainer Category Filtering renders filtered items without categor
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -357,7 +373,15 @@ exports[`ListContainer Category Filtering renders filtered items without categor
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -574,7 +598,15 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           <span
             class="list-item-content"
           >
-            not completed quantity no category not completed product
+            <span>
+              no category not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -675,7 +707,15 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -767,7 +807,15 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -868,7 +916,15 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           <span
             class="list-item-content"
           >
-            not completed quantity bar not completed product
+            <span>
+              bar not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -977,7 +1033,15 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1194,7 +1258,15 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
           <span
             class="list-item-content"
           >
-            not completed quantity no category not completed product
+            <span>
+              no category not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1295,7 +1367,15 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1387,7 +1467,15 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1488,7 +1576,15 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
           <span
             class="list-item-content"
           >
-            not completed quantity bar not completed product
+            <span>
+              bar not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1597,7 +1693,15 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1814,7 +1918,15 @@ exports[`ListContainer Item Rendering does not render complete items when none e
           <span
             class="list-item-content"
           >
-            not completed quantity no category not completed product
+            <span>
+              no category not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -1915,7 +2027,15 @@ exports[`ListContainer Item Rendering does not render complete items when none e
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2007,7 +2127,15 @@ exports[`ListContainer Item Rendering does not render complete items when none e
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2108,7 +2236,15 @@ exports[`ListContainer Item Rendering does not render complete items when none e
           <span
             class="list-item-content"
           >
-            not completed quantity bar not completed product
+            <span>
+              bar not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2354,7 +2490,15 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2492,7 +2636,15 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span
             class="list-item-content"
           >
-            not completed quantity no category not completed product
+            <span>
+              no category not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
         </div>
       </div>
@@ -2519,7 +2671,15 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
         </div>
       </div>
@@ -2537,7 +2697,15 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
         </div>
       </div>
@@ -2564,7 +2732,15 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span
             class="list-item-content"
           >
-            not completed quantity bar not completed product
+            <span>
+              bar not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
         </div>
       </div>
@@ -2589,7 +2765,15 @@ exports[`ListContainer Permissions does not render ListForm when user has read p
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
         </div>
       </div>
@@ -2732,7 +2916,15 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           <span
             class="list-item-content"
           >
-            not completed quantity no category not completed product
+            <span>
+              no category not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2833,7 +3025,15 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product
+            <span>
+              foo not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -2925,7 +3125,15 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           <span
             class="list-item-content"
           >
-            not completed quantity foo not completed product 2
+            <span>
+              foo not completed product 2
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -3026,7 +3234,15 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           <span
             class="list-item-content"
           >
-            not completed quantity bar not completed product
+            <span>
+              bar not completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: not completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"
@@ -3135,7 +3351,15 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           <span
             class="list-item-content"
           >
-            completed quantity foo completed product
+            <span>
+              foo completed product
+            </span>
+            <span
+              class="list-item-secondary text-muted"
+              style="font-size: 0.85em; display: block;"
+            >
+              quantity: completed quantity
+            </span>
           </span>
           <div
             class=" float-end btn-group"

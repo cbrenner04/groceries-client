@@ -9,6 +9,7 @@ export interface IListItemFormFieldsProps {
     label: string;
     data_type: EListItemFieldType;
     position: number;
+    primary?: boolean;
   }[];
   fields: IListItemField[];
   setFormData: ChangeEventHandler<HTMLInputElement>;
@@ -16,8 +17,16 @@ export interface IListItemFormFieldsProps {
 }
 
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element => {
-  // Sort field configurations by position
-  const sortedFieldConfigurations = [...props.fieldConfigurations].sort((a, b) => a.position - b.position);
+  // Sort field configurations: primary first, then by position
+  const sortedFieldConfigurations = [...props.fieldConfigurations].sort((a, b) => {
+    if (a.primary && !b.primary) {
+      return -1;
+    }
+    if (!a.primary && b.primary) {
+      return 1;
+    }
+    return a.position - b.position;
+  });
 
   // Helper to find the value for a given config
   const getFieldValue = (configLabel: string): IListItemField | undefined => {
@@ -37,12 +46,12 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
           <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="mb-3" />
         );
       case 'date_time':
-        return <DateField key={config.id} {...commonProps} value={field?.data ?? ''} />;
+        return <DateField key={config.id} {...commonProps} value={field?.data ? String(field.data) : ''} />;
       case 'number':
         return <NumberField key={config.id} {...commonProps} value={field?.data ? Number(field.data) : undefined} />;
       case 'free_text':
       default:
-        return <TextField key={config.id} {...commonProps} value={field?.data ?? ''} />;
+        return <TextField key={config.id} {...commonProps} value={field?.data ? String(field.data) : ''} />;
     }
   };
 

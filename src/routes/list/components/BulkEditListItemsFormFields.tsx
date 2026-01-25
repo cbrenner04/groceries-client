@@ -15,6 +15,7 @@ export interface IBulkEditListItemsFormFieldsProps {
     label: string;
     data_type: 'boolean' | 'date_time' | 'free_text' | 'number';
     position: number;
+    primary: boolean;
   }[];
   fieldUpdates: IFieldUpdate[];
   handleFieldChange: React.ChangeEventHandler<HTMLInputElement>;

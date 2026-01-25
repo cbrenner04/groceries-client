@@ -4,7 +4,7 @@ import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 import { EUserPermissions } from 'typings';
 import type { IListItem } from 'typings';
 import { Complete, EditButton, Refresh, Trash } from 'components/ActionButtons';
-import { itemName } from '../utils';
+import { itemName, secondaryFieldsDisplay } from '../utils';
 
 export interface IListItemProps {
   item: IListItem;
@@ -24,10 +24,20 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
 
   const itemTitle = (): ReactNode => {
     const formattedName = itemName(props.item);
+    const secondaryText = secondaryFieldsDisplay(props.item);
     if (!formattedName) {
       return <span>Untitled Item</span>;
     }
-    return <span className="list-item-content">{formattedName}</span>;
+    return (
+      <span className="list-item-content">
+        <span>{formattedName}</span>
+        {secondaryText && (
+          <span className="list-item-secondary text-muted" style={{ fontSize: '0.85em', display: 'block' }}>
+            {secondaryText}
+          </span>
+        )}
+      </span>
+    );
   };
   const multiSelectCheckbox = (item: IListItem): ReactNode | undefined =>
     multiSelect && (

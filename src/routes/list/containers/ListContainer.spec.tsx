@@ -100,7 +100,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -108,7 +108,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -140,7 +140,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
@@ -148,7 +148,7 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
-      expect((await findByText('item new')).parentElement?.parentElement?.parentElement).toHaveAttribute(
+      expect((await findByText('item new')).parentElement?.parentElement?.parentElement?.parentElement).toHaveAttribute(
         'data-test-class',
         'completed-item',
       );
@@ -184,6 +184,25 @@ describe('ListContainer', () => {
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
+      expect(mockShowToast.error).toHaveBeenCalledWith(
+        'Something went wrong. Data may be incomplete and user actions may not persist.',
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('shows toast with server error when error.response exists', async () => {
+      jest.useFakeTimers();
+      const serverError = new Error('Server Error') as unknown as AxiosError;
+      serverError.response = { status: 503, data: {} } as unknown as AxiosResponse;
+      axios.get = jest.fn().mockRejectedValue(serverError);
+
+      setup({ permissions: EUserPermissions.WRITE });
+
+      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      // Verify the error.response branch is taken (line 123)
       expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
       );
@@ -237,18 +256,18 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-foo'));
 
       expect(container).toMatchSnapshot();
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
-      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+      expect(queryByText('bar not completed product')).toBeNull();
     });
 
     it('renders items with category buckets when no filter is applied', async () => {
       const { container, findByText } = setup();
 
       expect(container).toMatchSnapshot();
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
     });
@@ -260,15 +279,15 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
       await user.click(await findByTestId('filter-by-foo'));
 
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
       expect(queryByText('Bar')).toBeNull();
 
       await user.click(await findByTestId('clear-filter'));
 
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
     });
@@ -281,12 +300,12 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should only show uncategorized items
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
       expect(await findByTestId('clear-filter')).toBeVisible();
 
       // Should not show categorized items
-      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
-      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+      expect(queryByText('foo not completed product')).toBeNull();
+      expect(queryByText('bar not completed product')).toBeNull();
       expect(queryByText('Foo')).toBeNull();
       expect(queryByText('Bar')).toBeNull();
     });
@@ -299,12 +318,12 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-bar'));
 
       // Should only show bar category items
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
 
       // Should not show other categories or uncategorized items
-      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
-      expect(queryByText('not completed quantity no category not completed product')).toBeNull();
+      expect(queryByText('foo not completed product')).toBeNull();
+      expect(queryByText('no category not completed product')).toBeNull();
       expect(queryByText('Foo')).toBeNull();
     });
 
@@ -317,10 +336,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-foo'));
 
       // Should only show foo category items, not uncategorized items
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
-      expect(queryByText('not completed quantity no category not completed product')).toBeNull();
-      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+      expect(queryByText('no category not completed product')).toBeNull();
+      expect(queryByText('bar not completed product')).toBeNull();
     });
 
     it('handles items with empty category data as uncategorized', async () => {
@@ -387,7 +406,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item with empty category data
-      expect(await findByText('item with empty category 1')).toBeVisible();
+      expect(await findByText('item with empty category')).toBeVisible();
     });
 
     it('handles items with missing category field as uncategorized', async () => {
@@ -442,16 +461,16 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item without category field
-      expect(await findByText('item without category field 1')).toBeVisible();
+      expect(await findByText('item without category field')).toBeVisible();
     });
 
     it('shows all categories and uncategorized when no filter is applied', async () => {
       const { findByText } = setup();
 
       // Should show all items grouped by category
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
     });
@@ -491,8 +510,8 @@ describe('ListContainer', () => {
       const { findByLabelText, findByTestId, user } = setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
-          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0, primary: false },
         ],
       });
 
@@ -547,7 +566,9 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+        ],
       });
 
       // Wait a moment to ensure any potential prefetch would have fired
@@ -666,7 +687,9 @@ describe('ListContainer', () => {
 
       setup({
         permissions: EUserPermissions.WRITE,
-        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+        ],
       });
 
       // Wait a moment to ensure any potential idle prefetch would have fired
@@ -728,7 +751,9 @@ describe('ListContainer', () => {
       // Should not throw or crash the component with preloaded configurations
       const { container } = setup({
         permissions: EUserPermissions.WRITE,
-        listItemFieldConfigurations: [{ id: 'config1', label: 'product', data_type: 'free_text', position: 1 }],
+        listItemFieldConfigurations: [
+          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+        ],
       });
 
       // Wait for any async operations
@@ -1008,7 +1033,7 @@ describe('ListContainer', () => {
       axios.delete = jest.fn().mockResolvedValue({});
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
 
       await user.click(await findByTestId('not-completed-item-delete-id5'));
@@ -1018,7 +1043,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect(queryByText('not completed quantity bar not completed product')).toBeNull();
+      expect(queryByText('bar not completed product')).toBeNull();
       expect(queryByText('Bar')).toBeNull();
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
@@ -1027,7 +1052,7 @@ describe('ListContainer', () => {
       axios.delete = jest.fn().mockResolvedValue({});
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('Foo')).toBeVisible();
 
       await user.click(await findByTestId('not-completed-item-delete-id3'));
@@ -1037,7 +1062,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
+      expect(queryByText('foo not completed product')).toBeNull();
       expect(await findByText('Foo')).toBeVisible();
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
@@ -1047,7 +1072,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
       expect(
-        (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click(await findByTestId('completed-item-delete-id1'));
@@ -1057,7 +1082,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect(queryByText('completed quantity foo completed product')).toBeNull();
+      expect(queryByText('foo completed product')).toBeNull();
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
@@ -1065,9 +1090,9 @@ describe('ListContainer', () => {
       axios.delete = jest.fn().mockResolvedValueOnce({}).mockResolvedValueOnce({});
       const { findAllByRole, findByText, findByTestId, queryByTestId, queryByText, findAllByText, user } = setup();
 
-      expect(await findByText('not completed quantity foo not completed product', { exact: true })).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product', { exact: true })).toBeVisible();
+      expect(await findByText('foo not completed product 2')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
 
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
@@ -1084,9 +1109,9 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('Foo')).toBeNull();
-      expect(queryByText('not completed quantity foo not completed product', { exact: true })).toBeNull();
-      expect(queryByText('not completed quantity foo not completed product 2')).toBeNull();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(queryByText('foo not completed product', { exact: true })).toBeNull();
+      expect(queryByText('foo not completed product 2')).toBeNull();
+      expect(await findByText('bar not completed product')).toBeVisible();
       expect(await findByText('Bar')).toBeVisible();
     });
 
@@ -1120,8 +1145,8 @@ describe('ListContainer', () => {
       // The successful item should be deleted, failed item should be rolled back
       // checkboxes[2] = id3 (foo not completed product) - should be deleted (success)
       // checkboxes[3] = id4 (foo not completed product 2) - should be rolled back (failure)
-      expect(queryByText('not completed quantity foo not completed product')).toBeNull();
-      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
+      expect(queryByText('foo not completed product')).toBeNull();
+      expect(await findByText('foo not completed product 2')).toBeVisible();
     });
 
     it('handles complete failure when deleting multiple items - all fail', async () => {
@@ -1150,8 +1175,8 @@ describe('ListContainer', () => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Failed to delete items. Please try again.');
 
       // All items should be rolled back to their original state
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product 2')).toBeVisible();
     });
 
     it('does not delete item when delete is cleared, hides modal', async () => {
@@ -1162,7 +1187,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('clear-delete'));
 
       await waitFor(() => expect(queryByTestId('clear-delete')).toBeNull());
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
     });
   });
 
@@ -1177,7 +1202,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, user } = setup();
 
       expect(
-        (await findByText('not completed quantity no category not completed product')).parentElement?.parentElement
+        (await findByText('no category not completed product')).parentElement?.parentElement?.parentElement
           ?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-completed-item');
 
@@ -1186,7 +1211,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       expect(
-        (await findByText('not completed quantity no category not completed product')).parentElement?.parentElement
+        (await findByText('no category not completed product')).parentElement?.parentElement?.parentElement
           ?.parentElement,
       ).toHaveAttribute('data-test-class', 'completed-item');
     });
@@ -1205,12 +1230,11 @@ describe('ListContainer', () => {
       await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
       await user.click(await findByTestId('filter-by-bar'));
 
-      await waitFor(() => expect(queryByText('not completed quantity foo not completed product')).toBeNull());
+      await waitFor(() => expect(queryByText('foo not completed product')).toBeNull());
 
       expect(await findByTestId('clear-filter')).toBeVisible();
       expect(
-        (await findByText('not completed quantity bar not completed product')).parentElement?.parentElement
-          ?.parentElement,
+        (await findByText('bar not completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-completed-item');
 
       await user.click(await findByTestId('not-completed-item-complete-id5'));
@@ -1221,8 +1245,7 @@ describe('ListContainer', () => {
       expect(await findByTestId('clear-filter')).toBeVisible();
       // The item should now be in completed state
       expect(
-        (await findByText('not completed quantity bar not completed product')).parentElement?.parentElement
-          ?.parentElement,
+        (await findByText('bar not completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'completed-item');
     });
 
@@ -1280,7 +1303,7 @@ describe('ListContainer', () => {
       );
 
       // The successful item should remain in completed, failed item should be rolled back to not completed
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
     });
 
     it('handles complete failure when completing multiple items - all fail', async () => {
@@ -1303,8 +1326,8 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
       // Should call handleFailure for complete failure
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product')).toBeVisible();
     });
 
     it('handles 401 on complete', async () => {
@@ -1398,7 +1421,7 @@ describe('ListContainer', () => {
           user_id: 'id1',
           fields: [
             createField('id1', 'quantity', 'completed quantity', 'id6'),
-            createField('id2', 'product', 'foo completed product', 'id6'),
+            createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
           ],
         },
       }); // Fetch complete item
@@ -1406,7 +1429,7 @@ describe('ListContainer', () => {
       const { findByTestId, findByText, user } = setup();
 
       expect(
-        (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click(await findByTestId('completed-item-refresh-id1'));
@@ -1417,12 +1440,12 @@ describe('ListContainer', () => {
 
       await waitFor(async () =>
         expect(
-          (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+          (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
         ).toHaveAttribute('data-test-class', 'non-completed-item'),
       );
 
       expect(
-        (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-completed-item');
     });
 
@@ -1441,13 +1464,13 @@ describe('ListContainer', () => {
         .mockResolvedValueOnce({
           data: createListItem('id6', false, [
             createField('id1', 'quantity', 'completed quantity', 'id6'),
-            createField('id2', 'product', 'foo completed product', 'id6'),
+            createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
           ]),
         }) // Fetch first complete item
         .mockResolvedValueOnce({
           data: createListItem('id7', false, [
             createField('id13', 'quantity', 'completed quantity', 'id7'),
-            createField('id14', 'product', 'bar completed product', 'id7'),
+            createField('id14', 'product', 'bar completed product', 'id7', { primary: true }),
           ]),
         }); // Fetch second complete item
       axios.put = jest.fn().mockResolvedValue(undefined);
@@ -1455,17 +1478,17 @@ describe('ListContainer', () => {
         completedItems: [
           createListItem('id1', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1'),
+            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
           ]),
           createListItem('id2', true, [
             createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'bar completed product', 'id1'),
+            createField('id2', 'product', 'bar completed product', 'id1', { primary: true }),
           ]),
         ],
       });
 
       expect(
-        (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'completed-item');
 
       await user.click((await findAllByText('Select'))[1]);
@@ -1483,12 +1506,12 @@ describe('ListContainer', () => {
 
       await waitFor(async () =>
         expect(
-          (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+          (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
         ).toHaveAttribute('data-test-class', 'non-completed-item'),
       );
 
       expect(
-        (await findByText('completed quantity foo completed product')).parentElement?.parentElement?.parentElement,
+        (await findByText('foo completed product')).parentElement?.parentElement?.parentElement?.parentElement,
       ).toHaveAttribute('data-test-class', 'non-completed-item');
     });
 
@@ -1545,6 +1568,67 @@ describe('ListContainer', () => {
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
+      );
+    });
+
+    it('shows failure message when some items fail to refresh', async () => {
+      // Mock first item succeeds, second item fails
+      // First item: create item, create 2 fields, fetch item, mark refreshed
+      // Second item: create item fails
+      axios.post = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
+        .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
+        .mockResolvedValueOnce({ data: {} }) // Create product field for first item
+        .mockRejectedValueOnce({ response: { status: 500 } }); // Second item create fails
+      axios.get = jest.fn().mockResolvedValueOnce({
+        data: createListItem('id6', false, [
+          createField('id1', 'quantity', 'completed quantity', 'id6'),
+          createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
+        ]),
+      });
+      // First item's refresh mark succeeds, second item never gets to this point
+      axios.put = jest
+        .fn()
+        .mockResolvedValueOnce({ data: {} }); // Mark first item as refreshed
+      const { findAllByRole, findByTestId, findAllByText, user } = setup({
+        completedItems: [
+          createListItem('id1', true, [
+            createField('id1', 'quantity', 'completed quantity', 'id1'),
+            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
+          ]),
+          createListItem('id2', true, [
+            createField('id1', 'quantity', 'completed quantity', 'id1'),
+            createField('id2', 'product', 'bar completed product', 'id1', { primary: true }),
+          ]),
+        ],
+      });
+
+      await user.click((await findAllByText('Select'))[1]);
+      await waitFor(async () => {
+        const hideSelectButtons = await findAllByText('Hide Select');
+        expect(hideSelectButtons.length).toBeGreaterThan(0);
+        expect(hideSelectButtons[hideSelectButtons.length - 1]).toBeVisible();
+      });
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+      await user.click(checkboxes[1]);
+      await user.click(await findByTestId('completed-item-refresh-id1'));
+
+      // Wait for executeBulkOperations to process both items
+      // First item succeeds, second item fails
+      // handleItemRefresh will show an error for the failed item via handleFailure,
+      // but executeBulkOperations should also show a warning for partial failures (lines 303/304)
+      await waitFor(
+        () => {
+          // executeBulkOperations uses showToast.warning for partial failures when some succeed and some fail
+          const warningCalls = mockShowToast.warning.mock.calls;
+          expect(warningCalls.length).toBeGreaterThan(0);
+          const lastWarningCall = warningCalls[warningCalls.length - 1];
+          expect(lastWarningCall[0]).toContain('Some items failed to refresh');
+        },
+        { timeout: 3000 },
       );
     });
 
@@ -1699,10 +1783,10 @@ describe('ListContainer', () => {
       await user.click(getByText('Complete'));
 
       // Copy operation should keep items in the current list
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
-      expect(getByText('not completed quantity foo not completed product')).toBeVisible();
-      expect(getByText('not completed quantity foo not completed product 2')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
+      expect(getByText('foo not completed product')).toBeVisible();
+      expect(getByText('foo not completed product 2')).toBeVisible();
     });
 
     it('multi select move incomplete items', async () => {
@@ -1730,8 +1814,8 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      expect(await findByText('not completed quantity no category not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
 
       await user.click((await findAllByRole('checkbox'))[1]);
       await user.click((await findAllByRole('checkbox'))[2]);
@@ -1759,12 +1843,32 @@ describe('ListContainer', () => {
         );
       });
 
-      expect(queryByText('not completed quantity no category not completed product')).not.toBeInTheDocument();
-      expect(queryByText('not completed quantity foo not completed product')).not.toBeInTheDocument();
+      expect(queryByText('no category not completed product')).not.toBeInTheDocument();
+      expect(queryByText('foo not completed product')).not.toBeInTheDocument();
 
       // Items that were not selected should still be visible
-      expect(await findByText('not completed quantity bar not completed product')).toBeVisible();
-      expect(await findByText('not completed quantity foo not completed product 2')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
+      expect(await findByText('foo not completed product 2')).toBeVisible();
+    });
+
+    it('does not move items when move is false', async () => {
+      // This test verifies that handleMove returns early when !move (line 444)
+      // We test this by ensuring items remain in the list when move state is false
+      const { findAllByRole, findAllByText, findByText, queryByText, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      // Select items but don't trigger move (move should be false)
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      await user.click((await findAllByRole('checkbox'))[1]);
+      await user.click((await findAllByRole('checkbox'))[2]);
+
+      // Items should still be visible (handleMove should not have been called or should return early)
+      expect(await findByText('no category not completed product')).toBeVisible();
+      expect(await findByText('bar not completed product')).toBeVisible();
+      expect(queryByText('Move to list')).toBeInTheDocument();
     });
 
     it('multi select copy complete items', async () => {
@@ -1875,7 +1979,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(4));
 
-      expect(await findByText('new product new quantity')).toBeVisible();
+      expect(await findByText('new product')).toBeVisible();
     });
 
     it('adds an item when category does not exist', async () => {
@@ -1932,7 +2036,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(4));
 
-      expect(await findByText('new product new quantity')).toBeVisible();
+      expect(await findByText('new product')).toBeVisible();
       expect(await findByText('New category')).toBeVisible();
     });
 
@@ -1986,7 +2090,7 @@ describe('ListContainer', () => {
 
       // The new item should not be visible because it's in a different category (bar)
       // and we're filtering by 'foo'
-      expect(queryByText('new product new quantity')).toBeNull();
+      expect(queryByText('new product')).toBeNull();
     });
   });
 });

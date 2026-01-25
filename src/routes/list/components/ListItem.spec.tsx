@@ -23,6 +23,7 @@ const mockFields: IListItemField[] = [
     archived_at: null,
     position: 0,
     data_type: EListItemFieldType.FREE_TEXT,
+    primary: true,
   },
   {
     id: '2',
@@ -36,6 +37,7 @@ const mockFields: IListItemField[] = [
     archived_at: null,
     position: 1,
     data_type: EListItemFieldType.NUMBER,
+    primary: false,
   },
 ];
 
@@ -68,9 +70,10 @@ describe('ListItem', () => {
     jest.clearAllMocks();
   });
 
-  it('renders item fields correctly', () => {
+  it('renders primary field as title and secondary fields below', () => {
     render(<ListItem {...defaultProps} />);
-    expect(screen.getByText('Apples 3')).toBeInTheDocument();
+    expect(screen.getByText('Apples')).toBeInTheDocument();
+    expect(screen.getByText('quantity: 3')).toBeInTheDocument();
   });
 
   it('renders action buttons for write permissions', () => {
@@ -215,7 +218,8 @@ describe('ListItem with read permissions', () => {
 
   it('still renders item content for read permissions', () => {
     render(<ListItem {...readOnlyProps} />);
-    expect(screen.getByText('Apples 3')).toBeInTheDocument();
+    expect(screen.getByText('Apples')).toBeInTheDocument();
+    expect(screen.getByText('quantity: 3')).toBeInTheDocument();
   });
 
   it('still shows multi-select checkbox when multiSelect is true for read permissions', () => {

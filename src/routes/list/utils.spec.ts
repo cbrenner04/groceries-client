@@ -6,6 +6,7 @@ import {
   fetchListItemToEdit,
   fetchItemsToEdit,
   itemName,
+  secondaryFieldsDisplay,
   type IFulfilledEditListData,
 } from './utils';
 import axios from 'utils/api';
@@ -32,45 +33,34 @@ const mockNavigate = jest.fn();
 const createError = (status: number): AxiosError => new AxiosError('Test error', String(status));
 
 describe('itemName', () => {
-  const createMockItem = (fields: { label: string; data: string }[]): IListItem => {
-    const mappedFields = fields.map((field, index) => createField(`field-${index}`, field.label, field.data, '1'));
-    return createListItem('1', false, mappedFields);
-  };
-
-  it('returns all non-category field data joined with spaces', () => {
-    const item = createMockItem([
-      { label: 'field1', data: 'value1' },
-      { label: 'field2', data: 'value2' },
-      { label: 'category', data: 'should be excluded' },
-    ]);
-    expect(itemName(item)).toBe('value1 value2');
+  it('returns the primary field value', () => {
+    const fields = [
+      createField('1', 'quantity', '5', '1', { primary: false }),
+      createField('2', 'product', 'Apples', '1', { primary: true }),
+      createField('3', 'category', 'produce', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(itemName(item)).toBe('Apples');
   });
 
-  it('excludes category field', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'category', data: 'Test Category' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    expect(itemName(item)).toBe('Test Title Test Author');
-  });
-
-  it('excludes empty fields', () => {
-    const item = createMockItem([
-      { label: 'field1', data: 'value1' },
-      { label: 'field2', data: '' },
-      { label: 'field3', data: 'value3' },
-    ]);
-    expect(itemName(item)).toBe('value1 value3');
+  it('falls back to first non-category field if no primary', () => {
+    const fields = [
+      createField('1', 'quantity', '5', '1'),
+      createField('2', 'product', 'Apples', '1'),
+      createField('3', 'category', 'produce', '1'),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(itemName(item)).toBe('5');
   });
 
   it('handles empty fields array', () => {
-    const item = createMockItem([]);
+    const item = createListItem('1', false, []);
     expect(itemName(item)).toBe('');
   });
 
   it('handles only category fields', () => {
-    const item = createMockItem([{ label: 'category', data: 'Test Category' }]);
+    const fields = [createField('1', 'category', 'Test Category', '1')];
+    const item = createListItem('1', false, fields);
     expect(itemName(item)).toBe('');
   });
 
@@ -90,57 +80,74 @@ describe('itemName', () => {
     expect(itemName(item)).toBe('');
   });
 
-  it('formats boolean fields as label: value', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'packed', data: 'true' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
-    expect(itemName(item)).toBe('Test Title packed: true Test Author');
+  it('returns empty string if primary field has no data', () => {
+    const fields = [createField('1', 'product', '', '1', { primary: true })];
+    const item = createListItem('1', false, fields);
+    expect(itemName(item)).toBe('');
+  });
+});
+
+describe('secondaryFieldsDisplay', () => {
+  it('returns non-primary, non-category fields as label: value', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1', { primary: true }),
+      createField('2', 'quantity', '5 lbs', '1', { primary: false }),
+      createField('3', 'category', 'produce', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toBe('quantity: 5 lbs');
   });
 
-  it('formats boolean fields with false value as label: false', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'packed', data: 'false' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
-    expect(itemName(item)).toBe('Test Title packed: false Test Author');
+  it('joins multiple secondary fields with spaces', () => {
+    const fields = [
+      createField('1', 'title', 'The Great Gatsby', '1', { primary: true }),
+      createField('2', 'author', 'F. Scott Fitzgerald', '1', { primary: false }),
+      createField('3', 'year', '1925', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toBe('author: F. Scott Fitzgerald year: 1925');
   });
 
-  it('excludes boolean fields with null data', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'packed', data: '' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
-    item.fields[1].data = null;
-    expect(itemName(item)).toBe('Test Title Test Author');
+  it('excludes fields with empty data', () => {
+    const fields = [
+      createField('1', 'product', 'Apples', '1', { primary: true }),
+      createField('2', 'quantity', '', '1', { primary: false }),
+      createField('3', 'notes', 'organic', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toBe('notes: organic');
   });
 
-  it('formats boolean fields with actual boolean true', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'read', data: 'true' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
-    (item.fields[1] as { data: unknown }).data = true;
-    expect(itemName(item)).toBe('Test Title read: true Test Author');
+  it('handles empty fields array', () => {
+    const item = createListItem('1', false, []);
+    expect(secondaryFieldsDisplay(item)).toBe('');
   });
 
-  it('formats boolean fields with actual boolean false', () => {
-    const item = createMockItem([
-      { label: 'title', data: 'Test Title' },
-      { label: 'read', data: 'false' },
-      { label: 'author', data: 'Test Author' },
-    ]);
-    item.fields[1].data_type = EListItemFieldType.BOOLEAN;
-    (item.fields[1] as { data: unknown }).data = false;
-    expect(itemName(item)).toBe('Test Title read: false Test Author');
+  it('handles null fields', () => {
+    const item = {
+      ...createListItem('1'),
+      fields: null as unknown as IListItem['fields'],
+    };
+    expect(secondaryFieldsDisplay(item)).toBe('');
+  });
+
+  it('shows boolean fields with true value', () => {
+    const fields = [
+      createField('1', 'title', 'Test Book', '1', { primary: true }),
+      createField('2', 'read', 'true', '1', { primary: false, data_type: EListItemFieldType.BOOLEAN }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toBe('read: true');
+  });
+
+  it('excludes boolean fields with false value for cleaner display', () => {
+    const fields = [
+      createField('1', 'title', 'Test Book', '1', { primary: true }),
+      createField('2', 'read', 'false', '1', { primary: false, data_type: EListItemFieldType.BOOLEAN }),
+      createField('3', 'author', 'Test Author', '1', { primary: false }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toBe('author: Test Author');
   });
 });
 

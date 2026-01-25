@@ -40,7 +40,7 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
-  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number }[];
+  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number; primary: boolean }[];
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {

@@ -62,14 +62,34 @@ export function itemName(item: IListItem): string {
     return '';
   }
 
+  // Find the primary field first
+  const primaryField = item.fields.find((f) => f.primary === true);
+  if (primaryField?.data) {
+    return String(primaryField.data);
+  }
+
+  // Fallback to first non-category field if no primary is set
+  const firstField = item.fields.find((f) => f.label !== 'category');
+  return firstField?.data ? String(firstField.data) : '';
+}
+
+export function secondaryFieldsDisplay(item: IListItem): string {
+  if (!Array.isArray(item.fields) || item.fields.length === 0) {
+    return '';
+  }
+
   return item.fields
-    .filter((f) => f.label !== 'category')
+    .filter((f) => f.label !== 'category' && f.primary !== true)
     .map((f) => {
-      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
-      if (isBoolean) {
-        return f.data !== undefined && f.data !== null ? `${f.label}: ${f.data}` : null;
+      if (!f.data && f.data !== false) {
+        return null;
       }
-      return f.data;
+      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
+      // For booleans, only show if true (skip false values for cleaner display)
+      if (isBoolean && (f.data === 'false' || f.data === false)) {
+        return null;
+      }
+      return `${f.label}: ${f.data}`;
     })
     .filter(Boolean)
     .join(' ')
