@@ -66,7 +66,7 @@ export function itemName(item: IListItem): string {
   const primaryFields = item.fields.filter((f) => f.primary === true);
   if (primaryFields.length > 0) {
     const firstPrimary = primaryFields[0];
-    if (firstPrimary?.data) {
+    if (firstPrimary.data) {
       return String(firstPrimary.data);
     }
   }
@@ -76,7 +76,7 @@ export function itemName(item: IListItem): string {
   return firstField?.data ? String(firstField.data) : '';
 }
 
-export function secondaryFieldsDisplay(item: IListItem): Array<{ label: string; value: string }> {
+export function secondaryFieldsDisplay(item: IListItem): { label: string; value: string }[] {
   if (!Array.isArray(item.fields) || item.fields.length === 0) {
     return [];
   }
