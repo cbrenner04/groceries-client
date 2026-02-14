@@ -1,4 +1,3 @@
-export { default as Bookmark } from './Bookmark';
 export { default as Complete } from './Complete';
 export { default as EditButton } from './EditButton';
 export { default as EditLink } from './EditLink';

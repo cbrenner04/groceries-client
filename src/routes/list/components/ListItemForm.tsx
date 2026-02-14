@@ -11,7 +11,7 @@ import { capitalize } from 'utils/format';
 import { getFieldConfigurations } from 'utils/fieldConfigCache';
 import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
-import { isBooleanFieldConfig } from '../fieldHelpers';
+import { isBooleanFieldConfig, sortFieldConfigurations } from '../fieldHelpers';
 
 export interface IListItemFormProps {
   navigate: (path: string) => void;
@@ -29,6 +29,7 @@ interface IFieldConfiguration {
   label: string;
   data_type: string;
   position: number;
+  primary?: boolean;
 }
 
 interface IListItemDataRecord extends Record<string, string | number | boolean | undefined | null> {}
@@ -42,8 +43,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     (props.preloadedFieldConfigurations ?? []) as IFieldConfiguration[],
   );
 
-  // Sort field configurations by position
-  const sortedFieldConfigurations = [...fieldConfigurations].sort((a, b) => a.position - b.position);
+  const sortedFieldConfigurations = sortFieldConfigurations(fieldConfigurations);
   // Track whether configurations have been loaded (to avoid early "no config" flash)
   const [fieldConfigsLoaded, setFieldConfigsLoaded] = useState<boolean>(
     props.preloadedFieldConfigurations !== undefined && props.preloadedFieldConfigurations.length > 0,
@@ -78,6 +78,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         label: config.label,
         data_type: config.data_type,
         position: config.position,
+        primary: config.primary,
       }));
       setFieldConfigurations(mappedConfigs);
       // Always mark as loaded after fetch attempt, even if empty
@@ -175,9 +176,9 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const itemWithFields = {
         ...newItem,
         fields: allEntriesForItem.map(([key, value]) => {
-          const config = fetchedFieldConfigurations.find(
-            (c: IFieldConfiguration) => c.label === key,
-          ) as IFieldConfiguration | undefined;
+          const config = fetchedFieldConfigurations.find((c: IFieldConfiguration) => c.label === key) as
+            | IFieldConfiguration
+            | undefined;
           return {
             id: `temp-${Date.now()}-${key}`,
             label: key,

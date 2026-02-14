@@ -7,6 +7,7 @@ import {
   isBooleanFieldConfig,
   normalizeBooleanToString,
   parseBulkFieldChange,
+  sortFieldConfigurations,
 } from './fieldHelpers';
 
 describe('fieldHelpers', () => {
@@ -43,8 +44,8 @@ describe('fieldHelpers', () => {
 
   describe('getInitialBulkFieldUpdates', () => {
     const configs: IListItemFieldConfiguration[] = [
-      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
-      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2 },
+      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
+      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2, primary: false },
     ];
     const items: IListItem[] = [
       {
@@ -126,8 +127,8 @@ describe('fieldHelpers', () => {
 
   describe('buildBulkUpdateFieldsPayload', () => {
     const configs: IListItemFieldConfiguration[] = [
-      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
-      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2 },
+      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
+      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2, primary: false },
     ];
 
     it('always includes boolean fields, defaulting to "false" when not clear', () => {
@@ -177,6 +178,27 @@ describe('fieldHelpers', () => {
     });
   });
 
+  describe('sortFieldConfigurations', () => {
+    it('sorts primary first, then by position', () => {
+      const configs = [
+        { id: '1', label: 'c', position: 3 },
+        { id: '2', label: 'a', position: 1, primary: true },
+        { id: '3', label: 'b', position: 2 },
+      ];
+      const sorted = sortFieldConfigurations(configs);
+      expect(sorted.map((c) => c.label)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('does not mutate the original array', () => {
+      const configs = [
+        { id: '1', label: 'b', position: 2 },
+        { id: '2', label: 'a', position: 1 },
+      ];
+      sortFieldConfigurations(configs);
+      expect(configs[0].label).toBe('b');
+    });
+  });
+
   describe('parseBulkFieldChange', () => {
     const configs = [
       { label: 'product', data_type: 'free_text' },
@@ -185,43 +207,28 @@ describe('fieldHelpers', () => {
 
     it('returns null for clear_ checkboxes', () => {
       expect(
-        parseBulkFieldChange(
-          { target: { name: 'clear_read', value: 'on', type: 'checkbox', checked: true } },
-          configs,
-        ),
+        parseBulkFieldChange({ target: { name: 'clear_read', value: 'on', type: 'checkbox', checked: true } }, configs),
       ).toBeNull();
     });
 
     it('uses checked for boolean checkboxes', () => {
       expect(
-        parseBulkFieldChange(
-          { target: { name: 'read', value: 'on', type: 'checkbox', checked: true } },
-          configs,
-        ),
+        parseBulkFieldChange({ target: { name: 'read', value: 'on', type: 'checkbox', checked: true } }, configs),
       ).toEqual({ label: 'read', data: 'true' });
       expect(
-        parseBulkFieldChange(
-          { target: { name: 'read', value: 'on', type: 'checkbox', checked: false } },
-          configs,
-        ),
+        parseBulkFieldChange({ target: { name: 'read', value: 'on', type: 'checkbox', checked: false } }, configs),
       ).toEqual({ label: 'read', data: 'false' });
     });
 
     it('uses value for non-checkbox fields', () => {
       expect(
-        parseBulkFieldChange(
-          { target: { name: 'product', value: 'Bananas', type: 'text', checked: false } },
-          configs,
-        ),
+        parseBulkFieldChange({ target: { name: 'product', value: 'Bananas', type: 'text', checked: false } }, configs),
       ).toEqual({ label: 'product', data: 'Bananas' });
     });
 
     it('uses value when field name not in configs', () => {
       expect(
-        parseBulkFieldChange(
-          { target: { name: 'unknown', value: 'x', type: 'text', checked: false } },
-          configs,
-        ),
+        parseBulkFieldChange({ target: { name: 'unknown', value: 'x', type: 'text', checked: false } }, configs),
       ).toEqual({ label: 'unknown', data: 'x' });
     });
   });

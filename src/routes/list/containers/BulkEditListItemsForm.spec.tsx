@@ -49,12 +49,14 @@ describe('BulkEditListItemsForm', () => {
       label: 'product',
       position: 1,
       data_type: EListItemFieldType.FREE_TEXT,
+      primary: true,
     },
     {
       id: 'field-config-2',
       label: 'quantity',
       position: 2,
       data_type: EListItemFieldType.NUMBER,
+      primary: false,
     },
   ];
 
@@ -81,6 +83,7 @@ describe('BulkEditListItemsForm', () => {
           user_id: 'user-1',
           position: 1,
           data_type: EListItemFieldType.FREE_TEXT,
+          
         },
         {
           id: 'field-2',

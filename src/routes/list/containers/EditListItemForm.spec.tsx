@@ -56,6 +56,7 @@ describe('EditListItemForm', () => {
       created_at: '2023-01-01T00:00:00Z',
       updated_at: '2023-01-01T00:00:00Z',
       archived_at: null,
+      primary: true,
     },
     {
       id: 'field-config2',
@@ -67,6 +68,7 @@ describe('EditListItemForm', () => {
       created_at: '2023-01-01T00:00:00Z',
       updated_at: '2023-01-01T00:00:00Z',
       archived_at: null,
+      primary: false,
     },
   ];
 
@@ -431,6 +433,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: true,
         },
         {
           id: 'field-config2',
@@ -442,6 +445,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: false,
         },
       ];
 
@@ -476,6 +480,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: true,
         },
         {
           id: 'field-config2',
@@ -487,6 +492,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: false,
         },
       ];
 
@@ -518,6 +524,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: true,
         },
         {
           id: 'field-config2',
@@ -529,6 +536,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: false,
         },
         {
           id: 'field-config3',
@@ -540,6 +548,7 @@ describe('EditListItemForm', () => {
           created_at: '2023-01-01T00:00:00Z',
           updated_at: '2023-01-01T00:00:00Z',
           archived_at: null,
+          primary: false,
         },
       ];
 

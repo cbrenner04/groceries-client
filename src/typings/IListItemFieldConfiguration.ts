@@ -5,4 +5,5 @@ export default interface IListItemFieldConfiguration {
   label: string;
   data_type: EListItemFieldType;
   position: number;
+  primary: boolean;
 }

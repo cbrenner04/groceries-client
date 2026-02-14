@@ -116,7 +116,7 @@ export const defaultTestData = {
   // Default completed item with quantity and product fields
   completedItem: createListItem('id1', true, [
     createField('id1', 'quantity', 'completed quantity', 'id1'),
-    createField('id2', 'product', 'foo completed product', 'id1'),
+    createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
   ]),
 
   // Default not completed items
@@ -124,24 +124,24 @@ export const defaultTestData = {
     // Item with no category
     createListItem('id2', false, [
       createField('id2', 'quantity', 'not completed quantity', 'id2'),
-      createField('id3', 'product', 'no category not completed product', 'id2'),
+      createField('id3', 'product', 'no category not completed product', 'id2', { primary: true }),
     ]),
     // Item with foo category
     createListItem('id3', false, [
       createField('id4', 'quantity', 'not completed quantity', 'id3'),
-      createField('id5', 'product', 'foo not completed product', 'id3'),
+      createField('id5', 'product', 'foo not completed product', 'id3', { primary: true }),
       createField('id6', 'category', 'foo', 'id3'),
     ]),
     // Another item with foo category
     createListItem('id4', false, [
       createField('id7', 'quantity', 'not completed quantity', 'id4'),
-      createField('id8', 'product', 'foo not completed product 2', 'id4'),
+      createField('id8', 'product', 'foo not completed product 2', 'id4', { primary: true }),
       createField('id9', 'category', 'foo', 'id4'),
     ]),
     // Item with bar category
     createListItem('id5', false, [
       createField('id10', 'quantity', 'not completed quantity', 'id5'),
-      createField('id11', 'product', 'bar not completed product', 'id5'),
+      createField('id11', 'product', 'bar not completed product', 'id5', { primary: true }),
       createField('id12', 'category', 'bar', 'id5'),
     ]),
   ],

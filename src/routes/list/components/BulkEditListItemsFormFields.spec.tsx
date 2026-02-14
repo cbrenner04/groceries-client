@@ -16,24 +16,28 @@ async function setup(suppliedProps?: Partial<IBulkEditListItemsFormFieldsProps>)
         label: 'title',
         data_type: 'free_text',
         position: 1,
+        primary: false,
       },
       {
         id: 'field2',
         label: 'completed',
         data_type: 'boolean',
         position: 2,
+        primary: false,
       },
       {
         id: 'field3',
         label: 'due_date',
         data_type: 'date_time',
         position: 3,
+        primary: false,
       },
       {
         id: 'field4',
         label: 'quantity',
         data_type: 'number',
         position: 4,
+        primary: false,
       },
     ],
     fieldUpdates: [
@@ -115,12 +119,14 @@ describe('BulkEditListItemsFormFields', () => {
           label: 'product_name',
           data_type: 'free_text',
           position: 1,
+          primary: false,
         },
         {
           id: 'field2',
           label: 'is_urgent',
           data_type: 'boolean',
           position: 2,
+          primary: false,
         },
       ],
       fieldUpdates: [
@@ -149,18 +155,21 @@ describe('BulkEditListItemsFormFields', () => {
           label: 'third',
           data_type: 'free_text',
           position: 3,
+          primary: false,
         },
         {
           id: 'field1',
           label: 'first',
           data_type: 'free_text',
           position: 1,
+          primary: false,
         },
         {
           id: 'field2',
           label: 'second',
           data_type: 'free_text',
           position: 2,
+          primary: false,
         },
       ],
       fieldUpdates: [
@@ -245,6 +254,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'completed',
             data_type: 'boolean',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -267,6 +277,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'completed',
             data_type: 'boolean',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -289,6 +300,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'completed',
             data_type: 'boolean',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -313,6 +325,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'quantity',
             data_type: 'number',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -335,6 +348,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'quantity',
             data_type: 'number',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -409,6 +423,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'description',
             data_type: 'free_text',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -433,6 +448,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'urgent',
             data_type: 'boolean',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -457,6 +473,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'deadline',
             data_type: 'date_time',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -481,6 +498,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'price',
             data_type: 'number',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [
@@ -505,6 +523,7 @@ describe('BulkEditListItemsFormFields', () => {
             label: 'unknown_field',
             data_type: 'unknown_type' as 'boolean' | 'date_time' | 'free_text' | 'number',
             position: 1,
+            primary: false,
           },
         ],
         fieldUpdates: [

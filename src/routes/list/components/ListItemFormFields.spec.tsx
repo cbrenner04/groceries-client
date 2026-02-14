@@ -18,24 +18,28 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
         label: 'title',
         data_type: EListItemFieldType.FREE_TEXT,
         position: 1,
+        primary: false,
       },
       {
         id: 'field2',
         label: 'completed',
         data_type: EListItemFieldType.BOOLEAN,
         position: 2,
+        primary: false,
       },
       {
         id: 'field3',
         label: 'due_date',
         data_type: EListItemFieldType.DATE_TIME,
         position: 3,
+        primary: false,
       },
       {
         id: 'field4',
         label: 'quantity',
         data_type: EListItemFieldType.NUMBER,
         position: 4,
+        primary: false,
       },
     ],
     fields: [
@@ -170,6 +174,7 @@ describe('ListItemFormFields', () => {
             label: 'completed',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'completed', 'true', 'item1')],
@@ -186,6 +191,7 @@ describe('ListItemFormFields', () => {
             label: 'completed',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'completed', 'false', 'item1')],
@@ -202,6 +208,7 @@ describe('ListItemFormFields', () => {
             label: 'completed',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
+            primary: false,
           },
         ],
         fields: [],
@@ -220,6 +227,7 @@ describe('ListItemFormFields', () => {
             label: 'quantity',
             data_type: EListItemFieldType.NUMBER,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'quantity', '42', 'item1')],
@@ -236,6 +244,7 @@ describe('ListItemFormFields', () => {
             label: 'quantity',
             data_type: EListItemFieldType.NUMBER,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'quantity', '', 'item1')],
@@ -252,6 +261,7 @@ describe('ListItemFormFields', () => {
             label: 'quantity',
             data_type: EListItemFieldType.NUMBER,
             position: 1,
+            primary: false,
           },
         ],
         fields: [],
@@ -270,6 +280,7 @@ describe('ListItemFormFields', () => {
             label: 'due_date',
             data_type: EListItemFieldType.DATE_TIME,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'due_date', '2024-01-15', 'item1')],
@@ -286,9 +297,44 @@ describe('ListItemFormFields', () => {
             label: 'due_date',
             data_type: EListItemFieldType.DATE_TIME,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'due_date', '', 'item1')],
+      });
+
+      expect(screen.getByLabelText('Due_date')).toHaveValue('');
+    });
+
+    it('handles date field when field is undefined', async () => {
+      await setup({
+        fieldConfigurations: [
+          {
+            id: 'field1',
+            label: 'due_date',
+            data_type: EListItemFieldType.DATE_TIME,
+            position: 1,
+            primary: false,
+          },
+        ],
+        fields: [],
+      });
+
+      expect(screen.getByLabelText('Due_date')).toHaveValue('');
+    });
+
+    it('handles date field when field.data is null', async () => {
+      await setup({
+        fieldConfigurations: [
+          {
+            id: 'field1',
+            label: 'due_date',
+            data_type: EListItemFieldType.DATE_TIME,
+            position: 1,
+            primary: false,
+          },
+        ],
+        fields: [createField('field1', 'due_date', '', 'item1', { data: null as unknown as string })],
       });
 
       expect(screen.getByLabelText('Due_date')).toHaveValue('');
@@ -304,6 +350,7 @@ describe('ListItemFormFields', () => {
             label: 'title',
             data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'title', 'Test Item', 'item1')],
@@ -320,6 +367,7 @@ describe('ListItemFormFields', () => {
             label: 'title',
             data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'title', '', 'item1')],
@@ -338,12 +386,14 @@ describe('ListItemFormFields', () => {
             label: 'second',
             data_type: EListItemFieldType.FREE_TEXT,
             position: 2,
+            primary: false,
           },
           {
             id: 'field1',
             label: 'first',
             data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
+            primary: false,
           },
         ],
         fields: [
@@ -367,6 +417,7 @@ describe('ListItemFormFields', () => {
             label: 'unknown_field',
             data_type: EListItemFieldType.FREE_TEXT,
             position: 1,
+            primary: false,
           },
         ],
         fields: [createField('field1', 'unknown_field', 'Unknown Value', 'item1')],

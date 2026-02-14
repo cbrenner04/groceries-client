@@ -39,9 +39,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       return;
     }
 
-    setFieldUpdates((prev) =>
-      prev.map((f) => (f.label === parsed.label ? { ...f, data: parsed.data } : f)),
-    );
+    setFieldUpdates((prev) => prev.map((f) => (f.label === parsed.label ? { ...f, data: parsed.data } : f)));
   };
 
   const handleClearField = (label: string): void => {
@@ -59,10 +57,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event): Promise<void> => {
     event.preventDefault();
     const itemIds = props.items.map((item) => item.id).join(',');
-    const fieldsToUpdateData = buildBulkUpdateFieldsPayload(
-      props.listItemFieldConfigurations,
-      fieldUpdates,
-    );
+    const fieldsToUpdateData = buildBulkUpdateFieldsPayload(props.listItemFieldConfigurations, fieldUpdates);
 
     try {
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {

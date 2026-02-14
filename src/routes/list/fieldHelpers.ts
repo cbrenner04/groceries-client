@@ -63,7 +63,7 @@ export function buildBulkUpdateFieldsPayload(
     }
 
     if (isBooleanFieldConfig(config)) {
-      const data = update.clear ? '' : (update.data === 'true' ? 'true' : 'false');
+      const data = update.clear ? '' : update.data === 'true' ? 'true' : 'false';
       result.push({ data, label: config.label, item_ids: update.itemIds });
     } else if (update.data || update.clear) {
       const data = update.clear ? '' : update.data;
@@ -75,6 +75,19 @@ export function buildBulkUpdateFieldsPayload(
     }
   }
   return result;
+}
+
+/** Sort field configurations: primary first, then by position. */
+export function sortFieldConfigurations<T extends { primary?: boolean; position: number }>(configs: T[]): T[] {
+  return [...configs].sort((a, b) => {
+    if (a.primary && !b.primary) {
+      return -1;
+    }
+    if (!a.primary && b.primary) {
+      return 1;
+    }
+    return a.position - b.position;
+  });
 }
 
 export interface IFieldConfig {

@@ -32,8 +32,8 @@ describe('FieldConfigurationCache', () => {
 
   describe('getFieldConfigurations', () => {
     const mockFieldConfigs: IListItemFieldConfiguration[] = [
-      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
-      { id: '2', label: 'notes', data_type: EListItemFieldType.FREE_TEXT, position: 2 },
+      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
+      { id: '2', label: 'notes', data_type: EListItemFieldType.FREE_TEXT, position: 2, primary: false },
     ];
 
     it('fetches and caches field configurations on first request', async () => {
@@ -143,7 +143,7 @@ describe('FieldConfigurationCache', () => {
 
   describe('prefetchFieldConfigurations', () => {
     const mockFieldConfigs: IListItemFieldConfiguration[] = [
-      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
+      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
     ];
 
     it('prefetches and caches field configurations', async () => {
@@ -205,7 +205,7 @@ describe('FieldConfigurationCache', () => {
 
   describe('prefetchFieldConfigurationsIdle', () => {
     const mockFieldConfigs: IListItemFieldConfiguration[] = [
-      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
+      { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
     ];
 
     it('schedules prefetch using setTimeout', async () => {
@@ -231,7 +231,7 @@ describe('FieldConfigurationCache', () => {
   describe('invalidateFieldConfigCache', () => {
     it('clears pending requests for specific config ID', async () => {
       const mockFieldConfigs: IListItemFieldConfiguration[] = [
-        { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
+        { id: '1', label: 'category', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
       ];
 
       mockedAxios.get.mockResolvedValueOnce({ data: mockFieldConfigs });

@@ -6,6 +6,14 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
 
+// Mock listPrefetch at module level
+jest.mock('utils/listPrefetch', () => ({
+  prefetchListsIdle: jest.fn(() => Promise.resolve()),
+  prefetchList: jest.fn(() => Promise.resolve()),
+  getPrefetchedList: jest.fn(() => null),
+}));
+
+// eslint-disable-next-line import/first
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
@@ -434,5 +442,162 @@ describe('ListsContainer', () => {
     });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
+  });
+
+  describe('prefetch logic', () => {
+    let mockPrefetchListsIdle: jest.Mock;
+    const originalPrefetchIdle = process.env.REACT_APP_PREFETCH_IDLE;
+
+    beforeEach(() => {
+      // Ensure prefetch is enabled for tests
+      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      // Get the mocked function
+      const listPrefetchModule = require('utils/listPrefetch');
+      mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as jest.Mock;
+      mockPrefetchListsIdle.mockClear();
+    });
+
+    afterEach(() => {
+      mockPrefetchListsIdle.mockClear();
+      process.env.REACT_APP_PREFETCH_IDLE = originalPrefetchIdle;
+    });
+
+    it('prefetches lists when pendingLists and incompleteLists are available', async () => {
+      setup({
+        pendingLists: [
+          {
+            id: 'id1',
+            name: 'pending1',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id1',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+        ],
+        incompleteLists: [
+          {
+            id: 'id5',
+            name: 'incomplete1',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id5',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          {
+            id: 'id6',
+            name: 'incomplete2',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id6',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+        ],
+      });
+
+      // Wait for useEffect to run (lines 99-107)
+      await act(async () => {
+        await waitFor(() => {
+          expect(mockPrefetchListsIdle).toHaveBeenCalled();
+        }, { timeout: 2000 });
+      });
+
+      // Verify prefetch was called with list IDs from pendingLists and incompleteLists
+      expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id5', 'id6']);
+    });
+
+    it('limits prefetch to MAX_PREFETCH_LISTS (5)', async () => {
+      // Create 7 lists (more than MAX_PREFETCH_LISTS)
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const manyLists = Array.from({ length: 7 }, (_, i) => ({ 
+        id: `id${i + 1}`,
+        name: `list${i + 1}`,
+        list_item_configuration_id: 'config-1',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: `id${i + 1}`,
+        owner_id: 'id1',
+        refreshed: false,
+      }));
+
+      setup({
+        pendingLists: manyLists.slice(0, 3),
+        incompleteLists: manyLists.slice(3),
+      });
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(mockPrefetchListsIdle).toHaveBeenCalled();
+        }, { timeout: 2000 });
+      });
+
+      // Should only prefetch first 5 lists (line 101: slice(0, MAX_PREFETCH_LISTS))
+      expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4', 'id5']);
+    });
+
+    it('filters out lists without valid IDs', async () => {
+      setup({
+        pendingLists: [
+          {
+            id: 'id1',
+            name: 'valid',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id1',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          {
+            id: null as unknown as string,
+            name: 'invalid',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id2',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+          {
+            id: '',
+            name: 'empty',
+            list_item_configuration_id: 'config-1',
+            created_at: new Date('05/31/2020').toISOString(),
+            completed: false,
+            users_list_id: 'id3',
+            owner_id: 'id1',
+            refreshed: false,
+          },
+        ],
+        incompleteLists: [],
+      });
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(mockPrefetchListsIdle).toHaveBeenCalled();
+        }, { timeout: 2000 });
+      });
+
+      // Should only prefetch lists with valid IDs (line 102: filter with type guard)
+      expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1']);
+    });
+
+    it('does not prefetch when listIds is empty', async () => {
+      setup({
+        pendingLists: [],
+        incompleteLists: [],
+      });
+
+      // Wait a bit to ensure useEffect has run
+      await waitFor(() => {
+        // prefetchListsIdle should not be called when there are no lists (line 105: if (listIds.length > 0))
+        expect(mockPrefetchListsIdle).not.toHaveBeenCalled();
+      }, { timeout: 100 });
+    });
   });
 });
