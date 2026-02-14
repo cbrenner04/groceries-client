@@ -178,6 +178,19 @@ describe('Component', () => {
 });
 ```
 
+## Environment Variables
+- `REACT_APP_API_BASE` — API base URL.
+- `REACT_APP_VERSION` — Application version (auto-set from git).
+
+## Code Review Checklist
+- TypeScript strict mode compliance (no `any`).
+- ESLint and Prettier pass (`tsc --noEmit && npm run lint`).
+- Tests written with proper coverage.
+- Components use proper naming conventions (PascalCase, `I`-prefixed interfaces).
+- API calls use `handleFailure` for error handling.
+- User interactions use `userEvent` (not `fireEvent`).
+- Test selectors use `data-test-id`.
+
 ## Do NOT
 
 - Add comments unless explicitly asked
