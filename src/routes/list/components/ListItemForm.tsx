@@ -11,7 +11,7 @@ import { capitalize } from 'utils/format';
 import { getFieldConfigurations } from 'utils/fieldConfigCache';
 import type { IListItem, IListUser, IListItemConfiguration } from 'typings';
 
-import { isBooleanFieldConfig } from '../fieldHelpers';
+import { isBooleanFieldConfig, sortFieldConfigurations } from '../fieldHelpers';
 
 export interface IListItemFormProps {
   navigate: (path: string) => void;
@@ -43,16 +43,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
     (props.preloadedFieldConfigurations ?? []) as IFieldConfiguration[],
   );
 
-  // Sort field configurations: primary first, then by position
-  const sortedFieldConfigurations = [...fieldConfigurations].sort((a, b) => {
-    if (a.primary && !b.primary) {
-      return -1;
-    }
-    if (!a.primary && b.primary) {
-      return 1;
-    }
-    return a.position - b.position;
-  });
+  const sortedFieldConfigurations = sortFieldConfigurations(fieldConfigurations);
   // Track whether configurations have been loaded (to avoid early "no config" flash)
   const [fieldConfigsLoaded, setFieldConfigsLoaded] = useState<boolean>(
     props.preloadedFieldConfigurations !== undefined && props.preloadedFieldConfigurations.length > 0,

@@ -2,6 +2,7 @@ import React, { type ChangeEventHandler } from 'react';
 
 import type { EListItemFieldType, IListItemField } from 'typings';
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
+import { sortFieldConfigurations } from '../fieldHelpers';
 
 export interface IListItemFormFieldsProps {
   fieldConfigurations: {
@@ -17,16 +18,7 @@ export interface IListItemFormFieldsProps {
 }
 
 const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JSX.Element => {
-  // Sort field configurations: primary first, then by position
-  const sortedFieldConfigurations = [...props.fieldConfigurations].sort((a, b) => {
-    if (a.primary && !b.primary) {
-      return -1;
-    }
-    if (!a.primary && b.primary) {
-      return 1;
-    }
-    return a.position - b.position;
-  });
+  const sortedFieldConfigurations = sortFieldConfigurations(props.fieldConfigurations);
 
   // Helper to find the value for a given config
   const getFieldValue = (configLabel: string): IListItemField | undefined => {

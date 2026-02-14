@@ -77,6 +77,19 @@ export function buildBulkUpdateFieldsPayload(
   return result;
 }
 
+/** Sort field configurations: primary first, then by position. */
+export function sortFieldConfigurations<T extends { primary?: boolean; position: number }>(configs: T[]): T[] {
+  return [...configs].sort((a, b) => {
+    if (a.primary && !b.primary) {
+      return -1;
+    }
+    if (!a.primary && b.primary) {
+      return 1;
+    }
+    return a.position - b.position;
+  });
+}
+
 export interface IFieldConfig {
   label: string;
   data_type: string;

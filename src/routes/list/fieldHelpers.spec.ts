@@ -7,6 +7,7 @@ import {
   isBooleanFieldConfig,
   normalizeBooleanToString,
   parseBulkFieldChange,
+  sortFieldConfigurations,
 } from './fieldHelpers';
 
 describe('fieldHelpers', () => {
@@ -174,6 +175,27 @@ describe('fieldHelpers', () => {
       const result = buildBulkUpdateFieldsPayload(configs, updates);
       expect(result).toHaveLength(1);
       expect(result[0].label).toBe('product');
+    });
+  });
+
+  describe('sortFieldConfigurations', () => {
+    it('sorts primary first, then by position', () => {
+      const configs = [
+        { id: '1', label: 'c', position: 3 },
+        { id: '2', label: 'a', position: 1, primary: true },
+        { id: '3', label: 'b', position: 2 },
+      ];
+      const sorted = sortFieldConfigurations(configs);
+      expect(sorted.map((c) => c.label)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('does not mutate the original array', () => {
+      const configs = [
+        { id: '1', label: 'b', position: 2 },
+        { id: '2', label: 'a', position: 1 },
+      ];
+      sortFieldConfigurations(configs);
+      expect(configs[0].label).toBe('b');
     });
   });
 
