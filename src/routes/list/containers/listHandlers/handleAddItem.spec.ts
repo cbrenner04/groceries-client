@@ -1,6 +1,6 @@
 import { handleAddItem } from './handleAddItem';
 import { handleFailure } from '../../../../utils/handleFailure';
-import { createField, createListItem } from '../../../../test-utils/factories';
+import { createListItem } from '../../../../test-utils/factories';
 
 jest.mock('../../../../utils/api', () => ({
   __esModule: true,
@@ -20,10 +20,11 @@ const mockNavigate = jest.fn();
 const mockSet = jest.fn();
 const mockSetPending = jest.fn();
 
-const item = createListItem('1', false, [createField('field1', 'category', 'Fruit', '1')], {
+const item = createListItem('1', false, [], {
   user_id: 'u',
   list_id: 'l',
   updated_at: null,
+  category: 'Fruit',
 });
 
 describe('handleAddItem', () => {
@@ -62,7 +63,7 @@ describe('handleAddItem', () => {
     });
     expect(setCompleted).toHaveBeenCalled();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'NewCat', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'NewCat' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -79,7 +80,7 @@ describe('handleAddItem', () => {
   it('adds new category when item has category not in existing categories', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'BrandNewCategory', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'BrandNewCategory' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -96,7 +97,7 @@ describe('handleAddItem', () => {
   it('does not add category when item category already exists in categories', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'ExistingCategory', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'ExistingCategory' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -113,7 +114,7 @@ describe('handleAddItem', () => {
   it('does not add category when item category matches existing category with different case', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'produce', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'produce' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -127,10 +128,10 @@ describe('handleAddItem', () => {
     expect(setCategories).not.toHaveBeenCalled();
   });
 
-  it('does not add category when item has no category field', () => {
+  it('does not add category when item has no category', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'name', 'Item Name', '1')] }],
+      newItems: [{ ...item, completed: false, category: undefined }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -144,10 +145,10 @@ describe('handleAddItem', () => {
     expect(setCategories).not.toHaveBeenCalled();
   });
 
-  it('does not add category when item has empty category field', () => {
+  it('does not add category when item has empty category', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', '', '1')] }],
+      newItems: [{ ...item, completed: false, category: '' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -164,7 +165,7 @@ describe('handleAddItem', () => {
   it('trims trailing whitespace before adding category', () => {
     const setCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'Fresh  ', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'Fresh  ' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -206,7 +207,7 @@ describe('handleAddItem', () => {
     const setCategories = jest.fn();
     const setIncludedCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'NewCategory', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -225,7 +226,7 @@ describe('handleAddItem', () => {
     const setCategories = jest.fn();
     const setDisplayedCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'NewCategory', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],
@@ -244,7 +245,7 @@ describe('handleAddItem', () => {
     const setCategories = jest.fn();
     const setDisplayedCategories = jest.fn();
     handleAddItem({
-      newItems: [{ ...item, completed: false, fields: [createField('field1', 'category', 'NewCategory', '1')] }],
+      newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,
       setPending: mockSetPending,
       completedItems: [],

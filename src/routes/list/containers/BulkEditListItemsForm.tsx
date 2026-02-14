@@ -5,6 +5,8 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
+import CategoryField from 'components/FormFields/CategoryField';
+import { capitalize } from 'utils/format';
 import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
@@ -33,6 +35,11 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   );
   const [fieldUpdates, setFieldUpdates] = useState<IBulkFieldUpdate[]>(getInitial);
 
+  // Determine initial category: if all items share the same category, show it; otherwise empty
+  const allCategories = props.items.map((item) => item.category ?? '');
+  const initialCategory = allCategories.every((c) => c === allCategories[0]) ? allCategories[0] : '';
+  const [category, setCategory] = useState(initialCategory);
+
   const handleFieldChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
     const parsed = parseBulkFieldChange(event, props.listItemFieldConfigurations);
     if (!parsed) {
@@ -59,15 +66,37 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     const itemIds = props.items.map((item) => item.id).join(',');
     const fieldsToUpdateData = buildBulkUpdateFieldsPayload(props.listItemFieldConfigurations, fieldUpdates);
 
+    // Include category as a field_to_update if it has changed
+    const categoryValue = category.trimEnd();
+    const capitalizedCategory = categoryValue ? capitalize(categoryValue) : '';
+    const allItemIds = props.items.map((item) => item.id);
+    const categoryFieldUpdate = {
+      label: 'category',
+      data: capitalizedCategory,
+      item_ids: allItemIds,
+    };
+    const allFieldsToUpdate = capitalizedCategory
+      ? [...fieldsToUpdateData, categoryFieldUpdate]
+      : fieldsToUpdateData;
+
     try {
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         item_ids: itemIds,
         list_id: props.list.id,
         list_items: {
           update_current_items: true,
-          fields_to_update: fieldsToUpdateData,
+          fields_to_update: allFieldsToUpdate,
         },
       });
+
+      // Auto-create category record if new category was provided
+      if (capitalizedCategory) {
+        try {
+          await axios.post(`/lists/${props.list.id}/categories`, { category: { name: capitalizedCategory } });
+        } catch {
+          // Category may already exist, ignore errors
+        }
+      }
 
       showToast.info('Items successfully updated');
       props.navigate(`/lists/${props.list.id}`);
@@ -105,6 +134,11 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           fieldUpdates={fieldUpdates}
           handleFieldChange={handleFieldChange}
           handleClearField={handleClearField}
+        />
+        <CategoryField
+          handleInput={(e): void => setCategory((e.target as HTMLInputElement).value)}
+          category={category}
+          categories={props.categories}
         />
         <FormSubmission
           submitText="Update Items"

@@ -33,11 +33,9 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       // Extract all unique categories from the items (case-insensitive)
       const itemCategories = new Set<string>();
       items.forEach((item) => {
-        // Defensive: treat missing fields as empty array
-        const fields = Array.isArray(item.fields) ? item.fields : [];
-        const categoryField = fields.find((field) => field.label === 'category');
-        if (categoryField?.data) {
-          const normalizedCategory = String(categoryField.data).trimEnd();
+        const rawCategory = item.category;
+        if (rawCategory) {
+          const normalizedCategory = String(rawCategory).trimEnd();
           if (normalizedCategory === '') {
             return;
           }
@@ -55,34 +53,18 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
 
       return categoriesToShow.map((category: string | undefined) => {
         const itemsToRender = items.filter((item: IListItem) => {
-          // Defensive: treat missing fields as empty array
-          const fields = Array.isArray(item.fields) ? item.fields : [];
+          const itemCategory = item.category ? String(item.category).trimEnd() : '';
 
           if (category === 'uncategorized') {
-            // Show items with no category field or empty category data
-            const hasCategoryField = fields.find((field) => field.label === 'category');
-            return (
-              !hasCategoryField ||
-              fields.find((field) => field.label === 'category' && (!field.data || String(field.data).trimEnd() === ''))
-            );
+            return !itemCategory;
           }
 
           if (category) {
-            // Show items with matching category (case-insensitive)
-            return fields.find(
-              (field) =>
-                field.label === 'category' &&
-                field.data &&
-                normalizeCategoryKey(String(field.data)) === normalizeCategoryKey(category),
-            );
+            return itemCategory && normalizeCategoryKey(itemCategory) === normalizeCategoryKey(category);
           }
 
           // Show uncategorized items when no filter is applied
-          const hasCategoryField = fields.find((field) => field.label === 'category');
-          return (
-            !hasCategoryField ||
-            fields.find((field) => field.label === 'category' && (!field.data || String(field.data).trimEnd() === ''))
-          );
+          return !itemCategory;
         });
 
         if (itemsToRender.length === 0) {

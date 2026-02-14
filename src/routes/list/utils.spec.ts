@@ -43,12 +43,8 @@ describe('itemName', () => {
     expect(itemName(item)).toBe('Apples');
   });
 
-  it('falls back to first non-category field if no primary', () => {
-    const fields = [
-      createField('1', 'quantity', '5', '1'),
-      createField('2', 'product', 'Apples', '1'),
-      createField('3', 'category', 'produce', '1'),
-    ];
+  it('falls back to first non-primary field if no primary', () => {
+    const fields = [createField('1', 'quantity', '5', '1'), createField('2', 'product', 'Apples', '1')];
     const item = createListItem('1', false, fields);
     expect(itemName(item)).toBe('5');
   });
@@ -58,8 +54,8 @@ describe('itemName', () => {
     expect(itemName(item)).toBe('');
   });
 
-  it('handles only category fields', () => {
-    const fields = [createField('1', 'category', 'Test Category', '1')];
+  it('handles no fields', () => {
+    const fields: IListItem['fields'] = [];
     const item = createListItem('1', false, fields);
     expect(itemName(item)).toBe('');
   });
@@ -96,11 +92,10 @@ describe('itemName', () => {
     expect(itemName(item)).toBe('Apples');
   });
 
-  it('falls back to first non-category field when primary field has no data', () => {
+  it('falls back to first non-primary field when primary field has no data', () => {
     const fields = [
       createField('1', 'product', '', '1', { primary: true }),
       createField('2', 'quantity', '5', '1', { primary: false }),
-      createField('3', 'category', 'produce', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
     expect(itemName(item)).toBe('5');
@@ -108,11 +103,10 @@ describe('itemName', () => {
 });
 
 describe('secondaryFieldsDisplay', () => {
-  it('returns non-primary, non-category fields as array of label/value objects', () => {
+  it('returns non-primary fields as array of label/value objects', () => {
     const fields = [
       createField('1', 'product', 'Apples', '1', { primary: true }),
       createField('2', 'quantity', '5 lbs', '1', { primary: false }),
-      createField('3', 'category', 'produce', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
     expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'quantity', value: '5 lbs' }]);
@@ -173,12 +167,8 @@ describe('secondaryFieldsDisplay', () => {
     expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'author', value: 'Test Author' }]);
   });
 
-  it('excludes fallback primary field (first non-category) when no primary is set', () => {
-    const fields = [
-      createField('1', 'product', 'Apples', '1'),
-      createField('2', 'quantity', '5 lbs', '1'),
-      createField('3', 'category', 'produce', '1'),
-    ];
+  it('excludes fallback primary field (first non-primary) when no primary is set', () => {
+    const fields = [createField('1', 'product', 'Apples', '1'), createField('2', 'quantity', '5 lbs', '1')];
     const item = createListItem('1', false, fields);
     // product is used as fallback primary, so it should not appear in secondary fields
     expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'quantity', value: '5 lbs' }]);
@@ -342,51 +332,11 @@ describe('fetchList', () => {
     });
   });
 
-  it('extracts categories from items with category fields', async () => {
+  it('returns categories from API response', async () => {
     const mockData = createApiResponse();
     axios.get = jest.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['foo', 'bar']);
-  });
-
-  it('deduplicates categories from items', async () => {
-    const mockData = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
-    const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['foo', 'bar']);
-  });
-
-  it('trims trailing whitespace from categories', async () => {
-    const notCompletedItems = [
-      createListItem('id1', false, [createField('id1', 'category', 'foo  ', 'id1')]),
-      createListItem('id2', false, [createField('id2', 'category', 'bar', 'id2')]),
-    ];
-    const mockData = createApiResponse(notCompletedItems, []);
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
-    const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['foo', 'bar']);
-  });
-
-  it('deduplicates categories case-insensitively', async () => {
-    const notCompletedItems = [
-      createListItem('id1', false, [createField('id1', 'category', 'Produce', 'id1')]),
-      createListItem('id2', false, [createField('id2', 'category', 'produce', 'id2')]),
-    ];
-    const mockData = createApiResponse(notCompletedItems, []);
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
-    const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['Produce']);
-  });
-
-  it('ignores categories that are only whitespace', async () => {
-    const notCompletedItems = [
-      createListItem('id1', false, [createField('id1', 'category', '   ', 'id1')]),
-      createListItem('id2', false, [createField('id2', 'category', 'bar', 'id2')]),
-    ];
-    const mockData = createApiResponse(notCompletedItems, []);
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
-    const result = await fetchList({ id: '1', navigate: mockNavigate });
-    expect(result?.categories).toEqual(['bar']);
   });
 });
 

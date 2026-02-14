@@ -75,9 +75,8 @@ export function pluralize(items: IListItem[]): string {
 export function extractCategoriesFromItems(items: IListItem[]): string[] {
   const categories = new Set<string>();
   items.forEach((item) => {
-    const categoryField = item.fields.find((field) => field.label === 'category');
-    if (categoryField?.data) {
-      categories.add(String(categoryField.data));
+    if (item.category) {
+      categories.add(String(item.category));
     }
   });
   return Array.from(categories);

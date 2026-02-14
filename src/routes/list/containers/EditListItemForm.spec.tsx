@@ -39,10 +39,15 @@ Object.defineProperty(window, 'location', {
 
 describe('EditListItemForm', () => {
   const mockList = createList('123', 'Test List', 'config-grocery');
-  const mockItem = createListItem('456', false, [
-    createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
-    createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
-  ]);
+  const mockItem = createListItem(
+    '456',
+    false,
+    [
+      createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
+      createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
+    ],
+    { category: 'Produce' },
+  );
   const mockListUsers = [createListUser('user1', 'test@example.com')];
   const mockListItemConfiguration = createListItemConfiguration('config1', 'Default Configuration');
   const mockListItemFieldConfigurations = [
@@ -148,6 +153,17 @@ describe('EditListItemForm', () => {
 
       expect(quantityInput.value).toBe('');
     });
+
+    it('updates category value when user types', () => {
+      render(<EditListItemForm {...defaultProps} />);
+
+      const categoryInput = screen.getByLabelText('Category') as HTMLInputElement;
+      expect(categoryInput.value).toBe('Produce');
+
+      fireEvent.change(categoryInput, { target: { value: 'Dairy' } });
+
+      expect(categoryInput.value).toBe('Dairy');
+    });
   });
 
   describe('Form Submission - Success Cases', () => {
@@ -164,7 +180,7 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockAxios.put).toHaveBeenCalledTimes(2);
+        expect(mockAxios.put).toHaveBeenCalledTimes(3);
         expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1', {
           list_item_field: {
             data: '2',
@@ -175,6 +191,11 @@ describe('EditListItemForm', () => {
           list_item_field: {
             data: 'Apples',
             list_item_field_configuration_id: 'field-config2',
+          },
+        });
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456', {
+          list_item: {
+            category: 'Produce',
           },
         });
         expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully updated');
@@ -216,8 +237,19 @@ describe('EditListItemForm', () => {
       fireEvent.submit(form);
 
       await waitFor(() => {
-        expect(mockAxios.put).toHaveBeenCalledTimes(1); // Update quantity
+        expect(mockAxios.put).toHaveBeenCalledTimes(2); // Update quantity and create category
         expect(mockAxios.post).toHaveBeenCalledTimes(1); // Create product
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456', {
+          list_item: {
+            category: null,
+          },
+        });
+        expect(mockAxios.put).toHaveBeenCalledWith("/lists/123/list_items/456/list_item_fields/field1", {
+          list_item_field: {
+            data: '2',
+            list_item_field_configuration_id: 'field-config1',
+          },
+        });
         expect(mockAxios.post).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields', {
           list_item_field: {
             data: 'New Product',
@@ -239,7 +271,18 @@ describe('EditListItemForm', () => {
       await waitFor(() => {
         expect(mockAxios.delete).toHaveBeenCalledTimes(1);
         expect(mockAxios.delete).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1');
-        expect(mockAxios.put).toHaveBeenCalledTimes(1); // Only product field
+        expect(mockAxios.put).toHaveBeenCalledTimes(2); // Update quantity and delete product field
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456', {
+          list_item: {
+            category: "Produce",
+          },
+        });
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field2', {
+          list_item_field: {
+            data: 'Apples',
+            list_item_field_configuration_id: 'field-config2',
+          },
+        });
       });
     });
 

@@ -39,21 +39,16 @@ export function handleAddItem(params: {
   setPending(true);
   try {
     const newItem = newItems[0];
-    const itemWithFields = {
-      ...newItem,
-      fields: newItem.fields,
-    };
-    const itemCategory = itemWithFields.fields.find((f) => f.label === 'category')?.data;
-    const normalizedCategory = itemCategory ? String(itemCategory).trimEnd() : undefined;
+    const normalizedCategory = newItem.category ? String(newItem.category).trimEnd() : undefined;
     const categoryExists =
       normalizedCategory !== undefined
         ? categories.some((category) => normalizeCategoryKey(category) === normalizeCategoryKey(normalizedCategory))
         : false;
-    if (itemWithFields.completed) {
-      const updatedCompletedItems = sortItemsByCreatedAt([...completedItems, itemWithFields]);
+    if (newItem.completed) {
+      const updatedCompletedItems = sortItemsByCreatedAt([...completedItems, newItem]);
       setCompletedItems(updatedCompletedItems);
     } else {
-      const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, itemWithFields]);
+      const updatedNotCompletedItems = sortItemsByCreatedAt([...notCompletedItems, newItem]);
       setNotCompletedItems(updatedNotCompletedItems);
     }
     if (normalizedCategory && !categoryExists) {

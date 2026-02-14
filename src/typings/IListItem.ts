@@ -9,5 +9,6 @@ export default interface IListItem {
   list_id: string;
   created_at: string;
   updated_at: string | null;
+  category?: string | null;
   fields: IListItemField[];
 }

@@ -83,7 +83,6 @@ describe('BulkEditListItemsForm', () => {
           user_id: 'user-1',
           position: 1,
           data_type: EListItemFieldType.FREE_TEXT,
-          
         },
         {
           id: 'field-2',
@@ -175,18 +174,21 @@ describe('BulkEditListItemsForm', () => {
     const itemsWithSameQuantity = [
       {
         ...mockItems[0],
+        category: 'Produce',
         fields: [{ ...mockItems[0].fields[0] }, { ...mockItems[0].fields[1], data: '5' }],
       },
       {
         ...mockItems[1],
+        category: 'Produce',
         fields: [{ ...mockItems[1].fields[0] }, { ...mockItems[1].fields[1], data: '5' }],
       },
     ];
 
     const { getByDisplayValue } = renderComponent({ items: itemsWithSameQuantity });
 
-    // Should show the common value for quantity
+    // Should show the common value for quantity and category
     expect(getByDisplayValue('5')).toBeInTheDocument();
+    expect(getByDisplayValue('Produce')).toBeInTheDocument();
   });
 
   it('submits form with correct parameters when updating fields', async () => {
@@ -431,6 +433,68 @@ describe('BulkEditListItemsForm', () => {
           }),
         }),
       );
+    });
+  });
+
+  describe('category auto-creation', () => {
+    beforeEach(() => {
+      mockAxios.post = jest.fn().mockResolvedValue({});
+    });
+
+    it('creates a new category when a category value is provided', async () => {
+      const { getByLabelText, getByText, user } = renderComponent();
+
+      // Enter a new category
+      const categoryField = getByLabelText('Category');
+      await user.clear(categoryField);
+      await user.type(categoryField, 'New Category');
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockAxios.post).toHaveBeenCalledWith('/lists/list-1/categories', {
+          category: { name: 'New Category' },
+        });
+      });
+
+      expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
+    });
+
+    it('does not create a category when no category value is provided', async () => {
+      const { getByText, user } = renderComponent();
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockAxios.put).toHaveBeenCalled();
+      });
+
+      expect(mockAxios.post).not.toHaveBeenCalled();
+      expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
+    });
+
+    it('continues successfully when category creation fails', async () => {
+      mockAxios.post = jest.fn().mockRejectedValue({ response: { status: 422 } });
+
+      const { getByLabelText, getByText, user } = renderComponent();
+
+      // Enter a category that already exists
+      const categoryField = getByLabelText('Category');
+      await user.clear(categoryField);
+      await user.type(categoryField, 'Existing Category');
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockAxios.post).toHaveBeenCalledWith('/lists/list-1/categories', {
+          category: { name: 'Existing Category' },
+        });
+      });
+
+      // Should still show success and navigate, even though POST failed
+      expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
 });

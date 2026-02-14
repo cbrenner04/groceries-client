@@ -914,7 +914,7 @@ describe('ListContainer', () => {
 
     it('does not render the string "undefined" for items missing name fields', async () => {
       const unnamedItem: IListItem = createListItem('id_unnamed', false, [
-        createField('id_cat', 'category', 'foo', 'id_unnamed'),
+        createField('id_cat', 'category', '', 'id_unnamed'),
       ]);
       const { findByText, queryByText } = setup({ notCompletedItems: [unnamedItem] });
 
@@ -1071,9 +1071,10 @@ describe('ListContainer', () => {
       axios.delete = jest.fn().mockResolvedValue({});
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
-      expect(
-        (await findByText('foo completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'completed-item');
+      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
 
       await user.click(await findByTestId('completed-item-delete-id1'));
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1201,17 +1202,19 @@ describe('ListContainer', () => {
 
       const { findByText, findByTestId, user } = setup();
 
-      expect(
-        (await findByText('no category not completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'non-completed-item');
+      expect((await findByText('no category not completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'non-completed-item',
+      );
 
       await user.click(await findByTestId('not-completed-item-complete-id2'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-      expect(
-        (await findByText('no category not completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'completed-item');
+      expect((await findByText('no category not completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
     });
 
     it('moves item to completed and clears filter when item is last of category', async () => {
@@ -1231,9 +1234,10 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByText('foo not completed product')).toBeNull());
 
       expect(await findByTestId('clear-filter')).toBeVisible();
-      expect(
-        (await findByText('bar not completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'non-completed-item');
+      expect((await findByText('bar not completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'non-completed-item',
+      );
 
       await user.click(await findByTestId('not-completed-item-complete-id5'));
 
@@ -1242,9 +1246,10 @@ describe('ListContainer', () => {
       // The filter should remain visible since there are still items in the category
       expect(await findByTestId('clear-filter')).toBeVisible();
       // The item should now be in completed state
-      expect(
-        (await findByText('bar not completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'completed-item');
+      expect((await findByText('bar not completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
     });
 
     it('moves items to completed when multiple selected', async () => {
@@ -1426,9 +1431,10 @@ describe('ListContainer', () => {
       axios.put = jest.fn().mockResolvedValue(undefined);
       const { findByTestId, findByText, user } = setup();
 
-      expect(
-        (await findByText('foo completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'completed-item');
+      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
 
       await user.click(await findByTestId('completed-item-refresh-id1'));
 
@@ -1437,14 +1443,16 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
       await waitFor(async () =>
-        expect(
-          (await findByText('foo completed product')).closest('[data-test-class]'),
-        ).toHaveAttribute('data-test-class', 'non-completed-item'),
+        expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+          'data-test-class',
+          'non-completed-item',
+        ),
       );
 
-      expect(
-        (await findByText('foo completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'non-completed-item');
+      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'non-completed-item',
+      );
     });
 
     it('moves items to not completed when refreshed with multiple selected', async () => {
@@ -1485,9 +1493,10 @@ describe('ListContainer', () => {
         ],
       });
 
-      expect(
-        (await findByText('foo completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'completed-item');
+      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'completed-item',
+      );
 
       await user.click((await findAllByText('Select'))[1]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
@@ -1503,14 +1512,16 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // Mark 2 original items as refreshed
 
       await waitFor(async () =>
-        expect(
-          (await findByText('foo completed product')).closest('[data-test-class]'),
-        ).toHaveAttribute('data-test-class', 'non-completed-item'),
+        expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+          'data-test-class',
+          'non-completed-item',
+        ),
       );
 
-      expect(
-        (await findByText('foo completed product')).closest('[data-test-class]'),
-      ).toHaveAttribute('data-test-class', 'non-completed-item');
+      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
+        'data-test-class',
+        'non-completed-item',
+      );
     });
 
     it('handles 401 on refresh', async () => {
@@ -1586,9 +1597,7 @@ describe('ListContainer', () => {
         ]),
       });
       // First item's refresh mark succeeds, second item never gets to this point
-      axios.put = jest
-        .fn()
-        .mockResolvedValueOnce({ data: {} }); // Mark first item as refreshed
+      axios.put = jest.fn().mockResolvedValueOnce({ data: {} }); // Mark first item as refreshed
       const { findAllByRole, findByTestId, findAllByText, user } = setup({
         completedItems: [
           createListItem('id1', true, [
