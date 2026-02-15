@@ -60,7 +60,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
     event.preventDefault();
     try {
       // Update category directly on the item
-      const categoryValue = category.trimEnd();
+      const categoryValue = category.trim();
       const capitalizedCategory = categoryValue ? capitalize(categoryValue) : null;
       await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, {
         list_item: { category: capitalizedCategory },
