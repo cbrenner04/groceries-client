@@ -71,7 +71,7 @@ export function itemName(item: IListItem): string {
   }
 
   // Fallback to first non-primary field if no primary is set or primary has no data
-  const firstField = item.fields.find((f) => f.primary !== true);
+  const firstField = item.fields.find((f) => f.primary !== true && f.data);
   return firstField?.data ? String(firstField.data) : '';
 }
 
@@ -83,7 +83,7 @@ export function secondaryFieldsDisplay(item: IListItem): { label: string; value:
   // Determine which field is used as the title (primary or fallback)
   const primaryFields = item.fields.filter((f) => f.primary === true);
   const hasPrimaryField = primaryFields.length > 0 && primaryFields[0]?.data;
-  const fallbackPrimaryField = hasPrimaryField ? null : item.fields.find((f) => f.primary !== true);
+  const fallbackPrimaryField = hasPrimaryField ? null : item.fields.find((f) => f.primary !== true && f.data);
 
   return item.fields
     .filter((f) => {

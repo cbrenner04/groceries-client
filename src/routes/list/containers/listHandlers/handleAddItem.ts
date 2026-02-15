@@ -39,7 +39,7 @@ export function handleAddItem(params: {
   setPending(true);
   try {
     const newItem = newItems[0];
-    const normalizedCategory = newItem.category ? String(newItem.category).trimEnd() : undefined;
+    const normalizedCategory = newItem.category ? String(newItem.category).trim() : undefined;
     const categoryExists =
       normalizedCategory !== undefined
         ? categories.some((category) => normalizeCategoryKey(category) === normalizeCategoryKey(normalizedCategory))

@@ -244,7 +244,7 @@ describe('EditListItemForm', () => {
             category: null,
           },
         });
-        expect(mockAxios.put).toHaveBeenCalledWith("/lists/123/list_items/456/list_item_fields/field1", {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1', {
           list_item_field: {
             data: '2',
             list_item_field_configuration_id: 'field-config1',
@@ -274,7 +274,7 @@ describe('EditListItemForm', () => {
         expect(mockAxios.put).toHaveBeenCalledTimes(2); // Update quantity and delete product field
         expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456', {
           list_item: {
-            category: "Produce",
+            category: 'Produce',
           },
         });
         expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field2', {

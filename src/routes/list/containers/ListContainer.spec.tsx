@@ -1947,7 +1947,6 @@ describe('ListContainer', () => {
             data: [
               { id: 'config1', label: 'product', data_type: 'free_text' },
               { id: 'config2', label: 'quantity', data_type: 'free_text' },
-              { id: 'config3', label: 'category', data_type: 'free_text' },
             ],
           });
         }
@@ -2004,7 +2003,6 @@ describe('ListContainer', () => {
             data: [
               { id: 'config1', label: 'product', data_type: 'free_text' },
               { id: 'config2', label: 'quantity', data_type: 'free_text' },
-              { id: 'config3', label: 'category', data_type: 'free_text' },
             ],
           });
         }
@@ -2064,7 +2062,6 @@ describe('ListContainer', () => {
             data: [
               { id: 'config1', label: 'product', data_type: 'free_text' },
               { id: 'config2', label: 'quantity', data_type: 'free_text' },
-              { id: 'config3', label: 'category', data_type: 'free_text' },
             ],
           });
         }

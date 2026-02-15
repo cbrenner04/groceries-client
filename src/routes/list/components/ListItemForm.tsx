@@ -126,7 +126,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       // Determine category value
       const { category: rawCategory } = formData;
-      const categoryValue = rawCategory ? capitalize(String(rawCategory).trimEnd()) : undefined;
+      const categoryValue = rawCategory ? capitalize(String(rawCategory).trim()) : undefined;
 
       // Step 1: Create the list item with category
       const { data: newItem } = await axios.post(`/lists/${props.listId}/list_items`, {
@@ -153,16 +153,12 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       const entriesToSend: [string, string | number | boolean][] = [];
       for (const config of fetchedFieldConfigurations as IFieldConfiguration[]) {
-        // Skip category — it's now a direct column, not a field
-        if (config.label === 'category') {
-          continue;
-        }
         const raw = formData[config.label];
         if (isBooleanFieldConfig(config)) {
           const bool = typeof raw === 'boolean' ? raw : false;
           entriesToSend.push([config.label, bool]);
         } else if (raw != null) {
-          const normalized = typeof raw === 'string' ? raw.trimEnd() : raw;
+          const normalized = typeof raw === 'string' ? raw.trim() : raw;
           if (normalized !== '') {
             entriesToSend.push([config.label, normalized]);
           }
@@ -171,7 +167,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       const keysToSend = new Set(entriesToSend.map(([k]) => k));
       const formDataOnly = (Object.entries(formData) as [string, string | number | boolean][])
-        .map(([k, v]) => [k, typeof v === 'string' ? v.trimEnd() : v] as const)
+        .map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v] as const)
         .filter(([k, v]) => !keysToSend.has(k) && k !== 'category' && (v as unknown) != null && v !== '');
       const allEntriesForItem = [...entriesToSend, ...formDataOnly];
 

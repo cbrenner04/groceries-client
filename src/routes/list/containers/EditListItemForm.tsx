@@ -78,18 +78,19 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
       // Update, create, or archive each field as needed
       const normalizedFields = fields.map((field) => ({
         ...field,
-        data: typeof field.data === 'string' ? field.data.trimEnd() : field.data,
+        data: typeof field.data === 'string' ? field.data.trim() : field.data,
       }));
 
+      const baseUrl = `/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`;
       await Promise.all(
         normalizedFields.map(async (field) => {
           /* istanbul ignore else */
           if (field.id && field.data === '') {
             // Archive (delete) the field if cleared
-            await axios.delete(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`);
+            await axios.delete(`${baseUrl}/${field.id}`);
           } else if (field.id && field.data !== '') {
             // Update existing field
-            await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`, {
+            await axios.put(`${baseUrl}/${field.id}`, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,
@@ -97,7 +98,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
             });
           } else if (!field.id && field.data !== '') {
             // Create new field
-            await axios.post(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`, {
+            await axios.post(baseUrl, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,

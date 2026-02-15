@@ -468,7 +468,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const deleteConfirmationModalBody = (): string => {
-    const itemNames = itemsToDelete.map((item) => itemName(item) || 'Unknown item');
+    const itemNames = itemsToDelete.map((item) => itemName(item));
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 

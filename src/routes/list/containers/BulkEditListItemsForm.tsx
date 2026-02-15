@@ -67,7 +67,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     const fieldsToUpdateData = buildBulkUpdateFieldsPayload(props.listItemFieldConfigurations, fieldUpdates);
 
     // Include category as a field_to_update if it has changed
-    const categoryValue = category.trimEnd();
+    const categoryValue = category.trim();
     const capitalizedCategory = categoryValue ? capitalize(categoryValue) : '';
     const allItemIds = props.items.map((item) => item.id);
     const categoryFieldUpdate = {
@@ -75,9 +75,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
       data: capitalizedCategory,
       item_ids: allItemIds,
     };
-    const allFieldsToUpdate = capitalizedCategory
-      ? [...fieldsToUpdateData, categoryFieldUpdate]
-      : fieldsToUpdateData;
+    const allFieldsToUpdate = capitalizedCategory ? [...fieldsToUpdateData, categoryFieldUpdate] : fieldsToUpdateData;
 
     try {
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {

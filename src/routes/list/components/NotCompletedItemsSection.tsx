@@ -35,7 +35,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       items.forEach((item) => {
         const rawCategory = item.category;
         if (rawCategory) {
-          const normalizedCategory = String(rawCategory).trimEnd();
+          const normalizedCategory = String(rawCategory).trim();
           if (normalizedCategory === '') {
             return;
           }
