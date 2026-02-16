@@ -418,6 +418,33 @@ describe('BulkEditListItemsForm', () => {
     expect(mockAxios.put).not.toHaveBeenCalled();
   });
 
+  it('submits category as empty when Clear Category is checked', async () => {
+    const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
+    const { getByText, user } = renderComponent({ items: itemsWithCategory });
+
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    await user.click(clearCategoryCheckbox);
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockAxios.put).toHaveBeenCalledWith(
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        expect.objectContaining({
+          list_items: expect.objectContaining({
+            fields_to_update: expect.arrayContaining([
+              expect.objectContaining({
+                data: '',
+                label: 'category',
+                item_ids: ['item-1', 'item-2'],
+              }),
+            ]),
+          }),
+        }),
+      );
+    });
+  });
+
   it('filters out empty fields that are not marked for clearing', async () => {
     const { getByText, user } = renderComponent();
 

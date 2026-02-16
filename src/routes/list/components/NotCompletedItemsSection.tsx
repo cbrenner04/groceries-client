@@ -53,7 +53,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
 
       return categoriesToShow.map((category: string | undefined) => {
         const itemsToRender = items.filter((item: IListItem) => {
-          const itemCategory = item.category ? String(item.category).trimEnd() : '';
+          const itemCategory = item.category ? String(item.category).trim() : '';
 
           if (category === 'uncategorized') {
             return !itemCategory;

@@ -377,6 +377,34 @@ describe('ListItemForm', () => {
     });
   });
 
+  it('includes primary flag on fields so itemName displays correct primary field on first render', async () => {
+    const fieldConfigs = [
+      { id: '1', label: 'quantity', data_type: 'number', position: 2, primary: false },
+      { id: '2', label: 'product', data_type: 'free_text', position: 1, primary: true },
+    ];
+
+    axios.get = jest.fn().mockResolvedValueOnce({ data: fieldConfigs }).mockResolvedValueOnce({ data: fieldConfigs });
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } })
+      .mockResolvedValue({});
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    fireEvent.change(await screen.findByLabelText('Product'), { target: { value: 'Apples' } });
+    fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '5' } });
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(mockHandleItemAddition).toHaveBeenCalled();
+      const callArgs = mockHandleItemAddition.mock.calls[0][0];
+      const productField = callArgs[0].fields.find((f: { label: string }) => f.label === 'product');
+      const quantityField = callArgs[0].fields.find((f: { label: string }) => f.label === 'quantity');
+      expect(productField?.primary).toBe(true);
+      expect(quantityField?.primary).toBe(false);
+    });
+  });
+
   it('sorts field configurations by position', async () => {
     unifiedCache.clear(); // Clear unified cache before this test
     clearFieldConfigCache(); // Clear pending requests

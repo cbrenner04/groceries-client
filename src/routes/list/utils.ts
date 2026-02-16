@@ -11,8 +11,6 @@ import type {
   TUserPermissions,
 } from 'typings';
 
-import { isBooleanFieldConfig } from './fieldHelpers';
-
 export interface IFulfilledListData {
   current_user_id: string;
   list: IList;
@@ -97,18 +95,7 @@ export function secondaryFieldsDisplay(item: IListItem): { label: string; value:
       }
       return true;
     })
-    .map((f) => {
-      if (!f.data && f.data !== false) {
-        return null;
-      }
-      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
-      // For booleans, only show if true (skip false values for cleaner display)
-      if (isBoolean && (f.data === 'false' || f.data === false)) {
-        return null;
-      }
-      return { label: f.label, value: String(f.data) };
-    })
-    .filter((f): f is { label: string; value: string } => f !== null);
+    .map((f) => ({ label: f.label, value: f.data ? String(f.data) : '' }));
 }
 
 export async function fetchList(fetchParams: {

@@ -201,6 +201,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
             list_item_field_configuration_id: config?.id,
             data_type: config?.data_type ?? 'free_text',
             position: config?.position ?? 0,
+            primary: config?.primary ?? false,
             user_id: props.userId,
             list_item_id: newItem.id,
             created_at: new Date().toISOString(),

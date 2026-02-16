@@ -125,14 +125,17 @@ describe('secondaryFieldsDisplay', () => {
     ]);
   });
 
-  it('excludes fields with empty data', () => {
+  it('includes fields with empty data', () => {
     const fields = [
       createField('1', 'product', 'Apples', '1', { primary: true }),
-      createField('2', 'quantity', '', '1', { primary: false }),
+      createField('2', 'quantity', null, '1', { primary: false }),
       createField('3', 'notes', 'organic', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'notes', value: 'organic' }]);
+    expect(secondaryFieldsDisplay(item)).toEqual([
+      { label: 'quantity', value: '' },
+      { label: 'notes', value: 'organic' },
+    ]);
   });
 
   it('handles empty fields array', () => {
@@ -157,14 +160,17 @@ describe('secondaryFieldsDisplay', () => {
     expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'read', value: 'true' }]);
   });
 
-  it('excludes boolean fields with false value for cleaner display', () => {
+  it('includes boolean fields with false value', () => {
     const fields = [
       createField('1', 'title', 'Test Book', '1', { primary: true }),
       createField('2', 'read', 'false', '1', { primary: false, data_type: EListItemFieldType.BOOLEAN }),
       createField('3', 'author', 'Test Author', '1', { primary: false }),
     ];
     const item = createListItem('1', false, fields);
-    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'author', value: 'Test Author' }]);
+    expect(secondaryFieldsDisplay(item)).toEqual([
+      { label: 'read', value: 'false' },
+      { label: 'author', value: 'Test Author' },
+    ]);
   });
 
   it('excludes fallback primary field (first non-primary) when no primary is set', () => {

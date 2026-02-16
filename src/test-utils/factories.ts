@@ -22,7 +22,7 @@ export interface IApiResponseData {
 export function createField(
   id: string,
   label: string,
-  data: string,
+  data: string | boolean | number | undefined | null,
   listItemId: string,
   overrides?: Partial<IListItemField>,
 ): IListItemField {
