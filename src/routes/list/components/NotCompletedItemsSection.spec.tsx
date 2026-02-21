@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { EUserPermissions } from 'typings';
-import { createField, createListItem } from 'test-utils/factories';
+import { createListItem } from 'test-utils/factories';
 
 import NotCompletedItemsSection from './NotCompletedItemsSection';
 
@@ -31,10 +31,7 @@ const baseProps = {
 
 describe('NotCompletedItemsSection', () => {
   it('treats whitespace-only category as uncategorized', () => {
-    const items = [
-      createListItem('1', false, [createField('f1', 'category', '   ', '1')]),
-      createListItem('2', false, []),
-    ];
+    const items = [createListItem('1', false, [], { category: '   ' }), createListItem('2', false, [])];
 
     render(<NotCompletedItemsSection {...baseProps} notCompletedItems={items} />);
 
@@ -43,8 +40,8 @@ describe('NotCompletedItemsSection', () => {
 
   it('groups categories case-insensitively', () => {
     const items = [
-      createListItem('1', false, [createField('f1', 'category', 'Produce', '1')]),
-      createListItem('2', false, [createField('f2', 'category', 'produce', '2')]),
+      createListItem('1', false, [], { category: 'Produce' }),
+      createListItem('2', false, [], { category: 'produce' }),
     ];
 
     render(<NotCompletedItemsSection {...baseProps} notCompletedItems={items} />);

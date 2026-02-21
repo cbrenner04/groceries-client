@@ -502,9 +502,12 @@ describe('ListsContainer', () => {
 
       // Wait for useEffect to run (lines 99-107)
       await act(async () => {
-        await waitFor(() => {
-          expect(mockPrefetchListsIdle).toHaveBeenCalled();
-        }, { timeout: 2000 });
+        await waitFor(
+          () => {
+            expect(mockPrefetchListsIdle).toHaveBeenCalled();
+          },
+          { timeout: 2000 },
+        );
       });
 
       // Verify prefetch was called with list IDs from pendingLists and incompleteLists
@@ -514,7 +517,7 @@ describe('ListsContainer', () => {
     it('limits prefetch to MAX_PREFETCH_LISTS (5)', async () => {
       // Create 7 lists (more than MAX_PREFETCH_LISTS)
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const manyLists = Array.from({ length: 7 }, (_, i) => ({ 
+      const manyLists = Array.from({ length: 7 }, (_, i) => ({
         id: `id${i + 1}`,
         name: `list${i + 1}`,
         list_item_configuration_id: 'config-1',
@@ -531,9 +534,12 @@ describe('ListsContainer', () => {
       });
 
       await act(async () => {
-        await waitFor(() => {
-          expect(mockPrefetchListsIdle).toHaveBeenCalled();
-        }, { timeout: 2000 });
+        await waitFor(
+          () => {
+            expect(mockPrefetchListsIdle).toHaveBeenCalled();
+          },
+          { timeout: 2000 },
+        );
       });
 
       // Should only prefetch first 5 lists (line 101: slice(0, MAX_PREFETCH_LISTS))
@@ -578,9 +584,12 @@ describe('ListsContainer', () => {
       });
 
       await act(async () => {
-        await waitFor(() => {
-          expect(mockPrefetchListsIdle).toHaveBeenCalled();
-        }, { timeout: 2000 });
+        await waitFor(
+          () => {
+            expect(mockPrefetchListsIdle).toHaveBeenCalled();
+          },
+          { timeout: 2000 },
+        );
       });
 
       // Should only prefetch lists with valid IDs (line 102: filter with type guard)
@@ -594,10 +603,13 @@ describe('ListsContainer', () => {
       });
 
       // Wait a bit to ensure useEffect has run
-      await waitFor(() => {
-        // prefetchListsIdle should not be called when there are no lists (line 105: if (listIds.length > 0))
-        expect(mockPrefetchListsIdle).not.toHaveBeenCalled();
-      }, { timeout: 100 });
+      await waitFor(
+        () => {
+          // prefetchListsIdle should not be called when there are no lists (line 105: if (listIds.length > 0))
+          expect(mockPrefetchListsIdle).not.toHaveBeenCalled();
+        },
+        { timeout: 100 },
+      );
     });
   });
 });

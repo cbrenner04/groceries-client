@@ -48,6 +48,35 @@ exports[`ListContainer Category Filtering renders filtered items without categor
       </div>
     </div>
     <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
       class="mb-3 mb-3"
     >
       <div
@@ -615,6 +644,35 @@ exports[`ListContainer Category Filtering renders items with category buckets wh
           class="placeholder col-8"
         />
       </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
     </div>
     <div
       class="mb-3 mb-3"
@@ -1452,6 +1510,35 @@ exports[`ListContainer Delete Operations renders confirmation modal when delete 
       </div>
     </div>
     <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
       class="mb-3 mb-3"
     >
       <div
@@ -2287,6 +2374,35 @@ exports[`ListContainer Item Rendering does not render complete items when none e
       </div>
     </div>
     <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
       class="mb-3 mb-3"
     >
       <div
@@ -2986,6 +3102,35 @@ exports[`ListContainer Item Rendering does not render incomplete items when none
       </div>
     </div>
     <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
+    </div>
+    <div
       class="mb-3 mb-3"
     >
       <div
@@ -3633,6 +3778,35 @@ exports[`ListContainer Permissions renders Add Item button (form collapsed) when
           class="placeholder col-8"
         />
       </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="foo"
+        />
+        <option
+          value="bar"
+        />
+      </datalist>
     </div>
     <div
       class="mb-3 mb-3"

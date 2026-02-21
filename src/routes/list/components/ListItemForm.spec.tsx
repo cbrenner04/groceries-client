@@ -121,32 +121,32 @@ describe('ListItemForm', () => {
     );
   });
 
-  it('trims trailing whitespace before submitting fields', async () => {
-    const fieldConfigsWithCategory = [
-      { id: '1', label: 'category', data_type: 'free_text', position: 1, primary: false },
-    ];
-
+  it('trims trailing whitespace and capitalizes category before submitting', async () => {
     axios.get = jest
       .fn()
-      .mockResolvedValueOnce({ data: fieldConfigsWithCategory }) // initial field config load
-      .mockResolvedValueOnce({ data: fieldConfigsWithCategory }); // field config during submit
+      .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
+      .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
     axios.post = jest
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
-      .mockResolvedValue({}); // create item fields
+      .mockResolvedValue({}); // create category + fields
 
-    render(<ListItemForm {...defaultProps} />);
+    render(<ListItemForm {...defaultProps} categories={['Produce', 'Dairy']} />);
     fireEvent.click(screen.getByText('Add Item'));
-    fireEvent.change(await screen.findByLabelText('Category'), { target: { value: 'produce  ' } });
+
+    // Wait for fields to load, then fill category
+    await screen.findByLabelText('Name');
+    const categoryInput = screen.getByLabelText('Category');
+    fireEvent.change(categoryInput, { target: { value: 'produce  ' } });
 
     fireEvent.click(screen.getByText('Add New Item'));
 
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items/item-1/list_item_fields', {
-        list_item_field: {
-          label: 'category',
-          data: 'Produce',
-          list_item_field_configuration_id: '1',
+      expect(axios.post).toHaveBeenCalledWith('/lists/list-1/list_items', {
+        list_item: {
+          user_id: 'user-1',
+          completed: false,
+          category: 'Produce',
         },
       });
     });
@@ -374,6 +374,34 @@ describe('ListItemForm', () => {
       expect(callArgs[0].fields).toHaveLength(1);
       expect(callArgs[0].fields[0].label).toBe('name');
       expect(callArgs[0].fields[0].data).toBe('Test Item');
+    });
+  });
+
+  it('includes primary flag on fields so itemName displays correct primary field on first render', async () => {
+    const fieldConfigs = [
+      { id: '1', label: 'quantity', data_type: 'number', position: 2, primary: false },
+      { id: '2', label: 'product', data_type: 'free_text', position: 1, primary: true },
+    ];
+
+    axios.get = jest.fn().mockResolvedValueOnce({ data: fieldConfigs }).mockResolvedValueOnce({ data: fieldConfigs });
+    axios.post = jest
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'item-1' } })
+      .mockResolvedValue({});
+
+    render(<ListItemForm {...defaultProps} />);
+    fireEvent.click(screen.getByText('Add Item'));
+    fireEvent.change(await screen.findByLabelText('Product'), { target: { value: 'Apples' } });
+    fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '5' } });
+    fireEvent.click(screen.getByText('Add New Item'));
+
+    await waitFor(() => {
+      expect(mockHandleItemAddition).toHaveBeenCalled();
+      const callArgs = mockHandleItemAddition.mock.calls[0][0];
+      const productField = callArgs[0].fields.find((f: { label: string }) => f.label === 'product');
+      const quantityField = callArgs[0].fields.find((f: { label: string }) => f.label === 'quantity');
+      expect(productField?.primary).toBe(true);
+      expect(quantityField?.primary).toBe(false);
     });
   });
 
@@ -739,7 +767,7 @@ describe('ListItemForm', () => {
       const allInputs = container.querySelectorAll('[name]');
       const nameIndex = Array.from(allInputs).findIndex((el) => el.getAttribute('name') === 'name');
       const quantityIndex = Array.from(allInputs).findIndex((el) => el.getAttribute('name') === 'quantity');
-      
+
       // Primary field (name) should appear before quantity in DOM order
       expect(nameIndex).toBeGreaterThanOrEqual(0);
       expect(quantityIndex).toBeGreaterThanOrEqual(0);
@@ -760,7 +788,7 @@ describe('ListItemForm', () => {
       // Query all inputs by name attribute
       const nameField = container.querySelector('[name="name"]');
       const quantityField = container.querySelector('[name="quantity"]');
-      
+
       // Primary field (name) should appear first
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();
@@ -781,7 +809,7 @@ describe('ListItemForm', () => {
       // Query all inputs by name attribute
       const nameField = container.querySelector('[name="name"]');
       const quantityField = container.querySelector('[name="quantity"]');
-      
+
       // Should sort by position when both are primary
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();
@@ -802,7 +830,7 @@ describe('ListItemForm', () => {
       // Query all inputs by name attribute
       const nameField = container.querySelector('[name="name"]');
       const quantityField = container.querySelector('[name="quantity"]');
-      
+
       // Should sort by position when neither is primary
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();

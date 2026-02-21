@@ -31,6 +31,7 @@ const EditListItem: React.FC = (): React.JSX.Element => {
               listUsers={data.list_users}
               listItemConfiguration={data.list_item_configuration}
               listItemFieldConfigurations={data.list_item_field_configurations}
+              categories={data.categories}
             />
           );
         }}
