@@ -13,7 +13,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
-import { fetchList } from '../utils';
+import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
   handleItemSelect as exportedHandleItemSelect,
@@ -468,17 +468,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const deleteConfirmationModalBody = (): string => {
-    const itemNames = itemsToDelete.map((item) => {
-      const nameField = item.fields.find(
-        (field) =>
-          field.label === 'name' ||
-          field.label === 'title' ||
-          field.label === 'product' ||
-          field.label === 'task' ||
-          field.label === 'content',
-      );
-      return nameField?.data ?? 'Unknown item';
-    });
+    const itemNames = itemsToDelete.map((item) => itemName(item));
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 

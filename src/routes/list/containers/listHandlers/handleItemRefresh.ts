@@ -34,6 +34,7 @@ export async function handleItemRefresh(params: {
       list_item: {
         completed: false,
         refreshed: false,
+        ...(item.category != null && { category: item.category }),
       },
     };
 

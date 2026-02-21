@@ -144,6 +144,36 @@ describe('handleItemRefresh', () => {
     expect(mockToastUtil.info).toHaveBeenCalledWith('Item refreshed successfully.');
   });
 
+  it('preserves category when creating new item', async () => {
+    const testItem = createListItem(
+      'test-id',
+      false,
+      [createField('field1', 'product', 'Test Product', 'test-id', { updated_at: null })],
+      { user_id: 'u', list_id: 'l', updated_at: null, category: 'foo' },
+    );
+
+    mockAxios.put.mockResolvedValueOnce({ data: { ...testItem, refreshed: true } });
+    mockAxios.post.mockResolvedValueOnce({ data: { id: 'new-item-id', completed: false } });
+    mockAxios.post.mockResolvedValueOnce({ data: {} });
+    mockAxios.get.mockResolvedValueOnce({
+      data: { id: 'new-item-id', completed: false, category: 'foo', fields: testItem.fields },
+    });
+
+    await handleItemRefresh({
+      item: testItem,
+      listId: '1',
+      completedItems: [testItem],
+      setCompletedItems: jest.fn(),
+      notCompletedItems: [],
+      setNotCompletedItems: jest.fn(),
+      setPending: jest.fn(),
+    });
+
+    expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items', {
+      list_item: { completed: false, refreshed: false, category: 'foo' },
+    });
+  });
+
   it('skips fields with empty data', async () => {
     const testItem = createListItem(
       'test-id',

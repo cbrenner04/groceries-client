@@ -5,6 +5,9 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
+import CategoryField from 'components/FormFields/CategoryField';
+import { CheckboxField } from 'components/FormFields';
+import { capitalize } from 'utils/format';
 import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import BulkEditListItemsFormFields from '../components/BulkEditListItemsFormFields';
@@ -33,6 +36,12 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
   );
   const [fieldUpdates, setFieldUpdates] = useState<IBulkFieldUpdate[]>(getInitial);
 
+  // Determine initial category: if all items share the same category, show it; otherwise empty
+  const allCategories = props.items.map((item) => item.category ?? '');
+  const initialCategory = allCategories.every((c) => c === allCategories[0]) ? allCategories[0] : '';
+  const [category, setCategory] = useState(initialCategory);
+  const [clearCategory, setClearCategory] = useState(false);
+
   const handleFieldChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
     const parsed = parseBulkFieldChange(event, props.listItemFieldConfigurations);
     if (!parsed) {
@@ -54,10 +63,32 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
     );
   };
 
+  const handleClearCategory = (): void => {
+    setClearCategory((prev) => {
+      const next = !prev;
+      if (next) {
+        setCategory('');
+      }
+      return next;
+    });
+  };
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event): Promise<void> => {
     event.preventDefault();
     const itemIds = props.items.map((item) => item.id).join(',');
     const fieldsToUpdateData = buildBulkUpdateFieldsPayload(props.listItemFieldConfigurations, fieldUpdates);
+
+    // Include category as a field_to_update when it has a value or user chose to clear it
+    const categoryValue = category.trim();
+    const capitalizedCategory = categoryValue ? capitalize(categoryValue) : '';
+    const allItemIds = props.items.map((item) => item.id);
+    const categoryFieldUpdate = {
+      label: 'category',
+      data: clearCategory ? '' : capitalizedCategory,
+      item_ids: allItemIds,
+    };
+    const includeCategory = clearCategory || capitalizedCategory;
+    const allFieldsToUpdate = includeCategory ? [...fieldsToUpdateData, categoryFieldUpdate] : fieldsToUpdateData;
 
     try {
       await axios.put(`/lists/${props.list.id}/list_items/bulk_update?item_ids=${itemIds}`, {
@@ -65,9 +96,18 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         list_id: props.list.id,
         list_items: {
           update_current_items: true,
-          fields_to_update: fieldsToUpdateData,
+          fields_to_update: allFieldsToUpdate,
         },
       });
+
+      // Auto-create category record if new category was provided (not when clearing)
+      if (capitalizedCategory && !clearCategory) {
+        try {
+          await axios.post(`/lists/${props.list.id}/categories`, { category: { name: capitalizedCategory } });
+        } catch {
+          // Category may already exist, ignore errors
+        }
+      }
 
       showToast.info('Items successfully updated');
       props.navigate(`/lists/${props.list.id}`);
@@ -105,6 +145,25 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           fieldUpdates={fieldUpdates}
           handleFieldChange={handleFieldChange}
           handleClearField={handleClearField}
+        />
+        <CategoryField
+          handleInput={(e): void => {
+            setCategory((e.target as HTMLInputElement).value);
+            if (clearCategory) {
+              setClearCategory(false);
+            }
+          }}
+          category={clearCategory ? '' : category}
+          categories={props.categories}
+          child={
+            <CheckboxField
+              name="clear_category"
+              label="Clear Category"
+              value={clearCategory}
+              handleChange={handleClearCategory}
+              classes="ms-1 mt-1"
+            />
+          }
         />
         <FormSubmission
           submitText="Update Items"

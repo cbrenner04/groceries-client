@@ -6,6 +6,7 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import { TextField, CheckboxField, NumberField, DateField } from 'components/FormFields';
+import CategoryField from 'components/FormFields/CategoryField';
 import FormSubmission from 'components/FormSubmission';
 import { capitalize } from 'utils/format';
 import { getFieldConfigurations } from 'utils/fieldConfigCache';
@@ -123,13 +124,27 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         return;
       }
 
-      // Step 1: Create the list item
+      // Determine category value
+      const { category: rawCategory } = formData;
+      const categoryValue = rawCategory ? capitalize(String(rawCategory).trim()) : undefined;
+
+      // Step 1: Create the list item with category
       const { data: newItem } = await axios.post(`/lists/${props.listId}/list_items`, {
         list_item: {
           user_id: props.userId,
           completed,
+          category: categoryValue ?? undefined,
         },
       });
+
+      // Auto-create category record if new category was provided
+      if (categoryValue) {
+        try {
+          await axios.post(`/lists/${props.listId}/categories`, { category: { name: categoryValue } });
+        } catch {
+          // Category may already exist, ignore errors
+        }
+      }
 
       // Step 2: Get field configurations for this list item configuration
       const { data: fetchedFieldConfigurations } = await axios.get(
@@ -143,7 +158,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           const bool = typeof raw === 'boolean' ? raw : false;
           entriesToSend.push([config.label, bool]);
         } else if (raw != null) {
-          const normalized = typeof raw === 'string' ? raw.trimEnd() : raw;
+          const normalized = typeof raw === 'string' ? raw.trim() : raw;
           if (normalized !== '') {
             entriesToSend.push([config.label, normalized]);
           }
@@ -152,19 +167,18 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       const keysToSend = new Set(entriesToSend.map(([k]) => k));
       const formDataOnly = (Object.entries(formData) as [string, string | number | boolean][])
-        .map(([k, v]) => [k, typeof v === 'string' ? v.trimEnd() : v] as const)
-        .filter(([k, v]) => !keysToSend.has(k) && (v as unknown) != null && v !== '');
+        .map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v] as const)
+        .filter(([k, v]) => !keysToSend.has(k) && k !== 'category' && (v as unknown) != null && v !== '');
       const allEntriesForItem = [...entriesToSend, ...formDataOnly];
 
       // Step 3: Add fields to the list item using the correct configuration IDs
       const fieldPromises = entriesToSend.map(async ([key, value]) => {
         const fieldConfig = fetchedFieldConfigurations.find((config: IFieldConfiguration) => config.label === key);
         if (fieldConfig) {
-          const fieldValue = key === 'category' ? capitalize(String(value)) : String(value);
           await axios.post(`/lists/${props.listId}/list_items/${newItem.id}/list_item_fields`, {
             list_item_field: {
               label: key,
-              data: fieldValue,
+              data: String(value),
               list_item_field_configuration_id: fieldConfig.id,
             },
           });
@@ -175,6 +189,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
 
       const itemWithFields = {
         ...newItem,
+        category: categoryValue ?? null,
         fields: allEntriesForItem.map(([key, value]) => {
           const config = fetchedFieldConfigurations.find((c: IFieldConfiguration) => c.label === key) as
             | IFieldConfiguration
@@ -182,10 +197,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
           return {
             id: `temp-${Date.now()}-${key}`,
             label: key,
-            data: key === 'category' ? capitalize(String(value)) : String(value),
+            data: String(value),
             list_item_field_configuration_id: config?.id,
             data_type: config?.data_type ?? 'free_text',
             position: config?.position ?? 0,
+            primary: config?.primary ?? false,
             user_id: props.userId,
             list_item_id: newItem.id,
             created_at: new Date().toISOString(),
@@ -319,6 +335,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off" data-test-id="list-item-form">
           {renderFields()}
+          <CategoryField
+            handleInput={setData}
+            category={formData.category ? String(formData.category) : ''}
+            categories={props.categories}
+          />
           <CheckboxField
             name="completed"
             label="Completed"

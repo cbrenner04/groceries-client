@@ -4,16 +4,12 @@ import axios from '../../utils/api';
 import type {
   IList,
   IListItemConfiguration,
-  IListItemField,
   IListItemFieldConfiguration,
   IListUser,
   IListItem,
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
-import { normalizeCategoryKey } from '../../utils/format';
-
-import { isBooleanFieldConfig } from './fieldHelpers';
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -44,6 +40,7 @@ export interface IFulfilledEditListItemData {
   list: IList;
   list_users: IListUser[];
   list_item_configuration: IListItemConfiguration;
+  categories: string[];
   list_item_field_configurations: IListItemFieldConfiguration[];
 }
 
@@ -71,8 +68,8 @@ export function itemName(item: IListItem): string {
     }
   }
 
-  // Fallback to first non-category, non-primary field if no primary is set or primary has no data
-  const firstField = item.fields.find((f) => f.label !== 'category' && f.primary !== true);
+  // Fallback to first non-primary field if no primary is set or primary has no data
+  const firstField = item.fields.find((f) => f.primary !== true && f.data);
   return firstField?.data ? String(firstField.data) : '';
 }
 
@@ -84,38 +81,21 @@ export function secondaryFieldsDisplay(item: IListItem): { label: string; value:
   // Determine which field is used as the title (primary or fallback)
   const primaryFields = item.fields.filter((f) => f.primary === true);
   const hasPrimaryField = primaryFields.length > 0 && primaryFields[0]?.data;
-  const fallbackPrimaryField = hasPrimaryField
-    ? null
-    : item.fields.find((f) => f.label !== 'category');
+  const fallbackPrimaryField = hasPrimaryField ? null : item.fields.find((f) => f.primary !== true && f.data);
 
   return item.fields
     .filter((f) => {
-      // Exclude category fields
-      if (f.label === 'category') {
-        return false;
-      }
       // Exclude ALL primary fields (defensive: handle multiple primary fields)
       if (f.primary === true) {
         return false;
       }
-      // Exclude the fallback primary field (first non-category) if no primary is set
+      // Exclude the fallback primary field if no primary is set
       if (fallbackPrimaryField && f.id === fallbackPrimaryField.id) {
         return false;
       }
       return true;
     })
-    .map((f) => {
-      if (!f.data && f.data !== false) {
-        return null;
-      }
-      const isBoolean = isBooleanFieldConfig(f) || typeof f.data === 'boolean';
-      // For booleans, only show if true (skip false values for cleaner display)
-      if (isBoolean && (f.data === 'false' || f.data === false)) {
-        return null;
-      }
-      return { label: f.label, value: String(f.data) };
-    })
-    .filter((f): f is { label: string; value: string } => f !== null);
+    .map((f) => ({ label: f.label, value: f.data ? String(f.data) : '' }));
 }
 
 export async function fetchList(fetchParams: {
@@ -135,24 +115,6 @@ export async function fetchList(fetchParams: {
     if (!data.list || !data.not_completed_items || !data.completed_items) {
       throw new AxiosError('Invalid data structure received from server', '500');
     }
-
-    const categoriesMap = new Map<string, string>();
-    data.not_completed_items.concat(data.completed_items).forEach((item: IListItem) => {
-      const rawCategory = item.fields.find((field: IListItemField) => field.label === 'category')?.data;
-      if (typeof rawCategory !== 'string') {
-        return;
-      }
-      const trimmedCategory = rawCategory.trimEnd();
-      if (trimmedCategory === '') {
-        return;
-      }
-      const key = normalizeCategoryKey(trimmedCategory);
-      if (!categoriesMap.has(key)) {
-        categoriesMap.set(key, trimmedCategory);
-      }
-    });
-    const categories = Array.from(categoriesMap.values());
-    data.categories = categories;
 
     return data;
   } catch (err: unknown) {

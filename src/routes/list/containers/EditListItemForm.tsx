@@ -5,6 +5,8 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import FormSubmission from 'components/FormSubmission';
+import CategoryField from 'components/FormFields/CategoryField';
+import { capitalize } from 'utils/format';
 import type { IListItem, IList, IListUser, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import ListItemFormFields from '../components/ListItemFormFields';
@@ -15,6 +17,7 @@ export interface IEditListItemFormProps {
   listUsers: IListUser[];
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
+  categories?: string[];
 }
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
@@ -40,6 +43,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
     };
   });
   const [fields, setFields] = useState(initialFields);
+  const [category, setCategory] = useState(props.item.category ?? '');
 
   const setData: ChangeEventHandler<HTMLInputElement> = (element): void => {
     const { name, value } = element.target;
@@ -55,21 +59,38 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event): Promise<void> => {
     event.preventDefault();
     try {
+      // Update category directly on the item
+      const categoryValue = category.trim();
+      const capitalizedCategory = categoryValue ? capitalize(categoryValue) : null;
+      await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}`, {
+        list_item: { category: capitalizedCategory },
+      });
+
+      // Auto-create category record if new category was provided
+      if (capitalizedCategory) {
+        try {
+          await axios.post(`/lists/${props.list.id}/categories`, { category: { name: capitalizedCategory } });
+        } catch {
+          // Category may already exist, ignore errors
+        }
+      }
+
       // Update, create, or archive each field as needed
       const normalizedFields = fields.map((field) => ({
         ...field,
-        data: typeof field.data === 'string' ? field.data.trimEnd() : field.data,
+        data: typeof field.data === 'string' ? field.data.trim() : field.data,
       }));
 
+      const baseUrl = `/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`;
       await Promise.all(
         normalizedFields.map(async (field) => {
           /* istanbul ignore else */
           if (field.id && field.data === '') {
             // Archive (delete) the field if cleared
-            await axios.delete(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`);
+            await axios.delete(`${baseUrl}/${field.id}`);
           } else if (field.id && field.data !== '') {
             // Update existing field
-            await axios.put(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields/${field.id}`, {
+            await axios.put(`${baseUrl}/${field.id}`, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,
@@ -77,7 +98,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
             });
           } else if (!field.id && field.data !== '') {
             // Create new field
-            await axios.post(`/lists/${props.list.id}/list_items/${props.item.id}/list_item_fields`, {
+            await axios.post(baseUrl, {
               list_item_field: {
                 data: field.data,
                 list_item_field_configuration_id: field.list_item_field_configuration_id,
@@ -122,6 +143,11 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           fields={fields}
           setFormData={setData}
           editForm
+        />
+        <CategoryField
+          handleInput={(e): void => setCategory((e.target as HTMLInputElement).value)}
+          category={category}
+          categories={props.categories}
         />
         <FormSubmission
           submitText="Update Item"

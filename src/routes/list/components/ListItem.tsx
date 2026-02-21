@@ -40,12 +40,16 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
               <div className="flex-grow-1">
                 <div>{formattedName}</div>
                 {secondaryFields.length > 0 && (
-                  <div className="list-item-secondary text-muted d-none d-md-block"
-                       style={{ fontSize: '0.85em', marginTop: '0.25rem' }}>
+                  <div
+                    className="list-item-secondary text-muted d-none d-md-block"
+                    style={{ fontSize: '0.85em', marginTop: '0.25rem' }}
+                  >
                     {secondaryFields.map((field, index) => (
                       <span key={index}>
                         {index > 0 && <span className="mx-2">•</span>}
-                        <span>{capitalizeLabel(field.label)}: {field.value}</span>
+                        <span>
+                          {capitalizeLabel(field.label)}: {field.value}
+                        </span>
                       </span>
                     ))}
                   </div>
@@ -82,13 +86,17 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
           </div>
         </div>
         {secondaryFields.length > 0 && (
-          <div className="list-item-secondary text-muted d-block d-md-none mt-1"
-               style={{ fontSize: '0.85em' }}
-               data-test-id="list-item-secondary-fields-mobile">
+          <div
+            className="list-item-secondary text-muted d-block d-md-none mt-1"
+            style={{ fontSize: '0.85em' }}
+            data-test-id="list-item-secondary-fields-mobile"
+          >
             {secondaryFields.map((field, index) => (
               <span key={index}>
                 {index > 0 && <span className="mx-2">•</span>}
-                <span>{capitalizeLabel(field.label)}: {field.value}</span>
+                <span>
+                  {capitalizeLabel(field.label)}: {field.value}
+                </span>
               </span>
             ))}
           </div>
