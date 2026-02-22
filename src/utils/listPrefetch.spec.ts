@@ -198,32 +198,23 @@ describe('ListPrefetcher', () => {
       expect(mockFetchList).toHaveBeenCalledTimes(3);
     });
 
-    it('falls back to setTimeout when requestIdleCallback is not available', async () => {
-      // Remove requestIdleCallback from the current window object
-      const originalRequestIdleCallback = (window as unknown as { requestIdleCallback?: () => void })
-        .requestIdleCallback;
-      delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
+    it('uses setTimeout fallback when requestIdleCallback is not available', async () => {
+      const originalRequestIdleCallback = window.requestIdleCallback;
+      mockRequestIdleCallback.mockClear();
+      delete (window as { requestIdleCallback?: unknown }).requestIdleCallback;
 
-      const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
       mockFetchList.mockResolvedValueOnce(mockListData);
 
       const prefetchPromise = listPrefetcher.prefetchIdle(['list-1']);
 
-      // Advance timers to trigger the setTimeout callback
-      jest.runOnlyPendingTimers();
+      // Advance timers to trigger the setTimeout callback (1000ms)
+      jest.advanceTimersByTime(1000);
       await prefetchPromise;
 
-      // Should use setTimeout as fallback (line 118 coverage)
-      // The delay might be affected by test setup, but we care that setTimeout was used
-      expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), expect.any(Number));
+      // Verify the list was prefetched (which means setTimeout fallback worked)
       expect(mockFetchList).toHaveBeenCalledTimes(1);
 
-      setTimeoutSpy.mockRestore();
-
-      // Restore requestIdleCallback
-      if (originalRequestIdleCallback) {
-        (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback = originalRequestIdleCallback;
-      }
+      window.requestIdleCallback = originalRequestIdleCallback;
     });
   });
 

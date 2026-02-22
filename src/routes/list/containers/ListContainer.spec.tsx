@@ -213,19 +213,29 @@ describe('ListContainer', () => {
     it('does not poll when tab is hidden', async () => {
       jest.useFakeTimers();
 
-      // Set tab to hidden
-      Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
-      Object.defineProperty(document, 'hidden', { value: true, writable: true });
-
       axios.get = jest.fn().mockResolvedValue({
         data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
       });
 
       setup({ permissions: EUserPermissions.WRITE });
 
+      // Hide the tab by setting document.hidden and firing the event
+      Object.defineProperty(document, 'hidden', { value: true, writable: true, configurable: true });
+      await act(async () => {
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+
+      // Reset axios mock call count after initial render
+      jest.clearAllMocks();
+
       // Advance time - polling should not fire when tab is hidden
       await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10));
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
+      
+      // Polling should be skipped when tab is hidden (line 75)
+      expect(axios.get).not.toHaveBeenCalled();
+
+      // Restore visibility
+      Object.defineProperty(document, 'hidden', { value: false, writable: true, configurable: true });
 
       jest.useRealTimers();
     });

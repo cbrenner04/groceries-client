@@ -6,6 +6,7 @@ import EditInvite from './routes/users/EditInvite';
 import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
 import Lists from './routes/lists/Lists';
+import Templates from './routes/templates/Templates';
 import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
@@ -19,6 +20,7 @@ import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
 const ShareList = createLazyComponent(() => import('./routes/share_list/ShareList'));
 const EditList = createLazyComponent(() => import('./routes/list/EditList'));
 const BulkEditListItems = createLazyComponent(() => import('./routes/list/BulkEditListItems'));
+const EditTemplate = createLazyComponent(() => import('./routes/templates/EditTemplate'));
 
 interface IUser {
   accessToken: string;
@@ -45,6 +47,7 @@ export default function AppRouter(): React.JSX.Element {
     preloadComponent(() => import('./routes/share_list/ShareList'));
     preloadComponent(() => import('./routes/list/EditList'));
     preloadComponent(() => import('./routes/list/BulkEditListItems'));
+    preloadComponent(() => import('./routes/templates/EditTemplate'));
   }, []);
 
   const signInUser = (accessToken: string, client: string, uid: string): void => {
@@ -80,6 +83,9 @@ export default function AppRouter(): React.JSX.Element {
           <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
           {/* routes/share_list */}
           <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
+          {/* routes/templates */}
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/:id/edit" element={<EditTemplate />} />
           {/* routes/users */}
           <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
           <Route path="/users/password/new" element={<NewPassword />} />

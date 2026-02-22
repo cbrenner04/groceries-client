@@ -1,5 +1,12 @@
 import { EListItemFieldType, EUserPermissions } from 'typings';
-import type { IList, IListItemField, IListUser, IListItemConfiguration, IListItem } from 'typings';
+import type {
+  IList,
+  IListItemField,
+  IListUser,
+  IListItemConfiguration,
+  IListItem,
+  IListItemFieldConfiguration,
+} from 'typings';
 
 // Base date for consistent test data
 const BASE_DATE = new Date('05/24/2020').toISOString();
@@ -104,6 +111,26 @@ export function createListItemConfiguration(
     updated_at: BASE_DATE,
     user_id: 'id1',
     archived_at: null,
+    ...overrides,
+  };
+}
+
+// Helper to create a list item field configuration
+export function createListItemFieldConfiguration(
+  id = 'field-config-id1',
+  label = 'product',
+  overrides?: Partial<IListItemFieldConfiguration>,
+): IListItemFieldConfiguration {
+  return {
+    id,
+    label,
+    data_type: EListItemFieldType.FREE_TEXT,
+    position: 1,
+    primary: false,
+    archived_at: null,
+    list_item_configuration_id: 'config-id1',
+    created_at: BASE_DATE,
+    updated_at: BASE_DATE,
     ...overrides,
   };
 }

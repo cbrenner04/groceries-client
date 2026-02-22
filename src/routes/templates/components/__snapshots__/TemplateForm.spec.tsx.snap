@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TemplateForm renders with snapshot 1`] = `
+<div>
+  <button
+    aria-controls="form-collapse"
+    aria-expanded="false"
+    class="btn btn-link"
+    data-test-id="add-template-button"
+    type="button"
+  >
+    Add Template
+  </button>
+  <form
+    autocomplete="off"
+    class="collapse"
+    id="form-collapse"
+  >
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="template-form-name"
+      >
+        Name
+      </label>
+      <input
+        class="form-control"
+        data-test-id="template-form-name"
+        id="template-form-name"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="mb-3"
+    >
+      <h5>
+        Fields
+      </h5>
+      <div
+        class="mb-3 p-2 border rounded"
+      >
+        <div
+          class="mb-2"
+        >
+          <label
+            class="small mb-1 form-label"
+          >
+            Label
+          </label>
+          <input
+            class="form-control"
+            data-test-id="field-row-label-0"
+            placeholder="e.g., product"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="mb-2"
+        >
+          <label
+            class="small mb-1 form-label"
+          >
+            Type
+          </label>
+          <select
+            class="form-control"
+            data-test-id="field-row-data-type-0"
+          >
+            <option
+              value="free_text"
+            >
+              Free Text
+            </option>
+            <option
+              value="boolean"
+            >
+              Boolean
+            </option>
+            <option
+              value="date_time"
+            >
+              Date/Time
+            </option>
+            <option
+              value="number"
+            >
+              Number
+            </option>
+          </select>
+        </div>
+        <div
+          class="d-flex gap-2 align-items-center justify-content-between"
+        >
+          <div
+            class="mb-0"
+            style="width: 80px;"
+          >
+            <label
+              class="small mb-1 form-label"
+            >
+              Position
+            </label>
+            <input
+              class="form-control"
+              data-test-id="field-row-position-0"
+              max="1"
+              min="1"
+              type="number"
+              value="1"
+            />
+          </div>
+          <div
+            class="mb-0"
+          >
+            <div
+              class="form-check"
+            >
+              <input
+                checked=""
+                class="form-check-input"
+                data-test-id="field-row-primary-0"
+                type="checkbox"
+              />
+              <label
+                class="form-check-label"
+                title=""
+              >
+                Primary
+              </label>
+            </div>
+          </div>
+          <button
+            class="p-0 btn btn-link"
+            data-test-id="field-row-remove-0"
+            disabled=""
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="text-danger"
+              data-test-id="trash-icon"
+              fill="currentColor"
+              focusable="false"
+              height="32"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="32"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn btn-secondary btn-sm"
+        data-test-id="add-field-button"
+        type="button"
+      >
+        Add Field
+      </button>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        disabled=""
+        type="submit"
+      >
+        Create Template
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Collapse Form
+      </button>
+    </div>
+  </form>
+</div>
+`;
