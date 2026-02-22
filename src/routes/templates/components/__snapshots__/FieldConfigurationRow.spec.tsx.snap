@@ -4,6 +4,7 @@ exports[`FieldConfigurationRow renders input fields 1`] = `
 <div>
   <div
     class="mb-3 p-2 border rounded"
+    data-test-class="field-configuration-row"
   >
     <div
       class="mb-2"

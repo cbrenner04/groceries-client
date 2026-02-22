@@ -41,6 +41,7 @@ exports[`TemplateForm renders with snapshot 1`] = `
       </h5>
       <div
         class="mb-3 p-2 border rounded"
+        data-test-class="field-configuration-row"
       >
         <div
           class="mb-2"
