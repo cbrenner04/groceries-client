@@ -10,6 +10,8 @@ import type {
   EUserPermissions,
   TUserPermissions,
 } from 'typings';
+import { EListItemFieldType } from 'typings';
+import { prettyDueBy } from '../../utils/format';
 
 export interface IFulfilledListData {
   current_user_id: string;
@@ -95,7 +97,12 @@ export function secondaryFieldsDisplay(item: IListItem): { label: string; value:
       }
       return true;
     })
-    .map((f) => ({ label: f.label, value: f.data ? String(f.data) : '' }));
+    .map((f) => {
+      if (f.data_type === EListItemFieldType.DATE_TIME && f.data) {
+        return { label: f.label, value: prettyDueBy(String(f.data)) };
+      }
+      return { label: f.label, value: f.data ? String(f.data) : '' };
+    });
 }
 
 export async function fetchList(fetchParams: {

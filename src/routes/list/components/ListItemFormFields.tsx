@@ -3,6 +3,7 @@ import React, { type ChangeEventHandler } from 'react';
 import type { EListItemFieldType, IListItemField } from 'typings';
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
 import { sortFieldConfigurations } from '../fieldHelpers';
+import { formatDateForInput } from 'utils/format';
 
 export interface IListItemFormFieldsProps {
   fieldConfigurations: {
@@ -37,8 +38,12 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
         return (
           <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="mb-3" />
         );
-      case 'date_time':
-        return <DateField key={config.id} {...commonProps} value={field?.data ? String(field.data) : ''} />;
+      case 'date_time': {
+        const dateValue = field?.data;
+        const formattedDate =
+          dateValue && typeof dateValue !== 'boolean' ? formatDateForInput(dateValue) ?? '' : '';
+        return <DateField key={config.id} {...commonProps} value={formattedDate} />;
+      }
       case 'number':
         return <NumberField key={config.id} {...commonProps} value={field?.data ? Number(field.data) : undefined} />;
       case 'free_text':

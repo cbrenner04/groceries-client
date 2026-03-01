@@ -42,7 +42,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
             <small
               class="text-muted"
             >
-              May 27 2020, 12:00:00 am
+              May 27 2020
             </small>
           </div>
           <div
@@ -99,7 +99,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
             <small
               class="text-muted"
             >
-              May 27 2020, 12:00:00 am
+              May 27 2020
             </small>
           </div>
           <div
@@ -145,7 +145,7 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
             <small
               class="text-muted"
             >
-              May 27 2020, 12:00:00 am
+              May 27 2020
             </small>
           </div>
           <div
@@ -197,7 +197,7 @@ exports[`List does render Link when includeLinkToList is true 1`] = `
             <small
               class="text-muted"
             >
-              May 27 2020, 12:00:00 am
+              May 27 2020
             </small>
           </div>
           <div

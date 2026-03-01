@@ -132,6 +132,14 @@ describe('ListsContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders Manage Templates link pointing to /templates', () => {
+    const { getByTestId } = setup();
+
+    const link = getByTestId('manage-templates-link');
+    expect(link).toHaveAttribute('href', '/templates');
+    expect(link).toHaveTextContent('Manage Templates');
+  });
+
   it('updates via polling when different data is returned', async () => {
     // messes with `userEvent` actions
     jest.useFakeTimers();

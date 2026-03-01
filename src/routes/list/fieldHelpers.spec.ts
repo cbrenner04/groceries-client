@@ -44,8 +44,28 @@ describe('fieldHelpers', () => {
 
   describe('getInitialBulkFieldUpdates', () => {
     const configs: IListItemFieldConfiguration[] = [
-      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
-      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2, primary: false },
+      {
+        id: 'c1',
+        label: 'product',
+        data_type: EListItemFieldType.FREE_TEXT,
+        position: 1,
+        primary: true,
+        list_item_configuration_id: 'config-1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: null,
+        archived_at: null,
+      },
+      {
+        id: 'c2',
+        label: 'read',
+        data_type: EListItemFieldType.BOOLEAN,
+        position: 2,
+        primary: false,
+        list_item_configuration_id: 'config-1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: null,
+        archived_at: null,
+      },
     ];
     const items: IListItem[] = [
       {
@@ -127,8 +147,28 @@ describe('fieldHelpers', () => {
 
   describe('buildBulkUpdateFieldsPayload', () => {
     const configs: IListItemFieldConfiguration[] = [
-      { id: 'c1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
-      { id: 'c2', label: 'read', data_type: EListItemFieldType.BOOLEAN, position: 2, primary: false },
+      {
+        id: 'c1',
+        label: 'product',
+        data_type: EListItemFieldType.FREE_TEXT,
+        position: 1,
+        primary: true,
+        list_item_configuration_id: 'config-1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: null,
+        archived_at: null,
+      },
+      {
+        id: 'c2',
+        label: 'read',
+        data_type: EListItemFieldType.BOOLEAN,
+        position: 2,
+        primary: false,
+        list_item_configuration_id: 'config-1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: null,
+        archived_at: null,
+      },
     ];
 
     it('always includes boolean fields, defaulting to "false" when not clear', () => {

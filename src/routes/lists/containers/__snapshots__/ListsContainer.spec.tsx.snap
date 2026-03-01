@@ -2,9 +2,23 @@
 
 exports[`ListsContainer does not render pending lists when they do not exist 1`] = `
 <div>
-  <h1>
-    Lists
-  </h1>
+  <div
+    class="d-flex justify-content-between align-items-center"
+  >
+    <h1
+      class="mb-0"
+    >
+      Lists
+    </h1>
+    <a
+      class="btn btn-link"
+      data-discover="true"
+      data-test-id="manage-templates-link"
+      href="/templates"
+    >
+      Manage Templates
+    </a>
+  </div>
   <button
     aria-controls="form-collapse"
     aria-expanded="false"
@@ -168,7 +182,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -315,7 +329,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -516,7 +530,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -613,7 +627,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -683,9 +697,23 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
 
 exports[`ListsContainer renders 1`] = `
 <div>
-  <h1>
-    Lists
-  </h1>
+  <div
+    class="d-flex justify-content-between align-items-center"
+  >
+    <h1
+      class="mb-0"
+    >
+      Lists
+    </h1>
+    <a
+      class="btn btn-link"
+      data-discover="true"
+      data-test-id="manage-templates-link"
+      href="/templates"
+    >
+      Manage Templates
+    </a>
+  </div>
   <button
     aria-controls="form-collapse"
     aria-expanded="false"
@@ -843,7 +871,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -993,7 +1021,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -1140,7 +1168,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -1341,7 +1369,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -1438,7 +1466,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div

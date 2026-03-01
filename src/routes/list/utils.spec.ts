@@ -160,6 +160,24 @@ describe('secondaryFieldsDisplay', () => {
     expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'read', value: 'true' }]);
   });
 
+  it('formats date_time fields with prettyDueBy', () => {
+    const fields = [
+      createField('1', 'title', 'Test Task', '1', { primary: true }),
+      createField('2', 'due by', '2025-09-15', '1', { primary: false, data_type: EListItemFieldType.DATE_TIME }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'due by', value: 'September 15, 2025' }]);
+  });
+
+  it('returns empty value for date_time fields with no data', () => {
+    const fields = [
+      createField('1', 'title', 'Test Task', '1', { primary: true }),
+      createField('2', 'due by', null, '1', { primary: false, data_type: EListItemFieldType.DATE_TIME }),
+    ];
+    const item = createListItem('1', false, fields);
+    expect(secondaryFieldsDisplay(item)).toEqual([{ label: 'due by', value: '' }]);
+  });
+
   it('includes boolean fields with false value', () => {
     const fields = [
       createField('1', 'title', 'Test Book', '1', { primary: true }),

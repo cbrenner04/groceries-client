@@ -1,22 +1,31 @@
-import { formatDate, formatDueBy, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType } from './format';
+import { EListItemFieldType } from 'typings';
+import {
+  formatDate,
+  formatDateForInput,
+  prettyDueBy,
+  capitalize,
+  normalizeCategoryKey,
+  prettyListType,
+  fieldTypeLabel,
+} from './format';
 
 describe('format', () => {
   describe('formatDate', () => {
     it('returns formatted date', () => {
-      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020, 12:00:00 am');
+      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020');
     });
   });
 
-  describe('formatDueBy', () => {
+  describe('formatDateForInput', () => {
     describe('when date supplied', () => {
-      it('returns formatted date', () => {
-        expect(formatDueBy(new Date('02/20/2020'))).toBe('2020-02-20');
+      it('returns formatted date for date input', () => {
+        expect(formatDateForInput(new Date('02/20/2020').toISOString())).toBe('2020-02-20');
       });
     });
 
     describe('when date not supplied', () => {
-      it('returns empty string', () => {
-        expect(formatDueBy(undefined)).toBe(undefined);
+      it('returns undefined', () => {
+        expect(formatDateForInput(undefined)).toBe(undefined);
       });
     });
   });
@@ -42,6 +51,24 @@ describe('format', () => {
   describe('normalizeCategoryKey', () => {
     it('normalizes category keys for comparison', () => {
       expect(normalizeCategoryKey('Produce  ')).toBe('produce');
+    });
+  });
+
+  describe('fieldTypeLabel', () => {
+    it('returns "Free Text" for FREE_TEXT', () => {
+      expect(fieldTypeLabel(EListItemFieldType.FREE_TEXT)).toBe('Free Text');
+    });
+
+    it('returns "True/False" for BOOLEAN', () => {
+      expect(fieldTypeLabel(EListItemFieldType.BOOLEAN)).toBe('True/False');
+    });
+
+    it('returns "Date" for DATE_TIME', () => {
+      expect(fieldTypeLabel(EListItemFieldType.DATE_TIME)).toBe('Date');
+    });
+
+    it('returns "Number" for NUMBER', () => {
+      expect(fieldTypeLabel(EListItemFieldType.NUMBER)).toBe('Number');
     });
   });
 });

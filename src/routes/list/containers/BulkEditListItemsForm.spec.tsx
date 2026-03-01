@@ -50,6 +50,10 @@ describe('BulkEditListItemsForm', () => {
       position: 1,
       data_type: EListItemFieldType.FREE_TEXT,
       primary: true,
+      list_item_configuration_id: 'config-1',
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: null,
+      archived_at: null,
     },
     {
       id: 'field-config-2',
@@ -57,6 +61,10 @@ describe('BulkEditListItemsForm', () => {
       position: 2,
       data_type: EListItemFieldType.NUMBER,
       primary: false,
+      list_item_configuration_id: 'config-1',
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: null,
+      archived_at: null,
     },
   ];
 
@@ -435,6 +443,36 @@ describe('BulkEditListItemsForm', () => {
             fields_to_update: expect.arrayContaining([
               expect.objectContaining({
                 data: '',
+                label: 'category',
+                item_ids: ['item-1', 'item-2'],
+              }),
+            ]),
+          }),
+        }),
+      );
+    });
+  });
+
+  it('unsets clear category when user types in category field', async () => {
+    const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
+    const { getByText, user } = renderComponent({ items: itemsWithCategory });
+
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    await user.click(clearCategoryCheckbox);
+
+    const categoryInput = document.querySelector('input[id="category"]')!;
+    await user.type(categoryInput, 'Dairy');
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockAxios.put).toHaveBeenCalledWith(
+        '/lists/list-1/list_items/bulk_update?item_ids=item-1,item-2',
+        expect.objectContaining({
+          list_items: expect.objectContaining({
+            fields_to_update: expect.arrayContaining([
+              expect.objectContaining({
+                data: 'Dairy',
                 label: 'category',
                 item_ids: ['item-1', 'item-2'],
               }),

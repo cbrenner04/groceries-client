@@ -7,6 +7,7 @@ import { cleanup, configure } from '@testing-library/react';
 import { TextEncoder } from 'util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type axios from './utils/api';
+import { DateTime } from 'luxon';
 
 // Mock global.IS_REACT_ACT_ENVIRONMENT for React 19
 Object.defineProperty(global, 'IS_REACT_ACT_ENVIRONMENT', {
@@ -114,13 +115,10 @@ jest.mock('react-idle-timer', () => ({
   useIdleTimer: (): { isIdle: () => boolean } => ({ isIdle: () => false }),
 }));
 
-// make sure when `moment()` is called without a date, the same date is always returned
-jest.mock(
-  'moment',
-  () =>
-    (date: Date | string | number | undefined): Date =>
-      jest.requireActual('moment')(date ?? '2020-05-24T10:00:00.000Z'),
-);
+const mockNow = DateTime.fromISO('2020-05-24T10:00:00.000Z');
+const originalNow = DateTime.now;
+
+DateTime.now = jest.fn(() => mockNow) as typeof originalNow;
 
 // Global test setup for React 19
 beforeEach(() => {

@@ -9,6 +9,7 @@ export interface ITextFieldProps {
   placeholder?: string;
   child?: ReactNode;
   disabled?: boolean;
+  testID?: string;
 }
 
 const TextField: React.FC<ITextFieldProps> = (props): React.JSX.Element => (
@@ -21,6 +22,7 @@ const TextField: React.FC<ITextFieldProps> = (props): React.JSX.Element => (
       placeholder={props.placeholder ?? ''}
       name={props.name}
       disabled={props.disabled ?? false}
+      data-test-id={props.testID}
     />
     {props.child ?? ''}
   </Form.Group>

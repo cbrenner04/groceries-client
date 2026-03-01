@@ -72,7 +72,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -203,7 +203,7 @@ exports[`AcceptedLists shows merge button when multi select and more than 1 list
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -366,7 +366,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
@@ -497,7 +497,7 @@ exports[`AcceptedLists shows modal to set the new list name for merging and clea
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020
                 </small>
               </div>
               <div
