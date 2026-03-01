@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { EListItemFieldType } from 'typings';
 
 const formatDate = (date: Date | string): string => {
   const dt = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(date);
@@ -25,4 +26,21 @@ const capitalize = (category: string): string => {
 const normalizeCategoryKey = (category: string): string => category.trimEnd().toLowerCase();
 const prettyListType = (listType: string): string => listType.replace(/([A-Z])/g, ($1) => ` ${$1.toUpperCase()}`);
 
-export { formatDate, formatDateForInput, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType };
+const fieldTypeLabelMap: Record<EListItemFieldType, string> = {
+  [EListItemFieldType.FREE_TEXT]: 'Free Text',
+  [EListItemFieldType.BOOLEAN]: 'True/False',
+  [EListItemFieldType.DATE_TIME]: 'Date',
+  [EListItemFieldType.NUMBER]: 'Number',
+};
+
+const fieldTypeLabel = (type: EListItemFieldType): string => fieldTypeLabelMap[type];
+
+export {
+  formatDate,
+  formatDateForInput,
+  prettyDueBy,
+  capitalize,
+  normalizeCategoryKey,
+  prettyListType,
+  fieldTypeLabel,
+};

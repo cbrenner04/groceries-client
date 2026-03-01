@@ -1,3 +1,4 @@
+import { EListItemFieldType } from 'typings';
 import {
   formatDate,
   formatDateForInput,
@@ -5,6 +6,7 @@ import {
   capitalize,
   normalizeCategoryKey,
   prettyListType,
+  fieldTypeLabel,
 } from './format';
 
 describe('format', () => {
@@ -49,6 +51,24 @@ describe('format', () => {
   describe('normalizeCategoryKey', () => {
     it('normalizes category keys for comparison', () => {
       expect(normalizeCategoryKey('Produce  ')).toBe('produce');
+    });
+  });
+
+  describe('fieldTypeLabel', () => {
+    it('returns "Free Text" for FREE_TEXT', () => {
+      expect(fieldTypeLabel(EListItemFieldType.FREE_TEXT)).toBe('Free Text');
+    });
+
+    it('returns "True/False" for BOOLEAN', () => {
+      expect(fieldTypeLabel(EListItemFieldType.BOOLEAN)).toBe('True/False');
+    });
+
+    it('returns "Date" for DATE_TIME', () => {
+      expect(fieldTypeLabel(EListItemFieldType.DATE_TIME)).toBe('Date');
+    });
+
+    it('returns "Number" for NUMBER', () => {
+      expect(fieldTypeLabel(EListItemFieldType.NUMBER)).toBe('Number');
     });
   });
 });

@@ -2,6 +2,7 @@ import React, { type ChangeEvent } from 'react';
 import { Form } from 'react-bootstrap';
 import { EListItemFieldType } from 'typings';
 import Trash from 'components/ActionButtons/Trash';
+import { fieldTypeLabel } from 'utils/format';
 import type { IFieldRow } from './FieldConfigurationRows';
 
 export interface IFieldConfigurationRowProps {
@@ -15,12 +16,10 @@ export interface IFieldConfigurationRowProps {
   hasDuplicatePosition?: boolean;
 }
 
-const dataTypeOptions = [
-  { value: EListItemFieldType.FREE_TEXT, label: 'Free Text' },
-  { value: EListItemFieldType.BOOLEAN, label: 'True/False' },
-  { value: EListItemFieldType.DATE_TIME, label: 'Date/Time' },
-  { value: EListItemFieldType.NUMBER, label: 'Number' },
-];
+const dataTypeOptions = Object.values(EListItemFieldType).map((type) => ({
+  value: type,
+  label: fieldTypeLabel(type),
+}));
 
 const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): React.JSX.Element => {
   const handleLabelChange = (event: ChangeEvent<HTMLInputElement>): void => {

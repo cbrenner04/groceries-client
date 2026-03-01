@@ -88,11 +88,6 @@ exports[`TemplatesContainer renders 1`] = `
             data-test-id="field-row-data-type-0"
           >
             <option
-              value="free_text"
-            >
-              Free Text
-            </option>
-            <option
               value="boolean"
             >
               True/False
@@ -100,7 +95,12 @@ exports[`TemplatesContainer renders 1`] = `
             <option
               value="date_time"
             >
-              Date/Time
+              Date
+            </option>
+            <option
+              value="free_text"
+            >
+              Free Text
             </option>
             <option
               value="number"
