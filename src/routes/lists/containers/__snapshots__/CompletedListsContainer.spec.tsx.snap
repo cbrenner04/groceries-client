@@ -99,7 +99,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 28 2020, 12:00:00 AM
+                  May 28 2020
                 </small>
               </div>
               <div
@@ -196,7 +196,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 28 2020, 12:00:00 AM
+                  May 28 2020
                 </small>
               </div>
               <div
@@ -293,7 +293,7 @@ exports[`CompletedListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 28 2020, 12:00:00 AM
+                  May 28 2020
                 </small>
               </div>
               <div

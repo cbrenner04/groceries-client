@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 const formatDate = (date: Date | string): string => {
   const dt = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(date);
-  return dt.toFormat('MMMM dd yyyy, h:mm:ss a');
+  return dt.toFormat('MMMM dd yyyy');
 };
 
 const formatDateForInput = (date?: Date | string | number): string | undefined => {

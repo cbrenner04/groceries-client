@@ -10,7 +10,7 @@ import {
 describe('format', () => {
   describe('formatDate', () => {
     it('returns formatted date', () => {
-      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020, 12:00:00 AM');
+      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020');
     });
   });
 
