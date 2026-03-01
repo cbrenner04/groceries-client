@@ -182,7 +182,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -329,7 +329,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -530,7 +530,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -627,7 +627,7 @@ exports[`ListsContainer does not render pending lists when they do not exist 1`]
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -871,7 +871,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -1021,7 +1021,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -1168,7 +1168,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -1369,7 +1369,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div
@@ -1466,7 +1466,7 @@ exports[`ListsContainer renders 1`] = `
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div

@@ -93,7 +93,7 @@ exports[`EditTemplate renders EditTemplateForm when data retrieval is complete 1
             <option
               value="boolean"
             >
-              Boolean
+              True/False
             </option>
             <option
               value="date_time"

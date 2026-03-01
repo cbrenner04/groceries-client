@@ -13,7 +13,7 @@ async function setup(): Promise<{
     handleChange: jest.fn(),
     name: 'testName',
     label: 'testLabel',
-    value: '03/03/2020',
+    value: '2020-03-03',
   };
   const { findByLabelText } = render(<DateField {...props} />);
   const formInput = await findByLabelText(props.label);
@@ -31,10 +31,10 @@ describe('DateField', () => {
   });
 
   describe('when value changes', () => {
-    // This is working IRL but something with the testing library is problematic. :shrug:
-    it.skip('calls handleChange', async () => {
+    it('calls handleChange', async () => {
       const { formInput, props, user } = await setup();
-      await user.type(formInput, '1');
+      await user.clear(formInput);
+      await user.type(formInput, '2024-12-25T14:30');
 
       expect(props.handleChange).toHaveBeenCalled();
     });

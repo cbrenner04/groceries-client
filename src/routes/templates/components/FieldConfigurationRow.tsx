@@ -17,7 +17,7 @@ export interface IFieldConfigurationRowProps {
 
 const dataTypeOptions = [
   { value: EListItemFieldType.FREE_TEXT, label: 'Free Text' },
-  { value: EListItemFieldType.BOOLEAN, label: 'Boolean' },
+  { value: EListItemFieldType.BOOLEAN, label: 'True/False' },
   { value: EListItemFieldType.DATE_TIME, label: 'Date/Time' },
   { value: EListItemFieldType.NUMBER, label: 'Number' },
 ];

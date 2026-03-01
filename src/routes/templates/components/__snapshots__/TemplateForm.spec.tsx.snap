@@ -79,7 +79,7 @@ exports[`TemplateForm renders with snapshot 1`] = `
             <option
               value="boolean"
             >
-              Boolean
+              True/False
             </option>
             <option
               value="date_time"

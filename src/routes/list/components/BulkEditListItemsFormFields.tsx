@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TextField, CheckboxField, DateField, NumberField } from 'components/FormFields';
-import { capitalize } from 'utils/format';
+import { capitalize, formatDateForInput } from 'utils/format';
 
 export interface IFieldUpdate {
   label: string;
@@ -60,7 +60,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
       case 'date_time':
         return (
           <div key={config.id} className="mb-3">
-            <DateField {...commonProps} value={value} />
+            <DateField {...commonProps} value={formatDateForInput(value) ?? ''} />
             {clearCheckbox}
           </div>
         );

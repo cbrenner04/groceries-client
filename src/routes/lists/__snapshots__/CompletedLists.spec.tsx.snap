@@ -99,7 +99,7 @@ exports[`CompletedLists renders CompletedLists when data retrieval is complete 1
                 <small
                   class="text-muted"
                 >
-                  May 31 2020, 12:00:00 am
+                  May 31 2020, 12:00:00 AM
                 </small>
               </div>
               <div

@@ -48,7 +48,7 @@ exports[`FieldConfigurationRows renders with container 1`] = `
           <option
             value="boolean"
           >
-            Boolean
+            True/False
           </option>
           <option
             value="date_time"

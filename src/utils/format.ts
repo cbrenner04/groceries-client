@@ -1,9 +1,22 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
-const formatDate = (date: Date | string): string => moment(date).format('MMMM DD YYYY, h:mm:ss a');
-const formatDueBy = (date?: Date | string | number): string | undefined =>
-  date ? moment(date).format('YYYY-MM-DD') : undefined;
-const prettyDueBy = (date: Date | string): string => moment(date).format('LL');
+const formatDate = (date: Date | string): string => {
+  const dt = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(date);
+  return dt.toFormat('MMMM dd yyyy, h:mm:ss a');
+};
+
+const formatDateForInput = (date?: Date | string | number): string | undefined => {
+  if (!date) {
+    return undefined;
+  }
+  const dt = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(new Date(date));
+  return dt.toFormat('yyyy-MM-dd');
+};
+
+const prettyDueBy = (date: Date | string): string => {
+  const dt = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(date);
+  return dt.toLocaleString(DateTime.DATE_FULL);
+};
 const capitalize = (category: string): string => {
   // Replace underscores with spaces, then capitalize the first letter
   const withSpaces = category.replace(/_/g, ' ');
@@ -12,4 +25,4 @@ const capitalize = (category: string): string => {
 const normalizeCategoryKey = (category: string): string => category.trimEnd().toLowerCase();
 const prettyListType = (listType: string): string => listType.replace(/([A-Z])/g, ($1) => ` ${$1.toUpperCase()}`);
 
-export { formatDate, formatDueBy, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType };
+export { formatDate, formatDateForInput, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType };

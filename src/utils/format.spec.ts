@@ -1,22 +1,29 @@
-import { formatDate, formatDueBy, prettyDueBy, capitalize, normalizeCategoryKey, prettyListType } from './format';
+import {
+  formatDate,
+  formatDateForInput,
+  prettyDueBy,
+  capitalize,
+  normalizeCategoryKey,
+  prettyListType,
+} from './format';
 
 describe('format', () => {
   describe('formatDate', () => {
     it('returns formatted date', () => {
-      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020, 12:00:00 am');
+      expect(formatDate(new Date('02/02/2020'))).toBe('February 02 2020, 12:00:00 AM');
     });
   });
 
-  describe('formatDueBy', () => {
+  describe('formatDateForInput', () => {
     describe('when date supplied', () => {
-      it('returns formatted date', () => {
-        expect(formatDueBy(new Date('02/20/2020'))).toBe('2020-02-20');
+      it('returns formatted date for date input', () => {
+        expect(formatDateForInput(new Date('02/20/2020').toISOString())).toBe('2020-02-20');
       });
     });
 
     describe('when date not supplied', () => {
-      it('returns empty string', () => {
-        expect(formatDueBy(undefined)).toBe(undefined);
+      it('returns undefined', () => {
+        expect(formatDateForInput(undefined)).toBe(undefined);
       });
     });
   });

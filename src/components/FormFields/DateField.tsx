@@ -5,7 +5,7 @@ export interface IDateFieldProps {
   name: string;
   label: string;
   value: string;
-  handleChange: ChangeEventHandler;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   child?: ReactNode;
   disabled?: boolean;
