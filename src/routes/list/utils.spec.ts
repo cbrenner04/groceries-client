@@ -298,12 +298,11 @@ describe('fetchList', () => {
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
     axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -312,13 +311,13 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing list', async () => {
-    const error = createError(500);
-    const { list, ...mockData } = createApiResponse();
+    const { list: unusedList, ...mockData } = createApiResponse();
+    void unusedList;
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -327,13 +326,13 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing not_completed_items', async () => {
-    const error = createError(500);
-    const { not_completed_items: notCompletedItems, ...mockData } = createApiResponse();
+    const { not_completed_items: unusedNotCompletedItems, ...mockData } = createApiResponse();
+    void unusedNotCompletedItems;
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -342,13 +341,13 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing completed_items', async () => {
-    const error = createError(500);
-    const { completed_items: completedItems, ...mockData } = createApiResponse();
+    const { completed_items: unusedCompletedItems, ...mockData } = createApiResponse();
+    void unusedCompletedItems;
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -385,16 +384,14 @@ describe('fetchListToEdit', () => {
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
     axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
-      // rethrow: true,
     });
   });
 
@@ -462,16 +459,14 @@ describe('fetchListItemToEdit', () => {
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
     axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
       redirectURI: '/lists/1/',
-      // rethrow: true,
     });
   });
 

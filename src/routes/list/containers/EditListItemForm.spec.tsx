@@ -25,7 +25,7 @@ const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 const getForm = (): HTMLFormElement => {
   // Try to find the form by looking for any input field and getting its closest form
   const input = screen.getByLabelText('Quantity');
-  return input.closest('form')!;
+  return input.closest('form') as HTMLFormElement;
 };
 
 // Mock window.location

@@ -20,4 +20,4 @@ const setUserInfo = (headers: IUserInfo): void => {
   );
 };
 
-export { setUserInfo, IUserInfo };
+export { setUserInfo, type IUserInfo };

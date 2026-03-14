@@ -65,7 +65,7 @@ function setup(): RenderResult {
 
 describe('CompletedListsContainer', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
   afterEach(() => {
@@ -79,7 +79,7 @@ describe('CompletedListsContainer', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {

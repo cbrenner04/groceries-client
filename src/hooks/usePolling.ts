@@ -107,7 +107,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
     /* istanbul ignore else */
     if (delay !== null) {
       const id = setInterval(tick, delay);
-      return () => {
+      return (): void => {
         clearInterval(id);
       };
     }

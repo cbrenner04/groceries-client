@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
@@ -15,8 +14,8 @@ interface ISetupReturn extends RenderResult {
 }
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 

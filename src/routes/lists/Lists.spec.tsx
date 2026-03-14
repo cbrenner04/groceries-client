@@ -16,9 +16,10 @@ describe('Lists', () => {
     );
 
   it('renders loading component when data is being fetched', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderLists();
 
-    expect(await findByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 

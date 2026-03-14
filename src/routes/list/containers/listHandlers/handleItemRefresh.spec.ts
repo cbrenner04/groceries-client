@@ -3,9 +3,10 @@ import { handleItemRefresh } from './handleItemRefresh';
 import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
 import { createField, createListItem } from '../../../../test-utils/factories';
+import { showToast } from '../../../../utils/toast';
 
 // Mock immutability-helper
-vi.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
+vi.mock('immutability-helper', async () => await vi.importActual('immutability-helper'));
 vi.mock('../../../../utils/api', () => ({
   __esModule: true,
   default: {
@@ -17,7 +18,7 @@ vi.mock('../../../../utils/api', () => ({
 }));
 vi.mock('../../../../utils/handleFailure');
 
-const mockToastUtil = jest.requireMock('../../../../utils/toast').showToast;
+const mockToastUtil = showToast as jest.Mocked<typeof showToast>;
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();

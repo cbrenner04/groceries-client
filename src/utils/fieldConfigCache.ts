@@ -66,7 +66,7 @@ export async function prefetchFieldConfigurations(configId: string, signal?: Abo
     }
 
     await getFieldConfigurations(configId, { signal });
-  } catch (error) {
+  } catch {
     // Silently ignore prefetch errors to avoid disrupting user experience
     // Error details available in development via network tab
   }

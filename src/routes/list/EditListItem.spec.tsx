@@ -17,8 +17,8 @@ import {
 import EditListItem from './EditListItem';
 
 // Mock useParams for this specific test
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
 }));
 
@@ -27,8 +27,8 @@ const mockNavigate = vi.fn();
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),
 }));
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 

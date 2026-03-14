@@ -18,6 +18,7 @@ describe('BulkEditListItems', () => {
     );
 
   it('renders the Loading component when fetch request is pending', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderBulkEditListItems();
     const status = await findByText('Loading...');
 

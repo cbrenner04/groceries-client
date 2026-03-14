@@ -2,7 +2,7 @@ import { handleItemSelect } from './handleItemSelect';
 import { createListItem } from '../../../../test-utils/factories';
 
 // Mock immutability-helper
-vi.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
+vi.mock('immutability-helper', async () => await vi.importActual('immutability-helper'));
 
 const item = createListItem('1', false, [], {
   user_id: 'u',

@@ -18,7 +18,7 @@ export interface IEditTemplateFormProps {
 const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState(props.template.name);
   const [fieldRows, setFieldRows] = useState<IFieldRow[]>(
-    props.fieldConfigurations.map((fc, index) => ({
+    props.fieldConfigurations.map((fc) => ({
       key: fc.id,
       id: fc.id,
       label: fc.label,
@@ -133,7 +133,7 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
           showToast.error('Template not found');
           navigate('/templates');
         } else {
-          const keys = Object.keys(error.response.data!);
+          const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
           showToast.error(responseErrors.join(' and '));
         }
@@ -149,7 +149,7 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
     <React.Fragment>
       <h1 data-test-id="page-title">Edit Template</h1>
       <br />
-       <Form onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit} autoComplete="off">
         <Form.Group className="mb-3" controlId="template-name">
           <Form.Label>Name</Form.Label>
           <Form.Control

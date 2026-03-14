@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import React from 'react';
 import { render, cleanup, act, screen } from '@testing-library/react';
 import { useMobileSafariOptimizations } from './useMobileSafariOptimizations';
@@ -77,7 +76,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -93,7 +94,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -103,7 +106,9 @@ describe('useMobileSafariOptimizations', () => {
         value: false,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -140,7 +145,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 

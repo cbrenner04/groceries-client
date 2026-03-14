@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NewSession renders loading when fetch has not completed 1`] = `
+exports[`NewSession > renders loading when fetch has not completed 1`] = `
 <div>
   <div
     id="loader"
@@ -20,7 +20,7 @@ exports[`NewSession renders loading when fetch has not completed 1`] = `
 </div>
 `;
 
-exports[`NewSession renders session form when fetch errors 1`] = `
+exports[`NewSession > renders session form when fetch errors 1`] = `
 <div>
   <h2>
     Log in

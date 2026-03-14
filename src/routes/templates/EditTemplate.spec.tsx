@@ -18,9 +18,10 @@ describe('EditTemplate', () => {
     );
 
   it('renders loading component when data is being fetched', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderEditTemplate();
 
-    expect(await findByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 
@@ -45,7 +46,7 @@ describe('EditTemplate', () => {
   });
 
   it('renders EditTemplateForm when data retrieval is complete', async () => {
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {

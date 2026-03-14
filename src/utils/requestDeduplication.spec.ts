@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import {
   createRequestDeduplicator,
   listDeduplicator,
@@ -86,7 +85,7 @@ describe('RequestDeduplicator', () => {
 
     it('handles request timeout and allows new request', async () => {
       const deduplicator = createRequestDeduplicator<string>(1000); // 1 second timeout
-      const requestFn1 = jest
+      const requestFn1 = vi
         .fn()
         .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve('result 1'), 2000)));
       const requestFn2 = vi.fn().mockResolvedValue('result 2');

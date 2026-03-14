@@ -24,7 +24,7 @@ export async function fetchData(fetchParams: {
     const userInAccepted = data.accepted.find(
       (acceptedList: IUsersList) => acceptedList.user.id === data.current_user_id,
     );
-    if (!userInAccepted || userInAccepted.users_list.permissions !== 'write') {
+    if (userInAccepted?.users_list.permissions !== 'write') {
       showToast.error('List not found');
       fetchParams.navigate('/lists');
       return;
@@ -53,6 +53,6 @@ export async function fetchData(fetchParams: {
       }
     }
     // any other errors will just be caught and render the generic UnknownError
-    throw new Error(JSON.stringify(error));
+    throw new Error(JSON.stringify(error), { cause: err });
   }
 }

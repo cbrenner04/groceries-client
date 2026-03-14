@@ -9,8 +9,8 @@ import PageNotFound from './PageNotFound';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 

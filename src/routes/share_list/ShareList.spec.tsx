@@ -6,8 +6,8 @@ import ShareList from './ShareList';
 import axios from '../../utils/api';
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
   useParams: (): { list_id: string } => ({
     list_id: '1',
@@ -23,9 +23,10 @@ describe('ShareList', () => {
     );
 
   it('renders loading when data fetch is not complete', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderShareList();
 
-    expect(await findByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 

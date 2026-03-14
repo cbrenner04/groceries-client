@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import { setUserInfo } from './auth';
 
 describe('auth', () => {

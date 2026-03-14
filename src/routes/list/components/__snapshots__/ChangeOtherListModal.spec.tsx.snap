@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ChangeOtherListModal renders appropriate instructions when copy and lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when copy and lists 1`] = `
 <div
   class="modal-content"
 >
@@ -16,6 +16,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
   </div>
   <div
     class="modal-body"
+    data-test-id="confirm-modal-body"
   >
     <form
       autocomplete="off"
@@ -23,6 +24,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
     >
       <button
         class="float-end btn btn-link"
+        data-test-id="create-new-list-link"
         style="padding: 0px;"
         type="button"
       >
@@ -81,7 +83,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
 </div>
 `;
 
-exports[`ChangeOtherListModal renders appropriate instructions when move and lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when move and lists 1`] = `
 <div
   class="modal-content"
 >
@@ -97,6 +99,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when move and lis
   </div>
   <div
     class="modal-body"
+    data-test-id="confirm-modal-body"
   >
     <form
       autocomplete="off"
@@ -104,6 +107,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when move and lis
     >
       <button
         class="float-end btn btn-link"
+        data-test-id="create-new-list-link"
         style="padding: 0px;"
         type="button"
       >
@@ -162,7 +166,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when move and lis
 </div>
 `;
 
-exports[`ChangeOtherListModal renders appropriate instructions when no lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when no lists 1`] = `
 <div
   class="modal-header"
 >

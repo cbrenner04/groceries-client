@@ -11,9 +11,10 @@ import { defaultTestData, createApiResponse, createListItem, createField } from 
 import { listCache } from 'utils/lightweightCache';
 import { clearFieldConfigCache } from 'utils/fieldConfigCache';
 import { unifiedCache } from 'utils/lightweightCache';
+import { showToast } from '../../../utils/toast';
 
 // Create reference for test expectations
-const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 // Mock react-router
 const mockLocation = {
@@ -31,8 +32,8 @@ async function advanceTimersByTime(ms: number): Promise<void> {
   });
 }
 
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
   useLocation: (): typeof mockLocation => mockLocation,
 }));
@@ -86,7 +87,7 @@ describe('ListContainer', () => {
 
   describe('Polling', () => {
     it('does not update via polling when different data is not returned', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
 
       // Create API response with "item new" in not completed items
       const apiResponse = createApiResponse(
@@ -97,7 +98,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -105,7 +106,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -117,7 +118,7 @@ describe('ListContainer', () => {
     });
 
     it('updates via polling when different data is returned', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
 
       // First response: "item new" in not completed items
       const firstResponse = createApiResponse(
@@ -130,14 +131,14 @@ describe('ListContainer', () => {
         [createListItem('id1', true, [createField('id1', 'product', 'item new', 'id1')])],
       );
 
-      axios.get = jest
+      axios.get = vi
         .fn()
         .mockResolvedValueOnce({ data: firstResponse })
         .mockResolvedValueOnce({ data: secondResponse });
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -145,7 +146,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -157,12 +158,12 @@ describe('ListContainer', () => {
     });
 
     it('shows toast with unexplained error', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
       axios.get = vi.fn().mockRejectedValue(new Error('Ahhhh!'));
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -174,14 +175,14 @@ describe('ListContainer', () => {
     });
 
     it('shows toast with server error', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
       const serverError = new Error('Server Error') as unknown as AxiosError;
       serverError.response = { status: 500 } as unknown as AxiosResponse;
       axios.get = vi.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -192,14 +193,14 @@ describe('ListContainer', () => {
     });
 
     it('shows toast with server error when error.response exists', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
       const serverError = new Error('Server Error') as unknown as AxiosError;
       serverError.response = { status: 503, data: {} } as unknown as AxiosResponse;
       axios.get = vi.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL!, 10));
+      await advanceTimersByTime(5000);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       // Verify the error.response branch is taken (line 123)
@@ -211,7 +212,7 @@ describe('ListContainer', () => {
     });
 
     it('does not poll when tab is hidden', async () => {
-      vi.useFakeTimers();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
 
       axios.get = vi.fn().mockResolvedValue({
         data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
@@ -229,8 +230,8 @@ describe('ListContainer', () => {
       vi.clearAllMocks();
 
       // Advance time - polling should not fire when tab is hidden
-      await advanceTimersByTime(parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10));
-      
+      await advanceTimersByTime(5000);
+
       // Polling should be skipped when tab is hidden (line 75)
       expect(axios.get).not.toHaveBeenCalled();
 
@@ -487,12 +488,8 @@ describe('ListContainer', () => {
   });
 
   describe('Prefetch and undefined UI states', () => {
-    const originalIdlePrefetch = process.env.REACT_APP_PREFETCH_IDLE;
-    const originalMountPrefetch = process.env.REACT_APP_PREFETCH_ON_MOUNT;
-
     afterEach(() => {
-      process.env.REACT_APP_PREFETCH_IDLE = originalIdlePrefetch;
-      process.env.REACT_APP_PREFETCH_ON_MOUNT = originalMountPrefetch;
+      vi.unstubAllEnvs();
       // allow cleanup of test shim
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).requestIdleCallback;
@@ -535,7 +532,7 @@ describe('ListContainer', () => {
     });
 
     it('does not prefetch on mount when disabled via environment variable', async () => {
-      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+      vi.stubEnv('VITE_PREFETCH_ON_MOUNT', 'false');
 
       const getSpy = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
@@ -644,7 +641,7 @@ describe('ListContainer', () => {
     });
 
     it('does not idle-prefetch when disabled via environment variable', async () => {
-      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+      import.meta.env.VITE_PREFETCH_IDLE = 'false';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).requestIdleCallback = (cb: () => void): number => {
         cb();
@@ -675,7 +672,7 @@ describe('ListContainer', () => {
     });
 
     it('does not idle-prefetch when listItemFieldConfigurations already exist', async () => {
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      import.meta.env.VITE_PREFETCH_IDLE = 'true';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).requestIdleCallback = (cb: () => void): number => {
         cb();
@@ -711,7 +708,7 @@ describe('ListContainer', () => {
     });
 
     it('does not idle-prefetch when no listItemConfiguration ID exists', async () => {
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      import.meta.env.VITE_PREFETCH_IDLE = 'true';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).requestIdleCallback = (cb: () => void): number => {
         cb();
@@ -817,9 +814,9 @@ describe('ListContainer', () => {
       expect(document.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
     });
 
-    it('does not trigger prefetch when REACT_APP_PREFETCH_ON_MOUNT is false', async () => {
+    it('does not trigger prefetch when VITE_PREFETCH_ON_MOUNT is false', async () => {
       // Explicitly disable mount prefetch
-      process.env.REACT_APP_PREFETCH_ON_MOUNT = 'false';
+      import.meta.env.VITE_PREFETCH_ON_MOUNT = 'false';
 
       const getSpy = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
@@ -847,9 +844,9 @@ describe('ListContainer', () => {
       expect(configCalls.length).toBe(0);
     });
 
-    it('does not trigger idle prefetch when REACT_APP_PREFETCH_IDLE is false', async () => {
+    it('does not trigger idle prefetch when VITE_PREFETCH_IDLE is false', async () => {
       // Explicitly disable idle prefetch
-      process.env.REACT_APP_PREFETCH_IDLE = 'false';
+      import.meta.env.VITE_PREFETCH_IDLE = 'false';
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).requestIdleCallback = (cb: () => void): number => {
@@ -1128,7 +1125,7 @@ describe('ListContainer', () => {
 
     it('handles partial failure when deleting multiple items - some succeed, some fail', async () => {
       // Mock first item to succeed, second to fail
-      axios.delete = jest
+      axios.delete = vi
         .fn()
         .mockResolvedValueOnce({})
         .mockRejectedValueOnce({ response: { status: 500 } });
@@ -1162,7 +1159,7 @@ describe('ListContainer', () => {
 
     it('handles complete failure when deleting multiple items - all fail', async () => {
       // Mock all items to fail
-      axios.delete = jest
+      axios.delete = vi
         .fn()
         .mockRejectedValueOnce({ response: { status: 500 } })
         .mockRejectedValueOnce({ response: { status: 500 } });
@@ -1293,7 +1290,7 @@ describe('ListContainer', () => {
 
     it('handles partial failure when completing multiple items - some succeed, some fail', async () => {
       // Mock first item to succeed, second to fail
-      axios.put = jest
+      axios.put = vi
         .fn()
         .mockResolvedValueOnce({ data: createListItem('id2', true, [createField('id2', 'product', 'item 1', 'id2')]) })
         .mockRejectedValueOnce({ response: { status: 500 } });
@@ -1321,7 +1318,7 @@ describe('ListContainer', () => {
 
     it('handles complete failure when completing multiple items - all fail', async () => {
       // Mock all items to fail
-      axios.put = jest
+      axios.put = vi
         .fn()
         .mockRejectedValueOnce({ response: { status: 500 } })
         .mockRejectedValueOnce({ response: { status: 500 } });
@@ -1414,7 +1411,7 @@ describe('ListContainer', () => {
   describe('Refresh Operations', () => {
     it('moves item to not completed when refreshed', async () => {
       // Mock the new API pattern: create item, create fields, fetch complete item
-      axios.post = jest
+      axios.post = vi
         .fn()
         .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create item
         .mockResolvedValueOnce({ data: {} }) // Create quantity field
@@ -1467,7 +1464,7 @@ describe('ListContainer', () => {
 
     it('moves items to not completed when refreshed with multiple selected', async () => {
       // Mock the new API pattern: create items, create fields, fetch complete items
-      axios.post = jest
+      axios.post = vi
         .fn()
         .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
         .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
@@ -1475,7 +1472,7 @@ describe('ListContainer', () => {
         .mockResolvedValueOnce({ data: { id: 'id7', completed: false } }) // Create second item
         .mockResolvedValueOnce({ data: {} }) // Create quantity field for second item
         .mockResolvedValueOnce({ data: {} }); // Create product field for second item
-      axios.get = jest
+      axios.get = vi
         .fn()
         .mockResolvedValueOnce({
           data: createListItem('id6', false, [
@@ -1594,7 +1591,7 @@ describe('ListContainer', () => {
       // Mock first item succeeds, second item fails
       // First item: create item, create 2 fields, fetch item, mark refreshed
       // Second item: create item fails
-      axios.post = jest
+      axios.post = vi
         .fn()
         .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
         .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
@@ -1808,7 +1805,7 @@ describe('ListContainer', () => {
 
     it('multi select move incomplete items', async () => {
       // Mock axios.put to resolve successfully for bulk update
-      axios.put = vi.fn().mockImplementation((url: string) => Promise.resolve({ data: {} }));
+      axios.put = vi.fn().mockResolvedValue({ data: {} });
 
       // Mock axios.get to return list without moved items (id2 and id3)
       const remainingItems = [
@@ -1844,7 +1841,7 @@ describe('ListContainer', () => {
       // Enter a new list name to satisfy modal validation
       // If existing lists are present, click "Create new list" first
       const createNewListButton = queryByText('Create new list');
-      await user.click(createNewListButton!);
+      await user.click(createNewListButton as HTMLElement);
       const newListInput = await findByLabelText('New list name');
       await user.type(newListInput, 'New List');
 
@@ -1951,7 +1948,7 @@ describe('ListContainer', () => {
 
       // Mock the field configurations API call
       const originalGet = axios.get;
-      axios.get = vi.fn().mockImplementation((url) => {
+      axios.get = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
             data: [
@@ -1967,7 +1964,7 @@ describe('ListContainer', () => {
       });
 
       // Mock the POST calls
-      axios.post = vi.fn().mockImplementation((url, data) => {
+      axios.post = vi.fn().mockImplementation((url: string) => {
         if (url.includes('/list_items') && !url.includes('/list_item_fields')) {
           return Promise.resolve({ data: { id: 'id6' } });
         }
@@ -2007,7 +2004,7 @@ describe('ListContainer', () => {
 
       // Mock the field configurations API call
       const originalGet = axios.get;
-      axios.get = vi.fn().mockImplementation((url) => {
+      axios.get = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
             data: [
@@ -2023,7 +2020,7 @@ describe('ListContainer', () => {
       });
 
       // Mock the POST calls
-      axios.post = vi.fn().mockImplementation((url, data) => {
+      axios.post = vi.fn().mockImplementation((url: string) => {
         if (url.includes('/list_items') && !url.includes('/list_item_fields')) {
           return Promise.resolve({ data: { id: 'id6' } });
         }
@@ -2066,7 +2063,7 @@ describe('ListContainer', () => {
 
       // Mock the field configurations API call
       const originalGet = axios.get;
-      axios.get = vi.fn().mockImplementation((url) => {
+      axios.get = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
             data: [

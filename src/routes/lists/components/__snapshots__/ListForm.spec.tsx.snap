@@ -1,11 +1,12 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ListForm renders 1`] = `
+exports[`ListForm > renders 1`] = `
 <div>
   <button
     aria-controls="form-collapse"
     aria-expanded="false"
     class="btn btn-link"
+    data-test-id="add-list-button"
     type="button"
   >
     Add List

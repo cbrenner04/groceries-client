@@ -3,16 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
     "autoprefixer": "10.4.27",
     "axios": "^1.13.5",
     "env-cmd": "11.0.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-destructuring": "^2.2.1",
-    "eslint-plugin-prettier": "5.5.5",
-    "eslint-plugin-react": "7.37.5",
     "immutability-helper": "3.1.1",
     "luxon": "^3.7.2",
     "postcss": "8.5.8",
@@ -20,11 +17,11 @@
     "query-string": "9.3.1",
     "react": "19.2.4",
     "react-async": "10.0.1",
+    "react-bootstrap": "2.10.10",
     "react-dom": "19.2.4",
     "react-idle-timer": "5.7.2",
     "react-router": "^7.12.0",
-    "react-toastify": "11.0.5",
-    "typescript-eslint": "^8.0.0"
+    "react-toastify": "11.0.5"
   },
   "scripts": {
     "start": "VITE_VERSION=$(git rev-parse --short HEAD) vite",
@@ -34,7 +31,7 @@
     "build:staging": "rm -rf build && VITE_VERSION=$(git rev-parse --short HEAD) env-cmd -f .env.staging vite build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx src/",
+    "lint": "eslint src/",
     "test": "vitest",
     "test:watch": "vitest",
     "test:ci": "tsc --noEmit && npm run lint && vitest run --coverage",
@@ -43,89 +40,6 @@
     "build:lighthouse": "rm -rf build && VITE_API_BASE=http://localhost:3300 VITE_VERSION=$(git rev-parse --short HEAD) vite build",
     "lighthouse": "lhci autorun",
     "lighthouse:mobile": "lhci autorun --config=lighthouserc.mobile.js"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "eslint:recommended",
-      "plugin:@typescript-eslint/strict",
-      "plugin:react/recommended",
-      "plugin:destructuring/recommended",
-      "prettier"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint",
-      "destructuring"
-    ],
-    "parserOptions": {
-      "project": [
-        "./tsconfig.json"
-      ]
-    },
-    "rules": {
-      "no-console": "error",
-      "max-len": [
-        "error",
-        {
-          "code": 120,
-          "tabWidth": 2
-        }
-      ],
-      "curly": [
-        "error",
-        "all"
-      ],
-      "no-unused-vars": "off",
-      "destructuring/in-params": [
-        "error",
-        {
-          "max-params": 0
-        }
-      ],
-      "destructuring/no-rename": "off",
-      "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/consistent-type-definitions": [
-        "error",
-        "interface"
-      ],
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-inferrable-types": "error",
-      "@typescript-eslint/explicit-function-return-type": "error",
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          "selector": "variableLike",
-          "format": [
-            "camelCase",
-            "UPPER_CASE",
-            "PascalCase"
-          ]
-        }
-      ],
-      "@typescript-eslint/member-delimiter-style": [
-        "error",
-        {
-          "multiline": {
-            "delimiter": "semi",
-            "requireLast": true
-          },
-          "singleline": {
-            "delimiter": "semi",
-            "requireLast": false
-          }
-        }
-      ],
-      "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/prefer-optional-chain": "error",
-      "@typescript-eslint/semi": [
-        "error",
-        "always"
-      ],
-      "@typescript-eslint/type-annotation-spacing": "error",
-      "@typescript-eslint/no-empty-function": "error",
-      "@typescript-eslint/explicit-module-boundary-types": "error"
-    }
   },
   "browserslist": {
     "production": [
@@ -140,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
     "@tailwindcss/vite": "^4.2.1",
     "@types/luxon": "^3.7.1",
@@ -148,10 +63,15 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.0",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-destructuring": "^2.2.1",
+    "eslint-plugin-prettier": "^5.5.5",
     "jsdom": "^28.1.0",
     "source-map-explorer": "^2.5.3",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0",
     "vite": "^8.0.0",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.0",

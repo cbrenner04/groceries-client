@@ -1,7 +1,7 @@
-import { vi } from "vitest";
 import React, { useState } from 'react';
 import { render, cleanup, act } from '@testing-library/react';
 
+import { useIdleTimer } from 'react-idle-timer';
 import usePolling from './usePolling';
 
 // Mock react-idle-timer so we can control isIdle()
@@ -10,16 +10,12 @@ vi.mock('react-idle-timer', () => ({
   useIdleTimer: vi.fn(() => ({ isIdle: (): boolean => false })),
 }));
 
-const { useIdleTimer } = jest.requireMock('react-idle-timer');
-
 function TestComponent(props: { cb: () => void | Promise<void>; delay: number | null }): React.JSX.Element {
   usePolling(props.cb, props.delay);
   return <div data-test-id="mount" />;
 }
 
-describe('usePolling', () => {
-  jest.setTimeout(30_000);
-
+describe('usePolling', { timeout: 30_000 }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
@@ -32,11 +28,11 @@ describe('usePolling', () => {
   afterEach(() => {
     cleanup();
     vi.useRealTimers();
-    (React.startTransition as jest.Mock | (((fn: () => void) => void) & { mockRestore?: () => void })).mockRestore?.();
+    (React.startTransition as unknown as { mockRestore?: () => void }).mockRestore?.();
     // Reset visibilityState
     Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
     // Reset env
-    delete (process.env as Record<string, string>).REACT_APP_USE_IDLE_TIMER;
+    vi.unstubAllEnvs();
   });
 
   it('invokes the callback on the given interval', async () => {
@@ -66,8 +62,8 @@ describe('usePolling', () => {
   });
 
   it('skips polling when idle timer is enabled and user is idle', () => {
-    (useIdleTimer as jest.Mock).mockReturnValueOnce({ isIdle: () => true });
-    (process.env as Record<string, string>).REACT_APP_USE_IDLE_TIMER = 'true';
+    (useIdleTimer as unknown as ReturnType<typeof vi.fn>).mockReturnValueOnce({ isIdle: () => true });
+    vi.stubEnv('VITE_USE_IDLE_TIMER', 'true');
     const cb = vi.fn();
     render(<TestComponent cb={cb} delay={50} />);
     vi.advanceTimersByTime(200);
@@ -101,7 +97,7 @@ describe('usePolling', () => {
     // Advance to the very next scheduled timer rather than a fixed duration
     act(() => {
       // with setInterval, this jumps to the next tick deterministically
-      jest.advanceTimersToNextTimer();
+      vi.advanceTimersToNextTimer();
     });
     expect(cb).toHaveBeenCalledTimes(2);
   });
@@ -169,7 +165,7 @@ describe('usePolling', () => {
   });
 
   it('handles asynchronous callback errors with exponential backoff', async () => {
-    const cb = jest
+    const cb = vi
       .fn()
       .mockRejectedValueOnce(new Error('Async error 1'))
       .mockRejectedValueOnce(new Error('Async error 2'))

@@ -23,7 +23,7 @@ root.render(
       pauseOnFocusLoss={false}
       rtl={false}
       data-testid="toast-container"
-      closeButton={{ className: "toast-close" }}
+      closeButton={false}
     />
     <AppRouter />
   </React.StrictMode>,

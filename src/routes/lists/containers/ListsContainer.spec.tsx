@@ -5,6 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
+import { showToast } from '../../../utils/toast';
 
 // Mock listPrefetch at module level
 vi.mock('utils/listPrefetch', () => ({
@@ -13,15 +14,14 @@ vi.mock('utils/listPrefetch', () => ({
   getPrefetchedList: vi.fn(() => null),
 }));
 
-// eslint-disable-next-line import/first
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
-const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -142,8 +142,8 @@ describe('ListsContainer', () => {
 
   it('updates via polling when different data is returned', async () => {
     // messes with `userEvent` actions
-    vi.useFakeTimers();
-    axios.get = jest
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {
@@ -271,7 +271,7 @@ describe('ListsContainer', () => {
 
   it('does not update via polling when different data is not returned', async () => {
     // messes with `userEvent` actions
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
@@ -346,7 +346,7 @@ describe('ListsContainer', () => {
   });
 
   it('fires generic toast when unknown error on usePolling', async () => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
 
@@ -453,21 +453,20 @@ describe('ListsContainer', () => {
   });
 
   describe('prefetch logic', () => {
-    let mockPrefetchListsIdle: jest.Mock;
-    const originalPrefetchIdle = process.env.REACT_APP_PREFETCH_IDLE;
+    let mockPrefetchListsIdle: ReturnType<typeof vi.fn>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       // Ensure prefetch is enabled for tests
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      vi.stubEnv('VITE_PREFETCH_IDLE', 'true');
       // Get the mocked function
-      const listPrefetchModule = require('utils/listPrefetch');
-      mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as jest.Mock;
+      const listPrefetchModule = await import('utils/listPrefetch');
+      mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as unknown as ReturnType<typeof vi.fn>;
       mockPrefetchListsIdle.mockClear();
     });
 
     afterEach(() => {
       mockPrefetchListsIdle.mockClear();
-      process.env.REACT_APP_PREFETCH_IDLE = originalPrefetchIdle;
+      vi.unstubAllEnvs();
     });
 
     it('prefetches lists when pendingLists and incompleteLists are available', async () => {

@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import { showToast } from './toast';
 import type { AxiosError } from 'axios';
 import { handleFailure } from './handleFailure';

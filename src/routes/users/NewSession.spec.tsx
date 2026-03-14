@@ -9,8 +9,8 @@ import axios from 'utils/api';
 import NewSession, { type INewSessionProps } from './NewSession';
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -34,11 +34,15 @@ function setup(): ISetupReturn {
 }
 
 describe('NewSession', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('renders loading when fetch has not completed', async () => {
-    axios.get = vi.fn();
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = setup();
 
-    expect(await findByText('Loading...')).toBeVisible();
+    expect(await findByText('Loading...')).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 

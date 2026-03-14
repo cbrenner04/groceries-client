@@ -12,8 +12,8 @@ import PendingLists, { type IPendingListsProps } from './PendingLists';
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -115,6 +115,9 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
 }
 
 describe('PendingLists', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   it('accepts list', async () => {
     axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, props, user } = setup();

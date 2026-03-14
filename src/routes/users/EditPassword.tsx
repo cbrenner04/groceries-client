@@ -16,7 +16,7 @@ const EditPassword: React.FC = (): React.JSX.Element => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
-      await axios.put(`${process.env.REACT_APP_API_BASE}/auth/password`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE}/auth/password`, {
         password,
         password_confirmation: passwordConfirmation,
       });
@@ -25,7 +25,7 @@ const EditPassword: React.FC = (): React.JSX.Element => {
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
-        const responseTextKeys = Object.keys(error.response.data!);
+        const responseTextKeys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
         const responseErrors = responseTextKeys.map(
           (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
         );

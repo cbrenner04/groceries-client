@@ -9,8 +9,8 @@ import { unifiedCache } from 'utils/lightweightCache';
 const mockHandleItemAddition = vi.fn();
 const mockNavigate = vi.fn();
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -60,11 +60,11 @@ describe('ListItemForm', () => {
 
   it('submits completed status when checkbox is checked', async () => {
     // Mock all the axios calls that happen during form submission
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -96,11 +96,11 @@ describe('ListItemForm', () => {
 
   it('handles input and submits form', async () => {
     // Mock all the axios calls that happen during form submission
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -122,11 +122,11 @@ describe('ListItemForm', () => {
   });
 
   it('trims trailing whitespace and capitalizes category before submitting', async () => {
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigurations }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigurations }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create category + fields
@@ -155,11 +155,11 @@ describe('ListItemForm', () => {
   it('submits boolean field values from checkbox inputs', async () => {
     const fieldConfigsWithCheckbox = [{ id: '1', label: 'packed', data_type: 'boolean' }];
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -186,11 +186,11 @@ describe('ListItemForm', () => {
   it('defaults boolean field to false when checkbox is not touched', async () => {
     const fieldConfigsWithCheckbox = [{ id: '1', label: 'read', data_type: 'boolean' }];
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox })
       .mockResolvedValueOnce({ data: fieldConfigsWithCheckbox });
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } })
       .mockResolvedValue({});
@@ -280,11 +280,11 @@ describe('ListItemForm', () => {
   it('handles field configuration not found during submission', async () => {
     const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -316,11 +316,11 @@ describe('ListItemForm', () => {
       },
     ]; // Different config
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: initialFieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: submissionFieldConfigs }); // different field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -349,11 +349,11 @@ describe('ListItemForm', () => {
       { id: '3', label: 'quantity', data_type: 'number', position: 3, primary: false },
     ];
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -384,7 +384,7 @@ describe('ListItemForm', () => {
     ];
 
     axios.get = vi.fn().mockResolvedValueOnce({ data: fieldConfigs }).mockResolvedValueOnce({ data: fieldConfigs });
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } })
       .mockResolvedValue({});
@@ -484,7 +484,7 @@ describe('ListItemForm', () => {
   it('submits with number field and sends numeric value', async () => {
     const fieldConfigs = [{ id: '1', label: 'quantity', data_type: 'number', position: 1, primary: false }];
     axios.get = vi.fn().mockResolvedValueOnce({ data: fieldConfigs }).mockResolvedValueOnce({ data: fieldConfigs });
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } })
       .mockResolvedValue({});
@@ -522,11 +522,11 @@ describe('ListItemForm', () => {
   it('resets form data after successful submission', async () => {
     const fieldConfigs = [{ id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false }];
 
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({ data: fieldConfigs }) // initial field config load
       .mockResolvedValueOnce({ data: fieldConfigs }); // field config during submit
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValueOnce({ data: { id: 'item-1' } }) // create item
       .mockResolvedValue({}); // create item fields
@@ -792,7 +792,7 @@ describe('ListItemForm', () => {
       // Primary field (name) should appear first
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();
-      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(nameField?.compareDocumentPosition(quantityField as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('sorts by position when both fields are primary', async () => {
@@ -813,7 +813,7 @@ describe('ListItemForm', () => {
       // Should sort by position when both are primary
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();
-      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(nameField?.compareDocumentPosition(quantityField as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('sorts by position when neither field is primary', async () => {
@@ -834,7 +834,7 @@ describe('ListItemForm', () => {
       // Should sort by position when neither is primary
       expect(nameField).toBeInTheDocument();
       expect(quantityField).toBeInTheDocument();
-      expect(nameField?.compareDocumentPosition(quantityField!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(nameField?.compareDocumentPosition(quantityField as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
   });
 });

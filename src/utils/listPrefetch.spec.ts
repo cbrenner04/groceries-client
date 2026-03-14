@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import { listPrefetcher, prefetchList, prefetchListsIdle, getPrefetchedList } from './listPrefetch';
 import { fetchList } from '../routes/list/utils';
 import type { IFulfilledListData } from '../routes/list/utils';
@@ -8,14 +7,10 @@ vi.mock('../routes/list/utils', () => ({
   fetchList: vi.fn(),
 }));
 
-const mockFetchList = fetchList as jest.MockedFunction<typeof fetchList>;
+const mockFetchList = vi.mocked(fetchList);
 
 // Mock requestIdleCallback
 const mockRequestIdleCallback = vi.fn();
-Object.defineProperty(window, 'requestIdleCallback', {
-  writable: true,
-  value: mockRequestIdleCallback,
-});
 
 describe('ListPrefetcher', () => {
   let originalDateNow: () => number;
@@ -29,11 +24,16 @@ describe('ListPrefetcher', () => {
     originalDateNow = Date.now;
     Date.now = vi.fn(() => 1000);
 
-    // Reset requestIdleCallback mock
+    // Set requestIdleCallback mock AFTER useFakeTimers (which may override it)
     mockRequestIdleCallback.mockClear();
-    mockRequestIdleCallback.mockImplementation((callback, options) => {
+    mockRequestIdleCallback.mockImplementation((callback: () => void) => {
       setTimeout(callback, 0);
       return 1;
+    });
+    Object.defineProperty(window, 'requestIdleCallback', {
+      writable: true,
+      configurable: true,
+      value: mockRequestIdleCallback,
     });
   });
 
@@ -163,7 +163,7 @@ describe('ListPrefetcher', () => {
       expect(result).toBeNull();
 
       // eslint-disable-next-line no-console
-      (console.error as jest.Mock).mockRestore();
+      (console.error as unknown as ReturnType<typeof vi.fn>).mockRestore();
     });
   });
 
@@ -179,7 +179,7 @@ describe('ListPrefetcher', () => {
       expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function), { timeout: 5000 });
 
       // Wait for idle callback to execute
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       await prefetchPromise;
 
       expect(mockFetchList).toHaveBeenCalledTimes(2);
@@ -192,7 +192,7 @@ describe('ListPrefetcher', () => {
       const listIds = ['list-1', 'list-2', 'list-3', 'list-4', 'list-5'];
       const prefetchPromise = listPrefetcher.prefetchIdle(listIds);
 
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       await prefetchPromise;
 
       // Should only prefetch first 3
@@ -250,7 +250,7 @@ describe('ListPrefetcher', () => {
       const prefetchPromise = prefetchListsIdle(['list-1', 'list-2']);
 
       // Wait for async operations to complete
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       await prefetchPromise;
 
       expect(listPrefetcher.prefetchIdle).toHaveBeenCalledWith(['list-1', 'list-2']);
@@ -273,7 +273,7 @@ describe('ListPrefetcher', () => {
       await listPrefetcher.prefetchList('list-1');
 
       // Advance time past expiration (5 minutes + 1ms)
-      (Date.now as jest.Mock).mockReturnValue(1000 + 5 * 60 * 1000 + 1);
+      (Date.now as unknown as ReturnType<typeof vi.fn>).mockReturnValue(1000 + 5 * 60 * 1000 + 1);
 
       // Second prefetch should fetch again
       mockFetchList.mockResolvedValueOnce(mockListData);

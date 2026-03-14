@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CheckboxField renders input 1`] = `
+exports[`CheckboxField > renders input 1`] = `
 <div
   class="form-check"
 >
@@ -21,7 +21,7 @@ exports[`CheckboxField renders input 1`] = `
 </div>
 `;
 
-exports[`CheckboxField renders with defaults 1`] = `
+exports[`CheckboxField > renders with defaults 1`] = `
 <div
   class="form-check"
 >

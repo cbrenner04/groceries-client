@@ -66,7 +66,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
             setRefused(list.refused);
           }
         }
-      } catch (err: unknown) {
+      } catch {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
         showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }

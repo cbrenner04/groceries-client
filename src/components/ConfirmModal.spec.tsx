@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';

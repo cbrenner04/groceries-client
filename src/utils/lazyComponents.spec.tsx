@@ -3,11 +3,11 @@ import { render, waitFor } from '@testing-library/react';
 import { createLazyComponent, preloadComponent } from './lazyComponents';
 
 // Mock Loading component
-vi.mock('components/Loading', () => {
-  return function MockLoading(): React.ReactNode {
+vi.mock('components/Loading', () => ({
+  default: function MockLoading(): React.ReactNode {
     return <div data-test-id="loading">Loading...</div>;
-  };
-});
+  },
+}));
 
 // Mock component for testing
 const MockComponent = (props: { testProp: string }): React.ReactNode => (
@@ -113,7 +113,7 @@ describe('lazyComponents', () => {
     });
 
     it('should use requestIdleCallback when available', () => {
-      const mockRequestIdleCallback = vi.fn((callback, options) => {
+      const mockRequestIdleCallback = vi.fn((callback: (deadline: IdleDeadline) => void) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
@@ -129,7 +129,7 @@ describe('lazyComponents', () => {
 
     it('should fallback to setTimeout when requestIdleCallback is not available', () => {
       delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
-      const mockSetTimeout = vi.fn((callback) => {
+      const mockSetTimeout = vi.fn((callback: () => void) => {
         callback();
         return 1;
       });
@@ -145,7 +145,7 @@ describe('lazyComponents', () => {
     });
 
     it('should handle import errors in requestIdleCallback', async () => {
-      const mockRequestIdleCallback = vi.fn((callback) => {
+      const mockRequestIdleCallback = vi.fn((callback: (deadline: IdleDeadline) => void) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
@@ -171,7 +171,7 @@ describe('lazyComponents', () => {
 
     it('should handle import errors in setTimeout fallback', async () => {
       delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
-      const mockSetTimeout = vi.fn((callback, delay) => {
+      const mockSetTimeout = vi.fn((callback: () => void, delay: number) => {
         // Use real setTimeout to avoid conflicts with waitFor
         return originalSetTimeout(callback, delay);
       });
@@ -198,7 +198,7 @@ describe('lazyComponents', () => {
     });
 
     it('should not log errors in production mode', () => {
-      const mockRequestIdleCallback = vi.fn((callback) => {
+      const mockRequestIdleCallback = vi.fn((callback: (deadline: IdleDeadline) => void) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;

@@ -94,7 +94,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
       variant="link"
       onClick={(): void => setShowNewListForm(false)}
       className="float-end"
-      style={{ padding: "0" }}
+      style={{ padding: '0' }}
     >
       Choose existing list
     </Button>
@@ -106,7 +106,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
       variant="link"
       onClick={(): void => setShowNewListForm(true)}
       className="float-end"
-      style={{ padding: "0" }}
+      style={{ padding: '0' }}
     >
       Create new list
     </Button>

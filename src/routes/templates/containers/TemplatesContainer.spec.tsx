@@ -4,14 +4,15 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { showToast } from 'utils/toast';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
 
-const mockShowToast = jest.requireMock('utils/toast').showToast;
+const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 

@@ -16,7 +16,7 @@ function setup(): ISetupReturn {
     passwordChangeHandler: vi.fn(),
     passwordConfirmation: '',
     passwordConfirmationChangeHandler: vi.fn(),
-    submissionHandler: vi.fn((e) => e.preventDefault()),
+    submissionHandler: vi.fn((e: React.FormEvent) => e.preventDefault()),
   };
   const component = render(<PasswordForm {...props} />);
 

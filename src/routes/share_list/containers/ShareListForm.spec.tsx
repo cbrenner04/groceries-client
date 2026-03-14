@@ -9,8 +9,8 @@ import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -87,8 +87,8 @@ describe('ShareListForm', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    vi.useFakeTimers();
-    axios.get = jest
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {
@@ -149,7 +149,7 @@ describe('ShareListForm', () => {
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
         accepted: [
@@ -188,7 +188,7 @@ describe('ShareListForm', () => {
   });
 
   it('fires generic toast when unknown error occurs in usePolling', async () => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
 
@@ -287,7 +287,7 @@ describe('ShareListForm', () => {
   });
 
   it('adds user to list when selected', async () => {
-    axios.post = jest
+    axios.post = vi
       .fn()
       .mockResolvedValue({ data: { user_id: 'id1', email: 'foo@example.com', id: 'id6', permissions: 'write' } });
     const { findByTestId, props, user } = setup();

@@ -77,7 +77,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       try {
         const fetchResponse = await listDeduplicator.execute(`list-${props.list.id}`, () =>
-          fetchList({ id: props.list.id!, navigate, signal: new AbortController().signal }),
+          fetchList({ id: props.list.id ?? '', navigate, signal: new AbortController().signal }),
         );
 
         if (fetchResponse) {
@@ -180,12 +180,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       if (selectedItems.length > 1) {
         // Bulk edit - navigate with selected item IDs
         const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
-        navigate(`/lists/${props.list.id}/list_items/bulk-edit?item_ids=${itemIds}`);
+        navigate(`/lists/${props.list.id ?? ''}/list_items/bulk-edit?item_ids=${itemIds}`);
       } else {
         // Single edit
         exportedHandleItemEdit({
           item,
-          listId: props.list.id!,
+          listId: props.list.id ?? '',
           navigate,
         });
       }
@@ -219,7 +219,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         executeOperation: (itemToComplete) =>
           exportedHandleItemComplete({
             item: itemToComplete,
-            listId: props.list.id!,
+            listId: props.list.id ?? '',
             setPending,
             navigate,
           }),
@@ -290,7 +290,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         executeOperation: (itemToRefresh) =>
           exportedHandleItemRefresh({
             item: itemToRefresh,
-            listId: props.list.id!,
+            listId: props.list.id ?? '',
             completedItems: updatedCompletedItems,
             setCompletedItems,
             notCompletedItems: updatedNotCompletedItems,
@@ -309,7 +309,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       // Replace optimistic items with actual new items from API
       const successfulResults = results.filter((r) => r.success && r.result);
       if (successfulResults.length > 0) {
-        const newItems = successfulResults.map((r) => r.result!);
+        const newItems = successfulResults.map((r) => r.result as IListItem);
         const itemsWithoutOptimistic = updatedNotCompletedItems.filter((item) => !item.id.startsWith('optimistic-'));
         const finalNotCompletedItems = sortItemsByCreatedAt([...itemsWithoutOptimistic, ...newItems]);
         setNotCompletedItems(finalNotCompletedItems);
@@ -398,7 +398,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       executeOperation: (item) =>
         exportedHandleItemDelete({
           item,
-          listId: props.list.id!,
+          listId: props.list.id ?? '',
           completedItems: updatedCompletedItems,
           setCompletedItems,
           notCompletedItems: updatedNotCompletedItems,
@@ -507,7 +507,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       <br />
       {props.permissions === EUserPermissions.WRITE ? (
         <ListItemForm
-          listId={props.list.id!}
+          listId={props.list.id ?? ''}
           listUsers={props.listUsers}
           userId={props.userId}
           handleItemAddition={handleAddItem}

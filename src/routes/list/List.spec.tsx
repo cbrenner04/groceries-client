@@ -9,20 +9,15 @@ import { handleFailure } from '../../utils/handleFailure';
 
 import List from './List';
 
-// Mock useParams for this specific test
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useParams: (): { id: string } => ({ id: '123' }),
-}));
-
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
+const mockHandleFailure = vi.mocked(handleFailure);
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),
 }));
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): ((url: string) => void) => mockNavigate,
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useParams: (): { id: string } => ({ id: '123' }),
+  useNavigate: (): typeof mockNavigate => mockNavigate,
 }));
 
 const mockUser = {

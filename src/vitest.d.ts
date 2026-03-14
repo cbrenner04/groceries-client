@@ -1,10 +1,10 @@
-import type { Mocked, MockedFunction } from "vitest";
+import type { Mocked as ViMocked, MockedFunction as ViMockedFunction } from 'vitest';
 
 declare global {
   namespace jest {
-    type Mock<T = any> = Mocked<T>;
-    type Mocked<T> = Mocked<T>;
-    type MockedFunction<T extends (...args: any[]) => any> = MockedFunction<T>;
+    type Mock<T = unknown> = ViMocked<T>;
+    type Mocked<T> = ViMocked<T>;
+    type MockedFunction<T extends (...args: never[]) => unknown> = ViMockedFunction<T>;
   }
 }
 

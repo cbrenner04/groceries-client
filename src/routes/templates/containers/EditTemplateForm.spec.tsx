@@ -12,8 +12,8 @@ import EditTemplateForm, { type IEditTemplateFormProps } from './EditTemplateFor
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
@@ -144,7 +144,9 @@ describe('EditTemplateForm', () => {
 
     await waitFor(() => {
       const calls = (axios.put as jest.Mock).mock.calls;
-      const fieldUpdateCall = calls.find((call) => call[0].includes('list_item_field_configurations'));
+      const fieldUpdateCall = calls.find((call: [string, ...unknown[]]) =>
+        call[0].includes('list_item_field_configurations'),
+      );
       expect(fieldUpdateCall).toBeDefined();
     });
   });

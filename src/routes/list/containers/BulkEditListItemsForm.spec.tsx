@@ -272,7 +272,7 @@ describe('BulkEditListItemsForm', () => {
     const { getByText, user } = renderComponent();
 
     // Click clear button for the Product field
-    const clearCheckbox = document.querySelector('input[id="clear_product"]')!;
+    const clearCheckbox = document.querySelector('input[id="clear_product"]') as HTMLElement;
     await user.click(clearCheckbox);
 
     await user.click(getByText('Update Items'));
@@ -299,7 +299,7 @@ describe('BulkEditListItemsForm', () => {
     const { getByText, user } = renderComponent();
 
     // Click clear checkbox to enter clear mode
-    const clearCheckbox = document.querySelector('input[id="clear_product"]')!;
+    const clearCheckbox = document.querySelector('input[id="clear_product"]') as HTMLElement;
     await user.click(clearCheckbox);
 
     // Click clear checkbox again to exit clear mode
@@ -430,7 +430,7 @@ describe('BulkEditListItemsForm', () => {
     const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
     const { getByText, user } = renderComponent({ items: itemsWithCategory });
 
-    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]') as HTMLElement;
     await user.click(clearCategoryCheckbox);
 
     await user.click(getByText('Update Items'));
@@ -457,10 +457,10 @@ describe('BulkEditListItemsForm', () => {
     const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
     const { getByText, user } = renderComponent({ items: itemsWithCategory });
 
-    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]') as HTMLElement;
     await user.click(clearCategoryCheckbox);
 
-    const categoryInput = document.querySelector('input[id="category"]')!;
+    const categoryInput = document.querySelector('input[id="category"]') as HTMLElement;
     await user.type(categoryInput, 'Dairy');
 
     await user.click(getByText('Update Items'));

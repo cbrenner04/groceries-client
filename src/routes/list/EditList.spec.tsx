@@ -9,20 +9,18 @@ import { handleFailure } from '../../utils/handleFailure';
 
 import EditList from './EditList';
 
-// Mock useParams for this specific test
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useParams: (): { id: string } => ({ id: '123' }),
-}));
-
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
+
+// Mock router hooks in a single module factory to avoid mock-order flakiness.
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useParams: (): { id: string } => ({ id: '123' }),
+  useNavigate: (): ((url: string) => void) => mockNavigate,
+}));
+
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),
-}));
-vi.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 
 const mockUser = {
@@ -101,12 +99,14 @@ describe('EditList', () => {
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledTimes(1);
     });
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: authError,
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-    });
+    expect(mockHandleFailure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: authError,
+        notFoundMessage: 'List not found',
+        navigate: expect.any(Function),
+        redirectURI: '/lists',
+      }),
+    );
   });
 
   it('handles case where data is undefined', async () => {

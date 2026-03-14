@@ -80,19 +80,19 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
       )}
       <Collapse in={showForm}>
         <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off">
-           <Form.Group className="mb-3" controlId="template-form-name">
-             <Form.Label>Name</Form.Label>
-             <Form.Control
-               type="text"
-               value={name}
-               onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-               data-test-id="template-form-name"
-               isInvalid={showValidation && name.trim() === ''}
-             />
-             {showValidation && name.trim() === '' && (
-               <Form.Control.Feedback type="invalid">Name cannot be blank</Form.Control.Feedback>
-             )}
-           </Form.Group>
+          <Form.Group className="mb-3" controlId="template-form-name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={name}
+              onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+              data-test-id="template-form-name"
+              isInvalid={showValidation && name.trim() === ''}
+            />
+            {showValidation && name.trim() === '' && (
+              <Form.Control.Feedback type="invalid">Name cannot be blank</Form.Control.Feedback>
+            )}
+          </Form.Group>
           <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
           <FormSubmission
             disabled={props.pending || !isFormValid()}

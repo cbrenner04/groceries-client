@@ -40,7 +40,7 @@ const CompletedListsContainer: React.FC<ICompletedListContainer> = (props): Reac
             setCurrentUserPermissions(updatedUserPerms);
           }
         }
-      } catch (err: unknown) {
+      } catch {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
         showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
