@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import {
   createRequestDeduplicator,
   listDeduplicator,
@@ -7,11 +8,11 @@ import {
 
 describe('RequestDeduplicator', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   describe('createRequestDeduplicator', () => {
@@ -31,7 +32,7 @@ describe('RequestDeduplicator', () => {
   describe('execute', () => {
     it('executes a new request', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockResolvedValue('test result');
+      const requestFn = vi.fn().mockResolvedValue('test result');
 
       const result = await deduplicator.execute('test-key', requestFn);
 
@@ -41,7 +42,7 @@ describe('RequestDeduplicator', () => {
 
     it('deduplicates concurrent requests with the same key', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockResolvedValue('test result');
+      const requestFn = vi.fn().mockResolvedValue('test result');
 
       // Start two concurrent requests with the same key
       const promise1 = deduplicator.execute('test-key', requestFn);
@@ -56,8 +57,8 @@ describe('RequestDeduplicator', () => {
 
     it('allows different keys to execute separately', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn1 = jest.fn().mockResolvedValue('result 1');
-      const requestFn2 = jest.fn().mockResolvedValue('result 2');
+      const requestFn1 = vi.fn().mockResolvedValue('result 1');
+      const requestFn2 = vi.fn().mockResolvedValue('result 2');
 
       const [result1, result2] = await Promise.all([
         deduplicator.execute('key-1', requestFn1),
@@ -72,7 +73,7 @@ describe('RequestDeduplicator', () => {
 
     it('cleans up completed requests', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockResolvedValue('test result');
+      const requestFn = vi.fn().mockResolvedValue('test result');
 
       expect(deduplicator.getPendingCount()).toBe(0);
 
@@ -88,13 +89,13 @@ describe('RequestDeduplicator', () => {
       const requestFn1 = jest
         .fn()
         .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve('result 1'), 2000)));
-      const requestFn2 = jest.fn().mockResolvedValue('result 2');
+      const requestFn2 = vi.fn().mockResolvedValue('result 2');
 
       // Start first request
       const promise1 = deduplicator.execute('test-key', requestFn1);
 
       // Advance time beyond timeout
-      jest.advanceTimersByTime(1500);
+      vi.advanceTimersByTime(1500);
 
       // Start second request - should execute because first is considered timed out
       const promise2 = deduplicator.execute('test-key', requestFn2);
@@ -105,7 +106,7 @@ describe('RequestDeduplicator', () => {
       expect(requestFn2).toHaveBeenCalledTimes(1);
 
       // Complete first request
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
       const result1 = await promise1;
       expect(result1).toBe('result 1');
       expect(requestFn1).toHaveBeenCalledTimes(1);
@@ -114,7 +115,7 @@ describe('RequestDeduplicator', () => {
     it('handles rejected promises', async () => {
       const deduplicator = createRequestDeduplicator<string>();
       const error = new Error('Request failed');
-      const requestFn = jest.fn().mockRejectedValue(error);
+      const requestFn = vi.fn().mockRejectedValue(error);
 
       await expect(deduplicator.execute('test-key', requestFn)).rejects.toThrow('Request failed');
 
@@ -131,7 +132,7 @@ describe('RequestDeduplicator', () => {
 
     it('returns true for pending request', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockImplementation(() => new Promise(() => undefined)); // Never resolves
+      const requestFn = vi.fn().mockImplementation(() => new Promise(() => undefined)); // Never resolves
 
       deduplicator.execute('test-key', requestFn);
       expect(deduplicator.isPending('test-key')).toBe(true);
@@ -139,7 +140,7 @@ describe('RequestDeduplicator', () => {
 
     it('returns false after request completes', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockResolvedValue('result');
+      const requestFn = vi.fn().mockResolvedValue('result');
 
       await deduplicator.execute('test-key', requestFn);
       expect(deduplicator.isPending('test-key')).toBe(false);
@@ -149,7 +150,7 @@ describe('RequestDeduplicator', () => {
   describe('clear', () => {
     it('clears all pending requests', () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockImplementation(() => new Promise(() => undefined)); // Never resolves
+      const requestFn = vi.fn().mockImplementation(() => new Promise(() => undefined)); // Never resolves
 
       deduplicator.execute('key-1', requestFn);
       deduplicator.execute('key-2', requestFn);
@@ -167,7 +168,7 @@ describe('RequestDeduplicator', () => {
   describe('getPendingCount', () => {
     it('returns correct count of pending requests', async () => {
       const deduplicator = createRequestDeduplicator<string>();
-      const requestFn = jest.fn().mockResolvedValue('result');
+      const requestFn = vi.fn().mockResolvedValue('result');
 
       expect(deduplicator.getPendingCount()).toBe(0);
 
@@ -203,7 +204,7 @@ describe('RequestDeduplicator', () => {
     });
 
     it('global instances are separate from each other', async () => {
-      const requestFn = jest.fn().mockResolvedValue('result');
+      const requestFn = vi.fn().mockResolvedValue('result');
 
       await Promise.all([
         listDeduplicator.execute('test', requestFn),

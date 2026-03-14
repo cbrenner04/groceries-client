@@ -8,12 +8,12 @@ import { showToast } from '../../utils/toast';
 import axios from 'utils/api';
 import EditPassword from './EditPassword';
 
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 // Mock useLocation for this specific test
-jest.mock('react-router', () => ({
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useLocation: (): { search: jest.Mock } => ({
-    search: jest.fn(() => 'foo'),
+    search: vi.fn(() => 'foo'),
   }),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -35,7 +35,7 @@ function setup(): ISetupReturn {
 
 describe('EditPassword', () => {
   it('sets password', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Password'), 'foo');
@@ -48,7 +48,7 @@ describe('EditPassword', () => {
   });
 
   it('shows errors on failure', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Password'), 'foo');
@@ -60,7 +60,7 @@ describe('EditPassword', () => {
   });
 
   it('shows errors on failed request', async () => {
-    axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.put = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Password'), 'foo');
@@ -72,7 +72,7 @@ describe('EditPassword', () => {
   });
 
   it('shows errors on unknown error', async () => {
-    axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.put = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Password'), 'foo');

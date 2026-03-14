@@ -85,13 +85,13 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
     },
-    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
+    parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10),
   );
 
   // Idle prefetch for visible lists to improve navigation performance
   useEffect(() => {
     // Allow tests to disable idle prefetch
-    if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
+    if (import.meta.env.VITE_PREFETCH_IDLE === 'false') {
       return;
     }
 
@@ -127,7 +127,9 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   return (
     <React.Fragment>
       <div className="d-flex justify-content-between align-items-center">
-        <h1 className="mb-0">Lists</h1>
+        <h1 className="mb-0" data-test-id="page-title">
+          Lists
+        </h1>
         <Link to="/templates" data-test-id="manage-templates-link" className="btn btn-link">
           Manage Templates
         </Link>

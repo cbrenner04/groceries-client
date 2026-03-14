@@ -1,10 +1,11 @@
+import { vi } from "vitest";
 import React from 'react';
 import { render, cleanup, act, screen } from '@testing-library/react';
 import { useMobileSafariOptimizations } from './useMobileSafariOptimizations';
 
 // Mock addEventListener and removeEventListener
-const mockAddEventListener = jest.fn();
-const mockRemoveEventListener = jest.fn();
+const mockAddEventListener = vi.fn();
+const mockRemoveEventListener = vi.fn();
 
 // Mock document
 Object.defineProperty(document, 'hidden', {
@@ -43,7 +44,7 @@ function TestComponent(): React.JSX.Element {
 
 describe('useMobileSafariOptimizations', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     Object.defineProperty(document, 'hidden', {
       value: false,
       writable: true,

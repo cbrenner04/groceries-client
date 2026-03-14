@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import React from 'react';
 import { render } from '@testing-library/react';
 
@@ -6,7 +7,7 @@ import FormSubmission from './FormSubmission';
 describe('FormSubmission', () => {
   it('renders the submit and cancel', () => {
     const { container, getAllByRole } = render(
-      <FormSubmission submitText="foo" cancelAction={jest.fn()} cancelText="bar" />,
+      <FormSubmission submitText="foo" cancelAction={vi.fn()} cancelText="bar" />,
     );
 
     expect(container).toMatchSnapshot();

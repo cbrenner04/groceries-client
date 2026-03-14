@@ -8,8 +8,8 @@ import axios from 'utils/api';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -87,7 +87,7 @@ describe('ShareListForm', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     axios.get = jest
       .fn()
       .mockResolvedValueOnce({
@@ -130,7 +130,7 @@ describe('ShareListForm', () => {
     const { findByTestId, queryByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -138,19 +138,19 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('refused-user-id2')).toHaveTextContent('bar@example.com');
     expect(queryByTestId('pending-user-id2')).toBeNull();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    jest.useFakeTimers();
-    axios.get = jest.fn().mockResolvedValue({
+    vi.useFakeTimers();
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         accepted: [
           { user: { id: 'id1', email: 'foo@example.com' }, users_list: { id: 'id1', permissions: 'read' } },
@@ -170,7 +170,7 @@ describe('ShareListForm', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -178,22 +178,22 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('fires generic toast when unknown error occurs in usePolling', async () => {
-    jest.useFakeTimers();
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    vi.useFakeTimers();
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -201,11 +201,11 @@ describe('ShareListForm', () => {
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
     );
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('creates new user on form submit', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: { user: { id: 'id6', email: 'foobaz@example.com' }, users_list: { id: 'id6', permissions: 'write' } },
     });
 
@@ -226,7 +226,7 @@ describe('ShareListForm', () => {
   });
 
   it('redirects to login on 401 response from form submission', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
     const { findByLabelText, findByText, user } = setup();
 
@@ -242,7 +242,7 @@ describe('ShareListForm', () => {
   });
 
   it('displays error on non-401 response from form submission', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
 
     const { findByLabelText, findByText, user } = setup();
 
@@ -257,7 +257,7 @@ describe('ShareListForm', () => {
   });
 
   it('displays error on failed request from form submit', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
     const { findByLabelText, findByText, user } = setup();
 
@@ -272,7 +272,7 @@ describe('ShareListForm', () => {
   });
 
   it('displays error on unknown error from form submit', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
     const { findByLabelText, findByText, user } = setup();
 
@@ -303,7 +303,7 @@ describe('ShareListForm', () => {
   });
 
   it('redirects to login on 401 response from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
     const { findByTestId, user } = setup();
 
@@ -315,7 +315,7 @@ describe('ShareListForm', () => {
   });
 
   it('redirects to lists on 403 response from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
     const { findByTestId, user } = setup();
 
@@ -327,7 +327,7 @@ describe('ShareListForm', () => {
   });
 
   it('shows errors on 404 response from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
     const { findByTestId, user } = setup();
 
@@ -338,7 +338,7 @@ describe('ShareListForm', () => {
   });
 
   it('shows errors on error outside 401, 403, and 404 response from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { responseText: 'foo' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500, data: { responseText: 'foo' } } });
 
     const { findByTestId, user } = setup();
 
@@ -349,7 +349,7 @@ describe('ShareListForm', () => {
   });
 
   it('displays error on failed request from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
     const { findByTestId, user } = setup();
 
@@ -360,7 +360,7 @@ describe('ShareListForm', () => {
   });
 
   it('displays error on unknown error from selecting user', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
     const { findByTestId, user } = setup();
 
@@ -372,7 +372,7 @@ describe('ShareListForm', () => {
 
   describe('toggles permissions', () => {
     it('toggles permissions in pending', async () => {
-      axios.patch = jest.fn().mockResolvedValue({});
+      axios.patch = vi.fn().mockResolvedValue({});
 
       const { findByTestId, findAllByTestId, user } = setup();
 
@@ -385,7 +385,7 @@ describe('ShareListForm', () => {
     });
 
     it('toggles permissions in accepted', async () => {
-      axios.patch = jest.fn().mockResolvedValue({});
+      axios.patch = vi.fn().mockResolvedValue({});
 
       const { findByTestId, findAllByTestId, user } = setup();
 
@@ -398,7 +398,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -410,7 +410,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -422,7 +422,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on 404 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -433,7 +433,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
 
       const { findAllByTestId, user } = setup();
 
@@ -444,7 +444,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on failed request from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+      axios.patch = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 
@@ -455,7 +455,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+      axios.patch = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 
@@ -468,7 +468,7 @@ describe('ShareListForm', () => {
 
   describe('refresh share', () => {
     it('refreshes share', async () => {
-      axios.patch = jest.fn().mockResolvedValue({ data: { id: 'id1', permissions: 'write' } });
+      axios.patch = vi.fn().mockResolvedValue({ data: { id: 'id1', permissions: 'write' } });
 
       const { findByTestId, findAllByTestId, queryByTestId, user } = setup();
 
@@ -481,7 +481,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -493,7 +493,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -505,7 +505,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on 404 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -516,7 +516,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+      axios.patch = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
 
       const { findAllByTestId, user } = setup();
 
@@ -527,7 +527,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on failed request from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+      axios.patch = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 
@@ -538,7 +538,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
-      axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+      axios.patch = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 
@@ -551,8 +551,8 @@ describe('ShareListForm', () => {
 
   describe('remove share', () => {
     it('removes share', async () => {
-      axios.delete = jest.fn().mockResolvedValue({});
-      axios.get = jest.fn().mockResolvedValueOnce({
+      axios.delete = vi.fn().mockResolvedValue({});
+      axios.get = vi.fn().mockResolvedValueOnce({
         data: {
           accepted: [
             {
@@ -598,7 +598,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to login on 401 from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.delete = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -610,7 +610,7 @@ describe('ShareListForm', () => {
     });
 
     it('redirects to lists on 403 from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      axios.delete = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -622,7 +622,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on 404 from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      axios.delete = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
       const { findAllByTestId, user } = setup();
 
@@ -633,7 +633,7 @@ describe('ShareListForm', () => {
     });
 
     it('shows errors on non 401, 403, 404 from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+      axios.delete = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
 
       const { findAllByTestId, user } = setup();
 
@@ -644,7 +644,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on failed request from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+      axios.delete = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 
@@ -655,7 +655,7 @@ describe('ShareListForm', () => {
     });
 
     it('displays error on unknown error from toggling permissions', async () => {
-      axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+      axios.delete = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
       const { findAllByTestId, user } = setup();
 

@@ -12,8 +12,8 @@ import AcceptedLists, { type IAcceptedListsProps } from './AcceptedLists';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -59,7 +59,7 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
         refreshed: false,
       },
     ],
-    setCompletedLists: jest.fn(),
+    setCompletedLists: vi.fn(),
     incompleteLists: [
       {
         id: 'id3',
@@ -82,9 +82,9 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
         refreshed: false,
       },
     ],
-    setIncompleteLists: jest.fn(),
+    setIncompleteLists: vi.fn(),
     currentUserPermissions: perms,
-    setCurrentUserPermissions: jest.fn(),
+    setCurrentUserPermissions: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -98,11 +98,11 @@ function setup(suppliedProps?: Partial<IAcceptedListsProps>): ISetupReturn {
 
 describe('AcceptedLists', () => {
   beforeEach(() => {
-    axios.patch = jest.fn();
+    axios.patch = vi.fn();
   });
 
   it('does not delete list when confirm modal is cleared', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -117,7 +117,7 @@ describe('AcceptedLists', () => {
   });
 
   it('deletes incomplete list', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -133,7 +133,7 @@ describe('AcceptedLists', () => {
   });
 
   it('deletes complete list (owned)', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-trash'))[0]);
@@ -149,7 +149,7 @@ describe('AcceptedLists', () => {
   });
 
   it('refuses shared complete list (not owned)', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup({ completed: true });
 
     // Click on the second list which is owned by another user (id2)
@@ -166,8 +166,8 @@ describe('AcceptedLists', () => {
   });
 
   it('deletes multiple lists (mixed ownership)', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, findAllByRole, findByText, props, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -189,7 +189,7 @@ describe('AcceptedLists', () => {
   });
 
   it('redirects to login when delete fails with 401', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -203,7 +203,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when delete fails with 403', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -216,7 +216,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when delete fails with 404', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -229,7 +229,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when delete fails with error other than 401, 403, 404', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -242,7 +242,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when delete fails to send request', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.delete = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -255,7 +255,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when delete unknown error occurs', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.delete = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-trash'))[0]);
@@ -268,7 +268,7 @@ describe('AcceptedLists', () => {
   });
 
   it('completes list', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { findAllByTestId, props, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -283,7 +283,7 @@ describe('AcceptedLists', () => {
   });
 
   it('completes multiple lists', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findAllByRole, findByText, props, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -305,7 +305,7 @@ describe('AcceptedLists', () => {
   });
 
   it('redirects on 401 from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -316,7 +316,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows error on 403 from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -326,7 +326,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors on 404 from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -336,7 +336,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when error not 401, 403, 404 from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -346,7 +346,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when request fails from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.put = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -356,7 +356,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when known failure from list completion', async () => {
-    axios.put = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.put = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('incomplete-list-complete'))[0]);
@@ -376,7 +376,7 @@ describe('AcceptedLists', () => {
       refreshed: false,
       users_list_id: 'id8',
     };
-    axios.post = jest.fn().mockResolvedValue({ data: newList });
+    axios.post = vi.fn().mockResolvedValue({ data: newList });
     const { findAllByTestId, props, user } = setup({ completed: true, fullList: false });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -401,7 +401,7 @@ describe('AcceptedLists', () => {
       refreshed: false,
       users_list_id: 'id8',
     };
-    axios.post = jest.fn().mockResolvedValue({ data: newList });
+    axios.post = vi.fn().mockResolvedValue({ data: newList });
     const { findAllByTestId, props, user } = setup({ completed: true, incompleteLists: [], fullList: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -422,7 +422,7 @@ describe('AcceptedLists', () => {
       refreshed: false,
       users_list_id: 'id8',
     };
-    axios.post = jest.fn().mockResolvedValueOnce({ data: newList });
+    axios.post = vi.fn().mockResolvedValueOnce({ data: newList });
     const { findAllByTestId, findAllByRole, findByText, props, user } = setup({ completed: true });
 
     await user.click(await findByText('Select'));
@@ -444,7 +444,7 @@ describe('AcceptedLists', () => {
   });
 
   it('redirects on 401 from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -455,7 +455,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows error on 403 from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -465,7 +465,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors on 404 from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -475,7 +475,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when error not 401, 403, 404 from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -485,7 +485,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when request fails from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -495,7 +495,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when known failure from list refresh', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findAllByTestId, user } = setup({ completed: true });
 
     await user.click((await findAllByTestId('complete-list-refresh'))[0]);
@@ -557,7 +557,7 @@ describe('AcceptedLists', () => {
       user_id: 'id1',
       users_list_id: 'id29',
     };
-    axios.post = jest.fn().mockResolvedValue({ data: newList });
+    axios.post = vi.fn().mockResolvedValue({ data: newList });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, props, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -589,7 +589,7 @@ describe('AcceptedLists', () => {
   });
 
   it('redirects to login when remove fails with 401', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -629,7 +629,7 @@ describe('AcceptedLists', () => {
       user_id: 'id1',
       users_list_id: 'id29',
     };
-    axios.post = jest.fn().mockResolvedValue({ data: newList });
+    axios.post = vi.fn().mockResolvedValue({ data: newList });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, props, user } = setup({
       completed: true,
       incompleteLists: [],
@@ -661,7 +661,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when merge fails with 403', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -686,7 +686,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when merge fails with 404', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -711,7 +711,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when merge fails with error other than 401, 403, 404', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -736,7 +736,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when merge fails to send request', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -761,7 +761,7 @@ describe('AcceptedLists', () => {
   });
 
   it('shows errors when merge unknown error occurs', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByLabelText, findAllByRole, findByTestId, findAllByTestId, findByText, user } = setup();
 
     await user.click(await findByText('Select'));

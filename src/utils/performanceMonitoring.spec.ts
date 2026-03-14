@@ -2,13 +2,13 @@ import { reportWebVitals, initWebVitalsMonitoring } from './performanceMonitorin
 import type { Metric } from 'web-vitals';
 
 // Mock web-vitals module
-const mockOnCLS = jest.fn();
-const mockOnFCP = jest.fn();
-const mockOnLCP = jest.fn();
-const mockOnTTFB = jest.fn();
-const mockOnINP = jest.fn();
+const mockOnCLS = vi.fn();
+const mockOnFCP = vi.fn();
+const mockOnLCP = vi.fn();
+const mockOnTTFB = vi.fn();
+const mockOnINP = vi.fn();
 
-jest.mock('web-vitals', () => ({
+vi.mock('web-vitals', () => ({
   onCLS: (...args: unknown[]): void => mockOnCLS(...args),
   onFCP: (...args: unknown[]): void => mockOnFCP(...args),
   onLCP: (...args: unknown[]): void => mockOnLCP(...args),
@@ -17,8 +17,8 @@ jest.mock('web-vitals', () => ({
 }));
 
 // Mock console methods
-const mockConsoleLog = jest.fn();
-const mockConsoleError = jest.fn();
+const mockConsoleLog = vi.fn();
+const mockConsoleError = vi.fn();
 
 Object.defineProperty(console, 'log', {
   value: mockConsoleLog,
@@ -32,7 +32,7 @@ Object.defineProperty(console, 'error', {
 
 describe('performanceMonitoring', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockOnCLS.mockClear();
     mockOnFCP.mockClear();
     mockOnLCP.mockClear();
@@ -172,7 +172,7 @@ describe('performanceMonitoring', () => {
       // Suppress console.error re-throwing from setupTests.ts
       // eslint-disable-next-line no-console
       const originalConsoleError = console.error;
-      const consoleErrorMock = jest.fn();
+      const consoleErrorMock = vi.fn();
       // eslint-disable-next-line no-console
       console.error = consoleErrorMock;
 

@@ -9,8 +9,8 @@ import EditListForm, { type IEditListFormProps } from './EditListForm';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -61,7 +61,7 @@ describe('EditListForm', () => {
     const data = {
       foo: 'bar',
     };
-    axios.put = jest.fn().mockResolvedValue({ data });
+    axios.put = vi.fn().mockResolvedValue({ data });
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
@@ -72,7 +72,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to user login when 401', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
@@ -83,7 +83,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to lists page when 403', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
@@ -94,7 +94,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to lists page when 404', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
@@ -105,7 +105,7 @@ describe('EditListForm', () => {
   });
 
   it('displays appropriate error message', async () => {
-    axios.put = jest.fn().mockRejectedValue({
+    axios.put = vi.fn().mockRejectedValue({
       response: {
         status: 500,
         data: {
@@ -124,7 +124,7 @@ describe('EditListForm', () => {
   });
 
   it('displays toast when error in sending request', async () => {
-    axios.put = jest.fn().mockRejectedValue({
+    axios.put = vi.fn().mockRejectedValue({
       request: 'request failed',
     });
 
@@ -137,7 +137,7 @@ describe('EditListForm', () => {
   });
 
   it('displays toast when unknown error', async () => {
-    axios.put = jest.fn().mockRejectedValue({
+    axios.put = vi.fn().mockRejectedValue({
       message: 'request failed',
     });
 

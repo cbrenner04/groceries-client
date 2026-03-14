@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
@@ -14,8 +15,8 @@ function setup(suppliedProps: Partial<IConfirmModalProps>): ISetupReturn {
   const defaultProps = {
     action: 'testAction',
     body: 'testBody',
-    handleConfirm: jest.fn(),
-    handleClear: jest.fn(),
+    handleConfirm: vi.fn(),
+    handleClear: vi.fn(),
     show: true,
   };
   const props = { ...defaultProps, ...suppliedProps };

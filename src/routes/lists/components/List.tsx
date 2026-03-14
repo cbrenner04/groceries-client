@@ -30,7 +30,11 @@ const List: React.FC<IListProps> = (props): React.JSX.Element => {
     props.setSelectedLists(updatedLists);
   };
 
-  const listName = <h5 className="mb-1">{props.listName}</h5>;
+  const listName = (
+    <h5 className="mb-1" data-test-id="list-name">
+      {props.listName}
+    </h5>
+  );
 
   const listNameElement = props.includeLinkToList ? (
     <Link to={`/lists/${props.list.id}`} className="router-link">

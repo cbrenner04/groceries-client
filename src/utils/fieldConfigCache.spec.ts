@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import {
   getFieldConfigurations,
   prefetchFieldConfigurations,
@@ -10,20 +11,20 @@ import { unifiedCache } from './lightweightCache';
 import { type IListItemFieldConfiguration, EListItemFieldType } from '../typings';
 
 // Mock axios
-jest.mock('./api');
+vi.mock('./api');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('FieldConfigurationCache', () => {
   let originalDateNow: () => number;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     unifiedCache.clear();
     clearFieldConfigCache();
 
     // Mock Date.now() for predictable timing
     originalDateNow = Date.now;
-    Date.now = jest.fn(() => 1000);
+    Date.now = vi.fn(() => 1000);
   });
 
   afterEach(() => {
@@ -249,8 +250,8 @@ describe('FieldConfigurationCache', () => {
     ];
 
     it('schedules prefetch using setTimeout', async () => {
-      jest.useFakeTimers();
-      const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
+      vi.useFakeTimers();
+      const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
       mockedAxios.get.mockResolvedValueOnce({ data: mockFieldConfigs });
 
       const prefetchPromise = prefetchFieldConfigurationsIdle('config-123');
@@ -259,12 +260,12 @@ describe('FieldConfigurationCache', () => {
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 100);
 
       // Advance timers to complete the prefetch
-      jest.advanceTimersByTime(100);
+      vi.advanceTimersByTime(100);
       await prefetchPromise;
 
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
       setTimeoutSpy.mockRestore();
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
   });
 

@@ -9,7 +9,7 @@ async function setup(): Promise<{
   handleClick: jest.Mock;
   user: UserEvent;
 }> {
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
   const props = {
     handleClick,
     testID: 'foo',

@@ -12,7 +12,7 @@ interface ISetupReturn extends RenderResult {
 function setup(suppliedProps?: Partial<ITemplateFormProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: ITemplateFormProps = {
-    onFormSubmit: jest.fn(),
+    onFormSubmit: vi.fn(),
     pending: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -94,7 +94,7 @@ describe('TemplateForm', () => {
 
   it('clears form after submission', async () => {
     const { getByText, findByTestId, user } = setup({
-      onFormSubmit: jest.fn().mockResolvedValue(undefined),
+      onFormSubmit: vi.fn().mockResolvedValue(undefined),
     });
 
     await user.click(getByText('Add Template'));
@@ -111,7 +111,7 @@ describe('TemplateForm', () => {
 
   it('closes form after successful submission', async () => {
     const { getByText, findByText, findByTestId, user } = setup({
-      onFormSubmit: jest.fn().mockResolvedValue(undefined),
+      onFormSubmit: vi.fn().mockResolvedValue(undefined),
     });
 
     await user.click(getByText('Add Template'));

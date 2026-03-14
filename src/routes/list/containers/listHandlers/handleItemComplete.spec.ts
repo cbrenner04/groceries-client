@@ -3,18 +3,18 @@ import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
 import { createListItem } from '../../../../test-utils/factories';
 
-jest.mock('../../../../utils/api', () => ({
+vi.mock('../../../../utils/api', () => ({
   __esModule: true,
   default: {
-    put: jest.fn(),
-    delete: jest.fn(),
-    post: jest.fn(),
-    get: jest.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    post: vi.fn(),
+    get: vi.fn(),
   },
 }));
-jest.mock('../../../../utils/handleFailure');
+vi.mock('../../../../utils/handleFailure');
 
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
@@ -26,7 +26,7 @@ const item = createListItem('1', false, [], {
 
 describe('handleItemComplete', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('completes item', async () => {
@@ -35,7 +35,7 @@ describe('handleItemComplete', () => {
       list_id: 'l',
       updated_at: null,
     });
-    const setPending = jest.fn();
+    const setPending = vi.fn();
 
     await handleItemComplete({
       item: testItem,
@@ -58,7 +58,7 @@ describe('handleItemComplete', () => {
     });
     // API returns minimal response without fields
     mockAxios.put.mockResolvedValueOnce({ data: { id: 'test-id', completed: true } });
-    const setPending = jest.fn();
+    const setPending = vi.fn();
 
     await handleItemComplete({
       item: testItem,
@@ -76,7 +76,7 @@ describe('handleItemComplete', () => {
   it('handles error', async () => {
     const error = new Error('AHHHH!');
     mockAxios.put.mockRejectedValueOnce(error);
-    const setPending = jest.fn();
+    const setPending = vi.fn();
     await expect(
       handleItemComplete({
         item,

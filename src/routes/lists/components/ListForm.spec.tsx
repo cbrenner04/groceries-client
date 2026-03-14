@@ -13,7 +13,7 @@ function setup(suppliedProps?: Partial<IListFormProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: IListFormProps = {
     pending: false,
-    onFormSubmit: jest.fn(),
+    onFormSubmit: vi.fn(),
     configurations: [
       {
         id: 'config-1',
@@ -95,7 +95,7 @@ describe('ListForm', () => {
   });
 
   it('calls props.onFormSubmit when form is submitted', async () => {
-    const onFormSubmit = jest.fn().mockResolvedValue({});
+    const onFormSubmit = vi.fn().mockResolvedValue({});
     const { findByLabelText, findAllByRole, props, user } = setup({ onFormSubmit });
 
     await user.type(await findByLabelText('Name'), 'foo');
@@ -107,7 +107,7 @@ describe('ListForm', () => {
   });
 
   it('disables submit when in pending state', async () => {
-    const onFormSubmit = jest.fn().mockResolvedValue({});
+    const onFormSubmit = vi.fn().mockResolvedValue({});
     const { findAllByRole } = setup({ pending: true, onFormSubmit });
 
     expect((await findAllByRole('button'))[1]).toBeDisabled();

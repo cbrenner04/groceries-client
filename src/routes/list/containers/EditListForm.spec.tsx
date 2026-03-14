@@ -10,8 +10,8 @@ import EditListForm, { type IEditListFormProps } from './EditListForm';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -42,7 +42,7 @@ function setup(): ISetupReturn {
 
 describe('EditListForm', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders with correct initial values', () => {
@@ -83,7 +83,7 @@ describe('EditListForm', () => {
   });
 
   it('makes put request, displays success toast, and redirects on successful submission', async () => {
-    const mockPut = jest.fn().mockResolvedValue({ data: { success: true } });
+    const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
     (axios.put as jest.Mock) = mockPut;
 
     const { getByText, user } = setup();
@@ -103,7 +103,7 @@ describe('EditListForm', () => {
   });
 
   it('sends updated form data on submission', async () => {
-    const mockPut = jest.fn().mockResolvedValue({ data: { success: true } });
+    const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
     (axios.put as jest.Mock) = mockPut;
 
     const { getByLabelText, getByText, user } = setup();
@@ -132,7 +132,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to sign in page when 401 error', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       response: { status: 401 },
     });
     (axios.put as jest.Mock) = mockPut;
@@ -147,7 +147,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to lists page when 403 error', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       response: { status: 403 },
     });
     (axios.put as jest.Mock) = mockPut;
@@ -162,7 +162,7 @@ describe('EditListForm', () => {
   });
 
   it('redirects to lists page when 404 error', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       response: { status: 404 },
     });
     (axios.put as jest.Mock) = mockPut;
@@ -177,7 +177,7 @@ describe('EditListForm', () => {
   });
 
   it('displays validation errors from response data', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       response: {
         status: 422,
         data: {
@@ -197,7 +197,7 @@ describe('EditListForm', () => {
   });
 
   it('displays generic error when request fails', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       request: 'request failed',
     });
     (axios.put as jest.Mock) = mockPut;
@@ -211,7 +211,7 @@ describe('EditListForm', () => {
   });
 
   it('displays error message when unknown error occurs', async () => {
-    const mockPut = jest.fn().mockRejectedValue({
+    const mockPut = vi.fn().mockRejectedValue({
       message: 'Network error',
     });
     (axios.put as jest.Mock) = mockPut;
@@ -253,7 +253,7 @@ describe('EditListForm', () => {
   });
 
   it('prevents default form submission behavior', async () => {
-    const mockPut = jest.fn().mockResolvedValue({ data: { success: true } });
+    const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
     (axios.put as jest.Mock) = mockPut;
 
     const { getByText, user } = setup();

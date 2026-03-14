@@ -29,7 +29,7 @@ const MergeModal: React.FC<IMergeModalProps> = (props): React.JSX.Element => {
       <Modal.Header closeButton>
         <Modal.Title>Merge {`"${props.listNames}"`}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body data-test-id="confirm-modal-body">
         {hasMultipleConfigurations && (
           <Alert variant="warning" className="mb-3">
             <strong>Note:</strong> Only lists of the same type can be merged. Some lists will be excluded.

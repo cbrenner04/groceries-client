@@ -10,7 +10,7 @@ async function setup(): Promise<{
   user: UserEvent;
 }> {
   const user = userEvent.setup();
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
   const props = {
     handleClick,
     testID: 'test-id',

@@ -29,6 +29,7 @@ const ListForm: React.FC<IListFormProps> = (props): React.JSX.Element => {
     <React.Fragment>
       {!showForm && (
         <Button
+          data-test-id="add-list-button"
           variant="link"
           onClick={(): void => setShowForm(true)}
           aria-controls="form-collapse"

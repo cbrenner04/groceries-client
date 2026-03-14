@@ -137,7 +137,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit Items</h1>
+      <h1 data-test-id="page-title">Edit Items</h1>
       <br />
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields

@@ -147,7 +147,7 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
 
   return (
     <React.Fragment>
-      <h1>Edit Template</h1>
+      <h1 data-test-id="page-title">Edit Template</h1>
       <br />
        <Form onSubmit={handleSubmit} autoComplete="off">
         <Form.Group className="mb-3" controlId="template-name">

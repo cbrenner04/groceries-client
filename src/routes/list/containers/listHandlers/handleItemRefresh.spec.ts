@@ -5,22 +5,22 @@ import axios from '../../../../utils/api';
 import { createField, createListItem } from '../../../../test-utils/factories';
 
 // Mock immutability-helper
-jest.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
-jest.mock('../../../../utils/api', () => ({
+vi.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
+vi.mock('../../../../utils/api', () => ({
   __esModule: true,
   default: {
-    put: jest.fn(),
-    delete: jest.fn(),
-    post: jest.fn(),
-    get: jest.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    post: vi.fn(),
+    get: vi.fn(),
   },
 }));
-jest.mock('../../../../utils/handleFailure');
+vi.mock('../../../../utils/handleFailure');
 
 const mockToastUtil = jest.requireMock('../../../../utils/toast').showToast;
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 
 const item = createListItem('1', false, [createField('field1', 'category', 'Fruit', '1', { updated_at: null })], {
   user_id: 'u',
@@ -30,7 +30,7 @@ const item = createListItem('1', false, [createField('field1', 'category', 'Frui
 
 describe('handleItemRefresh', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('refreshes item', async () => {
@@ -64,9 +64,9 @@ describe('handleItemRefresh', () => {
       data: { id: 'new-item-id', completed: false, fields: testItem.fields },
     }); // Fetch complete item
 
-    const setCompleted = jest.fn();
-    const setNotCompleted = jest.fn();
-    const setPending = jest.fn();
+    const setCompleted = vi.fn();
+    const setNotCompleted = vi.fn();
+    const setPending = vi.fn();
     await handleItemRefresh({
       item: testItem,
       listId: '1',
@@ -116,9 +116,9 @@ describe('handleItemRefresh', () => {
       data: { id: 'new-item-id', completed: false, fields: [] },
     }); // Fetch complete item
 
-    const setCompleted = jest.fn();
-    const setNotCompleted = jest.fn();
-    const setPending = jest.fn();
+    const setCompleted = vi.fn();
+    const setNotCompleted = vi.fn();
+    const setPending = vi.fn();
     await handleItemRefresh({
       item: testItem,
       listId: '1',
@@ -163,10 +163,10 @@ describe('handleItemRefresh', () => {
       item: testItem,
       listId: '1',
       completedItems: [testItem],
-      setCompletedItems: jest.fn(),
+      setCompletedItems: vi.fn(),
       notCompletedItems: [],
-      setNotCompletedItems: jest.fn(),
-      setPending: jest.fn(),
+      setNotCompletedItems: vi.fn(),
+      setPending: vi.fn(),
     });
 
     expect(mockAxios.post).toHaveBeenCalledWith('/lists/1/list_items', {
@@ -201,9 +201,9 @@ describe('handleItemRefresh', () => {
       data: { id: 'new-item-id', completed: false, fields: [testItem.fields[0]] },
     }); // Fetch complete item
 
-    const setCompleted = jest.fn();
-    const setNotCompleted = jest.fn();
-    const setPending = jest.fn();
+    const setCompleted = vi.fn();
+    const setNotCompleted = vi.fn();
+    const setPending = vi.fn();
     await handleItemRefresh({
       item: testItem,
       listId: '1',
@@ -253,9 +253,9 @@ describe('handleItemRefresh', () => {
       data: { id: 'new-item-id', completed: false, fields: [] }, // Server returns item without fields
     });
 
-    const setCompleted = jest.fn();
-    const setNotCompleted = jest.fn();
-    const setPending = jest.fn();
+    const setCompleted = vi.fn();
+    const setNotCompleted = vi.fn();
+    const setPending = vi.fn();
     await handleItemRefresh({
       item: testItem,
       listId: '1',
@@ -281,15 +281,15 @@ describe('handleItemRefresh', () => {
   it('handles error', async () => {
     const error = new Error('fail') as AxiosError;
     mockAxios.put.mockRejectedValueOnce(error);
-    const setPending = jest.fn();
+    const setPending = vi.fn();
     await expect(
       handleItemRefresh({
         item,
         listId: '1',
         completedItems: [item],
-        setCompletedItems: jest.fn(),
+        setCompletedItems: vi.fn(),
         notCompletedItems: [],
-        setNotCompletedItems: jest.fn(),
+        setNotCompletedItems: vi.fn(),
         setPending,
         navigate: mockNavigate,
       }),

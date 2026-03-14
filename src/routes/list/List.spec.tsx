@@ -10,17 +10,17 @@ import { handleFailure } from '../../utils/handleFailure';
 import List from './List';
 
 // Mock useParams for this specific test
-jest.mock('react-router', () => ({
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: (): { id: string } => ({ id: '123' }),
 }));
 
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
-jest.mock('../../utils/handleFailure', () => ({
-  handleFailure: jest.fn(),
+const mockNavigate = vi.fn();
+vi.mock('../../utils/handleFailure', () => ({
+  handleFailure: vi.fn(),
 }));
-jest.mock('react-router', () => ({
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
@@ -73,11 +73,11 @@ const renderList = (): ReturnType<typeof render> => {
 
 describe('List', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders loading state initially', () => {
-    axios.get = jest.fn().mockImplementation(
+    axios.get = vi.fn().mockImplementation(
       () =>
         new Promise(() => {
           /* never resolves for loading state */
@@ -89,7 +89,7 @@ describe('List', () => {
   });
 
   it('renders list data when fetch succeeds', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockListData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderList();
     });
@@ -100,7 +100,7 @@ describe('List', () => {
   });
 
   it('renders error state when fetch fails', async () => {
-    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
+    axios.get = vi.fn().mockRejectedValue(new Error('Network error'));
     await act(async () => {
       renderList();
     });
@@ -110,7 +110,7 @@ describe('List', () => {
 
   it('handles authentication errors', async () => {
     const authError = new AxiosError('Unauthorized', '401');
-    axios.get = jest.fn().mockRejectedValue(authError);
+    axios.get = vi.fn().mockRejectedValue(authError);
     await act(async () => {
       renderList();
     });

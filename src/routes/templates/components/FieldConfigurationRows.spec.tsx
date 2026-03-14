@@ -22,7 +22,7 @@ function setup(suppliedProps?: Partial<IFieldConfigurationRowsProps>): ISetupRet
         primary: true,
       },
     ],
-    setFieldRows: jest.fn(),
+    setFieldRows: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<FieldConfigurationRows {...props} />);

@@ -23,7 +23,7 @@ describe('Templates', () => {
   });
 
   it('renders unknown error when error occurs', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderTemplates();
 
     await act(async () => {
@@ -35,7 +35,7 @@ describe('Templates', () => {
   });
 
   it('displays UnknownError when data is undefined', async () => {
-    jest.spyOn(utils, 'fetchTemplates').mockResolvedValue(undefined);
+    vi.spyOn(utils, 'fetchTemplates').mockResolvedValue(undefined);
     const { container, findByRole } = renderTemplates();
 
     await act(async () => {
@@ -47,7 +47,7 @@ describe('Templates', () => {
   });
 
   it('renders TemplatesContainer when data retrieval is complete', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: [
         {
           id: 'id1',

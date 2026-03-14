@@ -9,8 +9,8 @@ import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesCo
 
 const mockShowToast = jest.requireMock('utils/toast').showToast;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -74,7 +74,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates template on form submit', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id3',
         name: 'new template',
@@ -100,7 +100,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates fields when creating template', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id3',
         name: 'new template',
@@ -127,7 +127,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('redirects to signin when 401 on create', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { getByText, findByTestId, user } = setup();
 
     await user.click(getByText('Add Template'));
@@ -144,7 +144,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('shows errors when create fails', async () => {
-    axios.post = jest.fn().mockRejectedValue({
+    axios.post = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'cannot be blank' } },
     });
     const { getByText, findByTestId, user } = setup();
@@ -162,7 +162,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('deletes template', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
     const { getAllByTestId, findByTestId, user } = setup();
 
     await user.click(getAllByTestId('template-trash')[0]);
@@ -177,7 +177,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('handles delete failure', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: {} } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500, data: {} } });
     const { getAllByTestId, findByTestId, user } = setup();
 
     await user.click(getAllByTestId('template-trash')[0]);

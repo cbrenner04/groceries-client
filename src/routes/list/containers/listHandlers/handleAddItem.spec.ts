@@ -2,23 +2,23 @@ import { handleAddItem } from './handleAddItem';
 import { handleFailure } from '../../../../utils/handleFailure';
 import { createListItem } from '../../../../test-utils/factories';
 
-jest.mock('../../../../utils/api', () => ({
+vi.mock('../../../../utils/api', () => ({
   __esModule: true,
   default: {
-    put: jest.fn(),
-    delete: jest.fn(),
-    post: jest.fn(),
-    get: jest.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    post: vi.fn(),
+    get: vi.fn(),
   },
 }));
-jest.mock('../../../../utils/handleFailure');
+vi.mock('../../../../utils/handleFailure');
 
 // Mock the toast utilities
 const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
 
-const mockNavigate = jest.fn();
-const mockSet = jest.fn();
-const mockSetPending = jest.fn();
+const mockNavigate = vi.fn();
+const mockSet = vi.fn();
+const mockSetPending = vi.fn();
 
 const item = createListItem('1', false, [], {
   user_id: 'u',
@@ -29,13 +29,13 @@ const item = createListItem('1', false, [], {
 
 describe('handleAddItem', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('adds to completed or notCompleted and new category', () => {
-    const setCompleted = jest.fn();
-    const setNotCompleted = jest.fn();
-    const setCategories = jest.fn();
+    const setCompleted = vi.fn();
+    const setNotCompleted = vi.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false }],
       pending: false,
@@ -78,7 +78,7 @@ describe('handleAddItem', () => {
   });
 
   it('adds new category when item has category not in existing categories', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'BrandNewCategory' }],
       pending: false,
@@ -95,7 +95,7 @@ describe('handleAddItem', () => {
   });
 
   it('does not add category when item category already exists in categories', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'ExistingCategory' }],
       pending: false,
@@ -112,7 +112,7 @@ describe('handleAddItem', () => {
   });
 
   it('does not add category when item category matches existing category with different case', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'produce' }],
       pending: false,
@@ -129,7 +129,7 @@ describe('handleAddItem', () => {
   });
 
   it('does not add category when item has no category', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: undefined }],
       pending: false,
@@ -146,7 +146,7 @@ describe('handleAddItem', () => {
   });
 
   it('does not add category when item has empty category', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: '' }],
       pending: false,
@@ -163,7 +163,7 @@ describe('handleAddItem', () => {
   });
 
   it('trims trailing whitespace before adding category', () => {
-    const setCategories = jest.fn();
+    const setCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'Fresh  ' }],
       pending: false,
@@ -180,7 +180,7 @@ describe('handleAddItem', () => {
   });
 
   it('handles error', () => {
-    const setCompletedItems = jest.fn(() => {
+    const setCompletedItems = vi.fn(() => {
       throw new Error('fail');
     });
     handleAddItem({
@@ -204,8 +204,8 @@ describe('handleAddItem', () => {
   });
 
   it('updates included categories when setIncludedCategories is provided', () => {
-    const setCategories = jest.fn();
-    const setIncludedCategories = jest.fn();
+    const setCategories = vi.fn();
+    const setIncludedCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,
@@ -223,8 +223,8 @@ describe('handleAddItem', () => {
   });
 
   it('updates displayed categories when setDisplayedCategories is provided and no filter is active', () => {
-    const setCategories = jest.fn();
-    const setDisplayedCategories = jest.fn();
+    const setCategories = vi.fn();
+    const setDisplayedCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,
@@ -242,8 +242,8 @@ describe('handleAddItem', () => {
   });
 
   it('does not update displayed categories when filter is active', () => {
-    const setCategories = jest.fn();
-    const setDisplayedCategories = jest.fn();
+    const setCategories = vi.fn();
+    const setDisplayedCategories = vi.fn();
     handleAddItem({
       newItems: [{ ...item, completed: false, category: 'NewCategory' }],
       pending: false,

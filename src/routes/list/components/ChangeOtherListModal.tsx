@@ -90,10 +90,11 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
 
   const switchToExisting = (
     <Button
+      data-test-id="choose-existing-list-link"
       variant="link"
       onClick={(): void => setShowNewListForm(false)}
       className="float-end"
-      style={{ padding: '0' }}
+      style={{ padding: "0" }}
     >
       Choose existing list
     </Button>
@@ -101,10 +102,11 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
 
   const switchToNew = (
     <Button
+      data-test-id="create-new-list-link"
       variant="link"
       onClick={(): void => setShowNewListForm(true)}
       className="float-end"
-      style={{ padding: '0' }}
+      style={{ padding: "0" }}
     >
       Create new list
     </Button>
@@ -145,7 +147,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   return (
     <Modal show={props.show} onHide={(): void => props.setShow(false)} data-test-id="change-other-list-modal">
       <Modal.Header closeButton>{changeListInstructions}</Modal.Header>
-      <Modal.Body>
+      <Modal.Body data-test-id="confirm-modal-body">
         <Form onSubmit={handleSubmit} autoComplete="off">
           {showNewListForm && existingListsOptions.length > 0 && switchToExisting}
           {showNewListForm && newListNameInput}

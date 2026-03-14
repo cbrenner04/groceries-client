@@ -64,7 +64,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
     copy: false,
     move: false,
     show: true,
-    setShow: jest.fn(),
+    setShow: vi.fn(),
     currentList: {
       id: 'list-1',
       name: 'Current List',
@@ -86,10 +86,10 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
         refreshed: false,
       },
     ],
-    setSelectedItems: jest.fn(),
-    setIncompleteMultiSelect: jest.fn(),
-    setCompleteMultiSelect: jest.fn(),
-    handleMove: jest.fn(),
+    setSelectedItems: vi.fn(),
+    setIncompleteMultiSelect: vi.fn(),
+    setCompleteMultiSelect: vi.fn(),
+    handleMove: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<ChangeOtherListModal {...props} />);
@@ -106,7 +106,7 @@ const noExistingListCopy =
 
 describe('ChangeOtherListModal', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders appropriate instructions when copy and lists', async () => {
@@ -157,7 +157,7 @@ describe('ChangeOtherListModal', () => {
   });
 
   it('handleSubmit with existing list', async () => {
-    axios.put = jest.fn().mockResolvedValue(undefined);
+    axios.put = vi.fn().mockResolvedValue(undefined);
     const { getByLabelText, getByText, props, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -181,7 +181,7 @@ describe('ChangeOtherListModal', () => {
   });
 
   it('handleSubmit with new list name', async () => {
-    axios.put = jest.fn().mockResolvedValue(undefined);
+    axios.put = vi.fn().mockResolvedValue(undefined);
     const { getByLabelText, getByText, props, user } = setup({ move: true });
 
     await user.click(getByText('Create new list'));
@@ -217,7 +217,7 @@ describe('ChangeOtherListModal', () => {
     const axiosError = {
       response: { status: 401 },
     } as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -231,7 +231,7 @@ describe('ChangeOtherListModal', () => {
     const axiosError = {
       response: { status: 404 },
     } as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -245,7 +245,7 @@ describe('ChangeOtherListModal', () => {
     const axiosError = {
       response: { status: 403 },
     } as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -259,7 +259,7 @@ describe('ChangeOtherListModal', () => {
     const axiosError = {
       response: { status: 500 },
     } as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -273,7 +273,7 @@ describe('ChangeOtherListModal', () => {
     const axiosError = {
       request: {},
     } as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -285,7 +285,7 @@ describe('ChangeOtherListModal', () => {
 
   it('handles unexpected error', async () => {
     const axiosError = {} as AxiosError;
-    axios.put = jest.fn().mockRejectedValue(axiosError);
+    axios.put = vi.fn().mockRejectedValue(axiosError);
     const { getByLabelText, getByText, user } = setup({ copy: true });
 
     await user.click(getByLabelText('Existing list'));
@@ -349,7 +349,7 @@ describe('ChangeOtherListModal', () => {
       },
     ];
 
-    axios.put = jest.fn().mockResolvedValue(undefined);
+    axios.put = vi.fn().mockResolvedValue(undefined);
     const { getByLabelText, getByText, user } = setup({ copy: true, items: multipleItems });
 
     await user.click(getByLabelText('Existing list'));

@@ -1,23 +1,24 @@
+import { vi } from "vitest";
 import { showToast } from './toast';
 import type { AxiosError } from 'axios';
 import { handleFailure } from './handleFailure';
 
 // Mock toast utility
-jest.mock('./toast', () => ({
+vi.mock('./toast', () => ({
   showToast: {
-    info: jest.fn(),
-    error: jest.fn(),
-    success: jest.fn(),
-    warning: jest.fn(),
+    info: vi.fn(),
+    error: vi.fn(),
+    success: vi.fn(),
+    warning: vi.fn(),
   },
 }));
 
 describe('handleFailure', () => {
-  const mockNavigate = jest.fn();
+  const mockNavigate = vi.fn();
   const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('401 Unauthorized errors', () => {

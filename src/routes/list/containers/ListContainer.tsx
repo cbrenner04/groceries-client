@@ -128,7 +128,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         }
       }
     },
-    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '5000', 10),
+    parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '5000', 10),
   );
 
   // Register cleanup functions for memory management

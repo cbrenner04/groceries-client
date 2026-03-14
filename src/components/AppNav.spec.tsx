@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
@@ -13,15 +14,15 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
 
 function setup(context: { uid: string; client: string; accessToken: string } | null): ISetupReturn {
   const user = userEvent.setup();
-  const signOutUser = jest.fn();
+  const signOutUser = vi.fn();
   const component = render(
     <MemoryRouter>
       <UserContext.Provider value={context}>

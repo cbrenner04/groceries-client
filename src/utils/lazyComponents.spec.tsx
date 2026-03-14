@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import { createLazyComponent, preloadComponent } from './lazyComponents';
 
 // Mock Loading component
-jest.mock('components/Loading', () => {
+vi.mock('components/Loading', () => {
   return function MockLoading(): React.ReactNode {
     return <div data-test-id="loading">Loading...</div>;
   };
@@ -21,12 +21,12 @@ interface MockComponentProps {
 
 describe('lazyComponents', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('createLazyComponent', () => {
     it('should create a lazy component with default fallback', async () => {
-      const importFn = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFn = vi.fn().mockResolvedValue({ default: MockComponent });
       const LazyComponent = createLazyComponent<MockComponentProps>(importFn);
 
       const { getByTestId } = render(<LazyComponent testProp="test value" />);
@@ -45,7 +45,7 @@ describe('lazyComponents', () => {
 
     it('should create a lazy component with custom fallback', async () => {
       const CustomFallback = (): React.ReactElement => <div data-test-id="custom-fallback">Custom Loading</div>;
-      const importFn = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFn = vi.fn().mockResolvedValue({ default: MockComponent });
       const LazyComponent = createLazyComponent<MockComponentProps>(importFn, CustomFallback);
 
       const { getByTestId } = render(<LazyComponent testProp="test value" />);
@@ -62,7 +62,7 @@ describe('lazyComponents', () => {
     });
 
     it('should set correct display name', () => {
-      const importFn = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFn = vi.fn().mockResolvedValue({ default: MockComponent });
       Object.defineProperty(importFn, 'name', { value: 'TestImport', writable: true });
 
       const LazyComponent = createLazyComponent<MockComponentProps>(importFn);
@@ -71,7 +71,7 @@ describe('lazyComponents', () => {
 
     it('should set display name with Unknown when importFn has no name', () => {
       // Create a function without a name property by using an anonymous function
-      const importFnWithoutName = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFnWithoutName = vi.fn().mockResolvedValue({ default: MockComponent });
       // Override the name property to be undefined
       Object.defineProperty(importFnWithoutName, 'name', { value: undefined, configurable: true });
 
@@ -80,7 +80,7 @@ describe('lazyComponents', () => {
     });
 
     it('should handle import errors gracefully', async () => {
-      const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
+      const importFn = vi.fn().mockRejectedValue(new Error('Import failed'));
       const LazyComponent = createLazyComponent<MockComponentProps>(importFn);
 
       const { getByTestId } = render(<LazyComponent testProp="test value" />);
@@ -113,12 +113,12 @@ describe('lazyComponents', () => {
     });
 
     it('should use requestIdleCallback when available', () => {
-      const mockRequestIdleCallback = jest.fn((callback, options) => {
+      const mockRequestIdleCallback = vi.fn((callback, options) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
 
-      const importFn = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFn = vi.fn().mockResolvedValue({ default: MockComponent });
 
       preloadComponent(importFn);
 
@@ -129,13 +129,13 @@ describe('lazyComponents', () => {
 
     it('should fallback to setTimeout when requestIdleCallback is not available', () => {
       delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
-      const mockSetTimeout = jest.fn((callback) => {
+      const mockSetTimeout = vi.fn((callback) => {
         callback();
         return 1;
       });
       window.setTimeout = mockSetTimeout as unknown as typeof window.setTimeout;
 
-      const importFn = jest.fn().mockResolvedValue({ default: MockComponent });
+      const importFn = vi.fn().mockResolvedValue({ default: MockComponent });
 
       preloadComponent(importFn);
 
@@ -145,13 +145,13 @@ describe('lazyComponents', () => {
     });
 
     it('should handle import errors in requestIdleCallback', async () => {
-      const mockRequestIdleCallback = jest.fn((callback) => {
+      const mockRequestIdleCallback = vi.fn((callback) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
 
-      const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const importFn = vi.fn().mockRejectedValue(new Error('Import failed'));
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation();
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
 
@@ -171,14 +171,14 @@ describe('lazyComponents', () => {
 
     it('should handle import errors in setTimeout fallback', async () => {
       delete (window as unknown as { requestIdleCallback?: () => void }).requestIdleCallback;
-      const mockSetTimeout = jest.fn((callback, delay) => {
+      const mockSetTimeout = vi.fn((callback, delay) => {
         // Use real setTimeout to avoid conflicts with waitFor
         return originalSetTimeout(callback, delay);
       });
       window.setTimeout = mockSetTimeout as unknown as typeof window.setTimeout;
 
-      const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const importFn = vi.fn().mockRejectedValue(new Error('Import failed'));
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation();
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
 
@@ -198,13 +198,13 @@ describe('lazyComponents', () => {
     });
 
     it('should not log errors in production mode', () => {
-      const mockRequestIdleCallback = jest.fn((callback) => {
+      const mockRequestIdleCallback = vi.fn((callback) => {
         callback({ didTimeout: false, timeRemaining: () => 5 });
       });
       window.requestIdleCallback = mockRequestIdleCallback as unknown as typeof window.requestIdleCallback;
 
-      const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const importFn = vi.fn().mockRejectedValue(new Error('Import failed'));
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation();
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
 

@@ -8,8 +8,8 @@ import axios from 'utils/api';
 import PageNotFound from './PageNotFound';
 
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
+const mockNavigate = vi.fn();
+vi.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useNavigate: (): jest.Mock => mockNavigate,
 }));
@@ -31,7 +31,7 @@ describe('PageNotFound', () => {
   });
 
   it('redirects to /users/sign_in when the user is not authenticated', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
     setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -44,7 +44,7 @@ describe('PageNotFound', () => {
   });
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const { container, findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -56,7 +56,7 @@ describe('PageNotFound', () => {
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
-    axios.get = jest.fn().mockResolvedValue({});
+    axios.get = vi.fn().mockResolvedValue({});
     const { container, findByText } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 

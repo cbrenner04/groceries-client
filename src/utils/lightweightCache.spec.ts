@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { renderHook } from '@testing-library/react';
 import { createCache, useCache } from './lightweightCache';
 
@@ -5,15 +6,15 @@ describe('LightweightCache', () => {
   let originalDateNow: () => number;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     // Mock Date.now() to work with jest timers
     originalDateNow = Date.now;
-    Date.now = jest.fn(() => 1000);
+    Date.now = vi.fn(() => 1000);
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
     Date.now = originalDateNow;
   });
 

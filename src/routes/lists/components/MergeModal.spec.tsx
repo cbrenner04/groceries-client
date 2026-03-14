@@ -6,11 +6,11 @@ import MergeModal from './MergeModal';
 
 const defaultProps = {
   showModal: true,
-  clearModal: jest.fn(),
+  clearModal: vi.fn(),
   listNames: 'name, name',
   mergeName: '',
-  handleMergeConfirm: jest.fn(),
-  handleMergeNameChange: jest.fn(),
+  handleMergeConfirm: vi.fn(),
+  handleMergeNameChange: vi.fn(),
   selectedLists: [
     { id: '1', name: 'Test List 1', list_item_configuration_id: 'config-1' },
     { id: '2', name: 'Test List 2', list_item_configuration_id: 'config-1' },

@@ -12,8 +12,8 @@ interface ISetupReturn extends RenderResult {
 function setup(userIsOwner = true): ISetupReturn {
   const user = userEvent.setup();
   const props = {
-    togglePermission: jest.fn(),
-    removeShare: jest.fn(),
+    togglePermission: vi.fn(),
+    removeShare: vi.fn(),
     userIsOwner,
     userId: 'id1',
     status: 'accepted',

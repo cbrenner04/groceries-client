@@ -27,7 +27,9 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
         data-test-id={`template-${props.template.id}`}
       >
         <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">{props.template.name}</h5>
+          <h5 className="mb-0" data-test-id="template-name">
+            {props.template.name}
+          </h5>
           <div className="d-flex gap-2">
             <EditLink to={`/templates/${props.template.id}/edit`} testID="template-edit" />
             <Trash handleClick={(): void => setShowModal(true)} testID="template-trash" />

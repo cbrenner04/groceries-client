@@ -25,7 +25,7 @@ describe('EditTemplate', () => {
   });
 
   it('renders unknown error when fetch fails', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderEditTemplate();
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
@@ -33,7 +33,7 @@ describe('EditTemplate', () => {
   });
 
   it('displays UnknownError when data is undefined', async () => {
-    jest.spyOn(utils, 'fetchTemplateToEdit').mockResolvedValue(undefined);
+    vi.spyOn(utils, 'fetchTemplateToEdit').mockResolvedValue(undefined);
     const { container, findByRole } = renderEditTemplate();
 
     await act(async () => {

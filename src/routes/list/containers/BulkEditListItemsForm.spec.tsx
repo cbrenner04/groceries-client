@@ -18,13 +18,13 @@ import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkE
 import * as fieldHelpers from '../fieldHelpers';
 
 // Mock dependencies
-jest.mock('utils/api');
+vi.mock('utils/api');
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockShowToast = showToast as jest.Mocked<typeof showToast>;
 
 describe('BulkEditListItemsForm', () => {
-  const mockNavigate = jest.fn();
+  const mockNavigate = vi.fn();
 
   const mockList: IList = {
     id: 'list-1',
@@ -168,8 +168,8 @@ describe('BulkEditListItemsForm', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockAxios.put = jest.fn().mockResolvedValue({});
+    vi.clearAllMocks();
+    mockAxios.put = vi.fn().mockResolvedValue({});
   });
 
   it('renders the form with generic title', () => {
@@ -248,7 +248,7 @@ describe('BulkEditListItemsForm', () => {
   });
 
   it('does not update state when parseBulkFieldChange returns null (clear_ handled by handleClearField)', async () => {
-    jest.spyOn(fieldHelpers, 'parseBulkFieldChange').mockReturnValue(null);
+    vi.spyOn(fieldHelpers, 'parseBulkFieldChange').mockReturnValue(null);
     const { getByLabelText, getByText, user } = renderComponent();
 
     await user.clear(getByLabelText('Product'));
@@ -265,7 +265,7 @@ describe('BulkEditListItemsForm', () => {
         }),
       );
     });
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('handles clear field functionality', async () => {
@@ -325,7 +325,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 401 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -341,7 +341,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 404 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -357,7 +357,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 403 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -376,7 +376,7 @@ describe('BulkEditListItemsForm', () => {
         data: { name: 'cannot be blank', quantity: 'must be a number' },
       },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -391,7 +391,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       request: {},
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -406,7 +406,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       message: 'Unexpected error',
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -503,7 +503,7 @@ describe('BulkEditListItemsForm', () => {
 
   describe('category auto-creation', () => {
     beforeEach(() => {
-      mockAxios.post = jest.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
     });
 
     it('creates a new category when a category value is provided', async () => {
@@ -540,7 +540,7 @@ describe('BulkEditListItemsForm', () => {
     });
 
     it('continues successfully when category creation fails', async () => {
-      mockAxios.post = jest.fn().mockRejectedValue({ response: { status: 422 } });
+      mockAxios.post = vi.fn().mockRejectedValue({ response: { status: 422 } });
 
       const { getByLabelText, getByText, user } = renderComponent();
 

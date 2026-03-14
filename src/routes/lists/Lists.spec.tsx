@@ -23,7 +23,7 @@ describe('Lists', () => {
   });
 
   it('renders unknown error when error occurs', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderLists();
 
     await act(async () => {
@@ -36,7 +36,7 @@ describe('Lists', () => {
 
   it('displays UnknownError when data is undefined', async () => {
     // Mock the fetchLists function to return undefined
-    jest.spyOn(utils, 'fetchLists').mockResolvedValue(undefined);
+    vi.spyOn(utils, 'fetchLists').mockResolvedValue(undefined);
     const { container, findByRole } = renderLists();
 
     await act(async () => {
@@ -48,7 +48,7 @@ describe('Lists', () => {
   });
 
   it('renders Lists when data retrieval is complete', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
         accepted_lists: {

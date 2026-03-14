@@ -35,7 +35,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
   useEffect(() => {
     function tick(): void {
       /* istanbul ignore next */
-      if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && idleTimer.isIdle()) {
+      if (import.meta.env.VITE_USE_IDLE_TIMER === 'true' && idleTimer.isIdle()) {
         return;
       }
 
