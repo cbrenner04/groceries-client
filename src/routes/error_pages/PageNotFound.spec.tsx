@@ -23,11 +23,14 @@ const setup = (): RenderResult =>
 
 describe('PageNotFound', () => {
   it('renders the Loading component when fetch request is pending', async () => {
+    axios.get = vi.fn().mockImplementation(() => new Promise(() => {}));
     const { container, findByText } = setup();
     const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
-    expect(status).toBeTruthy();
+    expect(status).toBeVisible();
+
+    (axios.get as jest.Mock).mockClear();
   });
 
   it('redirects to /users/sign_in when the user is not authenticated', async () => {

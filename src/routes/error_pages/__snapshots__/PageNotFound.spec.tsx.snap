@@ -38,17 +38,20 @@ exports[`PageNotFound > displays UnknownError when an error occurs validating au
 
 exports[`PageNotFound > renders the Loading component when fetch request is pending 1`] = `
 <div>
-  <h1>
-    Page not found!
-  </h1>
-  <h2>
-    Sorry but the page you are looking for was not found.
-  </h2>
-  <a
-    data-discover="true"
-    href="/lists"
+  <div
+    id="loader"
   >
-    Return to the home page
-  </a>
+    <div
+      class="spinner-border"
+      id="spinner"
+      role="status"
+    >
+      <span
+        class="visually-hidden"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
 </div>
 `;

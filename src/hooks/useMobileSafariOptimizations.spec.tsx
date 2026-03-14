@@ -5,7 +5,7 @@ import { useMobileSafariOptimizations } from './useMobileSafariOptimizations';
 // Mock addEventListener and removeEventListener
 const mockAddEventListener = vi.fn();
 const mockRemoveEventListener = vi.fn();
-
+type callType = [string, ...unknown[]];
 // Mock document
 Object.defineProperty(document, 'hidden', {
   value: false,
@@ -95,7 +95,7 @@ describe('useMobileSafariOptimizations', () => {
         writable: true,
       });
       const visibilityHandler = mockAddEventListener.mock.calls.find(
-        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+        (call: callType) => call[0] === 'visibilitychange',
       )?.[1];
       visibilityHandler?.();
     });
@@ -107,7 +107,7 @@ describe('useMobileSafariOptimizations', () => {
         writable: true,
       });
       const visibilityHandler = mockAddEventListener.mock.calls.find(
-        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+        (call: callType) => call[0] === 'visibilitychange',
       )?.[1];
       visibilityHandler?.();
     });
@@ -146,7 +146,7 @@ describe('useMobileSafariOptimizations', () => {
         writable: true,
       });
       const visibilityHandler = mockAddEventListener.mock.calls.find(
-        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+        (call: callType) => call[0] === 'visibilitychange',
       )?.[1];
       visibilityHandler?.();
     });
