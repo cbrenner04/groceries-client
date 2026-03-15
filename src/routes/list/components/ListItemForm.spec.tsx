@@ -8,10 +8,10 @@ import { unifiedCache } from 'utils/lightweightCache';
 
 const mockHandleItemAddition = vi.fn();
 const mockNavigate = vi.fn();
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 const fieldConfigurations = [

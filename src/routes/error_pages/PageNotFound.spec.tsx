@@ -7,11 +7,11 @@ import { showToast } from '../../utils/toast';
 import axios from 'utils/api';
 import PageNotFound from './PageNotFound';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 const setup = (): RenderResult =>
@@ -30,7 +30,7 @@ describe('PageNotFound', () => {
     expect(container).toMatchSnapshot();
     expect(status).toBeVisible();
 
-    (axios.get as jest.Mock).mockClear();
+    (axios.get as Mock).mockClear();
   });
 
   it('redirects to /users/sign_in when the user is not authenticated', async () => {
@@ -43,7 +43,7 @@ describe('PageNotFound', () => {
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
 
-    (axios.get as jest.Mock).mockClear();
+    (axios.get as Mock).mockClear();
   });
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
@@ -55,7 +55,7 @@ describe('PageNotFound', () => {
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
 
-    (axios.get as jest.Mock).mockClear();
+    (axios.get as Mock).mockClear();
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
@@ -67,6 +67,6 @@ describe('PageNotFound', () => {
     expect(await findByText('Page not found!')).toBeTruthy();
     expect(container).toMatchSnapshot();
 
-    (axios.get as jest.Mock).mockClear();
+    (axios.get as Mock).mockClear();
   });
 });

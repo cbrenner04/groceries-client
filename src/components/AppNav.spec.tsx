@@ -9,14 +9,14 @@ import { UserContext } from 'AppRouter';
 import AppNav from './AppNav';
 
 interface ISetupReturn extends RenderResult {
-  signOutUser: jest.Mock;
+  signOutUser: Mock;
   user: UserEvent;
 }
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 function setup(context: { uid: string; client: string; accessToken: string } | null): ISetupReturn {

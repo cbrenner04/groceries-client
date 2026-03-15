@@ -5,7 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import Trash from './Trash';
 
 async function setup(): Promise<{
-  handleClick: jest.Mock;
+  handleClick: Mock;
   trashButton: HTMLElement;
   user: UserEvent;
 }> {

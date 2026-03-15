@@ -15,9 +15,9 @@ vi.mock('../../../../utils/api', () => ({
 }));
 vi.mock('../../../../utils/handleFailure');
 
-const mockToastUtil = showToast as jest.Mocked<typeof showToast>;
-const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockToastUtil = showToast as Mocked<typeof showToast>;
+const mockAxios = axios as Mocked<typeof axios>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
 
 const item = createListItem('1', false, [], {

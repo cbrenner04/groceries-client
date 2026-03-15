@@ -87,7 +87,7 @@ describe('TemplateForm', () => {
     await user.click(getByText('Create Template'));
 
     expect(props.onFormSubmit).toHaveBeenCalled();
-    const [name, fields] = (props.onFormSubmit as jest.Mock).mock.calls[0];
+    const [name, fields] = (props.onFormSubmit as Mock).mock.calls[0];
     expect(name).toBe('My Template');
     expect(fields).toHaveLength(2);
   });

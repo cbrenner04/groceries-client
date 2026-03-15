@@ -9,12 +9,12 @@ import axios from 'utils/api';
 
 import PendingLists, { type IPendingListsProps } from './PendingLists';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {

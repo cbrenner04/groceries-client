@@ -8,7 +8,7 @@ import axios from '../../utils/api';
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
   useParams: (): { list_id: string } => ({
     list_id: '1',
   }),

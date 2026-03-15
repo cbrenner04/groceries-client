@@ -101,7 +101,7 @@ describe('LightweightCache', () => {
       expect(cache.getStats().size).toBe(1);
 
       // Advance time past expiration
-      (Date.now as jest.Mock).mockReturnValue(2500);
+      (Date.now as Mock).mockReturnValue(2500);
 
       // Try to get the expired entry
       const result = cache.get('key1', 'value1');
@@ -181,7 +181,7 @@ describe('LightweightCache', () => {
       expect(cache.retrieve('key1')).toBe('value1');
 
       // Advance time past expiration
-      (Date.now as jest.Mock).mockReturnValue(2500);
+      (Date.now as Mock).mockReturnValue(2500);
 
       const retrieved = cache.retrieve('key1');
       expect(retrieved).toBeNull();
@@ -221,12 +221,12 @@ describe('LightweightCache', () => {
       expect(cache.getStats().size).toBe(1);
 
       // Advance time and create second entry at time 1500
-      (Date.now as jest.Mock).mockReturnValue(1500);
+      (Date.now as Mock).mockReturnValue(1500);
       cache.get('key2', 'value2');
       expect(cache.getStats().size).toBe(2);
 
       // Advance time to 2500 - key1 is 1500ms old (expired), key2 is 1000ms old (still valid)
-      (Date.now as jest.Mock).mockReturnValue(2500);
+      (Date.now as Mock).mockReturnValue(2500);
 
       cache.cleanup();
       expect(cache.getStats().size).toBe(1);

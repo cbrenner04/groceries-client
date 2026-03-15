@@ -21,7 +21,7 @@ import {
 } from 'test-utils/factories';
 import { handleFailure } from '../../utils/handleFailure';
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),

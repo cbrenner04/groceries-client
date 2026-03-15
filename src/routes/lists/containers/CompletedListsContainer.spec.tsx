@@ -8,7 +8,7 @@ import type { TUserPermissions } from 'typings';
 
 import CompletedListsContainer from './CompletedListsContainer';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 function setup(): RenderResult {
   const props = {

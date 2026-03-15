@@ -5,7 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import Merge from './Merge';
 
 async function setup(): Promise<{
-  handleClick: jest.Mock;
+  handleClick: Mock;
   mergeButton: HTMLElement;
   user: UserEvent;
 }> {

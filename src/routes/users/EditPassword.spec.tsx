@@ -12,10 +12,10 @@ const mockNavigate = vi.fn();
 // Mock useLocation for this specific test
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useLocation: (): { search: jest.Mock } => ({
+  useLocation: (): { search: Mock } => ({
     search: vi.fn(() => 'foo'),
   }),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {

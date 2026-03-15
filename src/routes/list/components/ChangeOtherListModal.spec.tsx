@@ -10,7 +10,7 @@ import { EListItemFieldType } from 'typings';
 import type { IListItem, IListItemField } from 'typings';
 import ChangeOtherListModal, { type IChangeOtherListModalProps } from './ChangeOtherListModal';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 interface ISetupReturn extends RenderResult {
   user: UserEvent;

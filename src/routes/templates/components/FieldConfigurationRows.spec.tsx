@@ -73,7 +73,7 @@ describe('FieldConfigurationRows', () => {
     await user.click(getByTestId('add-field-button'));
 
     expect(props.setFieldRows).toHaveBeenCalled();
-    const call = (props.setFieldRows as jest.Mock).mock.calls[0][0];
+    const call = (props.setFieldRows as Mock).mock.calls[0][0];
     expect(call).toHaveLength(2);
     expect(call[1].label).toBe('');
     expect(call[1].dataType).toBe(EListItemFieldType.FREE_TEXT);
@@ -102,7 +102,7 @@ describe('FieldConfigurationRows', () => {
 
     await user.click(getByTestId('add-field-button'));
 
-    const call = (props.setFieldRows as jest.Mock).mock.calls[0][0];
+    const call = (props.setFieldRows as Mock).mock.calls[0][0];
     expect(call[2].position).toBe(3);
   });
 
@@ -129,7 +129,7 @@ describe('FieldConfigurationRows', () => {
     await user.click(getByTestId('field-row-remove-0'));
 
     expect(props.setFieldRows).toHaveBeenCalled();
-    const call = (props.setFieldRows as jest.Mock).mock.calls[0][0];
+    const call = (props.setFieldRows as Mock).mock.calls[0][0];
     expect(call).toHaveLength(1);
     expect(call[0].key).toBe('1');
   });
@@ -142,7 +142,7 @@ describe('FieldConfigurationRows', () => {
     await user.type(labelInput, 'n');
 
     expect(props.setFieldRows).toHaveBeenCalled();
-    const mock = props.setFieldRows as jest.Mock;
+    const mock = props.setFieldRows as Mock;
     const lastCall = mock.mock.calls[mock.mock.calls.length - 1][0];
     expect(lastCall[0].label).toContain('n');
   });
@@ -158,7 +158,7 @@ describe('FieldConfigurationRows', () => {
 
     await user.click(getByTestId('add-field-button'));
 
-    const call = (props.setFieldRows as jest.Mock).mock.calls[0][0];
+    const call = (props.setFieldRows as Mock).mock.calls[0][0];
     expect(call[3].key).toBe('6');
   });
 

@@ -14,7 +14,7 @@ vi.mock('../../../../utils/api', () => ({
 vi.mock('../../../../utils/handleFailure');
 
 // Mock the toast utilities
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 
 const mockNavigate = vi.fn();
 const mockSet = vi.fn();

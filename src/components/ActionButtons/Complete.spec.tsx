@@ -6,7 +6,7 @@ import Complete from './Complete';
 
 async function setup(): Promise<{
   completeButton: HTMLElement;
-  handleClick: jest.Mock;
+  handleClick: Mock;
   user: UserEvent;
 }> {
   const handleClick = vi.fn();

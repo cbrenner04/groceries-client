@@ -30,7 +30,10 @@ jobs:
       
       # Bundle size tracking for all builds
       - name: Analyze bundle size
-        run: du -sh build/static/js/*.js && du -sh build/static/css/*.css
+        run: |
+          compgen -G "build/assets/*.js" >/dev/null || { echo "No JS assets found"; exit 1; }
+          du -sh build/assets/*.js
+          compgen -G "build/assets/*.css" >/dev/null && du -sh build/assets/*.css || echo "No CSS assets found"
       
       # Full Lighthouse audit only on merge to master or manual trigger
       - name: Run Lighthouse CI

@@ -9,12 +9,12 @@ import { showToast } from '../../../utils/toast';
 
 import EditTemplateForm, { type IEditTemplateFormProps } from './EditTemplateForm';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -143,7 +143,7 @@ describe('EditTemplateForm', () => {
     await user.click(getByText('Update Template'));
 
     await waitFor(() => {
-      const calls = (axios.put as jest.Mock).mock.calls;
+      const calls = (axios.put as Mock).mock.calls;
       const fieldUpdateCall = calls.find((call: [string, ...unknown[]]) =>
         call[0].includes('list_item_field_configurations'),
       );

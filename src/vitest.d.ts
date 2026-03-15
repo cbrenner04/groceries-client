@@ -1,11 +1,11 @@
-import type { Mocked as ViMocked, MockedFunction as ViMockedFunction } from 'vitest';
+import type { Mock as VitestMock, Mocked as VitestMocked, MockedFunction as VitestMockedFunction } from 'vitest';
 
 declare global {
-  namespace jest {
-    type Mock<T = unknown> = ViMocked<T>;
-    type Mocked<T> = ViMocked<T>;
-    type MockedFunction<T extends (...args: never[]) => unknown> = ViMockedFunction<T>;
-  }
+  // Re-export vitest mock types globally so they can be used without import
+  type Mock = VitestMock;
+  type Mocked<T> = VitestMocked<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type MockedFunction<T extends (...args: any[]) => any> = VitestMockedFunction<T>;
 }
 
 export {};

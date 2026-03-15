@@ -9,7 +9,7 @@ import { handleFailure } from '../../utils/handleFailure';
 
 import EditList from './EditList';
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
 
 // Mock router hooks in a single module factory to avoid mock-order flakiness.

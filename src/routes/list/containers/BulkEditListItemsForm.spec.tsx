@@ -20,8 +20,8 @@ import * as fieldHelpers from '../fieldHelpers';
 // Mock dependencies
 vi.mock('utils/api');
 
-const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockAxios = axios as Mocked<typeof axios>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 describe('BulkEditListItemsForm', () => {
   const mockNavigate = vi.fn();

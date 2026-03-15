@@ -8,7 +8,7 @@ import * as utils from './utils';
 
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => vi.fn(),
+  useNavigate: (): Mock => vi.fn(),
   useParams: (): { id: string } => ({ id: '1' }),
 }));
 

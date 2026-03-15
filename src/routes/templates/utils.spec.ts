@@ -4,7 +4,7 @@ import { showToast } from '../../utils/toast';
 import * as utils from './utils';
 import type { IListItemConfiguration } from 'typings';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
 

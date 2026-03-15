@@ -14,7 +14,7 @@ import { unifiedCache } from 'utils/lightweightCache';
 import { showToast } from '../../../utils/toast';
 
 // Create reference for test expectations
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 // Mock react-router
 const mockLocation = {
@@ -34,7 +34,7 @@ async function advanceTimersByTime(ms: number): Promise<void> {
 
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
   useLocation: (): typeof mockLocation => mockLocation,
 }));
 

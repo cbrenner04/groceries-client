@@ -22,7 +22,7 @@ vi.mock('react-router', async () => ({
   useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
 }));
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),

@@ -46,7 +46,7 @@ describe('FieldConfigurationRow', () => {
     await user.clear(labelInput);
     await user.type(labelInput, 'n');
 
-    const calls = (props.onChange as jest.Mock).mock.calls;
+    const calls = (props.onChange as Mock).mock.calls;
     expect(calls[calls.length - 1][0]).toBe('label');
     expect(calls[calls.length - 1][1]).toContain('n');
   });

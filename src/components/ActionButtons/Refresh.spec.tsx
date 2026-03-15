@@ -5,7 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import Refresh from './Refresh';
 
 async function setup(): Promise<{
-  handleClick: jest.Mock;
+  handleClick: Mock;
   refreshButton: HTMLElement;
   user: UserEvent;
 }> {

@@ -6,7 +6,7 @@ import EditButton from './EditButton';
 
 async function setup(): Promise<{
   editButton: HTMLElement;
-  handleClick: jest.Mock;
+  handleClick: Mock;
   user: UserEvent;
 }> {
   const user = userEvent.setup();

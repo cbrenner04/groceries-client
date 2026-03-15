@@ -3,7 +3,7 @@ import { showToast } from '../../utils/toast';
 import { fetchData } from './utils';
 import axios from '../../utils/api';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 describe('utils', () => {
   describe('fetchData', () => {

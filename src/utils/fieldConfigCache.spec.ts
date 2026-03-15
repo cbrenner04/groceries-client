@@ -11,7 +11,7 @@ import { type IListItemFieldConfiguration, EListItemFieldType } from '../typings
 
 // Mock axios
 vi.mock('./api');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = axios as Mocked<typeof axios>;
 
 describe('FieldConfigurationCache', () => {
   let originalDateNow: () => number;
@@ -144,7 +144,7 @@ describe('FieldConfigurationCache', () => {
       await getFieldConfigurations('config-123');
 
       // Advance time past expiration (5 minutes + 1ms)
-      (Date.now as jest.Mock).mockReturnValue(1000 + 5 * 60 * 1000 + 1);
+      (Date.now as Mock).mockReturnValue(1000 + 5 * 60 * 1000 + 1);
 
       // Second request should fetch again
       mockedAxios.get.mockResolvedValueOnce({ data: mockFieldConfigs });

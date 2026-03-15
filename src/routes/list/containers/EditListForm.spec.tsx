@@ -8,12 +8,12 @@ import { showToast } from 'utils/toast';
 
 import EditListForm, { type IEditListFormProps } from './EditListForm';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -85,7 +85,7 @@ describe('EditListForm', () => {
 
   it('makes put request, displays success toast, and redirects on successful submission', async () => {
     const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -105,7 +105,7 @@ describe('EditListForm', () => {
 
   it('sends updated form data on submission', async () => {
     const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByLabelText, getByText, user } = setup();
 
@@ -136,7 +136,7 @@ describe('EditListForm', () => {
     const mockPut = vi.fn().mockRejectedValue({
       response: { status: 401 },
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -151,7 +151,7 @@ describe('EditListForm', () => {
     const mockPut = vi.fn().mockRejectedValue({
       response: { status: 403 },
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -166,7 +166,7 @@ describe('EditListForm', () => {
     const mockPut = vi.fn().mockRejectedValue({
       response: { status: 404 },
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -187,7 +187,7 @@ describe('EditListForm', () => {
         },
       },
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -201,7 +201,7 @@ describe('EditListForm', () => {
     const mockPut = vi.fn().mockRejectedValue({
       request: 'request failed',
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -215,7 +215,7 @@ describe('EditListForm', () => {
     const mockPut = vi.fn().mockRejectedValue({
       message: 'Network error',
     });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 
@@ -255,7 +255,7 @@ describe('EditListForm', () => {
 
   it('prevents default form submission behavior', async () => {
     const mockPut = vi.fn().mockResolvedValue({ data: { success: true } });
-    (axios.put as jest.Mock) = mockPut;
+    (axios.put as Mock) = mockPut;
 
     const { getByText, user } = setup();
 

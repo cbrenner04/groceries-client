@@ -2,7 +2,7 @@ import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './u
 import axios from '../../utils/api';
 import { showToast } from '../../utils/toast';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 describe('utils', () => {
   const navigate = vi.fn();

@@ -8,12 +8,12 @@ import { showToast } from 'utils/toast';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
-  useNavigate: (): jest.Mock => mockNavigate,
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -122,7 +122,7 @@ describe('TemplatesContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
     });
 
-    const calls = (axios.post as jest.Mock).mock.calls;
+    const calls = (axios.post as Mock).mock.calls;
     expect(calls[0][0]).toBe('/list_item_configurations');
     expect(calls[1][0]).toContain('/list_item_field_configurations');
   });

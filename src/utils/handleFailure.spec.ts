@@ -14,7 +14,7 @@ vi.mock('./toast', () => ({
 
 describe('handleFailure', () => {
   const mockNavigate = vi.fn();
-  const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+  const mockShowToast = showToast as Mocked<typeof showToast>;
 
   beforeEach(() => {
     vi.clearAllMocks();
