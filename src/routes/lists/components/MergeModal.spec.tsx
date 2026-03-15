@@ -36,9 +36,9 @@ describe('MergeModal', () => {
   });
 
   it('renders', async () => {
-    const { container, findByTestId, findByText } = setup();
+    const { baseElement, findByTestId, findByText } = setup();
 
-    expect(container).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
     expect(await findByText('Merge "name, name"')).toBeVisible();
     expect(await findByTestId('confirm-merge')).toBeDisabled();
   });
@@ -73,13 +73,11 @@ describe('MergeModal', () => {
     expect(await findByTestId('confirm-merge')).toBeEnabled();
   });
 
-  it('call handleMergeConfirm when Merge lists is selected', async () => {
-    const { findByLabelText, findByTestId, props, user } = setup();
-
-    await user.type(await findByLabelText('Name for the merged list'), 'a');
+  it('calls handleMergeConfirm when Merge lists is selected', async () => {
+    const { findByTestId, props, user } = setup({ mergeName: 'Merged List' });
     await user.click(await findByTestId('confirm-merge'));
 
-    expect(props.handleMergeNameChange).toHaveBeenCalled();
+    expect(props.handleMergeConfirm).toHaveBeenCalled();
   });
 
   it('shows warning when lists of different configurations are selected', async () => {

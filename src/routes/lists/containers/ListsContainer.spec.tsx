@@ -457,7 +457,7 @@ describe('ListsContainer', () => {
 
     beforeEach(async () => {
       // Ensure prefetch is enabled for tests
-      vi.stubEnv('VITE_PREFETCH_IDLE', 'true');
+      import.meta.env.VITE_PREFETCH_IDLE = 'true';
       // Get the mocked function
       const listPrefetchModule = await import('utils/listPrefetch');
       mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as unknown as ReturnType<typeof vi.fn>;

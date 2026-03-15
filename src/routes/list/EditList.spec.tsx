@@ -103,7 +103,7 @@ describe('EditList', () => {
       expect.objectContaining({
         error: authError,
         notFoundMessage: 'List not found',
-        navigate: expect.any(Function),
+        navigate: mockNavigate,
         redirectURI: '/lists',
       }),
     );

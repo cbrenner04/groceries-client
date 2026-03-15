@@ -19,7 +19,7 @@ describe('Templates', () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderTemplates();
 
-    expect(await findByText('Loading...')).toBeInTheDocument();
+    expect(await findByText('Loading...')).toBeVisible();
     expect(container).toMatchSnapshot();
   });
 

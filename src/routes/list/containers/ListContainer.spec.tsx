@@ -532,7 +532,7 @@ describe('ListContainer', () => {
     });
 
     it('does not prefetch on mount when disabled via environment variable', async () => {
-      vi.stubEnv('VITE_PREFETCH_ON_MOUNT', 'false');
+      import.meta.env.VITE_PREFETCH_ON_MOUNT = 'false';
 
       const getSpy = vi.fn().mockImplementation((url: string) => {
         if (url.includes('list_item_field_configurations')) {

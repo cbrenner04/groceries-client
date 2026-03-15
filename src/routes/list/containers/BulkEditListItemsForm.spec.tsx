@@ -173,8 +173,9 @@ describe('BulkEditListItemsForm', () => {
   });
 
   it('renders the form with generic title', () => {
-    const { getByText } = renderComponent();
+    const { container, getByText } = renderComponent();
 
+    expect(container).toMatchSnapshot();
     expect(getByText('Edit Items')).toBeInTheDocument();
   });
 

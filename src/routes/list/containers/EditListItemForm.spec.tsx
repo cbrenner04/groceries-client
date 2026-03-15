@@ -92,7 +92,9 @@ describe('EditListItemForm', () => {
 
   describe('Rendering', () => {
     it('renders the form with correct title', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      const { container } = render(<EditListItemForm {...defaultProps} />);
+
+      expect(container).toMatchSnapshot();
       expect(screen.getByText('Edit Item')).toBeInTheDocument();
     });
 

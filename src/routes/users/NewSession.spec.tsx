@@ -42,7 +42,7 @@ describe('NewSession', () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = setup();
 
-    expect(await findByText('Loading...')).toBeInTheDocument();
+    expect(await findByText('Loading...')).toBeVisible();
     expect(container).toMatchSnapshot();
   });
 

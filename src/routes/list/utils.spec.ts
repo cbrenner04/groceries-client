@@ -312,7 +312,7 @@ describe('fetchList', () => {
 
   it('handles invalid data structure - missing list', async () => {
     const { list: unusedList, ...mockData } = createApiResponse();
-    void unusedList;
+    void unusedList; // `unusedList` is intentionally removed from the destructured mockData to test the error handling
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
@@ -327,6 +327,7 @@ describe('fetchList', () => {
 
   it('handles invalid data structure - missing not_completed_items', async () => {
     const { not_completed_items: unusedNotCompletedItems, ...mockData } = createApiResponse();
+    // `unusedNotCompletedItems` is intentionally removed from the destructured mockData to test the error handling
     void unusedNotCompletedItems;
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
@@ -342,6 +343,7 @@ describe('fetchList', () => {
 
   it('handles invalid data structure - missing completed_items', async () => {
     const { completed_items: unusedCompletedItems, ...mockData } = createApiResponse();
+    // `unusedCompletedItems` is intentionally removed from the destructured mockData to test the error handling
     void unusedCompletedItems;
     axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });

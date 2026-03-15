@@ -60,7 +60,7 @@ export default defineConfig(
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/no-empty-function': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
-      '@typescript-eslint/no-empty-function': 'off', // remove and update later
+      '@typescript-eslint/no-empty-function': 'off', // TODO: remove and update later
     },
   },
 );
