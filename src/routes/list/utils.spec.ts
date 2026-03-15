@@ -21,13 +21,13 @@ import {
 } from 'test-utils/factories';
 import { handleFailure } from '../../utils/handleFailure';
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 
-jest.mock('../../utils/handleFailure', () => ({
-  handleFailure: jest.fn(),
+vi.mock('../../utils/handleFailure', () => ({
+  handleFailure: vi.fn(),
 }));
 
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 
 // Helper to create mock error with status
 const createError = (status: number): AxiosError => new AxiosError('Test error', String(status));
@@ -230,12 +230,12 @@ describe('secondaryFieldsDisplay', () => {
 
 describe('fetchList', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('returns data on success', async () => {
     const mockData = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
     expect(mockNavigate).not.toHaveBeenCalled();
@@ -243,7 +243,7 @@ describe('fetchList', () => {
 
   it('handles 401 error', async () => {
     const error = createError(401);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -257,7 +257,7 @@ describe('fetchList', () => {
 
   it('handles 403 error', async () => {
     const error = createError(403);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -271,7 +271,7 @@ describe('fetchList', () => {
 
   it('handles 404 error', async () => {
     const error = createError(404);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -285,7 +285,7 @@ describe('fetchList', () => {
 
   it('handles generic error', async () => {
     const error = createError(500);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -298,12 +298,11 @@ describe('fetchList', () => {
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -312,13 +311,13 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing list', async () => {
-    const error = createError(500);
-    const { list, ...mockData } = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const { list: unusedList, ...mockData } = createApiResponse();
+    void unusedList; // `unusedList` is intentionally removed from the destructured mockData to test the error handling
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -327,13 +326,14 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing not_completed_items', async () => {
-    const error = createError(500);
-    const { not_completed_items: notCompletedItems, ...mockData } = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const { not_completed_items: unusedNotCompletedItems, ...mockData } = createApiResponse();
+    // `unusedNotCompletedItems` is intentionally removed from the destructured mockData to test the error handling
+    void unusedNotCompletedItems;
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -342,13 +342,14 @@ describe('fetchList', () => {
   });
 
   it('handles invalid data structure - missing completed_items', async () => {
-    const error = createError(500);
-    const { completed_items: completedItems, ...mockData } = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    const { completed_items: unusedCompletedItems, ...mockData } = createApiResponse();
+    // `unusedCompletedItems` is intentionally removed from the destructured mockData to test the error handling
+    void unusedCompletedItems;
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
@@ -358,7 +359,7 @@ describe('fetchList', () => {
 
   it('returns categories from API response', async () => {
     const mockData = createApiResponse();
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchList({ id: '1', navigate: mockNavigate });
     expect(result?.categories).toEqual(['foo', 'bar']);
   });
@@ -366,7 +367,7 @@ describe('fetchList', () => {
 
 describe('fetchListToEdit', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('returns data on success', async () => {
@@ -378,28 +379,26 @@ describe('fetchListToEdit', () => {
       list_item_configuration_id: 'config-1',
       archived_at: null,
     };
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List not found',
       navigate: mockNavigate,
       redirectURI: '/lists',
-      // rethrow: true,
     });
   });
 
   it('throws AxiosError when data is null', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -413,7 +412,7 @@ describe('fetchListToEdit', () => {
   });
 
   it('throws AxiosError when data is undefined', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -428,7 +427,7 @@ describe('fetchListToEdit', () => {
 
   it('handles error from server', async () => {
     const error = createError(500);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -443,7 +442,7 @@ describe('fetchListToEdit', () => {
 
 describe('fetchListItemToEdit', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('returns data on success', async () => {
@@ -455,28 +454,26 @@ describe('fetchListItemToEdit', () => {
       list_item_configuration: createListItemConfiguration(),
       list_item_field_configurations: [],
     };
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('handles missing data from server', async () => {
-    const error = createError(404);
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
+      error: expect.any(AxiosError),
       notFoundMessage: 'List item not found',
       navigate: mockNavigate,
       redirectURI: '/lists/1/',
-      // rethrow: true,
     });
   });
 
   it('throws AxiosError when data is null', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -490,7 +487,7 @@ describe('fetchListItemToEdit', () => {
   });
 
   it('throws AxiosError when data is undefined', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -505,7 +502,7 @@ describe('fetchListItemToEdit', () => {
 
   it('handles error from server', async () => {
     const error = createError(500);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchListItemToEdit({ list_id: '1', id: '1', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -520,7 +517,7 @@ describe('fetchListItemToEdit', () => {
 
 describe('fetchItemsToEdit', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('returns data on success', async () => {
@@ -533,14 +530,14 @@ describe('fetchItemsToEdit', () => {
       list_item_configuration: createListItemConfiguration(),
       list_item_field_configurations: [],
     };
-    axios.get = jest.fn().mockResolvedValue({ data: mockData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
     const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
     expect(result).toEqual(expect.objectContaining(mockData));
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('throws AxiosError when data is null', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: null });
+    axios.get = vi.fn().mockResolvedValue({ data: null });
     const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -554,7 +551,7 @@ describe('fetchItemsToEdit', () => {
   });
 
   it('throws AxiosError when data is undefined', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
     const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({
@@ -569,7 +566,7 @@ describe('fetchItemsToEdit', () => {
 
   it('handles error from server', async () => {
     const error = createError(500);
-    axios.get = jest.fn().mockRejectedValue(error);
+    axios.get = vi.fn().mockRejectedValue(error);
     const result = await fetchItemsToEdit({ list_id: '1', search: '?q=test', navigate: mockNavigate });
     expect(result).toBeUndefined();
     expect(mockHandleFailure).toHaveBeenCalledWith({

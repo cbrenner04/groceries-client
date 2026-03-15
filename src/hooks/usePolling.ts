@@ -35,7 +35,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
   useEffect(() => {
     function tick(): void {
       /* istanbul ignore next */
-      if (process.env.REACT_APP_USE_IDLE_TIMER === 'true' && idleTimer.isIdle()) {
+      if (import.meta.env.VITE_USE_IDLE_TIMER === 'true' && idleTimer.isIdle()) {
         return;
       }
 
@@ -107,7 +107,7 @@ export default function usePolling(callback: () => void | Promise<void>, delay: 
     /* istanbul ignore else */
     if (delay !== null) {
       const id = setInterval(tick, delay);
-      return () => {
+      return (): void => {
         clearInterval(id);
       };
     }

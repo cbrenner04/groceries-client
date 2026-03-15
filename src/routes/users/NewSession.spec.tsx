@@ -8,10 +8,10 @@ import { showToast } from '../../utils/toast';
 import axios from 'utils/api';
 import NewSession, { type INewSessionProps } from './NewSession';
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -22,7 +22,7 @@ interface ISetupReturn extends RenderResult {
 function setup(): ISetupReturn {
   const user = userEvent.setup();
   const props = {
-    signInUser: jest.fn(),
+    signInUser: vi.fn(),
   };
   const component = render(
     <MemoryRouter>
@@ -34,8 +34,12 @@ function setup(): ISetupReturn {
 }
 
 describe('NewSession', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('renders loading when fetch has not completed', async () => {
-    axios.get = jest.fn();
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = setup();
 
     expect(await findByText('Loading...')).toBeVisible();
@@ -43,7 +47,7 @@ describe('NewSession', () => {
   });
 
   it('renders session form when fetch errors', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
     const { container, findByLabelText } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -55,7 +59,7 @@ describe('NewSession', () => {
   });
 
   it('redirects to /lists when fetch is successful', async () => {
-    axios.get = jest.fn().mockResolvedValue({});
+    axios.get = vi.fn().mockResolvedValue({});
 
     setup();
 
@@ -65,10 +69,10 @@ describe('NewSession', () => {
   });
 
   it('creates a new session on successful submission', async () => {
-    axios.get = jest.fn().mockRejectedValue({
+    axios.get = vi.fn().mockRejectedValue({
       response: { status: 401 },
     });
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: { data: { uid: 1 } },
       headers: { 'access-token': 'foo', client: 'bar' },
     });
@@ -87,9 +91,9 @@ describe('NewSession', () => {
   });
 
   it('displays error on failed submission', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500 } });
-    const spy = jest.spyOn(window.sessionStorage.__proto__, 'setItem');
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const spy = vi.spyOn(window.sessionStorage.__proto__, 'setItem');
 
     const { findByLabelText, findByRole, user } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));

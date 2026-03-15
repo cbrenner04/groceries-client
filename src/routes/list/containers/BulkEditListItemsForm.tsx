@@ -117,11 +117,11 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         if (error.response.status === 401) {
           showToast.error('You must sign in');
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(error.response.status!)) {
+        } else if ([403, 404].includes(error.response.status ?? 0)) {
           showToast.error('Some items not found');
           props.navigate(`/lists/${props.list.id}`);
         } else {
-          const keys = Object.keys(error.response.data!);
+          const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );

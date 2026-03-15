@@ -13,7 +13,7 @@ async function setup(suppliedProps?: Partial<ICategoryFieldProps>): Promise<{
 }> {
   const user = userEvent.setup();
   const defaultProps = {
-    handleInput: jest.fn(),
+    handleInput: vi.fn(),
     category: 'testCategory',
     categories,
   };

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
-import './index.scss';
+import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import AppRouter from './AppRouter';
 import { ToastContainer } from 'react-toastify';
@@ -10,7 +10,7 @@ import { initWebVitalsMonitoring } from './utils/performanceMonitoring';
 const root: Root = createRoot(document.getElementById('root') as Element);
 root.render(
   <React.StrictMode>
-    <div hidden>{process.env.REACT_APP_VERSION}</div>
+    <div hidden>{import.meta.env.VITE_VERSION}</div>
     <ToastContainer
       limit={3}
       hideProgressBar
@@ -22,6 +22,8 @@ root.render(
       draggable
       pauseOnFocusLoss={false}
       rtl={false}
+      data-testid="toast-container"
+      closeButton={false}
     />
     <AppRouter />
   </React.StrictMode>,

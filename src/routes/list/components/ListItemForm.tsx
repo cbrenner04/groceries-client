@@ -33,7 +33,7 @@ interface IFieldConfiguration {
   primary?: boolean;
 }
 
-interface IListItemDataRecord extends Record<string, string | number | boolean | undefined | null> {}
+type IListItemDataRecord = Record<string, string | number | boolean | undefined | null>;
 
 const ListItemForm: React.FC<IListItemFormProps> = (props) => {
   const [formData, setFormData] = useState({} as IListItemDataRecord);
@@ -57,7 +57,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       // Only mark as loaded if we actually have configurations, otherwise keep showing skeleton
       setFieldConfigsLoaded(props.preloadedFieldConfigurations.length > 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.preloadedFieldConfigurations]);
 
   // Load field configurations when form is shown
@@ -84,7 +83,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       setFieldConfigurations(mappedConfigs);
       // Always mark as loaded after fetch attempt, even if empty
       setFieldConfigsLoaded(true);
-    } catch (err) {
+    } catch {
       // Silently fail - field configurations will be empty
       // Keep fieldConfigsLoaded false so skeleton shows (tests expect this behavior)
       // In production, this means skeleton will show indefinitely on error
@@ -221,11 +220,11 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         if (error.response.status === 401) {
           showToast.error('You must sign in');
           props.navigate('/users/sign_in');
-        } else if ([403, 404].includes(error.response.status!)) {
+        } else if ([403, 404].includes(error.response.status ?? 0)) {
           showToast.error('List not found');
           props.navigate('/lists');
         } else if (error.response.status === 422) {
-          const responseTextKeys = Object.keys(error.response.data!);
+          const responseTextKeys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = responseTextKeys.map(
             (key: string) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );

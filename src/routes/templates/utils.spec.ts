@@ -4,9 +4,9 @@ import { showToast } from '../../utils/toast';
 import * as utils from './utils';
 import type { IListItemConfiguration } from 'typings';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
+const mockNavigate = vi.fn();
 
 describe('Templates Utils', () => {
   describe('fetchTemplates', () => {
@@ -21,7 +21,7 @@ describe('Templates Utils', () => {
           archived_at: null,
         },
       ];
-      axios.get = jest.fn().mockResolvedValue({ data: mockTemplates });
+      axios.get = vi.fn().mockResolvedValue({ data: mockTemplates });
 
       const result = await utils.fetchTemplates({ navigate: mockNavigate });
 
@@ -48,7 +48,7 @@ describe('Templates Utils', () => {
           archived_at: '2024-01-01T00:00:00Z',
         },
       ];
-      axios.get = jest.fn().mockResolvedValue({ data: mockTemplates });
+      axios.get = vi.fn().mockResolvedValue({ data: mockTemplates });
 
       const result = await utils.fetchTemplates({ navigate: mockNavigate });
 
@@ -57,7 +57,7 @@ describe('Templates Utils', () => {
     });
 
     it('redirects to signin when 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       await utils.fetchTemplates({ navigate: mockNavigate });
 
@@ -66,7 +66,7 @@ describe('Templates Utils', () => {
     });
 
     it('throws error for other statuses', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
 
       await expect(utils.fetchTemplates({ navigate: mockNavigate })).rejects.toThrow();
     });
@@ -95,7 +95,7 @@ describe('Templates Utils', () => {
           updated_at: '',
         },
       ];
-      axios.get = jest.fn().mockResolvedValueOnce({ data: mockTemplate }).mockResolvedValueOnce({ data: mockFields });
+      axios.get = vi.fn().mockResolvedValueOnce({ data: mockTemplate }).mockResolvedValueOnce({ data: mockFields });
 
       const result = await utils.fetchTemplateToEdit({
         id: 'id1',
@@ -107,7 +107,7 @@ describe('Templates Utils', () => {
     });
 
     it('redirects to signin when 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       await utils.fetchTemplateToEdit({ id: 'id1', navigate: mockNavigate });
 
@@ -116,7 +116,7 @@ describe('Templates Utils', () => {
     });
 
     it('redirects to templates when 403', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
       await utils.fetchTemplateToEdit({ id: 'id1', navigate: mockNavigate });
 
@@ -125,7 +125,7 @@ describe('Templates Utils', () => {
     });
 
     it('redirects to templates when 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
       await utils.fetchTemplateToEdit({ id: 'id1', navigate: mockNavigate });
 
@@ -136,7 +136,7 @@ describe('Templates Utils', () => {
 
   describe('failure', () => {
     it('redirects to signin when 401', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ response: { status: 401 } }, mockNavigate, setPending);
 
       expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
@@ -144,21 +144,21 @@ describe('Templates Utils', () => {
     });
 
     it('redirects to templates when 403', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ response: { status: 403 } }, mockNavigate, setPending);
 
       expect(mockShowToast.error).toHaveBeenCalledWith('Template not found');
     });
 
     it('redirects to templates when 404', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ response: { status: 404 } }, mockNavigate, setPending);
 
       expect(mockShowToast.error).toHaveBeenCalledWith('Template not found');
     });
 
     it('shows validation errors when 400', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ response: { status: 400, data: { foo: 'bar', baz: 'qux' } } }, mockNavigate, setPending);
 
       expect(setPending).toHaveBeenCalledWith(false);
@@ -166,7 +166,7 @@ describe('Templates Utils', () => {
     });
 
     it('shows generic error when no response', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ request: 'error' }, mockNavigate, setPending);
 
       expect(setPending).toHaveBeenCalledWith(false);
@@ -174,7 +174,7 @@ describe('Templates Utils', () => {
     });
 
     it('shows error message when neither response nor request', () => {
-      const setPending = jest.fn();
+      const setPending = vi.fn();
       utils.failure({ message: 'custom error' }, mockNavigate, setPending);
 
       expect(setPending).toHaveBeenCalledWith(false);

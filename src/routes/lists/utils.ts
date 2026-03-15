@@ -6,7 +6,7 @@ import axios from 'utils/api';
 import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 export const sortLists = (lists: IList[]): IList[] =>
-  lists.sort((a, b) => Number(new Date(b.created_at!)) - Number(new Date(a.created_at!)));
+  lists.sort((a, b) => Number(new Date(b.created_at ?? '')) - Number(new Date(a.created_at ?? '')));
 
 function handleFailure(error: unknown, navigate: (url: string) => void): void {
   const err = error as AxiosError;
@@ -94,11 +94,11 @@ export async function fetchListToEdit(fetchParams: {
         fetchParams.navigate('/lists');
       } else {
         // any other errors will just be caught and render the generic UnknownError
-        throw new Error();
+        throw new Error('Unexpected error editing list', { cause: error });
       }
     } else {
       // any other errors will just be caught and render the generic UnknownError
-      throw new Error();
+      throw new Error('Unexpected error editing list', { cause: error });
     }
   }
 }
@@ -113,7 +113,7 @@ export function failure(error: unknown, navigate: (url: string) => void, setPend
       showToast.error('List not found');
     } else {
       setPending(false);
-      const responseTextKeys = Object.keys(err.response.data!);
+      const responseTextKeys = Object.keys((err.response.data ?? {}) as Record<string, unknown>);
       const responseErrors = responseTextKeys.map(
         (key) => `${key} ${(err.response?.data as Record<string, string>)[key]}`,
       );

@@ -41,7 +41,7 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
           showToast.error('List not found');
           navigate('/lists');
         } else {
-          const keys = Object.keys(error.response.data!);
+          const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
           showToast.error(responseErrors.join(' and '));
         }

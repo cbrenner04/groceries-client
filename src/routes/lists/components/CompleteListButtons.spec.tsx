@@ -12,8 +12,8 @@ interface ISetupReturn extends RenderResult {
 function setup(suppliedProps?: Partial<ICompleteListButtonsProps>, listOwnerId = 'id1'): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
-    onListRefresh: jest.fn(),
-    onListDeletion: jest.fn(),
+    onListRefresh: vi.fn(),
+    onListDeletion: vi.fn(),
     userId: 'id1',
     list: {
       id: 'id1',
@@ -26,7 +26,7 @@ function setup(suppliedProps?: Partial<ICompleteListButtonsProps>, listOwnerId =
     },
     multiSelect: false,
     selectedLists: [],
-    handleMerge: jest.fn(),
+    handleMerge: vi.fn(),
     pending: false,
   };
   const props = { ...defaultProps, ...suppliedProps };

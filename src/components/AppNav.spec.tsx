@@ -9,19 +9,19 @@ import { UserContext } from 'AppRouter';
 import AppNav from './AppNav';
 
 interface ISetupReturn extends RenderResult {
-  signOutUser: jest.Mock;
+  signOutUser: Mock;
   user: UserEvent;
 }
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 function setup(context: { uid: string; client: string; accessToken: string } | null): ISetupReturn {
   const user = userEvent.setup();
-  const signOutUser = jest.fn();
+  const signOutUser = vi.fn();
   const component = render(
     <MemoryRouter>
       <UserContext.Provider value={context}>

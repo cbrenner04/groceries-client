@@ -40,8 +40,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
         );
       case 'date_time': {
         const dateValue = field?.data;
-        const formattedDate =
-          dateValue && typeof dateValue !== 'boolean' ? formatDateForInput(dateValue) ?? '' : '';
+        const formattedDate = dateValue && typeof dateValue !== 'boolean' ? (formatDateForInput(dateValue) ?? '') : '';
         return <DateField key={config.id} {...commonProps} value={formattedDate} />;
       }
       case 'number':

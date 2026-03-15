@@ -18,6 +18,7 @@ describe('BulkEditListItems', () => {
     );
 
   it('renders the Loading component when fetch request is pending', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderBulkEditListItems();
     const status = await findByText('Loading...');
 
@@ -26,7 +27,7 @@ describe('BulkEditListItems', () => {
   });
 
   it('displays UnknownError when an error occurs', async () => {
-    axios.get = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.get = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { container, findByRole } = renderBulkEditListItems();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -35,7 +36,7 @@ describe('BulkEditListItems', () => {
   });
 
   it('calls the correct API endpoint with search params', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         list: { id: '123', name: 'Test List', type: 'GroceryList' },
         lists: [],
@@ -137,7 +138,7 @@ describe('BulkEditListItems', () => {
       { id: 'config2', label: 'Notes' },
     ];
 
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         list: { id: '123', name: 'Test List', type: 'GroceryList' },
         lists: [],

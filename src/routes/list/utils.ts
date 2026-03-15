@@ -92,7 +92,7 @@ export function secondaryFieldsDisplay(item: IListItem): { label: string; value:
         return false;
       }
       // Exclude the fallback primary field if no primary is set
-      if (fallbackPrimaryField && f.id === fallbackPrimaryField.id) {
+      if (f.id === fallbackPrimaryField?.id) {
         return false;
       }
       return true;

@@ -10,7 +10,6 @@ export interface IBulkFieldUpdate {
 }
 
 export function isBooleanFieldConfig(config: { data_type: string }): boolean {
-  /* eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison */
   return config.data_type === EListItemFieldType.BOOLEAN;
 }
 

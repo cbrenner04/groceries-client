@@ -11,7 +11,7 @@ async function setup(): Promise<{
 }> {
   const user = userEvent.setup();
   const props = {
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     value: 'test@test',
   };
   const { findByLabelText } = render(<EmailField {...props} />);

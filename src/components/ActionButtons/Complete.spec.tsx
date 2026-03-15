@@ -6,10 +6,10 @@ import Complete from './Complete';
 
 async function setup(): Promise<{
   completeButton: HTMLElement;
-  handleClick: jest.Mock;
+  handleClick: Mock;
   user: UserEvent;
 }> {
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
   const props = {
     handleClick,
     testID: 'foo',

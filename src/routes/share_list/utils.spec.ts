@@ -3,14 +3,14 @@ import { showToast } from '../../utils/toast';
 import { fetchData } from './utils';
 import axios from '../../utils/api';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 describe('utils', () => {
   describe('fetchData', () => {
-    const navigate = jest.fn();
+    const navigate = vi.fn();
 
     it('returns data on success when user is in accepted and has write permissions', async () => {
-      axios.get = jest.fn().mockResolvedValue({
+      axios.get = vi.fn().mockResolvedValue({
         data: {
           accepted: [
             { user: { id: 1, email: 'foo@example.com' }, users_list: { id: 1, permissions: 'read' } },
@@ -44,7 +44,7 @@ describe('utils', () => {
     });
 
     it('redirects to lists on success when user is not in accepted', async () => {
-      axios.get = jest.fn().mockResolvedValue({
+      axios.get = vi.fn().mockResolvedValue({
         data: {
           accepted: [{ user: { id: 1, email: 'foo@example.com' }, users_list: { id: 1, permissions: 'read' } }],
           pending: [{ user: { id: 2, email: 'bar@example.com' }, users_list: { id: 2, permissions: 'write' } }],
@@ -66,7 +66,7 @@ describe('utils', () => {
     });
 
     it('redirects to lists on success when user does not have write permissions', async () => {
-      axios.get = jest.fn().mockResolvedValue({
+      axios.get = vi.fn().mockResolvedValue({
         data: {
           accepted: [
             { user: { id: 1, email: 'foo@example.com' }, users_list: { id: 1, permissions: 'read' } },
@@ -91,7 +91,7 @@ describe('utils', () => {
     });
 
     it('handles 401', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 401 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
       await fetchData({ listId: '1', navigate });
 
@@ -100,7 +100,7 @@ describe('utils', () => {
     });
 
     it('handles 403', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 403 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 403 } });
 
       await fetchData({ listId: '1', navigate });
 
@@ -109,7 +109,7 @@ describe('utils', () => {
     });
 
     it('handles 404', async () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 404 } });
 
       await fetchData({ listId: '1', navigate });
 
@@ -118,7 +118,7 @@ describe('utils', () => {
     });
 
     it('handles not 401, 403, 404', () => {
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+      axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
 
       expect(fetchData({ listId: '1', navigate })).rejects.toThrow();
     });

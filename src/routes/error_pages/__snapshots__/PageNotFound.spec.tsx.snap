@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PageNotFound displays PageNotFound when the user is authenticated 1`] = `
+exports[`PageNotFound > displays PageNotFound when the user is authenticated 1`] = `
 <div>
   <h1>
     Page not found!
@@ -17,7 +17,7 @@ exports[`PageNotFound displays PageNotFound when the user is authenticated 1`] =
 </div>
 `;
 
-exports[`PageNotFound displays UnknownError when an error occurs validating authentication 1`] = `
+exports[`PageNotFound > displays UnknownError when an error occurs validating authentication 1`] = `
 <div>
   <h1>
     Something went wrong!
@@ -28,7 +28,7 @@ exports[`PageNotFound displays UnknownError when an error occurs validating auth
   <p>
     Please check your connection and try to  
     <button
-      style="background-color: transparent; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 86, 179); text-decoration: none;"
+      style="background-color: transparent; border: medium; cursor: pointer; display: inline; margin: 0px; padding: 0px; color: rgb(0, 86, 179); text-decoration: none;"
     >
       refresh the page
     </button>
@@ -36,7 +36,7 @@ exports[`PageNotFound displays UnknownError when an error occurs validating auth
 </div>
 `;
 
-exports[`PageNotFound renders the Loading component when fetch request is pending 1`] = `
+exports[`PageNotFound > renders the Loading component when fetch request is pending 1`] = `
 <div>
   <div
     id="loader"

@@ -16,8 +16,8 @@ function setup(suppliedProps?: Partial<IListsProps>): ISetupReturn {
     children: [<div key="1" />],
     multiSelect: false,
     selectedLists: [],
-    setSelectedLists: jest.fn(),
-    setMultiSelect: jest.fn(),
+    setSelectedLists: vi.fn(),
+    setMultiSelect: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<Lists {...props} />);

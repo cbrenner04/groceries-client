@@ -9,12 +9,12 @@ import axios from 'utils/api';
 
 import PendingLists, { type IPendingListsProps } from './PendingLists';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -48,7 +48,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
         refreshed: false,
       },
     ],
-    setPendingLists: jest.fn(),
+    setPendingLists: vi.fn(),
     incompleteLists: [
       {
         id: 'id3',
@@ -71,7 +71,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
         refreshed: false,
       },
     ],
-    setIncompleteLists: jest.fn(),
+    setIncompleteLists: vi.fn(),
     completedLists: [
       {
         id: 'id5',
@@ -94,7 +94,7 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
         refreshed: false,
       },
     ],
-    setCompletedLists: jest.fn(),
+    setCompletedLists: vi.fn(),
     currentUserPermissions: {
       id1: 'write',
       id2: 'write',
@@ -115,8 +115,11 @@ function setup(suppliedProps?: Partial<IPendingListsProps>): ISetupReturn {
 }
 
 describe('PendingLists', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   it('accepts list', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, props, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -131,7 +134,7 @@ describe('PendingLists', () => {
   });
 
   it('accepts multiple lists', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByText, findAllByRole, props, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -157,7 +160,7 @@ describe('PendingLists', () => {
   });
 
   it('redirects on 401 from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -168,7 +171,7 @@ describe('PendingLists', () => {
   });
 
   it('shows error on 403 from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -178,7 +181,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors on 404 from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -188,7 +191,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when error not 401, 403, 404 from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -198,7 +201,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when request fails from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.patch = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -208,7 +211,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when known failure from list accept', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.patch = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findAllByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-accept'))[0]);
@@ -218,7 +221,7 @@ describe('PendingLists', () => {
   });
 
   it('does not reject list when confirm modal is cleared', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -233,7 +236,7 @@ describe('PendingLists', () => {
   });
 
   it('rejects list', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, props, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -248,7 +251,7 @@ describe('PendingLists', () => {
   });
 
   it('rejects multiple lists', async () => {
-    axios.patch = jest.fn().mockResolvedValue({});
+    axios.patch = vi.fn().mockResolvedValue({});
     const { findAllByTestId, findByTestId, queryByTestId, findByText, findAllByRole, props, user } = setup();
 
     await user.click(await findByText('Select'));
@@ -269,7 +272,7 @@ describe('PendingLists', () => {
   });
 
   it('redirects to login when reject fails with 401', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -283,7 +286,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when reject fails with 403', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -296,7 +299,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when reject fails with 404', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -309,7 +312,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when reject fails with error other than 401, 403, 404', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -322,7 +325,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when reject fails to send request', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.patch = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);
@@ -335,7 +338,7 @@ describe('PendingLists', () => {
   });
 
   it('shows errors when reject unknown error occurs', async () => {
-    axios.patch = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.patch = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findAllByTestId, findByTestId, user } = setup();
 
     await user.click((await findAllByTestId('pending-list-trash'))[0]);

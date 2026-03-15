@@ -13,7 +13,7 @@ interface ISetupReturn extends RenderResult {
 async function setup(suppliedProps: Partial<ISelectFieldProps>): Promise<ISetupReturn> {
   const user = userEvent.setup();
   const defaultProps = {
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     name: 'testName',
     label: 'testLabel',
     options: [

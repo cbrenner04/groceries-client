@@ -9,20 +9,18 @@ import { handleFailure } from '../../utils/handleFailure';
 
 import EditList from './EditList';
 
-// Mock useParams for this specific test
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
+const mockNavigate = vi.fn();
+
+// Mock router hooks in a single module factory to avoid mock-order flakiness.
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useParams: (): { id: string } => ({ id: '123' }),
+  useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
-jest.mock('../../utils/handleFailure', () => ({
-  handleFailure: jest.fn(),
-}));
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): ((url: string) => void) => mockNavigate,
+vi.mock('../../utils/handleFailure', () => ({
+  handleFailure: vi.fn(),
 }));
 
 const mockUser = {
@@ -56,11 +54,11 @@ const renderEditList = (): ReturnType<typeof render> => {
 
 describe('EditList', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders loading state initially', () => {
-    axios.get = jest.fn().mockImplementation(
+    axios.get = vi.fn().mockImplementation(
       () =>
         new Promise(() => {
           /* never resolves for loading state */
@@ -72,7 +70,7 @@ describe('EditList', () => {
   });
 
   it('renders edit form when fetch succeeds', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListData });
     await act(async () => {
       renderEditList();
     });
@@ -84,7 +82,7 @@ describe('EditList', () => {
   });
 
   it('renders error state when fetch fails', async () => {
-    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
+    axios.get = vi.fn().mockRejectedValue(new Error('Network error'));
     await act(async () => {
       renderEditList();
     });
@@ -94,23 +92,25 @@ describe('EditList', () => {
 
   it('handles authentication errors', async () => {
     const authError = new AxiosError('Unauthorized', '401');
-    axios.get = jest.fn().mockRejectedValue(authError);
+    axios.get = vi.fn().mockRejectedValue(authError);
     await act(async () => {
       renderEditList();
     });
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledTimes(1);
     });
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: authError,
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-    });
+    expect(mockHandleFailure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: authError,
+        notFoundMessage: 'List not found',
+        navigate: mockNavigate,
+        redirectURI: '/lists',
+      }),
+    );
   });
 
   it('handles case where data is undefined', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
     await act(async () => {
       renderEditList();
     });
@@ -124,7 +124,7 @@ describe('EditList', () => {
       completed: true,
       archived_at: '2023-01-01T00:00:00Z',
     };
-    axios.get = jest.fn().mockResolvedValue({ data: completedListData });
+    axios.get = vi.fn().mockResolvedValue({ data: completedListData });
     await act(async () => {
       renderEditList();
     });
@@ -138,7 +138,7 @@ describe('EditList', () => {
       ...mockEditListData,
       list_item_configuration_id: 'config-1',
     };
-    axios.get = jest.fn().mockResolvedValue({ data: bookListData });
+    axios.get = vi.fn().mockResolvedValue({ data: bookListData });
     await act(async () => {
       renderEditList();
     });
@@ -152,7 +152,7 @@ describe('EditList', () => {
       ...mockEditListData,
       list_item_configuration_id: null,
     };
-    axios.get = jest.fn().mockResolvedValue({ data: listDataWithoutConfig });
+    axios.get = vi.fn().mockResolvedValue({ data: listDataWithoutConfig });
     await act(async () => {
       renderEditList();
     });
@@ -166,7 +166,7 @@ describe('EditList', () => {
       ...mockEditListData,
       refreshed: true,
     };
-    axios.get = jest.fn().mockResolvedValue({ data: refreshedListData });
+    axios.get = vi.fn().mockResolvedValue({ data: refreshedListData });
     await act(async () => {
       renderEditList();
     });
@@ -176,7 +176,7 @@ describe('EditList', () => {
   });
 
   it('calls the correct API endpoint', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListData });
     await act(async () => {
       renderEditList();
     });
@@ -185,7 +185,7 @@ describe('EditList', () => {
   });
 
   it('passes correct props to EditListForm when data is available', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListData });
     await act(async () => {
       renderEditList();
     });

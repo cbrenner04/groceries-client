@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Loading renders the spinner 1`] = `
+exports[`Loading > renders the spinner 1`] = `
 <div
   class="spinner-border"
   id="spinner"

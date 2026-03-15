@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AppNav when user is not signed in renders basic nav with brand linking to sign in 1`] = `
+exports[`AppNav > when user is not signed in > renders basic nav with brand linking to sign in 1`] = `
 <nav
   class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
   data-test-id="nav"
@@ -13,7 +13,7 @@ exports[`AppNav when user is not signed in renders basic nav with brand linking 
 </nav>
 `;
 
-exports[`AppNav when user is signed in renders nav with brand linking to root, invite link and logout visible 1`] = `
+exports[`AppNav > when user is signed in > renders nav with brand linking to root, invite link and logout visible 1`] = `
 <nav
   class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
   data-test-id="nav"

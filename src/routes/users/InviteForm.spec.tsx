@@ -8,10 +8,10 @@ import { showToast } from '../../utils/toast';
 import axios from 'utils/api';
 import InviteForm from './InviteForm';
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -31,7 +31,7 @@ function setup(): ISetupReturn {
 
 describe('InviteForm', () => {
   it('invites new user', async () => {
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { container, findByLabelText, findAllByRole, user } = setup();
 
     expect(container).toMatchSnapshot();
@@ -45,7 +45,7 @@ describe('InviteForm', () => {
   });
 
   it('handles 401 from invite user request', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByLabelText, findAllByRole, user } = setup();
 
     await user.type(await findByLabelText('Email'), 'foo@example.com');
@@ -57,7 +57,7 @@ describe('InviteForm', () => {
   });
 
   it('handles non-401 from invite user request', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findByLabelText, findAllByRole, user } = setup();
 
     await user.type(await findByLabelText('Email'), 'foo@example.com');
@@ -68,7 +68,7 @@ describe('InviteForm', () => {
   });
 
   it('handles failed to send request from invite user request', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByLabelText, findAllByRole, user } = setup();
 
     await user.type(await findByLabelText('Email'), 'foo@example.com');
@@ -79,7 +79,7 @@ describe('InviteForm', () => {
   });
 
   it('handles unknown error from invite user request', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByLabelText, findAllByRole, user } = setup();
 
     await user.type(await findByLabelText('Email'), 'foo@example.com');

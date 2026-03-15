@@ -13,7 +13,7 @@ function setup(suppliedProps?: Partial<IFilterProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: IFilterProps = {
     categories: ['Produce', 'Dairy', 'Meat'],
-    handleCategoryFilter: jest.fn(),
+    handleCategoryFilter: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
 
@@ -24,7 +24,7 @@ function setup(suppliedProps?: Partial<IFilterProps>): ISetupReturn {
 
 describe('Filter', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders filter dropdown', async () => {

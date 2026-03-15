@@ -80,18 +80,18 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             setListItemConfigurations(updatedListItemConfigurations);
           }
         }
-      } catch (err: unknown) {
+      } catch {
         const errorMessage = 'You may not be connected to the internet. Please check your connection.';
         showToast.error(`${errorMessage} Data may be incomplete and user actions may not persist.`);
       }
     },
-    parseInt(process.env.REACT_APP_POLLING_INTERVAL ?? '10000', 10),
+    parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10),
   );
 
   // Idle prefetch for visible lists to improve navigation performance
   useEffect(() => {
     // Allow tests to disable idle prefetch
-    if (process.env.REACT_APP_PREFETCH_IDLE === 'false') {
+    if (import.meta.env.VITE_PREFETCH_IDLE === 'false') {
       return;
     }
 

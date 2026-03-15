@@ -1,3 +1,90 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`MergeModal renders 1`] = `<div />`;
+exports[`MergeModal > renders 1`] = `
+<body
+  class="modal-open"
+  data-rr-ui-modal-open=""
+  style="overflow: hidden; padding-right: 1024px;"
+>
+  <div />
+  <div
+    class="fade modal-backdrop show"
+  />
+  <div
+    aria-modal="true"
+    class="fade modal show"
+    role="dialog"
+    style="display: block; padding-right: 0px;"
+    tabindex="-1"
+  >
+    <div
+      class="modal-dialog"
+    >
+      <div
+        class="modal-content"
+      >
+        <div
+          class="modal-header"
+        >
+          <div
+            class="modal-title h4"
+          >
+            Merge 
+            "name, name"
+          </div>
+          <button
+            aria-label="Close"
+            class="btn-close"
+            type="button"
+          />
+        </div>
+        <div
+          class="modal-body"
+        >
+          <form
+            class=""
+          >
+            <div
+              class="mb-3"
+            >
+              <label
+                class="form-label"
+                for="mergeName"
+              >
+                Name for the merged list
+              </label>
+              <input
+                class="form-control"
+                id="mergeName"
+                name="mergeName"
+                placeholder="My super cool list"
+                type="text"
+                value=""
+              />
+            </div>
+          </form>
+        </div>
+        <div
+          class="modal-footer"
+        >
+          <button
+            class="btn btn-secondary"
+            data-test-id="clear-merge"
+            type="button"
+          >
+            Close
+          </button>
+          <button
+            class="merge-modal-confirm-disabled btn btn-primary"
+            data-test-id="confirm-merge"
+            disabled=""
+            type="button"
+          >
+            Merge lists
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

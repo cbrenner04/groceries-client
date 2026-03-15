@@ -17,7 +17,7 @@ const NewPassword: React.FC = (): React.JSX.Element => {
     try {
       await axios.post('/auth/password', {
         email,
-        redirect_url: `${process.env.REACT_APP_PUBLIC_URL}/users/password/edit`,
+        redirect_url: `${import.meta.env.VITE_PUBLIC_URL}/users/password/edit`,
       });
     } catch {
       // noop

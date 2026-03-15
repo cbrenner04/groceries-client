@@ -48,7 +48,7 @@ export async function fetchTemplateToEdit(fetchParams: {
       showToast.error('Template not found');
       fetchParams.navigate('/templates');
     } else {
-      throw new Error();
+      throw new Error('Unexpected error editing template', { cause: error });
     }
   }
 }
@@ -75,7 +75,7 @@ export function failure(error: unknown, navigate: (url: string) => void, setPend
       showToast.error('Template not found');
     } else {
       setPending(false);
-      const responseTextKeys = Object.keys(err.response.data!);
+      const responseTextKeys = Object.keys((err.response.data ?? {}) as Record<string, unknown>);
       const responseErrors = responseTextKeys.map(
         (key) => `${key} ${(err.response?.data as Record<string, string>)[key]}`,
       );

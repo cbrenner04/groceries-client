@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`MultiSelectMenu renders when isMultiSelect is false 1`] = `
+exports[`MultiSelectMenu > renders when isMultiSelect is false 1`] = `
 <div>
   <div
     class="clearfix"
@@ -15,7 +15,7 @@ exports[`MultiSelectMenu renders when isMultiSelect is false 1`] = `
 </div>
 `;
 
-exports[`MultiSelectMenu renders when isMultiSelect is true 1`] = `
+exports[`MultiSelectMenu > renders when isMultiSelect is true 1`] = `
 <div>
   <div
     class="clearfix"
@@ -48,7 +48,7 @@ exports[`MultiSelectMenu renders when isMultiSelect is true 1`] = `
 </div>
 `;
 
-exports[`MultiSelectMenu renders with empty selected items array 1`] = `
+exports[`MultiSelectMenu > renders with empty selected items array 1`] = `
 <div>
   <div
     class="clearfix"

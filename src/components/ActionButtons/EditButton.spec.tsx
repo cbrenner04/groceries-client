@@ -6,11 +6,11 @@ import EditButton from './EditButton';
 
 async function setup(): Promise<{
   editButton: HTMLElement;
-  handleClick: jest.Mock;
+  handleClick: Mock;
   user: UserEvent;
 }> {
   const user = userEvent.setup();
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
   const props = {
     handleClick,
     testID: 'test-id',

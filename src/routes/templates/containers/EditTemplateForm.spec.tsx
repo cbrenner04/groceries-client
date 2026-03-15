@@ -9,12 +9,12 @@ import { showToast } from '../../../utils/toast';
 
 import EditTemplateForm, { type IEditTemplateFormProps } from './EditTemplateForm';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -81,7 +81,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('updates template name on submit', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { findByLabelText, getByText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -96,8 +96,8 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows success toast on successful update', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { getByText, user } = setup();
 
     await user.click(getByText('Update Template'));
@@ -108,8 +108,8 @@ describe('EditTemplateForm', () => {
   });
 
   it('navigates to templates on successful update', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { getByText, user } = setup();
 
     await user.click(getByText('Update Template'));
@@ -120,8 +120,8 @@ describe('EditTemplateForm', () => {
   });
 
   it('creates new fields', async () => {
-    axios.post = jest.fn().mockResolvedValue({});
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { getByTestId, getByText, user } = setup();
 
     await user.click(getByTestId('add-field-button'));
@@ -134,7 +134,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('updates modified fields', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { getByTestId, getByText, user } = setup();
 
     const labelInput = getByTestId('field-row-label-0');
@@ -143,16 +143,18 @@ describe('EditTemplateForm', () => {
     await user.click(getByText('Update Template'));
 
     await waitFor(() => {
-      const calls = (axios.put as jest.Mock).mock.calls;
-      const fieldUpdateCall = calls.find((call) => call[0].includes('list_item_field_configurations'));
+      const calls = (axios.put as Mock).mock.calls;
+      const fieldUpdateCall = calls.find((call: [string, ...unknown[]]) =>
+        call[0].includes('list_item_field_configurations'),
+      );
       expect(fieldUpdateCall).toBeDefined();
     });
   });
 
   it('deletes removed fields', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
-    axios.put = jest.fn().mockResolvedValue({});
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { getByTestId, getByText, user } = setup({
       fieldConfigurations: [
         {
@@ -189,7 +191,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('redirects to signin when 401', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -203,7 +205,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows error when template not found (403)', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 403 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -217,7 +219,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows error when template not found (404)', async () => {
-    axios.put = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -231,7 +233,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows validation errors', async () => {
-    axios.put = jest.fn().mockRejectedValue({
+    axios.put = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'is invalid' } },
     });
     const { getByText, findByLabelText, user } = setup();
@@ -246,7 +248,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows generic error when no response', async () => {
-    axios.put = jest.fn().mockRejectedValue({ request: 'error' });
+    axios.put = vi.fn().mockRejectedValue({ request: 'error' });
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -259,7 +261,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('shows error message for unknown errors', async () => {
-    axios.put = jest.fn().mockRejectedValue({ message: 'custom error' });
+    axios.put = vi.fn().mockRejectedValue({ message: 'custom error' });
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
@@ -272,8 +274,8 @@ describe('EditTemplateForm', () => {
   });
 
   it('only updates name if changed', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { findAllByRole, user } = setup();
 
     await user.click((await findAllByRole('button'))[0]);
@@ -290,7 +292,7 @@ describe('EditTemplateForm', () => {
   });
 
   it('does not submit when template name is empty', async () => {
-    axios.put = jest.fn().mockResolvedValue({});
+    axios.put = vi.fn().mockResolvedValue({});
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
