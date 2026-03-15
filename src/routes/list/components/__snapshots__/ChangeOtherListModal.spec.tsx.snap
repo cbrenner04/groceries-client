@@ -16,7 +16,6 @@ exports[`ChangeOtherListModal > renders appropriate instructions when copy and l
   </div>
   <div
     class="modal-body"
-    data-test-id="confirm-modal-body"
   >
     <form
       autocomplete="off"
@@ -24,7 +23,6 @@ exports[`ChangeOtherListModal > renders appropriate instructions when copy and l
     >
       <button
         class="float-end btn btn-link"
-        data-test-id="create-new-list-link"
         style="padding: 0px;"
         type="button"
       >
@@ -99,7 +97,6 @@ exports[`ChangeOtherListModal > renders appropriate instructions when move and l
   </div>
   <div
     class="modal-body"
-    data-test-id="confirm-modal-body"
   >
     <form
       autocomplete="off"
@@ -107,7 +104,6 @@ exports[`ChangeOtherListModal > renders appropriate instructions when move and l
     >
       <button
         class="float-end btn btn-link"
-        data-test-id="create-new-list-link"
         style="padding: 0px;"
         type="button"
       >

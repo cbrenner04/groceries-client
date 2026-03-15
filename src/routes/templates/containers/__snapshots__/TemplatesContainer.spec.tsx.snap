@@ -7,7 +7,6 @@ exports[`TemplatesContainer > renders 1`] = `
   >
     <h1
       class="mb-0"
-      data-test-id="page-title"
     >
       Templates
     </h1>
@@ -222,7 +221,6 @@ exports[`TemplatesContainer > renders 1`] = `
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           grocery list
         </h5>
@@ -299,7 +297,6 @@ exports[`TemplatesContainer > renders 1`] = `
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           book list
         </h5>

@@ -61,7 +61,6 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     baz
                   </h5>
@@ -201,7 +200,6 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     foobar
                   </h5>
@@ -373,7 +371,6 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     baz
                   </h5>
@@ -513,7 +510,6 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     foobar
                   </h5>

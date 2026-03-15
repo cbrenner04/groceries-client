@@ -12,7 +12,6 @@ exports[`Template > renders template with name 1`] = `
     >
       <h5
         class="mb-0"
-        data-test-id="template-name"
       >
         grocery list
       </h5>

@@ -2,9 +2,7 @@
 
 exports[`EditListForm > renders 1`] = `
 <div>
-  <h1
-    data-test-id="page-title"
-  >
+  <h1>
     Edit List
   </h1>
   <br />

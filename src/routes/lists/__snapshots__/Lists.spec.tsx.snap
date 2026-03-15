@@ -26,7 +26,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
   >
     <h1
       class="mb-0"
-      data-test-id="page-title"
     >
       Lists
     </h1>
@@ -43,7 +42,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
     aria-controls="form-collapse"
     aria-expanded="false"
     class="btn btn-link"
-    data-test-id="add-list-button"
     type="button"
   >
     Add List
@@ -187,7 +185,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
               >
                 <h5
                   class="mb-1"
-                  data-test-id="list-name"
                 >
                   foo
                 </h5>
@@ -341,7 +338,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     bar
                   </h5>
@@ -557,7 +553,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     foo
                   </h5>

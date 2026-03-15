@@ -88,7 +88,6 @@ exports[`CompletedListsContainer > renders 1`] = `
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     foo
                   </h5>
@@ -191,7 +190,6 @@ exports[`CompletedListsContainer > renders 1`] = `
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     bar
                   </h5>
@@ -294,7 +292,6 @@ exports[`CompletedListsContainer > renders 1`] = `
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     baz
                   </h5>

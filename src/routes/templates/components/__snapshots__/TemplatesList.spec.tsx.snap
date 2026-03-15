@@ -15,7 +15,6 @@ exports[`TemplatesList > renders list of templates 1`] = `
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           grocery list
         </h5>
@@ -92,7 +91,6 @@ exports[`TemplatesList > renders list of templates 1`] = `
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           book list
         </h5>
@@ -178,7 +176,6 @@ exports[`TemplatesList > renders single template when only one exists 1`] = `
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           grocery list
         </h5>

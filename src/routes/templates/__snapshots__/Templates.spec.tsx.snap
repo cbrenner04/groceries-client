@@ -26,7 +26,6 @@ exports[`Templates > renders TemplatesContainer when data retrieval is complete 
   >
     <h1
       class="mb-0"
-      data-test-id="page-title"
     >
       Templates
     </h1>
@@ -241,7 +240,6 @@ exports[`Templates > renders TemplatesContainer when data retrieval is complete 
       >
         <h5
           class="mb-0"
-          data-test-id="template-name"
         >
           grocery list
         </h5>

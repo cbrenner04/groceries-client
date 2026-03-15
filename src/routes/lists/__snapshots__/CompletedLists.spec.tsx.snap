@@ -88,7 +88,6 @@ exports[`CompletedLists > renders CompletedLists when data retrieval is complete
                 >
                   <h5
                     class="mb-1"
-                    data-test-id="list-name"
                   >
                     foo
                   </h5>

@@ -127,9 +127,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   return (
     <React.Fragment>
       <div className="d-flex justify-content-between align-items-center">
-        <h1 className="mb-0" data-test-id="page-title">
-          Lists
-        </h1>
+        <h1 className="mb-0">Lists</h1>
         <Link to="/templates" data-test-id="manage-templates-link" className="btn btn-link">
           Manage Templates
         </Link>
