@@ -13,9 +13,9 @@ async function setup(suppliedProps?: Partial<IListFormFieldsProps>): Promise<{
     name: 'Test List',
     completed: false,
     refreshed: false,
-    handleNameChange: jest.fn(),
-    handleCompletedChange: jest.fn(),
-    handleRefreshedChange: jest.fn(),
+    handleNameChange: vi.fn(),
+    handleCompletedChange: vi.fn(),
+    handleRefreshedChange: vi.fn(),
     editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -118,7 +118,7 @@ describe('ListFormFields', () => {
     it('renders completed checkbox when handleCompletedChange is provided', async () => {
       const { user } = await setup({
         editForm: true,
-        handleCompletedChange: jest.fn(),
+        handleCompletedChange: vi.fn(),
       });
       const completedField = screen.getByLabelText('Completed');
 
@@ -129,7 +129,7 @@ describe('ListFormFields', () => {
     it('renders refreshed checkbox when handleRefreshedChange is provided', async () => {
       const { user } = await setup({
         editForm: true,
-        handleRefreshedChange: jest.fn(),
+        handleRefreshedChange: vi.fn(),
       });
       const refreshedField = screen.getByLabelText('Refreshed');
 
@@ -162,7 +162,7 @@ describe('ListFormFields', () => {
           name="Test List"
           completed={false}
           refreshed={false}
-          handleNameChange={jest.fn()}
+          handleNameChange={vi.fn()}
           editForm={false}
         />,
       );
@@ -176,9 +176,9 @@ describe('ListFormFields', () => {
           name="Test List"
           completed={true}
           refreshed={true}
-          handleNameChange={jest.fn()}
-          handleCompletedChange={jest.fn()}
-          handleRefreshedChange={jest.fn()}
+          handleNameChange={vi.fn()}
+          handleCompletedChange={vi.fn()}
+          handleRefreshedChange={vi.fn()}
           editForm={true}
         />,
       );

@@ -14,8 +14,8 @@ function setup(suppliedProps: Partial<IConfirmModalProps>): ISetupReturn {
   const defaultProps = {
     action: 'testAction',
     body: 'testBody',
-    handleConfirm: jest.fn(),
-    handleClear: jest.fn(),
+    handleConfirm: vi.fn(),
+    handleClear: vi.fn(),
     show: true,
   };
   const props = { ...defaultProps, ...suppliedProps };

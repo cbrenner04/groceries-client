@@ -11,7 +11,7 @@ async function setup(): Promise<{
 }> {
   const user = userEvent.setup();
   const props = {
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     name: 'testName',
     label: 'testLabel',
     value: 'testValue',

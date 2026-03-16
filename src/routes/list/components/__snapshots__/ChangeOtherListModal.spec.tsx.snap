@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ChangeOtherListModal renders appropriate instructions when copy and lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when copy and lists 1`] = `
 <div
   class="modal-content"
 >
@@ -81,7 +81,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when copy and lis
 </div>
 `;
 
-exports[`ChangeOtherListModal renders appropriate instructions when move and lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when move and lists 1`] = `
 <div
   class="modal-content"
 >
@@ -162,7 +162,7 @@ exports[`ChangeOtherListModal renders appropriate instructions when move and lis
 </div>
 `;
 
-exports[`ChangeOtherListModal renders appropriate instructions when no lists 1`] = `
+exports[`ChangeOtherListModal > renders appropriate instructions when no lists 1`] = `
 <div
   class="modal-header"
 >

@@ -4,11 +4,11 @@ import ListItem, { memoCompare } from './ListItem';
 import type { IListItem, IListItemField } from 'typings';
 import { EUserPermissions, EListItemFieldType } from 'typings';
 
-const mockHandleItemSelect = jest.fn();
-const mockHandleItemRefresh = jest.fn();
-const mockHandleItemComplete = jest.fn();
-const mockHandleItemEdit = jest.fn();
-const mockHandleItemDelete = jest.fn();
+const mockHandleItemSelect = vi.fn();
+const mockHandleItemRefresh = vi.fn();
+const mockHandleItemComplete = vi.fn();
+const mockHandleItemEdit = vi.fn();
+const mockHandleItemDelete = vi.fn();
 
 const mockFields: IListItemField[] = [
   {
@@ -67,7 +67,7 @@ const defaultProps = {
 
 describe('ListItem', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders primary field as title and secondary fields below', () => {
@@ -167,7 +167,7 @@ describe('ListItem', () => {
       const prev = { ...defaultProps };
       const next = {
         ...prev,
-        handleItemEdit: jest.fn(),
+        handleItemEdit: vi.fn(),
         item: {
           ...prev.item,
           fields: [...prev.item.fields, { ...prev.item.fields[0], id: '99', label: 'extra', data: 'foo' }],
@@ -225,7 +225,7 @@ describe('ListItem with read permissions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('does not render action buttons for read permissions', () => {

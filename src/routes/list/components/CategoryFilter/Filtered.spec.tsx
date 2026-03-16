@@ -13,7 +13,7 @@ function setup(suppliedProps?: Partial<IFilteredProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: IFilteredProps = {
     filter: 'Produce',
-    handleClearFilter: jest.fn(),
+    handleClearFilter: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<Filtered {...props} />);
@@ -23,7 +23,7 @@ function setup(suppliedProps?: Partial<IFilteredProps>): ISetupReturn {
 
 describe('Filtered', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders with filter name in button', async () => {

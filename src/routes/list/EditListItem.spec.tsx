@@ -17,18 +17,18 @@ import {
 import EditListItem from './EditListItem';
 
 // Mock useParams for this specific test
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
 }));
 
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
-jest.mock('../../utils/handleFailure', () => ({
-  handleFailure: jest.fn(),
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
+const mockNavigate = vi.fn();
+vi.mock('../../utils/handleFailure', () => ({
+  handleFailure: vi.fn(),
 }));
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
   useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 
@@ -89,11 +89,11 @@ const renderEditListItem = (): ReturnType<typeof render> => {
 
 describe('EditListItem', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders loading state initially', () => {
-    axios.get = jest.fn().mockImplementation(
+    axios.get = vi.fn().mockImplementation(
       () =>
         new Promise(() => {
           /* never resolves for loading state */
@@ -105,7 +105,7 @@ describe('EditListItem', () => {
   });
 
   it('renders edit form when fetch succeeds', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
     await act(async () => {
       renderEditListItem();
     });
@@ -123,7 +123,7 @@ describe('EditListItem', () => {
   });
 
   it('renders error state when fetch fails', async () => {
-    axios.get = jest.fn().mockRejectedValue(new Error('Network error'));
+    axios.get = vi.fn().mockRejectedValue(new Error('Network error'));
     await act(async () => {
       renderEditListItem();
     });
@@ -132,7 +132,7 @@ describe('EditListItem', () => {
   });
 
   it('renders error state when data is undefined', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: undefined });
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
     await act(async () => {
       renderEditListItem();
     });
@@ -142,7 +142,7 @@ describe('EditListItem', () => {
 
   it('handles authentication errors', async () => {
     const authError = new AxiosError('Unauthorized', '401');
-    axios.get = jest.fn().mockRejectedValue(authError);
+    axios.get = vi.fn().mockRejectedValue(authError);
     await act(async () => {
       renderEditListItem();
     });
@@ -159,7 +159,7 @@ describe('EditListItem', () => {
 
   it('handles not found errors', async () => {
     const notFoundError = new AxiosError('Not Found', '404');
-    axios.get = jest.fn().mockRejectedValue(notFoundError);
+    axios.get = vi.fn().mockRejectedValue(notFoundError);
     await act(async () => {
       renderEditListItem();
     });
@@ -175,7 +175,7 @@ describe('EditListItem', () => {
   });
 
   it('calls the correct API endpoint with list_id and id parameters', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
     await act(async () => {
       renderEditListItem();
     });
@@ -184,7 +184,7 @@ describe('EditListItem', () => {
   });
 
   it('renders form with correct props when data is fetched successfully', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
     await act(async () => {
       renderEditListItem();
     });
@@ -210,7 +210,7 @@ describe('EditListItem', () => {
       ]),
     };
 
-    axios.get = jest.fn().mockResolvedValue({ data: bookListData });
+    axios.get = vi.fn().mockResolvedValue({ data: bookListData });
     await act(async () => {
       renderEditListItem();
     });
@@ -224,7 +224,7 @@ describe('EditListItem', () => {
       item: createListItem('456', false, []),
     };
 
-    axios.get = jest.fn().mockResolvedValue({ data: emptyItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: emptyItemData });
     await act(async () => {
       renderEditListItem();
     });

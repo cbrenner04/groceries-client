@@ -2,15 +2,15 @@ import { toast } from 'react-toastify';
 import * as toastUtils from './toast';
 
 // Unmock the toast utility for this test file since we want to test the actual implementation
-jest.unmock('./toast');
+vi.unmock('./toast');
 
-jest.mock('react-toastify', () => {
-  const toastMock: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
-  toastMock.success = jest.fn();
-  toastMock.error = jest.fn();
-  toastMock.info = jest.fn();
-  toastMock.warning = jest.fn();
-  toastMock.dismiss = jest.fn();
+vi.mock('react-toastify', () => {
+  const toastMock: any = vi.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  toastMock.success = vi.fn();
+  toastMock.error = vi.fn();
+  toastMock.info = vi.fn();
+  toastMock.warning = vi.fn();
+  toastMock.dismiss = vi.fn();
   return {
     toast: toastMock,
     ToastContainer: (): null => null,
@@ -19,8 +19,8 @@ jest.mock('react-toastify', () => {
 
 describe('Toast Utility', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.clearAllMocks();
+    vi.useFakeTimers();
+    vi.clearAllMocks();
   });
 
   it('should call toast.success with correct parameters', () => {
@@ -122,7 +122,7 @@ describe('Toast Utility', () => {
       expect(toast.error).toHaveBeenCalledTimes(1);
 
       // Fast forward past deduplication window
-      jest.advanceTimersByTime(3500);
+      vi.advanceTimersByTime(3500);
 
       // Now it should show again
       toastUtils.showToast.error(message);

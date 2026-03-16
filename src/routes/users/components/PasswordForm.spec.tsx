@@ -13,10 +13,10 @@ function setup(): ISetupReturn {
   const user = userEvent.setup();
   const props = {
     password: '',
-    passwordChangeHandler: jest.fn(),
+    passwordChangeHandler: vi.fn(),
     passwordConfirmation: '',
-    passwordConfirmationChangeHandler: jest.fn(),
-    submissionHandler: jest.fn((e) => e.preventDefault()),
+    passwordConfirmationChangeHandler: vi.fn(),
+    submissionHandler: vi.fn((e: React.FormEvent) => e.preventDefault()),
   };
   const component = render(<PasswordForm {...props} />);
 

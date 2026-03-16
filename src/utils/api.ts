@@ -3,7 +3,7 @@ import axios from 'axios';
 import { setUserInfo } from './auth';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE,
+  baseURL: import.meta.env.VITE_API_BASE,
 });
 
 instance.interceptors.request.use(function (config) {

@@ -2,7 +2,7 @@ import { handleItemSelect } from './handleItemSelect';
 import { createListItem } from '../../../../test-utils/factories';
 
 // Mock immutability-helper
-jest.mock('immutability-helper', () => jest.requireActual('immutability-helper'));
+vi.mock('immutability-helper', async () => await vi.importActual('immutability-helper'));
 
 const item = createListItem('1', false, [], {
   user_id: 'u',
@@ -12,7 +12,7 @@ const item = createListItem('1', false, [], {
 
 describe('handleItemSelect', () => {
   it('selects and deselects', () => {
-    const setSelected = jest.fn();
+    const setSelected = vi.fn();
     handleItemSelect({ item, selectedItems: [], setSelectedItems: setSelected });
     expect(setSelected).toHaveBeenCalled();
     handleItemSelect({ item, selectedItems: [item], setSelectedItems: setSelected });

@@ -8,7 +8,7 @@ import axios from 'utils/api';
 import { UserContext } from 'AppRouter';
 
 interface IAppNavProps {
-  signOutUser: Function;
+  signOutUser: () => void;
 }
 
 const AppNav: React.FC<IAppNavProps> = (props): React.JSX.Element => {

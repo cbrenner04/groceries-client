@@ -1,0 +1,170 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
+<div>
+  <h1>
+    Edit Items
+  </h1>
+  <br />
+  <form
+    autocomplete="off"
+    class=""
+  >
+    <div>
+      Update attributes for all items.
+    </div>
+    <br />
+    <div
+      class="mb-3"
+    >
+      <div
+        class="mb-3"
+      >
+        <label
+          class="form-label"
+          for="product"
+        >
+          Product
+        </label>
+        <input
+          class="form-control"
+          id="product"
+          name="product"
+          placeholder=""
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="ms-1 mt-1 mb-3"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clear_product"
+            name="clear_product"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clear_product"
+            title=""
+          >
+            Clear Product
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <div
+        class="mb-3"
+      >
+        <label
+          class="form-label"
+          for="quantity"
+        >
+          Quantity
+        </label>
+        <input
+          class="form-control"
+          id="quantity"
+          name="quantity"
+          type="number"
+          value=""
+        />
+      </div>
+      <div
+        class="ms-1 mt-1 mb-3"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clear_quantity"
+            name="clear_quantity"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clear_quantity"
+            title=""
+          >
+            Clear Quantity
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <label
+        class="form-label"
+        for="category"
+      >
+        Category
+      </label>
+      <input
+        class="form-control"
+        id="category"
+        list="categories"
+        name="category"
+        type="text"
+        value=""
+      />
+      <datalist
+        data-test-id="categories"
+        id="categories"
+      >
+        <option
+          value="Fruits"
+        />
+        <option
+          value="Vegetables"
+        />
+      </datalist>
+      <div
+        class="ms-1 mt-1 mb-3"
+      >
+        <div
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            id="clear_category"
+            name="clear_category"
+            type="checkbox"
+          />
+          <label
+            class="form-check-label"
+            for="clear_category"
+            title=""
+          >
+            Clear Category
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-grid gap-2 mt-3"
+    >
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Update Items
+      </button>
+      <button
+        class="btn btn-link"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+`;

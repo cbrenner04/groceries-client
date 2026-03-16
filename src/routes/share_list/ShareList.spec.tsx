@@ -5,10 +5,10 @@ import { MemoryRouter } from 'react-router';
 import ShareList from './ShareList';
 import axios from '../../utils/api';
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
   useParams: (): { list_id: string } => ({
     list_id: '1',
   }),
@@ -23,6 +23,7 @@ describe('ShareList', () => {
     );
 
   it('renders loading when data fetch is not complete', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = renderShareList();
 
     expect(await findByText('Loading...')).toBeVisible();
@@ -30,7 +31,7 @@ describe('ShareList', () => {
   });
 
   it('renders unknown error component when error occurs', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = renderShareList();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
@@ -39,7 +40,7 @@ describe('ShareList', () => {
   });
 
   it('renders ShareList when data fetch is successful', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         accepted: [
           { user: { id: 'id1', email: 'foo@example.com' }, users_list: { id: 'id1', permissions: 'read' } },

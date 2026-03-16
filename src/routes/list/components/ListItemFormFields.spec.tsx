@@ -48,7 +48,7 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
       createField('field3', 'due_date', '2024-01-15', 'item1'),
       createField('field4', 'quantity', '5', 'item1'),
     ],
-    setFormData: jest.fn(),
+    setFormData: vi.fn(),
     editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };

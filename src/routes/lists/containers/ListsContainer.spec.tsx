@@ -5,24 +5,24 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
+import { showToast } from '../../../utils/toast';
 
 // Mock listPrefetch at module level
-jest.mock('utils/listPrefetch', () => ({
-  prefetchListsIdle: jest.fn(() => Promise.resolve()),
-  prefetchList: jest.fn(() => Promise.resolve()),
-  getPrefetchedList: jest.fn(() => null),
+vi.mock('utils/listPrefetch', () => ({
+  prefetchListsIdle: vi.fn(() => Promise.resolve()),
+  prefetchList: vi.fn(() => Promise.resolve()),
+  getPrefetchedList: vi.fn(() => null),
 }));
 
-// eslint-disable-next-line import/first
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
-const mockShowToast = jest.requireMock('../../../utils/toast').showToast;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -142,8 +142,8 @@ describe('ListsContainer', () => {
 
   it('updates via polling when different data is returned', async () => {
     // messes with `userEvent` actions
-    jest.useFakeTimers();
-    axios.get = jest
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {
@@ -252,7 +252,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -260,19 +260,19 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'completed-list');
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('does not update via polling when different data is not returned', async () => {
     // messes with `userEvent` actions
-    jest.useFakeTimers();
-    axios.get = jest.fn().mockResolvedValue({
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
         accepted_lists: {
@@ -328,7 +328,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -336,22 +336,22 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('fires generic toast when unknown error on usePolling', async () => {
-    jest.useFakeTimers();
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -359,7 +359,7 @@ describe('ListsContainer', () => {
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
     );
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('does not render pending lists when they do not exist', () => {
@@ -370,7 +370,7 @@ describe('ListsContainer', () => {
   });
 
   it('creates list on form submit', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id7',
         name: 'new list',
@@ -396,7 +396,7 @@ describe('ListsContainer', () => {
   });
 
   it('redirects to login when submit response is 401', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
@@ -411,7 +411,7 @@ describe('ListsContainer', () => {
   });
 
   it('shows errors when submission fails', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
@@ -425,7 +425,7 @@ describe('ListsContainer', () => {
   });
 
   it('shows errors when request fails', async () => {
-    axios.post = jest.fn().mockRejectedValue({ request: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
@@ -439,7 +439,7 @@ describe('ListsContainer', () => {
   });
 
   it('shows errors when unknown error occurs', async () => {
-    axios.post = jest.fn().mockRejectedValue({ message: 'failed to send request' });
+    axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByLabelText, findByText, user } = setup();
 
     await user.type(await findByLabelText('Name'), 'new list');
@@ -453,21 +453,20 @@ describe('ListsContainer', () => {
   });
 
   describe('prefetch logic', () => {
-    let mockPrefetchListsIdle: jest.Mock;
-    const originalPrefetchIdle = process.env.REACT_APP_PREFETCH_IDLE;
+    let mockPrefetchListsIdle: ReturnType<typeof vi.fn>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       // Ensure prefetch is enabled for tests
-      process.env.REACT_APP_PREFETCH_IDLE = 'true';
+      import.meta.env.VITE_PREFETCH_IDLE = 'true';
       // Get the mocked function
-      const listPrefetchModule = require('utils/listPrefetch');
-      mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as jest.Mock;
+      const listPrefetchModule = await import('utils/listPrefetch');
+      mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as unknown as ReturnType<typeof vi.fn>;
       mockPrefetchListsIdle.mockClear();
     });
 
     afterEach(() => {
       mockPrefetchListsIdle.mockClear();
-      process.env.REACT_APP_PREFETCH_IDLE = originalPrefetchIdle;
+      vi.unstubAllEnvs();
     });
 
     it('prefetches lists when pendingLists and incompleteLists are available', async () => {

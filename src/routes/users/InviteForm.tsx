@@ -26,7 +26,7 @@ const InviteForm: React.FC = (): React.JSX.Element => {
           showToast.error('You must sign in');
           navigate('/users/sign_in');
         } else {
-          const responseTextKeys = Object.keys(error.response.data!);
+          const responseTextKeys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = responseTextKeys.map(
             (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
           );

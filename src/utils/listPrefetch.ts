@@ -51,7 +51,7 @@ class ListPrefetcher {
       } finally {
         this.pendingPrefetches.delete(listId);
       }
-    } catch (error) {
+    } catch {
       // Silently ignore prefetch errors to avoid disrupting user experience
       // Error details available in development via network tab
     }

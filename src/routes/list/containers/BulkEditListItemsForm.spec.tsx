@@ -18,13 +18,13 @@ import BulkEditListItemsForm, { type IBulkEditListItemsFormProps } from './BulkE
 import * as fieldHelpers from '../fieldHelpers';
 
 // Mock dependencies
-jest.mock('utils/api');
+vi.mock('utils/api');
 
-const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockAxios = axios as Mocked<typeof axios>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 describe('BulkEditListItemsForm', () => {
-  const mockNavigate = jest.fn();
+  const mockNavigate = vi.fn();
 
   const mockList: IList = {
     id: 'list-1',
@@ -168,13 +168,14 @@ describe('BulkEditListItemsForm', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockAxios.put = jest.fn().mockResolvedValue({});
+    vi.clearAllMocks();
+    mockAxios.put = vi.fn().mockResolvedValue({});
   });
 
   it('renders the form with generic title', () => {
-    const { getByText } = renderComponent();
+    const { container, getByText } = renderComponent();
 
+    expect(container).toMatchSnapshot();
     expect(getByText('Edit Items')).toBeInTheDocument();
   });
 
@@ -248,7 +249,7 @@ describe('BulkEditListItemsForm', () => {
   });
 
   it('does not update state when parseBulkFieldChange returns null (clear_ handled by handleClearField)', async () => {
-    jest.spyOn(fieldHelpers, 'parseBulkFieldChange').mockReturnValue(null);
+    vi.spyOn(fieldHelpers, 'parseBulkFieldChange').mockReturnValue(null);
     const { getByLabelText, getByText, user } = renderComponent();
 
     await user.clear(getByLabelText('Product'));
@@ -265,14 +266,14 @@ describe('BulkEditListItemsForm', () => {
         }),
       );
     });
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('handles clear field functionality', async () => {
     const { getByText, user } = renderComponent();
 
     // Click clear button for the Product field
-    const clearCheckbox = document.querySelector('input[id="clear_product"]')!;
+    const clearCheckbox = document.querySelector('input[id="clear_product"]') as HTMLElement;
     await user.click(clearCheckbox);
 
     await user.click(getByText('Update Items'));
@@ -299,7 +300,7 @@ describe('BulkEditListItemsForm', () => {
     const { getByText, user } = renderComponent();
 
     // Click clear checkbox to enter clear mode
-    const clearCheckbox = document.querySelector('input[id="clear_product"]')!;
+    const clearCheckbox = document.querySelector('input[id="clear_product"]') as HTMLElement;
     await user.click(clearCheckbox);
 
     // Click clear checkbox again to exit clear mode
@@ -325,7 +326,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 401 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -341,7 +342,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 404 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -357,7 +358,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       response: { status: 403 },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -376,7 +377,7 @@ describe('BulkEditListItemsForm', () => {
         data: { name: 'cannot be blank', quantity: 'must be a number' },
       },
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -391,7 +392,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       request: {},
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -406,7 +407,7 @@ describe('BulkEditListItemsForm', () => {
     const axiosError = {
       message: 'Unexpected error',
     } as AxiosError;
-    mockAxios.put = jest.fn().mockRejectedValue(axiosError);
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
 
     const { getByText, user } = renderComponent();
 
@@ -430,7 +431,7 @@ describe('BulkEditListItemsForm', () => {
     const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
     const { getByText, user } = renderComponent({ items: itemsWithCategory });
 
-    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]') as HTMLElement;
     await user.click(clearCategoryCheckbox);
 
     await user.click(getByText('Update Items'));
@@ -457,10 +458,10 @@ describe('BulkEditListItemsForm', () => {
     const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
     const { getByText, user } = renderComponent({ items: itemsWithCategory });
 
-    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]')!;
+    const clearCategoryCheckbox = document.querySelector('input[id="clear_category"]') as HTMLElement;
     await user.click(clearCategoryCheckbox);
 
-    const categoryInput = document.querySelector('input[id="category"]')!;
+    const categoryInput = document.querySelector('input[id="category"]') as HTMLElement;
     await user.type(categoryInput, 'Dairy');
 
     await user.click(getByText('Update Items'));
@@ -503,7 +504,7 @@ describe('BulkEditListItemsForm', () => {
 
   describe('category auto-creation', () => {
     beforeEach(() => {
-      mockAxios.post = jest.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
     });
 
     it('creates a new category when a category value is provided', async () => {
@@ -540,7 +541,7 @@ describe('BulkEditListItemsForm', () => {
     });
 
     it('continues successfully when category creation fails', async () => {
-      mockAxios.post = jest.fn().mockRejectedValue({ response: { status: 422 } });
+      mockAxios.post = vi.fn().mockRejectedValue({ response: { status: 422 } });
 
       const { getByLabelText, getByText, user } = renderComponent();
 

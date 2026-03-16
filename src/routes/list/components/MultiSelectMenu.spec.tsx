@@ -56,11 +56,11 @@ function setup(suppliedProps?: Partial<IMultiSelectMenuProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: IMultiSelectMenuProps = {
     isMultiSelect: true,
-    setCopy: jest.fn(),
-    setMove: jest.fn(),
+    setCopy: vi.fn(),
+    setMove: vi.fn(),
     selectedItems: [mockItem],
-    setSelectedItems: jest.fn(),
-    setMultiSelect: jest.fn(),
+    setSelectedItems: vi.fn(),
+    setMultiSelect: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -74,7 +74,7 @@ function setup(suppliedProps?: Partial<IMultiSelectMenuProps>): ISetupReturn {
 
 describe('MultiSelectMenu', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders when isMultiSelect is true', async () => {

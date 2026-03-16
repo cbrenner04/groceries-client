@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Filter handles categories with empty strings 1`] = `
+exports[`Filter > handles categories with empty strings 1`] = `
 <div>
   <div
     class="show dropdown"
@@ -19,7 +19,7 @@ exports[`Filter handles categories with empty strings 1`] = `
       data-popper-escaped="true"
       data-popper-placement="bottom-start"
       data-popper-reference-hidden="true"
-      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      style="position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; transform: translate(0px, 2px);"
       x-placement="bottom-start"
     >
       <a
@@ -45,7 +45,7 @@ exports[`Filter handles categories with empty strings 1`] = `
 </div>
 `;
 
-exports[`Filter handles empty categories array 1`] = `
+exports[`Filter > handles empty categories array 1`] = `
 <div>
   <div
     class="show dropdown"
@@ -64,14 +64,14 @@ exports[`Filter handles empty categories array 1`] = `
       data-popper-escaped="true"
       data-popper-placement="bottom-start"
       data-popper-reference-hidden="true"
-      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      style="position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; transform: translate(0px, 2px);"
       x-placement="bottom-start"
     />
   </div>
 </div>
 `;
 
-exports[`Filter renders filter dropdown 1`] = `
+exports[`Filter > renders filter dropdown 1`] = `
 <div>
   <div
     class="dropdown"
@@ -88,7 +88,7 @@ exports[`Filter renders filter dropdown 1`] = `
 </div>
 `;
 
-exports[`Filter renders filter options when dropdown is clicked 1`] = `
+exports[`Filter > renders filter options when dropdown is clicked 1`] = `
 <div>
   <div
     class="show dropdown"
@@ -107,7 +107,7 @@ exports[`Filter renders filter options when dropdown is clicked 1`] = `
       data-popper-escaped="true"
       data-popper-placement="bottom-start"
       data-popper-reference-hidden="true"
-      style="position: absolute; top: 0px; left: 0px; transform: translate(0px, 2px);"
+      style="position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; transform: translate(0px, 2px);"
       x-placement="bottom-start"
     >
       <a

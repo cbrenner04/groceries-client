@@ -16,16 +16,16 @@ import { EListItemFieldType } from 'typings';
 import EditListItemForm from './EditListItemForm';
 
 // Mock dependencies
-jest.mock('utils/api');
+vi.mock('utils/api');
 
-const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockAxios = axios as Mocked<typeof axios>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 // Helper function to get the form element
 const getForm = (): HTMLFormElement => {
   // Try to find the form by looking for any input field and getting its closest form
   const input = screen.getByLabelText('Quantity');
-  return input.closest('form')!;
+  return input.closest('form') as HTMLFormElement;
 };
 
 // Mock window.location
@@ -86,13 +86,15 @@ describe('EditListItemForm', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockLocation.href = '';
   });
 
   describe('Rendering', () => {
     it('renders the form with correct title', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      const { container } = render(<EditListItemForm {...defaultProps} />);
+
+      expect(container).toMatchSnapshot();
       expect(screen.getByText('Edit Item')).toBeInTheDocument();
     });
 
@@ -168,9 +170,9 @@ describe('EditListItemForm', () => {
 
   describe('Form Submission - Success Cases', () => {
     beforeEach(() => {
-      mockAxios.put = jest.fn().mockResolvedValue({});
-      mockAxios.post = jest.fn().mockResolvedValue({});
-      mockAxios.delete = jest.fn().mockResolvedValue({});
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+      mockAxios.delete = vi.fn().mockResolvedValue({});
     });
 
     it('submits form successfully and redirects', async () => {
@@ -316,7 +318,7 @@ describe('EditListItemForm', () => {
         response: { status: 401 },
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(authError);
+      mockAxios.put = vi.fn().mockRejectedValue(authError);
 
       render(<EditListItemForm {...defaultProps} />);
 
@@ -334,7 +336,7 @@ describe('EditListItemForm', () => {
         response: { status: 403 },
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(forbiddenError);
+      mockAxios.put = vi.fn().mockRejectedValue(forbiddenError);
 
       render(<EditListItemForm {...defaultProps} />);
 
@@ -352,7 +354,7 @@ describe('EditListItemForm', () => {
         response: { status: 404 },
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(notFoundError);
+      mockAxios.put = vi.fn().mockRejectedValue(notFoundError);
 
       render(<EditListItemForm {...defaultProps} />);
 
@@ -376,7 +378,7 @@ describe('EditListItemForm', () => {
         },
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(validationError);
+      mockAxios.put = vi.fn().mockRejectedValue(validationError);
 
       render(<EditListItemForm {...defaultProps} />);
 
@@ -400,7 +402,7 @@ describe('EditListItemForm', () => {
         },
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(validationError);
+      mockAxios.put = vi.fn().mockRejectedValue(validationError);
 
       render(<EditListItemForm {...defaultProps} list={bookList} />);
 
@@ -417,7 +419,7 @@ describe('EditListItemForm', () => {
         request: {},
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(networkError);
+      mockAxios.put = vi.fn().mockRejectedValue(networkError);
 
       render(<EditListItemForm {...defaultProps} />);
 
@@ -434,7 +436,7 @@ describe('EditListItemForm', () => {
         message: 'Unexpected error occurred',
       } as AxiosError;
 
-      mockAxios.put = jest.fn().mockRejectedValue(genericError);
+      mockAxios.put = vi.fn().mockRejectedValue(genericError);
 
       render(<EditListItemForm {...defaultProps} />);
 

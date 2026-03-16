@@ -22,9 +22,9 @@ function setup(suppliedProps?: Partial<IListFormFieldsProps>): ISetupReturn {
     name: 'foo',
     configurationId: 'config-1',
     configurations: mockConfigurations,
-    handleNameChange: jest.fn(),
-    handleConfigurationChange: jest.fn(),
-    handleCompletedChange: jest.fn(),
+    handleNameChange: vi.fn(),
+    handleConfigurationChange: vi.fn(),
+    handleCompletedChange: vi.fn(),
     completed: false,
     editForm: false,
   };

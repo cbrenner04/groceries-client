@@ -15,6 +15,7 @@ const setup = (): RenderResult =>
 
 describe('CompletedLists', () => {
   it('renders loading component when data is being fetched', async () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = setup();
 
     expect(await findByText('Loading...')).toBeVisible();
@@ -22,7 +23,7 @@ describe('CompletedLists', () => {
   });
 
   it('renders unknown error when error occurs', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 400 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
     const { container, findByRole } = setup();
 
     await act(async () => {
@@ -34,7 +35,7 @@ describe('CompletedLists', () => {
   });
 
   it('renders CompletedLists when data retrieval is complete', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
         completed_lists: [

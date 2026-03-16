@@ -11,7 +11,7 @@ async function setup(suppliedProps?: Partial<INumberFieldProps>): Promise<{
 }> {
   const user = userEvent.setup();
   const defaultProps = {
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     name: 'testName',
     label: 'testLabel',
   };

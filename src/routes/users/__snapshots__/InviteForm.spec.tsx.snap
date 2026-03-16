@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`InviteForm invites new user 1`] = `
+exports[`InviteForm > invites new user 1`] = `
 <div>
   <h1>
     Send Invitation

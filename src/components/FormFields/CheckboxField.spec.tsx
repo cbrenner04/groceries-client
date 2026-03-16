@@ -11,7 +11,7 @@ async function setup(suppliedProps?: Partial<ICheckboxFieldProps>): Promise<{
 }> {
   const user = userEvent.setup();
   const defaultProps = {
-    handleChange: jest.fn(),
+    handleChange: vi.fn(),
     name: 'testName',
     label: 'testLabel',
     value: true,

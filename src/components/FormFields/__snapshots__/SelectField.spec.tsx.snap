@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SelectField when blankOption is false renders input with first option as first option provided 1`] = `
+exports[`SelectField > when blankOption is false > renders input with first option as first option provided 1`] = `
 <div
   class="mb-3"
 >
@@ -29,7 +29,7 @@ exports[`SelectField when blankOption is false renders input with first option a
 </div>
 `;
 
-exports[`SelectField when blankOption is true when value is not blank renders input with first option of empty string and clear input text 1`] = `
+exports[`SelectField > when blankOption is true > when value is not blank > renders input with first option of empty string and clear input text 1`] = `
 <div
   class="mb-3"
 >
@@ -63,7 +63,7 @@ exports[`SelectField when blankOption is true when value is not blank renders in
 </div>
 `;
 
-exports[`SelectField when blankOption is true when value is not blank renders input with first option of empty string and select input text 1`] = `
+exports[`SelectField > when blankOption is true > when value is not blank > renders input with first option of empty string and select input text 1`] = `
 <div
   class="mb-3"
 >

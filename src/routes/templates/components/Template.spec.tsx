@@ -21,7 +21,7 @@ function setup(suppliedProps?: Partial<ITemplateProps>): ISetupReturn {
       updated_at: '',
       archived_at: null,
     },
-    handleDelete: jest.fn(),
+    handleDelete: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(

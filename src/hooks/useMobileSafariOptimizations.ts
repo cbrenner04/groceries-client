@@ -34,7 +34,7 @@ export const useMobileSafariOptimizations = (): MobileSafariOptimizations => {
 
   useEffect(() => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
+    return (): void => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       // Run all cleanup functions on unmount
       cleanupFunctionsRef.current.forEach((cleanupFn) => cleanupFn());

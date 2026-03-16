@@ -58,9 +58,7 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
           placeholder="e.g., product"
           isInvalid={hasLabelError}
         />
-        {hasLabelError && (
-          <Form.Control.Feedback type="invalid">Label cannot be blank</Form.Control.Feedback>
-        )}
+        {hasLabelError && <Form.Control.Feedback type="invalid">Label cannot be blank</Form.Control.Feedback>}
       </Form.Group>
 
       <Form.Group className="mb-2">
@@ -91,9 +89,7 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
             data-test-id={`field-row-position-${props.index}`}
             isInvalid={hasPositionError}
           />
-          {hasPositionError && (
-            <Form.Control.Feedback type="invalid">Duplicate position</Form.Control.Feedback>
-          )}
+          {hasPositionError && <Form.Control.Feedback type="invalid">Duplicate position</Form.Control.Feedback>}
         </Form.Group>
 
         <Form.Group className="mb-0">

@@ -12,8 +12,8 @@ interface ISetupReturn extends RenderResult {
 function setup(suppliedProps?: Partial<ICategoryFilterProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps: ICategoryFilterProps = {
-    handleClearFilter: jest.fn(),
-    handleCategoryFilter: jest.fn(),
+    handleClearFilter: vi.fn(),
+    handleCategoryFilter: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
 
@@ -24,7 +24,7 @@ function setup(suppliedProps?: Partial<ICategoryFilterProps>): ISetupReturn {
 
 describe('CategoryFilter', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders Filtered when categories and filter exist', async () => {

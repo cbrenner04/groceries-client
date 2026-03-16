@@ -29,7 +29,7 @@ const EditInvite: React.FC = (): React.JSX.Element => {
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
-        const responseTextKeys = Object.keys(error.response.data!);
+        const responseTextKeys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
         const responseErrors = responseTextKeys.map(
           (key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`,
         );

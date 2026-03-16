@@ -30,7 +30,7 @@ function setup(suppliedProps?: Partial<IListProps>): ISetupReturn {
     },
     multiSelect: false,
     selectedLists: [],
-    setSelectedLists: jest.fn(),
+    setSelectedLists: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(

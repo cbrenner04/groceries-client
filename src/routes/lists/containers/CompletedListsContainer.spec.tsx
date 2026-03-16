@@ -8,7 +8,7 @@ import type { TUserPermissions } from 'typings';
 
 import CompletedListsContainer from './CompletedListsContainer';
 
-const mockShowToast = showToast as jest.Mocked<typeof showToast>;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
 function setup(): RenderResult {
   const props = {
@@ -65,11 +65,11 @@ function setup(): RenderResult {
 
 describe('CompletedListsContainer', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('renders', () => {
@@ -79,7 +79,7 @@ describe('CompletedListsContainer', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    axios.get = jest
+    axios.get = vi
       .fn()
       .mockResolvedValueOnce({
         data: {
@@ -134,7 +134,7 @@ describe('CompletedListsContainer', () => {
     const { findByTestId, queryByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -143,7 +143,7 @@ describe('CompletedListsContainer', () => {
     expect(queryByTestId('list-id2')).toBeNull();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(2);
@@ -152,7 +152,7 @@ describe('CompletedListsContainer', () => {
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    axios.get = jest.fn().mockResolvedValue({
+    axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
         completed_lists: [
@@ -175,14 +175,14 @@ describe('CompletedListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(await findByTestId('list-id1')).toBeVisible();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(2);
@@ -190,11 +190,11 @@ describe('CompletedListsContainer', () => {
   });
 
   it('fires generic toast when unknown error occurs in usePolling', async () => {
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -204,11 +204,11 @@ describe('CompletedListsContainer', () => {
   });
 
   it('fires network connectivity error toast when network error occurs in usePolling', async () => {
-    axios.get = jest.fn().mockRejectedValue({ request: {} });
+    axios.get = vi.fn().mockRejectedValue({ request: {} });
     setup();
 
     await act(async () => {
-      jest.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(10000);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);

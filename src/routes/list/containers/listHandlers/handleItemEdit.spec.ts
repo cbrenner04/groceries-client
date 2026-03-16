@@ -9,7 +9,7 @@ const item = createListItem('1', false, [], {
 
 describe('handleItemEdit', () => {
   it('navigates to edit', () => {
-    const nav = jest.fn();
+    const nav = vi.fn();
     handleItemEdit({ item, listId: '1', navigate: nav });
     expect(nav).toHaveBeenCalledWith('/lists/1/list_items/1/edit');
   });

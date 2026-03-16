@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`List calls setSelectedLists with empty array when deselecting list 1`] = `
+exports[`List > calls setSelectedLists with empty array when deselecting list 1`] = `
 <div>
   <div
     class="foo list-list-group-item list-group-item"
@@ -57,7 +57,7 @@ exports[`List calls setSelectedLists with empty array when deselecting list 1`] 
 </div>
 `;
 
-exports[`List calls setSelectedLists with list when selecting list 1`] = `
+exports[`List > calls setSelectedLists with list when selecting list 1`] = `
 <div>
   <div
     class="foo list-list-group-item list-group-item"
@@ -114,7 +114,7 @@ exports[`List calls setSelectedLists with list when selecting list 1`] = `
 </div>
 `;
 
-exports[`List does not render Link when includeLinkToList is false 1`] = `
+exports[`List > does not render Link when includeLinkToList is false 1`] = `
 <div>
   <div
     class="foo list-list-group-item list-group-item"
@@ -160,7 +160,7 @@ exports[`List does not render Link when includeLinkToList is false 1`] = `
 </div>
 `;
 
-exports[`List does render Link when includeLinkToList is true 1`] = `
+exports[`List > does render Link when includeLinkToList is true 1`] = `
 <div>
   <div
     class="foo list-list-group-item list-group-item"

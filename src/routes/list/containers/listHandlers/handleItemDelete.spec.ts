@@ -2,22 +2,23 @@ import { handleItemDelete } from './handleItemDelete';
 import { handleFailure } from '../../../../utils/handleFailure';
 import axios from '../../../../utils/api';
 import { createListItem } from '../../../../test-utils/factories';
+import { showToast } from '../../../../utils/toast';
 
-jest.mock('../../../../utils/api', () => ({
+vi.mock('../../../../utils/api', () => ({
   __esModule: true,
   default: {
-    put: jest.fn(),
-    delete: jest.fn(),
-    post: jest.fn(),
-    get: jest.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    post: vi.fn(),
+    get: vi.fn(),
   },
 }));
-jest.mock('../../../../utils/handleFailure');
+vi.mock('../../../../utils/handleFailure');
 
-const mockToastUtil = jest.requireMock('../../../../utils/toast').showToast;
-const mockAxios = axios as jest.Mocked<typeof axios>;
-const mockHandleFailure = handleFailure as jest.MockedFunction<typeof handleFailure>;
-const mockNavigate = jest.fn();
+const mockToastUtil = showToast as Mocked<typeof showToast>;
+const mockAxios = axios as Mocked<typeof axios>;
+const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
+const mockNavigate = vi.fn();
 
 const item = createListItem('1', false, [], {
   user_id: 'u',
@@ -27,7 +28,7 @@ const item = createListItem('1', false, [], {
 
 describe('handleItemDelete', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('deletes item', async () => {
@@ -42,14 +43,14 @@ describe('handleItemDelete', () => {
       updated_at: null,
     });
     mockAxios.delete.mockResolvedValueOnce({});
-    const setNotCompleted = jest.fn();
-    const setSelected = jest.fn();
-    const setPending = jest.fn();
+    const setNotCompleted = vi.fn();
+    const setSelected = vi.fn();
+    const setPending = vi.fn();
     await handleItemDelete({
       item: testItem,
       listId: '1',
       completedItems: [],
-      setCompletedItems: jest.fn(),
+      setCompletedItems: vi.fn(),
       notCompletedItems: [testItem, otherItem],
       setNotCompletedItems: setNotCompleted,
       selectedItems: [testItem, otherItem],
@@ -74,16 +75,16 @@ describe('handleItemDelete', () => {
       updated_at: null,
     });
     mockAxios.delete.mockResolvedValueOnce({});
-    const setCompleted = jest.fn();
-    const setSelected = jest.fn();
-    const setPending = jest.fn();
+    const setCompleted = vi.fn();
+    const setSelected = vi.fn();
+    const setPending = vi.fn();
     await handleItemDelete({
       item: testItem,
       listId: '1',
       completedItems: [testItem, otherItem],
       setCompletedItems: setCompleted,
       notCompletedItems: [],
-      setNotCompletedItems: jest.fn(),
+      setNotCompletedItems: vi.fn(),
       selectedItems: [testItem, otherItem],
       setSelectedItems: setSelected,
       setPending,
@@ -97,17 +98,17 @@ describe('handleItemDelete', () => {
   it('handles error', async () => {
     const error = new Error('AHHHH!');
     mockAxios.delete.mockRejectedValueOnce(error);
-    const setPending = jest.fn();
+    const setPending = vi.fn();
     await expect(
       handleItemDelete({
         item,
         listId: '1',
         completedItems: [],
-        setCompletedItems: jest.fn(),
+        setCompletedItems: vi.fn(),
         notCompletedItems: [item],
-        setNotCompletedItems: jest.fn(),
+        setNotCompletedItems: vi.fn(),
         selectedItems: [item],
-        setSelectedItems: jest.fn(),
+        setSelectedItems: vi.fn(),
         setPending,
         navigate: mockNavigate,
       }),
@@ -132,14 +133,14 @@ describe('handleItemDelete', () => {
       updated_at: null,
     });
     mockAxios.delete.mockResolvedValueOnce({});
-    const setNotCompleted = jest.fn();
-    const setSelected = jest.fn();
-    const setPending = jest.fn();
+    const setNotCompleted = vi.fn();
+    const setSelected = vi.fn();
+    const setPending = vi.fn();
     await handleItemDelete({
       item: testItem,
       listId: '1',
       completedItems: [],
-      setCompletedItems: jest.fn(),
+      setCompletedItems: vi.fn(),
       notCompletedItems: [testItem, otherItem],
       setNotCompletedItems: setNotCompleted,
       selectedItems: [testItem, otherItem],

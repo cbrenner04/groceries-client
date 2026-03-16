@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FormSubmission does not render cancel button when cancel text and cancel action are not provided 1`] = `
+exports[`FormSubmission > does not render cancel button when cancel text and cancel action are not provided 1`] = `
 <div>
   <div
     class="d-grid gap-2 mt-3"
@@ -15,7 +15,7 @@ exports[`FormSubmission does not render cancel button when cancel text and cance
 </div>
 `;
 
-exports[`FormSubmission renders the submit and cancel 1`] = `
+exports[`FormSubmission > renders the submit and cancel 1`] = `
 <div>
   <div
     class="d-grid gap-2 mt-3"

@@ -121,7 +121,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           showToast.error('Item not found');
           window.location.href = `/lists/${props.list.id}`;
         } else {
-          const keys = Object.keys(error.response.data!);
+          const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
           showToast.error(responseErrors.join(' and '));
         }

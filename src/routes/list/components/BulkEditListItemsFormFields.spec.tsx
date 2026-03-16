@@ -62,8 +62,8 @@ async function setup(suppliedProps?: Partial<IBulkEditListItemsFormFieldsProps>)
         clear: false,
       },
     ],
-    handleFieldChange: jest.fn(),
-    handleClearField: jest.fn(),
+    handleFieldChange: vi.fn(),
+    handleClearField: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   render(<BulkEditListItemsFormFields {...props} />);

@@ -5,7 +5,7 @@ import { createListItem } from 'test-utils/factories';
 
 import NotCompletedItemsSection from './NotCompletedItemsSection';
 
-jest.mock('./ListItem', () => ({
+vi.mock('./ListItem', () => ({
   __esModule: true,
   default: (props: { item: { id: string } }): React.JSX.Element => <div data-test-id="list-item">{props.item.id}</div>,
 }));
@@ -18,15 +18,15 @@ const baseProps = {
   filter: '',
   displayedCategories: [],
   incompleteMultiSelect: false,
-  setCopy: jest.fn(),
-  setMove: jest.fn(),
-  setSelectedItems: jest.fn(),
-  setIncompleteMultiSelect: jest.fn(),
-  handleItemSelect: jest.fn(),
-  handleItemComplete: jest.fn().mockResolvedValue(undefined),
-  handleItemEdit: jest.fn(),
-  handleItemDelete: jest.fn(),
-  handleItemRefresh: jest.fn().mockResolvedValue(undefined),
+  setCopy: vi.fn(),
+  setMove: vi.fn(),
+  setSelectedItems: vi.fn(),
+  setIncompleteMultiSelect: vi.fn(),
+  handleItemSelect: vi.fn(),
+  handleItemComplete: vi.fn().mockResolvedValue(undefined),
+  handleItemEdit: vi.fn(),
+  handleItemDelete: vi.fn(),
+  handleItemRefresh: vi.fn().mockResolvedValue(undefined),
 };
 
 describe('NotCompletedItemsSection', () => {

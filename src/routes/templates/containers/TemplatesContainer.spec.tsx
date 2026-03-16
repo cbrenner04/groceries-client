@@ -4,15 +4,16 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { showToast } from 'utils/toast';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
 
-const mockShowToast = jest.requireMock('utils/toast').showToast;
+const mockShowToast = showToast as Mocked<typeof showToast>;
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -74,7 +75,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates template on form submit', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id3',
         name: 'new template',
@@ -100,7 +101,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates fields when creating template', async () => {
-    axios.post = jest.fn().mockResolvedValue({
+    axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id3',
         name: 'new template',
@@ -121,13 +122,13 @@ describe('TemplatesContainer', () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
     });
 
-    const calls = (axios.post as jest.Mock).mock.calls;
+    const calls = (axios.post as Mock).mock.calls;
     expect(calls[0][0]).toBe('/list_item_configurations');
     expect(calls[1][0]).toContain('/list_item_field_configurations');
   });
 
   it('redirects to signin when 401 on create', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 401 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { getByText, findByTestId, user } = setup();
 
     await user.click(getByText('Add Template'));
@@ -144,7 +145,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('shows errors when create fails', async () => {
-    axios.post = jest.fn().mockRejectedValue({
+    axios.post = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'cannot be blank' } },
     });
     const { getByText, findByTestId, user } = setup();
@@ -162,7 +163,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('deletes template', async () => {
-    axios.delete = jest.fn().mockResolvedValue({});
+    axios.delete = vi.fn().mockResolvedValue({});
     const { getAllByTestId, findByTestId, user } = setup();
 
     await user.click(getAllByTestId('template-trash')[0]);
@@ -177,7 +178,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('handles delete failure', async () => {
-    axios.delete = jest.fn().mockRejectedValue({ response: { status: 500, data: {} } });
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500, data: {} } });
     const { getAllByTestId, findByTestId, user } = setup();
 
     await user.click(getAllByTestId('template-trash')[0]);

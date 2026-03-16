@@ -3,9 +3,9 @@ import { render, cleanup, act, screen } from '@testing-library/react';
 import { useMobileSafariOptimizations } from './useMobileSafariOptimizations';
 
 // Mock addEventListener and removeEventListener
-const mockAddEventListener = jest.fn();
-const mockRemoveEventListener = jest.fn();
-
+const mockAddEventListener = vi.fn();
+const mockRemoveEventListener = vi.fn();
+type callType = [string, ...unknown[]];
 // Mock document
 Object.defineProperty(document, 'hidden', {
   value: false,
@@ -43,7 +43,7 @@ function TestComponent(): React.JSX.Element {
 
 describe('useMobileSafariOptimizations', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     Object.defineProperty(document, 'hidden', {
       value: false,
       writable: true,
@@ -76,7 +76,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: [string, ...unknown[]]) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -92,7 +94,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: callType) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -102,7 +106,9 @@ describe('useMobileSafariOptimizations', () => {
         value: false,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: callType) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 
@@ -139,7 +145,9 @@ describe('useMobileSafariOptimizations', () => {
         value: true,
         writable: true,
       });
-      const visibilityHandler = mockAddEventListener.mock.calls.find((call) => call[0] === 'visibilitychange')?.[1];
+      const visibilityHandler = mockAddEventListener.mock.calls.find(
+        (call: callType) => call[0] === 'visibilitychange',
+      )?.[1];
       visibilityHandler?.();
     });
 

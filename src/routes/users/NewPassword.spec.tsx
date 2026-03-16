@@ -8,10 +8,10 @@ import { showToast } from '../../utils/toast';
 import axios from 'utils/api';
 import NewPassword from './NewPassword';
 
-const mockNavigate = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: (): jest.Mock => mockNavigate,
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -31,7 +31,7 @@ function setup(): ISetupReturn {
 
 describe('NewPassword', () => {
   it('requests new password', async () => {
-    axios.post = jest.fn().mockResolvedValue({});
+    axios.post = vi.fn().mockResolvedValue({});
     const { container, findByLabelText, findByRole, user } = setup();
 
     expect(container).toMatchSnapshot();
@@ -47,7 +47,7 @@ describe('NewPassword', () => {
   });
 
   it('has same outcome when error occurs', async () => {
-    axios.post = jest.fn().mockRejectedValue({ response: { status: 500 } });
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const { findByLabelText, findByRole, user } = setup();
 
     await user.type(await findByLabelText('Email'), 'foo@example.com');

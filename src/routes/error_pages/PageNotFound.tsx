@@ -19,7 +19,7 @@ const fetchData = async (fetchParams: { navigate: NavigateFunction }): Promise<v
       fetchParams.navigate('/users/sign_in');
     }
     // any other errors will just be caught and render the generic UnknownError
-    throw new Error();
+    throw new Error('Token validation failed', { cause: err });
   }
 };
 

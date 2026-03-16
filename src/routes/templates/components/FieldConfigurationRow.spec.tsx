@@ -21,8 +21,8 @@ function setup(suppliedProps?: Partial<IFieldConfigurationRowProps>): ISetupRetu
       position: 1,
       primary: true,
     },
-    onRemove: jest.fn(),
-    onChange: jest.fn(),
+    onRemove: vi.fn(),
+    onChange: vi.fn(),
     canRemove: true,
     totalFields: 3,
   };
@@ -46,7 +46,7 @@ describe('FieldConfigurationRow', () => {
     await user.clear(labelInput);
     await user.type(labelInput, 'n');
 
-    const calls = (props.onChange as jest.Mock).mock.calls;
+    const calls = (props.onChange as Mock).mock.calls;
     expect(calls[calls.length - 1][0]).toBe('label');
     expect(calls[calls.length - 1][1]).toContain('n');
   });

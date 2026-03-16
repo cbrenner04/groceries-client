@@ -35,7 +35,7 @@ describe('UnknownError', () => {
     // get location to reset it later
     const { location } = window;
 
-    Object.defineProperty(window, 'location', { value: { reload: jest.fn() } });
+    Object.defineProperty(window, 'location', { value: { reload: vi.fn() } });
 
     const user = userEvent.setup();
     const { getByRole } = render(<UnknownError />);
