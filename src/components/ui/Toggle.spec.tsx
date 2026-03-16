@@ -65,7 +65,6 @@ describe('Toggle', () => {
     const { findByRole, user } = setup({ checked: false, onChange: handleChange });
     const toggle = await findByRole('switch');
 
-    await user.keyboard('{Enter}');
     toggle.focus();
     await user.keyboard('{Enter}');
     expect(handleChange).toHaveBeenCalledWith(true);
@@ -101,6 +100,23 @@ describe('Toggle', () => {
     const label = await findByText('Dark Mode');
     await user.click(label);
     expect(handleChange).toHaveBeenCalledWith(true);
+  });
+
+  it('does not toggle when label is disabled', async () => {
+    const handleChange = vi.fn();
+    const { findByText, user } = setup({ label: 'Dark Mode', disabled: true, onChange: handleChange });
+    const label = await findByText('Dark Mode');
+    await user.click(label);
+    expect(handleChange).not.toHaveBeenCalled();
+  });
+
+  it('does not toggle on keyboard when disabled', async () => {
+    const handleChange = vi.fn();
+    const { findByRole, user } = setup({ disabled: true, onChange: handleChange });
+    const toggle = await findByRole('switch');
+    toggle.focus();
+    await user.keyboard(' ');
+    expect(handleChange).not.toHaveBeenCalled();
   });
 
   it('passes through data-test-id attribute', async () => {
