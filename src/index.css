@@ -1,4 +1,17 @@
-@import 'tailwindcss';
+/*
+ * Tailwind v4 granular imports — Bootstrap coexistence strategy:
+ *
+ * 1. Preflight is excluded: its CSS reset (margin: 0, padding: 0, border: 0 solid
+ *    on all elements) and its utility classes (e.g., .collapse { visibility: collapse })
+ *    conflict with Bootstrap. Re-enable in Phase 2 after Bootstrap removal.
+ *
+ * 2. Utilities use prefix(tw) so generated class names (tw:collapse, tw:fixed, etc.)
+ *    never collide with Bootstrap classes (.collapse, .fixed-top, etc.).
+ *    In Phase 2, use tw: prefixed classes in markup (e.g., class="tw:flex tw:gap-4").
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme) prefix(tw);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(tw);
 
 /* Design tokens — see Appendix A for full palette */
 @theme {
@@ -122,23 +135,17 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.2);
 }
 
-/* Global resets */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
+/* Apply design tokens to body after Tailwind — overrides baseline values */
+/* body {
   font-family: var(--font-sans);
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   padding-bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+} */
 
 /* Toast overrides to match design system */
-.Toastify__toast {
+/* .Toastify__toast {
   border-radius: var(--radius-lg) !important;
   font-family: var(--font-sans) !important;
   box-shadow: var(--shadow-lg) !important;
-}
+} */
