@@ -28,6 +28,21 @@ try {
   // ignore if already defined/configured by the environment
 }
 
+// Mock window.matchMedia for tests
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
 vi.mock('axios', async () => {
   // AxiosError mock - constructable class used by tests with `new AxiosError(...)`
   class AxiosErrorMock extends Error {

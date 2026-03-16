@@ -13,6 +13,7 @@ import NewSession from './routes/users/NewSession';
 import PageNotFound from './routes/error_pages/PageNotFound';
 import List from './routes/list/List';
 import EditListItem from './routes/list/EditListItem';
+import { ThemeProvider } from './components/ThemeProvider';
 
 // Lazy load heavy administrative/infrequent components for better Mobile Safari performance
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
@@ -68,34 +69,36 @@ export default function AppRouter(): React.JSX.Element {
   };
 
   return (
-    <Router>
-      <UserContext.Provider value={user}>
-        <AppNav signOutUser={signOutUser} />
-        <Routes>
-          {/* routes/lists */}
-          <Route path="/" element={<Navigate to="/lists" />} />
-          <Route path="/lists" element={<Lists />} />
-          <Route path="/completed_lists" element={<CompletedLists />} />
-          {/* routes/list */}
-          <Route path="/lists/:id" element={<List />} />
-          <Route path="/lists/:id/edit" element={<EditList />} />
-          <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
-          <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
-          {/* routes/share_list */}
-          <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
-          {/* routes/templates */}
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/templates/:id/edit" element={<EditTemplate />} />
-          {/* routes/users */}
-          <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
-          <Route path="/users/password/new" element={<NewPassword />} />
-          <Route path="/users/password/edit" element={<EditPassword />} />
-          <Route path="/users/invitation/new" element={<InviteForm />} />
-          <Route path="/users/invitation/accept" element={<EditInvite />} />
-          {/* routes/error_pages */}
-          <Route errorElement={<PageNotFound />} />
-        </Routes>
-      </UserContext.Provider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <UserContext.Provider value={user}>
+          <AppNav signOutUser={signOutUser} />
+          <Routes>
+            {/* routes/lists */}
+            <Route path="/" element={<Navigate to="/lists" />} />
+            <Route path="/lists" element={<Lists />} />
+            <Route path="/completed_lists" element={<CompletedLists />} />
+            {/* routes/list */}
+            <Route path="/lists/:id" element={<List />} />
+            <Route path="/lists/:id/edit" element={<EditList />} />
+            <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+            <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+            {/* routes/share_list */}
+            <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
+            {/* routes/templates */}
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/templates/:id/edit" element={<EditTemplate />} />
+            {/* routes/users */}
+            <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
+            <Route path="/users/password/new" element={<NewPassword />} />
+            <Route path="/users/password/edit" element={<EditPassword />} />
+            <Route path="/users/invitation/new" element={<InviteForm />} />
+            <Route path="/users/invitation/accept" element={<EditInvite />} />
+            {/* routes/error_pages */}
+            <Route errorElement={<PageNotFound />} />
+          </Routes>
+        </UserContext.Provider>
+      </Router>
+    </ThemeProvider>
   );
 }
