@@ -9,6 +9,7 @@ import { unifiedCache } from 'utils/lightweightCache';
 const mockHandleItemAddition = vi.fn();
 const mockNavigate = vi.fn();
 const mockShowToast = showToast as Mocked<typeof showToast>;
+
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
   useNavigate: (): Mock => mockNavigate,
@@ -236,7 +237,7 @@ describe('ListItemForm', () => {
     const fieldConfigsWithTypes = [
       { id: '1', label: 'name', data_type: 'free_text', position: 1, primary: false },
       { id: '2', label: 'quantity', data_type: 'number', position: 2, primary: false },
-      { id: '3', label: 'completed', data_type: 'boolean', position: 3, primary: false },
+      { id: '3', label: 'foobar', data_type: 'boolean', position: 3, primary: false },
       { id: '4', label: 'due_date', data_type: 'date_time', position: 4, primary: false },
     ];
 
@@ -247,7 +248,7 @@ describe('ListItemForm', () => {
 
     await screen.findByLabelText('Name');
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
-    expect(screen.getByLabelText('Completed')).toBeInTheDocument();
+    expect(screen.getByLabelText('Foobar')).toBeInTheDocument();
     expect(screen.getByLabelText('Due date')).toBeInTheDocument();
   });
 

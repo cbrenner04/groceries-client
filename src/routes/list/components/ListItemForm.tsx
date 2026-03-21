@@ -123,10 +123,6 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
         return;
       }
 
-      // Check if completed is in field configurations
-      const completedInConfig = sortedFieldConfigurations.some((config) => config.label === 'completed');
-      const finalCompleted = completedInConfig ? formData.completed : completed;
-
       // Determine category value
       const { category: rawCategory } = formData;
       const categoryValue = rawCategory ? capitalize(String(rawCategory).trim()) : undefined;
@@ -135,7 +131,7 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
       const { data: newItem } = await axios.post(`/lists/${props.listId}/list_items`, {
         list_item: {
           user_id: props.userId,
-          completed: finalCompleted,
+          completed,
           category: categoryValue ?? undefined,
         },
       });
@@ -343,18 +339,16 @@ const ListItemForm: React.FC<IListItemFormProps> = (props) => {
             category={formData.category ? String(formData.category) : ''}
             categories={props.categories}
           />
-          {!sortedFieldConfigurations.some((config) => config.label === 'completed') && (
-            <CheckboxField
-              name="completed"
-              label="Completed"
-              value={completed}
-              handleChange={(e): void => {
-                const checked = (e.target as HTMLInputElement).checked;
-                setCompleted(checked);
-              }}
-              classes="mb-3"
-            />
-          )}
+          <CheckboxField
+            name="completed"
+            label="Completed"
+            value={completed}
+            handleChange={(e): void => {
+              const checked = (e.target as HTMLInputElement).checked;
+              setCompleted(checked);
+            }}
+            classes="mb-3"
+          />
           <FormSubmission
             disabled={pending}
             submitText="Add New Item"
