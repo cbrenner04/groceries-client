@@ -24,9 +24,9 @@ async function setup(): Promise<{
 describe('DateField', () => {
   it('renders input', async () => {
     const { formInput, props } = await setup();
-    const formGroup = formInput.parentElement;
+    const wrapper = formInput.parentElement;
 
-    expect(formGroup).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     expect(formInput).toHaveAttribute('value', props.value);
   });
 

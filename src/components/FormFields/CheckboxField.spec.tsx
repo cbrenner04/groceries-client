@@ -25,17 +25,17 @@ async function setup(suppliedProps?: Partial<ICheckboxFieldProps>): Promise<{
 describe('CheckboxField', () => {
   it('renders input', async () => {
     const { formInput } = await setup();
-    const formGroup = formInput.parentElement;
+    const wrapper = formInput.parentElement;
 
-    expect(formGroup).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     expect(formInput).toBeChecked();
   });
 
   it('renders with defaults', async () => {
     const { formInput } = await setup({ value: undefined });
-    const formGroup = formInput.parentElement;
+    const wrapper = formInput.parentElement;
 
-    expect(formGroup).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     expect(formInput).not.toBeChecked();
   });
 

@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler, type ReactNode } from 'react';
-import { Form } from 'react-bootstrap';
+import DateInput from '../ui/DateInput';
 
 export interface IDateFieldProps {
   name: string;
@@ -12,10 +12,9 @@ export interface IDateFieldProps {
 }
 
 const DateField: React.FC<IDateFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name} className="mb-3">
-    <Form.Label>{props.label}</Form.Label>
-    <Form.Control
-      type="date"
+  <div className="tw:mb-3">
+    <DateInput
+      label={props.label}
       value={props.value}
       onChange={props.handleChange}
       placeholder={props.placeholder ?? ''}
@@ -23,7 +22,7 @@ const DateField: React.FC<IDateFieldProps> = (props): React.JSX.Element => (
       disabled={props.disabled ?? false}
     />
     {props.child ?? ''}
-  </Form.Group>
+  </div>
 );
 
 export default DateField;

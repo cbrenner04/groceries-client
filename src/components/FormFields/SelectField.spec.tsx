@@ -39,21 +39,27 @@ describe('SelectField', () => {
   describe('when blankOption is true', () => {
     describe('when value is not blank', () => {
       it('renders input with first option of empty string and clear input text', async () => {
-        const { formInput, findByText, props } = await setup({ blankOption: true, value: 'testValue' });
-        const formGroup = formInput.parentElement;
+        const { formInput, findByText, props } = await setup({
+          blankOption: true,
+          value: 'testValue',
+        });
+        const wrapper = formInput.parentElement;
 
-        expect(formGroup).toMatchSnapshot();
+        expect(wrapper).toMatchSnapshot();
         expect(formInput).toHaveValue('');
         expect(await findByText(`Clear ${props.label}`)).toBeVisible();
       });
     });
 
-    describe('when value is not blank', () => {
+    describe('when value is blank', () => {
       it('renders input with first option of empty string and select input text', async () => {
-        const { formInput, findByText, props } = await setup({ blankOption: true, value: '' });
-        const formGroup = formInput.parentElement;
+        const { formInput, findByText, props } = await setup({
+          blankOption: true,
+          value: '',
+        });
+        const wrapper = formInput.parentElement;
 
-        expect(formGroup).toMatchSnapshot();
+        expect(wrapper).toMatchSnapshot();
         expect(formInput).toHaveValue('');
         expect(await findByText(`Select ${props.label}`)).toBeVisible();
       });
@@ -63,9 +69,9 @@ describe('SelectField', () => {
   describe('when blankOption is false', () => {
     it('renders input with first option as first option provided', async () => {
       const { formInput, props } = await setup({ blankOption: false });
-      const formGroup = formInput.parentElement;
+      const wrapper = formInput.parentElement;
 
-      expect(formGroup).toMatchSnapshot();
+      expect(wrapper).toMatchSnapshot();
       expect(formInput).toHaveValue(props.options[0].value);
     });
   });

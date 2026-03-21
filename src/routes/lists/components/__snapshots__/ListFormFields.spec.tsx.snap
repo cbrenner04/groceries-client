@@ -3,74 +3,87 @@
 exports[`ListFormFields > renders edit form 1`] = `
 <div>
   <div
-    class="mb-3"
-  >
-    <label
-      class="form-label"
-      for="name"
-    >
-      Name
-    </label>
-    <input
-      class="form-control"
-      id="name"
-      name="name"
-      placeholder="My super cool list"
-      type="text"
-      value="foo"
-    />
-  </div>
-  <div
-    class="mb-3"
-  >
-    <label
-      class="form-label"
-      for="list_item_configuration_id"
-    >
-      Template
-    </label>
-    <select
-      class="form-control"
-      id="list_item_configuration_id"
-      name="list_item_configuration_id"
-    >
-      <option
-        value="config-1"
-      >
-        grocery list template
-      </option>
-      <option
-        value="config-2"
-      >
-        book list template
-      </option>
-      <option
-        value="config-3"
-      >
-        music list template
-      </option>
-    </select>
-  </div>
-  <div
-    class="mb-3 mb-3"
+    class="tw:mb-3"
   >
     <div
-      class="form-check"
+      class="tw:w-full"
     >
-      <input
-        class="form-check-input"
-        id="completed"
-        name="completed"
-        type="checkbox"
-      />
       <label
-        class="form-check-label"
-        for="completed"
-        title=""
+        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+        id="name"
+        name="name"
+        placeholder="My super cool list"
+        type="text"
+        value="foo"
+      />
+    </div>
+  </div>
+  <div
+    class="tw:mb-3"
+  >
+    <div
+      class="tw:w-full"
+    >
+      <label
+        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+        for="list_item_configuration_id"
+      >
+        Template
+      </label>
+      <select
+        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)] tw:appearance-none tw:bg-[image:url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%236b7280%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] tw:bg-no-repeat tw:bg-right tw:pr-10"
+        id="list_item_configuration_id"
+        name="list_item_configuration_id"
+      >
+        <option
+          value="config-1"
+        >
+          grocery list template
+        </option>
+        <option
+          value="config-2"
+        >
+          book list template
+        </option>
+        <option
+          value="config-3"
+        >
+          music list template
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    class="mb-3 tw:mb-3"
+  >
+    <label
+      class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+    >
+      <div
+        class="tw:relative tw:w-5 tw:h-5"
+      >
+        <input
+          class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <div
+          class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+        />
+      </div>
+      <span
+        class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
       >
         Completed
-      </label>
-    </div>
+      </span>
+    </label>
   </div>
 </div>
 `;
@@ -78,53 +91,61 @@ exports[`ListFormFields > renders edit form 1`] = `
 exports[`ListFormFields > renders new form 1`] = `
 <div>
   <div
-    class="mb-3"
+    class="tw:mb-3"
   >
-    <label
-      class="form-label"
-      for="name"
+    <div
+      class="tw:w-full"
     >
-      Name
-    </label>
-    <input
-      class="form-control"
-      id="name"
-      name="name"
-      placeholder="My super cool list"
-      type="text"
-      value="foo"
-    />
+      <label
+        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+        id="name"
+        name="name"
+        placeholder="My super cool list"
+        type="text"
+        value="foo"
+      />
+    </div>
   </div>
   <div
-    class="mb-3"
+    class="tw:mb-3"
   >
-    <label
-      class="form-label"
-      for="list_item_configuration_id"
+    <div
+      class="tw:w-full"
     >
-      Template
-    </label>
-    <select
-      class="form-control"
-      id="list_item_configuration_id"
-      name="list_item_configuration_id"
-    >
-      <option
-        value="config-1"
+      <label
+        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+        for="list_item_configuration_id"
       >
-        grocery list template
-      </option>
-      <option
-        value="config-2"
+        Template
+      </label>
+      <select
+        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)] tw:appearance-none tw:bg-[image:url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%236b7280%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] tw:bg-no-repeat tw:bg-right tw:pr-10"
+        id="list_item_configuration_id"
+        name="list_item_configuration_id"
       >
-        book list template
-      </option>
-      <option
-        value="config-3"
-      >
-        music list template
-      </option>
-    </select>
+        <option
+          value="config-1"
+        >
+          grocery list template
+        </option>
+        <option
+          value="config-2"
+        >
+          book list template
+        </option>
+        <option
+          value="config-3"
+        >
+          music list template
+        </option>
+      </select>
+    </div>
   </div>
 </div>
 `;
