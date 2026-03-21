@@ -2,7 +2,7 @@
 
 exports[`EditButton > renders 1`] = `
 <button
-  class="p-0 me-3 btn btn-link"
+  class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
   data-test-id="test-id"
   type="button"
 >

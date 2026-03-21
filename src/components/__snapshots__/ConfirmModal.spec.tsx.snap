@@ -3,56 +3,55 @@
 exports[`ConfirmModal > when show is true > renders dialog 1`] = `
 <div
   aria-modal="true"
-  class="fade modal show"
+  class="fixed inset-0 z-50 flex items-center justify-center"
   role="dialog"
-  style="display: block; padding-right: 0px;"
-  tabindex="-1"
 >
   <div
-    class="modal-dialog"
+    class="fixed inset-0 bg-black/50"
+  />
+  <div
+    class="relative bg-[var(--color-surface)] rounded-[var(--radius-xl)] shadow-[var(--shadow-xl)] w-full max-w-md mx-4"
   >
     <div
-      class="modal-content"
+      class="flex items-center justify-between p-4 border-b border-[var(--color-border)]"
     >
-      <div
-        class="modal-header"
+      <h2
+        class="text-lg font-semibold text-[var(--color-text-primary)]"
       >
-        <div
-          class="modal-title h4"
-        >
-          Confirm 
-          testAction
-        </div>
-        <button
-          aria-label="Close"
-          class="btn-close"
-          type="button"
-        />
-      </div>
-      <div
-        class="modal-body"
-        data-test-id="confirm-modal-body"
+        Confirm 
+        testAction
+      </h2>
+      <button
+        aria-label="Close"
+        class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] p-1"
+        type="button"
       >
-        testBody
-      </div>
-      <div
-        class="modal-footer"
+        ✕
+      </button>
+    </div>
+    <div
+      class="p-4"
+      data-test-id="confirm-modal-body"
+    >
+      testBody
+    </div>
+    <div
+      class="flex justify-end gap-2 p-4 border-t border-[var(--color-border)]"
+    >
+      <button
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer"
+        data-test-id="clear-testAction"
+        type="button"
       >
-        <button
-          class="btn btn-secondary"
-          data-test-id="clear-testAction"
-          type="button"
-        >
-          Close
-        </button>
-        <button
-          class="btn btn-primary"
-          data-test-id="confirm-testAction"
-          type="button"
-        >
-          Yes, I'm sure.
-        </button>
-      </div>
+        Close
+      </button>
+      <button
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg  cursor-pointer"
+        data-test-id="confirm-testAction"
+        type="button"
+      >
+        Yes, I'm sure.
+      </button>
     </div>
   </div>
 </div>

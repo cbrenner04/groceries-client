@@ -1,5 +1,5 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '../ui/Button';
 import { CompressIcon } from '../icons';
 
 interface IMergeProps {
@@ -10,7 +10,7 @@ interface IMergeProps {
 
 const Merge: React.FC<IMergeProps> = (props): React.JSX.Element => (
   <Button
-    variant="link"
+    variant="ghost"
     onClick={props.handleClick}
     className="p-0 me-3"
     data-test-id={props.testID}

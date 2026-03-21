@@ -2,12 +2,12 @@
 
 exports[`Loading > renders the spinner 1`] = `
 <div
-  class="spinner-border"
+  class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
   id="spinner"
   role="status"
 >
   <span
-    class="visually-hidden"
+    class="sr-only"
   >
     Loading...
   </span>

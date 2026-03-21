@@ -85,16 +85,16 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
       </div>
     </div>
     <div
-      class="d-grid gap-2 mt-3"
+      class="grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
         type="submit"
       >
         Create List
       </button>
       <button
-        class="btn btn-link"
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -114,35 +114,39 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
         class="mx-auto float-start"
       >
         <div
-          class="m-0 row"
+          class="flex items-center m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
           >
             Incomplete
           </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Incomplete-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
+          <div
+            class="relative"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
+              data-test-id="Incomplete-popover"
+              style="cursor: pointer; line-height: 1;"
+              type="button"
             >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <button
@@ -201,7 +205,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -286,7 +290,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                     </svg>
                   </a>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -363,7 +367,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -449,7 +453,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                     </svg>
                   </a>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -492,35 +496,39 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
         class="mx-auto float-start"
       >
         <div
-          class="m-0 row"
+          class="flex items-center m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
           >
             Completed
           </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Completed-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
+          <div
+            class="relative"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
+              data-test-id="Completed-popover"
+              style="cursor: pointer; line-height: 1;"
+              type="button"
             >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <button
@@ -579,7 +587,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -604,7 +612,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                     </svg>
                   </button>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
@@ -681,7 +689,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  opacity-50 cursor-not-allowed pointer-events-none p-0 me-3 list-button-disabled"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"
@@ -707,7 +715,7 @@ exports[`ListsContainer > does not render pending lists when they do not exist 1
                     </svg>
                   </button>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
@@ -828,16 +836,16 @@ exports[`ListsContainer > renders 1`] = `
       </div>
     </div>
     <div
-      class="d-grid gap-2 mt-3"
+      class="grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
         type="submit"
       >
         Create List
       </button>
       <button
-        class="btn btn-link"
+        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -857,35 +865,39 @@ exports[`ListsContainer > renders 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="m-0 row"
+          class="flex items-center m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
           >
             Pending
           </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Pending-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
+          <div
+            class="relative"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
+              data-test-id="Pending-popover"
+              style="cursor: pointer; line-height: 1;"
+              type="button"
             >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <button
@@ -938,7 +950,7 @@ exports[`ListsContainer > renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3  btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -962,7 +974,7 @@ exports[`ListsContainer > renders 1`] = `
                     </svg>
                   </button>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="pending-list-trash"
                     type="button"
                   >
@@ -1005,35 +1017,39 @@ exports[`ListsContainer > renders 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="m-0 row"
+          class="flex items-center m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
           >
             Incomplete
           </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Incomplete-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
+          <div
+            class="relative"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
+              data-test-id="Incomplete-popover"
+              style="cursor: pointer; line-height: 1;"
+              type="button"
             >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <button
@@ -1092,7 +1108,7 @@ exports[`ListsContainer > renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -1177,7 +1193,7 @@ exports[`ListsContainer > renders 1`] = `
                     </svg>
                   </a>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -1254,7 +1270,7 @@ exports[`ListsContainer > renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -1340,7 +1356,7 @@ exports[`ListsContainer > renders 1`] = `
                     </svg>
                   </a>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -1383,35 +1399,39 @@ exports[`ListsContainer > renders 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="m-0 row"
+          class="flex items-center m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
           >
             Completed
           </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Completed-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
+          <div
+            class="relative"
           >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
+              data-test-id="Completed-popover"
+              style="cursor: pointer; line-height: 1;"
+              type="button"
             >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <button
@@ -1470,7 +1490,7 @@ exports[`ListsContainer > renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -1495,7 +1515,7 @@ exports[`ListsContainer > renders 1`] = `
                     </svg>
                   </button>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
@@ -1572,7 +1592,7 @@ exports[`ListsContainer > renders 1`] = `
                   role="group"
                 >
                   <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  opacity-50 cursor-not-allowed pointer-events-none p-0 me-3 list-button-disabled"
                     data-test-id="complete-list-refresh"
                     disabled=""
                     type="button"
@@ -1598,7 +1618,7 @@ exports[`ListsContainer > renders 1`] = `
                     </svg>
                   </button>
                   <button
-                    class="p-0 btn btn-link"
+                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
                     data-test-id="complete-list-trash"
                     type="button"
                   >

@@ -1,11 +1,14 @@
 import React from 'react';
-import { Spinner } from 'react-bootstrap';
 
 const Loading: React.FC = (): React.JSX.Element => (
   <div id="loader">
-    <Spinner animation="border" role="status" id="spinner">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    <div
+      role="status"
+      id="spinner"
+      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
+    >
+      <span className="sr-only">Loading...</span>
+    </div>
   </div>
 );
 

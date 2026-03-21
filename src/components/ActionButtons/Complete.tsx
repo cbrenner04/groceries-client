@@ -1,5 +1,5 @@
 import React, { type CSSProperties, type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '../ui/Button';
 import { CheckIcon } from '../icons';
 
 interface ICompleteProps {
@@ -12,7 +12,7 @@ interface ICompleteProps {
 
 const Complete: React.FC<ICompleteProps> = (props): React.JSX.Element => (
   <Button
-    variant="link"
+    variant="ghost"
     onClick={props.handleClick}
     className={`p-0 me-3 ${props.classes ?? ''}`}
     data-test-id={props.testID}

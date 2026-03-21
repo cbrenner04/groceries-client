@@ -1,5 +1,5 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '../ui/Button';
 import { TrashIcon } from '../icons';
 
 interface ITrashProps {
@@ -10,7 +10,7 @@ interface ITrashProps {
 
 const Trash: React.FC<ITrashProps> = (props): React.JSX.Element => (
   <Button
-    variant="link"
+    variant="ghost"
     onClick={props.handleClick}
     className="p-0"
     data-test-id={props.testID}

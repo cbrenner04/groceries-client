@@ -1,5 +1,5 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '../ui/Button';
 import { EditIcon } from '../icons';
 
 interface IEditButtonProps {
@@ -10,7 +10,7 @@ interface IEditButtonProps {
 
 const EditButton: React.FC<IEditButtonProps> = (props): React.JSX.Element => (
   <Button
-    variant="link"
+    variant="ghost"
     onClick={props.handleClick}
     className="p-0 me-3"
     disabled={props.disabled ?? false}
