@@ -251,3 +251,11 @@ body {
 .merge-modal-confirm-disabled {
   pointer-events: none;
 }
+
+// Input fields background color
+input,
+textarea,
+select {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
