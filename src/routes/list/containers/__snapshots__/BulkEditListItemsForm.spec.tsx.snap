@@ -18,104 +18,126 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
       class="mb-3"
     >
       <div
-        class="mb-3"
+        class="tw:mb-3"
+      >
+        <div
+          class="tw:w-full"
+        >
+          <label
+            class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+            for="product"
+          >
+            Product
+          </label>
+          <input
+            class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+            id="product"
+            name="product"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="ms-1 mt-1 tw:mb-3"
       >
         <label
-          class="form-label"
-          for="product"
+          class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
         >
-          Product
+          <div
+            class="tw:relative tw:w-5 tw:h-5"
+          >
+            <input
+              class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+              id="clear_product"
+              name="clear_product"
+              type="checkbox"
+            />
+            <div
+              class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+            />
+          </div>
+          <span
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+          >
+            Clear Product
+          </span>
+        </label>
+      </div>
+    </div>
+    <div
+      class="mb-3"
+    >
+      <div
+        class="tw:mb-3"
+      >
+        <div
+          class="tw:w-full"
+        >
+          <label
+            class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+            for="quantity"
+          >
+            Quantity
+          </label>
+          <input
+            class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+            id="quantity"
+            name="quantity"
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="ms-1 mt-1 tw:mb-3"
+      >
+        <label
+          class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+        >
+          <div
+            class="tw:relative tw:w-5 tw:h-5"
+          >
+            <input
+              class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+              id="clear_quantity"
+              name="clear_quantity"
+              type="checkbox"
+            />
+            <div
+              class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+            />
+          </div>
+          <span
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+          >
+            Clear Quantity
+          </span>
+        </label>
+      </div>
+    </div>
+    <div
+      class="tw:mb-3"
+    >
+      <div
+        class="tw:w-full"
+      >
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
         </label>
         <input
-          class="form-control"
-          id="product"
-          name="product"
-          placeholder=""
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
           type="text"
           value=""
         />
       </div>
-      <div
-        class="ms-1 mt-1 mb-3"
-      >
-        <div
-          class="form-check"
-        >
-          <input
-            class="form-check-input"
-            id="clear_product"
-            name="clear_product"
-            type="checkbox"
-          />
-          <label
-            class="form-check-label"
-            for="clear_product"
-            title=""
-          >
-            Clear Product
-          </label>
-        </div>
-      </div>
-    </div>
-    <div
-      class="mb-3"
-    >
-      <div
-        class="mb-3"
-      >
-        <label
-          class="form-label"
-          for="quantity"
-        >
-          Quantity
-        </label>
-        <input
-          class="form-control"
-          id="quantity"
-          name="quantity"
-          type="number"
-          value=""
-        />
-      </div>
-      <div
-        class="ms-1 mt-1 mb-3"
-      >
-        <div
-          class="form-check"
-        >
-          <input
-            class="form-check-input"
-            id="clear_quantity"
-            name="clear_quantity"
-            type="checkbox"
-          />
-          <label
-            class="form-check-label"
-            for="clear_quantity"
-            title=""
-          >
-            Clear Quantity
-          </label>
-        </div>
-      </div>
-    </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="category"
-      >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
       <datalist
         data-test-id="categories"
         id="categories"
@@ -128,25 +150,30 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
         />
       </datalist>
       <div
-        class="ms-1 mt-1 mb-3"
+        class="ms-1 mt-1 tw:mb-3"
       >
-        <div
-          class="form-check"
+        <label
+          class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
         >
-          <input
-            class="form-check-input"
-            id="clear_category"
-            name="clear_category"
-            type="checkbox"
-          />
-          <label
-            class="form-check-label"
-            for="clear_category"
-            title=""
+          <div
+            class="tw:relative tw:w-5 tw:h-5"
+          >
+            <input
+              class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+              id="clear_category"
+              name="clear_category"
+              type="checkbox"
+            />
+            <div
+              class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+            />
+          </div>
+          <span
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
           >
             Clear Category
-          </label>
-        </div>
+          </span>
+        </label>
       </div>
     </div>
     <div

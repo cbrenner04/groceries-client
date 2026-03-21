@@ -2,16 +2,16 @@
 
 exports[`TextField > renders input 1`] = `
 <div
-  class="mb-3"
+  class="tw:w-full"
 >
   <label
-    class="form-label"
+    class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
     for="testName"
   >
     testLabel
   </label>
   <input
-    class="form-control"
+    class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
     id="testName"
     name="testName"
     placeholder=""

@@ -48,22 +48,26 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -77,25 +81,30 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -680,22 +689,26 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -709,25 +722,30 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -1595,22 +1613,26 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -1624,25 +1646,30 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -2510,22 +2537,26 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -2539,25 +2570,30 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -3278,22 +3314,26 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -3307,25 +3347,30 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -3967,22 +4012,26 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value=""
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value=""
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -3996,25 +4045,30 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </datalist>
     </div>
     <div
-      class="mb-3 mb-3"
+      class="mb-3 tw:mb-3"
     >
-      <div
-        class="form-check"
+      <label
+        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
-        <input
-          class="form-check-input"
-          id="completed"
-          name="completed"
-          type="checkbox"
-        />
-        <label
-          class="form-check-label"
-          for="completed"
-          title=""
+        <div
+          class="tw:relative tw:w-5 tw:h-5"
+        >
+          <input
+            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+            id="completed"
+            name="completed"
+            type="checkbox"
+          />
+          <div
+            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+          />
+        </div>
+        <span
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
         >
           Completed
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
     <div
       class="d-grid gap-2 mt-3"
