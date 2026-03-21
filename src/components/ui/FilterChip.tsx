@@ -11,12 +11,13 @@ export function FilterChip(props: IFilterChipProps): React.JSX.Element {
   const { label, active, onClick, testId } = props;
 
   const baseStyles =
-    'inline-flex items-center px-3 h-8 rounded-full text-sm font-medium ' +
-    'cursor-pointer transition-colors duration-200 whitespace-nowrap select-none';
+    'tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium ' +
+    'tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none';
 
   const activeStyles = active
-    ? 'bg-[var(--color-primary)] text-white'
-    : 'bg-[var(--color-surface-overlay)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]';
+    ? 'tw:bg-[var(--color-primary)] tw:text-white'
+    : 'tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] ' +
+      'tw:hover:bg-[var(--color-border)]';
 
   return (
     <button
@@ -42,8 +43,8 @@ export function FilterChipGroup(props: IFilterChipGroupProps): React.JSX.Element
   return (
     <div
       className={
-        `flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden ` +
-        `[-ms-overflow-style:none] [scrollbar-width:none] ${className}`
+        'tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden ' +
+        `tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] ${className}`
       }
       role="group"
     >

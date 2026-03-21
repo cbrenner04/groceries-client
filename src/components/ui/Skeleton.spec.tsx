@@ -19,21 +19,21 @@ describe('Skeleton', () => {
     const { container } = setup({ variant: 'text' });
     const skeleton = container.firstChild as HTMLElement;
     expect(skeleton).toBeVisible();
-    expect(skeleton).toHaveClass('animate-pulse');
+    expect(skeleton).toHaveClass('tw:animate-pulse');
   });
 
   it('renders card variant', async () => {
     const { container } = setup({ variant: 'card' });
     const skeleton = container.firstChild as HTMLElement;
     expect(skeleton).toBeVisible();
-    expect(skeleton).toHaveClass('animate-pulse');
+    expect(skeleton).toHaveClass('tw:animate-pulse');
   });
 
   it('renders circle variant', async () => {
     const { container } = setup({ variant: 'circle' });
     const skeleton = container.firstChild as HTMLElement;
     expect(skeleton).toBeVisible();
-    expect(skeleton).toHaveClass('rounded-full');
+    expect(skeleton).toHaveClass('tw:rounded-full');
   });
 
   it('renders list variant with multiple items', async () => {
@@ -58,13 +58,13 @@ describe('Skeleton', () => {
   it('has pulse animation', async () => {
     const { container } = setup({ variant: 'text' });
     const skeleton = container.firstChild as HTMLElement;
-    expect(skeleton).toHaveClass('animate-pulse');
+    expect(skeleton).toHaveClass('tw:animate-pulse');
   });
 
   it('uses surface-overlay color', async () => {
     const { container } = setup();
     const skeleton = container.firstChild as HTMLElement;
-    expect(skeleton).toHaveClass('bg-[var(--color-surface-overlay)]');
+    expect(skeleton).toHaveClass('tw:bg-[var(--color-surface-overlay)]');
   });
 
   it('defaults to text variant', async () => {

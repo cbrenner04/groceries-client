@@ -1,5 +1,4 @@
 import React, { type CSSProperties, type MouseEventHandler } from 'react';
-import { Button } from '../ui/Button';
 import { CheckIcon } from '../icons';
 
 interface ICompleteProps {
@@ -11,16 +10,16 @@ interface ICompleteProps {
 }
 
 const Complete: React.FC<ICompleteProps> = (props): React.JSX.Element => (
-  <Button
-    variant="ghost"
+  <button
+    type="button"
     onClick={props.handleClick}
-    className={`p-0 me-3 ${props.classes ?? ''}`}
+    className={`bg-transparent border-0 p-0 me-3 cursor-pointer ${props.classes ?? ''}`}
     data-test-id={props.testID}
     disabled={props.disabled ?? false}
     style={props.style ?? {}}
   >
     <CheckIcon size="2x" className="text-success" data-test-id="check-icon" />
-  </Button>
+  </button>
 );
 
 export default Complete;

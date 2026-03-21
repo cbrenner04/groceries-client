@@ -10,21 +10,21 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 const variantStyles: Record<string, string> = {
-  primary: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] ' + 'active:opacity-90',
+  primary: 'tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90',
   secondary:
-    'border border-[var(--color-border-strong)] text-[var(--color-text-primary)] ' +
-    'hover:bg-[var(--color-surface-overlay)]',
+    'tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] ' +
+    'tw:hover:bg-[var(--color-surface-overlay)]',
   ghost:
-    'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] ' +
-    'active:bg-[var(--color-surface-raised)]',
-  danger: 'bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-hover)] ' + 'active:opacity-90',
-  success: 'bg-[var(--color-success)] text-white hover:opacity-90 active:opacity-80',
+    'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+    'tw:active:bg-[var(--color-surface-raised)]',
+  danger: 'tw:bg-[var(--color-danger)] tw:text-white tw:hover:bg-[var(--color-danger-hover)] tw:active:opacity-90',
+  success: 'tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80',
 };
 
 const sizeStyles: Record<string, string> = {
-  sm: 'h-8 px-3 text-sm rounded-md',
-  md: 'h-10 px-4 text-sm rounded-lg',
-  lg: 'h-12 px-6 text-base rounded-lg',
+  sm: 'tw:h-8 tw:px-3 tw:text-sm tw:rounded-md',
+  md: 'tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg',
+  lg: 'tw:h-12 tw:px-6 tw:text-base tw:rounded-lg',
 };
 
 export function Button(props: IButtonProps): React.JSX.Element {
@@ -40,16 +40,19 @@ export function Button(props: IButtonProps): React.JSX.Element {
   } = props;
 
   const baseStyles =
-    'font-medium transition-colors duration-200 ease-in-out ' + 'min-h-[44px] flex items-center justify-center gap-2';
-  const widthStyles = fullWidth ? 'w-full' : '';
-  const disabledStyles = disabled || loading ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer';
+    'tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out ' +
+    'tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2';
+  const widthStyles = fullWidth ? 'tw:w-full' : '';
+  const disabledStyles =
+    disabled || loading ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : 'tw:cursor-pointer';
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];
   const classNameParts = [baseStyles, variantStyle, sizeStyle, widthStyles, disabledStyles, className];
   const classNameString = classNameParts.join(' ').trim();
 
   const spinnerClassName =
-    'inline-block h-4 w-4 animate-spin rounded-full ' + 'border-2 border-current border-t-transparent';
+    'tw:inline-block tw:h-4 tw:w-4 tw:animate-spin tw:rounded-full ' +
+    'tw:border-2 tw:border-current tw:border-t-transparent';
 
   return (
     <button type="button" disabled={disabled || loading} className={classNameString} {...rest}>

@@ -28,47 +28,47 @@ describe('Card', () => {
   it('renders default variant with correct base styles', () => {
     const { getByText } = setup();
     const card = getByText('Card content');
-    expect(card).toHaveClass('bg-[var(--color-surface-raised)]');
-    expect(card).toHaveClass('rounded-[var(--radius-lg)]');
-    expect(card).toHaveClass('p-4');
+    expect(card).toHaveClass('tw:bg-[var(--color-surface-raised)]');
+    expect(card).toHaveClass('tw:rounded-[var(--radius-lg)]');
+    expect(card).toHaveClass('tw:p-4');
   });
 
   it('renders interactive variant with hover/active styles', () => {
     const { getByText } = setup({ variant: 'interactive' });
     const card = getByText('Card content');
-    expect(card).toHaveClass('cursor-pointer');
-    expect(card).toHaveClass('hover:shadow-[var(--shadow-md)]');
+    expect(card).toHaveClass('tw:cursor-pointer');
+    expect(card).toHaveClass('tw:hover:shadow-[var(--shadow-md)]');
   });
 
   it('does not apply interactive styles for default variant', () => {
     const { getByText } = setup({ variant: 'default' });
     const card = getByText('Card content');
-    expect(card).not.toHaveClass('cursor-pointer');
+    expect(card).not.toHaveClass('tw:cursor-pointer');
   });
 
   it('applies selected styles when selected is true', () => {
     const { getByText } = setup({ selected: true });
     const card = getByText('Card content');
-    expect(card).toHaveClass('border-[var(--color-primary)]');
-    expect(card).toHaveClass('bg-[var(--color-primary-light)]');
+    expect(card).toHaveClass('tw:border-[var(--color-primary)]');
+    expect(card).toHaveClass('tw:bg-[var(--color-primary-light)]');
   });
 
   it('does not apply selected styles when selected is false', () => {
     const { getByText } = setup({ selected: false });
     const card = getByText('Card content');
-    expect(card).not.toHaveClass('border-[var(--color-primary)]');
+    expect(card).not.toHaveClass('tw:border-[var(--color-primary)]');
   });
 
   it('applies completed styles when completed is true', () => {
     const { getByText } = setup({ completed: true });
     const card = getByText('Card content');
-    expect(card).toHaveClass('opacity-60');
+    expect(card).toHaveClass('tw:opacity-60');
   });
 
   it('does not apply completed styles when completed is false', () => {
     const { getByText } = setup({ completed: false });
     const card = getByText('Card content');
-    expect(card).not.toHaveClass('opacity-60');
+    expect(card).not.toHaveClass('tw:opacity-60');
   });
 
   it('handles click events on interactive variant', async () => {

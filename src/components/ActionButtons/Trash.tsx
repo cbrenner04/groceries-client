@@ -1,5 +1,4 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from '../ui/Button';
 import { TrashIcon } from '../icons';
 
 interface ITrashProps {
@@ -9,15 +8,15 @@ interface ITrashProps {
 }
 
 const Trash: React.FC<ITrashProps> = (props): React.JSX.Element => (
-  <Button
-    variant="ghost"
+  <button
+    type="button"
     onClick={props.handleClick}
-    className="p-0"
+    className="bg-transparent border-0 p-0 cursor-pointer"
     data-test-id={props.testID}
     disabled={props.disabled ?? false}
   >
     <TrashIcon size="2x" className="text-danger" data-test-id="trash-icon" />
-  </Button>
+  </button>
 );
 
 export default Trash;

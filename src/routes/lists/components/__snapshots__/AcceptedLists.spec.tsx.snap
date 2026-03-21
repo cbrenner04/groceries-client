@@ -83,7 +83,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -107,7 +107,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -134,7 +134,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -222,7 +222,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  opacity-50 cursor-not-allowed pointer-events-none p-0 me-3 list-button-disabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-disabled"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     type="button"
@@ -247,7 +247,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -274,7 +274,7 @@ exports[`AcceptedLists > shows merge button when multi select and more than 1 li
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -393,7 +393,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -417,7 +417,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -444,7 +444,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -532,7 +532,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  opacity-50 cursor-not-allowed pointer-events-none p-0 me-3 list-button-disabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-disabled"
                     data-test-id="incomplete-list-complete"
                     disabled=""
                     type="button"
@@ -557,7 +557,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                     data-test-id="incomplete-list-merge"
                     type="button"
                   >
@@ -584,7 +584,7 @@ exports[`AcceptedLists > shows modal to set the new list name for merging and cl
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >

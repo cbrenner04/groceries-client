@@ -30,16 +30,16 @@ describe('FilterChip', () => {
   it('renders inactive state with correct styles', () => {
     const { getByRole } = setup({ active: false });
     const chip = getByRole('button');
-    expect(chip).toHaveClass('bg-[var(--color-surface-overlay)]');
-    expect(chip).toHaveClass('text-[var(--color-text-secondary)]');
+    expect(chip).toHaveClass('tw:bg-[var(--color-surface-overlay)]');
+    expect(chip).toHaveClass('tw:text-[var(--color-text-secondary)]');
     expect(chip).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('renders active state with correct styles', () => {
     const { getByRole } = setup({ active: true });
     const chip = getByRole('button');
-    expect(chip).toHaveClass('bg-[var(--color-primary)]');
-    expect(chip).toHaveClass('text-white');
+    expect(chip).toHaveClass('tw:bg-[var(--color-primary)]');
+    expect(chip).toHaveClass('tw:text-white');
     expect(chip).toHaveAttribute('aria-pressed', 'true');
   });
 
@@ -72,9 +72,9 @@ describe('FilterChipGroup', () => {
       </FilterChipGroup>,
     );
     const group = getByRole('group');
-    expect(group).toHaveClass('overflow-x-auto');
-    expect(group).toHaveClass('flex');
-    expect(group).toHaveClass('gap-2');
+    expect(group).toHaveClass('tw:overflow-x-auto');
+    expect(group).toHaveClass('tw:flex');
+    expect(group).toHaveClass('tw:gap-2');
   });
 
   it('accepts additional className', () => {

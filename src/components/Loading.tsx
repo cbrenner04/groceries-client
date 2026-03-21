@@ -5,9 +5,12 @@ const Loading: React.FC = (): React.JSX.Element => (
     <div
       role="status"
       id="spinner"
-      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
+      className={
+        'tw:inline-block tw:h-8 tw:w-8 tw:animate-spin tw:rounded-full ' +
+        'tw:border-4 tw:border-current tw:border-t-transparent'
+      }
     >
-      <span className="sr-only">Loading...</span>
+      <span className="tw:sr-only">Loading...</span>
     </div>
   </div>
 );

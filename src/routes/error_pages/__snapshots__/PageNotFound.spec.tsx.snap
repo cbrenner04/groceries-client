@@ -42,12 +42,12 @@ exports[`PageNotFound > renders the Loading component when fetch request is pend
     id="loader"
   >
     <div
-      class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
+      class="tw:inline-block tw:h-8 tw:w-8 tw:animate-spin tw:rounded-full tw:border-4 tw:border-current tw:border-t-transparent"
       id="spinner"
       role="status"
     >
       <span
-        class="sr-only"
+        class="tw:sr-only"
       >
         Loading...
       </span>

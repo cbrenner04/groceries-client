@@ -1,5 +1,4 @@
 import React, { type CSSProperties, type MouseEventHandler } from 'react';
-import { Button } from '../ui/Button';
 import { RedoIcon } from '../icons';
 
 interface IRefreshProps {
@@ -11,16 +10,16 @@ interface IRefreshProps {
 }
 
 const Refresh: React.FC<IRefreshProps> = (props): React.JSX.Element => (
-  <Button
-    variant="ghost"
+  <button
+    type="button"
     onClick={props.handleClick}
-    className={`p-0 me-3 ${props.classes ?? ''}`}
+    className={`bg-transparent border-0 p-0 me-3 cursor-pointer ${props.classes ?? ''}`}
     data-test-id={props.testID}
     style={props.style ?? {}}
     disabled={props.disabled ?? false}
   >
     <RedoIcon size="2x" className="text-primary" data-test-id="redo-icon" />
-  </Button>
+  </button>
 );
 
 export default Refresh;

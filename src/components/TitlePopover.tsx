@@ -32,9 +32,9 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
   }, [isOpen]);
 
   return (
-    <div className="flex items-center m-0">
+    <div className="row m-0">
       <h2 className="text-capitalize pe-0 w-auto">{props.title}</h2>
-      <div className="relative">
+      <div className="tw:relative w-auto p-0">
         <button
           ref={buttonRef}
           type="button"
@@ -49,9 +49,9 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
           <div
             ref={popoverRef}
             className={
-              'absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 ' +
-              'bg-[var(--color-surface-raised)] border border-[var(--color-border)] ' +
-              'rounded-[var(--radius-lg)] shadow-[var(--shadow-md)] p-3 min-w-[200px]'
+              'tw:absolute tw:bottom-full tw:left-1/2 tw:-translate-x-1/2 tw:mb-2 tw:z-50 ' +
+              'tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] ' +
+              'tw:rounded-lg tw:shadow-md tw:p-3 tw:min-w-[200px]'
             }
             data-test-id="popover-content"
           >

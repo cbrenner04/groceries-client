@@ -3,7 +3,7 @@
 exports[`TitlePopover > renders 1`] = `
 <div>
   <div
-    class="flex items-center m-0"
+    class="row m-0"
   >
     <h2
       class="text-capitalize pe-0 w-auto"
@@ -11,7 +11,7 @@ exports[`TitlePopover > renders 1`] = `
       foo
     </h2>
     <div
-      class="relative"
+      class="tw:relative w-auto p-0"
     >
       <button
         class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"

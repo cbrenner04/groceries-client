@@ -107,16 +107,16 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -230,7 +230,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -254,7 +254,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -283,7 +283,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -375,7 +375,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -399,7 +399,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -428,7 +428,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -537,7 +537,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -562,7 +562,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -591,7 +591,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -748,16 +748,16 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -846,7 +846,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -870,7 +870,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -899,7 +899,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -1000,7 +1000,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -1024,7 +1024,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -1053,7 +1053,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -1145,7 +1145,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -1169,7 +1169,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -1198,7 +1198,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -1299,7 +1299,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -1323,7 +1323,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -1352,7 +1352,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -1461,7 +1461,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -1486,7 +1486,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -1515,7 +1515,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -1672,16 +1672,16 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -1770,7 +1770,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -1794,7 +1794,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -1823,7 +1823,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -1924,7 +1924,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -1948,7 +1948,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -1977,7 +1977,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -2069,7 +2069,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -2093,7 +2093,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -2122,7 +2122,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -2223,7 +2223,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -2247,7 +2247,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -2276,7 +2276,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -2385,7 +2385,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -2410,7 +2410,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -2439,7 +2439,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -2487,51 +2487,51 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     </div>
   </div>
   <div
+    class="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50"
+  />
+  <div
     aria-modal="true"
-    class="fixed inset-0 z-50 flex items-center justify-center"
+    class="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
     role="dialog"
   >
     <div
-      class="fixed inset-0 bg-black/50"
-    />
-    <div
-      class="relative bg-[var(--color-surface)] rounded-[var(--radius-xl)] shadow-[var(--shadow-xl)] w-full max-w-md mx-4"
+      class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg"
     >
       <div
-        class="flex items-center justify-between p-4 border-b border-[var(--color-border)]"
+        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3 tw:border-b tw:border-[var(--color-border)]"
       >
-        <h2
-          class="text-lg font-semibold text-[var(--color-text-primary)]"
+        <h5
+          class="tw:text-lg tw:font-medium tw:m-0"
         >
           Confirm 
           delete
-        </h2>
+        </h5>
         <button
           aria-label="Close"
-          class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] p-1"
+          class="tw:text-[var(--color-text-tertiary)] tw:hover:text-[var(--color-text-primary)] tw:text-xl tw:leading-none tw:p-1"
           type="button"
         >
-          ✕
+          ×
         </button>
       </div>
       <div
-        class="p-4"
+        class="tw:px-4 tw:py-3"
         data-test-id="confirm-modal-body"
       >
         Are you sure you want to delete the following items? no category not completed product
       </div>
       <div
-        class="flex justify-end gap-2 p-4 border-t border-[var(--color-border)]"
+        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 tw:border-t tw:border-[var(--color-border)]"
       >
         <button
-          class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
           data-test-id="clear-delete"
           type="button"
         >
           Close
         </button>
         <button
-          class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg  cursor-pointer"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
           data-test-id="confirm-delete"
           type="button"
         >
@@ -2650,16 +2650,16 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -2748,7 +2748,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -2772,7 +2772,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -2801,7 +2801,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -2902,7 +2902,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -2926,7 +2926,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -2955,7 +2955,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -3047,7 +3047,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -3071,7 +3071,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -3100,7 +3100,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -3201,7 +3201,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -3225,7 +3225,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -3254,7 +3254,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -3427,16 +3427,16 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -3538,7 +3538,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -3563,7 +3563,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -3592,7 +3592,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -4125,16 +4125,16 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </label>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -4223,7 +4223,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -4247,7 +4247,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -4276,7 +4276,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -4377,7 +4377,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -4401,7 +4401,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -4430,7 +4430,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -4522,7 +4522,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -4546,7 +4546,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -4575,7 +4575,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -4676,7 +4676,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -4700,7 +4700,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -4729,7 +4729,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -4838,7 +4838,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -4863,7 +4863,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -4892,7 +4892,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >

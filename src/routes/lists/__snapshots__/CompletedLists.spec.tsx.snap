@@ -23,7 +23,7 @@ exports[`CompletedLists > renders CompletedLists when data retrieval is complete
         class="mx-auto float-start"
       >
         <div
-          class="flex items-center m-0"
+          class="row m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -31,7 +31,7 @@ exports[`CompletedLists > renders CompletedLists when data retrieval is complete
             Completed Lists
           </h2>
           <div
-            class="relative"
+            class="tw:relative w-auto p-0"
           >
             <button
               class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
@@ -114,7 +114,7 @@ exports[`CompletedLists > renders CompletedLists when data retrieval is complete
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -139,7 +139,7 @@ exports[`CompletedLists > renders CompletedLists when data retrieval is complete
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
@@ -181,12 +181,12 @@ exports[`CompletedLists > renders loading component when data is being fetched 1
     id="loader"
   >
     <div
-      class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
+      class="tw:inline-block tw:h-8 tw:w-8 tw:animate-spin tw:rounded-full tw:border-4 tw:border-current tw:border-t-transparent"
       id="spinner"
       role="status"
     >
       <span
-        class="sr-only"
+        class="tw:sr-only"
       >
         Loading...
       </span>

@@ -24,21 +24,22 @@ export function Toggle(props: IToggleProps): React.JSX.Element {
     }
   };
 
-  const trackColor = checked ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-surface-overlay)]';
-  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
-  const thumbTranslate = checked ? 'translate-x-5' : 'translate-x-0.5';
-  const labelColor = checked ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]';
-  const labelDisabled = disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer';
+  const trackColor = checked ? 'tw:bg-[var(--color-primary)]' : 'tw:bg-[var(--color-surface-overlay)]';
+  const disabledClass = disabled ? 'tw:opacity-50 tw:cursor-not-allowed' : 'tw:cursor-pointer';
+  const thumbTranslate = checked ? 'tw:translate-x-5' : 'tw:translate-x-0.5';
+  const labelColor = checked ? 'tw:text-[var(--color-text-primary)]' : 'tw:text-[var(--color-text-secondary)]';
+  const labelDisabled = disabled ? 'tw:cursor-not-allowed tw:opacity-50' : 'tw:cursor-pointer';
   const buttonClassName =
-    'relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out ' +
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ' +
-    `focus-visible:outline-[var(--color-primary)] ${trackColor} ${disabledClass}`;
+    'tw:relative tw:inline-flex tw:h-6 tw:w-11 tw:items-center tw:rounded-full ' +
+    'tw:transition-colors tw:duration-200 tw:ease-in-out ' +
+    'tw:focus-visible:outline tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 ' +
+    `tw:focus-visible:outline-[var(--color-primary)] ${trackColor} ${disabledClass}`;
   const spanClassName =
-    'inline-block h-5 w-5 transform rounded-full bg-white shadow-md ' +
-    `transition-transform duration-200 ease-in-out ${thumbTranslate}`;
+    'tw:inline-block tw:h-5 tw:w-5 tw:transform tw:rounded-full tw:bg-[#ffffff] tw:shadow-md ' +
+    `tw:transition-transform tw:duration-200 tw:ease-in-out ${thumbTranslate}`;
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="tw:flex tw:items-center tw:gap-3">
       <button
         type="button"
         role="switch"
@@ -54,7 +55,7 @@ export function Toggle(props: IToggleProps): React.JSX.Element {
       </button>
       {label && (
         <label
-          className={`text-sm font-medium ${labelDisabled} ${labelColor}`}
+          className={`tw:text-sm tw:font-medium ${labelDisabled} ${labelColor}`}
           onClick={!disabled ? handleToggle : undefined}
         >
           {label}

@@ -8,7 +8,7 @@ export interface ISkeletonProps {
   className?: string;
 }
 
-const baseStyles = 'bg-[var(--color-surface-overlay)] rounded animate-pulse';
+const baseStyles = 'tw:bg-[var(--color-surface-overlay)] tw:rounded tw:animate-pulse';
 
 const variantStyles: Record<string, { width: string; height: string }> = {
   text: { width: '100%', height: '1.25rem' },
@@ -26,7 +26,7 @@ export function Skeleton(props: ISkeletonProps): React.JSX.Element {
   if (variant === 'circle') {
     return (
       <div
-        className={`${baseStyles} rounded-full ${className}`.trim()}
+        className={`${baseStyles} tw:rounded-full ${className}`.trim()}
         style={{
           width: finalWidth,
           height: finalHeight,
@@ -37,7 +37,7 @@ export function Skeleton(props: ISkeletonProps): React.JSX.Element {
 
   if (variant === 'list') {
     return (
-      <div className="space-y-2">
+      <div className="tw:space-y-2">
         {Array.from({ length: count }).map((i, index) => (
           <div
             key={`skeleton-${index}`}

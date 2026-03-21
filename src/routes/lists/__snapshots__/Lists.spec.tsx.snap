@@ -104,16 +104,16 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
       </div>
     </div>
     <div
-      class="grid gap-2 mt-3"
+      class="d-grid gap-2 mt-3"
     >
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:opacity-90 h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Create List
       </button>
       <button
-        class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg w-full cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -133,7 +133,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="flex items-center m-0"
+          class="row m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -141,7 +141,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
             Pending
           </h2>
           <div
-            class="relative"
+            class="tw:relative w-auto p-0"
           >
             <button
               class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
@@ -218,7 +218,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                     data-test-id="pending-list-accept"
                     type="button"
                   >
@@ -242,7 +242,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="pending-list-trash"
                     type="button"
                   >
@@ -285,7 +285,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="flex items-center m-0"
+          class="row m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -293,7 +293,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
             Incomplete
           </h2>
           <div
-            class="relative"
+            class="tw:relative w-auto p-0"
           >
             <button
               class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
@@ -376,7 +376,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
                     data-test-id="incomplete-list-complete"
                     type="button"
                   >
@@ -461,7 +461,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                     </svg>
                   </a>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="incomplete-list-trash"
                     type="button"
                   >
@@ -504,7 +504,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
         class="mx-auto float-start"
       >
         <div
-          class="flex items-center m-0"
+          class="row m-0"
         >
           <h2
             class="text-capitalize pe-0 w-auto"
@@ -512,7 +512,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
             Completed
           </h2>
           <div
-            class="relative"
+            class="tw:relative w-auto p-0"
           >
             <button
               class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
@@ -595,7 +595,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                   role="group"
                 >
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0 me-3 list-button-enabled"
+                    class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
                     data-test-id="complete-list-refresh"
                     type="button"
                   >
@@ -620,7 +620,7 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                     </svg>
                   </button>
                   <button
-                    class="font-medium transition-colors duration-200 ease-in-out min-h-[44px] flex items-center justify-center gap-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] active:bg-[var(--color-surface-raised)] h-10 px-4 text-sm rounded-lg  cursor-pointer p-0"
+                    class="bg-transparent border-0 p-0 cursor-pointer"
                     data-test-id="complete-list-trash"
                     type="button"
                   >
@@ -662,12 +662,12 @@ exports[`Lists > renders loading component when data is being fetched 1`] = `
     id="loader"
   >
     <div
-      class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"
+      class="tw:inline-block tw:h-8 tw:w-8 tw:animate-spin tw:rounded-full tw:border-4 tw:border-current tw:border-t-transparent"
       id="spinner"
       role="status"
     >
       <span
-        class="sr-only"
+        class="tw:sr-only"
       >
         Loading...
       </span>
