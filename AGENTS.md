@@ -80,13 +80,13 @@ These rules extend the root AGENTS.md and must be followed.
 ## Build / Lint / Test Commands
 
 ```bash
-npm start
-npm run build:production
-npm run build:staging
-npm run lint
-npm run format
-npm run test
-npm run test:ci
+npm start                    # Dev server (CRA + craco)
+npm run build:production     # Production build
+npm run build:staging        # Staging build (uses .env.staging)
+npm run lint                 # ESLint: eslint --ext .ts,.tsx src/
+npm run format               # Prettier: prettier --write 'src/**/*.{ts,tsx,json,css,md}'
+npm run test                 # Jest in watch mode (craco test)
+npm run test:ci              # tsc --noEmit && lint && CI=true test --coverage
 ```
 
 ---
@@ -124,14 +124,14 @@ npm run format && npx tsc --noEmit && npm run lint
 
 ```
 src/
-├── components/
-├── routes/
-├── utils/
-├── typings/
-├── hooks/
-├── test-utils/
-├── styles/
-└── setupTests.ts
+├── components/         # Reusable UI components
+├── routes/             # Route-level page components
+├── utils/              # Utility functions (api, auth, format, etc.)
+├── typings/            # TypeScript interfaces and enums
+├── hooks/              # Custom React hooks
+├── test-utils/         # Test helpers and factories
+├── styles/             # SCSS stylesheets
+└── setupTests.ts       # Global Jest setup and mocks
 ```
 
 ---
