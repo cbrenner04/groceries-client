@@ -9,26 +9,29 @@ export interface IIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
 }
 
 const sizeStyles: Record<string, string> = {
-  sm: 'h-8 w-8 text-sm',
-  md: 'h-10 w-10 text-base',
-  lg: 'h-12 w-12 text-lg',
+  sm: 'tw:h-8 tw:w-8 tw:text-sm',
+  md: 'tw:h-10 tw:w-10 tw:text-base',
+  lg: 'tw:h-12 tw:w-12 tw:text-lg',
 };
 
 const variantStyles: Record<string, string> = {
   default:
-    'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-overlay)] ' + 'active:bg-[var(--color-border)]',
-  success: 'text-[var(--color-success)] hover:bg-[rgb(16_185_129_/_0.1)] ' + 'active:bg-[rgb(16_185_129_/_0.2)]',
-  danger: 'text-[var(--color-danger)] hover:bg-[rgb(239_68_68_/_0.1)] ' + 'active:bg-[rgb(239_68_68_/_0.2)]',
-  primary: 'text-[var(--color-primary)] hover:bg-[var(--color-primary-light)] ' + 'active:bg-[rgb(79_70_229_/_0.2)]',
+    'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+    'tw:active:bg-[var(--color-border)]',
+  success:
+    'tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] ' + 'tw:active:bg-[rgb(16_185_129_/_0.2)]',
+  danger: 'tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] ' + 'tw:active:bg-[rgb(239_68_68_/_0.2)]',
+  primary:
+    'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(79_70_229_/_0.2)]',
 };
 
 export function IconButton(props: IIconButtonProps): React.JSX.Element {
   const { icon, variant = 'default', size = 'md', label, disabled = false, className = '', ...rest } = props;
 
   const baseStyles =
-    'rounded-full transition-colors duration-200 ease-in-out flex items-center ' +
-    'justify-center flex-shrink-0 min-h-[44px] min-w-[44px] cursor-pointer';
-  const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '';
+    'tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center ' +
+    'tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer';
+  const disabledStyles = disabled ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : '';
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];
 

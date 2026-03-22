@@ -52,8 +52,8 @@ describe('IconButton', () => {
   it('has minimum 44x44px touch target', async () => {
     const { findByRole } = setup();
     const button = await findByRole('button');
-    expect(button).toHaveClass('min-h-[44px]');
-    expect(button).toHaveClass('min-w-[44px]');
+    expect(button).toHaveClass('tw:min-h-[44px]');
+    expect(button).toHaveClass('tw:min-w-[44px]');
   });
 
   it('disables button when disabled prop is true', async () => {

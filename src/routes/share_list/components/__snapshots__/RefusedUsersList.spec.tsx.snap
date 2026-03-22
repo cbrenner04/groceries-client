@@ -64,7 +64,7 @@ exports[`RefusedUsersList > renders refresh share button 1`] = `
             role="group"
           >
             <button
-              class="p-0 me-3  btn btn-link"
+              class="bg-transparent border-0 p-0 me-3 cursor-pointer "
               data-test-id="refresh-share"
               type="button"
             >

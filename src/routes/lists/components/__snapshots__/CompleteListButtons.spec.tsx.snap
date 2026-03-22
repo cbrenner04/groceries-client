@@ -7,7 +7,7 @@ exports[`CompleteListButtons > calls handleMerge when Merge is selected 1`] = `
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
       data-test-id="complete-list-refresh"
       type="button"
     >
@@ -32,7 +32,7 @@ exports[`CompleteListButtons > calls handleMerge when Merge is selected 1`] = `
       </svg>
     </button>
     <button
-      class="p-0 me-3 btn btn-link"
+      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
       data-test-id="complete-list-merge"
       type="button"
     >
@@ -59,7 +59,7 @@ exports[`CompleteListButtons > calls handleMerge when Merge is selected 1`] = `
       </svg>
     </button>
     <button
-      class="p-0 btn btn-link"
+      class="bg-transparent border-0 p-0 cursor-pointer"
       data-test-id="complete-list-trash"
       type="button"
     >
@@ -95,7 +95,7 @@ exports[`CompleteListButtons > renders refresh disabled when user is not owner 1
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-disabled btn btn-link"
+      class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-disabled"
       data-test-id="complete-list-refresh"
       disabled=""
       type="button"
@@ -121,7 +121,7 @@ exports[`CompleteListButtons > renders refresh disabled when user is not owner 1
       </svg>
     </button>
     <button
-      class="p-0 btn btn-link"
+      class="bg-transparent border-0 p-0 cursor-pointer"
       data-test-id="complete-list-trash"
       type="button"
     >
@@ -157,7 +157,7 @@ exports[`CompleteListButtons > renders refresh enabled when user is owner 1`] = 
     role="group"
   >
     <button
-      class="p-0 me-3 list-button-enabled btn btn-link"
+      class="bg-transparent border-0 p-0 me-3 cursor-pointer list-button-enabled"
       data-test-id="complete-list-refresh"
       type="button"
     >
@@ -182,7 +182,7 @@ exports[`CompleteListButtons > renders refresh enabled when user is owner 1`] = 
       </svg>
     </button>
     <button
-      class="p-0 btn btn-link"
+      class="bg-transparent border-0 p-0 cursor-pointer"
       data-test-id="complete-list-trash"
       type="button"
     >

@@ -83,7 +83,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -99,24 +99,25 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -230,7 +231,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -254,7 +255,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -283,7 +284,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -375,7 +376,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -399,7 +400,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -428,7 +429,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -537,7 +538,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -562,7 +563,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -591,7 +592,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -724,7 +725,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -740,24 +741,25 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -846,7 +848,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -870,7 +872,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -899,7 +901,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -1000,7 +1002,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -1024,7 +1026,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -1053,7 +1055,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -1145,7 +1147,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -1169,7 +1171,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -1198,7 +1200,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -1299,7 +1301,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -1323,7 +1325,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -1352,7 +1354,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -1461,7 +1463,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -1486,7 +1488,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -1515,7 +1517,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -1648,7 +1650,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -1664,24 +1666,25 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -1770,7 +1773,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -1794,7 +1797,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -1823,7 +1826,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -1924,7 +1927,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -1948,7 +1951,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -1977,7 +1980,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -2069,7 +2072,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -2093,7 +2096,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -2122,7 +2125,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -2223,7 +2226,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -2247,7 +2250,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -2276,7 +2279,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -2385,7 +2388,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -2410,7 +2413,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -2439,7 +2442,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -2483,6 +2486,62 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50"
+  />
+  <div
+    aria-modal="true"
+    class="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
+    role="dialog"
+  >
+    <div
+      class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg tw:border-0"
+    >
+      <div
+        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
+        style="border-bottom: 1px solid rgb(229, 231, 235);"
+      >
+        <h5
+          class="tw:text-lg tw:font-medium tw:m-0"
+        >
+          Confirm 
+          delete
+        </h5>
+        <button
+          aria-label="Close"
+          class="tw:text-[var(--color-text-tertiary)] tw:hover:text-[var(--color-text-primary)] tw:text-xl tw:leading-none tw:p-1"
+          type="button"
+        >
+          ×
+        </button>
+      </div>
+      <div
+        class="tw:px-4 tw:py-3"
+        data-test-id="confirm-modal-body"
+      >
+        Are you sure you want to delete the following items? no category not completed product
+      </div>
+      <div
+        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
+        style="border-top: 1px solid rgb(229, 231, 235);"
+      >
+        <button
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+          data-test-id="clear-delete"
+          type="button"
+        >
+          Close
+        </button>
+        <button
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+          data-test-id="confirm-delete"
+          type="button"
+        >
+          Yes, I'm sure.
+        </button>
       </div>
     </div>
   </div>
@@ -2572,7 +2631,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -2588,24 +2647,25 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -2694,7 +2754,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -2718,7 +2778,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -2747,7 +2807,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -2848,7 +2908,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -2872,7 +2932,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -2901,7 +2961,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -2993,7 +3053,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -3017,7 +3077,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -3046,7 +3106,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -3147,7 +3207,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -3171,7 +3231,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -3200,7 +3260,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -3349,7 +3409,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -3365,24 +3425,25 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -3484,7 +3545,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -3509,7 +3570,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -3538,7 +3599,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >
@@ -4047,7 +4108,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -4063,24 +4124,25 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Add New Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Collapse Form
@@ -4169,7 +4231,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id2"
                       type="button"
                     >
@@ -4193,7 +4255,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id2"
                       type="button"
                     >
@@ -4222,7 +4284,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id2"
                       type="button"
                     >
@@ -4323,7 +4385,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id3"
                       type="button"
                     >
@@ -4347,7 +4409,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id3"
                       type="button"
                     >
@@ -4376,7 +4438,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id3"
                       type="button"
                     >
@@ -4468,7 +4530,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id4"
                       type="button"
                     >
@@ -4492,7 +4554,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id4"
                       type="button"
                     >
@@ -4521,7 +4583,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id4"
                       type="button"
                     >
@@ -4622,7 +4684,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="not-completed-item-complete-id5"
                       type="button"
                     >
@@ -4646,7 +4708,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="not-completed-item-edit-id5"
                       type="button"
                     >
@@ -4675,7 +4737,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="not-completed-item-delete-id5"
                       type="button"
                     >
@@ -4784,7 +4846,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                     role="group"
                   >
                     <button
-                      class="p-0 me-3  btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer "
                       data-test-id="completed-item-refresh-id1"
                       type="button"
                     >
@@ -4809,7 +4871,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 me-3 btn btn-link"
+                      class="bg-transparent border-0 p-0 me-3 cursor-pointer"
                       data-test-id="completed-item-edit-id1"
                       type="button"
                     >
@@ -4838,7 +4900,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       </svg>
                     </button>
                     <button
-                      class="p-0 btn btn-link"
+                      class="bg-transparent border-0 p-0 cursor-pointer"
                       data-test-id="completed-item-delete-id1"
                       type="button"
                     >

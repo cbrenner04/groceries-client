@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Checkbox > matches snapshot when checked 1`] = `
-<label
+<div
   class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
 >
   <div
@@ -35,16 +35,17 @@ exports[`Checkbox > matches snapshot when checked 1`] = `
       />
     </svg>
   </div>
-  <span
-    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+  <label
+    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+    for="checkbox"
   >
     Test
-  </span>
-</label>
+  </label>
+</div>
 `;
 
 exports[`Checkbox > matches snapshot when unchecked 1`] = `
-<label
+<div
   class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
 >
   <div
@@ -60,10 +61,11 @@ exports[`Checkbox > matches snapshot when unchecked 1`] = `
       class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
     />
   </div>
-  <span
-    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+  <label
+    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+    for="checkbox"
   >
     Test
-  </span>
-</label>
+  </label>
+</div>
 `;

@@ -74,7 +74,7 @@ describe('Button', () => {
   it('applies fullWidth class when fullWidth prop is true', async () => {
     const { findByRole } = setup({ fullWidth: true });
     const button = await findByRole('button');
-    expect(button).toHaveClass('w-full');
+    expect(button).toHaveClass('tw:w-full');
   });
 
   it('handles click events when not disabled', async () => {
@@ -115,6 +115,6 @@ describe('Button', () => {
   it('renders with minimum 44px touch target', async () => {
     const { findByRole } = setup({ size: 'sm' });
     const button = await findByRole('button');
-    expect(button).toHaveClass('min-h-[44px]');
+    expect(button).toHaveClass('tw:min-h-[44px]');
   });
 });

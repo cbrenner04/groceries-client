@@ -67,13 +67,13 @@ exports[`ChangeOtherListModal > renders appropriate instructions when copy and l
           class=" gap-2 mt-3"
         >
           <button
-            class="btn btn-success"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
             type="submit"
           >
             Complete
           </button>
           <button
-            class="btn btn-link"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
             type="button"
           >
             Cancel
@@ -152,13 +152,13 @@ exports[`ChangeOtherListModal > renders appropriate instructions when move and l
           class=" gap-2 mt-3"
         >
           <button
-            class="btn btn-success"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
             type="submit"
           >
             Complete
           </button>
           <button
-            class="btn btn-link"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
             type="button"
           >
             Cancel

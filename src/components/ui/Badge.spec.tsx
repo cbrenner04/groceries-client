@@ -43,11 +43,11 @@ describe('Badge', () => {
   it('applies correct base styles', async () => {
     const { findByText } = setup();
     const badge = await findByText('Badge');
-    expect(badge).toHaveClass('inline-flex');
-    expect(badge).toHaveClass('items-center');
-    expect(badge).toHaveClass('text-xs');
-    expect(badge).toHaveClass('font-medium');
-    expect(badge).toHaveClass('rounded-full');
+    expect(badge).toHaveClass('tw:inline-flex');
+    expect(badge).toHaveClass('tw:items-center');
+    expect(badge).toHaveClass('tw:text-xs');
+    expect(badge).toHaveClass('tw:font-medium');
+    expect(badge).toHaveClass('tw:rounded-full');
   });
 
   it('passes through data-test-id attribute', async () => {

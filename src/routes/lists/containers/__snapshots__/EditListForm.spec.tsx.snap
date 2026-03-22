@@ -35,7 +35,7 @@ exports[`EditListForm > renders 1`] = `
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -51,24 +51,25 @@ exports[`EditListForm > renders 1`] = `
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Update List
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Cancel
