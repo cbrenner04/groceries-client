@@ -2495,10 +2495,11 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     role="dialog"
   >
     <div
-      class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg"
+      class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg tw:border-0"
     >
       <div
-        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3 tw:border-b tw:border-[var(--color-border)]"
+        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
+        style="border-bottom: 1px solid rgb(229, 231, 235);"
       >
         <h5
           class="tw:text-lg tw:font-medium tw:m-0"
@@ -2521,7 +2522,8 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         Are you sure you want to delete the following items? no category not completed product
       </div>
       <div
-        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 tw:border-t tw:border-[var(--color-border)]"
+        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
+        style="border-top: 1px solid rgb(229, 231, 235);"
       >
         <button
           class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"

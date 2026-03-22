@@ -50,7 +50,7 @@ const TitlePopover: React.FC<ITitlePopoverProps> = (props): React.JSX.Element =>
             ref={popoverRef}
             className={
               'tw:absolute tw:bottom-full tw:left-1/2 tw:-translate-x-1/2 tw:mb-2 tw:z-50 ' +
-              'tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] ' +
+              'tw:bg-[var(--color-surface-raised)] tw:border tw:border-solid tw:border-[var(--color-border)] ' +
               'tw:rounded-lg tw:shadow-md tw:p-3 tw:min-w-[200px]'
             }
             data-test-id="popover-content"
