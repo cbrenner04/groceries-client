@@ -83,7 +83,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -99,12 +99,13 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -724,7 +725,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -740,12 +741,13 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -1648,7 +1650,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -1664,12 +1666,13 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -2628,7 +2631,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -2644,12 +2647,13 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -3405,7 +3409,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -3421,12 +3425,13 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
@@ -4103,7 +4108,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -4119,12 +4124,13 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"

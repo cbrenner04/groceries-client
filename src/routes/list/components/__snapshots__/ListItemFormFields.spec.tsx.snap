@@ -27,7 +27,7 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
   <div
     class="mb-3 tw:mb-3"
   >
-    <label
+    <div
       class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
     >
       <div
@@ -61,12 +61,13 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
           />
         </svg>
       </div>
-      <span
-        class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+      <label
+        class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+        for="Foobar"
       >
         Foobar
-      </span>
-    </label>
+      </label>
+    </div>
   </div>
   <div
     class="tw:mb-3"

@@ -11,7 +11,7 @@ const Checkbox: React.FC<ICheckboxProps> = (props): React.JSX.Element => {
   const isChecked = checked ?? false;
 
   return (
-    <label className="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3">
+    <div className="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3">
       <div className="tw:relative tw:w-5 tw:h-5">
         <input
           type="checkbox"
@@ -53,8 +53,13 @@ const Checkbox: React.FC<ICheckboxProps> = (props): React.JSX.Element => {
           />
         )}
       </div>
-      <span className="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]">{label}</span>
-    </label>
+      <label
+        htmlFor={inputId}
+        className="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+      >
+        {label}
+      </label>
+    </div>
   );
 };
 

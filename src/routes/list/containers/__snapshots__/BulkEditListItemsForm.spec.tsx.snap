@@ -42,7 +42,7 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
       <div
         class="ms-1 mt-1 tw:mb-3"
       >
-        <label
+        <div
           class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
         >
           <div
@@ -58,12 +58,13 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
               class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
             />
           </div>
-          <span
-            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+          <label
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+            for="clear_product"
           >
             Clear Product
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
     </div>
     <div
@@ -93,7 +94,7 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
       <div
         class="ms-1 mt-1 tw:mb-3"
       >
-        <label
+        <div
           class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
         >
           <div
@@ -109,12 +110,13 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
               class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
             />
           </div>
-          <span
-            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+          <label
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+            for="clear_quantity"
           >
             Clear Quantity
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
     </div>
     <div
@@ -152,7 +154,7 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
       <div
         class="ms-1 mt-1 tw:mb-3"
       >
-        <label
+        <div
           class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
         >
           <div
@@ -168,12 +170,13 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
               class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
             />
           </div>
-          <span
-            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+          <label
+            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+            for="clear_category"
           >
             Clear Category
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
     </div>
     <div

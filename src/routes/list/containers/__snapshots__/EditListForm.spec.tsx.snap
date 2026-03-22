@@ -35,7 +35,7 @@ exports[`EditListForm > renders with correct initial values 1`] = `
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -51,17 +51,18 @@ exports[`EditListForm > renders with correct initial values 1`] = `
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="completed"
         >
           Completed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="mb-3 tw:mb-3"
     >
-      <label
+      <div
         class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
       >
         <div
@@ -77,12 +78,13 @@ exports[`EditListForm > renders with correct initial values 1`] = `
             class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
           />
         </div>
-        <span
-          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)]"
+        <label
+          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+          for="refreshed"
         >
           Refreshed
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
     <div
       class="d-grid gap-2 mt-3"
