@@ -51,6 +51,14 @@ describe('MergeModal', () => {
     expect(props.handleMergeNameChange).toHaveBeenCalled();
   });
 
+  it('clears modal when Escape key is pressed', async () => {
+    const { props, user } = setup();
+
+    await user.keyboard('{Escape}');
+
+    expect(props.clearModal).toHaveBeenCalled();
+  });
+
   it('clears modal when x button is selected', async () => {
     const { findAllByRole, props, user } = setup();
 
