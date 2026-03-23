@@ -1,49 +1,41 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`MergeModal > renders 1`] = `
-<body
-  class="modal-open"
-  data-rr-ui-modal-open=""
-  style="overflow: hidden; padding-right: 1024px;"
->
-  <div />
-  <div
-    class="fade modal-backdrop show"
-  />
-  <div
-    aria-modal="true"
-    class="fade modal show"
-    role="dialog"
-    style="display: block; padding-right: 0px;"
-    tabindex="-1"
-  >
+<body>
+  <div>
     <div
-      class="modal-dialog"
+      class="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50"
+    />
+    <div
+      aria-modal="true"
+      class="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
+      role="dialog"
     >
       <div
-        class="modal-content"
+        class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg tw:border-0"
       >
         <div
-          class="modal-header"
+          class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
+          style="border-bottom: 1px solid rgb(229, 231, 235);"
         >
-          <div
-            class="modal-title h4"
+          <h5
+            class="tw:text-lg tw:font-medium tw:m-0"
           >
             Merge 
             "name, name"
-          </div>
+          </h5>
           <button
             aria-label="Close"
-            class="btn-close"
+            class="tw:text-[var(--color-text-tertiary)] tw:hover:text-[var(--color-text-primary)] tw:text-xl tw:leading-none tw:p-1"
             type="button"
-          />
+          >
+            ×
+          </button>
         </div>
         <div
-          class="modal-body"
+          class="tw:px-4 tw:py-3"
         >
-          <form
-            class=""
-          >
+          <div>
             <div
               class="tw:mb-3"
             >
@@ -66,20 +58,21 @@ exports[`MergeModal > renders 1`] = `
                 />
               </div>
             </div>
-          </form>
+          </div>
         </div>
         <div
-          class="modal-footer"
+          class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
+          style="border-top: 1px solid rgb(229, 231, 235);"
         >
           <button
-            class="btn btn-secondary"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
             data-test-id="clear-merge"
             type="button"
           >
             Close
           </button>
           <button
-            class="merge-modal-confirm-disabled btn btn-primary"
+            class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
             data-test-id="confirm-merge"
             disabled=""
             type="button"
