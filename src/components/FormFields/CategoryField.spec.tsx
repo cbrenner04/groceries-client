@@ -27,20 +27,25 @@ async function setup(suppliedProps?: Partial<ICategoryFieldProps>): Promise<{
 describe('CategoryField', () => {
   it('renders input with datalist', async () => {
     const { formInput, props } = await setup();
-    const formGroup = formInput.parentElement;
+    const wrapper = formInput.closest('[data-test-id="category-field"]');
 
-    expect(formGroup).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     expect(formInput).toHaveValue(props.category);
-    expect(formGroup?.children[2].firstChild).toHaveValue(categories[0]);
+    const datalist = wrapper?.querySelector('datalist[id="categories"]');
+    expect(datalist?.children[0]).toHaveValue(categories[0]);
   });
 
   it('renders when no category or categories given', async () => {
-    const { formInput } = await setup({ category: undefined, categories: undefined });
-    const formGroup = formInput.parentElement;
+    const { formInput } = await setup({
+      category: undefined,
+      categories: undefined,
+    });
+    const wrapper = formInput.closest('[data-test-id="category-field"]');
 
-    expect(formGroup).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     expect(formInput).toHaveValue('');
-    expect(formGroup?.children[2].firstChild).toBeNull();
+    const datalist = wrapper?.querySelector('datalist[id="categories"]');
+    expect(datalist?.children.length).toBe(0);
   });
 
   describe('when value changes', () => {

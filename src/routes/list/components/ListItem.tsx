@@ -111,7 +111,8 @@ const ListItem: React.FC<IListItemProps> = (props): React.JSX.Element => {
           type="checkbox"
           className="multi-select-check"
           data-test-id={`${item.completed ? 'completed' : 'not-completed'}-item-select-${item.id}`}
-          onClick={(): void => props.handleItemSelect(item)}
+          checked={props.selectedItems.some((s) => s.id === item.id)}
+          onChange={(): void => props.handleItemSelect(item)}
         />
         <div className="list-item-multi-divider"></div>
       </Col>

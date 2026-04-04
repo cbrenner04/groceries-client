@@ -1,5 +1,5 @@
 import React, { type ChangeEvent } from 'react';
-import { Form } from 'react-bootstrap';
+import Input from '../ui/Input';
 
 export interface IEmailFieldProps {
   value: string;
@@ -10,16 +10,16 @@ export interface IEmailFieldProps {
 }
 
 const EmailField: React.FC<IEmailFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name ?? 'email'} className="mb-3">
-    <Form.Label>{props.label ?? 'Email'}</Form.Label>
-    <Form.Control
+  <div className="tw:mb-3">
+    <Input
       type="email"
+      label={props.label ?? 'Email'}
       value={props.value}
       onChange={props.handleChange}
       placeholder={props.placeholder ?? 'jane.smith@example.com'}
       name={props.name ?? 'email'}
     />
-  </Form.Group>
+  </div>
 );
 
 export default EmailField;

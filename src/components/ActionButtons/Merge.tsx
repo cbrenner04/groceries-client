@@ -1,5 +1,4 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
 import { CompressIcon } from '../icons';
 
 interface IMergeProps {
@@ -9,15 +8,15 @@ interface IMergeProps {
 }
 
 const Merge: React.FC<IMergeProps> = (props): React.JSX.Element => (
-  <Button
-    variant="link"
+  <button
+    type="button"
     onClick={props.handleClick}
-    className="p-0 me-3"
+    className="bg-transparent border-0 p-0 me-3 cursor-pointer"
     data-test-id={props.testID}
     disabled={props.disabled}
   >
     <CompressIcon size="2x" className="text-warning" data-test-id="compress-icon" />
-  </Button>
+  </button>
 );
 
 export default Merge;

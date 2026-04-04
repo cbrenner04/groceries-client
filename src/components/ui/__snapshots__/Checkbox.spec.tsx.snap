@@ -1,0 +1,71 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Checkbox > matches snapshot when checked 1`] = `
+<div
+  class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+>
+  <div
+    class="tw:relative tw:w-5 tw:h-5"
+  >
+    <input
+      checked=""
+      class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+      data-test-id="test-checkbox"
+      id="checkbox"
+      type="checkbox"
+    />
+    <svg
+      class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:text-white tw:pointer-events-none"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
+      <rect
+        fill="var(--color-primary)"
+        height="20"
+        rx="2"
+        width="20"
+      />
+      <path
+        d="M6.5 10.5L8.5 12.5L13.5 7.5"
+        fill="none"
+        stroke="white"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+  </div>
+  <label
+    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+    for="checkbox"
+  >
+    Test
+  </label>
+</div>
+`;
+
+exports[`Checkbox > matches snapshot when unchecked 1`] = `
+<div
+  class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+>
+  <div
+    class="tw:relative tw:w-5 tw:h-5"
+  >
+    <input
+      class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+      data-test-id="test-checkbox"
+      id="checkbox"
+      type="checkbox"
+    />
+    <div
+      class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+    />
+  </div>
+  <label
+    class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+    for="checkbox"
+  >
+    Test
+  </label>
+</div>
+`;

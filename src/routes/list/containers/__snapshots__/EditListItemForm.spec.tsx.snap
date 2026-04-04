@@ -11,58 +11,71 @@ exports[`EditListItemForm > Rendering > renders the form with correct title 1`] 
     class=""
   >
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="quantity"
+      <div
+        class="tw:w-full"
       >
-        Quantity
-      </label>
-      <input
-        class="form-control"
-        id="quantity"
-        name="quantity"
-        placeholder=""
-        type="text"
-        value="2"
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="quantity"
+        >
+          Quantity
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="quantity"
+          name="quantity"
+          placeholder=""
+          type="text"
+          value="2"
+        />
+      </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
     >
-      <label
-        class="form-label"
-        for="product"
+      <div
+        class="tw:w-full"
       >
-        Product
-      </label>
-      <input
-        class="form-control"
-        id="product"
-        name="product"
-        placeholder=""
-        type="text"
-        value="Apples"
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="product"
+        >
+          Product
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="product"
+          name="product"
+          placeholder=""
+          type="text"
+          value="Apples"
+        />
+      </div>
     </div>
     <div
-      class="mb-3"
+      class="tw:mb-3"
+      data-test-id="category-field"
     >
-      <label
-        class="form-label"
-        for="category"
+      <div
+        class="tw:w-full"
       >
-        Category
-      </label>
-      <input
-        class="form-control"
-        id="category"
-        list="categories"
-        name="category"
-        type="text"
-        value="Produce"
-      />
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="category"
+        >
+          Category
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="category"
+          list="categories"
+          name="category"
+          type="text"
+          value="Produce"
+        />
+      </div>
       <datalist
         data-test-id="categories"
         id="categories"
@@ -72,13 +85,13 @@ exports[`EditListItemForm > Rendering > renders the form with correct title 1`] 
       class="d-grid gap-2 mt-3"
     >
       <button
-        class="btn btn-success"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="submit"
       >
         Update Item
       </button>
       <button
-        class="btn btn-link"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
         type="button"
       >
         Cancel

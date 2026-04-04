@@ -104,7 +104,7 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
           </div>
         </div>
         <button
-          class="p-0 btn btn-link"
+          class="bg-transparent border-0 p-0 cursor-pointer"
           data-test-id="field-row-remove-0"
           disabled=""
           type="button"
