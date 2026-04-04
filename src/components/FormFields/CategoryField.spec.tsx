@@ -27,7 +27,7 @@ async function setup(suppliedProps?: Partial<ICategoryFieldProps>): Promise<{
 describe('CategoryField', () => {
   it('renders input with datalist', async () => {
     const { formInput, props } = await setup();
-    const wrapper = formInput.closest('.tw\\:mb-3');
+    const wrapper = formInput.closest('[data-test-id="category-field"]');
 
     expect(wrapper).toMatchSnapshot();
     expect(formInput).toHaveValue(props.category);
@@ -40,7 +40,7 @@ describe('CategoryField', () => {
       category: undefined,
       categories: undefined,
     });
-    const wrapper = formInput.closest('.tw\\:mb-3');
+    const wrapper = formInput.closest('[data-test-id="category-field"]');
 
     expect(wrapper).toMatchSnapshot();
     expect(formInput).toHaveValue('');

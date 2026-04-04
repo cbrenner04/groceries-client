@@ -3,6 +3,7 @@
 exports[`CategoryField > renders input with datalist 1`] = `
 <div
   class="tw:mb-3"
+  data-test-id="category-field"
 >
   <div
     class="tw:w-full"
@@ -36,6 +37,7 @@ exports[`CategoryField > renders input with datalist 1`] = `
 exports[`CategoryField > renders when no category or categories given 1`] = `
 <div
   class="tw:mb-3"
+  data-test-id="category-field"
 >
   <div
     class="tw:w-full"

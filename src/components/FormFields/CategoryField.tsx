@@ -11,7 +11,7 @@ export interface ICategoryFieldProps {
 }
 
 const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element => (
-  <div className="tw:mb-3">
+  <div className="tw:mb-3" data-test-id="category-field">
     <Input
       type="text"
       label="Category"
