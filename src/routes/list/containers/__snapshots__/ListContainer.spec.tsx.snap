@@ -49,6 +49,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
@@ -691,6 +692,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
@@ -1616,6 +1618,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
@@ -2597,6 +2600,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
@@ -3375,6 +3379,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
@@ -4074,6 +4079,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"

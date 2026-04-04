@@ -121,6 +121,7 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
     </div>
     <div
       class="tw:mb-3"
+      data-test-id="category-field"
     >
       <div
         class="tw:w-full"
