@@ -16,12 +16,6 @@ import {
 
 import EditListItem from './EditListItem';
 
-// Mock useParams for this specific test
-vi.mock('react-router', async () => ({
-  ...(await vi.importActual('react-router')),
-  useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
-}));
-
 const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
 const mockNavigate = vi.fn();
 vi.mock('../../utils/handleFailure', () => ({
@@ -29,6 +23,7 @@ vi.mock('../../utils/handleFailure', () => ({
 }));
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
+  useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
   useNavigate: (): ((url: string) => void) => mockNavigate,
 }));
 
