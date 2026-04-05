@@ -62,6 +62,21 @@ describe('ListItemRow', () => {
       expect(await findByText('Dairy')).toBeVisible();
     });
 
+    it('uses first field with data as primary when no field is marked primary', async () => {
+      const item = createListItem('item1', false, [
+        createField('f1', 'author', 'Author A', 'item1'),
+        createField('f2', 'year', '2024', 'item1'),
+      ]);
+      const { findByText, container } = setup({ item, fields: item.fields });
+      // First field with data becomes the primary display value
+      expect(await findByText('Author A')).toBeVisible();
+      // The fallback primary field should not appear in secondary fields text
+      const secondaryEl = container.querySelector('.tw\\:text-sm');
+      expect(secondaryEl?.textContent).not.toContain('Author A');
+      // Only "2024" should appear as a secondary field
+      expect(secondaryEl?.textContent).toContain('2024');
+    });
+
     it('does not render category badge when no category', () => {
       const { queryByText } = setup();
       expect(queryByText('Dairy')).not.toBeInTheDocument();
@@ -204,6 +219,30 @@ describe('ListItemRow', () => {
       const item = createListItem('item1', true, [createField('f1', 'product', 'Done', 'item1', { primary: true })]);
       const { container } = setup({ item, fields: item.fields, isMultiSelectActive: true });
       expect(container.querySelector('[data-test-id="completed-item-select-item1"]')).toBeInTheDocument();
+    });
+  });
+
+  describe('fallback primary field edge cases', () => {
+    it('returns empty primary when no fields have data', async () => {
+      const item = createListItem('item1', false, [createField('f1', 'author', undefined, 'item1')]);
+      const { findByText } = setup({ item, fields: item.fields });
+      expect(await findByText('Untitled Item')).toBeVisible();
+    });
+
+    it('renders empty string for secondary fields without data', () => {
+      const item = createListItem('item1', false, [
+        createField('f1', 'product', 'Milk', 'item1', { primary: true }),
+        createField('f2', 'notes', undefined, 'item1'),
+      ]);
+      const { container } = setup({ item, fields: item.fields });
+      expect(container.querySelector('[data-test-class="non-completed-item"]')).toBeInTheDocument();
+    });
+
+    it('uses fallback aria-label when no primary value', () => {
+      const item = createListItem('item1', false, []);
+      const { container } = setup({ item, fields: item.fields, isMultiSelectActive: true });
+      const checkbox = container.querySelector('input[type="checkbox"]');
+      expect(checkbox).toHaveAttribute('aria-label', 'Select item');
     });
   });
 

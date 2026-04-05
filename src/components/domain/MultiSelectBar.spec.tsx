@@ -103,6 +103,12 @@ describe('MultiSelectBar', () => {
       expect(actionBtn).toHaveAttribute('aria-label', 'Complete');
     });
 
+    it('renders action with default variant when variant is not specified', () => {
+      const action = createAction({ variant: undefined, testId: 'action-default' });
+      const { container } = setup({ actions: [action] });
+      expect(container.querySelector('[data-test-id="action-default"]')).toBeInTheDocument();
+    });
+
     it('renders no actions when empty array', () => {
       const { container } = setup({ actions: [] });
       const bar = container.querySelector('[data-test-id="multi-select-bar"]');

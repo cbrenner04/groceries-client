@@ -310,6 +310,13 @@ describe('ListCard', () => {
       expect(container.querySelector('[data-test-id="incomplete-list-merge"]')).toBeInTheDocument();
     });
 
+    it('merge button click does not trigger card click', async () => {
+      const { container, props, user } = setup({ isMultiSelectActive: true });
+      const mergeBtn = container.querySelector('[data-test-id="incomplete-list-merge"]') as HTMLElement;
+      await user.click(mergeBtn);
+      expect(props.onClick).not.toHaveBeenCalled();
+    });
+
     it('hides regular action buttons in multi-select mode', () => {
       const { container } = setup({ isMultiSelectActive: true });
       expect(container.querySelector('[data-test-id="incomplete-list-complete"]')).not.toBeInTheDocument();
@@ -337,6 +344,30 @@ describe('ListCard', () => {
       const card = container.querySelector('[data-test-id="list-list1"]');
       expect(card).toHaveAttribute('role', 'button');
       expect(card).toHaveAttribute('tabindex', '0');
+    });
+
+    it('calls onClick when Enter key is pressed', async () => {
+      const { container, props, user } = setup();
+      const card = container.querySelector('[data-test-id="list-list1"]') as HTMLElement;
+      card.focus();
+      await user.keyboard('{Enter}');
+      expect(props.onClick).toHaveBeenCalledWith('list1');
+    });
+
+    it('calls onClick when Space key is pressed', async () => {
+      const { container, props, user } = setup();
+      const card = container.querySelector('[data-test-id="list-list1"]') as HTMLElement;
+      card.focus();
+      await user.keyboard(' ');
+      expect(props.onClick).toHaveBeenCalledWith('list1');
+    });
+
+    it('calls onSelect on Enter key in multi-select mode', async () => {
+      const { container, props, user } = setup({ isMultiSelectActive: true });
+      const card = container.querySelector('[data-test-id="list-list1"]') as HTMLElement;
+      card.focus();
+      await user.keyboard('{Enter}');
+      expect(props.onSelect).toHaveBeenCalledWith('list1');
     });
   });
 });
