@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { type ChangeEvent, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
 import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
-import TitlePopover from 'components/TitlePopover';
 import { usePolling } from 'hooks';
 import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
-import ListForm from '../components/ListForm';
-import { fetchLists, sortLists, failure, type IFetchListsReturn } from '../utils';
+import { ListCard } from 'components/domain/ListCard';
+import { BottomInputBar } from 'components/layout/BottomInputBar';
+import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
+import { ConfirmDialog } from 'components/domain/ConfirmDialog';
+import Select from 'components/ui/Select';
+import { fetchLists, sortLists, failure, type IFetchListsReturn, pluralize } from '../utils';
 import { listsDeduplicator } from 'utils/requestDeduplication';
 import { listsCache } from 'utils/lightweightCache';
 import { prefetchListsIdle } from 'utils/listPrefetch';
-import PendingLists from '../components/PendingLists';
-import AcceptedLists from '../components/AcceptedLists';
+import MergeModal from '../components/MergeModal';
+
+type TStatusFilter = 'all' | 'pending' | 'active' | 'completed';
 
 export interface IListsContainerProps {
   userId: string;
@@ -23,6 +27,7 @@ export interface IListsContainerProps {
   incompleteLists: IList[];
   currentUserPermissions: TUserPermissions;
   listItemConfigurations: IListItemConfiguration[];
+  initialFilter?: TStatusFilter;
 }
 
 const MAX_PREFETCH_LISTS = 5;
@@ -33,7 +38,16 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [listItemConfigurations, setListItemConfigurations] = useState(props.listItemConfigurations);
-  const [pending, setPending] = useState(false);
+  const [, setPending] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<TStatusFilter>(props.initialFilter ?? 'all');
+  const [multiSelectActive, setMultiSelectActive] = useState(false);
+  const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
+  const [listsToDelete, setListsToDelete] = useState<IList[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showMergeModal, setShowMergeModal] = useState(false);
+  const [listsToMerge, setListsToMerge] = useState<IList[]>([]);
+  const [mergeName, setMergeName] = useState('');
+  const [selectedTemplateId, setSelectedTemplateId] = useState(props.listItemConfigurations[0]?.id ?? '');
   const navigate = useNavigate();
 
   usePolling(
@@ -50,20 +64,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             listItemConfigurations: updatedListItemConfigurations,
           } = lists as IFetchListsReturn;
 
-          // Use lightweight cache to avoid re-render churn for identical data
-          const pendingCacheKey = 'lists-pending';
-          const completedCacheKey = 'lists-completed';
-          const incompleteCacheKey = 'lists-incomplete';
-          const permissionsCacheKey = 'lists-permissions';
-          const configurationsCacheKey = 'lists-configurations';
+          const pendingResult = listsCache.get('lists-pending', updatedPending);
+          const completedResult = listsCache.get('lists-completed', updatedCompleted);
+          const incompleteResult = listsCache.get('lists-incomplete', updatedIncomplete);
+          const permissionsResult = listsCache.get('lists-permissions', updatedCurrentUserPermissions);
+          const configurationsResult = listsCache.get('lists-configurations', updatedListItemConfigurations);
 
-          const pendingResult = listsCache.get(pendingCacheKey, updatedPending);
-          const completedResult = listsCache.get(completedCacheKey, updatedCompleted);
-          const incompleteResult = listsCache.get(incompleteCacheKey, updatedIncomplete);
-          const permissionsResult = listsCache.get(permissionsCacheKey, updatedCurrentUserPermissions);
-          const configurationsResult = listsCache.get(configurationsCacheKey, updatedListItemConfigurations);
-
-          // Only update state if data has actually changed
           if (pendingResult.hasChanged) {
             setPendingLists(updatedPending);
           }
@@ -88,105 +94,455 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10),
   );
 
-  // Idle prefetch for visible lists to improve navigation performance
   useEffect(() => {
-    // Allow tests to disable idle prefetch
     if (import.meta.env.VITE_PREFETCH_IDLE === 'false') {
       return;
     }
 
-    // Get all visible list IDs for prefetching
     const allVisibleLists = [...pendingLists, ...incompleteLists];
     const listIds = allVisibleLists
-      .slice(0, MAX_PREFETCH_LISTS) // Limit to first 5 lists to avoid overwhelming
+      .slice(0, MAX_PREFETCH_LISTS)
       .filter((list): list is IList & { id: string } => typeof list.id === 'string' && list.id.length > 0)
       .map((list) => list.id);
 
     if (listIds.length > 0) {
-      // Prefetch during idle time
       void prefetchListsIdle(listIds);
     }
   }, [pendingLists, incompleteLists]);
 
-  const handleFormSubmit = async (list: IList): Promise<void> => {
+  const resetMultiSelect = (): void => {
+    setSelectedListIds(new Set());
+    setMultiSelectActive(false);
+  };
+
+  const getSelectedLists = (): IList[] => {
+    const allLists = [...pendingLists, ...incompleteLists, ...completedLists];
+    return allLists.filter((list) => selectedListIds.has(list.id ?? ''));
+  };
+
+  const handleSelect = (listId: string): void => {
+    setSelectedListIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(listId)) {
+        next.delete(listId);
+      } else {
+        next.add(listId);
+      }
+      return next;
+    });
+  };
+
+  const handleCreateList = (name: string): void => {
+    setPending(true);
+    const list = { name, list_item_configuration_id: selectedTemplateId };
+    axios
+      .post('/lists', { list })
+      .then((response) => {
+        const updatedCurrentUserPermissions = update(currentUserPermissions, {
+          [response.data.id]: { $set: 'write' },
+        });
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+        const updatedIncompleteLists = update(incompleteLists, { $push: [response.data] });
+        setIncompleteLists(sortLists(updatedIncompleteLists));
+        setPending(false);
+        showToast.info('List successfully added.');
+      })
+      .catch((error) => {
+        failure(error, navigate, setPending);
+      });
+  };
+
+  const handleDelete = (listId: string): void => {
+    const selected = getSelectedLists();
+    const listsForDeletion = selected.length > 0 ? selected : findListById(listId);
+    setListsToDelete(listsForDeletion);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = async (): Promise<void> => {
+    setShowDeleteConfirm(false);
+    setPending(true);
+
+    try {
+      const requests = listsToDelete.map(async (list) => {
+        if (props.userId === list.owner_id) {
+          await axios.delete(`/lists/${list.id}`);
+        } else {
+          await axios.patch(`/lists/${list.id}/users_lists/${list.users_list_id}`, {
+            users_list: { has_accepted: false },
+          });
+        }
+      });
+
+      await Promise.all(requests);
+
+      const deletedIds = listsToDelete.map((l) => l.id);
+      setIncompleteLists((prev) => sortLists(prev.filter((l) => !deletedIds.includes(l.id))));
+      setCompletedLists((prev) => sortLists(prev.filter((l) => !deletedIds.includes(l.id))));
+
+      resetMultiSelect();
+      setListsToDelete([]);
+      setPending(false);
+      showToast.info(`${pluralize(listsToDelete.length)} successfully deleted.`);
+    } catch (error: unknown) {
+      failure(error, navigate, setPending);
+    }
+  };
+
+  const handleMerge = (): void => {
+    const selected = getSelectedLists();
+    const configId = selected[0]?.list_item_configuration_id;
+    const filteredLists = selected.filter((l) => l.list_item_configuration_id === configId);
+    setListsToMerge(filteredLists);
+    setShowMergeModal(true);
+  };
+
+  const handleMergeConfirm = async (): Promise<void> => {
+    setShowMergeModal(false);
+    setPending(true);
+    const listIds = listsToMerge.map((l) => l.id).join(',');
+    try {
+      const { data } = await axios.post('/lists/merge_lists', {
+        merge_lists: { list_ids: listIds, new_list_name: mergeName },
+      });
+      const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
+      const updatedIncompleteLists = update(incompleteLists, { $push: [data] });
+      setCurrentUserPermissions(updatedCurrentUserPermissions);
+      setIncompleteLists(sortLists(updatedIncompleteLists));
+      resetMultiSelect();
+      setListsToMerge([]);
+      setMergeName('');
+      setPending(false);
+      showToast.info('Lists successfully merged.');
+    } catch (err) {
+      failure(err, navigate, setPending);
+    }
+  };
+
+  const handleCompletion = (listId: string): void => {
+    const selected = getSelectedLists();
+    const listsToComplete = selected.length > 0 ? selected : findListById(listId);
+    const ownedLists = listsToComplete.filter((l) => props.userId === l.owner_id && !l.completed);
+    const ownedListIds = ownedLists.map((l) => l.id);
+    const updateRequests = ownedLists.map((l) => axios.put(`/lists/${l.id}`, { list: { completed: true } }));
+
+    setPending(true);
+    Promise.all(updateRequests)
+      .then(() => {
+        const updatedIncompleteLists = incompleteLists.filter((l) => !ownedListIds.includes(l.id));
+        setIncompleteLists(sortLists(updatedIncompleteLists));
+        let updatedCompletedLists = completedLists;
+        ownedLists.forEach((l) => {
+          l.completed = true;
+          updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+        });
+        setCompletedLists(sortLists(updatedCompletedLists));
+        resetMultiSelect();
+        setPending(false);
+        showToast.info(`${pluralize(ownedLists.length)} successfully completed.`);
+      })
+      .catch((error) => {
+        failure(error, navigate, setPending);
+      });
+  };
+
+  const handleRefresh = (listId: string): void => {
+    const selected = getSelectedLists();
+    const listsToRefresh = selected.length > 0 ? selected : findListById(listId);
+    const ownedLists = listsToRefresh.filter((l) => props.userId === l.owner_id);
+    ownedLists.forEach((l) => {
+      l.refreshed = true;
+    });
+    const refreshRequests = ownedLists.map((l) => axios.post(`/lists/${l.id}/refresh_list`, {}));
+
+    setPending(true);
+    Promise.all(refreshRequests)
+      .then((responses) => {
+        let updatedCurrentUserPermissions = currentUserPermissions;
+        let updatedIncompleteLists = incompleteLists;
+        responses.forEach((response) => {
+          updatedCurrentUserPermissions = update(updatedCurrentUserPermissions, {
+            [response.data.id]: { $set: 'write' },
+          });
+          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [response.data] });
+        });
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+        setIncompleteLists(sortLists(updatedIncompleteLists));
+        resetMultiSelect();
+        setPending(false);
+        showToast.info(`${pluralize(ownedLists.length)} successfully refreshed.`);
+      })
+      .catch((error) => {
+        failure(error, navigate, setPending);
+      });
+  };
+
+  const handleAccept = async (listId: string): Promise<void> => {
+    const selected = getSelectedLists();
+    const listsToAccept = selected.length > 0 ? selected : findListById(listId);
+    const requests = listsToAccept.map((l) =>
+      axios.patch(`/lists/${l.id}/users_lists/${l.users_list_id}`, { users_list: { has_accepted: true } }),
+    );
+
     setPending(true);
     try {
-      const { data } = await axios.post('/lists', { list });
-      // must update currentUserPermissions prior to incompleteLists
-      const updatedCurrentUserPermissions = update(currentUserPermissions, { [data.id]: { $set: 'write' } });
-      setCurrentUserPermissions(updatedCurrentUserPermissions);
-      const updatedIncompleteLists = update(incompleteLists, { $push: [data] });
+      await Promise.all(requests);
+      let updatedCompletedLists = completedLists;
+      let updatedIncompleteLists = incompleteLists;
+      let updatedPendingLists = pendingLists;
+      listsToAccept.forEach((l) => {
+        if (l.completed) {
+          updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+        } else {
+          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [l] });
+        }
+        updatedPendingLists = updatedPendingLists.filter((ll) => ll.id !== l.id);
+      });
+      setCompletedLists(sortLists(updatedCompletedLists));
       setIncompleteLists(sortLists(updatedIncompleteLists));
-      setPending(false);
-      showToast.info('List successfully added.');
+      setPendingLists(updatedPendingLists);
+      if (updatedPendingLists.length > 0) {
+        resetMultiSelect();
+        setPending(false);
+      }
+      showToast.info(`${pluralize(listsToAccept.length)} successfully accepted.`);
     } catch (error) {
       failure(error, navigate, setPending);
     }
   };
 
+  const handleReject = (listId: string): void => {
+    const selected = getSelectedLists();
+    const listsForRejection = selected.length > 0 ? selected : findListById(listId);
+    setListsToDelete(listsForRejection);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleClick = (listId: string): void => {
+    navigate(`/lists/${listId}`);
+  };
+
+  const handleShare = (listId: string): void => {
+    navigate(`/lists/${listId}/users_lists`);
+  };
+
+  const handleEdit = (listId: string): void => {
+    navigate(`/lists/${listId}/edit`);
+  };
+
+  const findListById = (listId: string): IList[] => {
+    const allLists = [...pendingLists, ...incompleteLists, ...completedLists];
+    const found = allLists.find((l) => l.id === listId);
+    return found ? [found] : [];
+  };
+
+  const getFilteredLists = (): { pending: IList[]; active: IList[]; completed: IList[] } => {
+    switch (statusFilter) {
+      case 'pending':
+        return { pending: pendingLists, active: [], completed: [] };
+      case 'active':
+        return { pending: [], active: incompleteLists, completed: [] };
+      case 'completed':
+        return { pending: [], active: [], completed: completedLists };
+      default:
+        return { pending: pendingLists, active: incompleteLists, completed: completedLists };
+    }
+  };
+
+  const filtered = getFilteredLists();
+  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
+  const templateOptions = listItemConfigurations.map((config) => ({
+    value: config.id,
+    label: config.name,
+  }));
+
+  const renderListCard = (list: IList): React.JSX.Element => (
+    <ListCard
+      key={list.id}
+      list={list}
+      userId={props.userId}
+      currentUserPermissions={currentUserPermissions}
+      isMultiSelectActive={multiSelectActive}
+      isSelected={selectedListIds.has(list.id ?? '')}
+      onSelect={handleSelect}
+      onComplete={handleCompletion}
+      onShare={handleShare}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      onRefresh={handleRefresh}
+      onAccept={handleAccept}
+      onReject={handleReject}
+      onClick={handleClick}
+    />
+  );
+
   return (
-    <React.Fragment>
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 className="mb-0">Lists</h1>
-        <Link to="/templates" data-test-id="manage-templates-link" className="btn btn-link">
-          Manage Templates
-        </Link>
-      </div>
-      <ListForm onFormSubmit={handleFormSubmit} pending={pending} configurations={listItemConfigurations} />
-      <hr className="mb-4" />
-      {pendingLists.length > 0 && ( // cannot just check length as it will render 0
-        <PendingLists
-          userId={props.userId}
-          currentUserPermissions={currentUserPermissions}
-          pendingLists={pendingLists}
-          setPendingLists={setPendingLists}
-          completedLists={completedLists}
-          setCompletedLists={setCompletedLists}
-          incompleteLists={incompleteLists}
-          setIncompleteLists={setIncompleteLists}
-        />
-      )}
-      <AcceptedLists
-        title={
-          <TitlePopover
-            title="Incomplete"
-            message="These are lists you've created or you've accepted an invitation from someone else."
-          />
-        }
-        completed={false}
-        fullList={false}
-        userId={props.userId}
-        incompleteLists={incompleteLists}
-        setIncompleteLists={setIncompleteLists}
-        completedLists={completedLists}
-        setCompletedLists={setCompletedLists}
-        currentUserPermissions={currentUserPermissions}
-        setCurrentUserPermissions={setCurrentUserPermissions}
-      />
-      <AcceptedLists
-        title={
-          <TitlePopover
-            title="Completed"
-            message={
-              <React.Fragment>
-                These are the completed lists most recently created.&nbsp;
-                <Link to="/completed_lists">See all completed lists here.</Link>&nbsp; Previously refreshed lists are
-                marked with an asterisk (*).
-              </React.Fragment>
+    <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
+      <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
+        <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
+          Lists
+        </h1>
+        <div className="tw:flex tw:items-center tw:gap-2">
+          <button
+            type="button"
+            className={
+              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
             }
+            onClick={(): void => {
+              if (multiSelectActive && selectedListIds.size > 0) {
+                setSelectedListIds(new Set());
+              }
+              setMultiSelectActive(!multiSelectActive);
+            }}
+          >
+            {multiSelectActive ? 'Hide Select' : 'Select'}
+          </button>
+          <Link
+            to="/templates"
+            data-test-id="manage-templates-link"
+            className="tw:text-sm tw:text-[var(--color-primary)]"
+          >
+            Manage Templates
+          </Link>
+        </div>
+      </div>
+
+      <FilterChipGroup className="tw:mb-4">
+        <FilterChip
+          label="All"
+          active={statusFilter === 'all'}
+          onClick={(): void => setStatusFilter('all')}
+          testId="filter-all"
+        />
+        <FilterChip
+          label="Pending"
+          active={statusFilter === 'pending'}
+          onClick={(): void => setStatusFilter('pending')}
+          testId="filter-pending"
+        />
+        <FilterChip
+          label="Active"
+          active={statusFilter === 'active'}
+          onClick={(): void => setStatusFilter('active')}
+          testId="filter-active"
+        />
+        <FilterChip
+          label="Completed"
+          active={statusFilter === 'completed'}
+          onClick={(): void => setStatusFilter('completed')}
+          testId="filter-completed"
+        />
+      </FilterChipGroup>
+
+      {multiSelectActive && selectedListIds.size > 1 && (
+        <div
+          className={
+            'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
+          }
+        >
+          <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
+            onClick={handleMerge}
+            data-test-id="multi-select-merge"
+          >
+            Merge
+          </button>
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-danger)] tw:cursor-pointer"
+            onClick={(): void => handleDelete('')}
+            data-test-id="multi-select-delete"
+          >
+            Delete
+          </button>
+        </div>
+      )}
+
+      {filtered.pending.length > 0 && (
+        <div
+          className={
+            'tw:mb-4 tw:p-3 tw:rounded-lg tw:border ' +
+            'tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10'
+          }
+          data-test-id="pending-alert"
+        >
+          You have {filtered.pending.length} {filtered.pending.length === 1 ? 'list' : 'lists'} waiting for your
+          response.
+        </div>
+      )}
+
+      <div className="tw:flex tw:flex-col tw:gap-2">
+        {filtered.pending.map(renderListCard)}
+        {filtered.active.map(renderListCard)}
+        {filtered.completed.map(renderListCard)}
+      </div>
+
+      {showCompletedLink && (
+        <div className="tw:mt-4 tw:text-center">
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
+            onClick={(): void => setStatusFilter('completed')}
+            data-test-id="show-all-completed"
+          >
+            Show all completed lists &rarr;
+          </button>
+        </div>
+      )}
+
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={(): void => setShowDeleteConfirm(false)}
+        onConfirm={(): void => {
+          void handleDeleteConfirm();
+        }}
+        title="delete"
+        body={
+          <React.Fragment>
+            <p>
+              Are you sure you want to remove the following lists? Lists you own will be deleted completely. Lists you
+              do not own will continue to exist for the owner, you will just be removed from the list of users.
+            </p>
+            <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
+          </React.Fragment>
+        }
+        confirmText="Yes, I'm sure."
+        testId="delete-confirm-dialog"
+      />
+      <MergeModal
+        showModal={showMergeModal}
+        clearModal={(): void => setShowMergeModal(false)}
+        listNames={listsToMerge.map((l) => l.name).join('", "')}
+        mergeName={mergeName}
+        handleMergeNameChange={
+          ((event: ChangeEvent<HTMLInputElement>) =>
+            setMergeName(event.target.value)) as React.ChangeEventHandler<HTMLInputElement>
+        }
+        handleMergeConfirm={(): void => {
+          void handleMergeConfirm();
+        }}
+        selectedLists={getSelectedLists()}
+      />
+
+      <BottomInputBar
+        placeholder="Create a new list..."
+        onSubmit={handleCreateList}
+        expandedContent={
+          <Select
+            label="Template"
+            options={templateOptions}
+            value={selectedTemplateId}
+            onChange={(e: ChangeEvent<HTMLSelectElement>): void => setSelectedTemplateId(e.target.value)}
+            id="list_item_configuration_id"
+            testId="list_item_configuration_id"
           />
         }
-        completed={true}
-        fullList={false}
-        userId={props.userId}
-        incompleteLists={incompleteLists}
-        setIncompleteLists={setIncompleteLists}
-        completedLists={completedLists}
-        setCompletedLists={setCompletedLists}
-        currentUserPermissions={currentUserPermissions}
-        setCurrentUserPermissions={setCurrentUserPermissions}
+        initialExpanded={false}
       />
-    </React.Fragment>
+    </div>
   );
 };
 

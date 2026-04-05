@@ -4,14 +4,21 @@ import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
 
+// Mock listPrefetch at module level
+vi.mock('utils/listPrefetch', () => ({
+  prefetchListsIdle: vi.fn(() => Promise.resolve()),
+  prefetchList: vi.fn(() => Promise.resolve()),
+  getPrefetchedList: vi.fn(() => null),
+}));
+
 import Lists from './Lists';
 import * as utils from './utils';
 
 describe('Lists', () => {
-  const renderLists = (): RenderResult =>
+  const renderLists = (initialFilter?: 'all' | 'pending' | 'active' | 'completed'): RenderResult =>
     render(
       <MemoryRouter>
-        <Lists />
+        <Lists initialFilter={initialFilter} />
       </MemoryRouter>,
     );
 
@@ -96,7 +103,6 @@ describe('Lists', () => {
         current_list_permissions: {
           id1: 'write',
           id2: 'write',
-          id3: 'write',
         },
         list_item_configurations: [
           { id: 'config-1', name: 'grocery list template' },
