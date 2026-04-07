@@ -44,6 +44,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
   const [listsToDelete, setListsToDelete] = useState<IList[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [listsToReject, setListsToReject] = useState<IList[]>([]);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [listsToMerge, setListsToMerge] = useState<IList[]>([]);
   const [mergeName, setMergeName] = useState('');
@@ -159,12 +161,13 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = async (): Promise<void> => {
+  const handleDeleteConfirm = async (listToDelete?: IList[]): Promise<void> => {
+    const listIds = listToDelete || listsToDelete;
     setShowDeleteConfirm(false);
     setPending(true);
 
     try {
-      const requests = listsToDelete.map(async (list) => {
+      const requests = listIds.map(async (list) => {
         if (props.userId === list.owner_id) {
           await axios.delete(`/lists/${list.id}`);
         } else {
@@ -176,14 +179,15 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
       await Promise.all(requests);
 
-      const deletedIds = listsToDelete.map((l) => l.id);
+      const deletedIds = listIds.map((l) => l.id);
       setIncompleteLists((prev) => sortLists(prev.filter((l) => !deletedIds.includes(l.id))));
       setCompletedLists((prev) => sortLists(prev.filter((l) => !deletedIds.includes(l.id))));
+      setPendingLists((prev) => sortLists(prev.filter((l) => !deletedIds.includes(l.id))));
 
       resetMultiSelect();
       setListsToDelete([]);
       setPending(false);
-      showToast.info(`${pluralize(listsToDelete.length)} successfully deleted.`);
+      showToast.info(`${pluralize(listIds.length)} successfully deleted.`);
     } catch (error: unknown) {
       failure(error, navigate, setPending);
     }
@@ -290,21 +294,27 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       let updatedCompletedLists = completedLists;
       let updatedIncompleteLists = incompleteLists;
       let updatedPendingLists = pendingLists;
+      const updatedPermissions = { ...currentUserPermissions };
       listsToAccept.forEach((l) => {
+        // Update the list to mark it as accepted
+        const acceptedList = { ...l, has_accepted: true };
         if (l.completed) {
-          updatedCompletedLists = update(updatedCompletedLists, { $push: [l] });
+          updatedCompletedLists = update(updatedCompletedLists, { $push: [acceptedList] });
         } else {
-          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [l] });
+          updatedIncompleteLists = update(updatedIncompleteLists, { $push: [acceptedList] });
         }
         updatedPendingLists = updatedPendingLists.filter((ll) => ll.id !== l.id);
+        // Update permissions so the list no longer renders as pending
+        if (l.id) {
+          updatedPermissions[l.id] = 'write';
+        }
       });
       setCompletedLists(sortLists(updatedCompletedLists));
       setIncompleteLists(sortLists(updatedIncompleteLists));
       setPendingLists(updatedPendingLists);
-      if (updatedPendingLists.length > 0) {
-        resetMultiSelect();
-        setPending(false);
-      }
+      setCurrentUserPermissions(updatedPermissions);
+      resetMultiSelect();
+      setPending(false);
       showToast.info(`${pluralize(listsToAccept.length)} successfully accepted.`);
     } catch (error) {
       failure(error, navigate, setPending);
@@ -314,8 +324,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const handleReject = (listId: string): void => {
     const selected = getSelectedLists();
     const listsForRejection = selected.length > 0 ? selected : findListById(listId);
-    setListsToDelete(listsForRejection);
-    setShowDeleteConfirm(true);
+    setListsToReject(listsForRejection);
+    setShowRejectConfirm(true);
   };
 
   const handleClick = (listId: string): void => {
@@ -511,6 +521,23 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         }
         confirmText="Yes, I'm sure."
         testId="delete-confirm-dialog"
+      />
+      <ConfirmDialog
+        isOpen={showRejectConfirm}
+        onClose={(): void => setShowRejectConfirm(false)}
+        onConfirm={(): void => {
+          setShowRejectConfirm(false);
+          void handleDeleteConfirm(listsToReject);
+        }}
+        title="reject"
+        body={
+          <React.Fragment>
+            <p>Are you sure you want to reject the following lists?</p>
+            <p>{listsToReject.map((list) => list.name).join(', ')}</p>
+          </React.Fragment>
+        }
+        confirmText="Yes, I'm sure."
+        testId="reject-confirm-dialog"
       />
       <MergeModal
         showModal={showMergeModal}

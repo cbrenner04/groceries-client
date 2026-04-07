@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Card } from '../ui/Card';
 import { IconButton } from '../ui/IconButton';
-import { CheckIcon, EditIcon, RedoIcon, TrashIcon, UsersIcon, CompressIcon } from '../icons';
+import { CheckIcon, EditIcon, RedoIcon, TrashIcon, UsersIcon } from '../icons';
 import type { IList, TUserPermissions } from 'typings';
 
 export interface IListCardProps {
@@ -22,12 +22,13 @@ export interface IListCardProps {
   onClick: (listId: string) => void;
 }
 
-function isPending(list: IList, permissions: TUserPermissions): boolean {
-  return list.id !== undefined && !(list.id in permissions);
+function isPending(list: IList): boolean {
+  // A list is pending if has_accepted is null/undefined (not yet accepted or rejected)
+  return list.has_accepted === null || list.has_accepted === undefined;
 }
 
-function getTestClass(list: IList, permissions: TUserPermissions): string {
-  if (isPending(list, permissions)) {
+function getTestClass(list: IList): string {
+  if (isPending(list)) {
     return 'pending-list';
   }
   return list.completed ? 'completed-list' : 'incomplete-list';
@@ -52,11 +53,10 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   } = props;
 
   const listId = list.id ?? '';
-  const pending = isPending(list, currentUserPermissions);
+  const pending = isPending(list);
   const permission = currentUserPermissions[listId];
   const isOwner = userId === list.owner_id;
-  const canShare = permission === 'write';
-  const testClass = getTestClass(list, currentUserPermissions);
+  const testClass = getTestClass(list);
 
   const handleClick = (): void => {
     if (isMultiSelectActive) {
@@ -74,21 +74,6 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   };
 
   const renderActionButtons = (): React.JSX.Element | null => {
-    if (isMultiSelectActive) {
-      return (
-        <IconButton
-          icon={<CompressIcon size="sm" />}
-          variant="primary"
-          size="sm"
-          label="Merge"
-          data-test-id="incomplete-list-merge"
-          onClick={(e): void => {
-            e.stopPropagation();
-          }}
-        />
-      );
-    }
-
     if (pending) {
       return (
         <div className="tw:flex tw:items-center tw:gap-1">
@@ -127,6 +112,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             size="sm"
             label="Refresh"
             data-test-id="complete-list-refresh"
+            disabled={!isOwner}
             onClick={(e): void => {
               e.stopPropagation();
               onRefresh(listId);
@@ -162,7 +148,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             }}
           />
         )}
-        {canShare && (
+        {permission === 'write' && (
           <IconButton
             icon={<UsersIcon size="sm" />}
             variant="primary"
@@ -231,8 +217,8 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       <div className="tw:flex-1 tw:min-w-0">
         <div className="tw:flex tw:items-center tw:gap-2">
           <span className="tw:text-base tw:font-semibold tw:truncate" data-test-id="list-name">
-            {list.refreshed && <span aria-label="Refreshed">* </span>}
             {list.name}
+            {list.refreshed && '*'}
           </span>
         </div>
       </div>

@@ -85,6 +85,7 @@ export function createList(
     completed: false,
     owner_id: 'id1',
     refreshed: false,
+    has_accepted: false,
     ...overrides,
   };
 }

@@ -57,6 +57,7 @@ describe('CompletedLists', () => {
               completed: true,
               refreshed: false,
               owner_id: 'id1',
+              has_accepted: true,
             },
           ],
           not_completed_lists: [

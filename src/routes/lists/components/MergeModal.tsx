@@ -19,11 +19,23 @@ const MergeModal: React.FC<IMergeModalProps> = (props): React.JSX.Element => {
   const selectedLists = props.selectedLists ?? [];
   const configurationIds = [...new Set(selectedLists.map((list) => list.list_item_configuration_id))];
   const hasMultipleConfigurations = configurationIds.length > 1;
-  const primaryConfigurationId = configurationIds[0];
-  const listsOfPrimaryConfiguration = selectedLists.filter(
-    (list) => list.list_item_configuration_id === primaryConfigurationId,
-  );
-  const excludedLists = selectedLists.filter((list) => list.list_item_configuration_id !== primaryConfigurationId);
+
+  // Find the configuration that appears most frequently - that's the primary one to merge
+  let primaryConfigurationId: string | undefined;
+  if (configurationIds.length > 0) {
+    const configurationCounts = configurationIds.map((configId) => ({
+      configId,
+      count: selectedLists.filter((list) => list.list_item_configuration_id === configId).length,
+    }));
+    primaryConfigurationId = configurationCounts.reduce((max, curr) => (curr.count > max.count ? curr : max)).configId;
+  }
+
+  const listsOfPrimaryConfiguration = primaryConfigurationId
+    ? selectedLists.filter((list) => list.list_item_configuration_id === primaryConfigurationId)
+    : [];
+  const excludedLists = primaryConfigurationId
+    ? selectedLists.filter((list) => list.list_item_configuration_id !== primaryConfigurationId)
+    : [];
 
   return (
     <BottomSheet

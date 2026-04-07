@@ -71,6 +71,7 @@ describe('Lists', () => {
               completed: true,
               refreshed: false,
               owner_id: 'id1',
+              has_accepted: true,
             },
           ],
           not_completed_lists: [
@@ -82,6 +83,7 @@ describe('Lists', () => {
               list_item_configuration_id: 'config-2',
               created_at: new Date('05/31/2020').toISOString(),
               completed: false,
+              has_accepted: true,
               refreshed: false,
               owner_id: 'id1',
             },
@@ -98,6 +100,7 @@ describe('Lists', () => {
             completed: false,
             refreshed: false,
             owner_id: 'id2',
+            has_accepted: null,
           },
         ],
         current_list_permissions: {

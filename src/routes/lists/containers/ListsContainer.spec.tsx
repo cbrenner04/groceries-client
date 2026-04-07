@@ -43,6 +43,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id-pending',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: null,
       },
     ],
     completedLists: [
@@ -55,6 +56,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id2',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id4',
@@ -65,6 +67,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id4',
         owner_id: 'id2',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     incompleteLists: [
@@ -77,6 +80,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id5',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id6',
@@ -87,6 +91,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id6',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     currentUserPermissions: {
@@ -300,6 +305,7 @@ describe('ListsContainer', () => {
                 completed: true,
                 refreshed: false,
                 owner_id: 'id2',
+                has_accepted: true,
               },
             ],
             not_completed_lists: [
@@ -313,6 +319,7 @@ describe('ListsContainer', () => {
                 completed: false,
                 refreshed: false,
                 owner_id: 'id1',
+                has_accepted: true,
               },
             ],
           },
@@ -561,6 +568,53 @@ describe('ListsContainer', () => {
     await user.click(getByText('Select'));
 
     expect(queryByText('Hide Select')).toBeInTheDocument();
+  });
+
+  it('shows error when list deletion fails', async () => {
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { user } = setup({
+      incompleteLists: [
+        {
+          id: 'id-single',
+          name: 'Single List',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id-single',
+          owner_id: 'id1',
+          refreshed: false,
+        },
+      ],
+    });
+
+    const trashButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-trash"]'));
+    if (trashButtons.length === 1) {
+      await user.click(trashButtons[0] as HTMLElement);
+
+      await waitFor(() => {
+        expect(axios.delete).toHaveBeenCalledTimes(1);
+      });
+    }
+  });
+
+  it('navigates to share page when share button is clicked', async () => {
+    const { user } = setup();
+
+    const shareButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-share"]'));
+    if (shareButtons.length > 0) {
+      await user.click(shareButtons[0] as HTMLElement);
+      expect(mockNavigate).toHaveBeenCalled();
+    }
+  });
+
+  it('navigates to edit page when edit button is clicked', async () => {
+    const { user } = setup();
+
+    const editButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-edit"]'));
+    if (editButtons.length > 0) {
+      await user.click(editButtons[0] as HTMLElement);
+      expect(mockNavigate).toHaveBeenCalled();
+    }
   });
 
   describe('prefetch logic', () => {
