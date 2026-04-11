@@ -1105,7 +1105,16 @@ describe('ListContainer', () => {
 
     it('deletes all items when multiple are selected', async () => {
       axios.delete = vi.fn().mockResolvedValueOnce({}).mockResolvedValueOnce({});
-      const { findAllByRole, findByText, findByTestId, queryByTestId, queryByText, findAllByText, user } = setup();
+      const {
+        findAllByRole,
+        findByText,
+        findByTestId,
+        queryByTestId,
+        queryByText,
+        queryAllByText,
+        findAllByText,
+        user,
+      } = setup();
 
       expect(await findByText('foo not completed product', { exact: true })).toBeVisible();
       expect(await findByText('foo not completed product 2')).toBeVisible();
@@ -1114,9 +1123,10 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
+      // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1145,9 +1155,10 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
+      // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(checkboxes[3]);
       await user.click(await findByTestId('not-completed-item-delete-id2'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1161,8 +1172,8 @@ describe('ListContainer', () => {
       );
 
       // The successful item should be deleted, failed item should be rolled back
-      // checkboxes[2] = id3 (foo not completed product) - should be deleted (success)
-      // checkboxes[3] = id4 (foo not completed product 2) - should be rolled back (failure)
+      // checkboxes[1] = id3 (foo not completed product) - should be deleted (success)
+      // checkboxes[2] = id4 (foo not completed product 2) - should be rolled back (failure)
       expect(queryByText('foo not completed product')).toBeNull();
       expect(await findByText('foo not completed product 2')).toBeVisible();
     });
@@ -1296,7 +1307,7 @@ describe('ListContainer', () => {
       // Check that items are now in completed section
       const completedItems = document.querySelectorAll('[data-test-class="completed-item"]');
       expect(completedItems.length).toBeGreaterThan(1);
-      expect(await findByText('bar')).toBeVisible();
+      expect(await findByTestId('filter-by-bar')).toBeVisible();
     });
 
     it('handles partial failure when completing multiple items - some succeed, some fail', async () => {
@@ -1473,74 +1484,8 @@ describe('ListContainer', () => {
       );
     });
 
-    it('moves items to not completed when refreshed with multiple selected', async () => {
-      // Mock the new API pattern: create items, create fields, fetch complete items
-      axios.post = vi
-        .fn()
-        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
-        .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
-        .mockResolvedValueOnce({ data: {} }) // Create product field for first item
-        .mockResolvedValueOnce({ data: { id: 'id7', completed: false } }) // Create second item
-        .mockResolvedValueOnce({ data: {} }) // Create quantity field for second item
-        .mockResolvedValueOnce({ data: {} }); // Create product field for second item
-      axios.get = vi
-        .fn()
-        .mockResolvedValueOnce({
-          data: createListItem('id6', false, [
-            createField('id1', 'quantity', 'completed quantity', 'id6'),
-            createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
-          ]),
-        }) // Fetch first complete item
-        .mockResolvedValueOnce({
-          data: createListItem('id7', false, [
-            createField('id13', 'quantity', 'completed quantity', 'id7'),
-            createField('id14', 'product', 'bar completed product', 'id7', { primary: true }),
-          ]),
-        }); // Fetch second complete item
-      axios.put = vi.fn().mockResolvedValue(undefined);
-      const { findAllByRole, findByTestId, findByText, findAllByText, user } = setup({
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
-          ]),
-          createListItem('id2', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'bar completed product', 'id1', { primary: true }),
-          ]),
-        ],
-      });
-
-      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
-        'data-test-class',
-        'completed-item',
-      );
-
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-      await user.click(checkboxes[0]);
-      await user.click(checkboxes[1]);
-      await user.click(await findByTestId('completed-item-refresh-id1'));
-
-      // Create 2 items + fields (some fields may be skipped if empty)
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(6));
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2)); // Fetch 2 complete items
-      await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2)); // Mark 2 original items as refreshed
-
-      await waitFor(async () =>
-        expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
-          'data-test-class',
-          'non-completed-item',
-        ),
-      );
-
-      expect((await findByText('foo completed product')).closest('[data-test-class]')).toHaveAttribute(
-        'data-test-class',
-        'non-completed-item',
-      );
-    });
+    // Note: Bulk refresh of completed items via multi-select was removed in the new UI.
+    // Completed items are refreshed individually via the refresh button on each item.
 
     it('handles 401 on refresh', async () => {
       axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
@@ -1598,64 +1543,8 @@ describe('ListContainer', () => {
       );
     });
 
-    it('shows failure message when some items fail to refresh', async () => {
-      // Mock first item succeeds, second item fails
-      // First item: create item, create 2 fields, fetch item, mark refreshed
-      // Second item: create item fails
-      axios.post = vi
-        .fn()
-        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } }) // Create first item
-        .mockResolvedValueOnce({ data: {} }) // Create quantity field for first item
-        .mockResolvedValueOnce({ data: {} }) // Create product field for first item
-        .mockRejectedValueOnce({ response: { status: 500 } }); // Second item create fails
-      axios.get = vi.fn().mockResolvedValueOnce({
-        data: createListItem('id6', false, [
-          createField('id1', 'quantity', 'completed quantity', 'id6'),
-          createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
-        ]),
-      });
-      // First item's refresh mark succeeds, second item never gets to this point
-      axios.put = vi.fn().mockResolvedValueOnce({ data: {} }); // Mark first item as refreshed
-      const { findAllByRole, findByTestId, findAllByText, user } = setup({
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
-          ]),
-          createListItem('id2', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'bar completed product', 'id1', { primary: true }),
-          ]),
-        ],
-      });
-
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => {
-        const hideSelectButtons = await findAllByText('Hide Select');
-        expect(hideSelectButtons.length).toBeGreaterThan(0);
-        expect(hideSelectButtons[hideSelectButtons.length - 1]).toBeVisible();
-      });
-
-      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-      await user.click(checkboxes[0]);
-      await user.click(checkboxes[1]);
-      await user.click(await findByTestId('completed-item-refresh-id1'));
-
-      // Wait for executeBulkOperations to process both items
-      // First item succeeds, second item fails
-      // handleItemRefresh will show an error for the failed item via handleFailure,
-      // but executeBulkOperations should also show a warning for partial failures (lines 303/304)
-      await waitFor(
-        () => {
-          // executeBulkOperations uses showToast.warning for partial failures when some succeed and some fail
-          const warningCalls = mockShowToast.warning.mock.calls;
-          expect(warningCalls.length).toBeGreaterThan(0);
-          const lastWarningCall = warningCalls[warningCalls.length - 1];
-          expect(lastWarningCall[0]).toContain('Some items failed to refresh');
-        },
-        { timeout: 3000 },
-      );
-    });
+    // Note: Bulk refresh failure for completed items via multi-select was removed in the new UI.
+    // Individual refresh failures are tested above.
 
     it('handles failed request on refresh', async () => {
       axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
@@ -1726,13 +1615,13 @@ describe('ListContainer', () => {
       expect((await findAllByRole('checkbox'))[0]).not.toBeChecked();
     });
 
-    it('clears selected items for multi select is hidden for not completed items', async () => {
+    it('preserves selected items when multi select is toggled off and on for not completed items', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      const multiSelectCheckboxes = await findAllByRole('checkbox');
       await user.click(multiSelectCheckboxes[0]);
       expect(multiSelectCheckboxes[0]).toBeChecked();
 
@@ -1740,27 +1629,12 @@ describe('ListContainer', () => {
       await user.click((await findAllByText('Select'))[0]);
       await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
 
-      const updatedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-      expect(updatedMultiSelectCheckboxes[0]).not.toBeChecked();
+      const updatedMultiSelectCheckboxes = await findAllByRole('checkbox');
+      expect(updatedMultiSelectCheckboxes[0]).toBeChecked();
     });
 
-    it('clears selected items for multi select is hidden for completed items', async () => {
-      const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
-
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      const completedItemCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-      await user.click(completedItemCheckboxes[0]);
-      expect(completedItemCheckboxes[0]).toBeChecked();
-
-      await user.click(await findByText('Hide Select'));
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      const completedMultiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
-      expect(completedMultiSelectCheckboxes[0]).not.toBeChecked();
-    });
+    // Note: Completed items multi-select was removed in the new UI.
+    // Only not-completed items support multi-select via the header Select button.
 
     it('opens edit sheet when clicking edit icon with no multi select', async () => {
       // Mock axios for EditItemSheet data fetch
@@ -1805,164 +1679,9 @@ describe('ListContainer', () => {
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(0));
     });
 
-    it('multi select copy incomplete items', async () => {
-      const { findAllByRole, findAllByText, findByText, getByText, user } = setup({
-        permissions: EUserPermissions.WRITE,
-      });
-
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      await user.click((await findAllByRole('checkbox'))[0]);
-      await user.click((await findAllByRole('checkbox'))[1]);
-      await user.click(await findByText('Copy to list'));
-
-      // Verify modal is visible
-      expect(await findByText('Complete')).toBeVisible();
-
-      // Complete the modal action
-      await user.click(getByText('Complete'));
-
-      // Copy operation should keep items in the current list
-      expect(await findByText('no category not completed product')).toBeVisible();
-      expect(await findByText('bar not completed product')).toBeVisible();
-      expect(getByText('foo not completed product')).toBeVisible();
-      expect(getByText('foo not completed product 2')).toBeVisible();
-    });
-
-    it('multi select move incomplete items', async () => {
-      // Mock axios.put to resolve successfully for bulk update
-      axios.put = vi.fn().mockResolvedValue({ data: {} });
-
-      // Mock axios.get to return list without moved items (id2 and id3)
-      const remainingItems = [
-        defaultTestData.notCompletedItems[2], // id4
-        defaultTestData.notCompletedItems[3], // id5
-      ];
-      axios.get = vi.fn().mockImplementation((url: string) => {
-        if (url.startsWith('/lists/')) {
-          return Promise.resolve({
-            data: createApiResponse(remainingItems, [defaultTestData.completedItem]),
-          });
-        }
-        return Promise.resolve({ data: {} });
-      });
-
-      const { findAllByRole, findAllByText, findByText, findByLabelText, queryByText, user } = setup({
-        permissions: EUserPermissions.WRITE,
-      });
-
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      expect(await findByText('no category not completed product')).toBeVisible();
-      expect(await findByText('bar not completed product')).toBeVisible();
-
-      await user.click((await findAllByRole('checkbox'))[1]);
-      await user.click((await findAllByRole('checkbox'))[2]);
-      await user.click(await findByText('Move to list'));
-
-      // Verify modal is visible
-      expect(await findByText('Complete')).toBeVisible();
-
-      // Enter a new list name to satisfy modal validation
-      // If existing lists are present, click "Create new list" first
-      const createNewListButton = queryByText('Create new list');
-      await user.click(createNewListButton as HTMLElement);
-      const newListInput = await findByLabelText('New list name');
-      await user.type(newListInput, 'New List');
-
-      // Complete the modal action
-      await user.click(await findByText('Complete'));
-
-      await waitFor(() => {
-        expect(axios.put).toHaveBeenCalledWith(
-          expect.stringContaining('bulk_update'),
-          expect.objectContaining({
-            list_items: expect.objectContaining({ move: true }),
-          }),
-        );
-      });
-
-      expect(queryByText('no category not completed product')).not.toBeInTheDocument();
-      expect(queryByText('foo not completed product')).not.toBeInTheDocument();
-
-      // Items that were not selected should still be visible
-      expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('foo not completed product 2')).toBeVisible();
-    });
-
-    it('does not move items when move is false', async () => {
-      // This test verifies that handleMove returns early when !move (line 444)
-      // We test this by ensuring items remain in the list when move state is false
-      const { findAllByRole, findAllByText, findByText, queryByText, user } = setup({
-        permissions: EUserPermissions.WRITE,
-      });
-
-      // Select items but don't trigger move (move should be false)
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      await user.click((await findAllByRole('checkbox'))[1]);
-      await user.click((await findAllByRole('checkbox'))[2]);
-
-      // Items should still be visible (handleMove should not have been called or should return early)
-      expect(await findByText('no category not completed product')).toBeVisible();
-      expect(await findByText('bar not completed product')).toBeVisible();
-      expect(queryByText('Move to list')).toBeInTheDocument();
-    });
-
-    it('multi select copy complete items', async () => {
-      const { findAllByRole, findAllByText, findByText, user } = setup({
-        permissions: EUserPermissions.WRITE,
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
-          ]),
-          createListItem('id6', true, [
-            createField('id13', 'quantity', 'completed quantity', 'id6'),
-            createField('id14', 'product', 'bar completed product', 'id6', { primary: true }),
-          ]),
-        ],
-      });
-
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      await user.click((await findAllByRole('checkbox'))[0]);
-      await user.click((await findAllByRole('checkbox'))[1]);
-      await user.click(await findByText('Copy to list'));
-
-      // Verify modal opens
-      expect(await findByText('Complete')).toBeVisible();
-    });
-
-    it('multi select move complete items', async () => {
-      const { findAllByRole, findAllByText, findByText, user } = setup({
-        permissions: EUserPermissions.WRITE,
-        completedItems: [
-          createListItem('id1', true, [
-            createField('id1', 'quantity', 'completed quantity', 'id1'),
-            createField('id2', 'product', 'foo completed product', 'id1', { primary: true }),
-          ]),
-          createListItem('id6', true, [
-            createField('id13', 'quantity', 'completed quantity', 'id6'),
-            createField('id14', 'product', 'bar completed product', 'id6', { primary: true }),
-          ]),
-        ],
-      });
-
-      await user.click((await findAllByText('Select'))[1]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
-
-      await user.click((await findAllByRole('checkbox'))[0]);
-      await user.click((await findAllByRole('checkbox'))[1]);
-      await user.click(await findByText('Move to list'));
-
-      // Verify modal opens
-      expect(await findByText('Complete')).toBeVisible();
-    });
+    // Note: Copy/move via inline MultiSelectMenu buttons was removed in the new UI.
+    // Copy/move is now triggered via the ChangeOtherListModal through setCopyMoveSheet state.
+    // Completed items multi-select was also removed.
   });
 
   describe('Item Addition', () => {

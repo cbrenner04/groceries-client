@@ -564,7 +564,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       axios
         .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
         .then((response) => {
-          setQuickAddFieldConfigs(response.data);
+          // Only set if response is an array
+          if (Array.isArray(response.data)) {
+            setQuickAddFieldConfigs(response.data);
+          }
         })
         .catch(() => {
           // Silently fail - form just won't show fields
@@ -732,7 +735,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 placeholder="Add an item..."
                 onSubmit={handleQuickAdd}
                 initialExpanded={inputBarExpanded}
-                expandedContent={null}
+                expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
               />
               <button
