@@ -85,11 +85,22 @@ const renderEditListItem = (): ReturnType<typeof render> => {
 };
 
 // Mock axios.get to handle different URLs
-const setupApiMock = (listData: typeof mockListData, itemData?: typeof mockListData): void => {
+const setupApiMock = (listData: typeof mockListData): void => {
   axios.get = vi.fn().mockImplementation((url: string) => {
     if (url.includes('/list_items/456/edit')) {
       // EditItemSheet requests item-specific data
-      return Promise.resolve({ data: itemData || listData });
+      // Extract the item from the list data
+      const item = listData.not_completed_items.find((i) => i.id === '456') || listData.not_completed_items[0];
+      return Promise.resolve({
+        data: {
+          list: listData.list,
+          item: item,
+          list_users: listData.list_users,
+          list_item_configuration: listData.list_item_configuration,
+          list_item_field_configurations: listData.list_item_field_configurations,
+          categories: listData.categories,
+        },
+      });
     }
     // EditListItem requests list data
     return Promise.resolve({ data: listData });
