@@ -1125,10 +1125,11 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect((queryByText('foo') || [])).toBeFalsy();
+      // After deleting all 'foo' items, they should be gone but 'foo' may still appear in title/filters
       expect(queryByText('foo not completed product', { exact: true })).toBeNull();
       expect(queryByText('foo not completed product 2')).toBeNull();
       expect(await findByText('bar not completed product')).toBeVisible();
+      // Verify 'bar' category still exists (in button, header, or count)
       expect((queryAllByText('bar') || []).length).toBeGreaterThan(0);
     });
 
