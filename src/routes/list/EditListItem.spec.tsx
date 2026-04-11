@@ -84,6 +84,18 @@ const renderEditListItem = (): ReturnType<typeof render> => {
   );
 };
 
+// Mock axios.get to handle different URLs
+const setupApiMock = (listData: typeof mockListData, itemData?: typeof mockListData): void => {
+  axios.get = vi.fn().mockImplementation((url: string) => {
+    if (url.includes('/list_items/456/edit')) {
+      // EditItemSheet requests item-specific data
+      return Promise.resolve({ data: itemData || listData });
+    }
+    // EditListItem requests list data
+    return Promise.resolve({ data: listData });
+  });
+};
+
 describe('EditListItem', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -102,7 +114,7 @@ describe('EditListItem', () => {
   });
 
   it('renders edit form when fetch succeeds', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
+    setupApiMock(mockListData);
     await act(async () => {
       renderEditListItem();
     });
@@ -119,7 +131,7 @@ describe('EditListItem', () => {
   });
 
   it('calls the correct API endpoint with list_id and id parameters', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
+    setupApiMock(mockListData);
     await act(async () => {
       renderEditListItem();
     });
@@ -128,7 +140,7 @@ describe('EditListItem', () => {
   });
 
   it('renders form with correct props when data is fetched successfully', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
+    setupApiMock(mockListData);
     await act(async () => {
       renderEditListItem();
     });
@@ -142,7 +154,7 @@ describe('EditListItem', () => {
       list: createList('123', 'Book List', 'config-book'),
     };
 
-    axios.get = vi.fn().mockResolvedValue({ data: bookListData });
+    setupApiMock(bookListData);
     await act(async () => {
       renderEditListItem();
     });
@@ -156,7 +168,7 @@ describe('EditListItem', () => {
       not_completed_items: [createListItem('456', false, [])],
     };
 
-    axios.get = vi.fn().mockResolvedValue({ data: emptyItemData });
+    setupApiMock(emptyItemData);
     await act(async () => {
       renderEditListItem();
     });
