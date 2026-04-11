@@ -18,6 +18,9 @@ export interface IEditListItemFormProps {
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   categories?: string[];
+  onSubmit?: () => void;
+  onCancel?: () => void;
+  isBottomSheet?: boolean;
 }
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
@@ -109,17 +112,27 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         }),
       );
       showToast.info('Item successfully updated');
-      // TODO: why aren't we using navigate?
-      window.location.href = `/lists/${props.list.id}`;
+      if (props.isBottomSheet && props.onSubmit) {
+        props.onSubmit();
+      } else {
+        // TODO: why aren't we using navigate?
+        window.location.href = `/lists/${props.list.id}`;
+      }
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
           showToast.error('You must sign in');
-          window.location.href = '/users/sign_in';
+          if (!props.isBottomSheet) {
+            window.location.href = '/users/sign_in';
+          }
         } else if ([403, 404].includes(error.response.status)) {
           showToast.error('Item not found');
-          window.location.href = `/lists/${props.list.id}`;
+          if (props.isBottomSheet && props.onCancel) {
+            props.onCancel();
+          } else {
+            window.location.href = `/lists/${props.list.id}`;
+          }
         } else {
           const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
@@ -152,7 +165,11 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         <FormSubmission
           submitText="Update Item"
           cancelAction={(): void => {
-            window.location.href = `/lists/${props.list.id}`;
+            if (props.isBottomSheet && props.onCancel) {
+              props.onCancel();
+            } else {
+              window.location.href = `/lists/${props.list.id}`;
+            }
           }}
           cancelText="Cancel"
         />
