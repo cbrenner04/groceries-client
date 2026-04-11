@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
+import { PageLayout } from 'components/layout/PageLayout';
+import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
+import { BottomInputBar } from 'components/layout/BottomInputBar';
 import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
 import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
+import axios from 'utils/api';
 
-import ListItemForm from '../components/ListItemForm';
-import CategoryFilter from '../components/CategoryFilter';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
@@ -61,6 +63,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [copy, setCopy] = useState(false);
   const [move, setMove] = useState(false);
+  const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
+  const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
   const navigate = useNavigate();
 
   // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
@@ -208,6 +212,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setNotCompletedItems(updatedNotCompletedItems);
       setCompletedItems(updatedCompletedItems);
+      setInputBarExpanded(false);
 
       // Clear selections
       setSelectedItems([]);
@@ -472,16 +477,102 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 
-  // Category filter handlers
-  const handleCategoryFilter = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
-    setFilter(event.target.name);
-    setDisplayedCategories([event.target.name]);
-  }, []);
+  const handleQuickAdd = async (value: string): Promise<void> => {
+    if (!props.listItemConfiguration?.id) {
+      showToast.error('No field configuration available for this list. Please contact support.');
+      return;
+    }
 
-  const handleClearFilter = useCallback((): void => {
-    setFilter('');
-    setDisplayedCategories(includedCategories);
-  }, [includedCategories]);
+    try {
+      setPending(true);
+
+      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
+        list_item: {
+          user_id: props.userId,
+          completed: false,
+        },
+      });
+
+      const { data: fieldConfigurations } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+
+      const primaryFieldConfig = fieldConfigurations.find((config: { primary: boolean }) => config.primary === true);
+
+      if (primaryFieldConfig) {
+        const fieldPayload = { list_item_field: { data: value } };
+        await axios.post(`/list_items/${newItem.id}/list_item_fields`, fieldPayload);
+      }
+
+      const itemWithFields = { ...newItem, list_item_fields: [{ label: primaryFieldConfig?.label, data: value }] };
+
+      handleAddItem([itemWithFields]);
+      setInputBarExpanded(true);
+      setPending(false);
+    } catch {
+      showToast.error('Failed to add item');
+      setPending(false);
+    }
+  };
+
+  const permissionsDict: Record<string, 'read' | 'write'> = {
+    [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
+  };
+
+  const renderFilterChips = (): React.JSX.Element => {
+    const allCategories = includedCategories.filter(
+      (c) => c !== 'uncategorized' && c !== '' && notCompletedItems.some((item) => item.category === c),
+    );
+
+    const hasUncategorized = notCompletedItems.some((item) => !item.category);
+
+    return (
+      <FilterChipGroup className="tw:py-2">
+        <FilterChip
+          label="All"
+          active={filter === ''}
+          onClick={() => {
+            setFilter('');
+            setDisplayedCategories(includedCategories);
+          }}
+          testId="clear-filter"
+        />
+        {allCategories.map((category) => (
+          <FilterChip
+            key={category}
+            label={category}
+            active={filter === category}
+            onClick={() => {
+              if (filter === category) {
+                setFilter('');
+                setDisplayedCategories(includedCategories);
+              } else {
+                setFilter(category);
+                setDisplayedCategories([category]);
+              }
+            }}
+            testId={`filter-by-${category.toLowerCase()}`}
+          />
+        ))}
+        {hasUncategorized && (
+          <FilterChip
+            label="Other"
+            active={filter === 'uncategorized'}
+            onClick={() => {
+              if (filter === 'uncategorized') {
+                setFilter('');
+                setDisplayedCategories(includedCategories);
+              } else {
+                setFilter('uncategorized');
+                setDisplayedCategories(['uncategorized']);
+              }
+            }}
+            testId="filter-by-uncategorized"
+          />
+        )}
+      </FilterChipGroup>
+    );
+  };
 
   return (
     <React.Fragment>
@@ -500,72 +591,77 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleMove={handleMove}
         />
       )}
-      <Link to="/lists" className="float-end">
-        Back to lists
-      </Link>
-      <h1>{props.list.name}</h1>
-      <br />
-      {props.permissions === EUserPermissions.WRITE ? (
-        <ListItemForm
-          listId={props.list.id ?? ''}
-          listUsers={props.listUsers}
-          userId={props.userId}
-          handleItemAddition={handleAddItem}
-          categories={props.categories}
-          navigate={navigate}
-          listItemConfiguration={props.listItemConfiguration}
-          preloadedFieldConfigurations={props.listItemFieldConfigurations}
+      <PageLayout
+        showBackButton
+        backTo="/lists"
+        title={props.list.name}
+        headerRight={
+          props.permissions === EUserPermissions.WRITE ? (
+            <button
+              type="button"
+              className={
+                'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+                'tw:text-white tw:text-sm tw:font-medium'
+              }
+              onClick={() => setIncompleteMultiSelect(!incompleteMultiSelect)}
+              data-test-id="select-button"
+            >
+              Select
+            </button>
+          ) : null
+        }
+        bottomBar={
+          props.permissions === EUserPermissions.WRITE ? (
+            <BottomInputBar
+              placeholder="Add an item..."
+              onSubmit={handleQuickAdd}
+              initialExpanded={inputBarExpanded}
+              expandedContent={null}
+            />
+          ) : undefined
+        }
+      >
+        {renderFilterChips()}
+        <NotCompletedItemsSection
+          notCompletedItems={notCompletedItems}
+          permissions={props.permissions}
+          permissionsDict={permissionsDict}
+          selectedItems={selectedItems}
+          pending={pending}
+          filter={filter}
+          displayedCategories={displayedCategories}
+          incompleteMultiSelect={incompleteMultiSelect}
+          setCopy={setCopy}
+          setMove={setMove}
+          setSelectedItems={setSelectedItems}
+          setIncompleteMultiSelect={setIncompleteMultiSelect}
+          handleItemSelect={handleItemSelect}
+          handleItemComplete={handleItemComplete}
+          handleItemEdit={handleItemEdit}
+          handleItemDelete={handleDelete}
+          handleItemRefresh={handleItemRefresh}
         />
-      ) : (
-        <p>You only have permission to read this list</p>
-      )}
-      <hr />
-      <div className="d-flex justify-content-between">
-        <h2>Items</h2>
-        <div>
-          <CategoryFilter
-            categories={includedCategories}
-            filter={filter}
-            handleCategoryFilter={handleCategoryFilter}
-            handleClearFilter={handleClearFilter}
-          />
-        </div>
-      </div>
-      <NotCompletedItemsSection
-        notCompletedItems={notCompletedItems}
-        permissions={props.permissions}
-        selectedItems={selectedItems}
-        pending={pending}
-        filter={filter}
-        displayedCategories={displayedCategories}
-        incompleteMultiSelect={incompleteMultiSelect}
-        setCopy={setCopy}
-        setMove={setMove}
-        setSelectedItems={setSelectedItems}
-        setIncompleteMultiSelect={setIncompleteMultiSelect}
-        handleItemSelect={handleItemSelect}
-        handleItemComplete={handleItemComplete}
-        handleItemEdit={handleItemEdit}
-        handleItemDelete={handleDelete}
-        handleItemRefresh={handleItemRefresh}
-      />
 
-      <CompletedItemsSection
-        completedItems={completedItems}
-        permissions={props.permissions}
-        selectedItems={selectedItems}
-        pending={pending}
-        completeMultiSelect={completeMultiSelect}
-        setCopy={setCopy}
-        setMove={setMove}
-        setSelectedItems={setSelectedItems}
-        setCompleteMultiSelect={setCompleteMultiSelect}
-        handleItemSelect={handleItemSelect}
-        handleItemComplete={handleItemComplete}
-        handleItemEdit={handleItemEdit}
-        handleItemDelete={handleDelete}
-        handleItemRefresh={handleItemRefresh}
-      />
+        <CompletedItemsSection
+          completedItems={completedItems}
+          permissions={props.permissions}
+          permissionsDict={permissionsDict}
+          selectedItems={selectedItems}
+          pending={pending}
+          completeMultiSelect={completeMultiSelect}
+          setCopy={setCopy}
+          setMove={setMove}
+          setSelectedItems={setSelectedItems}
+          setCompleteMultiSelect={setCompleteMultiSelect}
+          handleItemSelect={handleItemSelect}
+          handleItemComplete={handleItemComplete}
+          handleItemEdit={handleItemEdit}
+          handleItemDelete={handleDelete}
+          handleItemRefresh={handleItemRefresh}
+          completedExpanded={completedExpanded}
+          setCompletedExpanded={setCompletedExpanded}
+        />
+      </PageLayout>
       <ConfirmModal
         action="delete"
         body={deleteConfirmationModalBody()}
