@@ -151,7 +151,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
         isOpen={props.show}
         onClose={(): void => {
           if (typeof props.setShow === 'function') {
-            props.setShow(false);
+            props.setShow(null);
           }
         }}
         title={props.copy ? 'Copy to List' : 'Move to List'}

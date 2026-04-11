@@ -5,9 +5,18 @@ import { createListItem } from 'test-utils/factories';
 
 import NotCompletedItemsSection from './NotCompletedItemsSection';
 
-vi.mock('./ListItem', () => ({
+vi.mock('components/domain/ListItemRow', () => ({
   __esModule: true,
-  default: (props: { item: { id: string } }): React.JSX.Element => <div data-test-id="list-item">{props.item.id}</div>,
+  ListItemRow: (props: { item: { id: string } }): React.JSX.Element => (
+    <div data-test-id="list-item">{props.item.id}</div>
+  ),
+}));
+
+vi.mock('components/domain/CategoryGroup', () => ({
+  __esModule: true,
+  CategoryGroup: (props: { children: React.ReactNode; category: string }): React.JSX.Element => (
+    <div>{props.children}</div>
+  ),
 }));
 
 const baseProps = {

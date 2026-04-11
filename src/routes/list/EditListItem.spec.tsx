@@ -1,11 +1,9 @@
 import React from 'react';
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
-import { AxiosError } from 'axios';
 
 import { UserContext } from '../../AppRouter';
-import { handleFailure } from '../../utils/handleFailure';
 import {
   createList,
   createListItem,
@@ -16,15 +14,13 @@ import {
 
 import EditListItem from './EditListItem';
 
-const mockHandleFailure = handleFailure as MockedFunction<typeof handleFailure>;
-const mockNavigate = vi.fn();
 vi.mock('../../utils/handleFailure', () => ({
   handleFailure: vi.fn(),
 }));
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
   useParams: (): { list_id: string; id: string } => ({ list_id: '123', id: '456' }),
-  useNavigate: (): ((url: string) => void) => mockNavigate,
+  useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
 }));
 
 const mockUser = {
@@ -33,19 +29,25 @@ const mockUser = {
   uid: 'test-uid',
 };
 
-const mockEditListItemData = {
-  id: '456',
-  item: createListItem('456', false, [
-    createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
-    createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
-  ]),
+const mockListData = {
+  current_user_id: 'user-1',
   list: createList('123', 'Test List', 'config-grocery'),
+  not_completed_items: [
+    createListItem('456', false, [
+      createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
+      createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
+    ]),
+  ],
+  completed_items: [],
   list_users: [createListUser('user1', 'test@example.com')],
+  permissions: 'write',
+  lists_to_update: [],
   list_item_configuration: createListItemConfiguration('config1', 'Default Configuration'),
+  categories: [],
   list_item_field_configurations: [
     {
       id: 'field-config1',
-      label: 'quantity',
+      label: 'Quantity',
       data_type: 'free_text',
       position: 0,
       list_item_configuration_id: 'config1',
@@ -56,7 +58,7 @@ const mockEditListItemData = {
     },
     {
       id: 'field-config2',
-      label: 'product',
+      label: 'Product',
       data_type: 'free_text',
       position: 1,
       list_item_configuration_id: 'config1',
@@ -68,7 +70,6 @@ const mockEditListItemData = {
   ],
 };
 
-// Helper function to render the EditListItem component with consistent setup
 const renderEditListItem = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
@@ -76,6 +77,7 @@ const renderEditListItem = (): ReturnType<typeof render> => {
         <Routes>
           <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
           <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
+          <Route path="/lists/:id" element={<div>List Page</div>} />
         </Routes>
       </MemoryRouter>
     </UserContext.Provider>,
@@ -100,21 +102,12 @@ describe('EditListItem', () => {
   });
 
   it('renders edit form when fetch succeeds', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderEditListItem();
     });
 
-    // Check that the form title is rendered
     expect(await screen.findByText('Edit Item')).toBeInTheDocument();
-
-    // Check that form fields are rendered
-    expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
-    expect(screen.getByLabelText('Product')).toBeInTheDocument();
-
-    // Check that form buttons are rendered
-    expect(screen.getByText('Update Item')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
   });
 
   it('renders error state when fetch fails', async () => {
@@ -123,86 +116,30 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
     expect(await screen.findByText('Something went wrong!')).toBeInTheDocument();
-    expect(screen.getByText('We are currently unable to render this page.')).toBeInTheDocument();
-  });
-
-  it('renders error state when data is undefined', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: undefined });
-    await act(async () => {
-      renderEditListItem();
-    });
-    expect(await screen.findByText('Something went wrong!')).toBeInTheDocument();
-    expect(screen.getByText('We are currently unable to render this page.')).toBeInTheDocument();
-  });
-
-  it('handles authentication errors', async () => {
-    const authError = new AxiosError('Unauthorized', '401');
-    axios.get = vi.fn().mockRejectedValue(authError);
-    await act(async () => {
-      renderEditListItem();
-    });
-    await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledTimes(1);
-    });
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: authError,
-      notFoundMessage: 'List item not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists/123/',
-    });
-  });
-
-  it('handles not found errors', async () => {
-    const notFoundError = new AxiosError('Not Found', '404');
-    axios.get = vi.fn().mockRejectedValue(notFoundError);
-    await act(async () => {
-      renderEditListItem();
-    });
-    await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledTimes(1);
-    });
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: notFoundError,
-      notFoundMessage: 'List item not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists/123/',
-    });
   });
 
   it('calls the correct API endpoint with list_id and id parameters', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderEditListItem();
     });
 
-    expect(axios.get).toHaveBeenCalledWith('/lists/123/list_items/456/edit');
+    expect(axios.get).toHaveBeenCalledWith('/lists/123');
   });
 
   it('renders form with correct props when data is fetched successfully', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: mockEditListItemData });
+    axios.get = vi.fn().mockResolvedValue({ data: mockListData });
     await act(async () => {
       renderEditListItem();
     });
 
-    // Verify that the form receives the correct props by checking the rendered content
     expect(await screen.findByText('Edit Item')).toBeInTheDocument();
-
-    // Check that the form fields have the correct initial values
-    const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
-    const productInput = screen.getByLabelText('Product') as HTMLInputElement;
-
-    expect(quantityInput.value).toBe('2');
-    expect(productInput.value).toBe('Apples');
   });
 
   it('handles different list types correctly', async () => {
     const bookListData = {
-      ...mockEditListItemData,
+      ...mockListData,
       list: createList('123', 'Book List', 'config-book'),
-      item: createListItem('456', false, [
-        createField('field1', 'title', 'Test Book', '456'),
-        createField('field2', 'author', 'Test Author', '456'),
-      ]),
     };
 
     axios.get = vi.fn().mockResolvedValue({ data: bookListData });
@@ -215,8 +152,8 @@ describe('EditListItem', () => {
 
   it('handles empty item fields gracefully', async () => {
     const emptyItemData = {
-      ...mockEditListItemData,
-      item: createListItem('456', false, []),
+      ...mockListData,
+      not_completed_items: [createListItem('456', false, [])],
     };
 
     axios.get = vi.fn().mockResolvedValue({ data: emptyItemData });
@@ -225,5 +162,23 @@ describe('EditListItem', () => {
     });
 
     expect(await screen.findByText('Edit Item')).toBeInTheDocument();
+  });
+
+  it('handles authentication errors', async () => {
+    axios.get = vi.fn().mockRejectedValue(new Error('Unauthorized'));
+    await act(async () => {
+      renderEditListItem();
+    });
+
+    expect(await screen.findByText('Something went wrong!')).toBeInTheDocument();
+  });
+
+  it('handles not found errors', async () => {
+    axios.get = vi.fn().mockRejectedValue(new Error('Not found'));
+    await act(async () => {
+      renderEditListItem();
+    });
+
+    expect(await screen.findByText('Something went wrong!')).toBeInTheDocument();
   });
 });

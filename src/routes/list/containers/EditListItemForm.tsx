@@ -148,8 +148,12 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
 
   return (
     <React.Fragment>
-      <h1>Edit Item</h1>
-      <br />
+      {!props.isBottomSheet && (
+        <>
+          <h1>Edit Item</h1>
+          <br />
+        </>
+      )}
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
