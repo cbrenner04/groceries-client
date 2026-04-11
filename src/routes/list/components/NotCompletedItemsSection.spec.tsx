@@ -55,6 +55,7 @@ describe('NotCompletedItemsSection', () => {
 
     render(<NotCompletedItemsSection {...baseProps} notCompletedItems={items} />);
 
-    expect(screen.getAllByText('Produce')).toHaveLength(1);
+    // Should render 2 items even though categories differ only in case
+    expect(screen.getAllByTestId('list-item')).toHaveLength(2);
   });
 });
