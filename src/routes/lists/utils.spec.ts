@@ -1,4 +1,4 @@
-import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit } from './utils';
+import { sortLists, fetchLists, fetchCompletedLists, fetchListToEdit, failure, pluralize } from './utils';
 import axios from '../../utils/api';
 import { showToast } from '../../utils/toast';
 
@@ -355,6 +355,83 @@ describe('utils', () => {
       axios.get = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
       expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
+    });
+  });
+
+  describe('failure', () => {
+    const navigate = vi.fn();
+    const setPending = vi.fn();
+
+    it('redirects to login when 401 is returned', () => {
+      failure({ response: { status: 401 } }, navigate, setPending);
+
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      expect(navigate).toHaveBeenCalledWith('/users/sign_in');
+    });
+
+    it('shows list not found when 403 is returned', () => {
+      failure({ response: { status: 403 } }, navigate, setPending);
+
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
+    });
+
+    it('shows list not found when 404 is returned', () => {
+      failure({ response: { status: 404 } }, navigate, setPending);
+
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
+    });
+
+    it('shows validation errors from response data', () => {
+      failure(
+        {
+          response: {
+            status: 400,
+            data: { name: 'cannot be blank', description: 'is invalid' },
+          },
+        },
+        navigate,
+        setPending,
+      );
+
+      expect(setPending).toHaveBeenCalledWith(false);
+      expect(mockShowToast.error).toHaveBeenCalledWith('name cannot be blank and description is invalid');
+    });
+
+    it('shows generic error when no response data', () => {
+      failure({ response: { status: 400 } }, navigate, setPending);
+
+      expect(setPending).toHaveBeenCalledWith(false);
+      expect(mockShowToast.error).toHaveBeenCalled();
+    });
+
+    it('shows generic error when request fails', () => {
+      failure({ request: { failed: true } }, navigate, setPending);
+
+      expect(setPending).toHaveBeenCalledWith(false);
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
+    });
+
+    it('shows error message when no request or response', () => {
+      failure({ message: 'Network error' }, navigate, setPending);
+
+      expect(setPending).toHaveBeenCalledWith(false);
+      expect(mockShowToast.error).toHaveBeenCalledWith('Network error');
+    });
+  });
+
+  describe('pluralize', () => {
+    it('returns "List" when count is 1', () => {
+      expect(pluralize(1)).toBe('List');
+    });
+
+    it('returns "Lists" when count is greater than 1', () => {
+      expect(pluralize(2)).toBe('Lists');
+      expect(pluralize(5)).toBe('Lists');
+      expect(pluralize(100)).toBe('Lists');
+    });
+
+    it('returns "List" when count is 0', () => {
+      expect(pluralize(0)).toBe('List');
     });
   });
 });

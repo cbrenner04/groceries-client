@@ -29,10 +29,10 @@ function setup(suppliedProps = {}): ReturnType<typeof render> & {
 
 describe('MergeModal', () => {
   it('does not render modal when showModal is false', () => {
-    const { container, queryByTestId } = setup({ showModal: false });
+    const { queryByTestId } = setup({ showModal: false });
 
-    expect(container).toMatchInlineSnapshot('<div />');
     expect(queryByTestId('confirm-merge')).toBeNull();
+    expect(queryByTestId('bottom-sheet')).toBeNull();
   });
 
   it('renders', async () => {
@@ -59,10 +59,11 @@ describe('MergeModal', () => {
     expect(props.clearModal).toHaveBeenCalled();
   });
 
-  it('clears modal when x button is selected', async () => {
-    const { findAllByRole, props, user } = setup();
+  it('clears modal when overlay is clicked', async () => {
+    const { findByTestId, props, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    const overlay = await findByTestId('bottom-sheet');
+    await user.click(overlay);
 
     expect(props.clearModal).toHaveBeenCalled();
   });

@@ -50,14 +50,16 @@ describe('ListCard', () => {
       expect(container.querySelector('[data-test-id="list-name"]')).toBeInTheDocument();
     });
 
-    it('shows refreshed indicator when list is refreshed', async () => {
-      const { findByLabelText } = setup({ list: createList('list1', 'Test List', 'config1', { refreshed: true }) });
-      expect(await findByLabelText('Refreshed')).toBeVisible();
+    it('shows refreshed indicator when list is refreshed', () => {
+      const { container } = setup({ list: createList('list1', 'Test List', 'config1', { refreshed: true }) });
+      const listName = container.querySelector('[data-test-id="list-name"]');
+      expect(listName?.textContent).toContain('*');
     });
 
     it('does not show refreshed indicator when list is not refreshed', () => {
-      const { queryByLabelText } = setup();
-      expect(queryByLabelText('Refreshed')).not.toBeInTheDocument();
+      const { container } = setup();
+      const listName = container.querySelector('[data-test-id="list-name"]');
+      expect(listName?.textContent).not.toContain('*');
     });
   });
 
@@ -232,7 +234,7 @@ describe('ListCard', () => {
   describe('pending list', () => {
     function pendingSetup(overrides: Partial<IListCardProps> = {}): ISetupReturn {
       return setup({
-        list: createList('list1', 'Pending List'),
+        list: createList('list1', 'Pending List', 'config-1', { has_accepted: null }),
         currentUserPermissions: {},
         ...overrides,
       });
@@ -305,23 +307,11 @@ describe('ListCard', () => {
       expect(props.onSelect).toHaveBeenCalled();
     });
 
-    it('shows merge button in multi-select mode', () => {
+    it('shows regular action buttons in multi-select mode', () => {
       const { container } = setup({ isMultiSelectActive: true });
-      expect(container.querySelector('[data-test-id="incomplete-list-merge"]')).toBeInTheDocument();
-    });
-
-    it('merge button click does not trigger card click', async () => {
-      const { container, props, user } = setup({ isMultiSelectActive: true });
-      const mergeBtn = container.querySelector('[data-test-id="incomplete-list-merge"]') as HTMLElement;
-      await user.click(mergeBtn);
-      expect(props.onClick).not.toHaveBeenCalled();
-    });
-
-    it('hides regular action buttons in multi-select mode', () => {
-      const { container } = setup({ isMultiSelectActive: true });
-      expect(container.querySelector('[data-test-id="incomplete-list-complete"]')).not.toBeInTheDocument();
-      expect(container.querySelector('[data-test-id="incomplete-list-share"]')).not.toBeInTheDocument();
-      expect(container.querySelector('[data-test-id="incomplete-list-edit"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-complete"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-share"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-edit"]')).toBeInTheDocument();
     });
 
     it('applies selected visual state when isSelected is true', () => {

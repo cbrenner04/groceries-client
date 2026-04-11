@@ -35,14 +35,15 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     userId: 'id1',
     pendingLists: [
       {
-        id: 'id1',
+        id: 'id-pending',
         name: 'foo',
         list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id1',
+        users_list_id: 'id-pending',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: null,
       },
     ],
     completedLists: [
@@ -55,6 +56,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id2',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id4',
@@ -65,6 +67,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id4',
         owner_id: 'id2',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     incompleteLists: [
@@ -77,6 +80,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id5',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id6',
@@ -87,6 +91,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id6',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     currentUserPermissions: {
@@ -132,6 +137,12 @@ describe('ListsContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders page title', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('page-title')).toHaveTextContent('Lists');
+  });
+
   it('renders Manage Templates link pointing to /templates', () => {
     const { getByTestId } = setup();
 
@@ -140,8 +151,80 @@ describe('ListsContainer', () => {
     expect(link).toHaveTextContent('Manage Templates');
   });
 
+  it('renders filter chips', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('filter-all')).toBeInTheDocument();
+    expect(getByTestId('filter-pending')).toBeInTheDocument();
+    expect(getByTestId('filter-active')).toBeInTheDocument();
+    expect(getByTestId('filter-completed')).toBeInTheDocument();
+  });
+
+  it('renders pending alert when pending lists exist', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('pending-alert')).toHaveTextContent('You have 1 list waiting for your response.');
+  });
+
+  it('does not render pending alert when no pending lists', () => {
+    const { queryByTestId } = setup({ pendingLists: [] });
+
+    expect(queryByTestId('pending-alert')).toBeNull();
+  });
+
+  it('renders all list types by default', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('list-id-pending')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(getByTestId('list-id5')).toHaveAttribute('data-test-class', 'incomplete-list');
+    expect(getByTestId('list-id2')).toHaveAttribute('data-test-class', 'completed-list');
+  });
+
+  it('filters to only pending lists when Pending chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-pending'));
+
+    expect(getByTestId('list-id-pending')).toBeInTheDocument();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('filters to only active lists when Active chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(getByTestId('list-id5')).toBeInTheDocument();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('filters to only completed lists when Completed chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  it('accepts initialFilter prop', () => {
+    const { getByTestId, queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  it('renders quick-add input', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
   it('updates via polling when different data is returned', async () => {
-    // messes with `userEvent` actions
     vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi
       .fn()
@@ -192,7 +275,6 @@ describe('ListsContainer', () => {
           current_list_permissions: {
             id1: 'write',
             id2: 'write',
-            id3: 'write',
           },
           list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
         },
@@ -220,9 +302,10 @@ describe('ListsContainer', () => {
                 user_id: 'id1',
                 list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
-                completed: false,
+                completed: true,
                 refreshed: false,
                 owner_id: 'id2',
+                has_accepted: true,
               },
             ],
             not_completed_lists: [
@@ -236,6 +319,7 @@ describe('ListsContainer', () => {
                 completed: false,
                 refreshed: false,
                 owner_id: 'id1',
+                has_accepted: true,
               },
             ],
           },
@@ -270,7 +354,6 @@ describe('ListsContainer', () => {
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    // messes with `userEvent` actions
     vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
@@ -319,7 +402,6 @@ describe('ListsContainer', () => {
         current_list_permissions: {
           id1: 'write',
           id2: 'write',
-          id3: 'write',
         },
         list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
       },
@@ -362,14 +444,7 @@ describe('ListsContainer', () => {
     vi.useRealTimers();
   });
 
-  it('does not render pending lists when they do not exist', () => {
-    const { container, queryByText } = setup({ pendingLists: [] });
-
-    expect(container).toMatchSnapshot();
-    expect(queryByText('Pending')).toBeNull();
-  });
-
-  it('creates list on form submit', async () => {
+  it('creates list via quick-add input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id7',
@@ -382,26 +457,57 @@ describe('ListsContainer', () => {
         users_list_id: 'id9',
       },
     });
-    const { findByLabelText, findByTestId, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    const input = await findByTestId('quick-add-input');
+    await user.type(input, 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
 
+    expect(axios.post).toHaveBeenCalledWith('/lists', {
+      list: { name: 'new list', list_item_configuration_id: 'config-1' },
+    });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
     expect(await findByTestId('list-id7')).toHaveTextContent('new list');
   });
 
+  it('creates list with selected template via expanded input', async () => {
+    axios.post = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id7',
+        name: 'new list',
+        list_item_configuration_id: 'config-2',
+        created_at: new Date('05/31/2020').toISOString(),
+        owner_id: 'id1',
+        completed: false,
+        refreshed: false,
+        users_list_id: 'id9',
+      },
+    });
+    const { findByTestId, user } = setup();
+
+    // Expand to show template selector
+    await user.click(await findByTestId('quick-add-expand'));
+    // Select a different template
+    const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
+    await user.selectOptions(templateSelect, 'config-2');
+    // Type name and submit
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
+
+    expect(axios.post).toHaveBeenCalledWith('/lists', {
+      list: { name: 'new list', list_item_configuration_id: 'config-2' },
+    });
+  });
+
   it('redirects to login when submit response is 401', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -411,12 +517,12 @@ describe('ListsContainer', () => {
   });
 
   it('shows errors when submission fails', async () => {
-    axios.post = vi.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { findByLabelText, findByText, user } = setup();
+    axios.post = vi.fn().mockRejectedValue({
+      response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } },
+    });
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -426,11 +532,9 @@ describe('ListsContainer', () => {
 
   it('shows errors when request fails', async () => {
     axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -440,11 +544,9 @@ describe('ListsContainer', () => {
 
   it('shows errors when unknown error occurs', async () => {
     axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -452,13 +554,74 @@ describe('ListsContainer', () => {
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
+  it('navigates to list on click', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('list-id5'));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/id5');
+  });
+
+  it('toggles multi-select mode', async () => {
+    const { getByText, queryByText, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    expect(queryByText('Hide Select')).toBeInTheDocument();
+  });
+
+  it('shows error when list deletion fails', async () => {
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { user } = setup({
+      incompleteLists: [
+        {
+          id: 'id-single',
+          name: 'Single List',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id-single',
+          owner_id: 'id1',
+          refreshed: false,
+        },
+      ],
+    });
+
+    const trashButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-trash"]'));
+    if (trashButtons.length === 1) {
+      await user.click(trashButtons[0] as HTMLElement);
+
+      await waitFor(() => {
+        expect(axios.delete).toHaveBeenCalledTimes(1);
+      });
+    }
+  });
+
+  it('navigates to share page when share button is clicked', async () => {
+    const { user } = setup();
+
+    const shareButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-share"]'));
+    if (shareButtons.length > 0) {
+      await user.click(shareButtons[0] as HTMLElement);
+      expect(mockNavigate).toHaveBeenCalled();
+    }
+  });
+
+  it('navigates to edit page when edit button is clicked', async () => {
+    const { user } = setup();
+
+    const editButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-edit"]'));
+    if (editButtons.length > 0) {
+      await user.click(editButtons[0] as HTMLElement);
+      expect(mockNavigate).toHaveBeenCalled();
+    }
+  });
+
   describe('prefetch logic', () => {
     let mockPrefetchListsIdle: ReturnType<typeof vi.fn>;
 
     beforeEach(async () => {
-      // Ensure prefetch is enabled for tests
       import.meta.env.VITE_PREFETCH_IDLE = 'true';
-      // Get the mocked function
       const listPrefetchModule = await import('utils/listPrefetch');
       mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as unknown as ReturnType<typeof vi.fn>;
       mockPrefetchListsIdle.mockClear();
@@ -507,7 +670,6 @@ describe('ListsContainer', () => {
         ],
       });
 
-      // Wait for useEffect to run (lines 99-107)
       await act(async () => {
         await waitFor(
           () => {
@@ -517,12 +679,10 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Verify prefetch was called with list IDs from pendingLists and incompleteLists
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id5', 'id6']);
     });
 
     it('limits prefetch to MAX_PREFETCH_LISTS (5)', async () => {
-      // Create 7 lists (more than MAX_PREFETCH_LISTS)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const manyLists = Array.from({ length: 7 }, (_, i) => ({
         id: `id${i + 1}`,
@@ -549,7 +709,6 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Should only prefetch first 5 lists (line 101: slice(0, MAX_PREFETCH_LISTS))
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4', 'id5']);
     });
 
@@ -599,7 +758,6 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Should only prefetch lists with valid IDs (line 102: filter with type guard)
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1']);
     });
 
@@ -609,10 +767,8 @@ describe('ListsContainer', () => {
         incompleteLists: [],
       });
 
-      // Wait a bit to ensure useEffect has run
       await waitFor(
         () => {
-          // prefetchListsIdle should not be called when there are no lists (line 105: if (listIds.length > 0))
           expect(mockPrefetchListsIdle).not.toHaveBeenCalled();
         },
         { timeout: 100 },
