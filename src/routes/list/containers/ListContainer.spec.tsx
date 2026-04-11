@@ -262,7 +262,8 @@ describe('ListContainer', () => {
     it('renders filtered items without category buckets when filter exists', async () => {
       const { container, findByTestId, findByText, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
       await user.click(await findByTestId('filter-by-foo'));
 
@@ -286,7 +287,8 @@ describe('ListContainer', () => {
     it('clears filter when filter is cleared', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
       await user.click(await findByTestId('filter-by-foo'));
 
@@ -306,7 +308,8 @@ describe('ListContainer', () => {
     it('filters by uncategorized items only', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
       await user.click(await findByTestId('filter-by-uncategorized'));
 
@@ -324,7 +327,8 @@ describe('ListContainer', () => {
     it('filters by specific category only', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
       await user.click(await findByTestId('filter-by-bar'));
 
@@ -342,7 +346,8 @@ describe('ListContainer', () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
       // Apply filter
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
       await user.click(await findByTestId('filter-by-foo'));
 
@@ -412,7 +417,8 @@ describe('ListContainer', () => {
         notCompletedItems: itemsWithEmptyCategory,
       });
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
       await user.click(await findByTestId('filter-by-uncategorized'));
 
@@ -467,7 +473,8 @@ describe('ListContainer', () => {
         notCompletedItems: itemsWithoutCategoryField,
       });
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
       await user.click(await findByTestId('filter-by-uncategorized'));
 
@@ -1234,7 +1241,8 @@ describe('ListContainer', () => {
 
       const { findByText, findByTestId, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
       await user.click(await findByTestId('filter-by-bar'));
 
@@ -1768,7 +1776,10 @@ describe('ListContainer', () => {
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
       // Should open edit sheet (BottomSheet) instead of navigating
-      await waitFor(() => expect(findByRole('dialog')).toBeDefined());
+      await waitFor(async () => {
+        const dialog = await findByRole('dialog');
+        expect(dialog).toBeInTheDocument();
+      });
     });
 
     it('opens bulk edit sheet when clicking edit with multi select', async () => {
@@ -2090,7 +2101,8 @@ describe('ListContainer', () => {
 
       const { findByLabelText, findByText, findByTestId, queryByText, user } = setup();
 
-      await user.click(await findByText('Filter by category'));
+      // Click the filter chip for the specific category
+      await user.click(await findByTestId('filter-by-foo'));
       await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
       await user.click(await findByTestId('filter-by-foo'));
 
