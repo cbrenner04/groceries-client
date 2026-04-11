@@ -9,6 +9,7 @@ import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
 import {
   EUserPermissions,
+  EListItemFieldType,
   type IList,
   type IListItemConfiguration,
   type IListItemFieldConfiguration,
@@ -53,7 +54,13 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
-  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number; primary: boolean }[];
+  listItemFieldConfigurations?: {
+    id: string;
+    label: string;
+    data_type: EListItemFieldType;
+    position: number;
+    primary: boolean;
+  }[];
   initialEditingItemId?: string | null;
   initialBulkEditOpen?: boolean;
 }
@@ -541,12 +548,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return (
       <ListItemFormFields
         fieldConfigurations={configs}
-        fields={Object.entries(quickAddFormData).map(([label, data]) => ({
+        fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
           id: `form-${label}`,
           label,
           data,
           list_item_id: '',
           list_item_field_configuration_id: '',
+          archived_at: null,
+          user_id: '',
+          created_at: '',
+          updated_at: null,
+          position: index,
+          data_type: EListItemFieldType.FREE_TEXT,
         }))}
         setFormData={handleQuickAddFormChange}
         editForm={false}
@@ -789,7 +802,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               />
               <button
                 type="button"
-                className="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+                className={[
+                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40',
+                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
+                  'tw:text-white tw:text-sm tw:font-medium',
+                ].join(' ')}
                 onClick={handleQuickAddClick}
               >
                 Add

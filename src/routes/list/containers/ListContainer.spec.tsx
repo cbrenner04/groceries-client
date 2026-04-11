@@ -509,8 +509,8 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
             data: [
-              { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
-              { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+              { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
+              { id: 'config2', label: 'quantity', data_type: EListItemFieldType.FREE_TEXT, position: 0 },
             ],
           });
         }
@@ -526,8 +526,8 @@ describe('ListContainer', () => {
       const { findByLabelText, findByTestId, user } = setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
-          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
+          { id: 'config2', label: 'quantity', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
         ],
       });
 
@@ -583,7 +583,7 @@ describe('ListContainer', () => {
       setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -704,7 +704,7 @@ describe('ListContainer', () => {
       setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -768,7 +768,7 @@ describe('ListContainer', () => {
       const { container } = setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -892,7 +892,7 @@ describe('ListContainer', () => {
     it('handles form interaction correctly when no prefetch data is available', async () => {
       // Test that form works normally without prefetch data
       const mockFieldConfigs = [
-        { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+        { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
         { id: 'config2', label: 'quantity', data_type: 'number', position: 0 },
       ];
 
