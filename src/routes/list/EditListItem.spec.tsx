@@ -147,7 +147,7 @@ describe('EditListItem', () => {
       renderEditListItem();
     });
 
-    expect(axios.get).toHaveBeenCalledWith('/lists/123');
+    expect(axios.get).toHaveBeenCalledWith('/lists/123', expect.any(Object));
   });
 
   it('renders form with correct props when data is fetched successfully', async () => {

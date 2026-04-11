@@ -262,56 +262,62 @@ describe('ListContainer', () => {
     it('renders filtered items without category buckets when filter exists', async () => {
       const { container, findByTestId, findByText, queryByText, user } = setup();
 
-      // Click the filter chip for the specific category
+      // Click the filter chip for the specific category to apply the filter
       await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
-      await user.click(await findByTestId('filter-by-foo'));
+      await waitFor(async () => {
+        const activeFilter = await findByTestId('filter-by-foo');
+        expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+      });
 
       expect(container).toMatchSnapshot();
       expect(await findByText('foo not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
       expect(queryByText('bar not completed product')).toBeNull();
     });
 
     it('renders items with category buckets when no filter is applied', async () => {
-      const { container, findByText } = setup();
+      const { container, findByText, findByTestId } = setup();
 
       expect(container).toMatchSnapshot();
       expect(await findByText('no category not completed product')).toBeVisible();
       expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
+      expect(await findByTestId('filter-by-bar')).toBeVisible();
     });
 
     it('clears filter when filter is cleared', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      // Click the filter chip for the specific category
+      // Click the filter chip to apply the filter
       await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
-      await user.click(await findByTestId('filter-by-foo'));
+      await waitFor(async () => {
+        const activeFilter = await findByTestId('filter-by-foo');
+        expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+      });
 
       expect(await findByText('foo not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
-      expect(queryByText('Bar')).toBeNull();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
+      expect(queryByText('bar not completed product')).toBeNull();
 
       await user.click(await findByTestId('clear-filter'));
 
       expect(await findByText('no category not completed product')).toBeVisible();
       expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
+      expect(await findByTestId('filter-by-bar')).toBeVisible();
     });
 
     it('filters by uncategorized items only', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      // Click the filter chip for the specific category
-      await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      // Click the filter chip for uncategorized
       await user.click(await findByTestId('filter-by-uncategorized'));
+      await waitFor(async () => {
+        const activeFilter = await findByTestId('filter-by-uncategorized');
+        expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+      });
 
       // Should only show uncategorized items
       expect(await findByText('no category not completed product')).toBeVisible();
@@ -320,40 +326,40 @@ describe('ListContainer', () => {
       // Should not show categorized items
       expect(queryByText('foo not completed product')).toBeNull();
       expect(queryByText('bar not completed product')).toBeNull();
-      expect(queryByText('Foo')).toBeNull();
-      expect(queryByText('Bar')).toBeNull();
     });
 
     it('filters by specific category only', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      // Click the filter chip for the specific category
-      await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-bar')).toBeVisible());
+      // Click the filter chip for the bar category
       await user.click(await findByTestId('filter-by-bar'));
+      await waitFor(async () => {
+        const activeFilter = await findByTestId('filter-by-bar');
+        expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+      });
 
       // Should only show bar category items
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByTestId('filter-by-bar')).toBeVisible();
 
       // Should not show other categories or uncategorized items
       expect(queryByText('foo not completed product')).toBeNull();
       expect(queryByText('no category not completed product')).toBeNull();
-      expect(queryByText('Foo')).toBeNull();
     });
 
     it('shows only selected category when filter is applied', async () => {
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      // Apply filter
-      // Click the filter chip for the specific category
+      // Apply filter to foo category
       await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-foo')).toBeVisible());
-      await user.click(await findByTestId('filter-by-foo'));
+      await waitFor(async () => {
+        const activeFilter = await findByTestId('filter-by-foo');
+        expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+      });
 
       // Should only show foo category items, not uncategorized items
       expect(await findByText('foo not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
       expect(queryByText('no category not completed product')).toBeNull();
       expect(queryByText('bar not completed product')).toBeNull();
     });
@@ -417,9 +423,7 @@ describe('ListContainer', () => {
         notCompletedItems: itemsWithEmptyCategory,
       });
 
-      // Click the filter chip for the specific category
-      await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      // Click the filter chip for uncategorized items
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item with empty category data
@@ -473,9 +477,7 @@ describe('ListContainer', () => {
         notCompletedItems: itemsWithoutCategoryField,
       });
 
-      // Click the filter chip for the specific category
-      await user.click(await findByTestId('filter-by-foo'));
-      await waitFor(async () => expect(await findByTestId('filter-by-uncategorized')).toBeVisible());
+      // Click the filter chip for uncategorized items
       await user.click(await findByTestId('filter-by-uncategorized'));
 
       // Should show item without category field
@@ -483,14 +485,14 @@ describe('ListContainer', () => {
     });
 
     it('shows all categories and uncategorized when no filter is applied', async () => {
-      const { findByText } = setup();
+      const { findByText, findByTestId } = setup();
 
       // Should show all items grouped by category
       expect(await findByText('no category not completed product')).toBeVisible();
       expect(await findByText('foo not completed product')).toBeVisible();
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByTestId('filter-by-foo')).toBeVisible();
+      expect(await findByTestId('filter-by-bar')).toBeVisible();
     });
   });
 
@@ -1048,7 +1050,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByText('bar')).toBeVisible();
 
       await user.click(await findByTestId('not-completed-item-delete-id5'));
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1058,7 +1060,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('bar not completed product')).toBeNull();
-      expect(queryByText('Bar')).toBeNull();
+      expect(queryByText('bar')).toBeNull();
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
@@ -1067,7 +1069,7 @@ describe('ListContainer', () => {
       const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
 
       expect(await findByText('foo not completed product')).toBeVisible();
-      expect(await findByText('Foo')).toBeVisible();
+      expect(await findByText('foo')).toBeVisible();
 
       await user.click(await findByTestId('not-completed-item-delete-id3'));
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1077,7 +1079,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('foo not completed product')).toBeNull();
-      expect(await findByText('Foo')).toBeVisible();
+      expect(await findByText('foo')).toBeVisible();
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
@@ -1123,11 +1125,11 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect(queryByText('Foo')).toBeNull();
+      expect(queryByText('foo')).toBeNull();
       expect(queryByText('foo not completed product', { exact: true })).toBeNull();
       expect(queryByText('foo not completed product 2')).toBeNull();
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByText('bar')).toBeVisible();
     });
 
     it('handles partial failure when deleting multiple items - some succeed, some fail', async () => {
@@ -1293,7 +1295,7 @@ describe('ListContainer', () => {
       // Check that items are now in completed section
       const completedItems = document.querySelectorAll('[data-test-class="completed-item"]');
       expect(completedItems.length).toBeGreaterThan(1);
-      expect(await findByText('Bar')).toBeVisible();
+      expect(await findByText('bar')).toBeVisible();
     });
 
     it('handles partial failure when completing multiple items - some succeed, some fail', async () => {

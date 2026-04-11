@@ -37,11 +37,27 @@ describe('EditItemSheet', () => {
   it('renders form with item data when loaded', async () => {
     const itemData = {
       list: defaultTestData.list,
-      item: createListItem('item123', false, [createField('field1', 'product', 'Test Item', 'config1')]),
+      item: createListItem('item123', false, [
+        createField('field1', 'Product', 'Test Item', 'item123', {
+          list_item_field_configuration_id: 'config1',
+        }),
+      ]),
       list_users: defaultTestData.listUsers,
       list_item_configuration: defaultTestData.listItemConfiguration,
-      list_item_field_configurations: (defaultTestData.listItemConfigurations ||
-        []) as unknown as IListItemFieldConfiguration[],
+      list_item_field_configurations: [
+        {
+          id: 'config1',
+          label: 'Product',
+          data_type: 'free_text',
+          position: 0,
+          list_item_configuration_id: 'config1',
+          user_id: 'user1',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z',
+          archived_at: null,
+          primary: true,
+        },
+      ] as IListItemFieldConfiguration[],
       categories: ['Produce', 'Dairy'],
     };
 
@@ -59,11 +75,27 @@ describe('EditItemSheet', () => {
   it('calls onClose when bottom sheet is closed', async () => {
     const itemData = {
       list: defaultTestData.list,
-      item: createListItem('item123', false, [createField('field1', 'product', 'Test Item', 'config1')]),
+      item: createListItem('item123', false, [
+        createField('field1', 'Product', 'Test Item', 'item123', {
+          list_item_field_configuration_id: 'config1',
+        }),
+      ]),
       list_users: defaultTestData.listUsers,
       list_item_configuration: defaultTestData.listItemConfiguration,
-      list_item_field_configurations: (defaultTestData.listItemConfigurations ||
-        []) as unknown as IListItemFieldConfiguration[],
+      list_item_field_configurations: [
+        {
+          id: 'config1',
+          label: 'Product',
+          data_type: 'free_text',
+          position: 0,
+          list_item_configuration_id: 'config1',
+          user_id: 'user1',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z',
+          archived_at: null,
+          primary: true,
+        },
+      ] as IListItemFieldConfiguration[],
       categories: ['Produce', 'Dairy'],
     };
 
