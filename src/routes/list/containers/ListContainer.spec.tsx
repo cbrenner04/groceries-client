@@ -1751,15 +1751,27 @@ describe('ListContainer', () => {
       expect(completedMultiSelectCheckboxes[0]).not.toBeChecked();
     });
 
-    it('navigates to single edit form when no multi select', async () => {
-      const { findByTestId, props, user } = setup({ permissions: EUserPermissions.WRITE });
+    it('opens edit sheet when clicking edit icon with no multi select', async () => {
+      // Mock axios for EditItemSheet data fetch
+      axios.get = vi.fn().mockResolvedValue({
+        data: {
+          list: defaultTestData.list,
+          item: defaultTestData.notCompletedItems[0],
+          list_users: defaultTestData.listUsers,
+          list_item_configuration: defaultTestData.listItemConfiguration,
+          list_item_field_configurations: [],
+          categories: defaultTestData.categories,
+        },
+      });
+
+      const { findByTestId, findByRole, props, user } = setup({ permissions: EUserPermissions.WRITE });
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
-      await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
-      expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/id2/edit');
+      // Should open edit sheet (BottomSheet) instead of navigating
+      await waitFor(() => expect(findByRole('dialog')).toBeDefined());
     });
 
-    it('navigates to bulk edit form when multi select', async () => {
+    it('opens bulk edit sheet when clicking edit with multi select', async () => {
       const { findAllByRole, findByTestId, findAllByText, findByText, props, user } = setup({
         permissions: EUserPermissions.WRITE,
       });
@@ -1774,8 +1786,9 @@ describe('ListContainer', () => {
       await user.click(multiSelectCheckboxes[1]);
       await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
 
-      await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
-      expect(mockNavigate).toHaveBeenCalledWith('/lists/id1/list_items/bulk-edit?item_ids=id2,id3');
+      // Should open bulk edit sheet (BottomSheet) instead of navigating
+      // The sheet should be rendered with the selected items
+      await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(0));
     });
 
     it('multi select copy incomplete items', async () => {

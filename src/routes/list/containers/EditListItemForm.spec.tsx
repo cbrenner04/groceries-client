@@ -616,4 +616,59 @@ describe('EditListItemForm', () => {
       expect(screen.getByLabelText('Due_date')).toBeInTheDocument();
     });
   });
+
+  describe('Bottom Sheet Mode', () => {
+    beforeEach(() => {
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+      mockAxios.delete = vi.fn().mockResolvedValue({});
+    });
+
+    it('does not render form title when isBottomSheet is true', () => {
+      const { queryByText } = render(<EditListItemForm {...defaultProps} isBottomSheet={true} />);
+
+      // The h1 with "Edit Item" should not be rendered in bottom sheet mode
+      expect(queryByText('Edit Item')).not.toBeInTheDocument();
+    });
+
+    it('calls onSubmit callback instead of redirecting when isBottomSheet is true', async () => {
+      const mockOnSubmit = vi.fn();
+      render(<EditListItemForm {...defaultProps} isBottomSheet={true} onSubmit={mockOnSubmit} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockOnSubmit).toHaveBeenCalled();
+        expect(mockLocation.href).toBe(''); // Should not redirect
+      });
+    });
+
+    it('calls onCancel callback when cancel button is clicked in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      render(<EditListItemForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />);
+
+      const cancelButton = screen.getByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      expect(mockOnCancel).toHaveBeenCalled();
+    });
+
+    it('calls onCancel callback on 404 error in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      mockAxios.put = vi.fn().mockRejectedValueOnce({
+        response: { status: 404 },
+      });
+
+      render(<EditListItemForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+        expect(mockOnCancel).toHaveBeenCalled();
+      });
+    });
+  });
 });
