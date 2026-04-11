@@ -6,10 +6,11 @@ export interface IBottomInputBarProps {
   expandedContent?: React.ReactNode;
   initialExpanded?: boolean;
   autoCollapseOnComplete?: boolean;
+  onInputFocus?: () => void;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
-  const { onSubmit, placeholder = 'Add an item...', expandedContent, initialExpanded = false } = props;
+  const { onSubmit, placeholder = 'Add an item...', expandedContent, initialExpanded = false, onInputFocus } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
   const [value, setValue] = useState('');
@@ -68,6 +69,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          onFocus={() => {
+            setExpanded(true);
+            onInputFocus?.();
+          }}
           placeholder={placeholder}
           className={inputClassName}
           data-test-id="quick-add-input"

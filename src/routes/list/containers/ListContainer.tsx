@@ -24,6 +24,7 @@ import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
 import EditItemSheet from '../components/EditItemSheet';
 import BulkEditSheet from '../components/BulkEditSheet';
+import ListItemFormFields from '../components/ListItemFormFields';
 import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
@@ -78,6 +79,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
   const [bulkEditOpen, setBulkEditOpen] = useState(props.initialBulkEditOpen ?? false);
   const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
+
+  // Quick add form state
+  const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
+  const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
 
   const navigate = useNavigate();
 
@@ -482,6 +487,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 
+  const handleQuickAddFormChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setQuickAddFormData({
+      ...quickAddFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleQuickAdd = async (value: string): Promise<void> => {
     if (!props.listItemConfiguration?.id) {
       showToast.error('No field configuration available for this list. Please contact support.');
@@ -522,6 +534,54 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const permissionsDict: Record<string, 'read' | 'write'> = {
     [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
+  };
+
+  const getQuickAddExpandedContent = (): React.ReactNode => {
+    const configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      return null;
+    }
+
+    return (
+      <ListItemFormFields
+        fieldConfigurations={configs}
+        fields={Object.entries(quickAddFormData).map(([label, data]) => ({
+          id: `form-${label}`,
+          label,
+          data,
+          list_item_id: '',
+          list_item_field_configuration_id: '',
+        }))}
+        setFormData={handleQuickAddFormChange}
+        editForm={false}
+      />
+    );
+  };
+
+  const handleQuickAddFormOpen = (): void => {
+    // Fetch field configurations when form is opened if not preloaded
+    if (!quickAddFieldConfigs && props.listItemConfiguration?.id) {
+      axios
+        .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
+        .then((response) => {
+          setQuickAddFieldConfigs(response.data);
+        })
+        .catch(() => {
+          // Silently fail - form just won't show fields
+        });
+    }
+  };
+
+  const handleQuickAddClick = (): void => {
+    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
+    if (inputElement) {
+      const value = inputElement.value.trim();
+      if (value) {
+        handleQuickAdd(value);
+        inputElement.value = '';
+        setQuickAddFormData({});
+      }
+    }
   };
 
   const renderFilterChips = (): React.JSX.Element => {
@@ -661,18 +721,28 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               onClick={() => setIncompleteMultiSelect(!incompleteMultiSelect)}
               data-test-id="select-button"
             >
-              Select
+              {incompleteMultiSelect ? 'Hide Select' : 'Select'}
             </button>
           ) : null
         }
         bottomBar={
           props.permissions === EUserPermissions.WRITE ? (
-            <BottomInputBar
-              placeholder="Add an item..."
-              onSubmit={handleQuickAdd}
-              initialExpanded={inputBarExpanded}
-              expandedContent={null}
-            />
+            <>
+              <BottomInputBar
+                placeholder="Add an item..."
+                onSubmit={handleQuickAdd}
+                initialExpanded={inputBarExpanded}
+                expandedContent={null}
+                onInputFocus={handleQuickAddFormOpen}
+              />
+              <button
+                type="button"
+                className="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+                onClick={handleQuickAddClick}
+              >
+                Add
+              </button>
+            </>
           ) : undefined
         }
       >
