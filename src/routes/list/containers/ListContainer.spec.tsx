@@ -247,7 +247,7 @@ describe('ListContainer', () => {
       const { container, findByTestId } = setup({ permissions: EUserPermissions.WRITE });
 
       expect(container).toMatchSnapshot();
-      expect(await findByTestId('add-item-button')).toBeVisible();
+      expect(await findByTestId('quick-add-input')).toBeVisible();
     });
 
     it('does not render ListForm when user has read permissions', () => {
@@ -530,7 +530,7 @@ describe('ListContainer', () => {
       });
 
       // Open the form; fields should already be available from preloaded configurations
-      await user.click(await findByTestId('add-item-button'));
+      await user.click(await findByTestId('quick-add-input'));
       await waitFor(async () => expect(await findByLabelText('Quantity')).toBeVisible());
 
       // No field configuration API calls should be made since data is preloaded
@@ -644,7 +644,7 @@ describe('ListContainer', () => {
       expect(container).toBeInTheDocument();
 
       // In test environment, prefetch may be disabled, so we just verify component works
-      expect(container.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
     });
 
     it('does not idle-prefetch when disabled via environment variable', async () => {
@@ -818,7 +818,7 @@ describe('ListContainer', () => {
       await waitFor(() => new Promise((resolve) => setTimeout(resolve, 50)));
 
       // Verify component is still functioning
-      expect(document.querySelector('[data-test-id="add-item-button"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
     });
 
     it('does not trigger prefetch when VITE_PREFETCH_ON_MOUNT is false', async () => {
@@ -913,7 +913,7 @@ describe('ListContainer', () => {
       });
 
       // Open the form
-      await user.click(await findByTestId('add-item-button'));
+      await user.click(await findByTestId('quick-add-input'));
 
       // Fields should load normally when form opens
       await waitFor(async () => {
@@ -2001,7 +2001,7 @@ describe('ListContainer', () => {
       const { findByLabelText, findByText, findByTestId, user } = setup();
 
       // Show the form
-      await user.click(await findByTestId('add-item-button'));
+      await user.click(await findByTestId('quick-add-input'));
 
       // Wait for form fields to load
       await waitFor(async () => {
@@ -2057,7 +2057,7 @@ describe('ListContainer', () => {
       const { findByLabelText, findByText, findByTestId, user } = setup();
 
       // Show the form
-      await user.click(await findByTestId('add-item-button'));
+      await user.click(await findByTestId('quick-add-input'));
 
       // Wait for form fields to load
       await waitFor(async () => {
@@ -2107,7 +2107,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('filter-by-foo'));
 
       // Show the form
-      await user.click(await findByTestId('add-item-button'));
+      await user.click(await findByTestId('quick-add-input'));
 
       // Wait for form fields to load
       await waitFor(async () => {
