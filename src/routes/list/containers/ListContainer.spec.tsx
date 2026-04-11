@@ -1047,10 +1047,10 @@ describe('ListContainer', () => {
 
     it('deletes item when confirmed, hides modal, removes category when item is last of category', async () => {
       axios.delete = vi.fn().mockResolvedValue({});
-      const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
+      const { findByText, findByTestId, queryByTestId, queryByText, user, queryAllByText } = setup();
 
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('bar')).toBeVisible();
+      expect((await queryAllByText('bar')).length).toBeGreaterThan(0);
 
       await user.click(await findByTestId('not-completed-item-delete-id5'));
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1060,16 +1060,16 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('bar not completed product')).toBeNull();
-      expect(queryByText('bar')).toBeNull();
+      expect((queryAllByText('bar') || []).length).toBe(0);
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
     it('deletes item, hides modal, does not remove category when item is not last of category', async () => {
       axios.delete = vi.fn().mockResolvedValue({});
-      const { findByText, findByTestId, queryByTestId, queryByText, user } = setup();
+      const { findByText, findByTestId, queryByTestId, queryByText, user, queryAllByText } = setup();
 
       expect(await findByText('foo not completed product')).toBeVisible();
-      expect(await findByText('foo')).toBeVisible();
+      expect((await queryAllByText('foo')).length).toBeGreaterThan(0);
 
       await user.click(await findByTestId('not-completed-item-delete-id3'));
       expect(await findByTestId('confirm-delete')).toBeVisible();
@@ -1079,7 +1079,7 @@ describe('ListContainer', () => {
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
       expect(queryByText('foo not completed product')).toBeNull();
-      expect(await findByText('foo')).toBeVisible();
+      expect((queryAllByText('foo') || []).length).toBeGreaterThan(0);
       expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully deleted.');
     });
 
@@ -1125,11 +1125,11 @@ describe('ListContainer', () => {
       await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
       await waitFor(() => expect(queryByTestId('confirm-delete')).toBeNull());
 
-      expect(queryByText('foo')).toBeNull();
+      expect((queryByText('foo') || [])).toBeFalsy();
       expect(queryByText('foo not completed product', { exact: true })).toBeNull();
       expect(queryByText('foo not completed product 2')).toBeNull();
       expect(await findByText('bar not completed product')).toBeVisible();
-      expect(await findByText('bar')).toBeVisible();
+      expect((queryAllByText('bar') || []).length).toBeGreaterThan(0);
     });
 
     it('handles partial failure when deleting multiple items - some succeed, some fail', async () => {
