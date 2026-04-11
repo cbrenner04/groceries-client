@@ -563,4 +563,74 @@ describe('BulkEditListItemsForm', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
     });
   });
+
+  describe('Bottom Sheet Mode', () => {
+    const defaultProps: IBulkEditListItemsFormProps = {
+      navigate: mockNavigate,
+      items: mockItems,
+      list: mockList,
+      lists: [mockList],
+      categories: ['Produce'],
+      listUsers: [
+        {
+          id: 'user-1',
+          email: 'user@example.com',
+        },
+      ],
+      listItemConfiguration: mockListItemConfiguration,
+      listItemFieldConfigurations: mockListItemFieldConfigurations,
+    };
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+    });
+
+    it('does not render form title when isBottomSheet is true', () => {
+      const { queryByText } = render(<BulkEditListItemsForm {...defaultProps} isBottomSheet={true} />);
+
+      expect(queryByText('Edit Items')).not.toBeInTheDocument();
+    });
+
+    it('calls onCancel callback when cancel button is clicked in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      const { getByText } = render(
+        <BulkEditListItemsForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />,
+      );
+
+      const cancelButton = getByText('Cancel');
+      await user.click(cancelButton);
+
+      expect(mockOnCancel).toHaveBeenCalled();
+    });
+
+    it('navigates to /lists/:id when form is submitted in normal mode', async () => {
+      const { getByText } = render(<BulkEditListItemsForm {...defaultProps} />);
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
+      });
+    });
+
+    it('calls navigate callback correctly in bottom sheet mode', async () => {
+      const mockNavigateSheet = vi.fn((url: string) => {
+        if (url === '/lists/list-1') {
+          // Simulate successful navigation
+        }
+      });
+
+      const { getByText } = render(
+        <BulkEditListItemsForm {...defaultProps} navigate={mockNavigateSheet} isBottomSheet={true} />,
+      );
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockNavigateSheet).toHaveBeenCalledWith('/lists/list-1');
+      });
+    });
+  });
 });

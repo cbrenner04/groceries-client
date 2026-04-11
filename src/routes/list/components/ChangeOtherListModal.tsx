@@ -1,8 +1,9 @@
 import React, { useState, type ChangeEventHandler, type Dispatch, type FormEvent, type SetStateAction } from 'react';
-import { Button, ButtonGroup, Form, Modal } from 'react-bootstrap';
+import { ButtonGroup, Form, Modal } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
 
 import { showToast } from '../../../utils/toast';
+import { BottomSheet } from 'components/ui/BottomSheet';
 
 import { SelectField, TextField } from 'components/FormFields';
 import type { IList, IListItem } from 'typings';
@@ -13,7 +14,7 @@ export interface IChangeOtherListModalProps {
   copy: boolean;
   move: boolean;
   show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  setShow: Dispatch<SetStateAction<boolean | null>> | (() => void);
   currentList: IList;
   lists: IList[];
   items: IListItem[];
@@ -21,6 +22,7 @@ export interface IChangeOtherListModalProps {
   setIncompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
   setCompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
   handleMove: () => void;
+  useBottomSheet?: boolean;
 }
 
 const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX.Element => {
@@ -89,25 +91,25 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   };
 
   const switchToExisting = (
-    <Button
-      variant="link"
+    <button
+      type="button"
       onClick={(): void => setShowNewListForm(false)}
-      className="float-end"
-      style={{ padding: '0' }}
+      className="tw:text-sm tw:text-[var(--color-primary)] tw:font-medium tw:underline tw:mb-3"
+      data-test-id="choose-existing-list-link"
     >
       Choose existing list
-    </Button>
+    </button>
   );
 
   const switchToNew = (
-    <Button
-      variant="link"
+    <button
+      type="button"
       onClick={(): void => setShowNewListForm(true)}
-      className="float-end"
-      style={{ padding: '0' }}
+      className="tw:text-sm tw:text-[var(--color-primary)] tw:font-medium tw:underline tw:mb-3"
+      data-test-id="create-new-list-link"
     >
       Create new list
-    </Button>
+    </button>
   );
 
   const existingListSelect = (
@@ -132,15 +134,42 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   );
 
   const submit = (
-    <ButtonGroup>
-      <FormSubmission
-        submitText="Complete"
-        cancelAction={(): void => props.setShow(false)}
-        cancelText="Cancel"
-        noGrid={true}
-      />
-    </ButtonGroup>
+    <FormSubmission
+      submitText="Complete"
+      cancelAction={(): void => {
+        if (typeof props.setShow === 'function') {
+          props.setShow(false);
+        }
+      }}
+      cancelText="Cancel"
+    />
   );
+
+  if (props.useBottomSheet) {
+    return (
+      <BottomSheet
+        isOpen={props.show}
+        onClose={(): void => {
+          if (typeof props.setShow === 'function') {
+            props.setShow(null);
+          }
+        }}
+        title={props.copy ? 'Copy to List' : 'Move to List'}
+        testId="change-other-list-sheet"
+      >
+        <div className="tw:mb-3 tw:text-sm tw:text-[var(--color-text-secondary)]">{changeListInstructions}</div>
+        <Form onSubmit={handleSubmit} autoComplete="off">
+          {showNewListForm && existingListsOptions.length > 0 && switchToExisting}
+          {showNewListForm && newListNameInput}
+
+          {!showNewListForm && switchToNew}
+          {!showNewListForm && existingListsOptions.length > 0 && existingListSelect}
+
+          {submit}
+        </Form>
+      </BottomSheet>
+    );
+  }
 
   return (
     <Modal show={props.show} onHide={(): void => props.setShow(false)} data-test-id="change-other-list-modal">
@@ -153,7 +182,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
           {!showNewListForm && switchToNew}
           {!showNewListForm && existingListsOptions.length > 0 && existingListSelect}
 
-          {submit}
+          <ButtonGroup>{submit}</ButtonGroup>
         </Form>
       </Modal.Body>
     </Modal>

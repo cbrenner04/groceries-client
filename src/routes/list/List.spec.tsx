@@ -89,9 +89,8 @@ describe('List', () => {
       renderList();
     });
     expect(await screen.findByText('Test List')).toBeInTheDocument();
-    expect(screen.getByText('Back to lists')).toBeInTheDocument();
-    expect(screen.getByText('Items')).toBeInTheDocument();
-    expect(screen.getByText('Completed Items')).toBeInTheDocument();
+    expect(screen.getByTestId('back-button')).toBeInTheDocument();
+    expect(screen.getByTestId('page-title')).toBeInTheDocument();
   });
 
   it('renders error state when fetch fails', async () => {

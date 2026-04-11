@@ -7,7 +7,14 @@ import ConfirmModal from 'components/ConfirmModal';
 import { PageLayout } from 'components/layout/PageLayout';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
-import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
+import {
+  EUserPermissions,
+  type IList,
+  type IListItemConfiguration,
+  type IListItemFieldConfiguration,
+  type IListUser,
+  type IListItem,
+} from 'typings';
 import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
 import axios from 'utils/api';
@@ -15,11 +22,13 @@ import axios from 'utils/api';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
+import EditItemSheet from '../components/EditItemSheet';
+import BulkEditSheet from '../components/BulkEditSheet';
+import ListItemFormFields from '../components/ListItemFormFields';
 import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
   handleItemSelect as exportedHandleItemSelect,
-  handleItemEdit as exportedHandleItemEdit,
   handleItemComplete as exportedHandleItemComplete,
   handleItemDelete as exportedHandleItemDelete,
   handleItemRefresh as exportedHandleItemRefresh,
@@ -43,6 +52,8 @@ export interface IListContainerProps {
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
   listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number; primary: boolean }[];
+  initialEditingItemId?: string | null;
+  initialBulkEditOpen?: boolean;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -61,10 +72,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
   const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
-  const [copy, setCopy] = useState(false);
-  const [move, setMove] = useState(false);
   const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
   const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
+
+  // Bottom sheet state
+  const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
+  const [bulkEditOpen, setBulkEditOpen] = useState(props.initialBulkEditOpen ?? false);
+  const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
+
+  // Quick add form state
+  const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
+  const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
+
   const navigate = useNavigate();
 
   // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
@@ -182,19 +201,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const handleItemEdit = useCallback(
     (item: IListItem): void => {
       if (selectedItems.length > 1) {
-        // Bulk edit - navigate with selected item IDs
-        const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
-        navigate(`/lists/${props.list.id ?? ''}/list_items/bulk-edit?item_ids=${itemIds}`);
+        // Bulk edit - open sheet
+        setBulkEditOpen(true);
       } else {
-        // Single edit
-        exportedHandleItemEdit({
-          item,
-          listId: props.list.id ?? '',
-          navigate,
-        });
+        // Single edit - open sheet
+        setEditingItemId(item.id);
       }
     },
-    [selectedItems, props.list.id, navigate],
+    [selectedItems.length],
   );
 
   const handleItemComplete = useCallback(
@@ -445,9 +459,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleMove = (): void => {
-    if (!move) {
-      return;
-    }
     // Remove items from both not completed and completed since they've been moved to another list
     const updatedNotCompletedItems = notCompletedItems.filter(
       (item) => !selectedItems.some((selected) => selected.id === item.id),
@@ -469,12 +480,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     setSelectedItems([]);
     setIncompleteMultiSelect(false);
-    setMove(false);
   };
 
   const deleteConfirmationModalBody = (): string => {
     const itemNames = itemsToDelete.map((item) => itemName(item));
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
+  };
+
+  const handleQuickAddFormChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setQuickAddFormData({
+      ...quickAddFormData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleQuickAdd = async (value: string): Promise<void> => {
@@ -517,6 +534,57 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const permissionsDict: Record<string, 'read' | 'write'> = {
     [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
+  };
+
+  const getQuickAddExpandedContent = (): React.ReactNode => {
+    const configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      return null;
+    }
+
+    return (
+      <ListItemFormFields
+        fieldConfigurations={configs}
+        fields={Object.entries(quickAddFormData).map(([label, data]) => ({
+          id: `form-${label}`,
+          label,
+          data,
+          list_item_id: '',
+          list_item_field_configuration_id: '',
+        }))}
+        setFormData={handleQuickAddFormChange}
+        editForm={false}
+      />
+    );
+  };
+
+  const handleQuickAddFormOpen = (): void => {
+    // Fetch field configurations when form is opened if not preloaded
+    if (!quickAddFieldConfigs && props.listItemConfiguration?.id) {
+      axios
+        .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
+        .then((response) => {
+          // Only set if response is an array
+          if (Array.isArray(response.data)) {
+            setQuickAddFieldConfigs(response.data);
+          }
+        })
+        .catch(() => {
+          // Silently fail - form just won't show fields
+        });
+    }
+  };
+
+  const handleQuickAddClick = (): void => {
+    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
+    if (inputElement) {
+      const value = inputElement.value.trim();
+      if (value) {
+        handleQuickAdd(value);
+        inputElement.value = '';
+        setQuickAddFormData({});
+      }
+    }
   };
 
   const renderFilterChips = (): React.JSX.Element => {
@@ -576,12 +644,61 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   return (
     <React.Fragment>
-      {(copy || move) && (
+      {editingItemId && (
+        <EditItemSheet
+          listId={props.list.id ?? ''}
+          itemId={editingItemId}
+          onClose={(): void => setEditingItemId(null)}
+          onSave={(): void => {
+            setEditingItemId(null);
+            // Refetch list data
+            const listId = props.list.id;
+            if (listId) {
+              listDeduplicator
+                .execute(`list-${listId}`, () =>
+                  fetchList({ id: listId, navigate, signal: new AbortController().signal }),
+                )
+                .catch(() => {
+                  // Silently handle refetch errors
+                });
+            }
+          }}
+        />
+      )}
+      {bulkEditOpen && props.listItemConfiguration && (
+        <BulkEditSheet
+          listId={props.list.id ?? ''}
+          items={selectedItems}
+          lists={props.listsToUpdate}
+          categories={categories}
+          listItemConfiguration={props.listItemConfiguration}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+          onClose={(): void => setBulkEditOpen(false)}
+          onSave={(): void => {
+            setBulkEditOpen(false);
+            setSelectedItems([]);
+            setIncompleteMultiSelect(false);
+            setCompleteMultiSelect(false);
+            // Refetch list data
+            const listId = props.list.id;
+            if (listId) {
+              listDeduplicator
+                .execute(`list-${listId}`, () =>
+                  fetchList({ id: listId, navigate, signal: new AbortController().signal }),
+                )
+                .catch(() => {
+                  // Silently handle refetch errors
+                });
+            }
+          }}
+        />
+      )}
+      {copyMoveSheet && (
         <ChangeOtherListModal
-          show={copy || move}
-          setShow={copy ? setCopy : setMove}
-          copy={copy}
-          move={move}
+          show={true}
+          setShow={(): void => setCopyMoveSheet(null)}
+          copy={copyMoveSheet.mode === 'copy'}
+          move={copyMoveSheet.mode === 'move'}
           currentList={props.list}
           lists={props.listsToUpdate}
           items={selectedItems}
@@ -589,6 +706,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           setIncompleteMultiSelect={setIncompleteMultiSelect}
           setCompleteMultiSelect={setCompleteMultiSelect}
           handleMove={handleMove}
+          useBottomSheet={true}
         />
       )}
       <PageLayout
@@ -606,18 +724,28 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               onClick={() => setIncompleteMultiSelect(!incompleteMultiSelect)}
               data-test-id="select-button"
             >
-              Select
+              {incompleteMultiSelect ? 'Hide Select' : 'Select'}
             </button>
           ) : null
         }
         bottomBar={
           props.permissions === EUserPermissions.WRITE ? (
-            <BottomInputBar
-              placeholder="Add an item..."
-              onSubmit={handleQuickAdd}
-              initialExpanded={inputBarExpanded}
-              expandedContent={null}
-            />
+            <>
+              <BottomInputBar
+                placeholder="Add an item..."
+                onSubmit={handleQuickAdd}
+                initialExpanded={inputBarExpanded}
+                expandedContent={getQuickAddExpandedContent()}
+                onInputFocus={handleQuickAddFormOpen}
+              />
+              <button
+                type="button"
+                className="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+                onClick={handleQuickAddClick}
+              >
+                Add
+              </button>
+            </>
           ) : undefined
         }
       >
@@ -631,8 +759,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           filter={filter}
           displayedCategories={displayedCategories}
           incompleteMultiSelect={incompleteMultiSelect}
-          setCopy={setCopy}
-          setMove={setMove}
+          setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
+          setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
           setIncompleteMultiSelect={setIncompleteMultiSelect}
           handleItemSelect={handleItemSelect}
@@ -649,8 +777,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           selectedItems={selectedItems}
           pending={pending}
           completeMultiSelect={completeMultiSelect}
-          setCopy={setCopy}
-          setMove={setMove}
+          setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
+          setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
           setCompleteMultiSelect={setCompleteMultiSelect}
           handleItemSelect={handleItemSelect}
