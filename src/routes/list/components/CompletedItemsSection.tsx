@@ -1,15 +1,13 @@
-import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import React, { useState } from 'react';
 
-import type { IListItem } from 'typings';
-import { EUserPermissions } from 'typings';
-
-import ListItem from './ListItem';
-import MultiSelectMenu from './MultiSelectMenu';
+import type { EUserPermissions, IListItem, IListItemField, TUserPermissions } from 'typings';
+import { ListItemRow } from 'components/domain/ListItemRow';
+import { Badge } from 'components/ui/Badge';
 
 export interface ICompletedItemsSectionProps {
   completedItems: IListItem[];
   permissions: EUserPermissions;
+  permissionsDict?: TUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
   completeMultiSelect: boolean;
@@ -22,40 +20,82 @@ export interface ICompletedItemsSectionProps {
   handleItemEdit: (item: IListItem) => void;
   handleItemDelete: (item: IListItem) => void;
   handleItemRefresh: (item: IListItem) => Promise<void>;
+  completedExpanded?: boolean;
+  setCompletedExpanded?: (value: boolean) => void;
 }
 
 const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): React.JSX.Element => {
+  const [localExpanded, setLocalExpanded] = useState(props.completedExpanded ?? false);
+  const expanded = props.setCompletedExpanded !== undefined ? props.completedExpanded : localExpanded;
+
+  const handleToggle = (): void => {
+    if (props.setCompletedExpanded) {
+      props.setCompletedExpanded(!expanded);
+    } else {
+      setLocalExpanded(!localExpanded);
+    }
+  };
+
+  if (props.completedItems.length === 0) {
+    return <React.Fragment />;
+  }
+
   return (
-    <React.Fragment>
-      <h2>Completed Items</h2>
-      {props.permissions === EUserPermissions.WRITE && (
-        <MultiSelectMenu
-          setCopy={props.setCopy}
-          setMove={props.setMove}
-          isMultiSelect={props.completeMultiSelect}
-          selectedItems={props.selectedItems}
-          setSelectedItems={props.setSelectedItems}
-          setMultiSelect={props.setCompleteMultiSelect}
-        />
+    <div className="tw:mt-4 tw:mb-4">
+      <button
+        type="button"
+        className="tw:flex tw:items-center tw:gap-2 tw:w-full tw:mb-2 tw:group tw:cursor-pointer"
+        data-test-class="completed-header"
+        onClick={handleToggle}
+        aria-expanded={expanded}
+      >
+        <span
+          className={
+            'tw:text-sm tw:font-semibold tw:uppercase tw:tracking-wide ' +
+            'tw:text-[var(--color-text-secondary)] tw:whitespace-nowrap'
+          }
+        >
+          Completed
+        </span>
+        <Badge>{props.completedItems.length}</Badge>
+        <div className="tw:flex-1 tw:h-px tw:bg-[var(--color-border)]" />
+        <span
+          className={
+            'tw:text-[var(--color-text-tertiary)] tw:text-xs tw:transition-transform tw:duration-200' +
+            (expanded ? '' : ' tw:-rotate-90')
+          }
+          aria-hidden
+        >
+          ▼
+        </span>
+      </button>
+      {expanded && (
+        <div className="tw:flex tw:flex-col tw:gap-2">
+          {props.completedItems.map((item: IListItem) => {
+            const findItem = (itemId: string): IListItem =>
+              props.completedItems.find((i) => i.id === itemId) as IListItem;
+
+            return (
+              <ListItemRow
+                key={item.id}
+                item={item}
+                listId={item.list_id}
+                fields={(item.fields ?? []) as IListItemField[]}
+                fieldConfigurations={[]}
+                isMultiSelectActive={props.completeMultiSelect}
+                isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                permissions={props.permissionsDict ?? {}}
+              />
+            );
+          })}
+        </div>
       )}
-      <ListGroup className="mb-3">
-        {props.completedItems.map((item: IListItem) => (
-          <ListItem
-            key={item.id}
-            item={item}
-            permissions={props.permissions}
-            selectedItems={props.selectedItems}
-            pending={props.pending}
-            handleItemSelect={props.handleItemSelect}
-            handleItemComplete={props.handleItemComplete}
-            handleItemEdit={props.handleItemEdit}
-            handleItemDelete={props.handleItemDelete}
-            handleItemRefresh={props.handleItemRefresh}
-            multiSelect={props.completeMultiSelect}
-          />
-        ))}
-      </ListGroup>
-    </React.Fragment>
+    </div>
   );
 };
 
