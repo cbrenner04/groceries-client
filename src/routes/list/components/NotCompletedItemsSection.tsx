@@ -77,48 +77,26 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
             category={displayCategory}
             itemCount={itemsToRender.length}
           >
-            {itemsToRender.map((item: IListItem) => (
-              <ListItemRow
-                key={item.id}
-                item={item}
-                listId={item.list_id}
-                fields={(item.fields ?? []) as IListItemField[]}
-                fieldConfigurations={[]}
-                isMultiSelectActive={props.incompleteMultiSelect}
-                isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
-                onSelect={(itemId: string) => {
-                  const selectedItem = items.find((i) => i.id === itemId);
-                  if (selectedItem) {
-                    props.handleItemSelect(selectedItem);
-                  }
-                }}
-                onComplete={(itemId: string) => {
-                  const itemToComplete = items.find((i) => i.id === itemId);
-                  if (itemToComplete) {
-                    props.handleItemComplete(itemToComplete);
-                  }
-                }}
-                onRefresh={(itemId: string) => {
-                  const itemToRefresh = items.find((i) => i.id === itemId);
-                  if (itemToRefresh) {
-                    props.handleItemRefresh(itemToRefresh);
-                  }
-                }}
-                onEdit={(itemId: string) => {
-                  const itemToEdit = items.find((i) => i.id === itemId);
-                  if (itemToEdit) {
-                    props.handleItemEdit(itemToEdit);
-                  }
-                }}
-                onDelete={(itemId: string) => {
-                  const itemToDelete = items.find((i) => i.id === itemId);
-                  if (itemToDelete) {
-                    props.handleItemDelete(itemToDelete);
-                  }
-                }}
-                permissions={props.permissionsDict ?? {}}
-              />
-            ))}
+            {itemsToRender.map((item: IListItem) => {
+              const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
+              return (
+                <ListItemRow
+                  key={item.id}
+                  item={item}
+                  listId={item.list_id}
+                  fields={(item.fields ?? []) as IListItemField[]}
+                  fieldConfigurations={[]}
+                  isMultiSelectActive={props.incompleteMultiSelect}
+                  isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                  onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                  onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                  onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                  onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                  onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                  permissions={props.permissionsDict ?? {}}
+                />
+              );
+            })}
           </CategoryGroup>
         );
       });

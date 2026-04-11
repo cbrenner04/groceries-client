@@ -71,48 +71,28 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
       </button>
       {expanded && (
         <div className="tw:flex tw:flex-col tw:gap-2">
-          {props.completedItems.map((item: IListItem) => (
-            <ListItemRow
-              key={item.id}
-              item={item}
-              listId={item.list_id}
-              fields={(item.fields ?? []) as IListItemField[]}
-              fieldConfigurations={[]}
-              isMultiSelectActive={props.completeMultiSelect}
-              isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
-              onSelect={(itemId: string) => {
-                const selectedItem = props.completedItems.find((i) => i.id === itemId);
-                if (selectedItem) {
-                  props.handleItemSelect(selectedItem);
-                }
-              }}
-              onComplete={(itemId: string) => {
-                const itemToComplete = props.completedItems.find((i) => i.id === itemId);
-                if (itemToComplete) {
-                  props.handleItemComplete(itemToComplete);
-                }
-              }}
-              onRefresh={(itemId: string) => {
-                const itemToRefresh = props.completedItems.find((i) => i.id === itemId);
-                if (itemToRefresh) {
-                  props.handleItemRefresh(itemToRefresh);
-                }
-              }}
-              onEdit={(itemId: string) => {
-                const itemToEdit = props.completedItems.find((i) => i.id === itemId);
-                if (itemToEdit) {
-                  props.handleItemEdit(itemToEdit);
-                }
-              }}
-              onDelete={(itemId: string) => {
-                const itemToDelete = props.completedItems.find((i) => i.id === itemId);
-                if (itemToDelete) {
-                  props.handleItemDelete(itemToDelete);
-                }
-              }}
-              permissions={props.permissionsDict ?? {}}
-            />
-          ))}
+          {props.completedItems.map((item: IListItem) => {
+            const findItem = (itemId: string): IListItem =>
+              props.completedItems.find((i) => i.id === itemId) as IListItem;
+
+            return (
+              <ListItemRow
+                key={item.id}
+                item={item}
+                listId={item.list_id}
+                fields={(item.fields ?? []) as IListItemField[]}
+                fieldConfigurations={[]}
+                isMultiSelectActive={props.completeMultiSelect}
+                isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                permissions={props.permissionsDict ?? {}}
+              />
+            );
+          })}
         </div>
       )}
     </div>
