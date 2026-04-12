@@ -775,4 +775,364 @@ describe('ListsContainer', () => {
       );
     });
   });
+
+  // ─── Multi-select ────────────────────────────────────────────────────────────
+
+  it('selects a list when clicked in multi-select mode', async () => {
+    const { getByText, getAllByRole, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    // Click the list card — in multi-select mode clicking the card calls onSelect
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    const checkboxes = getAllByRole('checkbox');
+    const checkedCheckbox = checkboxes.find((cb) => (cb as HTMLInputElement).checked);
+    expect(checkedCheckbox).toBeDefined();
+  });
+
+  it('deselects a list when clicked again in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    const card = document.querySelector('[data-test-id="list-id5"]') as HTMLElement;
+    await user.click(card);
+    await user.click(card);
+
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+    expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
+  });
+
+  it('clears selection when Hide Select is clicked with items selected', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    // "Select" button has changed to "Hide Select"
+    await user.click(getByText('Hide Select'));
+
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+    expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
+  });
+
+  it('shows multi-select toolbar when 2+ lists are selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-merge')).toBeInTheDocument();
+    expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+  });
+
+  // ─── Delete ───────────────────────────────────────────────────────────────────
+
+  it('opens delete confirm dialog when trash is clicked on an incomplete list', async () => {
+    const { getByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+
+    expect(getByTestId('delete-confirm-dialog')).toBeInTheDocument();
+  });
+
+  it('closes delete confirm dialog when cancel is clicked', async () => {
+    const { getByTestId, queryByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    expect(getByTestId('delete-confirm-dialog')).toBeInTheDocument();
+
+    await user.click(getByTestId('clear-delete'));
+
+    expect(queryByTestId('delete-confirm-dialog')).not.toBeInTheDocument();
+  });
+
+  it('deletes an owned incomplete list when delete is confirmed', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByTestId, getAllByTestId, queryByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledWith('/lists/id5'));
+    await waitFor(() => expect(queryByTestId('list-id5')).toBeNull());
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully deleted.');
+  });
+
+  it('patches users_lists when rejecting a list the user does not own', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const sharedList = {
+      id: 'id-shared',
+      name: 'shared',
+      list_item_configuration_id: 'config-1',
+      created_at: new Date('05/31/2020').toISOString(),
+      completed: false,
+      users_list_id: 'ul-shared',
+      owner_id: 'other-user',
+      refreshed: false,
+      has_accepted: true,
+    };
+    const { getByTestId, user } = setup({
+      incompleteLists: [sharedList],
+      currentUserPermissions: { 'id-shared': 'write' } as TUserPermissions,
+    });
+
+    await user.click(getByTestId('incomplete-list-trash'));
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() =>
+      expect(axios.patch).toHaveBeenCalledWith('/lists/id-shared/users_lists/ul-shared', {
+        users_list: { has_accepted: false },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully deleted.');
+  });
+
+  it('shows error when list deletion fails after confirm', async () => {
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  it('deletes multiple selected lists via multi-select toolbar', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    await user.click(getByTestId('multi-select-delete'));
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(queryByTestId('list-id5')).toBeNull());
+    await waitFor(() => expect(queryByTestId('list-id6')).toBeNull());
+  });
+
+  // ─── Completion ───────────────────────────────────────────────────────────────
+
+  it('completes an owned incomplete list when complete button is clicked', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-complete')[0]);
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledWith('/lists/id5', { list: { completed: true } }));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully completed.');
+  });
+
+  it('shows error when completing a list fails', async () => {
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-complete')[0]);
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Refresh ─────────────────────────────────────────────────────────────────
+
+  it('refreshes an owned completed list when refresh button is clicked', async () => {
+    const refreshedList = {
+      id: 'id-refreshed',
+      name: 'bar',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: true,
+      users_list_id: 'id2',
+      created_at: new Date('05/31/2020').toISOString(),
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: refreshedList });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('complete-list-refresh')[0]);
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledWith('/lists/id2/refresh_list', {}));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully refreshed.');
+  });
+
+  it('shows error when refresh fails', async () => {
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('complete-list-refresh')[0]);
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Accept ───────────────────────────────────────────────────────────────────
+
+  it('accepts a pending list and moves it to incomplete', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() =>
+      expect(axios.patch).toHaveBeenCalledWith('/lists/id-pending/users_lists/id-pending', {
+        users_list: { has_accepted: true },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully accepted.');
+    // The list moves from pending to incomplete, so the accept button disappears
+    await waitFor(() => expect(queryByTestId('pending-list-accept')).toBeNull());
+  });
+
+  it('accepts a completed pending list and moves it to completed section', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const completedPending = {
+      id: 'id-completed-pending',
+      name: 'completed pending',
+      list_item_configuration_id: 'config-1',
+      created_at: new Date('05/31/2020').toISOString(),
+      completed: true,
+      users_list_id: 'id-completed-pending',
+      owner_id: 'id2',
+      refreshed: false,
+      has_accepted: null,
+    };
+    const { getByTestId, user } = setup({
+      pendingLists: [completedPending],
+      currentUserPermissions: { 'id-completed-pending': 'write' } as TUserPermissions,
+    });
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() => expect(axios.patch).toHaveBeenCalled());
+    // The list should appear in completed section
+    await waitFor(() =>
+      expect(getByTestId('list-id-completed-pending')).toHaveAttribute('data-test-class', 'completed-list'),
+    );
+  });
+
+  it('shows error when accepting a list fails', async () => {
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Reject ───────────────────────────────────────────────────────────────────
+
+  it('opens reject confirm dialog when trash is clicked on a pending list', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+
+    expect(getByTestId('reject-confirm-dialog')).toBeInTheDocument();
+  });
+
+  it('closes reject confirm dialog when cancel is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+    expect(getByTestId('reject-confirm-dialog')).toBeInTheDocument();
+
+    await user.click(getByTestId('clear-reject'));
+
+    expect(queryByTestId('reject-confirm-dialog')).not.toBeInTheDocument();
+  });
+
+  it('rejects a pending list when reject is confirmed', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+    await user.click(getByTestId('confirm-reject'));
+
+    // pending list owner_id='id1' = userId so DELETE is called
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledWith('/lists/id-pending'));
+    await waitFor(() => expect(queryByTestId('list-id-pending')).toBeNull());
+  });
+
+  // ─── Merge ────────────────────────────────────────────────────────────────────
+
+  it('opens merge modal when Merge is clicked with 2+ lists selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    await user.click(getByTestId('multi-select-merge'));
+
+    // MergeModal renders when showMergeModal is true
+    expect(getByTestId('confirm-merge')).toBeInTheDocument();
+  });
+
+  it('merges selected lists when merge name is provided and confirmed', async () => {
+    const mergedList = {
+      id: 'merged-id',
+      name: 'merged list',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: false,
+      users_list_id: 'merged-id',
+      created_at: new Date('05/31/2020').toISOString(),
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: mergedList });
+    const { getByText, getByTestId, findByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-merge'));
+
+    const mergeNameInput = document.querySelector('[name="mergeName"]') as HTMLInputElement;
+    await user.type(mergeNameInput, 'merged list');
+    await user.click(getByTestId('confirm-merge'));
+
+    await waitFor(() =>
+      expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
+        merge_lists: { list_ids: 'id5,id6', new_list_name: 'merged list' },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenCalledWith('Lists successfully merged.');
+    expect(await findByTestId('list-merged-id')).toBeInTheDocument();
+  });
+
+  it('shows error when merge fails', async () => {
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-merge'));
+
+    const mergeNameInput = document.querySelector('[name="mergeName"]') as HTMLInputElement;
+    await user.type(mergeNameInput, 'merged list');
+    await user.click(getByTestId('confirm-merge'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Show all completed ───────────────────────────────────────────────────────
+
+  it('shows "Show all completed" button when filter is all and completed lists exist', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('show-all-completed')).toBeInTheDocument();
+  });
+
+  it('changes filter to completed when "Show all completed" is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('show-all-completed'));
+
+    // Active lists should be hidden, completed lists visible
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
 });

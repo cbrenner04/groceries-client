@@ -145,4 +145,78 @@ describe('ThemeProvider', () => {
 
     consoleErrorSpy.mockRestore();
   });
+
+  it('responds to system theme media query change events', async () => {
+    let changeListener: ((e: MediaQueryListEvent) => void) | null = null;
+    const mockMediaQuery = {
+      matches: false,
+      addEventListener: vi.fn((event: string, handler: (e: MediaQueryListEvent) => void) => {
+        if (event === 'change') {
+          changeListener = handler;
+        }
+      }),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    };
+    vi.spyOn(window, 'matchMedia').mockReturnValue(mockMediaQuery as unknown as MediaQueryList);
+
+    render(
+      <ThemeProvider>
+        <TestComponentInside />
+      </ThemeProvider>,
+    );
+
+    await waitFor(() => {
+      expect(mockMediaQuery.addEventListener).toHaveBeenCalledWith('change', expect.any(Function));
+    });
+
+    // Cast via unknown since TS cannot track closure assignment on let variables
+    const fireChange = changeListener as unknown as (e: MediaQueryListEvent) => void;
+
+    // Fire dark mode change
+    fireChange({ matches: true } as MediaQueryListEvent);
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    });
+
+    // Fire light mode change
+    fireChange({ matches: false } as MediaQueryListEvent);
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    });
+  });
+
+  it('sets resolved theme based on system preference when setTheme("system") is called', async () => {
+    const mockMediaQuery = {
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    };
+    vi.spyOn(window, 'matchMedia').mockReturnValue(mockMediaQuery as unknown as MediaQueryList);
+
+    const user = userEvent.setup();
+    const { findByTestId } = render(
+      <ThemeProvider>
+        <TestComponentInside />
+      </ThemeProvider>,
+    );
+
+    // First set to light to move away from system
+    await user.click(await findByTestId('set-light'));
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    });
+
+    // Now set back to system — matchMedia.matches = true → dark
+    await user.click(await findByTestId('set-system'));
+    await waitFor(() => {
+      expect(localStorage.getItem('theme')).toBe('system');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    });
+  });
 });

@@ -147,5 +147,19 @@ describe('Toast Utility', () => {
 
       expect(toast.error).toHaveBeenCalledTimes(2);
     });
+
+    it('runs the cleanup timeout and removes entry after deduplication window', () => {
+      const message = 'Cleanup timeout test';
+
+      toastUtils.showToast.error(message);
+      expect(toast.error).toHaveBeenCalledTimes(1);
+
+      // Advance exactly to the deduplication window — fires the setTimeout at line 69
+      vi.advanceTimersByTime(3000);
+
+      // Entry has been removed; same toast can show again
+      toastUtils.showToast.error(message);
+      expect(toast.error).toHaveBeenCalledTimes(2);
+    });
   });
 });

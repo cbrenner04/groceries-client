@@ -114,7 +114,7 @@ describe('EditItemSheet', () => {
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it('handles error when fetching item', async () => {
+  it('handles 404 error when fetching item', async () => {
     const error = new Error('Not found') as AxiosError;
     (error as unknown as { response?: { status?: number } }).response = { status: 404 };
     axios.get = vi.fn().mockRejectedValue(error);
@@ -123,6 +123,44 @@ describe('EditItemSheet', () => {
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles 403 error when fetching item', async () => {
+    const error = new Error('Forbidden') as AxiosError;
+    (error as unknown as { response?: { status?: number } }).response = { status: 403 };
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles 401 error when fetching item', async () => {
+    const error = new Error('Unauthorized') as AxiosError;
+    (error as unknown as { response?: { status?: number } }).response = { status: 401 };
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles generic error when fetching item', async () => {
+    const error = new Error('Server error') as AxiosError;
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to load item');
       expect(mockOnClose).toHaveBeenCalled();
     });
   });

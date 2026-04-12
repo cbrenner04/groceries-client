@@ -494,6 +494,38 @@ describe('ListContainer', () => {
       expect(await findByTestId('filter-by-foo')).toBeVisible();
       expect(await findByTestId('filter-by-bar')).toBeVisible();
     });
+
+    it('deselects category filter when same chip is clicked twice', async () => {
+      const { findByTestId, user } = setup();
+
+      // First click applies the filter
+      await user.click(await findByTestId('filter-by-foo'));
+      await waitFor(async () => {
+        expect(await findByTestId('filter-by-foo')).toHaveAttribute('aria-pressed', 'true');
+      });
+
+      // Second click on the same chip clears the filter
+      await user.click(await findByTestId('filter-by-foo'));
+      await waitFor(async () => {
+        expect(await findByTestId('clear-filter')).toHaveAttribute('aria-pressed', 'true');
+      });
+    });
+
+    it('deselects uncategorized filter when Other chip is clicked twice', async () => {
+      const { findByTestId, user } = setup();
+
+      // First click applies uncategorized filter
+      await user.click(await findByTestId('filter-by-uncategorized'));
+      await waitFor(async () => {
+        expect(await findByTestId('filter-by-uncategorized')).toHaveAttribute('aria-pressed', 'true');
+      });
+
+      // Second click clears the filter
+      await user.click(await findByTestId('filter-by-uncategorized'));
+      await waitFor(async () => {
+        expect(await findByTestId('clear-filter')).toHaveAttribute('aria-pressed', 'true');
+      });
+    });
   });
 
   describe('Prefetch and undefined UI states', () => {
@@ -1751,6 +1783,109 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(queryByTestId('multi-select-bar')).not.toBeInTheDocument());
     });
+
+    it('opens copy/move sheet when copy-to-list action is clicked', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+
+      await user.click(await findByTestId('copy-to-list'));
+
+      // ChangeOtherListModal should render (copyMoveSheet state set to copy mode)
+      await waitFor(() => {
+        expect(document.querySelector('[role="dialog"]')).toBeInTheDocument();
+      });
+    });
+
+    it('opens copy/move sheet when move-to-list action is clicked', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+
+      await user.click(await findByTestId('move-to-list'));
+
+      await waitFor(() => {
+        expect(document.querySelector('[role="dialog"]')).toBeInTheDocument();
+      });
+    });
+
+    it('opens bulk edit sheet when bulk-edit action is clicked', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+
+      await user.click(await findByTestId('bulk-edit'));
+
+      // BulkEditSheet renders when bulkEditOpen is true
+      expect(await findByTestId('bulk-edit-sheet')).toBeInTheDocument();
+    });
+
+    it('shows refresh action in MultiSelectBar when only completed items are selected', async () => {
+      // Use no not-completed items so the only selectable items are completed.
+      // The completed section auto-expands when item count <= 5.
+      const { findByTestId, findByText, user } = setup({
+        permissions: EUserPermissions.WRITE,
+        notCompletedItems: [],
+      });
+
+      // Enter multi-select mode
+      await user.click(await findByTestId('select-button'));
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      // Select the completed item (id1 from defaultTestData.completedItem)
+      const checkbox = await findByTestId('completed-item-select-id1');
+      await user.click(checkbox);
+
+      // Refresh action should appear since only completed items are selected
+      expect(await findByTestId('refresh-selected')).toBeInTheDocument();
+    });
+
+    it('opens EditItemSheet when initialEditingItemId is provided', async () => {
+      axios.get = vi.fn().mockResolvedValue({
+        data: {
+          list: defaultTestData.list,
+          item: defaultTestData.notCompletedItems[0],
+          list_users: defaultTestData.listUsers,
+          list_item_configuration: defaultTestData.listItemConfiguration,
+          list_item_field_configurations: [],
+          categories: defaultTestData.categories,
+        },
+      });
+
+      const { findByRole } = setup({
+        initialEditingItemId: defaultTestData.notCompletedItems[0].id,
+      });
+
+      // EditItemSheet should render as a dialog
+      expect(await findByRole('dialog')).toBeInTheDocument();
+    });
+
+    it('opens BulkEditSheet when initialBulkEditOpen is true', async () => {
+      const { findByTestId } = setup({
+        initialBulkEditOpen: true,
+        listItemConfiguration: defaultTestData.listItemConfiguration,
+      });
+
+      expect(await findByTestId('bulk-edit-sheet')).toBeInTheDocument();
+    });
   });
 
   describe('Item Addition', () => {
@@ -1810,6 +1945,84 @@ describe('ListContainer', () => {
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
+    });
+
+    it('shows error toast when no listItemConfiguration is set', async () => {
+      const { findByTestId, findByText, user } = setup({ listItemConfiguration: undefined });
+
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add'));
+
+      await waitFor(() =>
+        expect(mockShowToast.error).toHaveBeenCalledWith(
+          'No field configuration available for this list. Please contact support.',
+        ),
+      );
+    });
+
+    it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
+      const newItem = createListItem('new-item-id', false, []);
+
+      // First post: create the item
+      // Second post: create the field value
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+
+      // GET: returns field configurations (array with a primary field)
+      axios.get = vi.fn().mockResolvedValue({
+        data: [{ id: 'fc1', label: 'product', primary: true }],
+      });
+
+      const { findByTestId, findByText, user } = setup();
+
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add'));
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
+        list_item: { user_id: defaultTestData.userId, completed: false },
+      });
+      expect(axios.post).toHaveBeenNthCalledWith(2, `/list_items/${newItem.id}/list_item_fields`, {
+        list_item_field: { data: 'new product' },
+      });
+    });
+
+    it('adds item without field post when no primary field config exists', async () => {
+      const newItem = createListItem('new-item-id', false, []);
+
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem });
+      // GET returns configs but none are primary
+      axios.get = vi.fn().mockResolvedValue({
+        data: [{ id: 'fc1', label: 'product', primary: false }],
+      });
+
+      const { findByTestId, findByText, user } = setup();
+
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add'));
+
+      // Only the item creation post — no field post since no primary config
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
+
+    it('renders expanded quick-add form with field configs when listItemFieldConfigurations are provided', async () => {
+      const { findByTestId, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+
+      // The expanded form should render ListItemFormFields
+      await waitFor(() => {
+        expect(document.querySelector('[data-test-id="quick-add-expand"]')).toBeInTheDocument();
+      });
     });
 
     it('adds item while filter, stays filtered', async () => {

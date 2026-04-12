@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult, waitFor } from '@testing-library/react';
+import { fireEvent, render, type RenderResult, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { EListItemFieldType } from 'typings';
@@ -296,6 +296,27 @@ describe('EditTemplateForm', () => {
     const { getByText, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
+    await user.click(getByText('Update Template'));
+
+    await waitFor(() => {
+      expect(axios.put).not.toHaveBeenCalled();
+    });
+  });
+
+  it('does not submit when field rows have duplicate positions', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const { getByText, findByTestId, user } = setup();
+
+    // Add a second field
+    await user.click(getByText('Add Field'));
+
+    // Fill in label for the new field
+    await user.type(await findByTestId('field-row-label-1'), 'quantity');
+
+    // Change second field position to 1 — duplicate of the first field
+    const positionInput = await findByTestId('field-row-position-1');
+    fireEvent.change(positionInput, { target: { value: '1' } });
+
     await user.click(getByText('Update Template'));
 
     await waitFor(() => {
