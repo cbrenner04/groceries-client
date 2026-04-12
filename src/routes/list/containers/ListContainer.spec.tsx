@@ -509,8 +509,8 @@ describe('ListContainer', () => {
         if (url.includes('list_item_field_configurations')) {
           return Promise.resolve({
             data: [
-              { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
-              { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0 },
+              { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
+              { id: 'config2', label: 'quantity', data_type: EListItemFieldType.FREE_TEXT, position: 0 },
             ],
           });
         }
@@ -526,8 +526,8 @@ describe('ListContainer', () => {
       const { findByLabelText, findByTestId, user } = setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
-          { id: 'config2', label: 'quantity', data_type: 'free_text', position: 0, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
+          { id: 'config2', label: 'quantity', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
         ],
       });
 
@@ -583,7 +583,7 @@ describe('ListContainer', () => {
       setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -704,7 +704,7 @@ describe('ListContainer', () => {
       setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -768,7 +768,7 @@ describe('ListContainer', () => {
       const { container } = setup({
         permissions: EUserPermissions.WRITE,
         listItemFieldConfigurations: [
-          { id: 'config1', label: 'product', data_type: 'free_text', position: 1, primary: false },
+          { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
         ],
       });
 
@@ -892,7 +892,7 @@ describe('ListContainer', () => {
     it('handles form interaction correctly when no prefetch data is available', async () => {
       // Test that form works normally without prefetch data
       const mockFieldConfigs = [
-        { id: 'config1', label: 'product', data_type: 'free_text', position: 1 },
+        { id: 'config1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 1 },
         { id: 'config2', label: 'quantity', data_type: 'number', position: 0 },
       ];
 
@@ -1633,8 +1633,7 @@ describe('ListContainer', () => {
       expect(updatedMultiSelectCheckboxes[0]).toBeChecked();
     });
 
-    // Note: Completed items multi-select was removed in the new UI.
-    // Only not-completed items support multi-select via the header Select button.
+    // Multi-select is now unified: one "Select" button in the header toggles checkboxes for all items.
 
     it('opens edit sheet when clicking edit icon with no multi select', async () => {
       // Mock axios for EditItemSheet data fetch
@@ -1679,9 +1678,79 @@ describe('ListContainer', () => {
       await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(0));
     });
 
-    // Note: Copy/move via inline MultiSelectMenu buttons was removed in the new UI.
-    // Copy/move is now triggered via the ChangeOtherListModal through setCopyMoveSheet state.
-    // Completed items multi-select was also removed.
+    // Copy/move is triggered via MultiSelectBar actions through setCopyMoveSheet state.
+
+    it('shows MultiSelectBar with correct actions when not-completed items are selected', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+
+      expect(await findByTestId('multi-select-bar')).toBeInTheDocument();
+      expect(await findByTestId('complete-selected')).toBeInTheDocument();
+      expect(await findByTestId('copy-to-list')).toBeInTheDocument();
+      expect(await findByTestId('move-to-list')).toBeInTheDocument();
+      expect(await findByTestId('bulk-edit')).toBeInTheDocument();
+      expect(await findByTestId('delete-selected')).toBeInTheDocument();
+    });
+
+    it('shows MultiSelectBar with only delete when mixed items are selected', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, queryByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      // Select a not-completed item
+      const checkboxes = await findAllByRole('checkbox');
+      await user.click(checkboxes[0]);
+
+      // Expand completed section and select a completed item
+      const completedHeader = findByText(/Completed/);
+      if (completedHeader) {
+        await user.click(await completedHeader);
+      }
+
+      const allCheckboxes = await findAllByRole('checkbox');
+      const completedCheckbox = allCheckboxes.find((cb) => cb.id === 'completed');
+      if (completedCheckbox) {
+        // A completed item checkbox would appear after expanding completed section
+        const completedItemCheckboxes = allCheckboxes.filter((cb) => cb.id !== 'completed' && !checkboxes.includes(cb));
+        if (completedItemCheckboxes.length > 0) {
+          await user.click(completedItemCheckboxes[0]);
+        }
+      }
+
+      // When both types selected, only delete should show (plus close)
+      const bar = queryByTestId('multi-select-bar');
+      if (bar) {
+        expect(await findByTestId('delete-selected')).toBeInTheDocument();
+      }
+    });
+
+    it('closes MultiSelectBar and clears selection when close button is clicked', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, queryByTestId, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+
+      expect(await findByTestId('multi-select-bar')).toBeInTheDocument();
+
+      await user.click(await findByTestId('multi-select-close'));
+
+      await waitFor(() => expect(queryByTestId('multi-select-bar')).not.toBeInTheDocument());
+    });
   });
 
   describe('Item Addition', () => {

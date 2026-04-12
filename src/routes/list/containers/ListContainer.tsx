@@ -9,6 +9,7 @@ import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
 import {
   EUserPermissions,
+  EListItemFieldType,
   type IList,
   type IListItemConfiguration,
   type IListItemFieldConfiguration,
@@ -19,6 +20,8 @@ import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
 import axios from 'utils/api';
 
+import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
+import { CheckIcon, EditIcon, RedoIcon, TrashIcon } from 'components/icons';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
@@ -51,7 +54,13 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
-  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number; primary: boolean }[];
+  listItemFieldConfigurations?: {
+    id: string;
+    label: string;
+    data_type: EListItemFieldType;
+    position: number;
+    primary: boolean;
+  }[];
   initialEditingItemId?: string | null;
   initialBulkEditOpen?: boolean;
 }
@@ -69,8 +78,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
-  const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
+  const [multiSelectActive, setMultiSelectActive] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
   const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
@@ -230,8 +238,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       // Clear selections
       setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
+      setMultiSelectActive(false);
 
       // Execute operations in parallel
       const results = await executeBulkOperations(itemsToComplete, {
@@ -273,8 +280,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems,
       setCompletedItems,
       setSelectedItems,
-      setIncompleteMultiSelect,
-      setCompleteMultiSelect,
+      setMultiSelectActive,
       props.list.id,
       navigate,
     ],
@@ -301,8 +307,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       // Clear selections
       setSelectedItems([]);
-      setCompleteMultiSelect(false);
-      setIncompleteMultiSelect(false);
+      setMultiSelectActive(false);
 
       // Execute operations in parallel
       const results = await executeBulkOperations<IListItem>(itemsToRefresh, {
@@ -361,8 +366,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems,
       setNotCompletedItems,
       setSelectedItems,
-      setCompleteMultiSelect,
-      setIncompleteMultiSelect,
+      setMultiSelectActive,
       props.list.id,
       navigate,
     ],
@@ -408,8 +412,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     // Clear selections
     setSelectedItems([]);
-    setIncompleteMultiSelect(false);
-    setCompleteMultiSelect(false);
+    setMultiSelectActive(false);
     setItemsToDelete([]);
 
     // Execute operations in parallel
@@ -479,7 +482,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
 
     setSelectedItems([]);
-    setIncompleteMultiSelect(false);
+    setMultiSelectActive(false);
   };
 
   const deleteConfirmationModalBody = (): string => {
@@ -545,12 +548,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return (
       <ListItemFormFields
         fieldConfigurations={configs}
-        fields={Object.entries(quickAddFormData).map(([label, data]) => ({
+        fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
           id: `form-${label}`,
           label,
           data,
           list_item_id: '',
           list_item_field_configuration_id: '',
+          archived_at: null,
+          user_id: '',
+          created_at: '',
+          updated_at: null,
+          position: index,
+          data_type: EListItemFieldType.FREE_TEXT,
         }))}
         setFormData={handleQuickAddFormChange}
         editForm={false}
@@ -642,6 +651,60 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     );
   };
 
+  const getMultiSelectActions = (): IMultiSelectAction[] => {
+    const hasNotCompleted = selectedItems.some((item) => !item.completed);
+    const hasCompleted = selectedItems.some((item) => item.completed);
+    const actions: IMultiSelectAction[] = [];
+
+    if (hasNotCompleted && !hasCompleted) {
+      actions.push({
+        icon: <CheckIcon size="sm" />,
+        label: 'Complete',
+        onClick: () => handleItemComplete(selectedItems[0]),
+        variant: 'success',
+        testId: 'complete-selected',
+      });
+      actions.push({
+        icon: <span className="tw:text-xs tw:font-bold">CP</span>,
+        label: 'Copy to list',
+        onClick: () => setCopyMoveSheet({ mode: 'copy' }),
+        testId: 'copy-to-list',
+      });
+      actions.push({
+        icon: <span className="tw:text-xs tw:font-bold">MV</span>,
+        label: 'Move to list',
+        onClick: () => setCopyMoveSheet({ mode: 'move' }),
+        testId: 'move-to-list',
+      });
+      actions.push({
+        icon: <EditIcon size="sm" />,
+        label: 'Bulk Edit',
+        onClick: () => setBulkEditOpen(true),
+        testId: 'bulk-edit',
+      });
+    }
+
+    if (hasCompleted && !hasNotCompleted) {
+      actions.push({
+        icon: <RedoIcon size="sm" />,
+        label: 'Refresh',
+        onClick: () => handleItemRefresh(selectedItems[0]),
+        variant: 'success',
+        testId: 'refresh-selected',
+      });
+    }
+
+    actions.push({
+      icon: <TrashIcon size="sm" />,
+      label: 'Delete',
+      onClick: () => handleDelete(selectedItems[0]),
+      variant: 'danger',
+      testId: 'delete-selected',
+    });
+
+    return actions;
+  };
+
   return (
     <React.Fragment>
       {editingItemId && (
@@ -677,8 +740,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           onSave={(): void => {
             setBulkEditOpen(false);
             setSelectedItems([]);
-            setIncompleteMultiSelect(false);
-            setCompleteMultiSelect(false);
+            setMultiSelectActive(false);
             // Refetch list data
             const listId = props.list.id;
             if (listId) {
@@ -703,8 +765,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           lists={props.listsToUpdate}
           items={selectedItems}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setIncompleteMultiSelect}
-          setCompleteMultiSelect={setCompleteMultiSelect}
+          setIncompleteMultiSelect={setMultiSelectActive}
+          setCompleteMultiSelect={setMultiSelectActive}
           handleMove={handleMove}
           useBottomSheet={true}
         />
@@ -721,10 +783,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
                 'tw:text-white tw:text-sm tw:font-medium'
               }
-              onClick={() => setIncompleteMultiSelect(!incompleteMultiSelect)}
+              onClick={() => setMultiSelectActive(!multiSelectActive)}
               data-test-id="select-button"
             >
-              {incompleteMultiSelect ? 'Hide Select' : 'Select'}
+              {multiSelectActive ? 'Hide Select' : 'Select'}
             </button>
           ) : null
         }
@@ -740,7 +802,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               />
               <button
                 type="button"
-                className="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+                className={[
+                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40',
+                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
+                  'tw:text-white tw:text-sm tw:font-medium',
+                ].join(' ')}
                 onClick={handleQuickAddClick}
               >
                 Add
@@ -750,6 +816,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         }
       >
         {renderFilterChips()}
+        {multiSelectActive && selectedItems.length > 0 && (
+          <div className="tw:mb-3">
+            <MultiSelectBar
+              selectedCount={selectedItems.length}
+              onClose={() => {
+                setSelectedItems([]);
+                setMultiSelectActive(false);
+              }}
+              actions={getMultiSelectActions()}
+            />
+          </div>
+        )}
         <NotCompletedItemsSection
           notCompletedItems={notCompletedItems}
           permissions={props.permissions}
@@ -758,11 +836,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           pending={pending}
           filter={filter}
           displayedCategories={displayedCategories}
-          incompleteMultiSelect={incompleteMultiSelect}
+          incompleteMultiSelect={multiSelectActive}
           setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
           setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setIncompleteMultiSelect}
+          setIncompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}
@@ -776,11 +854,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           permissionsDict={permissionsDict}
           selectedItems={selectedItems}
           pending={pending}
-          completeMultiSelect={completeMultiSelect}
+          completeMultiSelect={multiSelectActive}
           setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
           setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
-          setCompleteMultiSelect={setCompleteMultiSelect}
+          setCompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}
