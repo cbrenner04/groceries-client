@@ -28,6 +28,9 @@ import CompletedItemsSection from '../components/CompletedItemsSection';
 import EditItemSheet from '../components/EditItemSheet';
 import BulkEditSheet from '../components/BulkEditSheet';
 import ListItemFormFields from '../components/ListItemFormFields';
+import CategoryField from 'components/FormFields/CategoryField';
+import CheckboxField from 'components/FormFields/CheckboxField';
+import { capitalize } from 'utils/format';
 import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
@@ -91,6 +94,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
   const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
+  const [quickAddCategory, setQuickAddCategory] = useState('');
+  const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
   const navigate = useNavigate();
 
@@ -491,10 +496,103 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleQuickAddFormChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setQuickAddFormData({
-      ...quickAddFormData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, type, value, checked } = e.target;
+    const next = type === 'checkbox' ? (checked ? 'true' : 'false') : value;
+    setQuickAddFormData((prev) => ({
+      ...prev,
+      [name]: next,
+    }));
+  };
+
+  const handleQuickAddFormSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if (!props.list?.id || !props.listItemConfiguration?.id) {
+      return;
+    }
+
+    const configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      return;
+    }
+
+    const formEl = event.currentTarget;
+
+    try {
+      setPending(true);
+      const categoryEl = formEl.elements.namedItem('category');
+      const categoryRaw =
+        categoryEl instanceof HTMLInputElement ? String(categoryEl.value ?? '').trim() : '';
+      const categoryMerged = categoryRaw || quickAddCategory.trim();
+      const capitalizedCategory = categoryMerged ? capitalize(categoryMerged) : null;
+      const completedEl = formEl.elements.namedItem('completed');
+      const completedFlag =
+        completedEl instanceof HTMLInputElement ? completedEl.checked : quickAddCompleted;
+
+      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
+        list_item: {
+          completed: completedFlag,
+          ...(capitalizedCategory ? { category: capitalizedCategory } : {}),
+        },
+      });
+
+      const resolvedFieldData = (config: (typeof configs)[0]): string => {
+        const named = formEl.elements.namedItem(config.label);
+        const fromState = quickAddFormData[config.label];
+        if (config.data_type === EListItemFieldType.BOOLEAN) {
+          if (named instanceof HTMLInputElement) {
+            return named.checked ? 'true' : 'false';
+          }
+          return fromState === 'true' ? 'true' : 'false';
+        }
+        const fromDom = named instanceof HTMLInputElement ? String(named.value ?? '').trim() : '';
+        const str = fromDom || String(fromState ?? '').trim();
+        if (str !== '') {
+          return str;
+        }
+        switch (config.data_type) {
+          case EListItemFieldType.NUMBER:
+            return '0';
+          default:
+            return '';
+        }
+      };
+
+      await Promise.all(
+        configs.flatMap((config) => {
+          const data = resolvedFieldData(config);
+          if (data === '') {
+            return [];
+          }
+          return [
+            axios.post(`/lists/${props.list.id}/list_items/${newItem.id}/list_item_fields`, {
+              list_item_field: {
+                list_item_field_configuration_id: config.id,
+                data,
+              },
+            }),
+          ];
+        }),
+      );
+
+      if (capitalizedCategory) {
+        try {
+          await axios.post(`/lists/${props.list.id}/categories`, { category: { name: capitalizedCategory } });
+        } catch {
+          // Category may already exist
+        }
+      }
+
+      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
+      handleAddItem([completeItem]);
+      setQuickAddFormData({});
+      setQuickAddCategory('');
+      setQuickAddCompleted(false);
+      setInputBarExpanded(true);
+      setPending(false);
+    } catch {
+      showToast.error('Failed to add item');
+      setPending(false);
+    }
   };
 
   const handleQuickAdd = async (value: string): Promise<void> => {
@@ -546,24 +644,50 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
 
     return (
-      <ListItemFormFields
-        fieldConfigurations={configs}
-        fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
-          id: `form-${label}`,
-          label,
-          data,
-          list_item_id: '',
-          list_item_field_configuration_id: '',
-          archived_at: null,
-          user_id: '',
-          created_at: '',
-          updated_at: null,
-          position: index,
-          data_type: EListItemFieldType.FREE_TEXT,
-        }))}
-        setFormData={handleQuickAddFormChange}
-        editForm={false}
-      />
+      <form data-test-id="list-item-form" noValidate onSubmit={handleQuickAddFormSubmit} className="tw:pb-2">
+        <ListItemFormFields
+          fieldConfigurations={configs}
+          fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
+            id: `form-${label}`,
+            label,
+            data,
+            list_item_id: '',
+            list_item_field_configuration_id: '',
+            archived_at: null,
+            user_id: '',
+            created_at: '',
+            updated_at: null,
+            position: index,
+            data_type: EListItemFieldType.FREE_TEXT,
+          }))}
+          setFormData={handleQuickAddFormChange}
+          editForm={false}
+        />
+        <CategoryField
+          category={quickAddCategory}
+          categories={includedCategories}
+          handleInput={(e): void => {
+            setQuickAddCategory(e.target.value);
+          }}
+        />
+        <CheckboxField
+          name="completed"
+          label="Completed"
+          value={quickAddCompleted}
+          handleChange={(e): void => {
+            setQuickAddCompleted(e.target.checked);
+          }}
+        />
+        <button
+          type="submit"
+          className={
+            'tw:w-full tw:mt-2 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+            'tw:text-white tw:text-sm tw:font-medium'
+          }
+        >
+          Submit
+        </button>
+      </form>
     );
   };
 
@@ -803,7 +927,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               <button
                 type="button"
                 className={[
-                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:right-4 tw:z-40',
+                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
                   'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
                   'tw:text-white tw:text-sm tw:font-medium',
                 ].join(' ')}

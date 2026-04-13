@@ -149,6 +149,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
       selected={isMultiSelectActive && isSelected}
       completed={item.completed}
       data-test-class={testClass}
+      data-test-id={`list-item-${item.id}`}
       className="tw:flex tw:items-center tw:gap-3"
     >
       {isMultiSelectActive && (
