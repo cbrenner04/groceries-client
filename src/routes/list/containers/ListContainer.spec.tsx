@@ -38,6 +38,51 @@ vi.mock('react-router', async () => ({
   useLocation: (): typeof mockLocation => mockLocation,
 }));
 
+vi.mock('../components/ChangeOtherListModal', () => ({
+  __esModule: true,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: (props: any): React.JSX.Element => (
+    <div role="dialog">
+      <button data-test-id="change-other-list-handle-move" onClick={props.handleMove}>
+        handle move
+      </button>
+      <button data-test-id="change-other-list-close" onClick={props.closeModal}>
+        close
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('../components/EditItemSheet', () => ({
+  __esModule: true,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: (props: any): React.JSX.Element => (
+    <div role="dialog">
+      <button data-test-id="edit-item-sheet-save" onClick={props.onSave}>
+        save edit item
+      </button>
+      <button data-test-id="edit-item-sheet-close" onClick={props.onClose}>
+        close edit item
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('../components/BulkEditSheet', () => ({
+  __esModule: true,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: (props: any): React.JSX.Element => (
+    <div data-test-id="bulk-edit-sheet">
+      <button data-test-id="bulk-edit-sheet-save" onClick={props.onSave}>
+        save bulk edit
+      </button>
+      <button data-test-id="bulk-edit-sheet-close" onClick={props.onClose}>
+        close bulk edit
+      </button>
+    </div>
+  ),
+}));
+
 type TestRenderResult = ReturnType<typeof render>;
 type TestUserEvent = ReturnType<typeof userEvent.setup>;
 
@@ -1821,6 +1866,31 @@ describe('ListContainer', () => {
       });
     });
 
+    it('removes selected items from list state when handleMove is called', async () => {
+      const { findAllByRole, findAllByText, findByText, findByTestId, queryByText, user } = setup({
+        permissions: EUserPermissions.WRITE,
+      });
+
+      expect(await findByText('foo not completed product')).toBeVisible();
+
+      await user.click((await findAllByText('Select'))[0]);
+      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+
+      const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
+      await user.click(checkboxes[0]);
+      await user.click(await findByTestId('move-to-list'));
+
+      await waitFor(() => {
+        expect(document.querySelector('[role="dialog"]')).toBeInTheDocument();
+      });
+
+      await user.click(await findByTestId('change-other-list-handle-move'));
+
+      await waitFor(() => {
+        expect(queryByText('no category not completed product')).toBeNull();
+      });
+    });
+
     it('opens bulk edit sheet when bulk-edit action is clicked', async () => {
       const { findAllByRole, findAllByText, findByText, findByTestId, user } = setup({
         permissions: EUserPermissions.WRITE,
@@ -1878,6 +1948,22 @@ describe('ListContainer', () => {
       expect(await findByRole('dialog')).toBeInTheDocument();
     });
 
+    it('re-fetches list when EditItemSheet onSave is called', async () => {
+      axios.get = vi.fn().mockResolvedValue({
+        data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+      });
+      const { findByTestId, user } = setup({
+        initialEditingItemId: defaultTestData.notCompletedItems[0].id,
+      });
+
+      const initialCallCount = (axios.get as Mock).mock.calls.length;
+      await user.click(await findByTestId('edit-item-sheet-save'));
+
+      await waitFor(() => {
+        expect((axios.get as Mock).mock.calls.length).toBeGreaterThan(initialCallCount);
+      });
+    });
+
     it('opens BulkEditSheet when initialBulkEditOpen is true', async () => {
       const { findByTestId } = setup({
         initialBulkEditOpen: true,
@@ -1885,6 +1971,23 @@ describe('ListContainer', () => {
       });
 
       expect(await findByTestId('bulk-edit-sheet')).toBeInTheDocument();
+    });
+
+    it('re-fetches list when BulkEditSheet onSave is called', async () => {
+      axios.get = vi.fn().mockResolvedValue({
+        data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+      });
+      const { findByTestId, user } = setup({
+        initialBulkEditOpen: true,
+        listItemConfiguration: defaultTestData.listItemConfiguration,
+      });
+
+      const initialCallCount = (axios.get as Mock).mock.calls.length;
+      await user.click(await findByTestId('bulk-edit-sheet-save'));
+
+      await waitFor(() => {
+        expect((axios.get as Mock).mock.calls.length).toBeGreaterThan(initialCallCount);
+      });
     });
   });
 

@@ -19,6 +19,8 @@ exports[`BulkEditListItems > displays UnknownError when an error occurs 1`] = `
 </div>
 `;
 
+exports[`BulkEditListItems > renders UnknownError when fulfilled data is undefined 1`] = `<div />`;
+
 exports[`BulkEditListItems > renders the Loading component when fetch request is pending 1`] = `
 <div>
   <div

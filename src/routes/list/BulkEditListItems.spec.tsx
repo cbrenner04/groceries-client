@@ -35,6 +35,16 @@ describe('BulkEditListItems', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders UnknownError when fulfilled data is undefined', async () => {
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
+    const { container, findByRole } = renderBulkEditListItems();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
+    expect(container).toMatchSnapshot();
+  });
+
   it('calls the correct API endpoint with search params', async () => {
     axios.get = vi.fn().mockResolvedValue({
       data: {
