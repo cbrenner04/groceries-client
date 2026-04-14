@@ -568,6 +568,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           />
         }
         initialExpanded={false}
+        allowEnterSubmitWhenExpanded
       />
     </div>
   );

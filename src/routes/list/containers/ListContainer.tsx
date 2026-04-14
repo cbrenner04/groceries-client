@@ -520,13 +520,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     try {
       setPending(true);
       const categoryEl = formEl.elements.namedItem('category');
-      const categoryRaw =
-        categoryEl instanceof HTMLInputElement ? String(categoryEl.value ?? '').trim() : '';
+      const categoryRaw = categoryEl instanceof HTMLInputElement ? String(categoryEl.value ?? '').trim() : '';
       const categoryMerged = categoryRaw || quickAddCategory.trim();
       const capitalizedCategory = categoryMerged ? capitalize(categoryMerged) : null;
       const completedEl = formEl.elements.namedItem('completed');
-      const completedFlag =
-        completedEl instanceof HTMLInputElement ? completedEl.checked : quickAddCompleted;
+      const completedFlag = completedEl instanceof HTMLInputElement ? completedEl.checked : quickAddCompleted;
 
       const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
         list_item: {
@@ -666,7 +664,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         <CategoryField
           category={quickAddCategory}
           categories={includedCategories}
-          handleInput={(e): void => {
+          handleInput={(e: React.ChangeEvent<HTMLInputElement>): void => {
             setQuickAddCategory(e.target.value);
           }}
         />
@@ -674,7 +672,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           name="completed"
           label="Completed"
           value={quickAddCompleted}
-          handleChange={(e): void => {
+          handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
             setQuickAddCompleted(e.target.checked);
           }}
         />
@@ -838,13 +836,34 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           onClose={(): void => setEditingItemId(null)}
           onSave={(): void => {
             setEditingItemId(null);
-            // Refetch list data
             const listId = props.list.id;
             if (listId) {
-              listDeduplicator
+              void listDeduplicator
                 .execute(`list-${listId}`, () =>
                   fetchList({ id: listId, navigate, signal: new AbortController().signal }),
                 )
+                .then((fetchResponse) => {
+                  if (!fetchResponse) {
+                    return;
+                  }
+                  const {
+                    not_completed_items: updatedNotCompletedItems,
+                    completed_items: updatedCompletedItems,
+                    categories: updatedCategories,
+                  } = fetchResponse as IFulfilledListData;
+                  setNotCompletedItems(updatedNotCompletedItems);
+                  setCompletedItems(updatedCompletedItems);
+                  setCategories(updatedCategories);
+                  setIncludedCategories(updatedCategories);
+                  if (!filter) {
+                    setDisplayedCategories(updatedCategories);
+                  } else if (
+                    filter &&
+                    !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())
+                  ) {
+                    setDisplayedCategories([filter]);
+                  }
+                })
                 .catch(() => {
                   // Silently handle refetch errors
                 });
@@ -865,13 +884,34 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             setBulkEditOpen(false);
             setSelectedItems([]);
             setMultiSelectActive(false);
-            // Refetch list data
             const listId = props.list.id;
             if (listId) {
-              listDeduplicator
+              void listDeduplicator
                 .execute(`list-${listId}`, () =>
                   fetchList({ id: listId, navigate, signal: new AbortController().signal }),
                 )
+                .then((fetchResponse) => {
+                  if (!fetchResponse) {
+                    return;
+                  }
+                  const {
+                    not_completed_items: updatedNotCompletedItems,
+                    completed_items: updatedCompletedItems,
+                    categories: updatedCategories,
+                  } = fetchResponse as IFulfilledListData;
+                  setNotCompletedItems(updatedNotCompletedItems);
+                  setCompletedItems(updatedCompletedItems);
+                  setCategories(updatedCategories);
+                  setIncludedCategories(updatedCategories);
+                  if (!filter) {
+                    setDisplayedCategories(updatedCategories);
+                  } else if (
+                    filter &&
+                    !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())
+                  ) {
+                    setDisplayedCategories([filter]);
+                  }
+                })
                 .catch(() => {
                   // Silently handle refetch errors
                 });

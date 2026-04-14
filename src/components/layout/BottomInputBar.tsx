@@ -7,10 +7,19 @@ export interface IBottomInputBarProps {
   initialExpanded?: boolean;
   autoCollapseOnComplete?: boolean;
   onInputFocus?: () => void;
+  /** Lists page: Enter must submit after choosing a template while the bar is expanded (focus also expands). */
+  allowEnterSubmitWhenExpanded?: boolean;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
-  const { onSubmit, placeholder = 'Add an item...', expandedContent, initialExpanded = false, onInputFocus } = props;
+  const {
+    onSubmit,
+    placeholder = 'Add an item...',
+    expandedContent,
+    initialExpanded = false,
+    onInputFocus,
+    allowEnterSubmitWhenExpanded = false,
+  } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
   const [value, setValue] = useState('');
@@ -31,7 +40,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     }
     e.preventDefault();
     // When the expanded quick-add form is open, Enter should not run single-line quick-add (avoids orphan items).
-    if (expanded && expandedContent) {
+    if (expanded && expandedContent && !allowEnterSubmitWhenExpanded) {
       return;
     }
     handleSubmit();
