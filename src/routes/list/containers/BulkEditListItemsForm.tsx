@@ -27,6 +27,8 @@ export interface IBulkEditListItemsFormProps {
   listUsers: IListUser[];
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
+  isBottomSheet?: boolean;
+  onCancel?: () => void;
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
@@ -137,8 +139,12 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit Items</h1>
-      <br />
+      {!props.isBottomSheet && (
+        <>
+          <h1>Edit Items</h1>
+          <br />
+        </>
+      )}
       <Form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
@@ -167,7 +173,13 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
+          cancelAction={(): void => {
+            if (props.isBottomSheet && props.onCancel) {
+              props.onCancel();
+            } else {
+              props.navigate(`/lists/${props.list.id}`);
+            }
+          }}
           cancelText="Cancel"
         />
       </Form>

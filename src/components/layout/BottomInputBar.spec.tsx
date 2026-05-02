@@ -109,4 +109,29 @@ describe('BottomInputBar', () => {
     const expandButton = await findByTestId('quick-add-expand');
     expect(expandButton).toHaveAttribute('aria-label');
   });
+
+  it('does not submit on Enter when expanded by default', async () => {
+    const onSubmit = vi.fn();
+    const { findByTestId, user } = setup({
+      onSubmit,
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+    });
+    const input = await findByTestId('quick-add-input');
+    await user.type(input, 'Milk{Enter}');
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('submits on Enter when expanded if allowEnterSubmitWhenExpanded', async () => {
+    const onSubmit = vi.fn();
+    const { findByTestId, user } = setup({
+      onSubmit,
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+      allowEnterSubmitWhenExpanded: true,
+    });
+    const input = await findByTestId('quick-add-input');
+    await user.type(input, 'Milk{Enter}');
+    expect(onSubmit).toHaveBeenCalledWith('Milk');
+  });
 });

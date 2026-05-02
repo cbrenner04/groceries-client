@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult, waitFor } from '@testing-library/react';
+import { fireEvent, render, type RenderResult, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import TemplateForm, { type ITemplateFormProps } from './TemplateForm';
@@ -176,5 +176,33 @@ describe('TemplateForm', () => {
     const { container } = setup();
 
     expect(container).toMatchSnapshot();
+  });
+
+  it('does not submit when field rows have duplicate positions', async () => {
+    const { getByText, findByTestId, props, user } = setup();
+
+    await user.click(getByText('Add Template'));
+
+    const nameInput = await findByTestId('template-form-name');
+    await user.type(nameInput, 'My Template');
+
+    // Fill the first field label (position 1 by default)
+    await user.type(await findByTestId('field-row-label-0'), 'Field One');
+
+    // Add a second field (gets position 2)
+    await user.click(getByText('Add Field'));
+
+    // Fill second field label
+    await user.type(await findByTestId('field-row-label-1'), 'Field Two');
+
+    // Change second field position to 1 — duplicate of first
+    const positionInput = await findByTestId('field-row-position-1');
+    fireEvent.change(positionInput, { target: { value: '1' } });
+
+    await user.click(getByText('Create Template'));
+
+    await waitFor(() => {
+      expect(props.onFormSubmit).not.toHaveBeenCalled();
+    });
   });
 });

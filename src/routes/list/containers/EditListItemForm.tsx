@@ -1,5 +1,6 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
@@ -18,9 +19,13 @@ export interface IEditListItemFormProps {
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   categories?: string[];
+  onSubmit?: () => void;
+  onCancel?: () => void;
+  isBottomSheet?: boolean;
 }
 
 const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.Element => {
+  const navigate = useNavigate();
   // Merge all possible field configurations with existing fields
   const initialFields = props.listItemFieldConfigurations.map((config) => {
     const existingField = props.item.fields.find((field) => field.list_item_field_configuration_id === config.id);
@@ -109,17 +114,26 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         }),
       );
       showToast.info('Item successfully updated');
-      // TODO: why aren't we using navigate?
-      window.location.href = `/lists/${props.list.id}`;
+      if (props.isBottomSheet && props.onSubmit) {
+        props.onSubmit();
+      } else {
+        navigate(`/lists/${props.list.id}`);
+      }
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
         if (error.response.status === 401) {
           showToast.error('You must sign in');
-          window.location.href = '/users/sign_in';
+          if (!props.isBottomSheet) {
+            navigate('/users/sign_in');
+          }
         } else if ([403, 404].includes(error.response.status)) {
           showToast.error('Item not found');
-          window.location.href = `/lists/${props.list.id}`;
+          if (props.isBottomSheet && props.onCancel) {
+            props.onCancel();
+          } else {
+            navigate(`/lists/${props.list.id}`);
+          }
         } else {
           const keys = Object.keys((error.response.data ?? {}) as Record<string, unknown>);
           const responseErrors = keys.map((key) => `${key} ${(error.response?.data as Record<string, string>)[key]}`);
@@ -135,8 +149,12 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
 
   return (
     <React.Fragment>
-      <h1>Edit Item</h1>
-      <br />
+      {!props.isBottomSheet && (
+        <>
+          <h1>Edit Item</h1>
+          <br />
+        </>
+      )}
       <Form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
@@ -152,7 +170,11 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
         <FormSubmission
           submitText="Update Item"
           cancelAction={(): void => {
-            window.location.href = `/lists/${props.list.id}`;
+            if (props.isBottomSheet && props.onCancel) {
+              props.onCancel();
+            } else {
+              navigate(`/lists/${props.list.id}`);
+            }
           }}
           cancelText="Cancel"
         />

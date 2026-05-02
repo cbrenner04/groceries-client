@@ -373,4 +373,78 @@ describe('ChangeOtherListModal', () => {
     expect(queryByLabelText('Existing list')).not.toBeInTheDocument();
     expect(queryByText('Choose existing list')).not.toBeInTheDocument();
   });
+
+  describe('Bottom Sheet Mode', () => {
+    it('renders BottomSheet when useBottomSheet is true', async () => {
+      const { getByRole } = setup({ copy: true, useBottomSheet: true });
+
+      expect(getByRole('dialog')).toBeInTheDocument();
+    });
+
+    it('renders Bootstrap Modal when useBottomSheet is false or undefined', async () => {
+      const { getByText } = setup({ copy: true, useBottomSheet: false });
+
+      // Modal header should be rendered with instructions
+      expect(getByText(/Choose an existing list or create a new one to copy items/)).toBeInTheDocument();
+    });
+
+    it('calls setShow with null when closing BottomSheet', async () => {
+      const setShow = vi.fn();
+      const { user, getByRole } = setup({
+        copy: true,
+        useBottomSheet: true,
+        setShow,
+      });
+
+      const overlay = getByRole('dialog');
+      await user.click(overlay);
+
+      expect(setShow).toHaveBeenCalledWith(null);
+    });
+
+    it('displays "Copy to List" title in BottomSheet when copy is true', () => {
+      const { getByText } = setup({ copy: true, useBottomSheet: true });
+
+      expect(getByText('Copy to List')).toBeInTheDocument();
+    });
+
+    it('displays "Move to List" title in BottomSheet when move is true', () => {
+      const { getByText } = setup({ move: true, useBottomSheet: true });
+
+      expect(getByText('Move to List')).toBeInTheDocument();
+    });
+
+    it('toggles to existing list select within BottomSheet when lists are available', async () => {
+      const { user, findByText } = setup({ copy: true, useBottomSheet: true });
+
+      await user.click(await findByText('Create new list'));
+      await user.click(await findByText('Choose existing list'));
+
+      expect(await findByText(instructions('copy'))).toBeVisible();
+    });
+
+    it('does not call setShow when cancelAction is invoked with non-function setShow', async () => {
+      const { user, getByText } = setup({
+        copy: true,
+        useBottomSheet: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      await user.click(getByText('Cancel'));
+      // Reaching here without throwing covers the typeof !== 'function' branch
+      expect(getByText('Cancel')).toBeInTheDocument();
+    });
+
+    it('does not throw when BottomSheet is closed and setShow is not a function', async () => {
+      const { user, getByRole } = setup({
+        copy: true,
+        useBottomSheet: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      const overlay = getByRole('dialog');
+      await user.click(overlay);
+      expect(overlay).toBeInTheDocument();
+    });
+  });
 });

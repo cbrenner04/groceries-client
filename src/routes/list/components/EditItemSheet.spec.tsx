@@ -1,0 +1,170 @@
+import React from 'react';
+import { render, waitFor, type RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
+import type { AxiosError } from 'axios';
+
+import axios from 'utils/api';
+import { defaultTestData, createListItem, createField } from 'test-utils/factories';
+import type { IListItemFieldConfiguration } from 'typings';
+import EditItemSheet from './EditItemSheet';
+import { showToast } from 'utils/toast';
+
+vi.mock('utils/api');
+vi.mock('utils/toast');
+
+const renderSheet = (ui: React.ReactElement): RenderResult => render(<MemoryRouter>{ui}</MemoryRouter>);
+
+const mockShowToast = showToast as Mocked<typeof showToast>;
+
+describe('EditItemSheet', () => {
+  const mockOnClose = vi.fn();
+  const mockOnSave = vi.fn();
+  const listId = 'list123';
+  const itemId = 'item123';
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('renders loading state initially', () => {
+    axios.get = vi.fn().mockImplementation(() => new Promise(() => {}));
+
+    const { getByText } = renderSheet(
+      <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
+    );
+
+    expect(getByText('Edit Item')).toBeInTheDocument();
+  });
+
+  it('renders form with item data when loaded', async () => {
+    const itemData = {
+      list: defaultTestData.list,
+      item: createListItem('item123', false, [
+        createField('field1', 'Product', 'Test Item', 'item123', {
+          list_item_field_configuration_id: 'config1',
+        }),
+      ]),
+      list_users: defaultTestData.listUsers,
+      list_item_configuration: defaultTestData.listItemConfiguration,
+      list_item_field_configurations: [
+        {
+          id: 'config1',
+          label: 'Product',
+          data_type: 'free_text',
+          position: 0,
+          list_item_configuration_id: 'config1',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z',
+          archived_at: null,
+          primary: true,
+        },
+      ] as IListItemFieldConfiguration[],
+      categories: ['Produce', 'Dairy'],
+    };
+
+    axios.get = vi.fn().mockResolvedValue({ data: itemData });
+
+    const { getByDisplayValue } = renderSheet(
+      <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
+    );
+
+    await waitFor(() => {
+      expect(getByDisplayValue('Test Item')).toBeInTheDocument();
+    });
+  });
+
+  it('calls onClose when bottom sheet is closed', async () => {
+    const itemData = {
+      list: defaultTestData.list,
+      item: createListItem('item123', false, [
+        createField('field1', 'Product', 'Test Item', 'item123', {
+          list_item_field_configuration_id: 'config1',
+        }),
+      ]),
+      list_users: defaultTestData.listUsers,
+      list_item_configuration: defaultTestData.listItemConfiguration,
+      list_item_field_configurations: [
+        {
+          id: 'config1',
+          label: 'Product',
+          data_type: 'free_text',
+          position: 0,
+          list_item_configuration_id: 'config1',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z',
+          archived_at: null,
+          primary: true,
+        },
+      ] as IListItemFieldConfiguration[],
+      categories: ['Produce', 'Dairy'],
+    };
+
+    axios.get = vi.fn().mockResolvedValue({ data: itemData });
+
+    const { getByRole } = renderSheet(
+      <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
+    );
+
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalled();
+    });
+
+    // Click the overlay to close
+    const overlay = getByRole('dialog');
+    await userEvent.click(overlay);
+
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('handles 404 error when fetching item', async () => {
+    const error = new Error('Not found') as AxiosError;
+    (error as unknown as { response?: { status?: number } }).response = { status: 404 };
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles 403 error when fetching item', async () => {
+    const error = new Error('Forbidden') as AxiosError;
+    (error as unknown as { response?: { status?: number } }).response = { status: 403 };
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles 401 error when fetching item', async () => {
+    const error = new Error('Unauthorized') as AxiosError;
+    (error as unknown as { response?: { status?: number } }).response = { status: 401 };
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('handles generic error when fetching item', async () => {
+    const error = new Error('Server error') as AxiosError;
+    axios.get = vi.fn().mockRejectedValue(error);
+
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Failed to load item');
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+});

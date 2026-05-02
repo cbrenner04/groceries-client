@@ -6,10 +6,20 @@ export interface IBottomInputBarProps {
   expandedContent?: React.ReactNode;
   initialExpanded?: boolean;
   autoCollapseOnComplete?: boolean;
+  onInputFocus?: () => void;
+  /** Lists page: Enter must submit after choosing a template while the bar is expanded (focus also expands). */
+  allowEnterSubmitWhenExpanded?: boolean;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
-  const { onSubmit, placeholder = 'Add an item...', expandedContent, initialExpanded = false } = props;
+  const {
+    onSubmit,
+    placeholder = 'Add an item...',
+    expandedContent,
+    initialExpanded = false,
+    onInputFocus,
+    allowEnterSubmitWhenExpanded = false,
+  } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
   const [value, setValue] = useState('');
@@ -25,10 +35,15 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSubmit();
+    if (e.key !== 'Enter') {
+      return;
     }
+    e.preventDefault();
+    // When the expanded quick-add form is open, Enter should not run single-line quick-add (avoids orphan items).
+    if (expanded && expandedContent && !allowEnterSubmitWhenExpanded) {
+      return;
+    }
+    handleSubmit();
   };
 
   const toggleExpand = (): void => {
@@ -36,7 +51,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const containerClassName =
-    'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 ' +
+    'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
     'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200';
 
@@ -68,6 +83,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          onFocus={() => {
+            setExpanded(true);
+            onInputFocus?.();
+          }}
           placeholder={placeholder}
           className={inputClassName}
           data-test-id="quick-add-input"
