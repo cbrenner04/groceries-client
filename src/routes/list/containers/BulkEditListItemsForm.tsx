@@ -1,5 +1,4 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState, useCallback } from 'react';
-import { Form } from 'react-bootstrap';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
@@ -145,7 +144,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           <br />
         </>
       )}
-      <Form onSubmit={handleSubmit} autoComplete="off">
+      <form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
           fieldUpdates={fieldUpdates}
@@ -182,7 +181,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
           }}
           cancelText="Cancel"
         />
-      </Form>
+      </form>
     </React.Fragment>
   );
 };

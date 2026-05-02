@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 
-import type { EUserPermissions, IListItem, IListItemField, TUserPermissions } from 'typings';
+import type {
+  EUserPermissions,
+  IListItem,
+  IListItemField,
+  IListItemFieldConfiguration,
+  TUserPermissions,
+} from 'typings';
 import { ListItemRow } from 'components/domain/ListItemRow';
 import { Badge } from 'components/ui/Badge';
 
@@ -10,6 +16,7 @@ export interface ICompletedItemsSectionProps {
   permissionsDict?: TUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
+  listItemFieldConfigurations: IListItemFieldConfiguration[];
   completeMultiSelect: boolean;
   setSelectedItems: (items: IListItem[]) => void;
   setCompleteMultiSelect: (value: boolean) => void;
@@ -79,7 +86,7 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
                 item={item}
                 listId={item.list_id}
                 fields={(item.fields ?? []) as IListItemField[]}
-                fieldConfigurations={[]}
+                fieldConfigurations={props.listItemFieldConfigurations}
                 isMultiSelectActive={props.completeMultiSelect}
                 isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
                 onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}

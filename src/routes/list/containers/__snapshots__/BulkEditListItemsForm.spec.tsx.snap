@@ -8,7 +8,6 @@ exports[`BulkEditListItemsForm > renders the form with generic title 1`] = `
   <br />
   <form
     autocomplete="off"
-    class=""
   >
     <div>
       Update attributes for all items.

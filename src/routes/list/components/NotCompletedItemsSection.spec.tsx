@@ -33,6 +33,7 @@ const baseProps = {
   pending: false,
   filter: '',
   displayedCategories: [],
+  listItemFieldConfigurations: [],
   incompleteMultiSelect: false,
   setSelectedItems: vi.fn(),
   setIncompleteMultiSelect: vi.fn(),

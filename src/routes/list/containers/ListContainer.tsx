@@ -932,7 +932,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           setIncompleteMultiSelect={setMultiSelectActive}
           setCompleteMultiSelect={setMultiSelectActive}
           handleMove={handleMove}
-          useBottomSheet={true}
         />
       )}
       <PageLayout
@@ -972,6 +971,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                   'tw:text-white tw:text-sm tw:font-medium',
                 ].join(' ')}
                 onClick={handleQuickAddClick}
+                data-test-id="add-item-button"
               >
                 Add
               </button>
@@ -1000,6 +1000,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           pending={pending}
           filter={filter}
           displayedCategories={displayedCategories}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           incompleteMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
           setIncompleteMultiSelect={setMultiSelectActive}
@@ -1016,6 +1017,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           permissionsDict={permissionsDict}
           selectedItems={selectedItems}
           pending={pending}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           completeMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
           setCompleteMultiSelect={setMultiSelectActive}

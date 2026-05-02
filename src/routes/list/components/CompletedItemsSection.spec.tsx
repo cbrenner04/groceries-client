@@ -38,6 +38,7 @@ const baseProps = {
   permissions: EUserPermissions.READ,
   selectedItems: [],
   pending: false,
+  listItemFieldConfigurations: [],
   completeMultiSelect: false,
   setSelectedItems: vi.fn(),
   setCompleteMultiSelect: vi.fn(),

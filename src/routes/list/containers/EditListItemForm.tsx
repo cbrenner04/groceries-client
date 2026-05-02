@@ -1,5 +1,4 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
@@ -155,7 +154,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           <br />
         </>
       )}
-      <Form onSubmit={handleSubmit} autoComplete="off">
+      <form onSubmit={handleSubmit} autoComplete="off">
         <ListItemFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
           fields={fields}
@@ -178,7 +177,7 @@ const EditListItemForm: React.FC<IEditListItemFormProps> = (props): React.JSX.El
           }}
           cancelText="Cancel"
         />
-      </Form>
+      </form>
     </React.Fragment>
   );
 };

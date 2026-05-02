@@ -8,7 +8,6 @@ exports[`EditListItemForm > Rendering > renders the form with correct title 1`] 
   <br />
   <form
     autocomplete="off"
-    class=""
   >
     <div
       class="tw:mb-3"
