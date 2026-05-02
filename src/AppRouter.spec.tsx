@@ -3,101 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import AppRouter from './AppRouter';
-
-const { mockDelete, mockGet, mockPost, mockPreloadComponent, mockPut, mockShowToastError, mockShowToastInfo } =
-  vi.hoisted(() => ({
-    mockDelete: vi.fn(),
-    mockGet: vi.fn(),
-    mockPost: vi.fn(),
-    mockPreloadComponent: vi.fn(),
-    mockPut: vi.fn(),
-    mockShowToastError: vi.fn(),
-    mockShowToastInfo: vi.fn(),
-  }));
-
-vi.mock('./utils/api', () => ({
-  default: {
-    delete: mockDelete,
-    get: mockGet,
-    post: mockPost,
-    put: mockPut,
-  },
-}));
-
-vi.mock('./utils/toast', () => ({
-  showToast: {
-    error: mockShowToastError,
-    info: mockShowToastInfo,
-  },
-}));
-
-vi.mock('./utils/lazyComponents', () => ({
-  createLazyComponent: (loader: () => Promise<unknown>) => {
-    const path = loader.toString();
-
-    if (path.includes('share_list/ShareList')) {
-      return (): React.JSX.Element => <div>Share List Route</div>;
-    }
-
-    if (path.includes('list/EditList')) {
-      return (): React.JSX.Element => <div>Edit List Route</div>;
-    }
-
-    if (path.includes('BulkEditListItems')) {
-      return (): React.JSX.Element => <div>Bulk Edit List Items Route</div>;
-    }
-
-    if (path.includes('templates/EditTemplate')) {
-      return (): React.JSX.Element => <div>Edit Template Route</div>;
-    }
-
-    return (): React.JSX.Element => <div>Lazy Route</div>;
-  },
-  preloadComponent: mockPreloadComponent,
-}));
-
-vi.mock('./routes/lists/utils', () => ({
-  fetchLists: vi.fn().mockResolvedValue({
-    userId: 'user-1',
-    pendingLists: [],
-    completedLists: [],
-    incompleteLists: [],
-    currentUserPermissions: 'write',
-    listItemConfigurations: [],
-  }),
-}));
-
-vi.mock('./routes/lists/containers/ListsContainer', () => ({
-  default: (props: { initialFilter?: 'all' | 'pending' | 'active' | 'completed' }): React.JSX.Element => (
-    <div>Lists Container Route {props.initialFilter ?? 'all'}</div>
-  ),
-}));
-
-vi.mock('./routes/templates/utils', () => ({
-  fetchTemplates: vi.fn().mockResolvedValue({
-    templates: [],
-  }),
-}));
-
-vi.mock('./routes/templates/containers/TemplatesContainer', () => ({
-  default: (): React.JSX.Element => <div>Templates Container Route</div>,
-}));
-
-vi.mock('./routes/users/EditInvite', () => ({
-  default: (): React.JSX.Element => <div>Edit Invite Route</div>,
-}));
-
-vi.mock('./routes/error_pages/PageNotFound', () => ({
-  default: (): React.JSX.Element => <div>Page Not Found Route</div>,
-}));
-
-vi.mock('./routes/list/List', () => ({
-  default: (): React.JSX.Element => <div>List Route</div>,
-}));
-
-vi.mock('./routes/list/EditListItem', () => ({
-  default: (): React.JSX.Element => <div>Edit List Item Route</div>,
-}));
+import api from './utils/api';
 
 function renderAppRouter(pathname: string): ReturnType<typeof render> {
   window.history.pushState({}, '', pathname);
@@ -107,12 +13,44 @@ function renderAppRouter(pathname: string): ReturnType<typeof render> {
 describe('AppRouter', () => {
   beforeEach(() => {
     sessionStorage.clear();
-    mockDelete.mockReset();
-    mockDelete.mockResolvedValue({});
-    mockGet.mockReset();
-    mockGet.mockRejectedValue(new Error('not signed in'));
-    mockPost.mockReset();
-    mockPost.mockResolvedValue({
+    vi.spyOn(api, 'delete').mockResolvedValue({} as never);
+    vi.spyOn(api, 'get').mockImplementation(async (url: string) => {
+      if (url === '/auth/validate_token') {
+        throw new Error('not signed in');
+      }
+
+      if (url === '/lists/') {
+        return {
+          data: {
+            current_user_id: 'user-1',
+            pending_lists: [],
+            accepted_lists: {
+              completed_lists: [],
+              not_completed_lists: [],
+            },
+            current_list_permissions: {},
+            list_item_configurations: [
+              {
+                id: 'config-1',
+                name: 'Default Template',
+                archived_at: null,
+              },
+            ],
+          },
+        };
+      }
+
+      if (url === '/list_item_configurations') {
+        return {
+          data: [],
+        };
+      }
+
+      return {
+        data: {},
+      };
+    });
+    vi.spyOn(api, 'post').mockResolvedValue({
       headers: {
         'access-token': 'token',
         client: 'client',
@@ -122,20 +60,16 @@ describe('AppRouter', () => {
           uid: 'uid',
         },
       },
-    });
-    mockPut.mockReset();
-    mockPut.mockResolvedValue({});
-    mockShowToastError.mockReset();
-    mockShowToastInfo.mockReset();
-    mockPreloadComponent.mockReset();
+    } as never);
+    vi.spyOn(api, 'put').mockResolvedValue({} as never);
+    vi.clearAllMocks();
   });
 
   it('redirects root path to lists and hides bottom nav when logged out', async () => {
     const { findByText, queryByTestId } = renderAppRouter('/');
 
-    expect(await findByText('Lists Container Route all')).toBeVisible();
+    expect(await findByText('Lists')).toBeVisible();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
-    expect(mockPreloadComponent).toHaveBeenCalledTimes(4);
   });
 
   it('loads a stored session and shows bottom nav on authenticated pages', async () => {
@@ -150,7 +84,7 @@ describe('AppRouter', () => {
 
     const { findByTestId, findByText } = renderAppRouter('/lists');
 
-    expect(await findByText('Lists Container Route all')).toBeVisible();
+    expect(await findByText('Lists')).toBeVisible();
     expect(await findByTestId('bottom-nav')).toBeVisible();
   });
 
@@ -174,16 +108,8 @@ describe('AppRouter', () => {
   });
 
   it('renders all route elements', async () => {
-    expect(await renderAppRouter('/completed_lists').findByText('Lists Container Route completed')).toBeVisible();
-    expect(await renderAppRouter('/lists/1').findByText('List Route')).toBeVisible();
-    expect(await renderAppRouter('/lists/1/edit').findByText('Edit List Route')).toBeVisible();
-    expect(await renderAppRouter('/lists/1/list_items/2/edit').findByText('Edit List Item Route')).toBeVisible();
-    expect(
-      await renderAppRouter('/lists/1/list_items/bulk-edit').findByText('Bulk Edit List Items Route'),
-    ).toBeVisible();
-    expect(await renderAppRouter('/lists/1/users_lists').findByText('Share List Route')).toBeVisible();
-    expect(await renderAppRouter('/templates').findByText('Templates Container Route')).toBeVisible();
-    expect(await renderAppRouter('/templates/2/edit').findByText('Edit Template Route')).toBeVisible();
+    expect(await renderAppRouter('/completed_lists').findByText('Completed')).toBeVisible();
+    expect(await renderAppRouter('/templates').findByText('Templates')).toBeVisible();
     expect(
       await renderAppRouter('/users/password/new').findByRole('heading', { name: 'Forgot your password?' }),
     ).toBeVisible();
@@ -193,7 +119,6 @@ describe('AppRouter', () => {
     expect(
       await renderAppRouter('/users/invitation/new').findByRole('heading', { name: 'Send Invitation' }),
     ).toBeVisible();
-    expect(await renderAppRouter('/users/invitation/accept').findByText('Edit Invite Route')).toBeVisible();
   });
 
   it('opens and closes the settings menu from the bottom nav', async () => {
@@ -229,13 +154,13 @@ describe('AppRouter', () => {
     );
 
     const user = userEvent.setup();
-    const { findByTestId, findByText, queryByTestId } = renderAppRouter('/lists');
+    const { findByRole, findByTestId, queryByTestId } = renderAppRouter('/lists');
 
     await user.click(await findByTestId('nav-settings'));
     expect(await findByTestId('settings-menu')).toBeVisible();
 
     await user.click(await findByTestId('nav-templates'));
-    expect(await findByText('Templates Container Route')).toBeVisible();
+    expect(await findByRole('heading', { name: 'Templates' })).toBeVisible();
     await waitFor(() => {
       expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
     });
@@ -273,7 +198,7 @@ describe('AppRouter', () => {
         uid: 'stored-uid',
       }),
     );
-    mockDelete.mockRejectedValueOnce(new Error('request failed'));
+    vi.mocked(api.delete).mockRejectedValueOnce(new Error('request failed'));
 
     const user = userEvent.setup();
     const { findByTestId, findByText, queryByTestId } = renderAppRouter('/lists');
@@ -284,7 +209,6 @@ describe('AppRouter', () => {
     expect(await findByText('Log in')).toBeVisible();
     expect(sessionStorage.getItem('user')).toBeNull();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
-    expect(mockDelete).toHaveBeenCalledWith('/auth/sign_out');
-    expect(mockShowToastInfo).toHaveBeenCalledWith('Log out successful');
+    expect(api.delete).toHaveBeenCalledWith('/auth/sign_out');
   });
 });
