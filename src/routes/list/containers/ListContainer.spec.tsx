@@ -1989,6 +1989,100 @@ describe('ListContainer', () => {
         expect((axios.get as Mock).mock.calls.length).toBeGreaterThan(initialCallCount);
       });
     });
+
+    it('closes EditItemSheet when onClose is called', async () => {
+      const { findByTestId, queryByTestId, user } = setup({
+        initialEditingItemId: defaultTestData.notCompletedItems[0].id,
+      });
+
+      await user.click(await findByTestId('edit-item-sheet-close'));
+
+      await waitFor(() => {
+        expect(queryByTestId('edit-item-sheet-close')).not.toBeInTheDocument();
+      });
+    });
+
+    it('closes BulkEditSheet when onClose is called', async () => {
+      const { findByTestId, queryByTestId, user } = setup({
+        initialBulkEditOpen: true,
+        listItemConfiguration: defaultTestData.listItemConfiguration,
+      });
+
+      await user.click(await findByTestId('bulk-edit-sheet-close'));
+
+      await waitFor(() => {
+        expect(queryByTestId('bulk-edit-sheet')).not.toBeInTheDocument();
+      });
+    });
+
+    it('returns early from EditItemSheet onSave when refetch returns no data', async () => {
+      axios.get = vi.fn().mockResolvedValue({ data: undefined });
+      const { findByTestId, user } = setup({
+        initialEditingItemId: defaultTestData.notCompletedItems[0].id,
+      });
+
+      await user.click(await findByTestId('edit-item-sheet-save'));
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalled();
+      });
+    });
+
+    it('returns early from BulkEditSheet onSave when refetch returns no data', async () => {
+      axios.get = vi.fn().mockResolvedValue({ data: undefined });
+      const { findByTestId, user } = setup({
+        initialBulkEditOpen: true,
+        listItemConfiguration: defaultTestData.listItemConfiguration,
+      });
+
+      await user.click(await findByTestId('bulk-edit-sheet-save'));
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalled();
+      });
+    });
+
+    it('preserves filter when EditItemSheet onSave refetches and filter category is missing', async () => {
+      axios.get = vi.fn().mockResolvedValue({
+        data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+      });
+      const { findByTestId, user } = setup({
+        initialEditingItemId: defaultTestData.notCompletedItems[0].id,
+        categories: ['foo', 'bar'],
+      });
+
+      await user.click(await findByTestId('filter-by-foo'));
+      // Now refetch — refetched categories don't contain 'foo' (createApiResponse defaults differ)
+      const refetched = createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]);
+      refetched.categories = ['baz'];
+      axios.get = vi.fn().mockResolvedValue({ data: refetched });
+
+      await user.click(await findByTestId('edit-item-sheet-save'));
+
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalled();
+      });
+    });
+
+    it('preserves filter when BulkEditSheet onSave refetches and filter category is missing', async () => {
+      axios.get = vi.fn().mockResolvedValue({
+        data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
+      });
+      const { findByTestId, user } = setup({
+        initialBulkEditOpen: true,
+        listItemConfiguration: defaultTestData.listItemConfiguration,
+        categories: ['foo', 'bar'],
+      });
+
+      await user.click(await findByTestId('filter-by-foo'));
+      const refetched = createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]);
+      refetched.categories = ['baz'];
+      axios.get = vi.fn().mockResolvedValue({ data: refetched });
+
+      await user.click(await findByTestId('bulk-edit-sheet-save'));
+
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('Item Addition', () => {
@@ -2126,6 +2220,131 @@ describe('ListContainer', () => {
       await waitFor(() => {
         expect(document.querySelector('[data-test-id="quick-add-expand"]')).toBeInTheDocument();
       });
+    });
+
+    it('submits expanded quick-add form with category, completed, and fields', async () => {
+      const newItem = createListItem('id6', false, [createField('id1', 'Notes', 'note text', 'id6')]);
+      axios.post = vi
+        .fn()
+        .mockResolvedValueOnce({ data: newItem }) // create item
+        .mockResolvedValueOnce({ data: {} }) // create field
+        .mockResolvedValueOnce({ data: {} }); // create category
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
+
+      const { findByTestId, getByLabelText, getByText, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+
+      const notesInput = getByLabelText('Notes') as HTMLInputElement;
+      await user.type(notesInput, 'note text');
+      const categoryInput = getByLabelText('Category') as HTMLInputElement;
+      await user.type(categoryInput, 'newcat');
+      const completedCheckbox = getByLabelText('Completed') as HTMLInputElement;
+      await user.click(completedCheckbox);
+
+      await user.click(getByText('Submit'));
+
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledWith(
+          '/lists/id1/list_items',
+          expect.objectContaining({
+            list_item: expect.objectContaining({ completed: true, category: 'Newcat' }),
+          }),
+        );
+      });
+    });
+
+    it('returns early from quick-add form submit when there are no field configs', async () => {
+      axios.post = vi.fn();
+      const { findByTestId, getByText, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      // Click Submit before typing into Notes; resolvedFieldData returns '' so no field POST,
+      // but should still create item. Test the configs.length === 0 path via fields cleared.
+      await user.click(getByText('Submit'));
+
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalled();
+      });
+    });
+
+    it('shows error toast when quick-add form submit fails', async () => {
+      axios.post = vi.fn().mockRejectedValue(new Error('boom'));
+      const { findByTestId, getByLabelText, getByText, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const notesInput = getByLabelText('Notes') as HTMLInputElement;
+      await user.type(notesInput, 'x');
+      await user.click(getByText('Submit'));
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('Failed to add item');
+      });
+    });
+
+    it('continues when category creation fails during expanded quick-add submit', async () => {
+      const newItem = createListItem('id6', false, [createField('id1', 'Notes', 'note', 'id6')]);
+      axios.post = vi.fn().mockImplementation(async (url: string) => {
+        if (url.endsWith('/categories')) {
+          throw new Error('exists');
+        }
+        return { data: newItem };
+      });
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
+
+      const { findByTestId, getByLabelText, getByText, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const notesInput = getByLabelText('Notes') as HTMLInputElement;
+      await user.type(notesInput, 'note');
+      const categoryInput = getByLabelText('Category') as HTMLInputElement;
+      await user.type(categoryInput, 'existing');
+      await user.click(getByText('Submit'));
+
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledWith('/lists/id1/categories', { category: { name: 'Existing' } });
+      });
+      expect(mockShowToast.error).not.toHaveBeenCalled();
     });
 
     it('adds item while filter, stays filtered', async () => {

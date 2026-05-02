@@ -11,8 +11,6 @@ export interface ICompletedItemsSectionProps {
   selectedItems: IListItem[];
   pending: boolean;
   completeMultiSelect: boolean;
-  setCopy: (value: boolean) => void;
-  setMove: (value: boolean) => void;
   setSelectedItems: (items: IListItem[]) => void;
   setCompleteMultiSelect: (value: boolean) => void;
   handleItemSelect: (item: IListItem) => void;

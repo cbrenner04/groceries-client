@@ -403,6 +403,54 @@ describe('BulkEditListItemsForm', () => {
     });
   });
 
+  it('uses empty initial category when items have different categories', () => {
+    const mixedCategoryItems = [
+      { ...mockItems[0], category: 'Produce' },
+      { ...mockItems[1], category: 'Dairy' },
+    ];
+    const { container } = renderComponent({ items: mixedCategoryItems });
+    const categoryInput = container.querySelector('input[id="category"]') as HTMLInputElement;
+    expect(categoryInput.value).toBe('');
+  });
+
+  it('toggles clear category off when checkbox is clicked twice', async () => {
+    const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
+    const { user, container } = renderComponent({ items: itemsWithCategory });
+    const clearCategoryCheckbox = container.querySelector('input[id="clear_category"]') as HTMLInputElement;
+
+    await user.click(clearCategoryCheckbox);
+    expect(clearCategoryCheckbox.checked).toBe(true);
+
+    await user.click(clearCategoryCheckbox);
+    expect(clearCategoryCheckbox.checked).toBe(false);
+  });
+
+  it('handles 403/404 error response when status is missing', async () => {
+    const axiosError = { response: {} } as AxiosError;
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
+
+    const { getByText, user } = renderComponent();
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('');
+    });
+  });
+
+  it('handles validation errors with missing response.data', async () => {
+    const axiosError = { response: { status: 422 } } as AxiosError;
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
+
+    const { getByText, user } = renderComponent();
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('');
+    });
+  });
+
   it('handles unexpected error', async () => {
     const axiosError = {
       message: 'Unexpected error',

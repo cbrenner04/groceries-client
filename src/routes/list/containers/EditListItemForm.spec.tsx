@@ -674,5 +674,64 @@ describe('EditListItemForm', () => {
         expect(mockOnCancel).toHaveBeenCalled();
       });
     });
+
+    it('does not navigate to sign_in on 401 in bottom sheet mode', async () => {
+      mockAxios.put = vi.fn().mockRejectedValueOnce({ response: { status: 401 } } as AxiosError);
+
+      renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      });
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles validation errors with empty response.data', async () => {
+      mockAxios.put = vi.fn().mockRejectedValueOnce({ response: { status: 422 } } as AxiosError);
+
+      renderForm(<EditListItemForm {...defaultProps} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('');
+      });
+    });
+
+    it('preserves non-string field data without trimming', async () => {
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+      mockAxios.delete = vi.fn().mockResolvedValue({});
+
+      const itemWithNumericField = createListItem(
+        '456',
+        false,
+        [
+          {
+            ...createField('field1', 'quantity', '0', '456', { list_item_field_configuration_id: 'field-config1' }),
+            data: 7 as unknown as string,
+          },
+          createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
+        ],
+        { category: 'Produce' },
+      );
+
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithNumericField} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1', {
+          list_item_field: { data: 7, list_item_field_configuration_id: 'field-config1' },
+        });
+      });
+    });
   });
 });

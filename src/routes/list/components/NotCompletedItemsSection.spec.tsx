@@ -34,8 +34,6 @@ const baseProps = {
   filter: '',
   displayedCategories: [],
   incompleteMultiSelect: false,
-  setCopy: vi.fn(),
-  setMove: vi.fn(),
   setSelectedItems: vi.fn(),
   setIncompleteMultiSelect: vi.fn(),
   handleItemSelect: vi.fn(),
@@ -147,5 +145,11 @@ describe('NotCompletedItemsSection', () => {
     );
 
     expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
+  });
+
+  it('renders items with no fields property', () => {
+    const item = { ...createListItem('no-fields', false, []), fields: undefined as unknown as [] };
+    render(<NotCompletedItemsSection {...baseProps} notCompletedItems={[item]} displayedCategories={['']} />);
+    expect(screen.getByText('no-fields')).toBeInTheDocument();
   });
 });

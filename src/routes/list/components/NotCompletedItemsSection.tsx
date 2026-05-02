@@ -14,8 +14,6 @@ export interface INotCompletedItemsSectionProps {
   filter: string;
   displayedCategories: string[];
   incompleteMultiSelect: boolean;
-  setCopy: (value: boolean) => void;
-  setMove: (value: boolean) => void;
   setSelectedItems: (items: IListItem[]) => void;
   setIncompleteMultiSelect: (value: boolean) => void;
   handleItemSelect: (item: IListItem) => void;

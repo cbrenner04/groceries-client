@@ -1001,8 +1001,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           filter={filter}
           displayedCategories={displayedCategories}
           incompleteMultiSelect={multiSelectActive}
-          setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
-          setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
           setIncompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
@@ -1019,8 +1017,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           selectedItems={selectedItems}
           pending={pending}
           completeMultiSelect={multiSelectActive}
-          setCopy={(): void => setCopyMoveSheet({ mode: 'copy' })}
-          setMove={(): void => setCopyMoveSheet({ mode: 'move' })}
           setSelectedItems={setSelectedItems}
           setCompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}

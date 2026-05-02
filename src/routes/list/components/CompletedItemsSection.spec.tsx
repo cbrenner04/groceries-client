@@ -39,8 +39,6 @@ const baseProps = {
   selectedItems: [],
   pending: false,
   completeMultiSelect: false,
-  setCopy: vi.fn(),
-  setMove: vi.fn(),
   setSelectedItems: vi.fn(),
   setCompleteMultiSelect: vi.fn(),
   handleItemSelect: vi.fn(),
@@ -156,6 +154,12 @@ describe('CompletedItemsSection', () => {
 
     await user.click(screen.getByTestId('item-edit'));
     expect(baseProps.handleItemEdit).toHaveBeenCalledWith(item);
+  });
+
+  it('renders items with no fields property', () => {
+    const item = { ...createListItem('no-fields', true, []), fields: undefined as unknown as [] };
+    render(<CompletedItemsSection {...baseProps} completedItems={[item]} completedExpanded={true} />);
+    expect(screen.getByText('no-fields')).toBeInTheDocument();
   });
 
   it('has correct aria-expanded attribute on the header button', () => {

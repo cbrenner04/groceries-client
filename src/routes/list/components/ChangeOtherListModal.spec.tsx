@@ -413,5 +413,38 @@ describe('ChangeOtherListModal', () => {
 
       expect(getByText('Move to List')).toBeInTheDocument();
     });
+
+    it('toggles to existing list select within BottomSheet when lists are available', async () => {
+      const { user, findByText } = setup({ copy: true, useBottomSheet: true });
+
+      await user.click(await findByText('Create new list'));
+      await user.click(await findByText('Choose existing list'));
+
+      expect(await findByText(instructions('copy'))).toBeVisible();
+    });
+
+    it('does not call setShow when cancelAction is invoked with non-function setShow', async () => {
+      const { user, getByText } = setup({
+        copy: true,
+        useBottomSheet: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      await user.click(getByText('Cancel'));
+      // Reaching here without throwing covers the typeof !== 'function' branch
+      expect(getByText('Cancel')).toBeInTheDocument();
+    });
+
+    it('does not throw when BottomSheet is closed and setShow is not a function', async () => {
+      const { user, getByRole } = setup({
+        copy: true,
+        useBottomSheet: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      const overlay = getByRole('dialog');
+      await user.click(overlay);
+      expect(overlay).toBeInTheDocument();
+    });
   });
 });
