@@ -7,6 +7,9 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
+import type { IChangeOtherListModalProps } from '../components/ChangeOtherListModal';
+import type { IEditItemSheetProps } from '../components/EditItemSheet';
+import type { IBulkEditSheetProps } from '../components/BulkEditSheet';
 import { defaultTestData, createApiResponse, createListItem, createField } from 'test-utils/factories';
 import { listCache } from 'utils/lightweightCache';
 import { clearFieldConfigCache } from 'utils/fieldConfigCache';
@@ -40,8 +43,7 @@ vi.mock('react-router', async () => ({
 
 vi.mock('../components/ChangeOtherListModal', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: (props: any): React.JSX.Element => (
+  default: (props: IChangeOtherListModalProps & { closeModal?: () => void }): React.JSX.Element => (
     <div role="dialog">
       <button data-test-id="change-other-list-handle-move" onClick={props.handleMove}>
         handle move
@@ -55,8 +57,7 @@ vi.mock('../components/ChangeOtherListModal', () => ({
 
 vi.mock('../components/EditItemSheet', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: (props: any): React.JSX.Element => (
+  default: (props: IEditItemSheetProps): React.JSX.Element => (
     <div role="dialog">
       <button data-test-id="edit-item-sheet-save" onClick={props.onSave}>
         save edit item
@@ -70,8 +71,7 @@ vi.mock('../components/EditItemSheet', () => ({
 
 vi.mock('../components/BulkEditSheet', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: (props: any): React.JSX.Element => (
+  default: (props: IBulkEditSheetProps): React.JSX.Element => (
     <div data-test-id="bulk-edit-sheet">
       <button data-test-id="bulk-edit-sheet-save" onClick={props.onSave}>
         save bulk edit
@@ -576,9 +576,7 @@ describe('ListContainer', () => {
   describe('Prefetch and undefined UI states', () => {
     afterEach(() => {
       vi.unstubAllEnvs();
-      // allow cleanup of test shim
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (global as any).requestIdleCallback;
+      delete (globalThis as { requestIdleCallback?: unknown }).requestIdleCallback;
     });
 
     it('uses preloaded field configurations without making API calls', async () => {
@@ -728,8 +726,9 @@ describe('ListContainer', () => {
 
     it('does not idle-prefetch when disabled via environment variable', async () => {
       import.meta.env.VITE_PREFETCH_IDLE = 'false';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
+      (globalThis as { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback = (
+        cb: () => void,
+      ): number => {
         cb();
         return 1;
       };
@@ -759,8 +758,9 @@ describe('ListContainer', () => {
 
     it('does not idle-prefetch when listItemFieldConfigurations already exist', async () => {
       import.meta.env.VITE_PREFETCH_IDLE = 'true';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
+      (globalThis as { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback = (
+        cb: () => void,
+      ): number => {
         cb();
         return 1;
       };
@@ -795,8 +795,9 @@ describe('ListContainer', () => {
 
     it('does not idle-prefetch when no listItemConfiguration ID exists', async () => {
       import.meta.env.VITE_PREFETCH_IDLE = 'true';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
+      (globalThis as { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback = (
+        cb: () => void,
+      ): number => {
         cb();
         return 1;
       };
@@ -934,8 +935,9 @@ describe('ListContainer', () => {
       // Explicitly disable idle prefetch
       import.meta.env.VITE_PREFETCH_IDLE = 'false';
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).requestIdleCallback = (cb: () => void): number => {
+      (globalThis as { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback = (
+        cb: () => void,
+      ): number => {
         cb();
         return 1;
       };
