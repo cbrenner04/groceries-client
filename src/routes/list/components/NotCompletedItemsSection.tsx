@@ -1,6 +1,12 @@
 import React, { useCallback, type ReactNode } from 'react';
 
-import type { EUserPermissions, IListItem, IListItemField, TUserPermissions } from 'typings';
+import type {
+  EUserPermissions,
+  IListItem,
+  IListItemField,
+  IListItemFieldConfiguration,
+  TUserPermissions,
+} from 'typings';
 import { normalizeCategoryKey } from 'utils/format';
 import { ListItemRow } from 'components/domain/ListItemRow';
 import { CategoryGroup } from 'components/domain/CategoryGroup';
@@ -13,6 +19,7 @@ export interface INotCompletedItemsSectionProps {
   pending: boolean;
   filter: string;
   displayedCategories: string[];
+  listItemFieldConfigurations: IListItemFieldConfiguration[];
   incompleteMultiSelect: boolean;
   setSelectedItems: (items: IListItem[]) => void;
   setIncompleteMultiSelect: (value: boolean) => void;
@@ -83,7 +90,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
                   item={item}
                   listId={item.list_id}
                   fields={(item.fields ?? []) as IListItemField[]}
-                  fieldConfigurations={[]}
+                  fieldConfigurations={props.listItemFieldConfigurations}
                   isMultiSelectActive={props.incompleteMultiSelect}
                   isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
                   onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
@@ -102,6 +109,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
     [
       props.filter,
       props.displayedCategories,
+      props.listItemFieldConfigurations,
       props.permissions,
       props.selectedItems,
       props.pending,

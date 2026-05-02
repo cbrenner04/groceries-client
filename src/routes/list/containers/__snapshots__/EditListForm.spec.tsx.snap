@@ -8,7 +8,6 @@ exports[`EditListForm > renders with correct initial values 1`] = `
   <br />
   <form
     autocomplete="off"
-    class=""
   >
     <div
       class="tw:mb-3"
