@@ -6,6 +6,7 @@ import axios from 'utils/api';
 
 import BulkEditListItems from './BulkEditListItems';
 import { EListItemFieldType, type IListItem } from 'typings';
+import * as utils from './utils';
 
 describe('BulkEditListItems', () => {
   const renderBulkEditListItems = (): RenderResult =>
@@ -36,13 +37,12 @@ describe('BulkEditListItems', () => {
   });
 
   it('renders UnknownError when fulfilled data is undefined', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: undefined });
+    const fetchListSpy = vi.spyOn(utils, 'fetchList').mockResolvedValue(undefined);
     const { container, findByRole } = renderBulkEditListItems();
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
+    fetchListSpy.mockRestore();
   });
 
   it('calls the correct API endpoint with search params', async () => {

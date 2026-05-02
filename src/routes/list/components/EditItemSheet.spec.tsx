@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import type { AxiosError } from 'axios';
 
 import axios from 'utils/api';
@@ -11,6 +12,8 @@ import { showToast } from 'utils/toast';
 
 vi.mock('utils/api');
 vi.mock('utils/toast');
+
+const renderSheet = (ui: React.ReactElement): RenderResult => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 const mockShowToast = showToast as Mocked<typeof showToast>;
 
@@ -27,7 +30,7 @@ describe('EditItemSheet', () => {
   it('renders loading state initially', () => {
     axios.get = vi.fn().mockImplementation(() => new Promise(() => {}));
 
-    const { getByText } = render(
+    const { getByText } = renderSheet(
       <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
     );
 
@@ -62,7 +65,7 @@ describe('EditItemSheet', () => {
 
     axios.get = vi.fn().mockResolvedValue({ data: itemData });
 
-    const { getByDisplayValue } = render(
+    const { getByDisplayValue } = renderSheet(
       <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
     );
 
@@ -99,7 +102,7 @@ describe('EditItemSheet', () => {
 
     axios.get = vi.fn().mockResolvedValue({ data: itemData });
 
-    const { getByRole } = render(
+    const { getByRole } = renderSheet(
       <EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />,
     );
 
@@ -119,7 +122,7 @@ describe('EditItemSheet', () => {
     (error as unknown as { response?: { status?: number } }).response = { status: 404 };
     axios.get = vi.fn().mockRejectedValue(error);
 
-    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
@@ -132,7 +135,7 @@ describe('EditItemSheet', () => {
     (error as unknown as { response?: { status?: number } }).response = { status: 403 };
     axios.get = vi.fn().mockRejectedValue(error);
 
-    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
@@ -145,7 +148,7 @@ describe('EditItemSheet', () => {
     (error as unknown as { response?: { status?: number } }).response = { status: 401 };
     axios.get = vi.fn().mockRejectedValue(error);
 
-    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
@@ -157,7 +160,7 @@ describe('EditItemSheet', () => {
     const error = new Error('Server error') as AxiosError;
     axios.get = vi.fn().mockRejectedValue(error);
 
-    render(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
+    renderSheet(<EditItemSheet listId={listId} itemId={itemId} onClose={mockOnClose} onSave={mockOnSave} />);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Failed to load item');

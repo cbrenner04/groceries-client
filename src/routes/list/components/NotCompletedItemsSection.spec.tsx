@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { EUserPermissions } from 'typings';
 import { createListItem } from 'test-utils/factories';
+import type { IListItemRowProps } from 'components/domain/ListItemRow';
 
 import NotCompletedItemsSection from './NotCompletedItemsSection';
 
 vi.mock('components/domain/ListItemRow', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ListItemRow: (props: any): React.JSX.Element => (
+  ListItemRow: (props: IListItemRowProps): React.JSX.Element => (
     <div data-test-id="list-item">
       {props.item.id}
-      <button data-test-id="item-refresh" onClick={() => props.onRefresh(props.item.id)}>
+      <button data-test-id="item-refresh" onClick={(): void => props.onRefresh(props.item.id)}>
         refresh
       </button>
     </div>

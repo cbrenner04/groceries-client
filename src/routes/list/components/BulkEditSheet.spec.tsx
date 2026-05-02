@@ -4,16 +4,16 @@ import userEvent from '@testing-library/user-event';
 
 import { defaultTestData, createListItem, createField } from 'test-utils/factories';
 import type { IListItemFieldConfiguration } from 'typings';
+import type { IBulkEditListItemsFormProps } from '../containers/BulkEditListItemsForm';
 import BulkEditSheet from './BulkEditSheet';
 
 vi.mock('../containers/BulkEditListItemsForm', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: (props: any): React.JSX.Element => (
+  default: (props: IBulkEditListItemsFormProps): React.JSX.Element => (
     <div>
       <div>Update attributes for all items.</div>
-      <button onClick={() => props.navigate(`/lists/${props.list.id}`)}>Save to list</button>
-      <button onClick={() => props.navigate('/other-path')}>Navigate elsewhere</button>
+      <button onClick={(): void => props.navigate(`/lists/${props.list.id}`)}>Save to list</button>
+      <button onClick={(): void => props.navigate('/other-path')}>Navigate elsewhere</button>
       <button onClick={props.onCancel}>Cancel</button>
     </div>
   ),

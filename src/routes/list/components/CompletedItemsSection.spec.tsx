@@ -3,25 +3,25 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { EUserPermissions } from 'typings';
 import { createListItem, createField } from 'test-utils/factories';
+import type { IListItemRowProps } from 'components/domain/ListItemRow';
 
 import CompletedItemsSection from './CompletedItemsSection';
 
 vi.mock('components/domain/ListItemRow', () => ({
   __esModule: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ListItemRow: (props: any): React.JSX.Element => (
+  ListItemRow: (props: IListItemRowProps): React.JSX.Element => (
     <div data-test-id="list-item">
       {props.item.id}
-      <button data-test-id="item-select" onClick={() => props.onSelect(props.item.id)}>
+      <button data-test-id="item-select" onClick={(): void => props.onSelect(props.item.id)}>
         select
       </button>
-      <button data-test-id="item-complete" onClick={() => props.onComplete(props.item.id)}>
+      <button data-test-id="item-complete" onClick={(): void => props.onComplete(props.item.id)}>
         complete
       </button>
-      <button data-test-id="item-refresh" onClick={() => props.onRefresh(props.item.id)}>
+      <button data-test-id="item-refresh" onClick={(): void => props.onRefresh(props.item.id)}>
         refresh
       </button>
-      <button data-test-id="item-edit" onClick={() => props.onEdit(props.item.id)}>
+      <button data-test-id="item-edit" onClick={(): void => props.onEdit(props.item.id)}>
         edit
       </button>
     </div>
