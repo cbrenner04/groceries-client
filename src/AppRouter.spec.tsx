@@ -4,20 +4,29 @@ import userEvent from '@testing-library/user-event';
 
 import AppRouter from './AppRouter';
 
-const { mockDelete, mockPreloadComponent, mockShowToastInfo } = vi.hoisted(() => ({
-  mockDelete: vi.fn(),
-  mockPreloadComponent: vi.fn(),
-  mockShowToastInfo: vi.fn(),
-}));
+const { mockDelete, mockGet, mockPost, mockPreloadComponent, mockPut, mockShowToastError, mockShowToastInfo } =
+  vi.hoisted(() => ({
+    mockDelete: vi.fn(),
+    mockGet: vi.fn(),
+    mockPost: vi.fn(),
+    mockPreloadComponent: vi.fn(),
+    mockPut: vi.fn(),
+    mockShowToastError: vi.fn(),
+    mockShowToastInfo: vi.fn(),
+  }));
 
 vi.mock('./utils/api', () => ({
   default: {
     delete: mockDelete,
+    get: mockGet,
+    post: mockPost,
+    put: mockPut,
   },
 }));
 
 vi.mock('./utils/toast', () => ({
   showToast: {
+    error: mockShowToastError,
     info: mockShowToastInfo,
   },
 }));
@@ -47,43 +56,35 @@ vi.mock('./utils/lazyComponents', () => ({
   preloadComponent: mockPreloadComponent,
 }));
 
-vi.mock('./routes/lists/CompletedLists', () => ({
-  default: (): React.JSX.Element => <div>Completed Lists Route</div>,
+vi.mock('./routes/lists/utils', () => ({
+  fetchLists: vi.fn().mockResolvedValue({
+    userId: 'user-1',
+    pendingLists: [],
+    completedLists: [],
+    incompleteLists: [],
+    currentUserPermissions: 'write',
+    listItemConfigurations: [],
+  }),
+}));
+
+vi.mock('./routes/lists/containers/ListsContainer', () => ({
+  default: (props: { initialFilter?: 'all' | 'pending' | 'active' | 'completed' }): React.JSX.Element => (
+    <div>Lists Container Route {props.initialFilter ?? 'all'}</div>
+  ),
+}));
+
+vi.mock('./routes/templates/utils', () => ({
+  fetchTemplates: vi.fn().mockResolvedValue({
+    templates: [],
+  }),
+}));
+
+vi.mock('./routes/templates/containers/TemplatesContainer', () => ({
+  default: (): React.JSX.Element => <div>Templates Container Route</div>,
 }));
 
 vi.mock('./routes/users/EditInvite', () => ({
   default: (): React.JSX.Element => <div>Edit Invite Route</div>,
-}));
-
-vi.mock('./routes/users/EditPassword', () => ({
-  default: (): React.JSX.Element => <div>Edit Password Route</div>,
-}));
-
-vi.mock('./routes/users/InviteForm', () => ({
-  default: (): React.JSX.Element => <div>Invite Form Route</div>,
-}));
-
-vi.mock('./routes/lists/Lists', () => ({
-  default: (): React.JSX.Element => <div>Lists Route</div>,
-}));
-
-vi.mock('./routes/templates/Templates', () => ({
-  default: (): React.JSX.Element => <div>Templates Route</div>,
-}));
-
-vi.mock('./routes/users/NewPassword', () => ({
-  default: (): React.JSX.Element => <div>New Password Route</div>,
-}));
-
-vi.mock('./routes/users/NewSession', () => ({
-  default: (props: { signInUser: (accessToken: string, client: string, uid: string) => void }): React.JSX.Element => (
-    <div>
-      <div>New Session Route</div>
-      <button type="button" data-test-id="sign-in-user" onClick={() => props.signInUser('token', 'client', 'uid')}>
-        Sign In
-      </button>
-    </div>
-  ),
 }));
 
 vi.mock('./routes/error_pages/PageNotFound', () => ({
@@ -108,6 +109,23 @@ describe('AppRouter', () => {
     sessionStorage.clear();
     mockDelete.mockReset();
     mockDelete.mockResolvedValue({});
+    mockGet.mockReset();
+    mockGet.mockRejectedValue(new Error('not signed in'));
+    mockPost.mockReset();
+    mockPost.mockResolvedValue({
+      headers: {
+        'access-token': 'token',
+        client: 'client',
+      },
+      data: {
+        data: {
+          uid: 'uid',
+        },
+      },
+    });
+    mockPut.mockReset();
+    mockPut.mockResolvedValue({});
+    mockShowToastError.mockReset();
     mockShowToastInfo.mockReset();
     mockPreloadComponent.mockReset();
   });
@@ -115,7 +133,7 @@ describe('AppRouter', () => {
   it('redirects root path to lists and hides bottom nav when logged out', async () => {
     const { findByText, queryByTestId } = renderAppRouter('/');
 
-    expect(await findByText('Lists Route')).toBeVisible();
+    expect(await findByText('Lists Container Route all')).toBeVisible();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
     expect(mockPreloadComponent).toHaveBeenCalledTimes(4);
   });
@@ -132,17 +150,19 @@ describe('AppRouter', () => {
 
     const { findByTestId, findByText } = renderAppRouter('/lists');
 
-    expect(await findByText('Lists Route')).toBeVisible();
+    expect(await findByText('Lists Container Route all')).toBeVisible();
     expect(await findByTestId('bottom-nav')).toBeVisible();
   });
 
   it('hides bottom nav on auth pages even after sign in and shows it after navigation to an app page', async () => {
     const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/users/sign_in');
+    const { findByLabelText, findByRole, findByTestId, queryByTestId } = renderAppRouter('/users/sign_in');
 
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
 
-    await user.click(await findByTestId('sign-in-user'));
+    await user.type(await findByLabelText('Email'), 'user@example.com');
+    await user.type(await findByLabelText('Password'), 'password');
+    await user.click(await findByRole('button', { name: 'Log In' }));
 
     expect(sessionStorage.getItem('user')).toContain('"access-token":"token"');
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
@@ -154,7 +174,7 @@ describe('AppRouter', () => {
   });
 
   it('renders all route elements', async () => {
-    expect(await renderAppRouter('/completed_lists').findByText('Completed Lists Route')).toBeVisible();
+    expect(await renderAppRouter('/completed_lists').findByText('Lists Container Route completed')).toBeVisible();
     expect(await renderAppRouter('/lists/1').findByText('List Route')).toBeVisible();
     expect(await renderAppRouter('/lists/1/edit').findByText('Edit List Route')).toBeVisible();
     expect(await renderAppRouter('/lists/1/list_items/2/edit').findByText('Edit List Item Route')).toBeVisible();
@@ -162,11 +182,17 @@ describe('AppRouter', () => {
       await renderAppRouter('/lists/1/list_items/bulk-edit').findByText('Bulk Edit List Items Route'),
     ).toBeVisible();
     expect(await renderAppRouter('/lists/1/users_lists').findByText('Share List Route')).toBeVisible();
-    expect(await renderAppRouter('/templates').findByText('Templates Route')).toBeVisible();
+    expect(await renderAppRouter('/templates').findByText('Templates Container Route')).toBeVisible();
     expect(await renderAppRouter('/templates/2/edit').findByText('Edit Template Route')).toBeVisible();
-    expect(await renderAppRouter('/users/password/new').findByText('New Password Route')).toBeVisible();
-    expect(await renderAppRouter('/users/password/edit').findByText('Edit Password Route')).toBeVisible();
-    expect(await renderAppRouter('/users/invitation/new').findByText('Invite Form Route')).toBeVisible();
+    expect(
+      await renderAppRouter('/users/password/new').findByRole('heading', { name: 'Forgot your password?' }),
+    ).toBeVisible();
+    expect(
+      await renderAppRouter('/users/password/edit').findByRole('heading', { name: 'Change your password' }),
+    ).toBeVisible();
+    expect(
+      await renderAppRouter('/users/invitation/new').findByRole('heading', { name: 'Send Invitation' }),
+    ).toBeVisible();
     expect(await renderAppRouter('/users/invitation/accept').findByText('Edit Invite Route')).toBeVisible();
   });
 
@@ -209,7 +235,7 @@ describe('AppRouter', () => {
     expect(await findByTestId('settings-menu')).toBeVisible();
 
     await user.click(await findByTestId('nav-templates'));
-    expect(await findByText('Templates Route')).toBeVisible();
+    expect(await findByText('Templates Container Route')).toBeVisible();
     await waitFor(() => {
       expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
     });
@@ -255,7 +281,7 @@ describe('AppRouter', () => {
     await user.click(await findByTestId('nav-settings'));
     await user.click(await findByTestId('log-out-link'));
 
-    expect(await findByText('New Session Route')).toBeVisible();
+    expect(await findByText('Log in')).toBeVisible();
     expect(sessionStorage.getItem('user')).toBeNull();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
     expect(mockDelete).toHaveBeenCalledWith('/auth/sign_out');
