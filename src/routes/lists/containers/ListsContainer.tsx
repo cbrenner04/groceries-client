@@ -361,6 +361,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   const filtered = getFilteredLists();
   const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
+  const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -557,6 +558,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       <BottomInputBar
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
+        hidden={hideBottomInputBar}
         expandedContent={
           <Select
             label="Template"

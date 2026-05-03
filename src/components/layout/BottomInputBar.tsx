@@ -7,6 +7,7 @@ export interface IBottomInputBarProps {
   initialExpanded?: boolean;
   autoCollapseOnComplete?: boolean;
   onInputFocus?: () => void;
+  hidden?: boolean;
   /** Lists page: Enter must submit after choosing a template while the bar is expanded (focus also expands). */
   allowEnterSubmitWhenExpanded?: boolean;
 }
@@ -18,6 +19,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     expandedContent,
     initialExpanded = false,
     onInputFocus,
+    hidden = false,
     allowEnterSubmitWhenExpanded = false,
   } = props;
 
@@ -51,7 +53,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const containerClassName =
-    'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 ' +
+    'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
     'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200';
 
@@ -73,6 +75,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const expandedClassName =
     'tw:overflow-y-auto tw:transition-all tw:duration-200 ' +
     (expanded ? 'tw:max-h-[60vh] tw:px-4 tw:pb-4' : 'tw:max-h-0 tw:overflow-hidden');
+
+  if (hidden) {
+    return <></>;
+  }
 
   return (
     <div className={containerClassName}>

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
@@ -7,13 +7,16 @@ import EditPassword from './routes/users/EditPassword';
 import InviteForm from './routes/users/InviteForm';
 import Lists from './routes/lists/Lists';
 import Templates from './routes/templates/Templates';
-import AppNav from './components/AppNav';
 import NewPassword from './routes/users/NewPassword';
 import NewSession from './routes/users/NewSession';
 import PageNotFound from './routes/error_pages/PageNotFound';
 import List from './routes/list/List';
 import EditListItem from './routes/list/EditListItem';
 import { ThemeProvider } from './components/ThemeProvider';
+import { SettingsMenu } from './components/domain/SettingsMenu';
+import { BottomNavBar } from './components/layout/BottomNavBar';
+import { showToast } from './utils/toast';
+import axios from './utils/api';
 
 // Lazy load heavy administrative/infrequent components for better Mobile Safari performance
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
@@ -30,6 +33,111 @@ interface IUser {
 }
 
 export const UserContext = createContext<IUser | null>(null);
+
+interface IAppRouterContentProps {
+  signInUser: (accessToken: string, client: string, uid: string) => void;
+  signOutUser: () => void;
+  user: IUser | null;
+}
+
+function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
+  const { signInUser, signOutUser, user } = props;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+
+  const isAuthPage =
+    location.pathname === '/users/sign_in' ||
+    location.pathname === '/users/password/new' ||
+    location.pathname === '/users/password/edit' ||
+    location.pathname === '/users/invitation/accept';
+  const showBottomNav = Boolean(user) && !isAuthPage;
+
+  useEffect(() => {
+    if (!showBottomNav) {
+      setSettingsMenuOpen(false);
+    }
+  }, [showBottomNav]);
+
+  useEffect(() => {
+    setSettingsMenuOpen(false);
+  }, [location.pathname]);
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await axios.delete('/auth/sign_out');
+    } catch {
+      // noop
+    }
+    setSettingsMenuOpen(false);
+    signOutUser();
+    showToast.info('Log out successful');
+    navigate('/users/sign_in');
+  };
+
+  const handleBottomNavClickCapture = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const target = event.target as HTMLElement;
+    const settingsTrigger = target.closest('[data-test-id="nav-settings"]');
+
+    if (settingsTrigger) {
+      event.preventDefault();
+      setSettingsMenuOpen((current) => !current);
+      return;
+    }
+
+    if (settingsMenuOpen) {
+      setSettingsMenuOpen(false);
+    }
+  };
+
+  const handleSettingsMenuClickCapture = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const target = event.target as HTMLElement;
+
+    if (target.closest('[data-test-id="log-out-link"]')) {
+      event.preventDefault();
+      void handleLogout();
+    }
+  };
+
+  return (
+    <>
+      <Routes>
+        {/* routes/lists */}
+        <Route path="/" element={<Navigate to="/lists" />} />
+        <Route path="/lists" element={<Lists />} />
+        <Route path="/completed_lists" element={<CompletedLists />} />
+        {/* routes/list */}
+        <Route path="/lists/:id" element={<List />} />
+        <Route path="/lists/:id/edit" element={<EditList />} />
+        <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+        <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+        {/* routes/share_list */}
+        <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
+        {/* routes/templates */}
+        <Route path="/templates" element={<Templates />} />
+        <Route path="/templates/:id/edit" element={<EditTemplate />} />
+        {/* routes/users */}
+        <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
+        <Route path="/users/password/new" element={<NewPassword />} />
+        <Route path="/users/password/edit" element={<EditPassword />} />
+        <Route path="/users/invitation/new" element={<InviteForm />} />
+        <Route path="/users/invitation/accept" element={<EditInvite />} />
+        {/* routes/error_pages */}
+        <Route errorElement={<PageNotFound />} />
+      </Routes>
+      {showBottomNav ? (
+        <div onClickCapture={handleBottomNavClickCapture}>
+          <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />
+        </div>
+      ) : null}
+      {showBottomNav ? (
+        <div onClickCapture={handleSettingsMenuClickCapture}>
+          <SettingsMenu isOpen={settingsMenuOpen} onClose={() => setSettingsMenuOpen(false)} />
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 export default function AppRouter(): React.JSX.Element {
   const [user, setUser] = useState<IUser | null>(null);
@@ -72,31 +180,7 @@ export default function AppRouter(): React.JSX.Element {
     <ThemeProvider>
       <Router>
         <UserContext.Provider value={user}>
-          <AppNav signOutUser={signOutUser} />
-          <Routes>
-            {/* routes/lists */}
-            <Route path="/" element={<Navigate to="/lists" />} />
-            <Route path="/lists" element={<Lists />} />
-            <Route path="/completed_lists" element={<CompletedLists />} />
-            {/* routes/list */}
-            <Route path="/lists/:id" element={<List />} />
-            <Route path="/lists/:id/edit" element={<EditList />} />
-            <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
-            <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
-            {/* routes/share_list */}
-            <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
-            {/* routes/templates */}
-            <Route path="/templates" element={<Templates />} />
-            <Route path="/templates/:id/edit" element={<EditTemplate />} />
-            {/* routes/users */}
-            <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
-            <Route path="/users/password/new" element={<NewPassword />} />
-            <Route path="/users/password/edit" element={<EditPassword />} />
-            <Route path="/users/invitation/new" element={<InviteForm />} />
-            <Route path="/users/invitation/accept" element={<EditInvite />} />
-            {/* routes/error_pages */}
-            <Route errorElement={<PageNotFound />} />
-          </Routes>
+          <AppRouterContent signInUser={signInUser} signOutUser={signOutUser} user={user} />
         </UserContext.Provider>
       </Router>
     </ThemeProvider>
