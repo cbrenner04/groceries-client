@@ -20,6 +20,7 @@ interface IFulfilledLists {
 
 interface IListsProps {
   initialFilter?: 'all' | 'pending' | 'active' | 'completed';
+  initialEditListId?: string | null;
 }
 
 const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
@@ -46,6 +47,7 @@ const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
               currentUserPermissions={data.currentUserPermissions}
               listItemConfigurations={data.listItemConfigurations}
               initialFilter={props.initialFilter}
+              initialEditListId={props.initialEditListId ?? null}
             />
           );
         }}

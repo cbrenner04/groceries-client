@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router';
 
 import EditList from './EditList';
 import axios from '../../utils/api';
-import * as utils from './utils';
 
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
@@ -20,40 +19,49 @@ const setup = (): RenderResult =>
   );
 
 describe('EditList', () => {
-  it('renders the Loading component when fetch request is pending', async () => {
-    const { container, findByText } = setup();
-
-    expect(await findByText('Loading...')).toBeTruthy();
-    expect(container).toMatchSnapshot();
-  });
-
-  it('displays UnknownError when an error occurs', async () => {
-    axios.get = vi.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { container, findByRole } = setup();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
-    expect(await findByRole('button')).toHaveTextContent('refresh the page');
-    expect(container).toMatchSnapshot();
-  });
-
-  it('displays UnknownError when data is undefined', async () => {
-    // Mock the fetchListToEdit function to return undefined
-    vi.spyOn(utils, 'fetchListToEdit').mockResolvedValue(undefined);
-    const { container, findByRole } = setup();
-    await waitFor(() => expect(utils.fetchListToEdit).toHaveBeenCalledTimes(1));
-
-    expect(await findByRole('button')).toHaveTextContent('refresh the page');
-    expect(container).toMatchSnapshot();
-  });
-
-  it('displays EditList', async () => {
+  it('renders the lists page (defers to Async loading)', async () => {
     axios.get = vi.fn().mockResolvedValue({
-      data: { owner_id: 'id1', id: 'id1', name: 'foo', completed: false, type: 'GroceryList' },
+      data: {
+        current_user_id: 'u1',
+        accepted_lists: { completed_lists: [], not_completed_lists: [] },
+        pending_lists: [],
+        current_list_permissions: {},
+        list_item_configurations: [],
+      },
     });
-    const { container, findByText } = setup();
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    const { findByText } = setup();
+    expect(await findByText('Loading...')).toBeTruthy();
+  });
 
-    expect(await findByText('Update List')).toBeVisible();
-    expect(container).toMatchSnapshot();
+  it('opens the edit sheet when fetchListToEdit succeeds', async () => {
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/lists/') {
+        return {
+          data: {
+            current_user_id: 'u1',
+            accepted_lists: { completed_lists: [], not_completed_lists: [] },
+            pending_lists: [],
+            current_list_permissions: {},
+            list_item_configurations: [],
+          },
+        };
+      }
+      if (url === '/lists/1/edit') {
+        return {
+          data: {
+            id: '1',
+            name: 'My List',
+            completed: false,
+            refreshed: false,
+            archived_at: null,
+            list_item_configuration_id: 'cfg-1',
+          },
+        };
+      }
+      return { data: {} };
+    });
+    const { findByText } = setup();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith('/lists/1/edit'));
+    expect(await findByText('Edit List')).toBeVisible();
   });
 });

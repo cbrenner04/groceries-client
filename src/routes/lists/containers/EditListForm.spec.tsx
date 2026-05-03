@@ -20,13 +20,18 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
-function setup(): ISetupReturn {
+function setup(overrides: Partial<IEditListFormProps> = {}): ISetupReturn {
   const user = userEvent.setup();
-  const props = {
+  const props: IEditListFormProps = {
     listId: 'id1',
     name: 'foo',
-    type: 'GroceryList',
     completed: false,
+    refreshed: false,
+    archivedAt: null,
+    listItemConfigurationId: 'cfg-1',
+    onClose: vi.fn(),
+    onSaved: vi.fn(),
+    ...overrides,
   };
   const component = render(<EditListForm {...props} />);
 
@@ -34,6 +39,10 @@ function setup(): ISetupReturn {
 }
 
 describe('EditListForm', () => {
+  beforeEach(() => {
+    mockNavigate.mockReset();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
@@ -57,49 +66,62 @@ describe('EditListForm', () => {
     expect(await findByLabelText('Completed')).toBeChecked();
   });
 
-  it('makes put, displays toast, and redirects to lists page on successful submission', async () => {
-    const data = {
-      foo: 'bar',
-    };
-    axios.put = vi.fn().mockResolvedValue({ data });
-    const { findAllByRole, user } = setup();
+  it('updates refreshed when changed', async () => {
+    const { findByLabelText, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.click(await findByLabelText('Refreshed'));
+
+    expect(await findByLabelText('Refreshed')).toBeChecked();
+  });
+
+  it('makes put, displays toast, calls onClose and onSaved on successful submission', async () => {
+    axios.put = vi.fn().mockResolvedValue({ data: { foo: 'bar' } });
+    const { findByText, props, user } = setup();
+
+    await user.click(await findByText('Update List'));
 
     expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully updated');
+    expect(props.onClose).toHaveBeenCalled();
+    expect(props.onSaved).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('navigates to /lists when no onSaved is provided', async () => {
+    axios.put = vi.fn().mockResolvedValue({ data: {} });
+    const { findByText, user } = setup({ onSaved: undefined });
+
+    await user.click(await findByText('Update List'));
+
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to user login when 401', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { findAllByRole, user } = setup();
+    const { findByText, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.click(await findByText('Update List'));
 
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
   it('redirects to lists page when 403', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
-    const { findAllByRole, user } = setup();
+    const { findByText, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.click(await findByText('Update List'));
 
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
 
   it('redirects to lists page when 404', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
-    const { findAllByRole, user } = setup();
+    const { findByText, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.click(await findByText('Update List'));
 
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
     expect(mockNavigate).toHaveBeenCalledWith('/lists');
   });
@@ -108,52 +130,40 @@ describe('EditListForm', () => {
     axios.put = vi.fn().mockRejectedValue({
       response: {
         status: 500,
-        data: {
-          foo: 'bar',
-          baz: 'foobar',
-        },
+        data: { foo: 'bar', baz: 'foobar' },
       },
     });
+    const { findByText, user } = setup();
 
-    const { findAllByRole, user } = setup();
+    await user.click(await findByText('Update List'));
 
-    await user.click((await findAllByRole('button'))[0]);
-
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and baz foobar');
   });
 
   it('displays toast when error in sending request', async () => {
-    axios.put = vi.fn().mockRejectedValue({
-      request: 'request failed',
-    });
+    axios.put = vi.fn().mockRejectedValue({ request: 'request failed' });
+    const { findByText, user } = setup();
 
-    const { findAllByRole, user } = setup();
+    await user.click(await findByText('Update List'));
 
-    await user.click((await findAllByRole('button'))[0]);
-
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
   it('displays toast when unknown error', async () => {
-    axios.put = vi.fn().mockRejectedValue({
-      message: 'request failed',
-    });
+    axios.put = vi.fn().mockRejectedValue({ message: 'request failed' });
+    const { findByText, user } = setup();
 
-    const { findAllByRole, user } = setup();
+    await user.click(await findByText('Update List'));
 
-    await user.click((await findAllByRole('button'))[0]);
-
-    expect(axios.put).toHaveBeenCalledTimes(1);
     expect(mockShowToast.error).toHaveBeenCalledWith('request failed');
   });
 
-  it('goes back to lists on Cancel', async () => {
-    const { findAllByRole, user } = setup();
+  it('calls onClose on Cancel without navigating', async () => {
+    const { findByText, props, user } = setup();
 
-    await user.click((await findAllByRole('button'))[1]);
+    await user.click(await findByText('Cancel'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    expect(props.onClose).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

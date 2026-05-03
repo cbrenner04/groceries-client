@@ -22,7 +22,7 @@ import axios from './utils/api';
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
 
 const ShareList = createLazyComponent(() => import('./routes/share_list/ShareList'));
-const EditList = createLazyComponent(() => import('./routes/list/EditList'));
+const EditList = createLazyComponent(() => import('./routes/lists/EditList'));
 const BulkEditListItems = createLazyComponent(() => import('./routes/list/BulkEditListItems'));
 const EditTemplate = createLazyComponent(() => import('./routes/templates/EditTemplate'));
 
@@ -154,7 +154,7 @@ export default function AppRouter(): React.JSX.Element {
   // Preload heavy components during idle time for better perceived performance
   useEffect(() => {
     preloadComponent(() => import('./routes/share_list/ShareList'));
-    preloadComponent(() => import('./routes/list/EditList'));
+    preloadComponent(() => import('./routes/lists/EditList'));
     preloadComponent(() => import('./routes/list/BulkEditListItems'));
     preloadComponent(() => import('./routes/templates/EditTemplate'));
   }, []);
