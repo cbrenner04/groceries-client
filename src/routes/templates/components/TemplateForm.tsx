@@ -1,4 +1,3 @@
-/* c8 ignore file */
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { EListItemFieldType } from 'typings';
 
@@ -26,7 +25,6 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
   const [showForm, setShowForm] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
 
-  /* c8 ignore start */
   const isFormValid = (): boolean => {
     if (name.trim() === '') {
       return false;
@@ -44,7 +42,6 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
 
     return true;
   };
-  /* c8 ignore stop */
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -69,14 +66,11 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
     setShowValidation(false);
   };
 
-  /* c8 ignore next */
   const nameError = showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined;
-  /* c8 ignore next */
   const submitDisabled = props.pending || !isFormValid();
 
   return (
     <React.Fragment>
-      {/* c8 ignore next */}
       {!showForm && (
         <Button
           variant="ghost"
@@ -88,7 +82,6 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
           Add Template
         </Button>
       )}
-      {/* c8 ignore next */}
       {showForm && (
         <form id="form-collapse" onSubmit={handleSubmit} autoComplete="off">
           <div className="mb-3">

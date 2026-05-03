@@ -55,7 +55,6 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
                     onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
                     data-test-id="toggle-permissions"
                   >
-                    {/* c8 ignore next */}
                     {permissions === 'write' ? <AngleDoubleDownIcon size="2x" /> : <AngleDoubleUpIcon size="2x" />}
                   </button>
                   <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />

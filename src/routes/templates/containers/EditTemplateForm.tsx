@@ -33,7 +33,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
   // Track original field IDs to detect deletions
   const originalFieldIds = useMemo(() => props.fieldConfigurations.map((fc) => fc.id), [props.fieldConfigurations]);
 
-  /* c8 ignore start */
   const isFormValid = (): boolean => {
     if (name.trim() === '') {
       return false;
@@ -51,7 +50,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
 
     return true;
   };
-  /* c8 ignore stop */
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
