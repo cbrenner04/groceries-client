@@ -59,6 +59,10 @@ function setup(suppliedProps?: Partial<IEditTemplateFormProps>): ISetupReturn {
 }
 
 describe('EditTemplateForm', () => {
+  beforeEach(() => {
+    mockNavigate.mockReset();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
@@ -282,6 +286,21 @@ describe('EditTemplateForm', () => {
     await user.click((await findAllByRole('button'))[0]);
 
     expect(axios.put).not.toHaveBeenCalled();
+  });
+
+  it('calls onSaved when provided after successful update', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const onSaved = vi.fn();
+    const { findByLabelText, getByText, user } = setup({ onSaved });
+
+    await user.clear(await findByLabelText('Name'));
+    await user.type(await findByLabelText('Name'), 'renamed');
+    await user.click(getByText('Update Template'));
+
+    await waitFor(() => {
+      expect(onSaved).toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
   });
 
   it('calls onCancel when cancel button clicked', async () => {

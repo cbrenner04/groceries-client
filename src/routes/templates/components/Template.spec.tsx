@@ -3,6 +3,8 @@ import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
+import { EListItemFieldType } from 'typings';
+
 import Template, { type ITemplateProps } from './Template';
 
 interface ISetupReturn extends RenderResult {
@@ -83,6 +85,45 @@ describe('Template', () => {
     await waitFor(() => {
       expect(queryByRole('dialog')).not.toBeInTheDocument();
     });
+  });
+
+  it('renders an edit button and calls onEdit when provided', async () => {
+    const onEdit = vi.fn();
+    const { getByTestId, user } = setup({ onEdit });
+
+    await user.click(getByTestId('template-edit'));
+    expect(onEdit).toHaveBeenCalledWith('id1');
+  });
+
+  it('renders a fields summary when fieldConfigurations are provided', () => {
+    const { getByText } = setup({
+      fieldConfigurations: [
+        {
+          id: 'f1',
+          label: 'product',
+          data_type: EListItemFieldType.FREE_TEXT,
+          position: 1,
+          primary: true,
+          archived_at: null,
+          list_item_configuration_id: 'id1',
+          created_at: '',
+          updated_at: '',
+        },
+        {
+          id: 'f2',
+          label: 'quantity',
+          data_type: EListItemFieldType.NUMBER,
+          position: 2,
+          primary: false,
+          archived_at: null,
+          list_item_configuration_id: 'id1',
+          created_at: '',
+          updated_at: '',
+        },
+      ],
+    });
+
+    expect(getByText('Fields: product, quantity')).toBeVisible();
   });
 
   it('renders template with correct test id', () => {

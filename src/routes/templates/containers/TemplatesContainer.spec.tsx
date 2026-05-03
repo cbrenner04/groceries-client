@@ -173,6 +173,74 @@ describe('TemplatesContainer', () => {
     expect(mockShowToast.error).toHaveBeenCalled();
   });
 
+  it('opens then cancels the create sheet', async () => {
+    const { getByTestId, getByText, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('add-template-button'));
+    expect(getByTestId('template-form-name')).toBeVisible();
+    await user.click(getByText('Cancel'));
+
+    await waitFor(() => expect(queryByTestId('template-form-name')).not.toBeInTheDocument());
+  });
+
+  it('opens edit sheet when an edit button is clicked', async () => {
+    axios.get = vi
+      .fn()
+      .mockResolvedValueOnce({
+        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+      })
+      .mockResolvedValueOnce({ data: [] });
+
+    const { getAllByTestId, findByTestId, user } = setup();
+
+    await user.click(getAllByTestId('template-edit')[0]);
+    expect(await findByTestId('template-name')).toBeVisible();
+  });
+
+  it('keeps current state when post-edit refresh fetch fails', async () => {
+    axios.get = vi
+      .fn()
+      .mockResolvedValueOnce({
+        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+      })
+      .mockResolvedValueOnce({ data: [] })
+      .mockRejectedValueOnce(new Error('boom'));
+    axios.put = vi.fn().mockResolvedValue({});
+
+    const { getAllByTestId, findByTestId, findByText, user } = setup();
+
+    await user.click(getAllByTestId('template-edit')[0]);
+    const nameInput = await findByTestId('template-name');
+    await user.clear(nameInput);
+    await user.type(nameInput, 'renamed');
+    await user.click(await findByText('Update Template'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalled());
+  });
+
+  it('updates the template list after a successful edit', async () => {
+    axios.get = vi
+      .fn()
+      .mockResolvedValueOnce({
+        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+      })
+      .mockResolvedValueOnce({ data: [] })
+      .mockResolvedValueOnce({
+        data: [{ id: 'id1', name: 'updated list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null }],
+      });
+    axios.put = vi.fn().mockResolvedValue({});
+
+    const { getAllByTestId, findByTestId, findByText, user } = setup();
+
+    await user.click(getAllByTestId('template-edit')[0]);
+    const nameInput = await findByTestId('template-name');
+    await user.clear(nameInput);
+    await user.type(nameInput, 'updated list');
+    await user.click(await findByText('Update Template'));
+
+    expect(await findByText('updated list')).toBeVisible();
+  });
+
   it('opens edit sheet when initialEditTemplateId is provided', async () => {
     axios.get = vi
       .fn()

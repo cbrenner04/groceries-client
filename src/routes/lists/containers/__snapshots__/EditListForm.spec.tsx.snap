@@ -1,0 +1,90 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EditListForm > renders 1`] = `
+<div>
+  <form
+    autocomplete="off"
+    class="tw:flex tw:flex-col tw:gap-4"
+  >
+    <div
+      class="tw:w-full"
+    >
+      <label
+        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+        id="name"
+        name="name"
+        placeholder="My super cool list"
+        value="foo"
+      />
+    </div>
+    <div
+      class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+    >
+      <div
+        class="tw:relative tw:w-5 tw:h-5"
+      >
+        <input
+          class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="completed"
+          name="completed"
+          type="checkbox"
+        />
+        <div
+          class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+        />
+      </div>
+      <label
+        class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+        for="completed"
+      >
+        Completed
+      </label>
+    </div>
+    <div
+      class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+    >
+      <div
+        class="tw:relative tw:w-5 tw:h-5"
+      >
+        <input
+          class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="refreshed"
+          name="refreshed"
+          type="checkbox"
+        />
+        <div
+          class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:pointer-events-none"
+        />
+      </div>
+      <label
+        class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+        for="refreshed"
+      >
+        Refreshed
+      </label>
+    </div>
+    <div
+      class="tw:flex tw:justify-end tw:gap-2 tw:mt-2"
+    >
+      <button
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+        type="button"
+      >
+        Cancel
+      </button>
+      <button
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+        type="submit"
+      >
+        Update List
+      </button>
+    </div>
+  </form>
+</div>
+`;

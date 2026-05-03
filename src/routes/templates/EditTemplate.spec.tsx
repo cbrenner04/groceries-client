@@ -64,12 +64,11 @@ describe('EditTemplate', () => {
       return { data: [] };
     });
 
-    const { findByText } = renderEditTemplate();
+    const { findByTestId } = renderEditTemplate();
 
+    expect(await findByTestId('template-name')).toBeVisible();
     await act(async () => {
       await waitFor(() => expect(axios.get).toHaveBeenCalledWith('/list_item_configurations/id1/edit'));
     });
-
-    expect(await findByText('Edit Template')).toBeVisible();
   });
 });
