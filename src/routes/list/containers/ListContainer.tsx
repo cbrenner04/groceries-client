@@ -959,22 +959,25 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               <BottomInputBar
                 placeholder="Add an item..."
                 onSubmit={handleQuickAdd}
+                hidden={showDeleteConfirm || copyMoveSheet !== null}
                 initialExpanded={inputBarExpanded}
                 expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
               />
-              <button
-                type="button"
-                className={[
-                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
-                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
-                  'tw:text-white tw:text-sm tw:font-medium',
-                ].join(' ')}
-                onClick={handleQuickAddClick}
-                data-test-id="add-item-button"
-              >
-                Add
-              </button>
+              {!(showDeleteConfirm || copyMoveSheet !== null) ? (
+                <button
+                  type="button"
+                  className={[
+                    'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
+                    'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
+                    'tw:text-white tw:text-sm tw:font-medium',
+                  ].join(' ')}
+                  onClick={handleQuickAddClick}
+                  data-test-id="add-item-button"
+                >
+                  Add
+                </button>
+              ) : null}
             </>
           ) : undefined
         }

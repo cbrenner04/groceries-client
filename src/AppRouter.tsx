@@ -59,6 +59,10 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
     }
   }, [showBottomNav]);
 
+  useEffect(() => {
+    setSettingsMenuOpen(false);
+  }, [location.pathname]);
+
   const handleLogout = async (): Promise<void> => {
     try {
       await axios.delete('/auth/sign_out');

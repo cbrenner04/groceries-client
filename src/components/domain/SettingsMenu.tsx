@@ -39,7 +39,7 @@ export function SettingsMenu(props: ISettingsMenuProps): React.JSX.Element {
     'tw:flex tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface-overlay)] tw:p-0.5';
 
   return (
-    <div className="tw:fixed tw:inset-0 tw:z-50" onClick={handleOverlayClick}>
+    <div className="tw:fixed tw:inset-0 tw:z-60" onClick={handleOverlayClick}>
       <div className="tw:fixed tw:bottom-16 tw:left-0 tw:right-0 tw:flex tw:justify-center">
         <div className={containerClassName} data-test-id="settings-menu" role="menu">
           <div className="tw:p-3">

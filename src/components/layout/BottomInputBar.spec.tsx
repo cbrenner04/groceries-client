@@ -104,6 +104,11 @@ describe('BottomInputBar', () => {
     expect(bar).toHaveClass('tw:fixed');
   });
 
+  it('does not render when hidden', () => {
+    const { queryByTestId } = setup({ hidden: true });
+    expect(queryByTestId('quick-add-input')).not.toBeInTheDocument();
+  });
+
   it('has accessible label on expand button', async () => {
     const { findByTestId } = setup({ expandedContent: <div>Extra</div> });
     const expandButton = await findByTestId('quick-add-expand');

@@ -50,7 +50,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -526,7 +526,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -601,7 +601,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -1386,7 +1386,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -1461,7 +1461,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -2245,28 +2245,6 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         </div>
       </div>
     </main>
-    <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
-    >
-      <div
-        class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
-      >
-        <input
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
-          data-test-id="quick-add-input"
-          placeholder="Add an item..."
-          type="text"
-          value=""
-        />
-      </div>
-    </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
   <div
     class="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50"
@@ -2377,7 +2355,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -3011,7 +2989,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3086,7 +3064,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -3254,7 +3232,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3750,7 +3728,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+1rem)]"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
@@ -4535,7 +4513,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-50 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"

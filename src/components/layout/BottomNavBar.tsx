@@ -136,7 +136,7 @@ export function BottomNavBar(props: IBottomNavBarProps): React.JSX.Element {
   ];
 
   const navClassName =
-    'tw:fixed tw:bottom-0 tw:left-0 tw:right-0 tw:z-50 ' +
+    'tw:fixed tw:bottom-0 tw:left-0 tw:right-0 tw:z-40 ' +
     'tw:h-[var(--spacing-nav-height)] tw:bg-[var(--color-surface-raised)] ' +
     'tw:border-t tw:border-[var(--color-border)] ' +
     'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] ' +
