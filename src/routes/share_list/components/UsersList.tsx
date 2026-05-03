@@ -1,9 +1,9 @@
 import React from 'react';
-import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Trash } from 'components/ActionButtons';
 import { AngleDoubleDownIcon, AngleDoubleUpIcon } from 'components/icons';
 import TitlePopover from 'components/TitlePopover';
+import { Badge } from 'components/ui/Badge';
 import type { IUsersList } from 'typings';
 
 export interface IUsersListProps {
@@ -21,7 +21,12 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
       title={props.status}
       message="Click the arrows to upgrade or downgrade the permissions between read and write"
     />
-    <ListGroup className="mb-4">
+    <div
+      className={
+        'tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg ' +
+        'tw:divide-y tw:divide-[var(--color-border)]'
+      }
+    >
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
           return '';
@@ -29,44 +34,43 @@ const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
         const { permissions } = user.users_list;
         if (props.userIsOwner) {
           return (
-            <ListGroup.Item
+            <div
               key={user.users_list.id}
               data-test-id={`${props.status}-user-${user.user.id}`}
-              className="users-list-list-group-item"
+              className="users-list-list-group-item tw:px-4 tw:py-3"
             >
-              <Row>
-                <Col md="6" className="pt-1">
-                  {user.user.email}
-                </Col>
-                <Col md="4" className="pt-1">
-                  <Badge data-test-id={`perm-${permissions}`} bg={permissions === 'write' ? 'success' : 'primary'}>
+              <div className="tw:flex tw:items-center tw:justify-between tw:gap-3">
+                <span>{user.user.email}</span>
+                <div className="tw:flex tw:items-center tw:gap-3">
+                  <Badge
+                    variant={permissions === 'write' ? 'success' : 'primary'}
+                    data-test-id={`perm-${permissions}`}
+                    className="badge"
+                  >
                     {permissions}
                   </Badge>
-                </Col>
-                <Col md="2">
-                  <ButtonGroup className="float-end">
-                    <Button
-                      variant="link"
-                      className="p-0 me-4 text-warning"
-                      onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
-                      data-test-id="toggle-permissions"
-                    >
-                      {permissions === 'write' ? <AngleDoubleDownIcon size="2x" /> : <AngleDoubleUpIcon size="2x" />}
-                    </Button>
-                    <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </ListGroup.Item>
+                  <button
+                    type="button"
+                    className="tw:bg-transparent tw:border-0 tw:p-0 tw:cursor-pointer tw:text-amber-500"
+                    onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
+                    data-test-id="toggle-permissions"
+                  >
+                    {/* c8 ignore next */}
+                    {permissions === 'write' ? <AngleDoubleDownIcon size="2x" /> : <AngleDoubleUpIcon size="2x" />}
+                  </button>
+                  <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />
+                </div>
+              </div>
+            </div>
           );
         }
         return (
           <div key={user.users_list.id} data-test-id={`${props.status}-user-${user.user.id}`}>
-            <ListGroup.Item>{user.user.email}</ListGroup.Item>
+            <div className="tw:px-4 tw:py-3">{user.user.email}</div>
           </div>
         );
       })}
-    </ListGroup>
+    </div>
   </React.Fragment>
 );
 

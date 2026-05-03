@@ -69,4 +69,15 @@ describe('PageNotFound', () => {
 
     (axios.get as Mock).mockClear();
   });
+
+  it('navigates to lists from the empty state action', async () => {
+    axios.get = vi.fn().mockResolvedValue({});
+    const { findByRole } = setup();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    const button = await findByRole('button', { name: 'Go to Lists' });
+    button.click();
+
+    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+  });
 });

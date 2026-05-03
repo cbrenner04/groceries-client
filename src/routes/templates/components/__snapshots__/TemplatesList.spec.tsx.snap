@@ -3,10 +3,10 @@
 exports[`TemplatesList > renders list of templates 1`] = `
 <div>
   <div
-    class="list-group"
+    class="tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
   >
     <div
-      class="list-list-group-item list-group-item"
+      class="list-list-group-item"
       data-test-class="template"
       data-test-id="template-id1"
     >
@@ -82,7 +82,7 @@ exports[`TemplatesList > renders list of templates 1`] = `
       </div>
     </div>
     <div
-      class="list-list-group-item list-group-item"
+      class="list-list-group-item"
       data-test-class="template"
       data-test-id="template-id2"
     >
@@ -164,10 +164,10 @@ exports[`TemplatesList > renders list of templates 1`] = `
 exports[`TemplatesList > renders single template when only one exists 1`] = `
 <div>
   <div
-    class="list-group"
+    class="tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
   >
     <div
-      class="list-list-group-item list-group-item"
+      class="list-list-group-item"
       data-test-class="template"
       data-test-id="template-id1"
     >

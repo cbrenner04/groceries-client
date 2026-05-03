@@ -67,3 +67,24 @@
   --z-modal: 400;
   --z-toast: 500;
 }
+
+/* Global resets — added in Phase 3C.3 after Bootstrap is fully removed */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  padding-bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Toast overrides to match design system */
+.Toastify__toast {
+  border-radius: var(--radius-lg) !important;
+  font-family: var(--font-sans) !important;
+  box-shadow: var(--shadow-lg) !important;
+}

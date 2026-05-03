@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ListGroup } from 'react-bootstrap';
 import type { IListItemConfiguration } from 'typings';
 
 import ConfirmModal from 'components/ConfirmModal';
@@ -21,11 +20,7 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
 
   return (
     <React.Fragment>
-      <ListGroup.Item
-        className="list-list-group-item"
-        data-test-class="template"
-        data-test-id={`template-${props.template.id}`}
-      >
+      <div className="list-list-group-item" data-test-class="template" data-test-id={`template-${props.template.id}`}>
         <div className="d-flex justify-content-between align-items-center">
           <h5 className="mb-0">{props.template.name}</h5>
           <div className="d-flex gap-2">
@@ -33,7 +28,7 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
             <Trash handleClick={(): void => setShowModal(true)} testID="template-trash" />
           </div>
         </div>
-      </ListGroup.Item>
+      </div>
       <ConfirmModal
         action="delete"
         body="Are you sure you want to delete this template?"
