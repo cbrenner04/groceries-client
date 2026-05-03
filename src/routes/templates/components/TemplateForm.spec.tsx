@@ -173,8 +173,9 @@ describe('TemplateForm', () => {
     });
   });
 
-  it('renders with snapshot', () => {
-    const { container } = setup();
+  it('renders with snapshot', async () => {
+    const { container, getByText, user } = setup();
+    await user.click(getByText('Add Template'));
 
     expect(container).toMatchSnapshot();
   });

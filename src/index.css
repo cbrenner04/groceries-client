@@ -68,7 +68,6 @@
   --z-toast: 500;
 }
 
-/* Global resets — added in Phase 3C.3 after Bootstrap is fully removed */
 * {
   -webkit-tap-highlight-color: transparent;
 }

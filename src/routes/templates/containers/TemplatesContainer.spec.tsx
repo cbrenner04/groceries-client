@@ -54,8 +54,9 @@ function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn 
 }
 
 describe('TemplatesContainer', () => {
-  it('renders', () => {
-    const { container } = setup();
+  it('renders', async () => {
+    const { container, getByText, user } = setup();
+    await user.click(getByText('Add Template'));
 
     expect(container).toMatchSnapshot();
   });

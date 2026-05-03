@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, type RenderResult, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
+import userEvent from '@testing-library/user-event';
 
 import axios from 'utils/api';
 
@@ -61,6 +62,7 @@ describe('Templates', () => {
       ],
     });
 
+    const user = userEvent.setup();
     const { container, findByText } = renderTemplates();
 
     await act(async () => {
@@ -68,6 +70,7 @@ describe('Templates', () => {
     });
 
     expect(await findByText('Templates')).toBeVisible();
+    await user.click(await findByText('Add Template'));
     expect(container).toMatchSnapshot();
   });
 });
