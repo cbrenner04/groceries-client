@@ -46,6 +46,7 @@ function setup(suppliedProps?: Partial<IEditTemplateFormProps>): ISetupReturn {
         updated_at: '',
       },
     ],
+    onCancel: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -283,12 +284,13 @@ describe('EditTemplateForm', () => {
     expect(axios.put).not.toHaveBeenCalled();
   });
 
-  it('navigates to templates when cancel button clicked', async () => {
-    const { getByText, user } = setup();
+  it('calls onCancel when cancel button clicked', async () => {
+    const { getByText, props, user } = setup();
 
     await user.click(getByText('Cancel'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('/templates');
+    expect(props.onCancel).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('does not submit when template name is empty', async () => {

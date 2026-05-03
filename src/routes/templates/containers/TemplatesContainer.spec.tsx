@@ -25,22 +25,8 @@ function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn 
   const user = userEvent.setup();
   const defaultProps: ITemplatesContainerProps = {
     templates: [
-      {
-        id: 'id1',
-        name: 'grocery list',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
-      {
-        id: 'id2',
-        name: 'book list',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
+      { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+      { id: 'id2', name: 'book list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
     ],
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -54,41 +40,42 @@ function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn 
 }
 
 describe('TemplatesContainer', () => {
-  it('renders', async () => {
-    const { container, getByText, user } = setup();
-    await user.click(getByText('Add Template'));
-
+  it('renders', () => {
+    const { container } = setup();
     expect(container).toMatchSnapshot();
   });
 
   it('displays templates', () => {
     const { getByTestId } = setup();
-
     expect(getByTestId('template-id1')).toBeVisible();
     expect(getByTestId('template-id2')).toBeVisible();
   });
 
-  it('displays back to lists link', () => {
-    const { getByText } = setup();
+  it('shows heading', () => {
+    const { getAllByText } = setup();
+    expect(getAllByText('Templates')[0]).toBeVisible();
+  });
 
-    const link = getByText('Back to Lists');
-    expect(link).toHaveAttribute('href', '/lists');
+  it('renders empty state correctly', () => {
+    const { getByText } = setup({ templates: [] });
+    expect(getByText('No templates found')).toBeVisible();
+  });
+
+  it('opens add template sheet on + Add', async () => {
+    const { getByTestId, findByTestId, user } = setup();
+
+    await user.click(getByTestId('add-template-button'));
+
+    expect(await findByTestId('template-form-name')).toBeVisible();
   });
 
   it('creates template on form submit', async () => {
     axios.post = vi.fn().mockResolvedValue({
-      data: {
-        id: 'id3',
-        name: 'new template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
+      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
     });
-    const { getByText, findByTestId, user } = setup();
+    const { getByTestId, getByText, findByTestId, user } = setup();
 
-    await user.click(getByText('Add Template'));
+    await user.click(getByTestId('add-template-button'));
     await user.type(await findByTestId('template-form-name'), 'new template');
     await user.type(await findByTestId('field-row-label-0'), 'Field 1');
     await user.click(getByText('Create Template'));
@@ -103,18 +90,11 @@ describe('TemplatesContainer', () => {
 
   it('creates fields when creating template', async () => {
     axios.post = vi.fn().mockResolvedValue({
-      data: {
-        id: 'id3',
-        name: 'new template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
+      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
     });
-    const { getByText, findByTestId, user } = setup();
+    const { getByTestId, getByText, findByTestId, user } = setup();
 
-    await user.click(getByText('Add Template'));
+    await user.click(getByTestId('add-template-button'));
     await user.type(await findByTestId('template-form-name'), 'new template');
     await user.type(await findByTestId('field-row-label-0'), 'Field 1');
     await user.click(getByText('Create Template'));
@@ -130,9 +110,9 @@ describe('TemplatesContainer', () => {
 
   it('redirects to signin when 401 on create', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByText, findByTestId, user } = setup();
+    const { getByTestId, getByText, findByTestId, user } = setup();
 
-    await user.click(getByText('Add Template'));
+    await user.click(getByTestId('add-template-button'));
     await user.type(await findByTestId('template-form-name'), 'new template');
     await user.type(await findByTestId('field-row-label-0'), 'Field 1');
     await user.click(getByText('Create Template'));
@@ -149,9 +129,9 @@ describe('TemplatesContainer', () => {
     axios.post = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'cannot be blank' } },
     });
-    const { getByText, findByTestId, user } = setup();
+    const { getByTestId, getByText, findByTestId, user } = setup();
 
-    await user.click(getByText('Add Template'));
+    await user.click(getByTestId('add-template-button'));
     await user.type(await findByTestId('template-form-name'), 'new template');
     await user.type(await findByTestId('field-row-label-0'), 'Field 1');
     await user.click(getByText('Create Template'));
@@ -193,15 +173,23 @@ describe('TemplatesContainer', () => {
     expect(mockShowToast.error).toHaveBeenCalled();
   });
 
-  it('shows heading', () => {
-    const { getByText } = setup();
+  it('opens edit sheet when initialEditTemplateId is provided', async () => {
+    axios.get = vi
+      .fn()
+      .mockResolvedValueOnce({
+        data: {
+          id: 'id1',
+          name: 'grocery list',
+          user_id: 'id1',
+          created_at: '',
+          updated_at: '',
+          archived_at: null,
+        },
+      })
+      .mockResolvedValueOnce({ data: [] });
 
-    expect(getByText('Templates')).toBeVisible();
-  });
+    const { findByTestId } = setup({ initialEditTemplateId: 'id1' });
 
-  it('renders empty state correctly', () => {
-    const { getByText } = setup({ templates: [] });
-
-    expect(getByText('No templates found')).toBeVisible();
+    expect(await findByTestId('template-name')).toBeVisible();
   });
 });

@@ -13,7 +13,11 @@ interface IFulfilledTemplates {
   templates: IListItemConfiguration[];
 }
 
-const Templates: React.FC = (): React.JSX.Element => {
+interface ITemplatesProps {
+  initialEditTemplateId?: string | null;
+}
+
+const Templates: React.FC<ITemplatesProps> = (props): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
@@ -23,12 +27,15 @@ const Templates: React.FC = (): React.JSX.Element => {
       </Async.Pending>
       <Async.Fulfilled>
         {(data: IFulfilledTemplates | undefined): ReactNode => {
-          // Handle the case where data might be undefined (e.g., when fetchTemplates returns undefined due to an error)
           if (!data) {
             return <UnknownError />;
           }
-
-          return <TemplatesContainer templates={data.templates} />;
+          return (
+            <TemplatesContainer
+              templates={data.templates}
+              initialEditTemplateId={props.initialEditTemplateId ?? null}
+            />
+          );
         }}
       </Async.Fulfilled>
       <Async.Rejected>

@@ -1,9 +1,11 @@
 import React, { type ChangeEvent } from 'react';
 import { EListItemFieldType } from 'typings';
-import Trash from 'components/ActionButtons/Trash';
-import Checkbox from 'components/ui/Checkbox';
+
 import Input from 'components/ui/Input';
 import Select from 'components/ui/Select';
+import Checkbox from 'components/ui/Checkbox';
+import { IconButton } from 'components/ui/IconButton';
+import { TrashIcon } from 'components/icons';
 import { fieldTypeLabel } from 'utils/format';
 import type { IFieldRow } from './FieldConfigurationRows';
 
@@ -28,9 +30,7 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
     props.onChange('label', event.target.value);
   };
 
-  const handleDataTypeChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-  ): void => {
+  const handleDataTypeChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     props.onChange('dataType', event.target.value as EListItemFieldType);
   };
 
@@ -49,51 +49,61 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
   const hasPositionError = props.showValidation && props.hasDuplicatePosition;
 
   return (
-    <div className="mb-3 p-2 border rounded" data-test-class={`field-configuration-row`}>
-      <div className="mb-2">
-        <Input
-          label="Label"
-          type="text"
-          value={props.row.label}
-          onChange={handleLabelChange}
-          testId={`field-row-label-${props.index}`}
-          placeholder="e.g., product"
-          error={hasLabelError ? 'Label cannot be blank' : undefined}
-        />
-      </div>
-
-      <div className="mb-2">
-        <Select
-          label="Type"
-          value={props.row.dataType}
-          onChange={handleDataTypeChange}
-          testId={`field-row-data-type-${props.index}`}
-          options={dataTypeOptions}
-        />
-      </div>
-
-      <div className="d-flex gap-2 align-items-center justify-content-between">
-        <div className="mb-0" style={{ width: '80px' }}>
+    <div
+      data-test-class="field-configuration-row"
+      className={
+        'tw:flex tw:flex-col tw:gap-3 tw:p-3 tw:rounded-lg tw:border ' +
+        'tw:border-[var(--color-border)] tw:bg-[var(--color-surface-raised)]'
+      }
+    >
+      <Input
+        id={`field-row-label-${props.index}`}
+        testId={`field-row-label-${props.index}`}
+        label="Label"
+        value={props.row.label}
+        onChange={handleLabelChange}
+        placeholder="e.g., product"
+        error={hasLabelError ? 'Label cannot be blank' : undefined}
+      />
+      <Select
+        id={`field-row-data-type-${props.index}`}
+        testId={`field-row-data-type-${props.index}`}
+        label="Type"
+        value={props.row.dataType}
+        onChange={handleDataTypeChange}
+        options={dataTypeOptions}
+      />
+      <div className="tw:flex tw:items-end tw:gap-3 tw:justify-between">
+        <div className="tw:w-24">
           <Input
+            id={`field-row-position-${props.index}`}
+            testId={`field-row-position-${props.index}`}
             label="Position"
             type="number"
-            value={String(props.row.position)}
+            value={props.row.position}
             onChange={handlePositionChange}
             min={1}
             max={props.totalFields}
-            testId={`field-row-position-${props.index}`}
             error={hasPositionError ? 'Duplicate position' : undefined}
           />
         </div>
-        <div className="mb-0">
-          <Checkbox
-            checked={props.row.primary}
-            onChange={handlePrimaryChange}
-            label="Primary"
-            testId={`field-row-primary-${props.index}`}
-          />
-        </div>
-        <Trash handleClick={props.onRemove} testID={`field-row-remove-${props.index}`} disabled={!props.canRemove} />
+        <Checkbox
+          id={`field-row-primary-${props.index}`}
+          testId={`field-row-primary-${props.index}`}
+          name={`field-row-primary-${props.index}`}
+          label="Primary"
+          checked={props.row.primary}
+          onChange={handlePrimaryChange}
+        />
+        <IconButton
+          icon={<TrashIcon size="sm" />}
+          variant="danger"
+          size="sm"
+          label="Remove field"
+          data-test-id={`field-row-remove-${props.index}`}
+          onClick={props.onRemove}
+          disabled={!props.canRemove}
+        />
       </div>
     </div>
   );

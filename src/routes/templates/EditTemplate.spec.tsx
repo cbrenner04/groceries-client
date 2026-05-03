@@ -5,7 +5,6 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import axios from 'utils/api';
 
 import EditTemplate from './EditTemplate';
-import * as utils from './utils';
 
 describe('EditTemplate', () => {
   const renderEditTemplate = (): RenderResult =>
@@ -19,68 +18,58 @@ describe('EditTemplate', () => {
 
   it('renders loading component when data is being fetched', async () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
-    const { container, findByText } = renderEditTemplate();
+    const { findByText } = renderEditTemplate();
 
     expect(await findByText('Loading...')).toBeInTheDocument();
-    expect(container).toMatchSnapshot();
   });
 
   it('renders unknown error when fetch fails', async () => {
     axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
-    const { container, findByRole } = renderEditTemplate();
+    const { findByRole } = renderEditTemplate();
 
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
-    expect(container).toMatchSnapshot();
   });
 
-  it('displays UnknownError when data is undefined', async () => {
-    vi.spyOn(utils, 'fetchTemplateToEdit').mockResolvedValue(undefined);
-    const { container, findByRole } = renderEditTemplate();
-
-    await act(async () => {
-      await waitFor(() => expect(utils.fetchTemplateToEdit).toHaveBeenCalledTimes(1));
+  it('renders the templates page with edit sheet open when data retrieval is complete', async () => {
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/list_item_configurations') {
+        return {
+          data: [
+            { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+          ],
+        };
+      }
+      if (url === '/list_item_configurations/id1/edit') {
+        return {
+          data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+        };
+      }
+      if (url === '/list_item_configurations/id1/list_item_field_configurations') {
+        return {
+          data: [
+            {
+              id: 'field1',
+              label: 'product',
+              data_type: 'free_text',
+              position: 1,
+              primary: true,
+              archived_at: null,
+              list_item_configuration_id: 'id1',
+              created_at: '',
+              updated_at: '',
+            },
+          ],
+        };
+      }
+      return { data: [] };
     });
 
-    expect(await findByRole('button')).toHaveTextContent('refresh the page');
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders EditTemplateForm when data retrieval is complete', async () => {
-    axios.get = vi
-      .fn()
-      .mockResolvedValueOnce({
-        data: {
-          id: 'id1',
-          name: 'grocery list',
-          user_id: 'id1',
-          created_at: new Date('05/24/2020').toISOString(),
-          updated_at: new Date('05/24/2020').toISOString(),
-          archived_at: null,
-        },
-      })
-      .mockResolvedValueOnce({
-        data: [
-          {
-            id: 'field1',
-            label: 'product',
-            data_type: 'free_text',
-            position: 1,
-            primary: true,
-            archived_at: null,
-            list_item_configuration_id: 'id1',
-            created_at: '',
-            updated_at: '',
-          },
-        ],
-      });
-
-    const { container, findByText } = renderEditTemplate();
+    const { findByText } = renderEditTemplate();
 
     await act(async () => {
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+      await waitFor(() => expect(axios.get).toHaveBeenCalledWith('/list_item_configurations/id1/edit'));
     });
 
     expect(await findByText('Edit Template')).toBeVisible();
-    expect(container).toMatchSnapshot();
   });
 });

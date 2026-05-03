@@ -1,34 +1,62 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
-import type { IListItemConfiguration } from 'typings';
+import type { IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
+import { PageLayout } from 'components/layout/PageLayout';
+import { Button } from 'components/ui/Button';
+import { BottomSheet } from 'components/ui/BottomSheet';
 import TemplateForm from '../components/TemplateForm';
 import TemplatesList from '../components/TemplatesList';
-import { failure } from '../utils';
+import EditTemplateForm from './EditTemplateForm';
+import { failure, fetchTemplateToEdit } from '../utils';
 import type { IFieldRow } from '../components/FieldConfigurationRows';
 
 export interface ITemplatesContainerProps {
   templates: IListItemConfiguration[];
+  initialEditTemplateId?: string | null;
+}
+
+interface IEditingTemplate {
+  template: IListItemConfiguration;
+  fieldConfigurations: IListItemFieldConfiguration[];
 }
 
 const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JSX.Element => {
   const [templates, setTemplates] = useState(props.templates);
   const [pending, setPending] = useState(false);
+  const [createSheetOpen, setCreateSheetOpen] = useState(false);
+  const [editing, setEditing] = useState<IEditingTemplate | null>(null);
+  const [editSheetOpen, setEditSheetOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleFormSubmit = async (name: string, fieldRows: IFieldRow[]): Promise<void> => {
+  const openEditSheet = useCallback(
+    async (templateId: string): Promise<void> => {
+      const result = await fetchTemplateToEdit({ id: templateId, navigate });
+      if (result) {
+        setEditing(result);
+        setEditSheetOpen(true);
+      }
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    if (props.initialEditTemplateId) {
+      void openEditSheet(props.initialEditTemplateId);
+    }
+  }, [props.initialEditTemplateId, openEditSheet]);
+
+  const handleCreateSubmit = async (name: string, fieldRows: IFieldRow[]): Promise<void> => {
     setPending(true);
     try {
-      // Create template
       const { data: templateData } = await axios.post('/list_item_configurations', {
         list_item_configuration: { name },
       });
 
-      // Create fields
       const fieldPromises = fieldRows.map((row) =>
         axios.post(`/list_item_configurations/${templateData.id}/list_item_field_configurations`, {
           list_item_field_configuration: {
@@ -45,6 +73,7 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
       const updatedTemplates = update(templates, { $push: [templateData] });
       setTemplates(updatedTemplates);
       setPending(false);
+      setCreateSheetOpen(false);
       showToast.info('Template successfully created.');
     } catch (error) {
       failure(error, navigate, setPending);
@@ -67,18 +96,79 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
     }
   };
 
+  const closeEditSheet = (): void => {
+    setEditSheetOpen(false);
+    setEditing(null);
+  };
+
+  const handleEditSaved = (): void => {
+    closeEditSheet();
+    // Refresh templates so the card reflects renamed templates immediately.
+    void axios
+      .get('/list_item_configurations')
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setTemplates(response.data.filter((t: IListItemConfiguration) => !t.archived_at));
+        }
+      })
+      .catch(() => {
+        // noop — keep current state
+      });
+  };
+
   return (
-    <React.Fragment>
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 className="mb-0">Templates</h1>
-        <Link to="/lists" className="btn btn-link">
-          Back to Lists
-        </Link>
-      </div>
-      <TemplateForm onFormSubmit={handleFormSubmit} pending={pending} />
-      <hr className="mb-4" />
-      <TemplatesList templates={templates} handleDelete={handleDelete} />
-    </React.Fragment>
+    <PageLayout
+      title="Templates"
+      headerRight={
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={(): void => setCreateSheetOpen(true)}
+          data-test-id="add-template-button"
+        >
+          + Add
+        </Button>
+      }
+    >
+      <TemplatesList
+        templates={templates}
+        handleDelete={(templateId: string): void => {
+          void handleDelete(templateId);
+        }}
+        onEdit={(templateId: string): void => {
+          void openEditSheet(templateId);
+        }}
+      />
+
+      <BottomSheet
+        isOpen={createSheetOpen}
+        onClose={(): void => setCreateSheetOpen(false)}
+        title="New Template"
+        testId="add-template-sheet"
+      >
+        <TemplateForm
+          onFormSubmit={handleCreateSubmit}
+          pending={pending}
+          onCancel={(): void => setCreateSheetOpen(false)}
+        />
+      </BottomSheet>
+
+      <BottomSheet
+        isOpen={editSheetOpen && editing !== null}
+        onClose={closeEditSheet}
+        title="Edit Template"
+        testId="edit-template-sheet"
+      >
+        {editing && (
+          <EditTemplateForm
+            template={editing.template}
+            fieldConfigurations={editing.fieldConfigurations}
+            onCancel={closeEditSheet}
+            onSaved={handleEditSaved}
+          />
+        )}
+      </BottomSheet>
+    </PageLayout>
   );
 };
 
