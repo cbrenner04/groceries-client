@@ -709,6 +709,18 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
+  const handleQuickAddClick = (): void => {
+    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
+    if (inputElement) {
+      const value = inputElement.value.trim();
+      if (value) {
+        void handleQuickAdd(value);
+        inputElement.value = '';
+        setQuickAddFormData({});
+      }
+    }
+  };
+
   const renderFilterChips = (): React.JSX.Element => {
     const allCategories = includedCategories.filter(
       (c) => c !== 'uncategorized' && c !== '' && notCompletedItems.some((item) => item.category === c),
@@ -984,17 +996,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                     'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
                     'tw:text-white tw:text-sm tw:font-medium',
                   ].join(' ')}
-                  onClick={() => {
-                    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
-                    if (inputElement) {
-                      const value = inputElement.value.trim();
-                      if (value) {
-                        void handleQuickAdd(value);
-                        inputElement.value = '';
-                        setQuickAddFormData({});
-                      }
-                    }
-                  }}
+                  onClick={handleQuickAddClick}
                   data-test-id="add-item-button"
                 >
                   Add
