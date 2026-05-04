@@ -87,8 +87,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
       },
     ],
     setSelectedItems: vi.fn(),
-    setIncompleteMultiSelect: vi.fn(),
-    setCompleteMultiSelect: vi.fn(),
+    setMultiSelectActive: vi.fn(),
     handleMove: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -174,8 +173,7 @@ describe('ChangeOtherListModal', () => {
     });
     expect(props.setShow).toHaveBeenCalledWith(false);
     expect(props.setSelectedItems).toHaveBeenCalledWith([]);
-    expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.setMultiSelectActive).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
     expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
@@ -198,8 +196,7 @@ describe('ChangeOtherListModal', () => {
     });
     expect(props.setShow).toHaveBeenCalledWith(false);
     expect(props.setSelectedItems).toHaveBeenCalledWith([]);
-    expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.setMultiSelectActive).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
     expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
