@@ -69,19 +69,16 @@ vi.mock('../components/EditItemSheet', () => ({
   ),
 }));
 
-vi.mock('../../share_list/containers/ShareListSheet', () => ({
+vi.mock('../../share_list/utils', () => ({
   __esModule: true,
-  default: (props: { isOpen: boolean; onClose: () => void; listId: string; listName: string }): React.JSX.Element =>
-    props.isOpen ? (
-      <div data-test-id="share-list-sheet">
-        <span>{`Share ${props.listName}`}</span>
-        <button data-test-id="share-list-sheet-close" onClick={props.onClose}>
-          close share
-        </button>
-      </div>
-    ) : (
-      <></>
-    ),
+  fetchData: vi.fn().mockResolvedValue({
+    invitableUsers: [],
+    userIsOwner: true,
+    pending: [],
+    accepted: [],
+    refused: [],
+    userId: 'id1',
+  }),
 }));
 
 vi.mock('../components/BulkEditSheet', () => ({
@@ -2092,7 +2089,7 @@ describe('ListContainer', () => {
 
     it('closes the share sheet when its onClose fires', async () => {
       const { findByTestId, queryByTestId, user } = setup({ initialShareSheetOpen: true });
-      await user.click(await findByTestId('share-list-sheet-close'));
+      await user.click(await findByTestId('share-list-sheet'));
       await waitFor(() => expect(queryByTestId('share-list-sheet')).not.toBeInTheDocument());
     });
 

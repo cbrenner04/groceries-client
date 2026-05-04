@@ -76,8 +76,9 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   const handleBottomNavClickCapture = (event: React.MouseEvent<HTMLDivElement>): void => {
     const target = event.target as HTMLElement;
     const settingsTrigger = target.closest('[data-test-id="nav-settings"]');
+    const clickedWithinNav = settingsTrigger instanceof HTMLElement && event.currentTarget.contains(settingsTrigger);
 
-    if (settingsTrigger) {
+    if (clickedWithinNav) {
       event.preventDefault();
       setSettingsMenuOpen((current) => !current);
       return;

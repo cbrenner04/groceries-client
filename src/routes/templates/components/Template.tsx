@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import { Card } from 'components/ui/Card';
@@ -21,12 +21,18 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
     setShowModal(false);
   };
 
-  const fieldsSummary = props.fieldConfigurations
-    ?.slice()
-    .sort((a, b) => a.position - b.position)
-    .map((fc) => fc.label)
-    .filter(Boolean)
-    .join(', ');
+  const fieldsSummary = useMemo((): string => {
+    if (!props.fieldConfigurations) {
+      return '';
+    }
+
+    return props.fieldConfigurations
+      .slice()
+      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+      .map((fieldConfig) => fieldConfig.label.trim())
+      .filter((label) => label.length > 0)
+      .join(', ');
+  }, [props.fieldConfigurations]);
 
   const handleEditClick = (): void => {
     if (props.onEdit) {
