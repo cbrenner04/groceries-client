@@ -45,6 +45,13 @@ describe('TemplatesContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders with create sheet open', async () => {
+    const { container, getByTestId, findByTestId, user } = setup();
+    await user.click(getByTestId('add-template-button'));
+    expect(await findByTestId('template-form-name')).toBeVisible();
+    expect(container).toMatchSnapshot();
+  });
+
   it('displays templates', () => {
     const { getByTestId } = setup();
     expect(getByTestId('template-id1')).toBeVisible();

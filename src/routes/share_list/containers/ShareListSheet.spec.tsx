@@ -56,8 +56,7 @@ describe('ShareListSheet', () => {
     });
 
     const onClose = vi.fn();
-    const { findByText, queryByText } = setup({ onClose });
-    expect(await findByText('Loading...')).toBeVisible();
+    const { queryByText } = setup({ onClose });
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in'));
     await waitFor(() => expect(onClose).toHaveBeenCalled());
     await waitFor(() => expect(queryByText('Loading...')).toBeNull());

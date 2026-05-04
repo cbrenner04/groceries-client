@@ -30,6 +30,13 @@ describe('EditTemplate', () => {
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
   });
 
+  it('renders unknown error when fetch returns no data', async () => {
+    axios.get = vi.fn().mockResolvedValue({ data: undefined });
+    const { findByRole } = renderEditTemplate();
+
+    expect(await findByRole('button')).toHaveTextContent('refresh the page');
+  });
+
   it('renders the templates page with edit sheet open when data retrieval is complete', async () => {
     axios.get = vi.fn().mockImplementation(async (url: string) => {
       if (url === '/list_item_configurations') {

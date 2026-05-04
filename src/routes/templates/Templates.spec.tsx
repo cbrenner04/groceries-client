@@ -63,14 +63,14 @@ describe('Templates', () => {
     });
 
     const user = userEvent.setup();
-    const { container, findByText } = renderTemplates();
+    const { container, findByText, findByTestId } = renderTemplates();
 
     await act(async () => {
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
     });
 
     expect(await findByText('Templates')).toBeVisible();
-    await user.click(await findByText('Add Template'));
+    await user.click(await findByTestId('add-template-button'));
     expect(container).toMatchSnapshot();
   });
 });
