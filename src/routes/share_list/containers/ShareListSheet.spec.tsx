@@ -50,13 +50,16 @@ describe('ShareListSheet', () => {
     expect(await findByTestId('invite-user-u1')).toBeInTheDocument();
   });
 
-  it('keeps the loading state when fetchData returns undefined', async () => {
+  it('closes the sheet and exits loading when fetchData returns undefined', async () => {
     axios.get = vi.fn().mockImplementation(async () => {
       throw { response: { status: 401 } };
     });
 
-    const { findByText } = setup();
+    const onClose = vi.fn();
+    const { findByText, queryByText } = setup({ onClose });
     expect(await findByText('Loading...')).toBeVisible();
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in'));
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+    await waitFor(() => expect(queryByText('Loading...')).toBeNull());
   });
 });

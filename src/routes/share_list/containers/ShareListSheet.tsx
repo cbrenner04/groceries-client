@@ -47,14 +47,19 @@ const ShareListSheet: React.FC<IShareListSheetProps> = (props): React.JSX.Elemen
             refused: result.refused,
             userId: result.userId,
           });
+        } else {
+          onClose();
         }
       })
       .finally((): void => setPending(false));
-  }, [isOpen, listId, navigate]);
+  }, [isOpen, listId, navigate, onClose]);
 
   const renderBody = (): ReactNode => {
-    if (pending || !data) {
+    if (pending) {
       return <Loading />;
+    }
+    if (!data) {
+      return null;
     }
     return (
       <ShareListForm
