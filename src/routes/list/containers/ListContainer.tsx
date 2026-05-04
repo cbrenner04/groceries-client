@@ -21,7 +21,8 @@ import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations
 import axios from 'utils/api';
 
 import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
-import { CheckIcon, EditIcon, RedoIcon, TrashIcon } from 'components/icons';
+import { CheckIcon, EditIcon, RedoIcon, TrashIcon, UsersIcon } from 'components/icons';
+import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
@@ -66,6 +67,7 @@ export interface IListContainerProps {
   }[];
   initialEditingItemId?: string | null;
   initialBulkEditOpen?: boolean;
+  initialShareSheetOpen?: boolean;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -90,6 +92,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
   const [bulkEditOpen, setBulkEditOpen] = useState(props.initialBulkEditOpen ?? false);
   const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
+  const [shareSheetOpen, setShareSheetOpen] = useState(props.initialShareSheetOpen ?? false);
 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
@@ -934,23 +937,44 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleMove={handleMove}
         />
       )}
+      <ShareListSheet
+        isOpen={shareSheetOpen}
+        onClose={(): void => setShareSheetOpen(false)}
+        listId={props.list.id ?? ''}
+        listName={props.list.name}
+      />
       <PageLayout
         showBackButton
         backTo="/lists"
         title={props.list.name}
         headerRight={
           props.permissions === EUserPermissions.WRITE ? (
-            <button
-              type="button"
-              className={
-                'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
-                'tw:text-white tw:text-sm tw:font-medium'
-              }
-              onClick={() => setMultiSelectActive(!multiSelectActive)}
-              data-test-id="select-button"
-            >
-              {multiSelectActive ? 'Hide Select' : 'Select'}
-            </button>
+            <div className="tw:flex tw:items-center tw:gap-2">
+              <button
+                type="button"
+                className={
+                  'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:rounded-lg ' +
+                  'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+                  'tw:cursor-pointer tw:transition-colors'
+                }
+                onClick={() => setShareSheetOpen(true)}
+                data-test-id="open-share-sheet"
+                aria-label="Share list"
+              >
+                <UsersIcon size="sm" />
+              </button>
+              <button
+                type="button"
+                className={
+                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+                  'tw:text-white tw:text-sm tw:font-medium'
+                }
+                onClick={() => setMultiSelectActive(!multiSelectActive)}
+                data-test-id="select-button"
+              >
+                {multiSelectActive ? 'Hide Select' : 'Select'}
+              </button>
+            </div>
           ) : null
         }
         bottomBar={

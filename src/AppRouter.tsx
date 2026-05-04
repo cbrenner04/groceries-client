@@ -22,9 +22,7 @@ import axios from './utils/api';
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
 
 const ShareList = createLazyComponent(() => import('./routes/share_list/ShareList'));
-const EditList = createLazyComponent(() => import('./routes/list/EditList'));
 const BulkEditListItems = createLazyComponent(() => import('./routes/list/BulkEditListItems'));
-const EditTemplate = createLazyComponent(() => import('./routes/templates/EditTemplate'));
 
 interface IUser {
   accessToken: string;
@@ -108,14 +106,12 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
         <Route path="/completed_lists" element={<CompletedLists />} />
         {/* routes/list */}
         <Route path="/lists/:id" element={<List />} />
-        <Route path="/lists/:id/edit" element={<EditList />} />
         <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
         <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
         {/* routes/share_list */}
         <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
         {/* routes/templates */}
         <Route path="/templates" element={<Templates />} />
-        <Route path="/templates/:id/edit" element={<EditTemplate />} />
         {/* routes/users */}
         <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
         <Route path="/users/password/new" element={<NewPassword />} />
@@ -154,9 +150,7 @@ export default function AppRouter(): React.JSX.Element {
   // Preload heavy components during idle time for better perceived performance
   useEffect(() => {
     preloadComponent(() => import('./routes/share_list/ShareList'));
-    preloadComponent(() => import('./routes/list/EditList'));
     preloadComponent(() => import('./routes/list/BulkEditListItems'));
-    preloadComponent(() => import('./routes/templates/EditTemplate'));
   }, []);
 
   const signInUser = (accessToken: string, client: string, uid: string): void => {

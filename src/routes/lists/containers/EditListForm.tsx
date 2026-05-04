@@ -1,30 +1,44 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { showToast } from '../../../utils/toast';
 import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
-import FormSubmission from 'components/FormSubmission';
-import { CheckboxField, TextField } from 'components/FormFields';
+import { showToast } from 'utils/toast';
+import Input from 'components/ui/Input';
+import Checkbox from 'components/ui/Checkbox';
+import { Button } from 'components/ui/Button';
 
 export interface IEditListFormProps {
   listId: string;
   name: string;
   completed: boolean;
+  refreshed: boolean;
+  archivedAt: string | null;
+  listItemConfigurationId: string | null;
+  onClose: () => void;
+  onSaved?: () => void;
 }
 
 const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
+  const [refreshed, setRefreshed] = useState(props.refreshed);
+  const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const list = { name, completed };
+    setPending(true);
+    const list = { name, completed, refreshed };
     try {
       await axios.put(`/lists/${props.listId}`, { list });
       showToast.info('List successfully updated');
-      navigate('/lists');
+      props.onClose();
+      if (props.onSaved) {
+        props.onSaved();
+      } else {
+        navigate('/lists');
+      }
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -44,35 +58,44 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
       } else {
         showToast.error(error.message);
       }
+    } finally {
+      setPending(false);
     }
   };
 
   return (
-    <React.Fragment>
-      <h1>Edit List</h1>
-      <br />
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <TextField
-          name="name"
-          label="Name"
-          value={name}
-          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-          placeholder="My super cool list"
-        />
-        <CheckboxField
-          name="completed"
-          label="Completed"
-          value={completed}
-          handleChange={(): void => setCompleted(!completed)}
-          classes="mb-3"
-        />
-        <FormSubmission
-          submitText="Update List"
-          cancelAction={(): void | Promise<void> => navigate('/lists')}
-          cancelText="Cancel"
-        />
-      </form>
-    </React.Fragment>
+    <form onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
+      <Input
+        id="name"
+        name="name"
+        label="Name"
+        value={name}
+        onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+        placeholder="My super cool list"
+      />
+      <Checkbox
+        id="completed"
+        name="completed"
+        label="Completed"
+        checked={completed}
+        onChange={(): void => setCompleted(!completed)}
+      />
+      <Checkbox
+        id="refreshed"
+        name="refreshed"
+        label="Refreshed"
+        checked={refreshed}
+        onChange={(): void => setRefreshed(!refreshed)}
+      />
+      <div className="tw:flex tw:justify-end tw:gap-2 tw:mt-2">
+        <Button variant="ghost" onClick={props.onClose} type="button">
+          Cancel
+        </Button>
+        <Button variant="primary" type="submit" disabled={pending} loading={pending}>
+          Update List
+        </Button>
+      </div>
+    </form>
   );
 };
 

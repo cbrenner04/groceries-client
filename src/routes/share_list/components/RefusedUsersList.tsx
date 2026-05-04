@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Refresh } from 'components/ActionButtons';
+import { IconButton } from 'components/ui/IconButton';
+import { RedoIcon } from 'components/icons';
 import type { IUsersList } from 'typings';
 
 export interface IRefusedUsersListProps {
@@ -10,44 +11,41 @@ export interface IRefusedUsersListProps {
   users: IUsersList[];
 }
 
+const sectionLabel = 'tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2';
+const rowClass =
+  'tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]';
+
 const RefusedUsersList: React.FC<IRefusedUsersListProps> = (props): React.JSX.Element => (
-  <React.Fragment>
-    <h2 className="tw:text-xl tw:font-semibold tw:capitalize tw:mb-3">Refused</h2>
-    <div
-      className={
-        'tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg ' +
-        'tw:divide-y tw:divide-[var(--color-border)]'
-      }
-    >
+  <section className="tw:mb-4">
+    <h3 className={sectionLabel}>Declined</h3>
+    <ul className="tw:flex tw:flex-col">
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
-          return '';
+          return null;
         }
-        if (props.userIsOwner) {
+        if (!props.userIsOwner) {
           return (
-            <div
-              key={user.users_list.id}
-              data-test-id={`refused-user-${user.user.id}`}
-              className="refused-list-list-group-item tw:px-4 tw:py-3 tw:flex tw:items-center tw:justify-between"
-            >
-              <span>{user.user.email}</span>
-              <div>
-                <Refresh
-                  testID="refresh-share"
-                  handleClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
-                />
-              </div>
-            </div>
+            <li key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`} className={rowClass}>
+              <span className="tw:text-sm">{user.user.email}</span>
+            </li>
           );
         }
         return (
-          <div key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`}>
-            <div className="tw:px-4 tw:py-3">{user.user.email}</div>
-          </div>
+          <li key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`} className={rowClass}>
+            <span className="tw:text-sm tw:flex-1 tw:truncate">{user.user.email}</span>
+            <IconButton
+              icon={<RedoIcon size="sm" />}
+              variant="primary"
+              size="sm"
+              label="Re-share"
+              data-test-id="refresh-share"
+              onClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
+            />
+          </li>
         );
       })}
-    </div>
-  </React.Fragment>
+    </ul>
+  </section>
 );
 
 export default RefusedUsersList;

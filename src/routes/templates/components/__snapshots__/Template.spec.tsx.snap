@@ -3,39 +3,36 @@
 exports[`Template > renders template with name 1`] = `
 <div>
   <div
-    class="list-list-group-item"
+    class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
     data-test-class="template"
     data-test-id="template-id1"
   >
     <div
-      class="d-flex justify-content-between align-items-center"
+      class="tw:flex tw:items-center tw:justify-between tw:gap-2"
     >
-      <h5
-        class="mb-0"
+      <h3
+        class="tw:text-base tw:font-semibold tw:m-0"
       >
         grocery list
-      </h5>
+      </h3>
       <div
-        class="d-flex gap-2"
+        class="tw:flex tw:items-center tw:gap-1"
       >
         <a
-          aria-disabled="false"
-          class="p-0 me-3 "
-          data-discover="true"
+          aria-label="Edit template"
+          class="tw:flex tw:items-center tw:justify-center tw:w-9 tw:h-9 tw:rounded-full tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)]"
           data-test-id="template-edit"
           href="/templates/id1/edit"
         >
           <svg
             aria-hidden="true"
-            class="text-warning"
-            data-test-id="edit-icon"
             fill="currentColor"
             focusable="false"
-            height="32"
+            height="14"
             role="img"
             style="display: inline-block; vertical-align: middle;"
             viewBox="0 0 512 512"
-            width="32"
+            width="14"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -50,21 +47,20 @@ exports[`Template > renders template with name 1`] = `
           </svg>
         </a>
         <button
-          class="bg-transparent border-0 p-0 cursor-pointer"
+          aria-label="Delete template"
+          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
           data-test-id="template-trash"
           type="button"
         >
           <svg
             aria-hidden="true"
-            class="text-danger"
-            data-test-id="trash-icon"
             fill="currentColor"
             focusable="false"
-            height="32"
+            height="14"
             role="img"
             style="display: inline-block; vertical-align: middle;"
             viewBox="0 0 512 512"
-            width="32"
+            width="14"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path

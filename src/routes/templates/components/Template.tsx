@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import type { IListItemConfiguration } from 'typings';
+import type { IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
-import ConfirmModal from 'components/ConfirmModal';
-import EditLink from 'components/ActionButtons/EditLink';
-import Trash from 'components/ActionButtons/Trash';
+import { Card } from 'components/ui/Card';
+import { IconButton } from 'components/ui/IconButton';
+import { ConfirmDialog } from 'components/domain/ConfirmDialog';
+import { EditIcon, TrashIcon } from 'components/icons';
 
 export interface ITemplateProps {
   template: IListItemConfiguration;
+  fieldConfigurations?: IListItemFieldConfiguration[];
   handleDelete: (templateId: string) => void;
+  onEdit?: (templateId: string) => void;
 }
 
 const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
@@ -18,23 +21,72 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
     setShowModal(false);
   };
 
+  const fieldsSummary = props.fieldConfigurations
+    ?.slice()
+    .sort((a, b) => a.position - b.position)
+    .map((fc) => fc.label)
+    .filter(Boolean)
+    .join(', ');
+
+  const handleEditClick = (): void => {
+    if (props.onEdit) {
+      props.onEdit(props.template.id);
+    }
+  };
+
   return (
     <React.Fragment>
-      <div className="list-list-group-item" data-test-class="template" data-test-id={`template-${props.template.id}`}>
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">{props.template.name}</h5>
-          <div className="d-flex gap-2">
-            <EditLink to={`/templates/${props.template.id}/edit`} testID="template-edit" />
-            <Trash handleClick={(): void => setShowModal(true)} testID="template-trash" />
+      <Card
+        data-test-class="template"
+        data-test-id={`template-${props.template.id}`}
+        className="tw:flex tw:flex-col tw:gap-1"
+      >
+        <div className="tw:flex tw:items-center tw:justify-between tw:gap-2">
+          <h3 className="tw:text-base tw:font-semibold tw:m-0">{props.template.name}</h3>
+          <div className="tw:flex tw:items-center tw:gap-1">
+            {props.onEdit ? (
+              <IconButton
+                icon={<EditIcon size="sm" />}
+                variant="primary"
+                size="sm"
+                label="Edit template"
+                data-test-id="template-edit"
+                onClick={handleEditClick}
+              />
+            ) : (
+              <a
+                href={`/templates/${props.template.id}/edit`}
+                data-test-id="template-edit"
+                className={
+                  'tw:flex tw:items-center tw:justify-center tw:w-9 tw:h-9 tw:rounded-full ' +
+                  'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)]'
+                }
+                aria-label="Edit template"
+              >
+                <EditIcon size="sm" />
+              </a>
+            )}
+            <IconButton
+              icon={<TrashIcon size="sm" />}
+              variant="danger"
+              size="sm"
+              label="Delete template"
+              data-test-id="template-trash"
+              onClick={(): void => setShowModal(true)}
+            />
           </div>
         </div>
-      </div>
-      <ConfirmModal
-        action="delete"
+        {fieldsSummary ? (
+          <p className="tw:text-xs tw:text-[var(--color-text-secondary)] tw:m-0">Fields: {fieldsSummary}</p>
+        ) : null}
+      </Card>
+      <ConfirmDialog
+        isOpen={showModal}
+        title="delete"
         body="Are you sure you want to delete this template?"
-        show={showModal}
-        handleConfirm={handleConfirmDelete}
-        handleClear={(): void => setShowModal(false)}
+        onConfirm={handleConfirmDelete}
+        onClose={(): void => setShowModal(false)}
+        confirmText="Yes, I'm sure."
       />
     </React.Fragment>
   );

@@ -2,61 +2,69 @@
 
 exports[`RefusedUsersList > does not render refresh share button 1`] = `
 <div>
-  <h2
-    class="tw:text-xl tw:font-semibold tw:capitalize tw:mb-3"
+  <section
+    class="tw:mb-4"
   >
-    Refused
-  </h2>
-  <div
-    class="tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-  >
-    <div
-      data-test-id="refused-user-id2"
+    <h3
+      class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
     >
-      <div
-        class="tw:px-4 tw:py-3"
+      Declined
+    </h3>
+    <ul
+      class="tw:flex tw:flex-col"
+    >
+      <li
+        class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+        data-test-id="refused-user-id2"
       >
-        bar@example.com
-      </div>
-    </div>
-  </div>
+        <span
+          class="tw:text-sm"
+        >
+          bar@example.com
+        </span>
+      </li>
+    </ul>
+  </section>
 </div>
 `;
 
 exports[`RefusedUsersList > renders refresh share button 1`] = `
 <div>
-  <h2
-    class="tw:text-xl tw:font-semibold tw:capitalize tw:mb-3"
+  <section
+    class="tw:mb-4"
   >
-    Refused
-  </h2>
-  <div
-    class="tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-  >
-    <div
-      class="refused-list-list-group-item tw:px-4 tw:py-3 tw:flex tw:items-center tw:justify-between"
-      data-test-id="refused-user-id2"
+    <h3
+      class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
     >
-      <span>
-        bar@example.com
-      </span>
-      <div>
+      Declined
+    </h3>
+    <ul
+      class="tw:flex tw:flex-col"
+    >
+      <li
+        class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+        data-test-id="refused-user-id2"
+      >
+        <span
+          class="tw:text-sm tw:flex-1 tw:truncate"
+        >
+          bar@example.com
+        </span>
         <button
-          class="bg-transparent border-0 p-0 me-3 cursor-pointer "
+          aria-label="Re-share"
+          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
           data-test-id="refresh-share"
           type="button"
         >
           <svg
             aria-hidden="true"
-            class="text-primary"
-            data-test-id="redo-icon"
             fill="currentColor"
             focusable="false"
-            height="32"
+            height="14"
             role="img"
             style="display: inline-block; vertical-align: middle;"
             viewBox="0 0 512 512"
-            width="32"
+            width="14"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -66,8 +74,8 @@ exports[`RefusedUsersList > renders refresh share button 1`] = `
             />
           </svg>
         </button>
-      </div>
-    </div>
-  </div>
+      </li>
+    </ul>
+  </section>
 </div>
 `;

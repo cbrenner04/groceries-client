@@ -1,5 +1,6 @@
 import React from 'react';
 import { EListItemFieldType } from 'typings';
+
 import { Button } from 'components/ui/Button';
 import FieldConfigurationRow from './FieldConfigurationRow';
 
@@ -46,8 +47,8 @@ const FieldConfigurationRows: React.FC<IFieldConfigurationRowsProps> = (props): 
   };
 
   return (
-    <div className="mb-3">
-      <h5>Fields</h5>
+    <div className="tw:flex tw:flex-col tw:gap-3">
+      <h4 className="tw:text-sm tw:font-semibold tw:m-0 tw:text-[var(--color-text-primary)]">Fields</h4>
       {props.fieldRows.map((row, index) => (
         <FieldConfigurationRow
           key={row.key}
@@ -63,9 +64,11 @@ const FieldConfigurationRows: React.FC<IFieldConfigurationRowsProps> = (props): 
           hasDuplicatePosition={hasDuplicatePosition(row.position)}
         />
       ))}
-      <Button variant="secondary" size="sm" onClick={handleAddField} data-test-id="add-field-button">
-        Add Field
-      </Button>
+      <div>
+        <Button variant="secondary" size="sm" type="button" onClick={handleAddField} data-test-id="add-field-button">
+          Add Field
+        </Button>
+      </div>
     </div>
   );
 };

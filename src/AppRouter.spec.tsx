@@ -88,7 +88,7 @@ describe('AppRouter', () => {
     expect(await findByTestId('bottom-nav')).toBeVisible();
   });
 
-  it('hides bottom nav on auth pages even after sign in and shows it after navigation to an app page', async () => {
+  it('hides bottom nav on auth pages and shows it after sign in navigates to an app page', async () => {
     const user = userEvent.setup();
     const { findByLabelText, findByRole, findByTestId, queryByTestId } = renderAppRouter('/users/sign_in');
 
@@ -98,12 +98,7 @@ describe('AppRouter', () => {
     await user.type(await findByLabelText('Password'), 'password');
     await user.click(await findByRole('button', { name: 'Log In' }));
 
-    expect(sessionStorage.getItem('user')).toContain('"access-token":"token"');
-    expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
-
-    window.history.pushState({}, '', '/templates');
-    window.dispatchEvent(new PopStateEvent('popstate'));
-
+    await waitFor(() => expect(sessionStorage.getItem('user')).toContain('"access-token":"token"'));
     expect(await findByTestId('bottom-nav')).toBeVisible();
   });
 

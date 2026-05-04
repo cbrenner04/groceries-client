@@ -46,6 +46,7 @@ function setup(suppliedProps?: Partial<IEditTemplateFormProps>): ISetupReturn {
         updated_at: '',
       },
     ],
+    onCancel: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
@@ -58,6 +59,10 @@ function setup(suppliedProps?: Partial<IEditTemplateFormProps>): ISetupReturn {
 }
 
 describe('EditTemplateForm', () => {
+  beforeEach(() => {
+    mockNavigate.mockReset();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
@@ -283,12 +288,28 @@ describe('EditTemplateForm', () => {
     expect(axios.put).not.toHaveBeenCalled();
   });
 
-  it('navigates to templates when cancel button clicked', async () => {
-    const { getByText, user } = setup();
+  it('calls onSaved when provided after successful update', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const onSaved = vi.fn();
+    const { findByLabelText, getByText, user } = setup({ onSaved });
+
+    await user.clear(await findByLabelText('Name'));
+    await user.type(await findByLabelText('Name'), 'renamed');
+    await user.click(getByText('Update Template'));
+
+    await waitFor(() => {
+      expect(onSaved).toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+  });
+
+  it('calls onCancel when cancel button clicked', async () => {
+    const { getByText, props, user } = setup();
 
     await user.click(getByText('Cancel'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('/templates');
+    expect(props.onCancel).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('does not submit when template name is empty', async () => {

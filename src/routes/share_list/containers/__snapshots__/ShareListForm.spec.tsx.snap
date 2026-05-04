@@ -2,321 +2,278 @@
 
 exports[`ShareListForm > renders 1`] = `
 <div>
-  <div>
-    <a
-      class="float-end"
-      data-discover="true"
-      href="/lists"
-    >
-      Back to lists
-    </a>
-    <h1>
-      Share 
-      foo
-    </h1>
+  <div
+    class="tw:flex tw:flex-col tw:gap-4"
+  >
     <form
-      class="tw:pt-3 tw:pb-3"
+      class="tw:flex tw:flex-col tw:gap-2"
     >
       <div
-        class="tw:mb-3"
+        class="tw:w-full"
       >
-        <div
-          class="tw:w-full"
+        <label
+          class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+          for="new-email"
         >
-          <label
-            class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-            for="new-email"
-          >
-            Enter an email to invite someone to share this list:
-          </label>
-          <input
-            class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-            id="new-email"
-            name="new-email"
-            placeholder="jane.smith@example.com"
-            type="email"
-            value=""
-          />
-        </div>
+          Enter an email to invite someone to share this list:
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+          id="new-email"
+          name="new-email"
+          type="email"
+          value=""
+        />
       </div>
       <div
-        class="d-grid gap-2 mt-3"
+        class="tw:flex tw:justify-end"
       >
         <button
-          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+          disabled=""
           type="submit"
         >
           Share List
         </button>
       </div>
     </form>
-    <p
-      class="text-lead"
-    >
-      Or select someone you've previously shared with:
-    </p>
-    <div
-      class="tw:mb-5 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-    >
-      <div
-        data-test-id="invite-user-id1"
+    <section>
+      <h3
+        class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
       >
-        <button
-          class="tw:w-full tw:text-left tw:px-4 tw:py-3 tw:bg-transparent tw:border-0 tw:cursor-pointer tw:text-[var(--color-primary)]"
-          type="button"
+        Share with
+      </h3>
+      <ul
+        class="tw:flex tw:flex-col"
+      >
+        <li
+          class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+          data-test-id="invite-user-id1"
         >
-          foo@example.com
-        </button>
-      </div>
-    </div>
-    <div
-      class="row m-0"
-    >
-      <h2
-        class="text-capitalize pe-0 w-auto"
-      >
-        pending
-      </h2>
-      <div
-        class="tw:relative w-auto p-0"
-      >
-        <button
-          class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-          data-test-id="pending-popover"
-          style="cursor: pointer; line-height: 1;"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            focusable="false"
-            height="14"
-            role="img"
-            style="display: inline-block; vertical-align: middle;"
-            viewBox="0 0 512 512"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div
-      class="tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-    >
-      <div
-        class="users-list-list-group-item tw:px-4 tw:py-3"
-        data-test-id="pending-user-id2"
-      >
-        <div
-          class="tw:flex tw:items-center tw:justify-between tw:gap-3"
-        >
-          <span>
-            bar@example.com
-          </span>
-          <div
-            class="tw:flex tw:items-center tw:gap-3"
+          <button
+            class="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
+            type="button"
           >
             <span
-              class="tw:inline-flex tw:items-center tw:text-xs tw:font-medium tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[var(--color-primary-light)] tw:text-[var(--color-primary)] badge"
+              class="tw:text-sm tw:flex-1 tw:truncate"
+            >
+              foo@example.com
+            </span>
+          </button>
+          <button
+            aria-label="Add user"
+            class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
+      0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+              />
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </section>
+    <section
+      class="tw:mb-4"
+    >
+      <h3
+        class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
+      >
+        Pending
+      </h3>
+      <ul
+        class="tw:flex tw:flex-col"
+      >
+        <li
+          class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+          data-test-id="pending-user-id2"
+        >
+          <span
+            class="tw:text-sm tw:flex-1 tw:truncate"
+          >
+            bar@example.com
+          </span>
+          <button
+            aria-label="Toggle permissions"
+            class="tw:flex tw:items-center tw:gap-1 tw:cursor-pointer"
+            data-test-id="toggle-permissions"
+            type="button"
+          >
+            <span
+              class="tw:inline-flex tw:items-center tw:text-xs tw:font-medium tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[rgb(245_158_11_/_0.15)] tw:text-[var(--color-warning)]"
               data-test-id="perm-read"
             >
-              read
+              pending
             </span>
-            <button
-              class="tw:bg-transparent tw:border-0 tw:p-0 tw:cursor-pointer tw:text-amber-500"
-              data-test-id="toggle-permissions"
-              type="button"
+            <svg
+              aria-hidden="true"
+              class="tw:text-[var(--color-text-secondary)]"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-hidden="true"
-                fill="currentColor"
-                focusable="false"
-                height="32"
-                role="img"
-                style="display: inline-block; vertical-align: middle;"
-                viewBox="0 0 512 512"
-                width="32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M270.6 73.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L248 141.3 385.4 278.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L248 333.3 385.4 470.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"
-                />
-              </svg>
-            </button>
-            <button
-              class="bg-transparent border-0 p-0 cursor-pointer"
-              data-test-id="remove-share"
-              type="button"
+              <path
+                d="M270.6 73.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L248 141.3 385.4 278.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L248 333.3 385.4 470.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Remove share"
+            class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+            data-test-id="remove-share"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-hidden="true"
-                class="text-danger"
-                data-test-id="trash-icon"
-                fill="currentColor"
-                focusable="false"
-                height="32"
-                role="img"
-                style="display: inline-block; vertical-align: middle;"
-                viewBox="0 0 512 512"
-                width="32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+              <path
+                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="row m-0"
+              />
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </section>
+    <section
+      class="tw:mb-4"
     >
-      <h2
-        class="text-capitalize pe-0 w-auto"
+      <h3
+        class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
       >
-        accepted
-      </h2>
-      <div
-        class="tw:relative w-auto p-0"
+        Shared
+      </h3>
+      <ul
+        class="tw:flex tw:flex-col"
       >
-        <button
-          class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-          data-test-id="accepted-popover"
-          style="cursor: pointer; line-height: 1;"
-          type="button"
+        <li
+          class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+          data-test-id="accepted-user-id3"
         >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            focusable="false"
-            height="14"
-            role="img"
-            style="display: inline-block; vertical-align: middle;"
-            viewBox="0 0 512 512"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
+          <span
+            class="tw:text-sm tw:flex-1 tw:truncate"
           >
-            <path
-              d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div
-      class="tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-    >
-      <div
-        class="users-list-list-group-item tw:px-4 tw:py-3"
-        data-test-id="accepted-user-id3"
-      >
-        <div
-          class="tw:flex tw:items-center tw:justify-between tw:gap-3"
-        >
-          <span>
             baz@example.com
           </span>
-          <div
-            class="tw:flex tw:items-center tw:gap-3"
+          <button
+            aria-label="Toggle permissions"
+            class="tw:flex tw:items-center tw:gap-1 tw:cursor-pointer"
+            data-test-id="toggle-permissions"
+            type="button"
           >
             <span
-              class="tw:inline-flex tw:items-center tw:text-xs tw:font-medium tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[rgb(16_185_129_/_0.15)] tw:text-[var(--color-success)] badge"
+              class="tw:inline-flex tw:items-center tw:text-xs tw:font-medium tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[rgb(16_185_129_/_0.15)] tw:text-[var(--color-success)]"
               data-test-id="perm-write"
             >
               write
             </span>
-            <button
-              class="tw:bg-transparent tw:border-0 tw:p-0 tw:cursor-pointer tw:text-amber-500"
-              data-test-id="toggle-permissions"
-              type="button"
+            <svg
+              aria-hidden="true"
+              class="tw:text-[var(--color-text-secondary)]"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-hidden="true"
-                fill="currentColor"
-                focusable="false"
-                height="32"
-                role="img"
-                style="display: inline-block; vertical-align: middle;"
-                viewBox="0 0 512 512"
-                width="32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M270.6 454.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L248 386.7 385.4 249.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L248 194.7 385.4 57.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"
-                />
-              </svg>
-            </button>
-            <button
-              class="bg-transparent border-0 p-0 cursor-pointer"
-              data-test-id="remove-share"
-              type="button"
+              <path
+                d="M270.6 454.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L248 386.7 385.4 249.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L248 194.7 385.4 57.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Remove share"
+            class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+            data-test-id="remove-share"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-hidden="true"
-                class="text-danger"
-                data-test-id="trash-icon"
-                fill="currentColor"
-                focusable="false"
-                height="32"
-                role="img"
-                style="display: inline-block; vertical-align: middle;"
-                viewBox="0 0 512 512"
-                width="32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+              <path
+                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <h2
-      class="tw:text-xl tw:font-semibold tw:capitalize tw:mb-3"
+              />
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </section>
+    <section
+      class="tw:mb-4"
     >
-      Refused
-    </h2>
-    <div
-      class="tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:divide-y tw:divide-[var(--color-border)]"
-    >
-      <div
-        class="refused-list-list-group-item tw:px-4 tw:py-3 tw:flex tw:items-center tw:justify-between"
-        data-test-id="refused-user-id4"
+      <h3
+        class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
       >
-        <span>
-          foobar@example.com
-        </span>
-        <div>
+        Declined
+      </h3>
+      <ul
+        class="tw:flex tw:flex-col"
+      >
+        <li
+          class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+          data-test-id="refused-user-id4"
+        >
+          <span
+            class="tw:text-sm tw:flex-1 tw:truncate"
+          >
+            foobar@example.com
+          </span>
           <button
-            class="bg-transparent border-0 p-0 me-3 cursor-pointer "
+            aria-label="Re-share"
+            class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
             data-test-id="refresh-share"
             type="button"
           >
             <svg
               aria-hidden="true"
-              class="text-primary"
-              data-test-id="redo-icon"
               fill="currentColor"
               focusable="false"
-              height="32"
+              height="14"
               role="img"
               style="display: inline-block; vertical-align: middle;"
               viewBox="0 0 512 512"
-              width="32"
+              width="14"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -326,9 +283,9 @@ exports[`ShareListForm > renders 1`] = `
               />
             </svg>
           </button>
-        </div>
-      </div>
-    </div>
+        </li>
+      </ul>
+    </section>
   </div>
 </div>
 `;
