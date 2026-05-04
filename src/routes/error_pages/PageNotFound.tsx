@@ -7,6 +7,9 @@ import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
 import Loading from 'components/Loading';
+import { EmptyState } from 'components/domain/EmptyState';
+import { PageLayout } from 'components/layout/PageLayout';
+import { QuestionCircleIcon } from 'components/icons';
 
 import UnknownError from './UnknownError';
 
@@ -31,9 +34,17 @@ const PageNotFound: React.FC = (): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        <h1>Page not found!</h1>
-        <h2>Sorry but the page you are looking for was not found.</h2>
-        <Link to="/lists">Return to the home page</Link>
+        <PageLayout>
+          <EmptyState
+            icon={<QuestionCircleIcon size="3x" />}
+            title="Page not found!"
+            description="The page you're looking for doesn't exist."
+            action={{ label: 'Go to Lists', onClick: (): void => void navigate('/lists') }}
+          />
+          <div className="tw:text-center">
+            <Link to="/lists">Return to the home page</Link>
+          </div>
+        </PageLayout>
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

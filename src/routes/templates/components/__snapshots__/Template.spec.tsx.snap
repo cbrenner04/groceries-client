@@ -3,7 +3,7 @@
 exports[`Template > renders template with name 1`] = `
 <div>
   <div
-    class="list-list-group-item list-group-item"
+    class="list-list-group-item"
     data-test-class="template"
     data-test-id="template-id1"
   >

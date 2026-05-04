@@ -4,48 +4,27 @@ import userEvent from '@testing-library/user-event';
 
 import UnknownError from './UnknownError';
 
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
+}));
+
 describe('UnknownError', () => {
-  it('renders default styles', () => {
+  it('renders empty state with refresh action', () => {
     const { container, getByRole } = render(<UnknownError />);
-    const button = getByRole('button');
 
     expect(container).toMatchSnapshot();
-    expect(button.style.color).toBe('rgb(0, 86, 179)');
-    expect(button.style.textDecoration).toBe('none');
+    expect(getByRole('button')).toHaveTextContent('refresh the page');
   });
 
-  it('updates styles on mouse hover', async () => {
-    const user = userEvent.setup();
-    const { container, getByRole } = render(<UnknownError />);
-    const button = getByRole('button');
-
-    await user.hover(button);
-
-    expect(container).toMatchSnapshot();
-    expect(button.style.color).toBe('rgb(0, 61, 130)');
-    expect(button.style.textDecoration).toBe('underline');
-
-    await user.unhover(button);
-
-    expect(button.style.color).toBe('rgb(0, 86, 179)');
-    expect(button.style.textDecoration).toBe('none');
-  });
-
-  it('reloads the page on click', async () => {
-    // get location to reset it later
-    const { location } = window;
-
-    Object.defineProperty(window, 'location', { value: { reload: vi.fn() } });
-
+  it('navigates to refresh current route on click', async () => {
     const user = userEvent.setup();
     const { getByRole } = render(<UnknownError />);
     const button = getByRole('button');
 
     await user.click(button);
 
-    expect(window.location.reload).toHaveBeenCalled();
-
-    // return location back to original
-    Object.defineProperty(window, 'location', { value: location });
+    expect(mockNavigate).toHaveBeenCalledWith(0);
   });
 });

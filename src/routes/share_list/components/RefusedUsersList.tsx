@@ -1,5 +1,4 @@
 import React from 'react';
-import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
 import { Refresh } from 'components/ActionButtons';
 import type { IUsersList } from 'typings';
@@ -13,45 +12,41 @@ export interface IRefusedUsersListProps {
 
 const RefusedUsersList: React.FC<IRefusedUsersListProps> = (props): React.JSX.Element => (
   <React.Fragment>
-    <Row className="m-0">
-      <h2 className="text-capitalize pe-0 w-auto">Refused</h2>
-    </Row>
-    <ListGroup className="mb-4">
+    <h2 className="tw:text-xl tw:font-semibold tw:capitalize tw:mb-3">Refused</h2>
+    <div
+      className={
+        'tw:mb-4 tw:border tw:border-[var(--color-border)] tw:rounded-lg ' +
+        'tw:divide-y tw:divide-[var(--color-border)]'
+      }
+    >
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
           return '';
         }
         if (props.userIsOwner) {
           return (
-            <ListGroup.Item
+            <div
               key={user.users_list.id}
               data-test-id={`refused-user-${user.user.id}`}
-              className="refused-list-list-group-item"
+              className="refused-list-list-group-item tw:px-4 tw:py-3 tw:flex tw:items-center tw:justify-between"
             >
-              <Row>
-                <Col md="6" className="pt-1">
-                  {user.user.email}
-                </Col>
-                <Col md="4" className="pt-1"></Col>
-                <Col md="2">
-                  <ButtonGroup className="float-end">
-                    <Refresh
-                      testID="refresh-share"
-                      handleClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
-                    />
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </ListGroup.Item>
+              <span>{user.user.email}</span>
+              <div>
+                <Refresh
+                  testID="refresh-share"
+                  handleClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
+                />
+              </div>
+            </div>
           );
         }
         return (
           <div key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`}>
-            <ListGroup.Item>{user.user.email}</ListGroup.Item>
+            <div className="tw:px-4 tw:py-3">{user.user.email}</div>
           </div>
         );
       })}
-    </ListGroup>
+    </div>
   </React.Fragment>
 );
 

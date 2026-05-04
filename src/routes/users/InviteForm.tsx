@@ -1,5 +1,4 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
@@ -41,20 +40,22 @@ const InviteForm: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <React.Fragment>
-      <h1>Send Invitation</h1>
-      <Form onSubmit={handleSubmit} className="mt-3">
-        <EmailField
-          value={email}
-          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
-        />
-        <FormSubmission
-          submitText="Invite User"
-          cancelAction={(): void | Promise<void> => navigate('/lists')}
-          cancelText="Cancel"
-        />
-      </Form>
-    </React.Fragment>
+    <div className="tw:min-h-screen tw:flex tw:items-center tw:justify-center tw:px-4 tw:py-8">
+      <div className="tw:w-full tw:max-w-sm tw:bg-[var(--color-surface)] tw:rounded-xl tw:shadow-lg tw:p-6">
+        <h1 className="tw:text-xl tw:font-semibold tw:text-center tw:mb-6">Send Invitation</h1>
+        <form onSubmit={handleSubmit}>
+          <EmailField
+            value={email}
+            handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
+          />
+          <FormSubmission
+            submitText="Invite User"
+            cancelAction={(): void | Promise<void> => navigate('/lists')}
+            cancelText="Cancel"
+          />
+        </form>
+      </div>
+    </div>
   );
 };
 

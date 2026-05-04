@@ -93,7 +93,7 @@ describe('TemplateForm', () => {
   });
 
   it('clears form after submission', async () => {
-    const { getByText, findByTestId, user } = setup({
+    const { getByText, findByTestId, findByText, user } = setup({
       onFormSubmit: vi.fn().mockResolvedValue(undefined),
     });
 
@@ -105,7 +105,8 @@ describe('TemplateForm', () => {
     await user.click(getByText('Create Template'));
 
     await waitFor(async () => {
-      expect(nameInput).toHaveValue('');
+      await user.click(await findByText('Add Template'));
+      expect(await findByTestId('template-form-name')).toHaveValue('');
     });
   });
 
@@ -172,8 +173,9 @@ describe('TemplateForm', () => {
     });
   });
 
-  it('renders with snapshot', () => {
-    const { container } = setup();
+  it('renders with snapshot', async () => {
+    const { container, getByText, user } = setup();
+    await user.click(getByText('Add Template'));
 
     expect(container).toMatchSnapshot();
   });

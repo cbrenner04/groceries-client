@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { EListItemFieldType } from 'typings';
+import { Button } from 'components/ui/Button';
 import FieldConfigurationRow from './FieldConfigurationRow';
 
 export interface IFieldRow {

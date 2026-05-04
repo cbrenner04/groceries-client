@@ -1,7 +1,6 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import update from 'immutability-helper';
-import { Form, ListGroup } from 'react-bootstrap';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
@@ -223,7 +222,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
         Back to lists
       </Link>
       <h1>Share {props.name}</h1>
-      <Form onSubmit={handleSubmit} className="pt-3 pb-3">
+      <form onSubmit={handleSubmit} className="tw:pt-3 tw:pb-3">
         <EmailField
           name="new-email"
           label="Enter an email to invite someone to share this list:"
@@ -231,22 +230,30 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           handleChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
         />
         <FormSubmission submitText="Share List" />
-      </Form>
+      </form>
       {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
-      <ListGroup className="mb-5">
+      <div
+        className={
+          'tw:mb-5 tw:border tw:border-[var(--color-border)] tw:rounded-lg ' +
+          'tw:divide-y tw:divide-[var(--color-border)]'
+        }
+      >
         {invitableUsers.map((user) => (
           <div data-test-id={`invite-user-${user.id}`} key={user.id}>
-            <ListGroup.Item
-              action
+            <button
+              type="button"
               key={user.id}
-              className="btn btn-link"
+              className={
+                'tw:w-full tw:text-left tw:px-4 tw:py-3 tw:bg-transparent tw:border-0 ' +
+                'tw:cursor-pointer tw:text-[var(--color-primary)]'
+              }
               onClick={(): Promise<void> => handleSelectUser(user)}
             >
               {user.email}
-            </ListGroup.Item>
+            </button>
           </div>
         ))}
-      </ListGroup>
+      </div>
       <UsersList
         togglePermission={togglePermission}
         removeShare={removeShare}
