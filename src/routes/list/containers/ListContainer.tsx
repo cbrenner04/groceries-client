@@ -21,7 +21,7 @@ import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations
 import axios from 'utils/api';
 
 import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
-import { CheckIcon, EditIcon, RedoIcon, TrashIcon, UsersIcon } from 'components/icons';
+import { CheckIcon, CopyIcon, EditIcon, MoveIcon, RedoIcon, TrashIcon, UsersIcon } from 'components/icons';
 import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
@@ -709,18 +709,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  const handleQuickAddClick = (): void => {
-    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
-    if (inputElement) {
-      const value = inputElement.value.trim();
-      if (value) {
-        handleQuickAdd(value);
-        inputElement.value = '';
-        setQuickAddFormData({});
-      }
-    }
-  };
-
   const renderFilterChips = (): React.JSX.Element => {
     const allCategories = includedCategories.filter(
       (c) => c !== 'uncategorized' && c !== '' && notCompletedItems.some((item) => item.category === c),
@@ -790,13 +778,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         testId: 'complete-selected',
       });
       actions.push({
-        icon: <span className="tw:text-xs tw:font-bold">CP</span>,
+        icon: <CopyIcon size="sm" />,
         label: 'Copy to list',
         onClick: () => setCopyMoveSheet({ mode: 'copy' }),
         testId: 'copy-to-list',
       });
       actions.push({
-        icon: <span className="tw:text-xs tw:font-bold">MV</span>,
+        icon: <MoveIcon size="sm" />,
         label: 'Move to list',
         onClick: () => setCopyMoveSheet({ mode: 'move' }),
         testId: 'move-to-list',
@@ -932,8 +920,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           lists={props.listsToUpdate}
           items={selectedItems}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setMultiSelectActive}
-          setCompleteMultiSelect={setMultiSelectActive}
+          setMultiSelectActive={setMultiSelectActive}
           handleMove={handleMove}
         />
       )}
@@ -989,6 +976,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 onInputFocus={handleQuickAddFormOpen}
               />
               {!(showDeleteConfirm || copyMoveSheet !== null) ? (
+                // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
                 <button
                   type="button"
                   className={[
@@ -996,7 +984,17 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                     'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
                     'tw:text-white tw:text-sm tw:font-medium',
                   ].join(' ')}
-                  onClick={handleQuickAddClick}
+                  onClick={() => {
+                    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
+                    if (inputElement) {
+                      const value = inputElement.value.trim();
+                      if (value) {
+                        void handleQuickAdd(value);
+                        inputElement.value = '';
+                        setQuickAddFormData({});
+                      }
+                    }
+                  }}
                   data-test-id="add-item-button"
                 >
                   Add
@@ -1030,7 +1028,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           incompleteMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}
@@ -1047,7 +1044,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           completeMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
-          setCompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}

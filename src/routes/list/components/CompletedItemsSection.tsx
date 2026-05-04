@@ -9,6 +9,7 @@ import type {
 } from 'typings';
 import { ListItemRow } from 'components/domain/ListItemRow';
 import { Badge } from 'components/ui/Badge';
+import { ChevronDownIcon } from 'components/icons';
 
 export interface ICompletedItemsSectionProps {
   completedItems: IListItem[];
@@ -19,7 +20,6 @@ export interface ICompletedItemsSectionProps {
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   completeMultiSelect: boolean;
   setSelectedItems: (items: IListItem[]) => void;
-  setCompleteMultiSelect: (value: boolean) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
   handleItemEdit: (item: IListItem) => void;
@@ -64,15 +64,13 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
         </span>
         <Badge>{props.completedItems.length}</Badge>
         <div className="tw:flex-1 tw:h-px tw:bg-[var(--color-border)]" />
-        <span
+        <ChevronDownIcon
           className={
-            'tw:text-[var(--color-text-tertiary)] tw:text-xs tw:transition-transform tw:duration-200' +
+            'tw:text-[var(--color-text-tertiary)] tw:transition-transform tw:duration-200' +
             (expanded ? '' : ' tw:-rotate-90')
           }
-          aria-hidden
-        >
-          ▼
-        </span>
+          size="sm"
+        />
       </button>
       {expanded && (
         <div className="tw:flex tw:flex-col tw:gap-2">

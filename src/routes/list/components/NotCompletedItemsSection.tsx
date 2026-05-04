@@ -22,7 +22,6 @@ export interface INotCompletedItemsSectionProps {
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   incompleteMultiSelect: boolean;
   setSelectedItems: (items: IListItem[]) => void;
-  setIncompleteMultiSelect: (value: boolean) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
   handleItemEdit: (item: IListItem) => void;

@@ -36,7 +36,6 @@ const baseProps = {
   listItemFieldConfigurations: [],
   incompleteMultiSelect: false,
   setSelectedItems: vi.fn(),
-  setIncompleteMultiSelect: vi.fn(),
   handleItemSelect: vi.fn(),
   handleItemComplete: vi.fn().mockResolvedValue(undefined),
   handleItemEdit: vi.fn(),

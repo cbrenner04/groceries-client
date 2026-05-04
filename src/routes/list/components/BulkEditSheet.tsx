@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { BottomSheet } from 'components/ui/BottomSheet';
 import BulkEditListItemsForm from '../containers/BulkEditListItemsForm';
 import type { IList, IListItem, IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
@@ -15,6 +16,7 @@ export interface IBulkEditSheetProps {
 }
 
 const BulkEditSheet: React.FC<IBulkEditSheetProps> = (props): React.JSX.Element => {
+  const navigate = useNavigate();
   const { listId, items, lists, categories, listItemConfiguration, listItemFieldConfigurations, onClose, onSave } =
     props;
   return (
@@ -24,14 +26,14 @@ const BulkEditSheet: React.FC<IBulkEditSheetProps> = (props): React.JSX.Element 
           if (url === `/lists/${listId}`) {
             onSave();
           } else {
-            // Handle other navigations if needed
-            window.location.href = url;
+            navigate(url);
           }
         }}
         items={items}
         list={{ id: listId } as IList}
         lists={lists}
         categories={categories}
+        // Bulk edit in the list detail context doesn't use list-sharing user assignments.
         listUsers={[]}
         listItemConfiguration={listItemConfiguration}
         listItemFieldConfigurations={listItemFieldConfigurations}
