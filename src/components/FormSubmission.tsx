@@ -10,7 +10,7 @@ interface IFormSubmissionProps {
 }
 
 const FormSubmission: React.FC<IFormSubmissionProps> = (props): React.JSX.Element => (
-  <div className={`${props.noGrid ? '' : 'd-grid'} gap-2 mt-3`}>
+  <div className={`${props.noGrid ? '' : 'tw:grid'} tw:gap-2 tw:mt-3`}>
     <Button type="submit" variant="success" disabled={props.disabled ?? false} fullWidth={!props.noGrid}>
       {props.submitText}
     </Button>

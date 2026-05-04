@@ -166,7 +166,7 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
               label="Clear Category"
               value={clearCategory}
               handleChange={handleClearCategory}
-              classes="ms-1 mt-1"
+              classes="tw:ms-1 tw:mt-1"
             />
           }
         />
