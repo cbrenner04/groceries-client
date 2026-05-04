@@ -54,7 +54,6 @@ const NewSession: React.FC<INewSessionProps> = (props): React.JSX.Element => {
         <div className="tw:min-h-screen tw:flex tw:items-center tw:justify-center tw:px-4 tw:py-8">
           <div className="tw:w-full tw:max-w-sm tw:bg-[var(--color-surface)] tw:rounded-xl tw:shadow-lg tw:p-6">
             <h1 className="tw:text-xl tw:font-semibold tw:text-center tw:mb-1">Groceries</h1>
-            <h2 className="tw:text-lg tw:font-medium tw:text-center tw:mb-6">Log in</h2>
             <form onSubmit={handleSubmit}>
               <EmailField
                 value={email}

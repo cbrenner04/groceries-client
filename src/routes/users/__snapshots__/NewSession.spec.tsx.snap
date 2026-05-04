@@ -33,11 +33,6 @@ exports[`NewSession > renders session form when fetch errors 1`] = `
       >
         Groceries
       </h1>
-      <h2
-        class="tw:text-lg tw:font-medium tw:text-center tw:mb-6"
-      >
-        Log in
-      </h2>
       <form>
         <div
           class="tw:mb-3"
