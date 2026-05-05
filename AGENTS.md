@@ -80,13 +80,15 @@ These rules extend the root AGENTS.md and must be followed.
 ## Build / Lint / Test Commands
 
 ```bash
-npm start                    # Dev server (CRA + craco)
+npm start                    # Dev server (Vite)
+npm run build                # Type-check + Vite build
 npm run build:production     # Production build
 npm run build:staging        # Staging build (uses .env.staging)
 npm run lint                 # ESLint: eslint --ext .ts,.tsx src/
 npm run format               # Prettier: prettier --write 'src/**/*.{ts,tsx,json,css,md}'
-npm run test                 # Jest in watch mode (craco test)
-npm run test:ci              # tsc --noEmit && lint && CI=true test --coverage
+npm run test                 # Vitest
+npm run test:watch           # Vitest watch mode
+npm run test:ci              # tsc --noEmit && lint && vitest run --coverage
 ```
 
 ---
@@ -94,7 +96,7 @@ npm run test:ci              # tsc --noEmit && lint && CI=true test --coverage
 ## Single Test
 
 ```bash
-npx craco test -- --testPathPattern="path/to/file.spec" --watchAll=false
+npx vitest run path/to/file.spec.tsx
 ```
 
 ---
@@ -115,8 +117,8 @@ npm run format && npx tsc --noEmit && npm run lint
 * React 19, TypeScript (strict), React Router v7
 * SCSS + Bootstrap 5 + react-bootstrap
 * Axios (`src/utils/api.ts`)
-* Jest + React Testing Library + userEvent
-* CRA 5 via craco
+* Vitest + React Testing Library + userEvent
+* Vite 8
 
 ---
 

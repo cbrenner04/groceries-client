@@ -27,15 +27,6 @@ export interface IFulfilledListData {
   list_item_field_configurations?: IListItemFieldConfiguration[];
 }
 
-export interface IFulfilledEditListData {
-  id: string;
-  name: string;
-  completed: boolean;
-  archived_at: string | null;
-  refreshed: boolean;
-  list_item_configuration_id: string | null;
-}
-
 export interface IFulfilledEditListItemData {
   id: string;
   item: IListItem;
@@ -131,29 +122,6 @@ export async function fetchList(fetchParams: {
       navigate: fetchParams.navigate,
       redirectURI: '/lists',
       rethrow: true,
-    });
-  }
-}
-
-export async function fetchListToEdit(fetchParams: {
-  id: string;
-  navigate: (url: string) => void;
-}): Promise<IFulfilledEditListData | undefined> {
-  try {
-    const { data } = await axios.get(`/lists/${fetchParams.id}/edit`);
-
-    // Add defensive checks for undefined data
-    if (!data) {
-      throw new AxiosError('No data received from server', '404');
-    }
-
-    return data;
-  } catch (err: unknown) {
-    handleFailure({
-      error: err as AxiosError,
-      notFoundMessage: 'List not found',
-      navigate: fetchParams.navigate,
-      redirectURI: '/lists',
     });
   }
 }

@@ -7,6 +7,12 @@ import type { IListItemFieldConfiguration } from 'typings';
 import type { IBulkEditListItemsFormProps } from '../containers/BulkEditListItemsForm';
 import BulkEditSheet from './BulkEditSheet';
 
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => ({
+  ...(await vi.importActual('react-router')),
+  useNavigate: (): Mock => mockNavigate,
+}));
+
 vi.mock('../containers/BulkEditListItemsForm', () => ({
   __esModule: true,
   default: (props: IBulkEditListItemsFormProps): React.JSX.Element => (
@@ -113,23 +119,7 @@ describe('BulkEditSheet', () => {
     expect(mockOnSave).toHaveBeenCalled();
   });
 
-  it('sets window.location.href when navigate is called with a non-list URL', async () => {
-    const locationSpy = vi.spyOn(window, 'location', 'get').mockReturnValue({
-      ...window.location,
-      href: '',
-    } as Location);
-    let capturedHref = '';
-    Object.defineProperty(window, 'location', {
-      value: {
-        ...window.location,
-        set href(url: string) {
-          capturedHref = url;
-        },
-      },
-      writable: true,
-      configurable: true,
-    });
-
+  it('uses react-router navigation when navigate is called with a non-list URL', async () => {
     const { getByText } = render(
       <BulkEditSheet
         listId={listId}
@@ -146,9 +136,7 @@ describe('BulkEditSheet', () => {
     );
 
     await userEvent.click(getByText('Navigate elsewhere'));
-    expect(capturedHref).toBe('/other-path');
+    expect(mockNavigate).toHaveBeenCalledWith('/other-path');
     expect(mockOnSave).not.toHaveBeenCalled();
-
-    locationSpy.mockRestore();
   });
 });

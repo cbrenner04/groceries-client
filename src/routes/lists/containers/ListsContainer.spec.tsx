@@ -607,13 +607,23 @@ describe('ListsContainer', () => {
     }
   });
 
-  it('navigates to edit page when edit button is clicked', async () => {
-    const { user } = setup();
+  it('opens the edit sheet when the edit button is clicked', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id1',
+        name: 'foo',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText, user } = setup();
 
     const editButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-edit"]'));
     if (editButtons.length > 0) {
       await user.click(editButtons[0] as HTMLElement);
-      expect(mockNavigate).toHaveBeenCalled();
+      expect(await findByText('Edit List')).toBeVisible();
     }
   });
 
@@ -1134,5 +1144,103 @@ describe('ListsContainer', () => {
     // Active lists should be hidden, completed lists visible
     expect(queryByTestId('list-id5')).toBeNull();
     expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  // ─── Edit list BottomSheet ────────────────────────────────────────────────────
+
+  it('opens the edit sheet when initialEditListId is provided', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id5',
+        name: 'an active list',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText } = setup({ initialEditListId: 'id5' });
+
+    expect(await findByText('Edit List')).toBeVisible();
+  });
+
+  it('does not crash if the post-edit refresh fetch returns nothing', async () => {
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/lists/id5/edit') {
+        return {
+          data: {
+            id: 'id5',
+            name: 'an active list',
+            completed: false,
+            refreshed: false,
+            archived_at: null,
+            list_item_configuration_id: 'cfg-1',
+          },
+        };
+      }
+      // Simulate fetchLists returning undefined (e.g., 401)
+      throw { response: { status: 401 } };
+    });
+    axios.put = vi.fn().mockResolvedValue({});
+    const { findByText, user } = setup({ initialEditListId: 'id5' });
+
+    await user.click(await findByText('Update List'));
+    await waitFor(() => expect(axios.put).toHaveBeenCalled());
+  });
+
+  it('refreshes the lists after a successful edit', async () => {
+    let callIdx = 0;
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/lists/id5/edit') {
+        return {
+          data: {
+            id: 'id5',
+            name: 'an active list',
+            completed: false,
+            refreshed: false,
+            archived_at: null,
+            list_item_configuration_id: 'cfg-1',
+          },
+        };
+      }
+      callIdx += 1;
+      return {
+        data: {
+          current_user_id: 'id1',
+          accepted_lists: { completed_lists: [], not_completed_lists: [] },
+          pending_lists: [],
+          current_list_permissions: {},
+          list_item_configurations: [{ id: 'cfg-1', name: 'Default' }],
+          __callIdx: callIdx,
+        },
+      };
+    });
+    axios.put = vi.fn().mockResolvedValue({});
+
+    const { findByLabelText, findByText, user } = setup({ initialEditListId: 'id5' });
+
+    const nameInput = await findByLabelText('Name');
+    await user.clear(nameInput);
+    await user.type(nameInput, 'renamed list');
+    await user.click(await findByText('Update List'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+  });
+
+  it('closes the edit sheet when cancel is clicked', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id5',
+        name: 'an active list',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText, queryByText, user } = setup({ initialEditListId: 'id5' });
+
+    await user.click(await findByText('Cancel'));
+    await waitFor(() => expect(queryByText('Update List')).not.toBeInTheDocument());
   });
 });

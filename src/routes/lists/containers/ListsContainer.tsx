@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, useEffect, useState } from 'react';
+import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
 import { Link, useNavigate } from 'react-router';
@@ -11,12 +11,22 @@ import { ListCard } from 'components/domain/ListCard';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
+import { BottomSheet } from 'components/ui/BottomSheet';
 import Select from 'components/ui/Select';
-import { fetchLists, sortLists, failure, type IFetchListsReturn, pluralize } from '../utils';
+import {
+  fetchLists,
+  fetchListToEdit,
+  sortLists,
+  failure,
+  type IFetchListsReturn,
+  type IFetchListToEditReturn,
+  pluralize,
+} from '../utils';
 import { listsDeduplicator } from 'utils/requestDeduplication';
 import { listsCache } from 'utils/lightweightCache';
 import { prefetchListsIdle } from 'utils/listPrefetch';
 import MergeModal from '../components/MergeModal';
+import EditListForm from './EditListForm';
 
 type TStatusFilter = 'all' | 'pending' | 'active' | 'completed';
 
@@ -28,6 +38,7 @@ export interface IListsContainerProps {
   currentUserPermissions: TUserPermissions;
   listItemConfigurations: IListItemConfiguration[];
   initialFilter?: TStatusFilter;
+  initialEditListId?: string | null;
 }
 
 const MAX_PREFETCH_LISTS = 5;
@@ -50,7 +61,53 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [listsToMerge, setListsToMerge] = useState<IList[]>([]);
   const [mergeName, setMergeName] = useState('');
   const [selectedTemplateId, setSelectedTemplateId] = useState(props.listItemConfigurations[0]?.id ?? '');
+  const [editSheetOpen, setEditSheetOpen] = useState(false);
+  const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
   const navigate = useNavigate();
+
+  const openEditSheet = useCallback(
+    async (listId: string): Promise<void> => {
+      const data = await fetchListToEdit({ id: listId, navigate });
+      if (data) {
+        setEditingList(data);
+        setEditSheetOpen(true);
+      }
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    if (props.initialEditListId) {
+      void openEditSheet(props.initialEditListId);
+    }
+  }, [props.initialEditListId, openEditSheet]);
+
+  const closeEditSheet = (): void => {
+    setEditSheetOpen(false);
+    setEditingList(null);
+  };
+
+  const handleEditSaved = (): void => {
+    void listsDeduplicator
+      .execute('lists', () => fetchLists({ navigate }))
+      .then((lists) => {
+        if (!lists) {
+          return;
+        }
+        const {
+          pendingLists: updatedPending,
+          completedLists: updatedCompleted,
+          incompleteLists: updatedIncomplete,
+          currentUserPermissions: updatedCurrentUserPermissions,
+          listItemConfigurations: updatedListItemConfigurations,
+        } = lists as IFetchListsReturn;
+        setPendingLists(updatedPending);
+        setCompletedLists(updatedCompleted);
+        setIncompleteLists(updatedIncomplete);
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+        setListItemConfigurations(updatedListItemConfigurations);
+      });
+  };
 
   usePolling(
     async () => {
@@ -337,7 +394,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const handleEdit = (listId: string): void => {
-    navigate(`/lists/${listId}/edit`);
+    void openEditSheet(listId);
   };
 
   const findListById = (listId: string): IList[] => {
@@ -361,6 +418,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   const filtered = getFilteredLists();
   const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
+  const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -554,9 +612,30 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         selectedLists={getSelectedLists()}
       />
 
+      <BottomSheet
+        isOpen={editSheetOpen && editingList !== null}
+        onClose={closeEditSheet}
+        title="Edit List"
+        testId="edit-list-sheet"
+      >
+        {editingList && (
+          <EditListForm
+            listId={editingList.listId}
+            name={editingList.name}
+            completed={editingList.completed}
+            refreshed={editingList.refreshed}
+            archivedAt={editingList.archivedAt}
+            listItemConfigurationId={editingList.list_item_configuration_id}
+            onClose={closeEditSheet}
+            onSaved={handleEditSaved}
+          />
+        )}
+      </BottomSheet>
+
       <BottomInputBar
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
+        hidden={hideBottomInputBar}
         expandedContent={
           <Select
             label="Template"

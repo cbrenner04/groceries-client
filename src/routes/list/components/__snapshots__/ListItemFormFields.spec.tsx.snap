@@ -25,7 +25,7 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     </div>
   </div>
   <div
-    class="mb-3 tw:mb-3"
+    class="tw:mb-3 tw:mb-3"
   >
     <div
       class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"

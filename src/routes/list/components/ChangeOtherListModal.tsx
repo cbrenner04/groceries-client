@@ -18,8 +18,7 @@ export interface IChangeOtherListModalProps {
   lists: IList[];
   items: IListItem[];
   setSelectedItems: Dispatch<SetStateAction<IListItem[]>>;
-  setIncompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
-  setCompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
+  setMultiSelectActive: Dispatch<SetStateAction<boolean>>;
   handleMove: () => void;
 }
 
@@ -62,8 +61,7 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
       });
       props.setShow(false);
       props.setSelectedItems([]);
-      props.setCompleteMultiSelect(false);
-      props.setIncompleteMultiSelect(false);
+      props.setMultiSelectActive(false);
       props.handleMove();
       showToast.info('Items successfully updated');
     } catch (error: unknown) {

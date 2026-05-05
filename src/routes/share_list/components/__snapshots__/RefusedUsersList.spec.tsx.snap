@@ -2,96 +2,80 @@
 
 exports[`RefusedUsersList > does not render refresh share button 1`] = `
 <div>
-  <div
-    class="m-0 row"
+  <section
+    class="tw:mb-4"
   >
-    <h2
-      class="text-capitalize pe-0 w-auto"
+    <h3
+      class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
     >
-      Refused
-    </h2>
-  </div>
-  <div
-    class="mb-4 list-group"
-  >
-    <div
-      data-test-id="refused-user-id2"
+      Declined
+    </h3>
+    <ul
+      class="tw:flex tw:flex-col"
     >
-      <div
-        class="list-group-item"
+      <li
+        class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+        data-test-id="refused-user-id2"
       >
-        bar@example.com
-      </div>
-    </div>
-  </div>
+        <span
+          class="tw:text-sm"
+        >
+          bar@example.com
+        </span>
+      </li>
+    </ul>
+  </section>
 </div>
 `;
 
 exports[`RefusedUsersList > renders refresh share button 1`] = `
 <div>
-  <div
-    class="m-0 row"
+  <section
+    class="tw:mb-4"
   >
-    <h2
-      class="text-capitalize pe-0 w-auto"
+    <h3
+      class="tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2"
     >
-      Refused
-    </h2>
-  </div>
-  <div
-    class="mb-4 list-group"
-  >
-    <div
-      class="refused-list-list-group-item list-group-item"
-      data-test-id="refused-user-id2"
+      Declined
+    </h3>
+    <ul
+      class="tw:flex tw:flex-col"
     >
-      <div
-        class="row"
+      <li
+        class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]"
+        data-test-id="refused-user-id2"
       >
-        <div
-          class="pt-1 col-md-6"
+        <span
+          class="tw:text-sm tw:flex-1 tw:truncate"
         >
           bar@example.com
-        </div>
-        <div
-          class="pt-1 col-md-4"
-        />
-        <div
-          class="col-md-2"
+        </span>
+        <button
+          aria-label="Re-share"
+          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+          data-test-id="refresh-share"
+          type="button"
         >
-          <div
-            class="float-end btn-group"
-            role="group"
+          <svg
+            aria-hidden="true"
+            fill="currentColor"
+            focusable="false"
+            height="14"
+            role="img"
+            style="display: inline-block; vertical-align: middle;"
+            viewBox="0 0 512 512"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <button
-              class="bg-transparent border-0 p-0 me-3 cursor-pointer "
-              data-test-id="refresh-share"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="text-primary"
-                data-test-id="redo-icon"
-                fill="currentColor"
-                focusable="false"
-                height="32"
-                role="img"
-                style="display: inline-block; vertical-align: middle;"
-                viewBox="0 0 512 512"
-                width="32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
+            <path
+              d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
       32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
       0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            />
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </section>
 </div>
 `;

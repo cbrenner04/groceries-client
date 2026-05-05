@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, type RenderResult, waitFor } from '@testing-library/react';
+import { act, render, type RenderResult, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
@@ -219,7 +219,7 @@ describe('ShareListForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('pending-user-id6')).toHaveTextContent('foobaz@example.com');
-    expect(await findByTestId('pending-user-id6')).toHaveTextContent('write');
+    expect(await findByTestId('pending-user-id6')).toHaveTextContent('pending');
     expect(mockShowToast.info).toHaveBeenCalledWith(
       `"${props.name}" has been successfully shared with foobaz@example.com.`,
     );
@@ -296,7 +296,7 @@ describe('ShareListForm', () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('pending-user-id1')).toHaveTextContent('foo@example.com');
-    expect(await findByTestId('pending-user-id1')).toHaveTextContent('write');
+    expect(await findByTestId('pending-user-id1')).toHaveTextContent('pending');
     expect(mockShowToast.info).toHaveBeenCalledWith(
       `"${props.name}" has been successfully shared with foo@example.com.`,
     );
@@ -376,12 +376,12 @@ describe('ShareListForm', () => {
 
       const { findByTestId, findAllByTestId, user } = setup();
 
-      expect(await findByTestId('pending-user-id2')).toHaveTextContent('read');
+      expect(within(await findByTestId('pending-user-id2')).getByTestId('perm-read')).toBeInTheDocument();
 
       await user.click((await findAllByTestId('toggle-permissions'))[0]);
       await waitFor(() => expect(axios.patch).toHaveBeenCalledTimes(1));
 
-      expect(await findByTestId('pending-user-id2')).toHaveTextContent('write');
+      expect(within(await findByTestId('pending-user-id2')).getByTestId('perm-write')).toBeInTheDocument();
     });
 
     it('toggles permissions in accepted', async () => {

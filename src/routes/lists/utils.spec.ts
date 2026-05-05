@@ -301,13 +301,23 @@ describe('utils', () => {
 
     it('returns correct body on success', async () => {
       axios.get = vi.fn().mockResolvedValue({
-        data: { owner_id: 1, id: 1, name: 'foo', completed: false, list_item_configuration_id: 'config-1' },
+        data: {
+          owner_id: 1,
+          id: 1,
+          name: 'foo',
+          completed: false,
+          refreshed: true,
+          archived_at: null,
+          list_item_configuration_id: 'config-1',
+        },
       });
 
       expect(await fetchListToEdit({ id, navigate })).toStrictEqual({
         listId: 1,
         name: 'foo',
         completed: false,
+        refreshed: true,
+        archivedAt: null,
         list_item_configuration_id: 'config-1',
       });
     });

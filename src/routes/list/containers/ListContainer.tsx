@@ -21,7 +21,8 @@ import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations
 import axios from 'utils/api';
 
 import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
-import { CheckIcon, EditIcon, RedoIcon, TrashIcon } from 'components/icons';
+import { CheckIcon, CopyIcon, EditIcon, MoveIcon, RedoIcon, TrashIcon, UsersIcon } from 'components/icons';
+import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
@@ -66,6 +67,7 @@ export interface IListContainerProps {
   }[];
   initialEditingItemId?: string | null;
   initialBulkEditOpen?: boolean;
+  initialShareSheetOpen?: boolean;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -90,6 +92,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
   const [bulkEditOpen, setBulkEditOpen] = useState(props.initialBulkEditOpen ?? false);
   const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
+  const [shareSheetOpen, setShareSheetOpen] = useState(props.initialShareSheetOpen ?? false);
 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
@@ -711,7 +714,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     if (inputElement) {
       const value = inputElement.value.trim();
       if (value) {
-        handleQuickAdd(value);
+        void handleQuickAdd(value);
         inputElement.value = '';
         setQuickAddFormData({});
       }
@@ -787,13 +790,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         testId: 'complete-selected',
       });
       actions.push({
-        icon: <span className="tw:text-xs tw:font-bold">CP</span>,
+        icon: <CopyIcon size="sm" />,
         label: 'Copy to list',
         onClick: () => setCopyMoveSheet({ mode: 'copy' }),
         testId: 'copy-to-list',
       });
       actions.push({
-        icon: <span className="tw:text-xs tw:font-bold">MV</span>,
+        icon: <MoveIcon size="sm" />,
         label: 'Move to list',
         onClick: () => setCopyMoveSheet({ mode: 'move' }),
         testId: 'move-to-list',
@@ -929,28 +932,48 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           lists={props.listsToUpdate}
           items={selectedItems}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setMultiSelectActive}
-          setCompleteMultiSelect={setMultiSelectActive}
+          setMultiSelectActive={setMultiSelectActive}
           handleMove={handleMove}
         />
       )}
+      <ShareListSheet
+        isOpen={shareSheetOpen}
+        onClose={(): void => setShareSheetOpen(false)}
+        listId={props.list.id ?? ''}
+        listName={props.list.name}
+      />
       <PageLayout
         showBackButton
         backTo="/lists"
         title={props.list.name}
         headerRight={
           props.permissions === EUserPermissions.WRITE ? (
-            <button
-              type="button"
-              className={
-                'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
-                'tw:text-white tw:text-sm tw:font-medium'
-              }
-              onClick={() => setMultiSelectActive(!multiSelectActive)}
-              data-test-id="select-button"
-            >
-              {multiSelectActive ? 'Hide Select' : 'Select'}
-            </button>
+            <div className="tw:flex tw:items-center tw:gap-2">
+              <button
+                type="button"
+                className={
+                  'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:rounded-lg ' +
+                  'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+                  'tw:cursor-pointer tw:transition-colors'
+                }
+                onClick={() => setShareSheetOpen(true)}
+                data-test-id="open-share-sheet"
+                aria-label="Share list"
+              >
+                <UsersIcon size="sm" />
+              </button>
+              <button
+                type="button"
+                className={
+                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+                  'tw:text-white tw:text-sm tw:font-medium'
+                }
+                onClick={() => setMultiSelectActive(!multiSelectActive)}
+                data-test-id="select-button"
+              >
+                {multiSelectActive ? 'Hide Select' : 'Select'}
+              </button>
+            </div>
           ) : null
         }
         bottomBar={
@@ -959,22 +982,26 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               <BottomInputBar
                 placeholder="Add an item..."
                 onSubmit={handleQuickAdd}
+                hidden={showDeleteConfirm || copyMoveSheet !== null}
                 initialExpanded={inputBarExpanded}
                 expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
               />
-              <button
-                type="button"
-                className={[
-                  'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
-                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
-                  'tw:text-white tw:text-sm tw:font-medium',
-                ].join(' ')}
-                onClick={handleQuickAddClick}
-                data-test-id="add-item-button"
-              >
-                Add
-              </button>
+              {!(showDeleteConfirm || copyMoveSheet !== null) ? (
+                // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
+                <button
+                  type="button"
+                  className={[
+                    'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
+                    'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
+                    'tw:text-white tw:text-sm tw:font-medium',
+                  ].join(' ')}
+                  onClick={handleQuickAddClick}
+                  data-test-id="add-item-button"
+                >
+                  Add
+                </button>
+              ) : null}
             </>
           ) : undefined
         }
@@ -1003,7 +1030,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           incompleteMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}
@@ -1020,7 +1046,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           completeMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}
-          setCompleteMultiSelect={setMultiSelectActive}
           handleItemSelect={handleItemSelect}
           handleItemComplete={handleItemComplete}
           handleItemEdit={handleItemEdit}

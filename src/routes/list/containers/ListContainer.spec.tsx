@@ -69,6 +69,18 @@ vi.mock('../components/EditItemSheet', () => ({
   ),
 }));
 
+vi.mock('../../share_list/utils', () => ({
+  __esModule: true,
+  fetchData: vi.fn().mockResolvedValue({
+    invitableUsers: [],
+    userIsOwner: true,
+    pending: [],
+    accepted: [],
+    refused: [],
+    userId: 'id1',
+  }),
+}));
+
 vi.mock('../components/BulkEditSheet', () => ({
   __esModule: true,
   default: (props: IBulkEditSheetProps): React.JSX.Element => (
@@ -2062,6 +2074,23 @@ describe('ListContainer', () => {
       await waitFor(() => {
         expect(axios.get).toHaveBeenCalled();
       });
+    });
+
+    it('opens the share sheet from the header share button', async () => {
+      const { findByTestId, user } = setup();
+      await user.click(await findByTestId('open-share-sheet'));
+      expect(await findByTestId('share-list-sheet')).toBeInTheDocument();
+    });
+
+    it('opens the share sheet automatically when initialShareSheetOpen is true', async () => {
+      const { findByTestId } = setup({ initialShareSheetOpen: true });
+      expect(await findByTestId('share-list-sheet')).toBeInTheDocument();
+    });
+
+    it('closes the share sheet when its onClose fires', async () => {
+      const { findByTestId, queryByTestId, user } = setup({ initialShareSheetOpen: true });
+      await user.click(await findByTestId('share-list-sheet'));
+      await waitFor(() => expect(queryByTestId('share-list-sheet')).not.toBeInTheDocument());
     });
 
     it('preserves filter when BulkEditSheet onSave refetches and filter category is missing', async () => {
