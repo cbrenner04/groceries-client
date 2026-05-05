@@ -26,12 +26,19 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
       return '';
     }
 
-    return props.fieldConfigurations
+    const sortedFieldConfigurations = props.fieldConfigurations
       .slice()
-      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
-      .map((fieldConfig) => fieldConfig.label.trim())
-      .filter((label) => label.length > 0)
-      .join(', ');
+      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
+    const labels: string[] = [];
+
+    for (const fieldConfiguration of sortedFieldConfigurations) {
+      const trimmedLabel = fieldConfiguration.label.trim();
+      if (trimmedLabel.length > 0) {
+        labels.push(trimmedLabel);
+      }
+    }
+
+    return labels.join(', ');
   }, [props.fieldConfigurations]);
 
   const handleEditClick = (): void => {
