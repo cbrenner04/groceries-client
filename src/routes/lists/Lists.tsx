@@ -18,7 +18,12 @@ interface IFulfilledLists {
   listItemConfigurations: IListItemConfiguration[];
 }
 
-const Lists: React.FC = (): React.JSX.Element => {
+interface IListsProps {
+  initialFilter?: 'all' | 'pending' | 'active' | 'completed';
+  initialEditListId?: string | null;
+}
+
+const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
@@ -41,6 +46,8 @@ const Lists: React.FC = (): React.JSX.Element => {
               incompleteLists={data.incompleteLists}
               currentUserPermissions={data.currentUserPermissions}
               listItemConfigurations={data.listItemConfigurations}
+              initialFilter={props.initialFilter}
+              initialEditListId={props.initialEditListId ?? null}
             />
           );
         }}

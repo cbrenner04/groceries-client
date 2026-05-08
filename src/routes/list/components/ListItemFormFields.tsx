@@ -36,7 +36,7 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
     switch (config.data_type) {
       case 'boolean':
         return (
-          <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="mb-3" />
+          <CheckboxField key={config.id} {...commonProps} value={field?.data === 'true' || false} classes="tw:mb-3" />
         );
       case 'date_time': {
         const dateValue = field?.data;

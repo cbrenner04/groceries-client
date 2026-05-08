@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler, type ReactNode } from 'react';
-import { Form } from 'react-bootstrap';
+import Input from '../ui/Input';
 
 export interface ICategoryFieldProps {
   handleInput: ChangeEventHandler;
@@ -11,10 +11,10 @@ export interface ICategoryFieldProps {
 }
 
 const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name ?? 'category'} className="mb-3">
-    <Form.Label>Category</Form.Label>
-    <Form.Control
+  <div className="tw:mb-3" data-test-id="category-field">
+    <Input
       type="text"
+      label="Category"
       value={props.category ?? ''}
       onChange={props.handleInput}
       list="categories"
@@ -27,7 +27,7 @@ const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element 
       ))}
     </datalist>
     {props.child ?? ''}
-  </Form.Group>
+  </div>
 );
 
 export default CategoryField;

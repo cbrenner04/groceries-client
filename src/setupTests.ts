@@ -8,6 +8,28 @@ import { TextEncoder } from 'util';
 import type { AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
 
+const localStorageStore = new Map<string, string>();
+const localStorageMock: Storage = {
+  get length(): number {
+    return localStorageStore.size;
+  },
+  clear(): void {
+    localStorageStore.clear();
+  },
+  getItem(key: string): string | null {
+    return localStorageStore.has(key) ? (localStorageStore.get(key) ?? null) : null;
+  },
+  key(index: number): string | null {
+    return Array.from(localStorageStore.keys())[index] ?? null;
+  },
+  removeItem(key: string): void {
+    localStorageStore.delete(key);
+  },
+  setItem(key: string, value: string): void {
+    localStorageStore.set(key, value);
+  },
+};
+
 // Mock global.IS_REACT_ACT_ENVIRONMENT for React 19
 Object.defineProperty(global, 'IS_REACT_ACT_ENVIRONMENT', {
   value: true,
@@ -20,6 +42,16 @@ Object.defineProperty(global, 'IS_REACT_ACT_ENVIRONMENT', {
 // @ts-ignore
 global.TextEncoder = TextEncoder;
 configure({ testIdAttribute: 'data-test-id' });
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+  configurable: true,
+});
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+  configurable: true,
+});
 // Ensure polling considers the document visible in JSDOM; allow tests to override
 // Polling checks for visibility state to avoid unnecessary work when tab is hidden
 try {
@@ -27,6 +59,21 @@ try {
 } catch {
   // ignore if already defined/configured by the environment
 }
+
+// Mock window.matchMedia for tests
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
 vi.mock('axios', async () => {
   // AxiosError mock - constructable class used by tests with `new AxiosError(...)`
@@ -130,6 +177,7 @@ DateTime.now = vi.fn(() => mockNow) as DateTimeNowFn;
 
 // Global test setup for React 19
 beforeEach(() => {
+  localStorage.clear();
   // Suppress console warnings about act during tests
   vi.spyOn(console, 'error').mockImplementation((message: string) => {
     if (

@@ -1,23 +1,41 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
-import { EUserPermissions, type IList, type IListItemConfiguration, type IListUser, type IListItem } from 'typings';
+import { PageLayout } from 'components/layout/PageLayout';
+import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
+import { BottomInputBar } from 'components/layout/BottomInputBar';
+import {
+  EUserPermissions,
+  EListItemFieldType,
+  type IList,
+  type IListItemConfiguration,
+  type IListItemFieldConfiguration,
+  type IListUser,
+  type IListItem,
+} from 'typings';
 import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
+import axios from 'utils/api';
 
-import ListItemForm from '../components/ListItemForm';
-import CategoryFilter from '../components/CategoryFilter';
+import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
+import { CheckIcon, CopyIcon, EditIcon, MoveIcon, RedoIcon, TrashIcon, UsersIcon } from 'components/icons';
+import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
+import EditItemSheet from '../components/EditItemSheet';
+import BulkEditSheet from '../components/BulkEditSheet';
+import ListItemFormFields from '../components/ListItemFormFields';
+import CategoryField from 'components/FormFields/CategoryField';
+import CheckboxField from 'components/FormFields/CheckboxField';
+import { capitalize } from 'utils/format';
 import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
   handleItemSelect as exportedHandleItemSelect,
-  handleItemEdit as exportedHandleItemEdit,
   handleItemComplete as exportedHandleItemComplete,
   handleItemDelete as exportedHandleItemDelete,
   handleItemRefresh as exportedHandleItemRefresh,
@@ -40,7 +58,16 @@ export interface IListContainerProps {
   permissions: EUserPermissions;
   listsToUpdate: IList[];
   listItemConfiguration?: IListItemConfiguration;
-  listItemFieldConfigurations?: { id: string; label: string; data_type: string; position: number; primary: boolean }[];
+  listItemFieldConfigurations?: {
+    id: string;
+    label: string;
+    data_type: EListItemFieldType;
+    position: number;
+    primary: boolean;
+  }[];
+  initialEditingItemId?: string | null;
+  initialBulkEditOpen?: boolean;
+  initialShareSheetOpen?: boolean;
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -56,11 +83,23 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [includedCategories, setIncludedCategories] = useState(props.categories);
   const [itemsToDelete, setItemsToDelete] = useState([] as IListItem[]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [incompleteMultiSelect, setIncompleteMultiSelect] = useState(false);
-  const [completeMultiSelect, setCompleteMultiSelect] = useState(false);
+  const [multiSelectActive, setMultiSelectActive] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
-  const [copy, setCopy] = useState(false);
-  const [move, setMove] = useState(false);
+  const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
+  const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
+
+  // Bottom sheet state
+  const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
+  const [bulkEditOpen, setBulkEditOpen] = useState(props.initialBulkEditOpen ?? false);
+  const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
+  const [shareSheetOpen, setShareSheetOpen] = useState(props.initialShareSheetOpen ?? false);
+
+  // Quick add form state
+  const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
+  const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
+  const [quickAddCategory, setQuickAddCategory] = useState('');
+  const [quickAddCompleted, setQuickAddCompleted] = useState(false);
+
   const navigate = useNavigate();
 
   // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
@@ -178,19 +217,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const handleItemEdit = useCallback(
     (item: IListItem): void => {
       if (selectedItems.length > 1) {
-        // Bulk edit - navigate with selected item IDs
-        const itemIds = selectedItems.map((selectedItem) => selectedItem.id).join(',');
-        navigate(`/lists/${props.list.id ?? ''}/list_items/bulk-edit?item_ids=${itemIds}`);
+        // Bulk edit - open sheet
+        setBulkEditOpen(true);
       } else {
-        // Single edit
-        exportedHandleItemEdit({
-          item,
-          listId: props.list.id ?? '',
-          navigate,
-        });
+        // Single edit - open sheet
+        setEditingItemId(item.id);
       }
     },
-    [selectedItems, props.list.id, navigate],
+    [selectedItems.length],
   );
 
   const handleItemComplete = useCallback(
@@ -208,11 +242,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setNotCompletedItems(updatedNotCompletedItems);
       setCompletedItems(updatedCompletedItems);
+      setInputBarExpanded(false);
 
       // Clear selections
       setSelectedItems([]);
-      setIncompleteMultiSelect(false);
-      setCompleteMultiSelect(false);
+      setMultiSelectActive(false);
 
       // Execute operations in parallel
       const results = await executeBulkOperations(itemsToComplete, {
@@ -254,8 +288,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems,
       setCompletedItems,
       setSelectedItems,
-      setIncompleteMultiSelect,
-      setCompleteMultiSelect,
+      setMultiSelectActive,
       props.list.id,
       navigate,
     ],
@@ -282,8 +315,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       // Clear selections
       setSelectedItems([]);
-      setCompleteMultiSelect(false);
-      setIncompleteMultiSelect(false);
+      setMultiSelectActive(false);
 
       // Execute operations in parallel
       const results = await executeBulkOperations<IListItem>(itemsToRefresh, {
@@ -342,8 +374,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems,
       setNotCompletedItems,
       setSelectedItems,
-      setCompleteMultiSelect,
-      setIncompleteMultiSelect,
+      setMultiSelectActive,
       props.list.id,
       navigate,
     ],
@@ -389,8 +420,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     // Clear selections
     setSelectedItems([]);
-    setIncompleteMultiSelect(false);
-    setCompleteMultiSelect(false);
+    setMultiSelectActive(false);
     setItemsToDelete([]);
 
     // Execute operations in parallel
@@ -440,9 +470,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleMove = (): void => {
-    if (!move) {
-      return;
-    }
     // Remove items from both not completed and completed since they've been moved to another list
     const updatedNotCompletedItems = notCompletedItems.filter(
       (item) => !selectedItems.some((selected) => selected.id === item.id),
@@ -463,8 +490,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
 
     setSelectedItems([]);
-    setIncompleteMultiSelect(false);
-    setMove(false);
+    setMultiSelectActive(false);
   };
 
   const deleteConfirmationModalBody = (): string => {
@@ -472,100 +498,563 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 
-  // Category filter handlers
-  const handleCategoryFilter = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
-    setFilter(event.target.name);
-    setDisplayedCategories([event.target.name]);
-  }, []);
+  const handleQuickAddFormChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const { name, type, value, checked } = e.target;
+    const next = type === 'checkbox' ? (checked ? 'true' : 'false') : value;
+    setQuickAddFormData((prev) => ({
+      ...prev,
+      [name]: next,
+    }));
+  };
 
-  const handleClearFilter = useCallback((): void => {
-    setFilter('');
-    setDisplayedCategories(includedCategories);
-  }, [includedCategories]);
+  const handleQuickAddFormSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if (!props.list?.id || !props.listItemConfiguration?.id) {
+      return;
+    }
+
+    const configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      return;
+    }
+
+    const formEl = event.currentTarget;
+
+    try {
+      setPending(true);
+      const categoryEl = formEl.elements.namedItem('category');
+      const categoryRaw = categoryEl instanceof HTMLInputElement ? String(categoryEl.value ?? '').trim() : '';
+      const categoryMerged = categoryRaw || quickAddCategory.trim();
+      const capitalizedCategory = categoryMerged ? capitalize(categoryMerged) : null;
+      const completedEl = formEl.elements.namedItem('completed');
+      const completedFlag = completedEl instanceof HTMLInputElement ? completedEl.checked : quickAddCompleted;
+
+      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
+        list_item: {
+          completed: completedFlag,
+          ...(capitalizedCategory ? { category: capitalizedCategory } : {}),
+        },
+      });
+
+      const resolvedFieldData = (config: (typeof configs)[0]): string => {
+        const named = formEl.elements.namedItem(config.label);
+        const fromState = quickAddFormData[config.label];
+        if (config.data_type === EListItemFieldType.BOOLEAN) {
+          if (named instanceof HTMLInputElement) {
+            return named.checked ? 'true' : 'false';
+          }
+          return fromState === 'true' ? 'true' : 'false';
+        }
+        const fromDom = named instanceof HTMLInputElement ? String(named.value ?? '').trim() : '';
+        const str = fromDom || String(fromState ?? '').trim();
+        if (str !== '') {
+          return str;
+        }
+        switch (config.data_type) {
+          case EListItemFieldType.NUMBER:
+            return '0';
+          default:
+            return '';
+        }
+      };
+
+      await Promise.all(
+        configs.flatMap((config) => {
+          const data = resolvedFieldData(config);
+          if (data === '') {
+            return [];
+          }
+          return [
+            axios.post(`/lists/${props.list.id}/list_items/${newItem.id}/list_item_fields`, {
+              list_item_field: {
+                list_item_field_configuration_id: config.id,
+                data,
+              },
+            }),
+          ];
+        }),
+      );
+
+      if (capitalizedCategory) {
+        try {
+          await axios.post(`/lists/${props.list.id}/categories`, { category: { name: capitalizedCategory } });
+        } catch {
+          // Category may already exist
+        }
+      }
+
+      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
+      handleAddItem([completeItem]);
+      setQuickAddFormData({});
+      setQuickAddCategory('');
+      setQuickAddCompleted(false);
+      setInputBarExpanded(true);
+      setPending(false);
+    } catch {
+      showToast.error('Failed to add item');
+      setPending(false);
+    }
+  };
+
+  const handleQuickAdd = async (value: string): Promise<void> => {
+    if (!props.listItemConfiguration?.id) {
+      showToast.error('No field configuration available for this list. Please contact support.');
+      return;
+    }
+
+    try {
+      setPending(true);
+
+      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
+        list_item: {
+          user_id: props.userId,
+          completed: false,
+        },
+      });
+
+      const { data: fieldConfigurations } = await axios.get(
+        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+      );
+
+      const primaryFieldConfig = fieldConfigurations.find((config: { primary: boolean }) => config.primary === true);
+
+      if (primaryFieldConfig) {
+        const fieldPayload = { list_item_field: { data: value } };
+        await axios.post(`/list_items/${newItem.id}/list_item_fields`, fieldPayload);
+      }
+
+      const itemWithFields = { ...newItem, list_item_fields: [{ label: primaryFieldConfig?.label, data: value }] };
+
+      handleAddItem([itemWithFields]);
+      setInputBarExpanded(true);
+      setPending(false);
+    } catch {
+      showToast.error('Failed to add item');
+      setPending(false);
+    }
+  };
+
+  const permissionsDict: Record<string, 'read' | 'write'> = {
+    [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
+  };
+
+  const getQuickAddExpandedContent = (): React.ReactNode => {
+    const configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      return null;
+    }
+
+    return (
+      <form data-test-id="list-item-form" noValidate onSubmit={handleQuickAddFormSubmit} className="tw:pb-2">
+        <ListItemFormFields
+          fieldConfigurations={configs}
+          fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
+            id: `form-${label}`,
+            label,
+            data,
+            list_item_id: '',
+            list_item_field_configuration_id: '',
+            archived_at: null,
+            user_id: '',
+            created_at: '',
+            updated_at: null,
+            position: index,
+            data_type: EListItemFieldType.FREE_TEXT,
+          }))}
+          setFormData={handleQuickAddFormChange}
+          editForm={false}
+        />
+        <CategoryField
+          category={quickAddCategory}
+          categories={includedCategories}
+          handleInput={(e: React.ChangeEvent<HTMLInputElement>): void => {
+            setQuickAddCategory(e.target.value);
+          }}
+        />
+        <CheckboxField
+          name="completed"
+          label="Completed"
+          value={quickAddCompleted}
+          handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+            setQuickAddCompleted(e.target.checked);
+          }}
+        />
+        <button
+          type="submit"
+          className={
+            'tw:w-full tw:mt-2 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+            'tw:text-white tw:text-sm tw:font-medium'
+          }
+        >
+          Submit
+        </button>
+      </form>
+    );
+  };
+
+  const handleQuickAddFormOpen = (): void => {
+    // Fetch field configurations when form is opened if not preloaded
+    if (!quickAddFieldConfigs && props.listItemConfiguration?.id) {
+      axios
+        .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
+        .then((response) => {
+          // Only set if response is an array
+          if (Array.isArray(response.data)) {
+            setQuickAddFieldConfigs(response.data);
+          }
+        })
+        .catch(() => {
+          // Silently fail - form just won't show fields
+        });
+    }
+  };
+
+  const handleQuickAddClick = (): void => {
+    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
+    if (inputElement) {
+      const value = inputElement.value.trim();
+      if (value) {
+        void handleQuickAdd(value);
+        inputElement.value = '';
+        setQuickAddFormData({});
+      }
+    }
+  };
+
+  const renderFilterChips = (): React.JSX.Element => {
+    const allCategories = includedCategories.filter(
+      (c) => c !== 'uncategorized' && c !== '' && notCompletedItems.some((item) => item.category === c),
+    );
+
+    const hasUncategorized = notCompletedItems.some((item) => !item.category);
+
+    return (
+      <FilterChipGroup className="tw:py-2">
+        <FilterChip
+          label="All"
+          active={filter === ''}
+          onClick={() => {
+            setFilter('');
+            setDisplayedCategories(includedCategories);
+          }}
+          testId="clear-filter"
+        />
+        {allCategories.map((category) => (
+          <FilterChip
+            key={category}
+            label={category}
+            active={filter === category}
+            onClick={() => {
+              if (filter === category) {
+                setFilter('');
+                setDisplayedCategories(includedCategories);
+              } else {
+                setFilter(category);
+                setDisplayedCategories([category]);
+              }
+            }}
+            testId={`filter-by-${category.toLowerCase()}`}
+          />
+        ))}
+        {hasUncategorized && (
+          <FilterChip
+            label="Other"
+            active={filter === 'uncategorized'}
+            onClick={() => {
+              if (filter === 'uncategorized') {
+                setFilter('');
+                setDisplayedCategories(includedCategories);
+              } else {
+                setFilter('uncategorized');
+                setDisplayedCategories(['uncategorized']);
+              }
+            }}
+            testId="filter-by-uncategorized"
+          />
+        )}
+      </FilterChipGroup>
+    );
+  };
+
+  const getMultiSelectActions = (): IMultiSelectAction[] => {
+    const hasNotCompleted = selectedItems.some((item) => !item.completed);
+    const hasCompleted = selectedItems.some((item) => item.completed);
+    const actions: IMultiSelectAction[] = [];
+
+    if (hasNotCompleted && !hasCompleted) {
+      actions.push({
+        icon: <CheckIcon size="sm" />,
+        label: 'Complete',
+        onClick: () => handleItemComplete(selectedItems[0]),
+        variant: 'success',
+        testId: 'complete-selected',
+      });
+      actions.push({
+        icon: <CopyIcon size="sm" />,
+        label: 'Copy to list',
+        onClick: () => setCopyMoveSheet({ mode: 'copy' }),
+        testId: 'copy-to-list',
+      });
+      actions.push({
+        icon: <MoveIcon size="sm" />,
+        label: 'Move to list',
+        onClick: () => setCopyMoveSheet({ mode: 'move' }),
+        testId: 'move-to-list',
+      });
+      actions.push({
+        icon: <EditIcon size="sm" />,
+        label: 'Bulk Edit',
+        onClick: () => setBulkEditOpen(true),
+        testId: 'bulk-edit',
+      });
+    }
+
+    if (hasCompleted && !hasNotCompleted) {
+      actions.push({
+        icon: <RedoIcon size="sm" />,
+        label: 'Refresh',
+        onClick: () => handleItemRefresh(selectedItems[0]),
+        variant: 'success',
+        testId: 'refresh-selected',
+      });
+    }
+
+    actions.push({
+      icon: <TrashIcon size="sm" />,
+      label: 'Delete',
+      onClick: () => handleDelete(selectedItems[0]),
+      variant: 'danger',
+      testId: 'delete-selected',
+    });
+
+    return actions;
+  };
 
   return (
     <React.Fragment>
-      {(copy || move) && (
+      {editingItemId && (
+        <EditItemSheet
+          listId={props.list.id ?? ''}
+          itemId={editingItemId}
+          onClose={(): void => setEditingItemId(null)}
+          onSave={(): void => {
+            setEditingItemId(null);
+            const listId = props.list.id;
+            if (listId) {
+              void listDeduplicator
+                .execute(`list-${listId}`, () =>
+                  fetchList({ id: listId, navigate, signal: new AbortController().signal }),
+                )
+                .then((fetchResponse) => {
+                  if (!fetchResponse) {
+                    return;
+                  }
+                  const {
+                    not_completed_items: updatedNotCompletedItems,
+                    completed_items: updatedCompletedItems,
+                    categories: updatedCategories,
+                  } = fetchResponse as IFulfilledListData;
+                  setNotCompletedItems(updatedNotCompletedItems);
+                  setCompletedItems(updatedCompletedItems);
+                  setCategories(updatedCategories);
+                  setIncludedCategories(updatedCategories);
+                  if (!filter) {
+                    setDisplayedCategories(updatedCategories);
+                  } else if (
+                    filter &&
+                    !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())
+                  ) {
+                    setDisplayedCategories([filter]);
+                  }
+                })
+                .catch(() => {
+                  // Silently handle refetch errors
+                });
+            }
+          }}
+        />
+      )}
+      {bulkEditOpen && props.listItemConfiguration && (
+        <BulkEditSheet
+          listId={props.list.id ?? ''}
+          items={selectedItems}
+          lists={props.listsToUpdate}
+          categories={categories}
+          listItemConfiguration={props.listItemConfiguration}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+          onClose={(): void => setBulkEditOpen(false)}
+          onSave={(): void => {
+            setBulkEditOpen(false);
+            setSelectedItems([]);
+            setMultiSelectActive(false);
+            const listId = props.list.id;
+            if (listId) {
+              void listDeduplicator
+                .execute(`list-${listId}`, () =>
+                  fetchList({ id: listId, navigate, signal: new AbortController().signal }),
+                )
+                .then((fetchResponse) => {
+                  if (!fetchResponse) {
+                    return;
+                  }
+                  const {
+                    not_completed_items: updatedNotCompletedItems,
+                    completed_items: updatedCompletedItems,
+                    categories: updatedCategories,
+                  } = fetchResponse as IFulfilledListData;
+                  setNotCompletedItems(updatedNotCompletedItems);
+                  setCompletedItems(updatedCompletedItems);
+                  setCategories(updatedCategories);
+                  setIncludedCategories(updatedCategories);
+                  if (!filter) {
+                    setDisplayedCategories(updatedCategories);
+                  } else if (
+                    filter &&
+                    !updatedCategories.some((c: string) => c.toLowerCase() === filter.toLowerCase())
+                  ) {
+                    setDisplayedCategories([filter]);
+                  }
+                })
+                .catch(() => {
+                  // Silently handle refetch errors
+                });
+            }
+          }}
+        />
+      )}
+      {copyMoveSheet && (
         <ChangeOtherListModal
-          show={copy || move}
-          setShow={copy ? setCopy : setMove}
-          copy={copy}
-          move={move}
+          show={true}
+          setShow={(): void => setCopyMoveSheet(null)}
+          copy={copyMoveSheet.mode === 'copy'}
+          move={copyMoveSheet.mode === 'move'}
           currentList={props.list}
           lists={props.listsToUpdate}
           items={selectedItems}
           setSelectedItems={setSelectedItems}
-          setIncompleteMultiSelect={setIncompleteMultiSelect}
-          setCompleteMultiSelect={setCompleteMultiSelect}
+          setMultiSelectActive={setMultiSelectActive}
           handleMove={handleMove}
         />
       )}
-      <Link to="/lists" className="float-end">
-        Back to lists
-      </Link>
-      <h1>{props.list.name}</h1>
-      <br />
-      {props.permissions === EUserPermissions.WRITE ? (
-        <ListItemForm
-          listId={props.list.id ?? ''}
-          listUsers={props.listUsers}
-          userId={props.userId}
-          handleItemAddition={handleAddItem}
-          categories={props.categories}
-          navigate={navigate}
-          listItemConfiguration={props.listItemConfiguration}
-          preloadedFieldConfigurations={props.listItemFieldConfigurations}
+      <ShareListSheet
+        isOpen={shareSheetOpen}
+        onClose={(): void => setShareSheetOpen(false)}
+        listId={props.list.id ?? ''}
+        listName={props.list.name}
+      />
+      <PageLayout
+        showBackButton
+        backTo="/lists"
+        title={props.list.name}
+        headerRight={
+          props.permissions === EUserPermissions.WRITE ? (
+            <div className="tw:flex tw:items-center tw:gap-2">
+              <button
+                type="button"
+                className={
+                  'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:rounded-lg ' +
+                  'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+                  'tw:cursor-pointer tw:transition-colors'
+                }
+                onClick={() => setShareSheetOpen(true)}
+                data-test-id="open-share-sheet"
+                aria-label="Share list"
+              >
+                <UsersIcon size="sm" />
+              </button>
+              <button
+                type="button"
+                className={
+                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
+                  'tw:text-white tw:text-sm tw:font-medium'
+                }
+                onClick={() => setMultiSelectActive(!multiSelectActive)}
+                data-test-id="select-button"
+              >
+                {multiSelectActive ? 'Hide Select' : 'Select'}
+              </button>
+            </div>
+          ) : null
+        }
+        bottomBar={
+          props.permissions === EUserPermissions.WRITE ? (
+            <>
+              <BottomInputBar
+                placeholder="Add an item..."
+                onSubmit={handleQuickAdd}
+                hidden={showDeleteConfirm || copyMoveSheet !== null}
+                initialExpanded={inputBarExpanded}
+                expandedContent={getQuickAddExpandedContent()}
+                onInputFocus={handleQuickAddFormOpen}
+              />
+              {!(showDeleteConfirm || copyMoveSheet !== null) ? (
+                // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
+                <button
+                  type="button"
+                  className={[
+                    'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
+                    'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
+                    'tw:text-white tw:text-sm tw:font-medium',
+                  ].join(' ')}
+                  onClick={handleQuickAddClick}
+                  data-test-id="add-item-button"
+                >
+                  Add
+                </button>
+              ) : null}
+            </>
+          ) : undefined
+        }
+      >
+        {renderFilterChips()}
+        {multiSelectActive && selectedItems.length > 0 && (
+          <div className="tw:mb-3">
+            <MultiSelectBar
+              selectedCount={selectedItems.length}
+              onClose={() => {
+                setSelectedItems([]);
+                setMultiSelectActive(false);
+              }}
+              actions={getMultiSelectActions()}
+            />
+          </div>
+        )}
+        <NotCompletedItemsSection
+          notCompletedItems={notCompletedItems}
+          permissions={props.permissions}
+          permissionsDict={permissionsDict}
+          selectedItems={selectedItems}
+          pending={pending}
+          filter={filter}
+          displayedCategories={displayedCategories}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+          incompleteMultiSelect={multiSelectActive}
+          setSelectedItems={setSelectedItems}
+          handleItemSelect={handleItemSelect}
+          handleItemComplete={handleItemComplete}
+          handleItemEdit={handleItemEdit}
+          handleItemDelete={handleDelete}
+          handleItemRefresh={handleItemRefresh}
         />
-      ) : (
-        <p>You only have permission to read this list</p>
-      )}
-      <hr />
-      <div className="d-flex justify-content-between">
-        <h2>Items</h2>
-        <div>
-          <CategoryFilter
-            categories={includedCategories}
-            filter={filter}
-            handleCategoryFilter={handleCategoryFilter}
-            handleClearFilter={handleClearFilter}
-          />
-        </div>
-      </div>
-      <NotCompletedItemsSection
-        notCompletedItems={notCompletedItems}
-        permissions={props.permissions}
-        selectedItems={selectedItems}
-        pending={pending}
-        filter={filter}
-        displayedCategories={displayedCategories}
-        incompleteMultiSelect={incompleteMultiSelect}
-        setCopy={setCopy}
-        setMove={setMove}
-        setSelectedItems={setSelectedItems}
-        setIncompleteMultiSelect={setIncompleteMultiSelect}
-        handleItemSelect={handleItemSelect}
-        handleItemComplete={handleItemComplete}
-        handleItemEdit={handleItemEdit}
-        handleItemDelete={handleDelete}
-        handleItemRefresh={handleItemRefresh}
-      />
 
-      <CompletedItemsSection
-        completedItems={completedItems}
-        permissions={props.permissions}
-        selectedItems={selectedItems}
-        pending={pending}
-        completeMultiSelect={completeMultiSelect}
-        setCopy={setCopy}
-        setMove={setMove}
-        setSelectedItems={setSelectedItems}
-        setCompleteMultiSelect={setCompleteMultiSelect}
-        handleItemSelect={handleItemSelect}
-        handleItemComplete={handleItemComplete}
-        handleItemEdit={handleItemEdit}
-        handleItemDelete={handleDelete}
-        handleItemRefresh={handleItemRefresh}
-      />
+        <CompletedItemsSection
+          completedItems={completedItems}
+          permissions={props.permissions}
+          permissionsDict={permissionsDict}
+          selectedItems={selectedItems}
+          pending={pending}
+          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+          completeMultiSelect={multiSelectActive}
+          setSelectedItems={setSelectedItems}
+          handleItemSelect={handleItemSelect}
+          handleItemComplete={handleItemComplete}
+          handleItemEdit={handleItemEdit}
+          handleItemDelete={handleDelete}
+          handleItemRefresh={handleItemRefresh}
+          completedExpanded={completedExpanded}
+          setCompletedExpanded={setCompletedExpanded}
+        />
+      </PageLayout>
       <ConfirmModal
         action="delete"
         body={deleteConfirmationModalBody()}

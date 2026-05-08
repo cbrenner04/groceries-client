@@ -1,5 +1,4 @@
 import React, { type ChangeEventHandler, type FormEventHandler, useState, useCallback } from 'react';
-import { Form } from 'react-bootstrap';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
@@ -27,6 +26,8 @@ export interface IBulkEditListItemsFormProps {
   listUsers: IListUser[];
   listItemConfiguration: IListItemConfiguration;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
+  isBottomSheet?: boolean;
+  onCancel?: () => void;
 }
 
 const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): React.JSX.Element => {
@@ -137,9 +138,13 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
 
   return (
     <React.Fragment>
-      <h1>Edit Items</h1>
-      <br />
-      <Form onSubmit={handleSubmit} autoComplete="off">
+      {!props.isBottomSheet && (
+        <>
+          <h1>Edit Items</h1>
+          <br />
+        </>
+      )}
+      <form onSubmit={handleSubmit} autoComplete="off">
         <BulkEditListItemsFormFields
           fieldConfigurations={props.listItemFieldConfigurations}
           fieldUpdates={fieldUpdates}
@@ -161,16 +166,22 @@ const BulkEditListItemsForm: React.FC<IBulkEditListItemsFormProps> = (props): Re
               label="Clear Category"
               value={clearCategory}
               handleChange={handleClearCategory}
-              classes="ms-1 mt-1"
+              classes="tw:ms-1 tw:mt-1"
             />
           }
         />
         <FormSubmission
           submitText="Update Items"
-          cancelAction={(): void => props.navigate(`/lists/${props.list.id}`)}
+          cancelAction={(): void => {
+            if (props.isBottomSheet && props.onCancel) {
+              props.onCancel();
+            } else {
+              props.navigate(`/lists/${props.list.id}`);
+            }
+          }}
           cancelText="Cancel"
         />
-      </Form>
+      </form>
     </React.Fragment>
   );
 };

@@ -1,7 +1,11 @@
 import React, { type ChangeEvent } from 'react';
-import { Form } from 'react-bootstrap';
 import { EListItemFieldType } from 'typings';
-import Trash from 'components/ActionButtons/Trash';
+
+import Input from 'components/ui/Input';
+import Select from 'components/ui/Select';
+import Checkbox from 'components/ui/Checkbox';
+import { IconButton } from 'components/ui/IconButton';
+import { TrashIcon } from 'components/icons';
 import { fieldTypeLabel } from 'utils/format';
 import type { IFieldRow } from './FieldConfigurationRows';
 
@@ -26,9 +30,7 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
     props.onChange('label', event.target.value);
   };
 
-  const handleDataTypeChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-  ): void => {
+  const handleDataTypeChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     props.onChange('dataType', event.target.value as EListItemFieldType);
   };
 
@@ -47,62 +49,61 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
   const hasPositionError = props.showValidation && props.hasDuplicatePosition;
 
   return (
-    <div className="mb-3 p-2 border rounded" data-test-class={`field-configuration-row`}>
-      <Form.Group className="mb-2">
-        <Form.Label className="small mb-1">Label</Form.Label>
-        <Form.Control
-          type="text"
-          value={props.row.label}
-          onChange={handleLabelChange}
-          data-test-id={`field-row-label-${props.index}`}
-          placeholder="e.g., product"
-          isInvalid={hasLabelError}
-        />
-        {hasLabelError && <Form.Control.Feedback type="invalid">Label cannot be blank</Form.Control.Feedback>}
-      </Form.Group>
-
-      <Form.Group className="mb-2">
-        <Form.Label className="small mb-1">Type</Form.Label>
-        <Form.Control
-          as="select"
-          value={props.row.dataType}
-          onChange={handleDataTypeChange}
-          data-test-id={`field-row-data-type-${props.index}`}
-        >
-          {dataTypeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Form.Control>
-      </Form.Group>
-
-      <div className="d-flex gap-2 align-items-center justify-content-between">
-        <Form.Group className="mb-0" style={{ width: '80px' }}>
-          <Form.Label className="small mb-1">Position</Form.Label>
-          <Form.Control
+    <div
+      data-test-class="field-configuration-row"
+      className={
+        'tw:flex tw:flex-col tw:gap-3 tw:p-3 tw:rounded-lg tw:border ' +
+        'tw:border-[var(--color-border)] tw:bg-[var(--color-surface-raised)]'
+      }
+    >
+      <Input
+        id={`field-row-label-${props.index}`}
+        testId={`field-row-label-${props.index}`}
+        label="Label"
+        value={props.row.label}
+        onChange={handleLabelChange}
+        placeholder="e.g., product"
+        error={hasLabelError ? 'Label cannot be blank' : undefined}
+      />
+      <Select
+        id={`field-row-data-type-${props.index}`}
+        testId={`field-row-data-type-${props.index}`}
+        label="Type"
+        value={props.row.dataType}
+        onChange={handleDataTypeChange}
+        options={dataTypeOptions}
+      />
+      <div className="tw:flex tw:items-end tw:gap-3 tw:justify-between">
+        <div className="tw:w-24">
+          <Input
+            id={`field-row-position-${props.index}`}
+            testId={`field-row-position-${props.index}`}
+            label="Position"
             type="number"
             value={props.row.position}
             onChange={handlePositionChange}
             min={1}
             max={props.totalFields}
-            data-test-id={`field-row-position-${props.index}`}
-            isInvalid={hasPositionError}
+            error={hasPositionError ? 'Duplicate position' : undefined}
           />
-          {hasPositionError && <Form.Control.Feedback type="invalid">Duplicate position</Form.Control.Feedback>}
-        </Form.Group>
-
-        <Form.Group className="mb-0">
-          <Form.Check
-            type="checkbox"
-            checked={props.row.primary}
-            onChange={handlePrimaryChange}
-            label="Primary"
-            data-test-id={`field-row-primary-${props.index}`}
-          />
-        </Form.Group>
-
-        <Trash handleClick={props.onRemove} testID={`field-row-remove-${props.index}`} disabled={!props.canRemove} />
+        </div>
+        <Checkbox
+          id={`field-row-primary-${props.index}`}
+          testId={`field-row-primary-${props.index}`}
+          name={`field-row-primary-${props.index}`}
+          label="Primary"
+          checked={props.row.primary}
+          onChange={handlePrimaryChange}
+        />
+        <IconButton
+          icon={<TrashIcon size="sm" />}
+          variant="danger"
+          size="sm"
+          label="Remove field"
+          data-test-id={`field-row-remove-${props.index}`}
+          onClick={props.onRemove}
+          disabled={!props.canRemove}
+        />
       </div>
     </div>
   );

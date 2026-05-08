@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler, type ReactNode } from 'react';
-import { Form } from 'react-bootstrap';
+import Select from '../ui/Select';
 
 export interface ISelectFieldProps {
   name: string;
@@ -16,28 +16,23 @@ export interface ISelectFieldProps {
 }
 
 const SelectField: React.FC<ISelectFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name} className="mb-3">
-    <Form.Label>{props.label}</Form.Label>
-    <Form.Control
-      as="select"
+  <div className="tw:mb-3">
+    <Select
+      label={props.label}
       value={props.value ?? ''}
       onChange={props.handleChange}
       name={props.name}
       disabled={props.disabled ?? false}
+      options={props.options}
     >
       {props.blankOption && (
         <option value="" disabled={!props.value}>
           {props.value ? `Clear ${props.label}` : `Select ${props.label}`}
         </option>
       )}
-      {props.options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </Form.Control>
+    </Select>
     {props.child ?? ''}
-  </Form.Group>
+  </div>
 );
 
 export default SelectField;

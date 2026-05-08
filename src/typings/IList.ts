@@ -8,4 +8,5 @@ export default interface IList {
   owner_id?: string;
   refreshed?: boolean;
   categories?: string[];
+  has_accepted?: boolean | null;
 }

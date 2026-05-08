@@ -64,11 +64,13 @@ export async function fetchCompletedLists(fetchParams: {
   }
 }
 
-interface IFetchListToEditReturn {
+export interface IFetchListToEditReturn {
   listId: string;
   name: string;
   completed: boolean;
-  list_item_configuration_id: string;
+  refreshed: boolean;
+  archivedAt: string | null;
+  list_item_configuration_id: string | null;
 }
 
 export async function fetchListToEdit(fetchParams: {
@@ -81,7 +83,9 @@ export async function fetchListToEdit(fetchParams: {
       listId: data.id,
       name: data.name,
       completed: data.completed,
-      list_item_configuration_id: data.list_item_configuration_id,
+      refreshed: Boolean(data.refreshed),
+      archivedAt: data.archived_at ?? null,
+      list_item_configuration_id: data.list_item_configuration_id ?? null,
     };
   } catch (error: unknown) {
     const err = error as AxiosError;

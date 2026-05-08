@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input > matches snapshot 1`] = `
+<div
+  class="tw:w-full"
+>
+  <label
+    class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+    for="email-input"
+  >
+    Email
+  </label>
+  <input
+    class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+    data-test-id="email-input"
+    id="email-input"
+    placeholder="Enter email"
+    value=""
+  />
+</div>
+`;

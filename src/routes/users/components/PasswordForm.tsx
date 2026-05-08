@@ -1,5 +1,4 @@
 import React, { type ChangeEventHandler, type FormEventHandler } from 'react';
-import { Form } from 'react-bootstrap';
 
 import { PasswordField } from 'components/FormFields';
 import FormSubmission from 'components/FormSubmission';
@@ -13,7 +12,7 @@ export interface IPasswordFormProps {
 }
 
 const PasswordForm: React.FC<IPasswordFormProps> = (props): React.JSX.Element => (
-  <Form onSubmit={props.submissionHandler} autoComplete="off" data-test-id="password-form">
+  <form onSubmit={props.submissionHandler} autoComplete="off" data-test-id="password-form">
     <PasswordField
       name="password"
       label="Password"
@@ -29,7 +28,7 @@ const PasswordForm: React.FC<IPasswordFormProps> = (props): React.JSX.Element =>
       placeholder="Confirm new password"
     />
     <FormSubmission submitText="Set my password" />
-  </Form>
+  </form>
 );
 
 export default PasswordForm;

@@ -1,9 +1,20 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, type RenderResult } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import type * as ReactRouter from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
+
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof ReactRouter>('react-router');
+  return {
+    ...actual,
+    useNavigate: (): typeof mockNavigate => mockNavigate,
+  };
+});
 import {
   createList,
   createListItem,
@@ -28,14 +39,7 @@ const getForm = (): HTMLFormElement => {
   return input.closest('form') as HTMLFormElement;
 };
 
-// Mock window.location
-const mockLocation = {
-  href: '',
-};
-Object.defineProperty(window, 'location', {
-  value: mockLocation,
-  writable: true,
-});
+const renderForm = (ui: React.ReactElement): RenderResult => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe('EditListItemForm', () => {
   const mockList = createList('123', 'Test List', 'config-grocery');
@@ -87,19 +91,19 @@ describe('EditListItemForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockLocation.href = '';
+    mockNavigate.mockReset();
   });
 
   describe('Rendering', () => {
     it('renders the form with correct title', () => {
-      const { container } = render(<EditListItemForm {...defaultProps} />);
+      const { container } = renderForm(<EditListItemForm {...defaultProps} />);
 
       expect(container).toMatchSnapshot();
       expect(screen.getByText('Edit Item')).toBeInTheDocument();
     });
 
     it('renders form fields with correct labels and values', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
@@ -111,7 +115,7 @@ describe('EditListItemForm', () => {
     });
 
     it('renders form buttons', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       expect(screen.getByText('Update Item')).toBeInTheDocument();
       expect(screen.getByText('Cancel')).toBeInTheDocument();
@@ -123,7 +127,7 @@ describe('EditListItemForm', () => {
         // Missing product field
       ]);
 
-      render(<EditListItemForm {...defaultProps} item={itemWithMissingFields} />);
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithMissingFields} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
@@ -135,7 +139,7 @@ describe('EditListItemForm', () => {
 
   describe('Form Interactions', () => {
     it('updates field values when user types', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
@@ -148,7 +152,7 @@ describe('EditListItemForm', () => {
     });
 
     it('handles empty field values', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       fireEvent.change(quantityInput, { target: { value: '' } });
@@ -157,7 +161,7 @@ describe('EditListItemForm', () => {
     });
 
     it('updates category value when user types', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const categoryInput = screen.getByLabelText('Category') as HTMLInputElement;
       expect(categoryInput.value).toBe('Produce');
@@ -176,7 +180,7 @@ describe('EditListItemForm', () => {
     });
 
     it('submits form successfully and redirects', async () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
@@ -201,12 +205,12 @@ describe('EditListItemForm', () => {
           },
         });
         expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully updated');
-        expect(mockLocation.href).toBe('/lists/123');
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/123');
       });
     });
 
     it('trims trailing whitespace before updating fields', async () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
       fireEvent.change(productInput, { target: { value: 'Apples  ' } });
@@ -230,7 +234,7 @@ describe('EditListItemForm', () => {
         // Missing product field
       ]);
 
-      render(<EditListItemForm {...defaultProps} item={itemWithMissingFields} />);
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithMissingFields} />);
 
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
       fireEvent.change(productInput, { target: { value: 'New Product' } });
@@ -262,7 +266,7 @@ describe('EditListItemForm', () => {
     });
 
     it('archives fields when data is cleared', async () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       fireEvent.change(quantityInput, { target: { value: '' } });
@@ -294,7 +298,7 @@ describe('EditListItemForm', () => {
         // Missing product field
       ]);
 
-      render(<EditListItemForm {...defaultProps} item={itemWithMixedFields} />);
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithMixedFields} />);
 
       const quantityInput = screen.getByLabelText('Quantity') as HTMLInputElement;
       const productInput = screen.getByLabelText('Product') as HTMLInputElement;
@@ -320,14 +324,14 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(authError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
-        expect(mockLocation.href).toBe('/users/sign_in');
+        expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
       });
     });
 
@@ -338,14 +342,14 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(forbiddenError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
-        expect(mockLocation.href).toBe('/lists/123');
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/123');
       });
     });
 
@@ -356,14 +360,14 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(notFoundError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
-        expect(mockLocation.href).toBe('/lists/123');
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/123');
       });
     });
 
@@ -380,7 +384,7 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(validationError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
@@ -404,7 +408,7 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(validationError);
 
-      render(<EditListItemForm {...defaultProps} list={bookList} />);
+      renderForm(<EditListItemForm {...defaultProps} list={bookList} />);
 
       const form = getForm();
       fireEvent.submit(form);
@@ -421,7 +425,7 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(networkError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
@@ -438,7 +442,7 @@ describe('EditListItemForm', () => {
 
       mockAxios.put = vi.fn().mockRejectedValue(genericError);
 
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const form = getForm();
       fireEvent.submit(form);
@@ -451,12 +455,12 @@ describe('EditListItemForm', () => {
 
   describe('Cancel Functionality', () => {
     it('redirects to list page when cancel is clicked', () => {
-      render(<EditListItemForm {...defaultProps} />);
+      renderForm(<EditListItemForm {...defaultProps} />);
 
       const cancelButton = screen.getByText('Cancel');
       fireEvent.click(cancelButton);
 
-      expect(mockLocation.href).toBe('/lists/123');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists/123');
     });
   });
 
@@ -614,6 +618,120 @@ describe('EditListItemForm', () => {
       expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
       expect(screen.getByLabelText('Completed')).toBeInTheDocument();
       expect(screen.getByLabelText('Due_date')).toBeInTheDocument();
+    });
+  });
+
+  describe('Bottom Sheet Mode', () => {
+    beforeEach(() => {
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+      mockAxios.delete = vi.fn().mockResolvedValue({});
+    });
+
+    it('does not render form title when isBottomSheet is true', () => {
+      const { queryByText } = renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} />);
+
+      // The h1 with "Edit Item" should not be rendered in bottom sheet mode
+      expect(queryByText('Edit Item')).not.toBeInTheDocument();
+    });
+
+    it('calls onSubmit callback instead of redirecting when isBottomSheet is true', async () => {
+      const mockOnSubmit = vi.fn();
+      renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} onSubmit={mockOnSubmit} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockOnSubmit).toHaveBeenCalled();
+        expect(mockNavigate).not.toHaveBeenCalled(); // Should not redirect
+      });
+    });
+
+    it('calls onCancel callback when cancel button is clicked in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />);
+
+      const cancelButton = screen.getByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      expect(mockOnCancel).toHaveBeenCalled();
+    });
+
+    it('calls onCancel callback on 404 error in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      mockAxios.put = vi.fn().mockRejectedValueOnce({
+        response: { status: 404 },
+      });
+
+      renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('Item not found');
+        expect(mockOnCancel).toHaveBeenCalled();
+      });
+    });
+
+    it('does not navigate to sign_in on 401 in bottom sheet mode', async () => {
+      mockAxios.put = vi.fn().mockRejectedValueOnce({ response: { status: 401 } } as AxiosError);
+
+      renderForm(<EditListItemForm {...defaultProps} isBottomSheet={true} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      });
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles validation errors with empty response.data', async () => {
+      mockAxios.put = vi.fn().mockRejectedValueOnce({ response: { status: 422 } } as AxiosError);
+
+      renderForm(<EditListItemForm {...defaultProps} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockShowToast.error).toHaveBeenCalledWith('');
+      });
+    });
+
+    it('preserves non-string field data without trimming', async () => {
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+      mockAxios.delete = vi.fn().mockResolvedValue({});
+
+      const itemWithNumericField = createListItem(
+        '456',
+        false,
+        [
+          {
+            ...createField('field1', 'quantity', '0', '456', { list_item_field_configuration_id: 'field-config1' }),
+            data: 7 as unknown as string,
+          },
+          createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
+        ],
+        { category: 'Produce' },
+      );
+
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithNumericField} />);
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456/list_item_fields/field1', {
+          list_item_field: { data: 7, list_item_field_configuration_id: 'field-config1' },
+        });
+      });
     });
   });
 });

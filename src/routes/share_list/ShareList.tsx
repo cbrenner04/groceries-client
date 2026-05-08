@@ -3,45 +3,41 @@ import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router';
 
 import Loading from 'components/Loading';
-import type { IListUser, IUsersList } from 'typings';
 
-import ShareListForm from './containers/ShareListForm';
-import { fetchData } from './utils';
+import ListContainer from '../list/containers/ListContainer';
+import { fetchList, type IFulfilledListData } from '../list/utils';
 import UnknownError from '../error_pages/UnknownError';
-
-interface IFulfilledResponse {
-  name: string;
-  invitableUsers: IListUser[];
-  listId: string;
-  userIsOwner: boolean;
-  pending: IUsersList[];
-  accepted: IUsersList[];
-  refused: IUsersList[];
-  userId: string;
-}
 
 const ShareList: React.FC = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const params = useParams();
+  const { list_id: listId } = useParams();
 
   return (
-    <Async promiseFn={fetchData as unknown as PromiseFn<void>} listId={params.list_id} navigate={navigate}>
+    <Async promiseFn={fetchList as unknown as PromiseFn<void>} navigate={navigate} id={listId}>
       <Async.Pending>
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        {(data: IFulfilledResponse): ReactNode => (
-          <ShareListForm
-            name={data.name}
-            invitableUsers={data.invitableUsers}
-            listId={data.listId}
-            userIsOwner={data.userIsOwner}
-            pending={data.pending}
-            accepted={data.accepted}
-            refused={data.refused}
-            userId={data.userId}
-          />
-        )}
+        {(data: IFulfilledListData | undefined): ReactNode => {
+          if (!data) {
+            return <UnknownError />;
+          }
+          return (
+            <ListContainer
+              userId={data.current_user_id}
+              list={data.list}
+              categories={data.categories}
+              completedItems={data.completed_items}
+              listUsers={data.list_users}
+              notCompletedItems={data.not_completed_items}
+              permissions={data.permissions}
+              listsToUpdate={data.lists_to_update}
+              listItemConfiguration={data.list_item_configuration}
+              listItemFieldConfigurations={data.list_item_field_configurations}
+              initialShareSheetOpen
+            />
+          );
+        }}
       </Async.Fulfilled>
       <Async.Rejected>
         <UnknownError />

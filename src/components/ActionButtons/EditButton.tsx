@@ -1,5 +1,4 @@
 import React, { type MouseEventHandler } from 'react';
-import { Button } from 'react-bootstrap';
 import { EditIcon } from '../icons';
 
 interface IEditButtonProps {
@@ -9,15 +8,15 @@ interface IEditButtonProps {
 }
 
 const EditButton: React.FC<IEditButtonProps> = (props): React.JSX.Element => (
-  <Button
-    variant="link"
+  <button
+    type="button"
     onClick={props.handleClick}
-    className="p-0 me-3"
+    className="bg-transparent border-0 p-0 me-3 cursor-pointer"
     disabled={props.disabled ?? false}
     data-test-id={props.testID}
   >
     <EditIcon size="2x" className="text-warning" data-test-id="edit-icon" />
-  </Button>
+  </button>
 );
 
 export default EditButton;

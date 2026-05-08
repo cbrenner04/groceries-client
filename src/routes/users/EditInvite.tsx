@@ -43,18 +43,21 @@ const EditInvite: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <React.Fragment>
-      <h2>Set your password</h2>
-      <PasswordForm
-        password={password}
-        passwordChangeHandler={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
-        passwordConfirmation={passwordConfirmation}
-        passwordConfirmationChangeHandler={(event: ChangeEvent<HTMLInputElement>): void =>
-          setPasswordConfirmation(event.target.value)
-        }
-        submissionHandler={handleSubmit}
-      />
-    </React.Fragment>
+    <div className="tw:min-h-screen tw:flex tw:items-center tw:justify-center tw:px-4 tw:py-8">
+      <div className="tw:w-full tw:max-w-sm tw:bg-[var(--color-surface)] tw:rounded-xl tw:shadow-lg tw:p-6">
+        <h1 className="tw:text-xl tw:font-semibold tw:text-center tw:mb-1">Groceries</h1>
+        <h2 className="tw:text-lg tw:font-medium tw:text-center tw:mb-6">Set your password</h2>
+        <PasswordForm
+          password={password}
+          passwordChangeHandler={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
+          passwordConfirmation={passwordConfirmation}
+          passwordConfirmationChangeHandler={(event: ChangeEvent<HTMLInputElement>): void =>
+            setPasswordConfirmation(event.target.value)
+          }
+          submissionHandler={handleSubmit}
+        />
+      </div>
+    </div>
   );
 };
 

@@ -1,25 +1,27 @@
 import React, { useCallback, type ReactNode } from 'react';
-import { ListGroup } from 'react-bootstrap';
 
-import type { IListItem } from 'typings';
-import { EUserPermissions } from 'typings';
-import { capitalize, normalizeCategoryKey } from 'utils/format';
-
-import ListItem from './ListItem';
-import MultiSelectMenu from './MultiSelectMenu';
+import type {
+  EUserPermissions,
+  IListItem,
+  IListItemField,
+  IListItemFieldConfiguration,
+  TUserPermissions,
+} from 'typings';
+import { normalizeCategoryKey } from 'utils/format';
+import { ListItemRow } from 'components/domain/ListItemRow';
+import { CategoryGroup } from 'components/domain/CategoryGroup';
 
 export interface INotCompletedItemsSectionProps {
   notCompletedItems: IListItem[];
   permissions: EUserPermissions;
+  permissionsDict?: TUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
   filter: string;
   displayedCategories: string[];
+  listItemFieldConfigurations: IListItemFieldConfiguration[];
   incompleteMultiSelect: boolean;
-  setCopy: (value: boolean) => void;
-  setMove: (value: boolean) => void;
   setSelectedItems: (items: IListItem[]) => void;
-  setIncompleteMultiSelect: (value: boolean) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
   handleItemEdit: (item: IListItem) => void;
@@ -70,33 +72,43 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
         if (itemsToRender.length === 0) {
           return null;
         }
+
+        const displayCategory = !category ? '' : category;
+
         return (
-          <React.Fragment key={`${category ?? 'uncategorized'}-wrapper`}>
-            {category && <h5 data-test-class="category-header">{capitalize(category)}</h5>}
-            <ListGroup className="mb-3" key={category ?? 'uncategorized'}>
-              {itemsToRender.map((item: IListItem) => (
-                <ListItem
+          <CategoryGroup
+            key={displayCategory || 'uncategorized'}
+            category={displayCategory}
+            itemCount={itemsToRender.length}
+          >
+            {itemsToRender.map((item: IListItem) => {
+              const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
+              return (
+                <ListItemRow
                   key={item.id}
                   item={item}
-                  permissions={props.permissions}
-                  selectedItems={props.selectedItems}
-                  pending={props.pending}
-                  handleItemSelect={props.handleItemSelect}
-                  handleItemComplete={props.handleItemComplete}
-                  handleItemEdit={props.handleItemEdit}
-                  handleItemDelete={props.handleItemDelete}
-                  handleItemRefresh={props.handleItemRefresh}
-                  multiSelect={props.incompleteMultiSelect}
+                  listId={item.list_id}
+                  fields={(item.fields ?? []) as IListItemField[]}
+                  fieldConfigurations={props.listItemFieldConfigurations}
+                  isMultiSelectActive={props.incompleteMultiSelect}
+                  isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                  onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                  onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                  onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                  onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                  onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                  permissions={props.permissionsDict ?? {}}
                 />
-              ))}
-            </ListGroup>
-          </React.Fragment>
+              );
+            })}
+          </CategoryGroup>
         );
       });
     },
     [
       props.filter,
       props.displayedCategories,
+      props.listItemFieldConfigurations,
       props.permissions,
       props.selectedItems,
       props.pending,
@@ -109,22 +121,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
     ],
   );
 
-  return (
-    <React.Fragment>
-      {props.permissions === EUserPermissions.WRITE && (
-        <MultiSelectMenu
-          setCopy={props.setCopy}
-          setMove={props.setMove}
-          isMultiSelect={props.incompleteMultiSelect}
-          selectedItems={props.selectedItems}
-          setSelectedItems={props.setSelectedItems}
-          setMultiSelect={props.setIncompleteMultiSelect}
-        />
-      )}
-      <br />
-      {groupByCategory(props.notCompletedItems)}
-    </React.Fragment>
-  );
+  return <React.Fragment>{groupByCategory(props.notCompletedItems)}</React.Fragment>;
 };
 
 export default React.memo(NotCompletedItemsSection);

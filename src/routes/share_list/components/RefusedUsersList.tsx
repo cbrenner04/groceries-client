@@ -1,7 +1,7 @@
 import React from 'react';
-import { ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { Refresh } from 'components/ActionButtons';
+import { IconButton } from 'components/ui/IconButton';
+import { RedoIcon } from 'components/icons';
 import type { IUsersList } from 'typings';
 
 export interface IRefusedUsersListProps {
@@ -11,48 +11,41 @@ export interface IRefusedUsersListProps {
   users: IUsersList[];
 }
 
+const sectionLabel = 'tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2';
+const rowClass =
+  'tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]';
+
 const RefusedUsersList: React.FC<IRefusedUsersListProps> = (props): React.JSX.Element => (
-  <React.Fragment>
-    <Row className="m-0">
-      <h2 className="text-capitalize pe-0 w-auto">Refused</h2>
-    </Row>
-    <ListGroup className="mb-4">
+  <section className="tw:mb-4">
+    <h3 className={sectionLabel}>Declined</h3>
+    <ul className="tw:flex tw:flex-col">
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
-          return '';
+          return null;
         }
-        if (props.userIsOwner) {
+        if (!props.userIsOwner) {
           return (
-            <ListGroup.Item
-              key={user.users_list.id}
-              data-test-id={`refused-user-${user.user.id}`}
-              className="refused-list-list-group-item"
-            >
-              <Row>
-                <Col md="6" className="pt-1">
-                  {user.user.email}
-                </Col>
-                <Col md="4" className="pt-1"></Col>
-                <Col md="2">
-                  <ButtonGroup className="float-end">
-                    <Refresh
-                      testID="refresh-share"
-                      handleClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
-                    />
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </ListGroup.Item>
+            <li key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`} className={rowClass}>
+              <span className="tw:text-sm">{user.user.email}</span>
+            </li>
           );
         }
         return (
-          <div key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`}>
-            <ListGroup.Item>{user.user.email}</ListGroup.Item>
-          </div>
+          <li key={user.users_list.id} data-test-id={`refused-user-${user.user.id}`} className={rowClass}>
+            <span className="tw:text-sm tw:flex-1 tw:truncate">{user.user.email}</span>
+            <IconButton
+              icon={<RedoIcon size="sm" />}
+              variant="primary"
+              size="sm"
+              label="Re-share"
+              data-test-id="refresh-share"
+              onClick={(): void => props.refreshShare(user.users_list.id, user.user.id)}
+            />
+          </li>
         );
       })}
-    </ListGroup>
-  </React.Fragment>
+    </ul>
+  </section>
 );
 
 export default RefusedUsersList;

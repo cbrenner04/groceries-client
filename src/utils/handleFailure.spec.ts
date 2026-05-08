@@ -182,6 +182,20 @@ describe('handleFailure', () => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Network error. Please check your connection.');
       expect(mockNavigate).not.toHaveBeenCalled();
     });
+
+    it('should rethrow error when rethrow is true and error.request exists', () => {
+      const error = { request: {} } as AxiosError;
+
+      expect(() => {
+        handleFailure({
+          error,
+          notFoundMessage: 'Not found',
+          rethrow: true,
+        });
+      }).toThrow();
+
+      expect(mockShowToast.error).not.toHaveBeenCalled();
+    });
   });
 
   describe('Other errors', () => {
