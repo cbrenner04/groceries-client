@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler } from 'react';
-import { Form } from 'react-bootstrap';
+import Input from '../ui/Input';
 
 export interface IPasswordFieldProps {
   name: string;
@@ -10,17 +10,17 @@ export interface IPasswordFieldProps {
 }
 
 const PasswordField: React.FC<IPasswordFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name} className="mb-3">
-    <Form.Label>{props.label}</Form.Label>
-    <Form.Control
+  <div className="tw:mb-3">
+    <Input
       type="password"
+      label={props.label}
       value={props.value}
       onChange={props.handleChange}
       placeholder={props.placeholder ?? ''}
       autoComplete="off"
       name={props.name}
     />
-  </Form.Group>
+  </div>
 );
 
 export default PasswordField;

@@ -29,10 +29,10 @@ function setup(suppliedProps = {}): ReturnType<typeof render> & {
 
 describe('MergeModal', () => {
   it('does not render modal when showModal is false', () => {
-    const { container, queryByTestId } = setup({ showModal: false });
+    const { queryByTestId } = setup({ showModal: false });
 
-    expect(container).toMatchInlineSnapshot('<div />');
     expect(queryByTestId('confirm-merge')).toBeNull();
+    expect(queryByTestId('bottom-sheet')).toBeNull();
   });
 
   it('renders', async () => {
@@ -51,10 +51,19 @@ describe('MergeModal', () => {
     expect(props.handleMergeNameChange).toHaveBeenCalled();
   });
 
-  it('clears modal when x button is selected', async () => {
-    const { findAllByRole, props, user } = setup();
+  it('clears modal when Escape key is pressed', async () => {
+    const { props, user } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    await user.keyboard('{Escape}');
+
+    expect(props.clearModal).toHaveBeenCalled();
+  });
+
+  it('clears modal when overlay is clicked', async () => {
+    const { findByTestId, props, user } = setup();
+
+    const overlay = await findByTestId('bottom-sheet');
+    await user.click(overlay);
 
     expect(props.clearModal).toHaveBeenCalled();
   });
@@ -81,19 +90,20 @@ describe('MergeModal', () => {
   });
 
   it('shows warning when lists of different configurations are selected', async () => {
-    const { findByText } = setup({
+    const { findByText, findByTestId } = setup({
       selectedLists: [
         { id: '1', name: 'Grocery List', list_item_configuration_id: 'config-1' },
         { id: '2', name: 'Book List', list_item_configuration_id: 'config-2' },
       ],
     });
 
+    expect(await findByTestId('merge-warning')).toBeVisible();
     expect(await findByText(/Only lists of the same type can be merged/)).toBeVisible();
     expect(await findByText(/Some lists will be excluded/)).toBeVisible();
   });
 
   it('shows detailed breakdown when lists of different configurations are selected', async () => {
-    const { findByText } = setup({
+    const { findByText, findByTestId } = setup({
       selectedLists: [
         { id: '1', name: 'Grocery List 1', list_item_configuration_id: 'config-1' },
         { id: '2', name: 'Grocery List 2', list_item_configuration_id: 'config-1' },
@@ -101,6 +111,7 @@ describe('MergeModal', () => {
       ],
     });
 
+    expect(await findByTestId('merge-breakdown')).toBeVisible();
     expect(await findByText('Lists to be merged (2):')).toBeVisible();
     expect(await findByText('Lists excluded (1):')).toBeVisible();
     expect(await findByText('Grocery List 1')).toBeVisible();

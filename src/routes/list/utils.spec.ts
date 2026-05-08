@@ -2,12 +2,11 @@ import { AxiosError } from 'axios';
 
 import {
   fetchList,
-  fetchListToEdit,
   fetchListItemToEdit,
   fetchItemsToEdit,
+  fetchCompletedLists,
   itemName,
   secondaryFieldsDisplay,
-  type IFulfilledEditListData,
 } from './utils';
 import axios from 'utils/api';
 import type { IListItem } from 'typings';
@@ -365,81 +364,6 @@ describe('fetchList', () => {
   });
 });
 
-describe('fetchListToEdit', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('returns data on success', async () => {
-    const mockData: IFulfilledEditListData = {
-      id: '1',
-      name: 'Test List',
-      completed: false,
-      refreshed: false,
-      list_item_configuration_id: 'config-1',
-      archived_at: null,
-    };
-    axios.get = vi.fn().mockResolvedValue({ data: mockData });
-    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
-    expect(result).toEqual(expect.objectContaining(mockData));
-    expect(mockNavigate).not.toHaveBeenCalled();
-  });
-
-  it('handles missing data from server', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: null });
-    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
-    expect(result).toBeUndefined();
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: expect.any(AxiosError),
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-    });
-  });
-
-  it('throws AxiosError when data is null', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: null });
-    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
-    expect(result).toBeUndefined();
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: expect.any(AxiosError),
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-    });
-    const callArgs = mockHandleFailure.mock.calls[0][0];
-    expect(callArgs.error).toBeInstanceOf(AxiosError);
-  });
-
-  it('throws AxiosError when data is undefined', async () => {
-    axios.get = vi.fn().mockResolvedValue({ data: undefined });
-    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
-    expect(result).toBeUndefined();
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error: expect.any(AxiosError),
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-    });
-    const callArgs = mockHandleFailure.mock.calls[0][0];
-    expect(callArgs.error).toBeInstanceOf(AxiosError);
-  });
-
-  it('handles error from server', async () => {
-    const error = createError(500);
-    axios.get = vi.fn().mockRejectedValue(error);
-    const result = await fetchListToEdit({ id: '1', navigate: mockNavigate });
-    expect(result).toBeUndefined();
-    expect(mockHandleFailure).toHaveBeenCalledWith({
-      error,
-      notFoundMessage: 'List not found',
-      navigate: mockNavigate,
-      redirectURI: '/lists',
-      // rethrow: true,
-    });
-  });
-});
-
 describe('fetchListItemToEdit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -574,6 +498,74 @@ describe('fetchItemsToEdit', () => {
       notFoundMessage: 'One or more items not found',
       navigate: mockNavigate,
       redirectURI: '/lists/1/',
+    });
+  });
+});
+
+describe('fetchCompletedLists', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns completed lists on success', async () => {
+    const mockData = {
+      current_user_id: 'user-1',
+      completed_lists: [createList(), createList()],
+      current_list_permissions: { 'list-1': 'write', 'list-2': 'read' },
+    };
+    axios.get = vi.fn().mockResolvedValue({ data: mockData });
+    const result = await fetchCompletedLists({ navigate: mockNavigate });
+
+    expect(result).toEqual({
+      userId: 'user-1',
+      completedLists: mockData.completed_lists,
+      currentUserPermissions: { 'list-1': 'write', 'list-2': 'read' },
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('handles error from server', async () => {
+    const error = createError(500);
+    axios.get = vi.fn().mockRejectedValue(error);
+    const result = await fetchCompletedLists({ navigate: mockNavigate });
+
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to fetch completed lists',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles 401 error', async () => {
+    const error = createError(401);
+    axios.get = vi.fn().mockRejectedValue(error);
+    const result = await fetchCompletedLists({ navigate: mockNavigate });
+
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to fetch completed lists',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
+    });
+  });
+
+  it('handles 404 error', async () => {
+    const error = createError(404);
+    axios.get = vi.fn().mockRejectedValue(error);
+    const result = await fetchCompletedLists({ navigate: mockNavigate });
+
+    expect(result).toBeUndefined();
+    expect(mockHandleFailure).toHaveBeenCalledWith({
+      error,
+      notFoundMessage: 'Failed to fetch completed lists',
+      navigate: mockNavigate,
+      redirectURI: '/lists',
+      rethrow: true,
     });
   });
 });

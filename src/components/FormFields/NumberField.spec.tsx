@@ -25,9 +25,9 @@ describe('NumberField', () => {
   describe('when value provided', () => {
     it('renders input with value', async () => {
       const { formInput, props } = await setup({ value: 1 });
-      const formGroup = formInput.parentElement;
+      const wrapper = formInput.parentElement;
 
-      expect(formGroup).toMatchSnapshot();
+      expect(wrapper).toMatchSnapshot();
       expect(formInput).toHaveValue(props.value);
     });
   });
@@ -35,9 +35,9 @@ describe('NumberField', () => {
   describe('when no value provided', () => {
     it('renders input with value of empty string', async () => {
       const { formInput } = await setup();
-      const formGroup = formInput.parentElement;
+      const wrapper = formInput.parentElement;
 
-      expect(formGroup).toMatchSnapshot();
+      expect(wrapper).toMatchSnapshot();
       expect(formInput).toHaveAttribute('value', '');
     });
   });

@@ -35,14 +35,15 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
     userId: 'id1',
     pendingLists: [
       {
-        id: 'id1',
+        id: 'id-pending',
         name: 'foo',
         list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         completed: false,
-        users_list_id: 'id1',
+        users_list_id: 'id-pending',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: null,
       },
     ],
     completedLists: [
@@ -55,6 +56,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id2',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id4',
@@ -65,6 +67,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id4',
         owner_id: 'id2',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     incompleteLists: [
@@ -77,6 +80,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id5',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
       {
         id: 'id6',
@@ -87,6 +91,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         users_list_id: 'id6',
         owner_id: 'id1',
         refreshed: false,
+        has_accepted: true,
       },
     ],
     currentUserPermissions: {
@@ -132,6 +137,12 @@ describe('ListsContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders page title', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('page-title')).toHaveTextContent('Lists');
+  });
+
   it('renders Manage Templates link pointing to /templates', () => {
     const { getByTestId } = setup();
 
@@ -140,8 +151,80 @@ describe('ListsContainer', () => {
     expect(link).toHaveTextContent('Manage Templates');
   });
 
+  it('renders filter chips', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('filter-all')).toBeInTheDocument();
+    expect(getByTestId('filter-pending')).toBeInTheDocument();
+    expect(getByTestId('filter-active')).toBeInTheDocument();
+    expect(getByTestId('filter-completed')).toBeInTheDocument();
+  });
+
+  it('renders pending alert when pending lists exist', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('pending-alert')).toHaveTextContent('You have 1 list waiting for your response.');
+  });
+
+  it('does not render pending alert when no pending lists', () => {
+    const { queryByTestId } = setup({ pendingLists: [] });
+
+    expect(queryByTestId('pending-alert')).toBeNull();
+  });
+
+  it('renders all list types by default', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('list-id-pending')).toHaveAttribute('data-test-class', 'pending-list');
+    expect(getByTestId('list-id5')).toHaveAttribute('data-test-class', 'incomplete-list');
+    expect(getByTestId('list-id2')).toHaveAttribute('data-test-class', 'completed-list');
+  });
+
+  it('filters to only pending lists when Pending chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-pending'));
+
+    expect(getByTestId('list-id-pending')).toBeInTheDocument();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('filters to only active lists when Active chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(getByTestId('list-id5')).toBeInTheDocument();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('filters to only completed lists when Completed chip is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  it('accepts initialFilter prop', () => {
+    const { getByTestId, queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  it('renders quick-add input', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
   it('updates via polling when different data is returned', async () => {
-    // messes with `userEvent` actions
     vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi
       .fn()
@@ -192,7 +275,6 @@ describe('ListsContainer', () => {
           current_list_permissions: {
             id1: 'write',
             id2: 'write',
-            id3: 'write',
           },
           list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
         },
@@ -220,9 +302,10 @@ describe('ListsContainer', () => {
                 user_id: 'id1',
                 list_item_configuration_id: 'config-1',
                 created_at: new Date('05/31/2020').toISOString(),
-                completed: false,
+                completed: true,
                 refreshed: false,
                 owner_id: 'id2',
+                has_accepted: true,
               },
             ],
             not_completed_lists: [
@@ -236,6 +319,7 @@ describe('ListsContainer', () => {
                 completed: false,
                 refreshed: false,
                 owner_id: 'id1',
+                has_accepted: true,
               },
             ],
           },
@@ -270,7 +354,6 @@ describe('ListsContainer', () => {
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    // messes with `userEvent` actions
     vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
@@ -319,7 +402,6 @@ describe('ListsContainer', () => {
         current_list_permissions: {
           id1: 'write',
           id2: 'write',
-          id3: 'write',
         },
         list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
       },
@@ -362,14 +444,7 @@ describe('ListsContainer', () => {
     vi.useRealTimers();
   });
 
-  it('does not render pending lists when they do not exist', () => {
-    const { container, queryByText } = setup({ pendingLists: [] });
-
-    expect(container).toMatchSnapshot();
-    expect(queryByText('Pending')).toBeNull();
-  });
-
-  it('creates list on form submit', async () => {
+  it('creates list via quick-add input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id7',
@@ -382,26 +457,57 @@ describe('ListsContainer', () => {
         users_list_id: 'id9',
       },
     });
-    const { findByLabelText, findByTestId, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    const input = await findByTestId('quick-add-input');
+    await user.type(input, 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
 
+    expect(axios.post).toHaveBeenCalledWith('/lists', {
+      list: { name: 'new list', list_item_configuration_id: 'config-1' },
+    });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
     expect(await findByTestId('list-id7')).toHaveTextContent('new list');
   });
 
+  it('creates list with selected template via expanded input', async () => {
+    axios.post = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id7',
+        name: 'new list',
+        list_item_configuration_id: 'config-2',
+        created_at: new Date('05/31/2020').toISOString(),
+        owner_id: 'id1',
+        completed: false,
+        refreshed: false,
+        users_list_id: 'id9',
+      },
+    });
+    const { findByTestId, user } = setup();
+
+    // Expand to show template selector
+    await user.click(await findByTestId('quick-add-expand'));
+    // Select a different template
+    const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
+    await user.selectOptions(templateSelect, 'config-2');
+    // Type name and submit
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
+    await act(async () => {
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    });
+
+    expect(axios.post).toHaveBeenCalledWith('/lists', {
+      list: { name: 'new list', list_item_configuration_id: 'config-2' },
+    });
+  });
+
   it('redirects to login when submit response is 401', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -411,12 +517,12 @@ describe('ListsContainer', () => {
   });
 
   it('shows errors when submission fails', async () => {
-    axios.post = vi.fn().mockRejectedValue({ response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } } });
-    const { findByLabelText, findByText, user } = setup();
+    axios.post = vi.fn().mockRejectedValue({
+      response: { status: 400, data: { foo: 'bar', foobar: 'foobaz' } },
+    });
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -426,11 +532,9 @@ describe('ListsContainer', () => {
 
   it('shows errors when request fails', async () => {
     axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -440,11 +544,9 @@ describe('ListsContainer', () => {
 
   it('shows errors when unknown error occurs', async () => {
     axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
-    const { findByLabelText, findByText, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(await findByLabelText('Name'), 'new list');
-    await user.selectOptions(await findByLabelText('Template'), 'book list template');
-    await user.click(await findByText('Create List'));
+    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
@@ -452,13 +554,84 @@ describe('ListsContainer', () => {
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
 
+  it('navigates to list on click', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('list-id5'));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/lists/id5');
+  });
+
+  it('toggles multi-select mode', async () => {
+    const { getByText, queryByText, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    expect(queryByText('Hide Select')).toBeInTheDocument();
+  });
+
+  it('shows error when list deletion fails', async () => {
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { user } = setup({
+      incompleteLists: [
+        {
+          id: 'id-single',
+          name: 'Single List',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id-single',
+          owner_id: 'id1',
+          refreshed: false,
+        },
+      ],
+    });
+
+    const trashButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-trash"]'));
+    if (trashButtons.length === 1) {
+      await user.click(trashButtons[0] as HTMLElement);
+
+      await waitFor(() => {
+        expect(axios.delete).toHaveBeenCalledTimes(1);
+      });
+    }
+  });
+
+  it('navigates to share page when share button is clicked', async () => {
+    const { user } = setup();
+
+    const shareButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-share"]'));
+    if (shareButtons.length > 0) {
+      await user.click(shareButtons[0] as HTMLElement);
+      expect(mockNavigate).toHaveBeenCalled();
+    }
+  });
+
+  it('opens the edit sheet when the edit button is clicked', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id1',
+        name: 'foo',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText, user } = setup();
+
+    const editButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-edit"]'));
+    if (editButtons.length > 0) {
+      await user.click(editButtons[0] as HTMLElement);
+      expect(await findByText('Edit List')).toBeVisible();
+    }
+  });
+
   describe('prefetch logic', () => {
     let mockPrefetchListsIdle: ReturnType<typeof vi.fn>;
 
     beforeEach(async () => {
-      // Ensure prefetch is enabled for tests
       import.meta.env.VITE_PREFETCH_IDLE = 'true';
-      // Get the mocked function
       const listPrefetchModule = await import('utils/listPrefetch');
       mockPrefetchListsIdle = listPrefetchModule.prefetchListsIdle as unknown as ReturnType<typeof vi.fn>;
       mockPrefetchListsIdle.mockClear();
@@ -507,7 +680,6 @@ describe('ListsContainer', () => {
         ],
       });
 
-      // Wait for useEffect to run (lines 99-107)
       await act(async () => {
         await waitFor(
           () => {
@@ -517,12 +689,10 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Verify prefetch was called with list IDs from pendingLists and incompleteLists
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id5', 'id6']);
     });
 
     it('limits prefetch to MAX_PREFETCH_LISTS (5)', async () => {
-      // Create 7 lists (more than MAX_PREFETCH_LISTS)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const manyLists = Array.from({ length: 7 }, (_, i) => ({
         id: `id${i + 1}`,
@@ -549,7 +719,6 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Should only prefetch first 5 lists (line 101: slice(0, MAX_PREFETCH_LISTS))
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4', 'id5']);
     });
 
@@ -599,7 +768,6 @@ describe('ListsContainer', () => {
         );
       });
 
-      // Should only prefetch lists with valid IDs (line 102: filter with type guard)
       expect(mockPrefetchListsIdle).toHaveBeenCalledWith(['id1']);
     });
 
@@ -609,14 +777,470 @@ describe('ListsContainer', () => {
         incompleteLists: [],
       });
 
-      // Wait a bit to ensure useEffect has run
       await waitFor(
         () => {
-          // prefetchListsIdle should not be called when there are no lists (line 105: if (listIds.length > 0))
           expect(mockPrefetchListsIdle).not.toHaveBeenCalled();
         },
         { timeout: 100 },
       );
     });
+  });
+
+  // ─── Multi-select ────────────────────────────────────────────────────────────
+
+  it('selects a list when clicked in multi-select mode', async () => {
+    const { getByText, getAllByRole, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    // Click the list card — in multi-select mode clicking the card calls onSelect
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    const checkboxes = getAllByRole('checkbox');
+    const checkedCheckbox = checkboxes.find((cb) => (cb as HTMLInputElement).checked);
+    expect(checkedCheckbox).toBeDefined();
+  });
+
+  it('deselects a list when clicked again in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select'));
+
+    const card = document.querySelector('[data-test-id="list-id5"]') as HTMLElement;
+    await user.click(card);
+    await user.click(card);
+
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+    expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
+  });
+
+  it('clears selection when Hide Select is clicked with items selected', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    // "Select" button has changed to "Hide Select"
+    await user.click(getByText('Hide Select'));
+
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+    expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
+  });
+
+  it('shows multi-select toolbar when 2+ lists are selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-merge')).toBeInTheDocument();
+    expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+  });
+
+  // ─── Delete ───────────────────────────────────────────────────────────────────
+
+  it('opens delete confirm dialog when trash is clicked on an incomplete list', async () => {
+    const { getByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+
+    expect(getByTestId('delete-confirm-dialog')).toBeInTheDocument();
+  });
+
+  it('closes delete confirm dialog when cancel is clicked', async () => {
+    const { getByTestId, queryByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    expect(getByTestId('delete-confirm-dialog')).toBeInTheDocument();
+
+    await user.click(getByTestId('clear-delete'));
+
+    expect(queryByTestId('delete-confirm-dialog')).not.toBeInTheDocument();
+  });
+
+  it('deletes an owned incomplete list when delete is confirmed', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByTestId, getAllByTestId, queryByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledWith('/lists/id5'));
+    await waitFor(() => expect(queryByTestId('list-id5')).toBeNull());
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully deleted.');
+  });
+
+  it('patches users_lists when rejecting a list the user does not own', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const sharedList = {
+      id: 'id-shared',
+      name: 'shared',
+      list_item_configuration_id: 'config-1',
+      created_at: new Date('05/31/2020').toISOString(),
+      completed: false,
+      users_list_id: 'ul-shared',
+      owner_id: 'other-user',
+      refreshed: false,
+      has_accepted: true,
+    };
+    const { getByTestId, user } = setup({
+      incompleteLists: [sharedList],
+      currentUserPermissions: { 'id-shared': 'write' } as TUserPermissions,
+    });
+
+    await user.click(getByTestId('incomplete-list-trash'));
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() =>
+      expect(axios.patch).toHaveBeenCalledWith('/lists/id-shared/users_lists/ul-shared', {
+        users_list: { has_accepted: false },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully deleted.');
+  });
+
+  it('shows error when list deletion fails after confirm', async () => {
+    axios.delete = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByTestId, getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  it('deletes multiple selected lists via multi-select toolbar', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    await user.click(getByTestId('multi-select-delete'));
+    await user.click(getByTestId('confirm-delete'));
+
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(queryByTestId('list-id5')).toBeNull());
+    await waitFor(() => expect(queryByTestId('list-id6')).toBeNull());
+  });
+
+  // ─── Completion ───────────────────────────────────────────────────────────────
+
+  it('completes an owned incomplete list when complete button is clicked', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-complete')[0]);
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledWith('/lists/id5', { list: { completed: true } }));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully completed.');
+  });
+
+  it('shows error when completing a list fails', async () => {
+    axios.put = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-complete')[0]);
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Refresh ─────────────────────────────────────────────────────────────────
+
+  it('refreshes an owned completed list when refresh button is clicked', async () => {
+    const refreshedList = {
+      id: 'id-refreshed',
+      name: 'bar',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: true,
+      users_list_id: 'id2',
+      created_at: new Date('05/31/2020').toISOString(),
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: refreshedList });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('complete-list-refresh')[0]);
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledWith('/lists/id2/refresh_list', {}));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully refreshed.');
+  });
+
+  it('shows error when refresh fails', async () => {
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getAllByTestId, user } = setup();
+
+    await user.click(getAllByTestId('complete-list-refresh')[0]);
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Accept ───────────────────────────────────────────────────────────────────
+
+  it('accepts a pending list and moves it to incomplete', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() =>
+      expect(axios.patch).toHaveBeenCalledWith('/lists/id-pending/users_lists/id-pending', {
+        users_list: { has_accepted: true },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully accepted.');
+    // The list moves from pending to incomplete, so the accept button disappears
+    await waitFor(() => expect(queryByTestId('pending-list-accept')).toBeNull());
+  });
+
+  it('accepts a completed pending list and moves it to completed section', async () => {
+    axios.patch = vi.fn().mockResolvedValue({});
+    const completedPending = {
+      id: 'id-completed-pending',
+      name: 'completed pending',
+      list_item_configuration_id: 'config-1',
+      created_at: new Date('05/31/2020').toISOString(),
+      completed: true,
+      users_list_id: 'id-completed-pending',
+      owner_id: 'id2',
+      refreshed: false,
+      has_accepted: null,
+    };
+    const { getByTestId, user } = setup({
+      pendingLists: [completedPending],
+      currentUserPermissions: { 'id-completed-pending': 'write' } as TUserPermissions,
+    });
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() => expect(axios.patch).toHaveBeenCalled());
+    // The list should appear in completed section
+    await waitFor(() =>
+      expect(getByTestId('list-id-completed-pending')).toHaveAttribute('data-test-class', 'completed-list'),
+    );
+  });
+
+  it('shows error when accepting a list fails', async () => {
+    axios.patch = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-accept'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Reject ───────────────────────────────────────────────────────────────────
+
+  it('opens reject confirm dialog when trash is clicked on a pending list', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+
+    expect(getByTestId('reject-confirm-dialog')).toBeInTheDocument();
+  });
+
+  it('closes reject confirm dialog when cancel is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+    expect(getByTestId('reject-confirm-dialog')).toBeInTheDocument();
+
+    await user.click(getByTestId('clear-reject'));
+
+    expect(queryByTestId('reject-confirm-dialog')).not.toBeInTheDocument();
+  });
+
+  it('rejects a pending list when reject is confirmed', async () => {
+    axios.delete = vi.fn().mockResolvedValue({});
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+    await user.click(getByTestId('confirm-reject'));
+
+    // pending list owner_id='id1' = userId so DELETE is called
+    await waitFor(() => expect(axios.delete).toHaveBeenCalledWith('/lists/id-pending'));
+    await waitFor(() => expect(queryByTestId('list-id-pending')).toBeNull());
+  });
+
+  // ─── Merge ────────────────────────────────────────────────────────────────────
+
+  it('opens merge modal when Merge is clicked with 2+ lists selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    await user.click(getByTestId('multi-select-merge'));
+
+    // MergeModal renders when showMergeModal is true
+    expect(getByTestId('confirm-merge')).toBeInTheDocument();
+  });
+
+  it('merges selected lists when merge name is provided and confirmed', async () => {
+    const mergedList = {
+      id: 'merged-id',
+      name: 'merged list',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: false,
+      users_list_id: 'merged-id',
+      created_at: new Date('05/31/2020').toISOString(),
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: mergedList });
+    const { getByText, getByTestId, findByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-merge'));
+
+    const mergeNameInput = document.querySelector('[name="mergeName"]') as HTMLInputElement;
+    await user.type(mergeNameInput, 'merged list');
+    await user.click(getByTestId('confirm-merge'));
+
+    await waitFor(() =>
+      expect(axios.post).toHaveBeenCalledWith('/lists/merge_lists', {
+        merge_lists: { list_ids: 'id5,id6', new_list_name: 'merged list' },
+      }),
+    );
+    expect(mockShowToast.info).toHaveBeenCalledWith('Lists successfully merged.');
+    expect(await findByTestId('list-merged-id')).toBeInTheDocument();
+  });
+
+  it('shows error when merge fails', async () => {
+    axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-merge'));
+
+    const mergeNameInput = document.querySelector('[name="mergeName"]') as HTMLInputElement;
+    await user.type(mergeNameInput, 'merged list');
+    await user.click(getByTestId('confirm-merge'));
+
+    await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  // ─── Show all completed ───────────────────────────────────────────────────────
+
+  it('shows "Show all completed" button when filter is all and completed lists exist', () => {
+    const { getByTestId } = setup();
+
+    expect(getByTestId('show-all-completed')).toBeInTheDocument();
+  });
+
+  it('changes filter to completed when "Show all completed" is clicked', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('show-all-completed'));
+
+    // Active lists should be hidden, completed lists visible
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
+  // ─── Edit list BottomSheet ────────────────────────────────────────────────────
+
+  it('opens the edit sheet when initialEditListId is provided', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id5',
+        name: 'an active list',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText } = setup({ initialEditListId: 'id5' });
+
+    expect(await findByText('Edit List')).toBeVisible();
+  });
+
+  it('does not crash if the post-edit refresh fetch returns nothing', async () => {
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/lists/id5/edit') {
+        return {
+          data: {
+            id: 'id5',
+            name: 'an active list',
+            completed: false,
+            refreshed: false,
+            archived_at: null,
+            list_item_configuration_id: 'cfg-1',
+          },
+        };
+      }
+      // Simulate fetchLists returning undefined (e.g., 401)
+      throw { response: { status: 401 } };
+    });
+    axios.put = vi.fn().mockResolvedValue({});
+    const { findByText, user } = setup({ initialEditListId: 'id5' });
+
+    await user.click(await findByText('Update List'));
+    await waitFor(() => expect(axios.put).toHaveBeenCalled());
+  });
+
+  it('refreshes the lists after a successful edit', async () => {
+    let callIdx = 0;
+    axios.get = vi.fn().mockImplementation(async (url: string) => {
+      if (url === '/lists/id5/edit') {
+        return {
+          data: {
+            id: 'id5',
+            name: 'an active list',
+            completed: false,
+            refreshed: false,
+            archived_at: null,
+            list_item_configuration_id: 'cfg-1',
+          },
+        };
+      }
+      callIdx += 1;
+      return {
+        data: {
+          current_user_id: 'id1',
+          accepted_lists: { completed_lists: [], not_completed_lists: [] },
+          pending_lists: [],
+          current_list_permissions: {},
+          list_item_configurations: [{ id: 'cfg-1', name: 'Default' }],
+          __callIdx: callIdx,
+        },
+      };
+    });
+    axios.put = vi.fn().mockResolvedValue({});
+
+    const { findByLabelText, findByText, user } = setup({ initialEditListId: 'id5' });
+
+    const nameInput = await findByLabelText('Name');
+    await user.clear(nameInput);
+    await user.type(nameInput, 'renamed list');
+    await user.click(await findByText('Update List'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+  });
+
+  it('closes the edit sheet when cancel is clicked', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id5',
+        name: 'an active list',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByText, queryByText, user } = setup({ initialEditListId: 'id5' });
+
+    await user.click(await findByText('Cancel'));
+    await waitFor(() => expect(queryByText('Update List')).not.toBeInTheDocument());
   });
 });

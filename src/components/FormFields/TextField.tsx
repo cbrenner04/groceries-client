@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler, type ReactNode } from 'react';
-import { Form } from 'react-bootstrap';
+import Input from '../ui/Input';
 
 export interface ITextFieldProps {
   name: string;
@@ -13,19 +13,19 @@ export interface ITextFieldProps {
 }
 
 const TextField: React.FC<ITextFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name} className="mb-3">
-    <Form.Label>{props.label}</Form.Label>
-    <Form.Control
+  <div className="tw:mb-3">
+    <Input
       type="text"
+      label={props.label}
       value={props.value}
       onChange={props.handleChange}
       placeholder={props.placeholder ?? ''}
       name={props.name}
       disabled={props.disabled ?? false}
-      data-test-id={props.testID}
+      testId={props.testID}
     />
     {props.child ?? ''}
-  </Form.Group>
+  </div>
 );
 
 export default TextField;

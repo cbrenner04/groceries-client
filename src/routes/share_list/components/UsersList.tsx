@@ -1,9 +1,8 @@
 import React from 'react';
-import { Badge, Button, ButtonGroup, Col, ListGroup, Row } from 'react-bootstrap';
 
-import { Trash } from 'components/ActionButtons';
-import { AngleDoubleDownIcon, AngleDoubleUpIcon } from 'components/icons';
-import TitlePopover from 'components/TitlePopover';
+import { Badge } from 'components/ui/Badge';
+import { IconButton } from 'components/ui/IconButton';
+import { TrashIcon, AngleDoubleDownIcon, AngleDoubleUpIcon } from 'components/icons';
 import type { IUsersList } from 'typings';
 
 export interface IUsersListProps {
@@ -15,59 +14,61 @@ export interface IUsersListProps {
   users: IUsersList[];
 }
 
+const sectionLabel = 'tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2';
+const rowClass =
+  'tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]';
+
 const UsersList: React.FC<IUsersListProps> = (props): React.JSX.Element => (
-  <React.Fragment>
-    <TitlePopover
-      title={props.status}
-      message="Click the arrows to upgrade or downgrade the permissions between read and write"
-    />
-    <ListGroup className="mb-4">
+  <section className="tw:mb-4">
+    <h3 className={sectionLabel}>{props.status === 'pending' ? 'Pending' : 'Shared'}</h3>
+    <ul className="tw:flex tw:flex-col">
       {props.users.map((user) => {
         if (user.user.id === props.userId) {
-          return '';
+          return null;
         }
         const { permissions } = user.users_list;
-        if (props.userIsOwner) {
+        if (!props.userIsOwner) {
           return (
-            <ListGroup.Item
-              key={user.users_list.id}
-              data-test-id={`${props.status}-user-${user.user.id}`}
-              className="users-list-list-group-item"
-            >
-              <Row>
-                <Col md="6" className="pt-1">
-                  {user.user.email}
-                </Col>
-                <Col md="4" className="pt-1">
-                  <Badge data-test-id={`perm-${permissions}`} bg={permissions === 'write' ? 'success' : 'primary'}>
-                    {permissions}
-                  </Badge>
-                </Col>
-                <Col md="2">
-                  <ButtonGroup className="float-end">
-                    <Button
-                      variant="link"
-                      className="p-0 me-4 text-warning"
-                      onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
-                      data-test-id="toggle-permissions"
-                    >
-                      {permissions === 'write' ? <AngleDoubleDownIcon size="2x" /> : <AngleDoubleUpIcon size="2x" />}
-                    </Button>
-                    <Trash testID="remove-share" handleClick={(): void => props.removeShare(user.users_list.id)} />
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </ListGroup.Item>
+            <li key={user.users_list.id} data-test-id={`${props.status}-user-${user.user.id}`} className={rowClass}>
+              <span className="tw:text-sm">{user.user.email}</span>
+            </li>
           );
         }
         return (
-          <div key={user.users_list.id} data-test-id={`${props.status}-user-${user.user.id}`}>
-            <ListGroup.Item>{user.user.email}</ListGroup.Item>
-          </div>
+          <li key={user.users_list.id} data-test-id={`${props.status}-user-${user.user.id}`} className={rowClass}>
+            <span className="tw:text-sm tw:flex-1 tw:truncate">{user.user.email}</span>
+            <button
+              type="button"
+              data-test-id="toggle-permissions"
+              onClick={(): void => props.togglePermission(user.users_list.id, permissions, props.status)}
+              className="tw:flex tw:items-center tw:gap-1 tw:cursor-pointer"
+              aria-label="Toggle permissions"
+            >
+              <Badge
+                data-test-id={`perm-${permissions}`}
+                variant={props.status === 'pending' ? 'warning' : permissions === 'write' ? 'success' : 'primary'}
+              >
+                {props.status === 'pending' ? 'pending' : permissions}
+              </Badge>
+              {permissions === 'write' ? (
+                <AngleDoubleDownIcon size="sm" className="tw:text-[var(--color-text-secondary)]" />
+              ) : (
+                <AngleDoubleUpIcon size="sm" className="tw:text-[var(--color-text-secondary)]" />
+              )}
+            </button>
+            <IconButton
+              icon={<TrashIcon size="sm" />}
+              variant="danger"
+              size="sm"
+              label="Remove share"
+              data-test-id="remove-share"
+              onClick={(): void => props.removeShare(user.users_list.id)}
+            />
+          </li>
         );
       })}
-    </ListGroup>
-  </React.Fragment>
+    </ul>
+  </section>
 );
 
 export default UsersList;

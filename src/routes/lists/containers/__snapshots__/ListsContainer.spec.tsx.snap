@@ -1,1616 +1,640 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ListsContainer > does not render pending lists when they do not exist 1`] = `
-<div>
-  <div
-    class="d-flex justify-content-between align-items-center"
-  >
-    <h1
-      class="mb-0"
-    >
-      Lists
-    </h1>
-    <a
-      class="btn btn-link"
-      data-discover="true"
-      data-test-id="manage-templates-link"
-      href="/templates"
-    >
-      Manage Templates
-    </a>
-  </div>
-  <button
-    aria-controls="form-collapse"
-    aria-expanded="false"
-    class="btn btn-link"
-    type="button"
-  >
-    Add List
-  </button>
-  <form
-    autocomplete="off"
-    class="collapse"
-    id="form-collapse"
-  >
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="name"
-      >
-        Name
-      </label>
-      <input
-        class="form-control"
-        id="name"
-        name="name"
-        placeholder="My super cool list"
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="list_item_configuration_id"
-      >
-        Template
-      </label>
-      <select
-        class="form-control"
-        id="list_item_configuration_id"
-        name="list_item_configuration_id"
-      >
-        <option
-          value="config-1"
-        >
-          grocery list template
-        </option>
-        <option
-          value="config-2"
-        >
-          book list template
-        </option>
-      </select>
-    </div>
-    <div
-      class="d-grid gap-2 mt-3"
-    >
-      <button
-        class="btn btn-success"
-        type="submit"
-      >
-        Create List
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
-      </button>
-    </div>
-  </form>
-  <hr
-    class="mb-4"
-  />
-  <div
-    class="mb-4"
-  >
-    <div
-      class="clearfix"
-    >
-      <div
-        class="mx-auto float-start"
-      >
-        <div
-          class="m-0 row"
-        >
-          <h2
-            class="text-capitalize pe-0 w-auto"
-          >
-            Incomplete
-          </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Incomplete-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <button
-        class="mx-auto float-end btn btn-link"
-        type="button"
-      >
-         Select
-      </button>
-    </div>
-    <div
-      class="list-group"
-    >
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="incomplete-list"
-        data-test-id="list-id5"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id5"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    baz
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-success"
-                      data-test-id="check-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
-      0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                      />
-                    </svg>
-                  </button>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id5/users_lists"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="users-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8
-      483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17
-      13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0
-      30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9
-      11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224
-      204.3c-12.4 0-20.1 13.6-13.7 24.2z"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-warning"
-                      data-test-id="edit-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
-      21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
-      88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
-      21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
-      43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
-      17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
-      32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                      />
-                    </svg>
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="incomplete-list"
-        data-test-id="list-id6"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id6"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    foobar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-success"
-                      data-test-id="check-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
-      0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                      />
-                    </svg>
-                  </button>
-                  <a
-                    aria-disabled="true"
-                    class="p-0 me-3 list-button-disabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id6/users_lists"
-                    style="pointer-events: none;"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="users-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8
-      483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17
-      13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0
-      30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9
-      11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224
-      204.3c-12.4 0-20.1 13.6-13.7 24.2z"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id6/edit"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-warning"
-                      data-test-id="edit-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
-      21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
-      88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
-      21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
-      43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
-      17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
-      32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                      />
-                    </svg>
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="mb-4"
-  >
-    <div
-      class="clearfix"
-    >
-      <div
-        class="mx-auto float-start"
-      >
-        <div
-          class="m-0 row"
-        >
-          <h2
-            class="text-capitalize pe-0 w-auto"
-          >
-            Completed
-          </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Completed-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <button
-        class="mx-auto float-end btn btn-link"
-        type="button"
-      >
-         Select
-      </button>
-    </div>
-    <div
-      class="list-group"
-    >
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="completed-list"
-        data-test-id="list-id2"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id2"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    bar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="complete-list-refresh"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="redo-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
-      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
-      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="complete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="completed-list"
-        data-test-id="list-id4"
-      >
-        <div
-          class="row"
-        >
-          <div
-            class="col-sm-12 col-12"
-          >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id4"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    bar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
-                    data-test-id="complete-list-refresh"
-                    disabled=""
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="redo-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
-      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
-      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="complete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`ListsContainer > renders 1`] = `
 <div>
   <div
-    class="d-flex justify-content-between align-items-center"
-  >
-    <h1
-      class="mb-0"
-    >
-      Lists
-    </h1>
-    <a
-      class="btn btn-link"
-      data-discover="true"
-      data-test-id="manage-templates-link"
-      href="/templates"
-    >
-      Manage Templates
-    </a>
-  </div>
-  <button
-    aria-controls="form-collapse"
-    aria-expanded="false"
-    class="btn btn-link"
-    type="button"
-  >
-    Add List
-  </button>
-  <form
-    autocomplete="off"
-    class="collapse"
-    id="form-collapse"
+    class="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
   >
     <div
-      class="mb-3"
+      class="tw:flex tw:justify-between tw:items-center tw:mb-4"
     >
-      <label
-        class="form-label"
-        for="name"
+      <h1
+        class="tw:text-2xl tw:font-bold tw:m-0"
+        data-test-id="page-title"
       >
-        Name
-      </label>
-      <input
-        class="form-control"
-        id="name"
-        name="name"
-        placeholder="My super cool list"
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      class="mb-3"
-    >
-      <label
-        class="form-label"
-        for="list_item_configuration_id"
-      >
-        Template
-      </label>
-      <select
-        class="form-control"
-        id="list_item_configuration_id"
-        name="list_item_configuration_id"
-      >
-        <option
-          value="config-1"
-        >
-          grocery list template
-        </option>
-        <option
-          value="config-2"
-        >
-          book list template
-        </option>
-      </select>
-    </div>
-    <div
-      class="d-grid gap-2 mt-3"
-    >
-      <button
-        class="btn btn-success"
-        type="submit"
-      >
-        Create List
-      </button>
-      <button
-        class="btn btn-link"
-        type="button"
-      >
-        Collapse Form
-      </button>
-    </div>
-  </form>
-  <hr
-    class="mb-4"
-  />
-  <div
-    class="mb-4"
-  >
-    <div
-      class="clearfix"
-    >
+        Lists
+      </h1>
       <div
-        class="mx-auto float-start"
+        class="tw:flex tw:items-center tw:gap-2"
       >
-        <div
-          class="m-0 row"
+        <button
+          class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
+          type="button"
         >
-          <h2
-            class="text-capitalize pe-0 w-auto"
-          >
-            Pending
-          </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Pending-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
-        </div>
+          Select
+        </button>
+        <a
+          class="tw:text-sm tw:text-[var(--color-primary)]"
+          data-discover="true"
+          data-test-id="manage-templates-link"
+          href="/templates"
+        >
+          Manage Templates
+        </a>
       </div>
+    </div>
+    <div
+      class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:mb-4"
+      role="group"
+    >
       <button
-        class="mx-auto float-end btn btn-link"
+        aria-pressed="true"
+        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+        data-test-id="filter-all"
         type="button"
       >
-         Select
+        All
+      </button>
+      <button
+        aria-pressed="false"
+        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        data-test-id="filter-pending"
+        type="button"
+      >
+        Pending
+      </button>
+      <button
+        aria-pressed="false"
+        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        data-test-id="filter-active"
+        type="button"
+      >
+        Active
+      </button>
+      <button
+        aria-pressed="false"
+        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        data-test-id="filter-completed"
+        type="button"
+      >
+        Completed
       </button>
     </div>
     <div
-      class="list-group"
+      class="tw:mb-4 tw:p-3 tw:rounded-lg tw:border tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10"
+      data-test-id="pending-alert"
+    >
+      You have 
+      1
+       
+      list
+       waiting for your response.
+    </div>
+    <div
+      class="tw:flex tw:flex-col tw:gap-2"
     >
       <div
-        class="pending-list list-list-group-item list-group-item"
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:flex tw:items-center tw:gap-3 tw:border-l-4 tw:border-l-[var(--color-warning)]"
         data-test-class="pending-list"
-        data-test-id="list-id1"
+        data-test-id="list-id-pending"
+        role="button"
+        tabindex="0"
       >
         <div
-          class="row"
+          class="tw:flex-1 tw:min-w-0"
         >
           <div
-            class="col-sm-12 col-12"
+            class="tw:flex tw:items-center tw:gap-2"
           >
-            <div
-              class=" pt-1 row"
+            <span
+              class="tw:text-base tw:font-semibold tw:truncate"
+              data-test-id="list-name"
             >
-              <div
-                class="col-lg-6"
+              foo
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw:flex-shrink-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-1"
+          >
+            <button
+              aria-label="Accept"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="pending-list-accept"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <h5
-                  class="mb-1"
-                >
-                  foo
-                </h5>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3  btn btn-link"
-                    data-test-id="pending-list-accept"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-success"
-                      data-test-id="check-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
+                <path
+                  d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
       0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="pending-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Reject"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="pending-list-trash"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div
-    class="mb-4"
-  >
-    <div
-      class="clearfix"
-    >
       <div
-        class="mx-auto float-start"
-      >
-        <div
-          class="m-0 row"
-        >
-          <h2
-            class="text-capitalize pe-0 w-auto"
-          >
-            Incomplete
-          </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Incomplete-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <button
-        class="mx-auto float-end btn btn-link"
-        type="button"
-      >
-         Select
-      </button>
-    </div>
-    <div
-      class="list-group"
-    >
-      <div
-        class="accepted-list list-list-group-item list-group-item"
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:flex tw:items-center tw:gap-3"
         data-test-class="incomplete-list"
         data-test-id="list-id5"
+        role="button"
+        tabindex="0"
       >
         <div
-          class="row"
+          class="tw:flex-1 tw:min-w-0"
         >
           <div
-            class="col-sm-12 col-12"
+            class="tw:flex tw:items-center tw:gap-2"
           >
-            <div
-              class=" pt-1 row"
+            <span
+              class="tw:text-base tw:font-semibold tw:truncate"
+              data-test-id="list-name"
             >
-              <div
-                class="col-lg-6"
+              baz
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw:flex-shrink-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-1"
+          >
+            <button
+              aria-label="Complete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-complete"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id5"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    baz
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-success"
-                      data-test-id="check-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
+                <path
+                  d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
       0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                      />
-                    </svg>
-                  </button>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id5/users_lists"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="users-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Share"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-share"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8
       483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17
       13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0
       30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9
       11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224
       204.3c-12.4 0-20.1 13.6-13.7 24.2z"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id5/edit"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-warning"
-                      data-test-id="edit-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Edit"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-edit"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                      />
-                    </svg>
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Delete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-trash"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
       <div
-        class="accepted-list list-list-group-item list-group-item"
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:flex tw:items-center tw:gap-3"
         data-test-class="incomplete-list"
         data-test-id="list-id6"
+        role="button"
+        tabindex="0"
       >
         <div
-          class="row"
+          class="tw:flex-1 tw:min-w-0"
         >
           <div
-            class="col-sm-12 col-12"
+            class="tw:flex tw:items-center tw:gap-2"
           >
-            <div
-              class=" pt-1 row"
+            <span
+              class="tw:text-base tw:font-semibold tw:truncate"
+              data-test-id="list-name"
             >
-              <div
-                class="col-lg-6"
+              foobar
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw:flex-shrink-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-1"
+          >
+            <button
+              aria-label="Complete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-complete"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id6"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    foobar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="incomplete-list-complete"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-success"
-                      data-test-id="check-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
+                <path
+                  d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8
       0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                      />
-                    </svg>
-                  </button>
-                  <a
-                    aria-disabled="true"
-                    class="p-0 me-3 list-button-disabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-share"
-                    href="/id6/users_lists"
-                    style="pointer-events: none;"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="users-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8
-      483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17
-      13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0
-      30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9
-      11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224
-      204.3c-12.4 0-20.1 13.6-13.7 24.2z"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    aria-disabled="false"
-                    class="p-0 me-3 list-button-enabled"
-                    data-discover="true"
-                    data-test-id="incomplete-list-edit"
-                    href="/lists/id6/edit"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-warning"
-                      data-test-id="edit-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Edit"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-edit"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                      />
-                    </svg>
-                  </a>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="incomplete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Delete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="incomplete-list-trash"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_*]:line-through tw:flex tw:items-center tw:gap-3"
+        data-test-class="completed-list"
+        data-test-id="list-id2"
+        role="button"
+        tabindex="0"
+      >
+        <div
+          class="tw:flex-1 tw:min-w-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-2"
+          >
+            <span
+              class="tw:text-base tw:font-semibold tw:truncate"
+              data-test-id="list-name"
+            >
+              bar
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw:flex-shrink-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-1"
+          >
+            <button
+              aria-label="Refresh"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="complete-list-refresh"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
+      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
+      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Delete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="complete-list-trash"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
+      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
+      46.3-19.7 47.9-45L416 128z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_*]:line-through tw:flex tw:items-center tw:gap-3"
+        data-test-class="completed-list"
+        data-test-id="list-id4"
+        role="button"
+        tabindex="0"
+      >
+        <div
+          class="tw:flex-1 tw:min-w-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-2"
+          >
+            <span
+              class="tw:text-base tw:font-semibold tw:truncate"
+              data-test-id="list-name"
+            >
+              bar
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw:flex-shrink-0"
+        >
+          <div
+            class="tw:flex tw:items-center tw:gap-1"
+          >
+            <button
+              aria-label="Refresh"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+              data-test-id="complete-list-refresh"
+              disabled=""
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
+      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
+      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Delete"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              data-test-id="complete-list-trash"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                focusable="false"
+                height="14"
+                role="img"
+                style="display: inline-block; vertical-align: middle;"
+                viewBox="0 0 512 512"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
+      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
+      46.3-19.7 47.9-45L416 128z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="mb-4"
-  >
     <div
-      class="clearfix"
+      class="tw:mt-4 tw:text-center"
     >
-      <div
-        class="mx-auto float-start"
-      >
-        <div
-          class="m-0 row"
-        >
-          <h2
-            class="text-capitalize pe-0 w-auto"
-          >
-            Completed
-          </h2>
-          <button
-            class="float-end text-secondary ps-0 w-auto border-0 bg-transparent align-self-start"
-            data-test-id="Completed-popover"
-            style="cursor: pointer; line-height: 1;"
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
       <button
-        class="mx-auto float-end btn btn-link"
+        class="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
+        data-test-id="show-all-completed"
         type="button"
       >
-         Select
+        Show all completed lists →
       </button>
     </div>
     <div
-      class="list-group"
+      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
     >
       <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="completed-list"
-        data-test-id="list-id2"
+        class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
-        <div
-          class="row"
+        <input
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          data-test-id="quick-add-input"
+          placeholder="Create a new list..."
+          type="text"
+          value=""
+        />
+        <button
+          aria-label="Expand"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-all tw:duration-200 "
+          data-test-id="quick-add-expand"
+          type="button"
         >
-          <div
-            class="col-sm-12 col-12"
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <div
-              class=" pt-1 row"
-            >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id2"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    bar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-enabled btn btn-link"
-                    data-test-id="complete-list-refresh"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="redo-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
-      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
-      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="complete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            <path
+              d="M5 12.5L10 7.5L15 12.5"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
       <div
-        class="accepted-list list-list-group-item list-group-item"
-        data-test-class="completed-list"
-        data-test-id="list-id4"
+        class="tw:overflow-y-auto tw:transition-all tw:duration-200 tw:max-h-0 tw:overflow-hidden"
       >
         <div
-          class="row"
+          class="tw:w-full"
         >
-          <div
-            class="col-sm-12 col-12"
+          <label
+            class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+            for="list_item_configuration_id"
           >
-            <div
-              class=" pt-1 row"
+            Template
+          </label>
+          <select
+            class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)] tw:appearance-none tw:bg-[image:url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%236b7280%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] tw:bg-no-repeat tw:bg-right tw:pr-10"
+            data-test-id="list_item_configuration_id"
+            id="list_item_configuration_id"
+          >
+            <option
+              value="config-1"
             >
-              <div
-                class="col-lg-6"
-              >
-                <a
-                  class="router-link"
-                  data-discover="true"
-                  href="/lists/id4"
-                >
-                  <h5
-                    class="mb-1"
-                  >
-                    bar
-                  </h5>
-                </a>
-              </div>
-              <div
-                class="col-lg-4"
-              >
-                <small
-                  class="text-muted"
-                >
-                  May 31 2020
-                </small>
-              </div>
-              <div
-                class=" pe-lg-3 col-lg-2"
-              >
-                <div
-                  class="float-end btn-group"
-                  role="group"
-                >
-                  <button
-                    class="p-0 me-3 list-button-disabled btn btn-link"
-                    data-test-id="complete-list-refresh"
-                    disabled=""
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-primary"
-                      data-test-id="redo-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
-      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
-      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-0 btn btn-link"
-                    data-test-id="complete-list-trash"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="text-danger"
-                      data-test-id="trash-icon"
-                      fill="currentColor"
-                      focusable="false"
-                      height="32"
-                      role="img"
-                      style="display: inline-block; vertical-align: middle;"
-                      viewBox="0 0 512 512"
-                      width="32"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+              grocery list template
+            </option>
+            <option
+              value="config-2"
+            >
+              book list template
+            </option>
+          </select>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { EListItemFieldType } from 'typings';
 async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise<{
   props: IListItemFormFieldsProps;
   user: UserEvent;
+  container: HTMLElement;
 }> {
   const user = userEvent.setup();
   const defaultProps: IListItemFormFieldsProps = {
@@ -22,7 +23,7 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
       },
       {
         id: 'field2',
-        label: 'completed',
+        label: 'Foobar',
         data_type: EListItemFieldType.BOOLEAN,
         position: 2,
         primary: false,
@@ -44,7 +45,7 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
     ],
     fields: [
       createField('field1', 'title', 'Test Item', 'item1'),
-      createField('field2', 'completed', 'true', 'item1'),
+      createField('field2', 'Foobar', 'true', 'item1'),
       createField('field3', 'due_date', '2024-01-15', 'item1'),
       createField('field4', 'quantity', '5', 'item1'),
     ],
@@ -52,8 +53,8 @@ async function setup(suppliedProps?: Partial<IListItemFormFieldsProps>): Promise
     editForm: false,
   };
   const props = { ...defaultProps, ...suppliedProps };
-  render(<ListItemFormFields {...props} />);
-  return { props, user };
+  const { container } = render(<ListItemFormFields {...props} />);
+  return { props, user, container };
 }
 
 describe('ListItemFormFields', () => {
@@ -62,13 +63,13 @@ describe('ListItemFormFields', () => {
 
     // Check that all fields are rendered
     expect(screen.getByLabelText('Title')).toBeInTheDocument();
-    expect(screen.getByLabelText('Completed')).toBeInTheDocument();
+    expect(screen.getByLabelText('Foobar')).toBeInTheDocument();
     expect(screen.getByLabelText('Due_date')).toBeInTheDocument();
     expect(screen.getByLabelText('Quantity')).toBeInTheDocument();
 
     // Check field values
     expect(screen.getByLabelText('Title')).toHaveValue('Test Item');
-    expect(screen.getByLabelText('Completed')).toBeChecked();
+    expect(screen.getByLabelText('Foobar')).toBeChecked();
     expect(screen.getByLabelText('Due_date')).toHaveValue('2024-01-15');
     expect(screen.getByLabelText('Quantity')).toHaveValue(5);
   });
@@ -77,14 +78,14 @@ describe('ListItemFormFields', () => {
     await setup({
       fields: [
         createField('field1', 'title', '', 'item1'),
-        createField('field2', 'completed', 'false', 'item1'),
+        createField('field2', 'Foobar', 'false', 'item1'),
         createField('field3', 'due_date', '', 'item1'),
         createField('field4', 'quantity', '', 'item1'),
       ],
     });
 
     expect(screen.getByLabelText('Title')).toHaveValue('');
-    expect(screen.getByLabelText('Completed')).not.toBeChecked();
+    expect(screen.getByLabelText('Foobar')).not.toBeChecked();
     expect(screen.getByLabelText('Due_date')).toHaveValue('');
     expect(screen.getByLabelText('Quantity')).toHaveValue(null);
   });
@@ -95,7 +96,7 @@ describe('ListItemFormFields', () => {
     });
 
     expect(screen.getByLabelText('Title')).toHaveValue('');
-    expect(screen.getByLabelText('Completed')).not.toBeChecked();
+    expect(screen.getByLabelText('Foobar')).not.toBeChecked();
     expect(screen.getByLabelText('Due_date')).toHaveValue('');
     expect(screen.getByLabelText('Quantity')).toHaveValue(null);
   });
@@ -138,9 +139,9 @@ describe('ListItemFormFields', () => {
 
     it('calls setFormData when checkbox changes', async () => {
       const { props, user } = await setup();
-      const completedField = screen.getByLabelText('Completed');
+      const FoobarField = screen.getByLabelText('Foobar');
 
-      await user.click(completedField);
+      await user.click(FoobarField);
 
       expect(props.setFormData).toHaveBeenCalled();
     });
@@ -171,16 +172,16 @@ describe('ListItemFormFields', () => {
         fieldConfigurations: [
           {
             id: 'field1',
-            label: 'completed',
+            label: 'Foobar',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
             primary: false,
           },
         ],
-        fields: [createField('field1', 'completed', 'true', 'item1')],
+        fields: [createField('field1', 'Foobar', 'true', 'item1')],
       });
 
-      expect(screen.getByLabelText('Completed')).toBeChecked();
+      expect(screen.getByLabelText('Foobar')).toBeChecked();
     });
 
     it('handles boolean field with false value', async () => {
@@ -188,16 +189,16 @@ describe('ListItemFormFields', () => {
         fieldConfigurations: [
           {
             id: 'field1',
-            label: 'completed',
+            label: 'Foobar',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
             primary: false,
           },
         ],
-        fields: [createField('field1', 'completed', 'false', 'item1')],
+        fields: [createField('field1', 'Foobar', 'false', 'item1')],
       });
 
-      expect(screen.getByLabelText('Completed')).not.toBeChecked();
+      expect(screen.getByLabelText('Foobar')).not.toBeChecked();
     });
 
     it('handles boolean field with no value', async () => {
@@ -205,7 +206,7 @@ describe('ListItemFormFields', () => {
         fieldConfigurations: [
           {
             id: 'field1',
-            label: 'completed',
+            label: 'Foobar',
             data_type: EListItemFieldType.BOOLEAN,
             position: 1,
             primary: false,
@@ -214,7 +215,7 @@ describe('ListItemFormFields', () => {
         fields: [],
       });
 
-      expect(screen.getByLabelText('Completed')).not.toBeChecked();
+      expect(screen.getByLabelText('Foobar')).not.toBeChecked();
     });
   });
 
@@ -429,8 +430,7 @@ describe('ListItemFormFields', () => {
   });
 
   it('matches snapshot', async () => {
-    await setup();
-    const container = screen.getByLabelText('Title').closest('div')?.parentElement;
+    const { container } = await setup();
 
     expect(container).toMatchSnapshot();
   });

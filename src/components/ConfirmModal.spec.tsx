@@ -49,11 +49,18 @@ describe('ConfirmModal', () => {
       expect(props.handleClear).toHaveBeenCalled();
     });
 
-    it('calls handleConfirm when the close button is selected', async () => {
+    it('calls handleConfirm when the confirm button is selected', async () => {
       const { findByText, props, user } = setup({ show: true });
       await user.click(await findByText("Yes, I'm sure."));
 
       expect(props.handleConfirm).toHaveBeenCalled();
+    });
+
+    it('calls handleClear when Escape key is pressed', async () => {
+      const { props, user } = setup({ show: true });
+      await user.keyboard('{Escape}');
+
+      expect(props.handleClear).toHaveBeenCalled();
     });
   });
 });

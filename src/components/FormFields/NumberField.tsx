@@ -1,5 +1,5 @@
 import React, { type ChangeEventHandler } from 'react';
-import { Form } from 'react-bootstrap';
+import NumberInput from '../ui/NumberInput';
 
 export interface INumberFieldProps {
   name: string;
@@ -9,10 +9,9 @@ export interface INumberFieldProps {
 }
 
 const NumberField: React.FC<INumberFieldProps> = (props): React.JSX.Element => (
-  <Form.Group controlId={props.name} className="mb-3">
-    <Form.Label>{props.label}</Form.Label>
-    <Form.Control type="number" value={props.value ?? ''} onChange={props.handleChange} name={props.name} />
-  </Form.Group>
+  <div className="tw:mb-3">
+    <NumberInput label={props.label} value={props.value ?? ''} onChange={props.handleChange} name={props.name} />
+  </div>
 );
 
 export default NumberField;

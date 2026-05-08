@@ -40,14 +40,14 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
         label={`Clear ${capitalize(config.label)}`}
         value={isCleared}
         handleChange={(): void => props.handleClearField(config.label)}
-        classes="ms-1 mt-1"
+        classes="tw:ms-1 tw:mt-1"
       />
     );
 
     switch (config.data_type) {
       case 'boolean':
         return (
-          <div key={config.id} className="mb-3">
+          <div key={config.id} className="tw:mb-3">
             <CheckboxField
               name={config.label}
               label={capitalize(config.label)}
@@ -59,14 +59,14 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
         );
       case 'date_time':
         return (
-          <div key={config.id} className="mb-3">
+          <div key={config.id} className="tw:mb-3">
             <DateField {...commonProps} value={formatDateForInput(value) ?? ''} />
             {clearCheckbox}
           </div>
         );
       case 'number':
         return (
-          <div key={config.id} className="mb-3">
+          <div key={config.id} className="tw:mb-3">
             <NumberField {...commonProps} value={value !== '' ? Number(value) : undefined} />
             {clearCheckbox}
           </div>
@@ -74,7 +74,7 @@ const BulkEditListItemsFormFields: React.FC<IBulkEditListItemsFormFieldsProps> =
       case 'free_text':
       default:
         return (
-          <div key={config.id} className="mb-3">
+          <div key={config.id} className="tw:mb-3">
             <TextField {...commonProps} value={value} />
             {clearCheckbox}
           </div>
