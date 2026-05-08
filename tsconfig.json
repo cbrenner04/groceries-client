@@ -6,7 +6,9 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": true,
-    "baseUrl": "./src",
+    "paths": {
+      "*": ["./src/*"]
+    },
     "types": ["vitest/globals", "node"],
     "skipLibCheck": true,
     "esModuleInterop": true,
