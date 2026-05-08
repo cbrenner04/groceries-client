@@ -1,14 +1,15 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import update from 'immutability-helper';
-import { Form, ListGroup } from 'react-bootstrap';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
 
-import { EmailField } from 'components/FormFields';
+import Input from 'components/ui/Input';
+import { Button } from 'components/ui/Button';
+import { IconButton } from 'components/ui/IconButton';
+import { CheckIcon } from 'components/icons';
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
-import FormSubmission from 'components/FormSubmission';
 import type { IListUser, IUsersList } from 'typings';
 
 import UsersList from '../components/UsersList';
@@ -24,7 +25,12 @@ export interface IShareListFormProps {
   accepted: IUsersList[];
   refused: IUsersList[];
   userId: string;
+  onClose?: () => void;
 }
+
+const sectionLabel = 'tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:mb-2';
+const rowClass =
+  'tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]';
 
 const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
@@ -37,32 +43,25 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   usePolling(
     async () => {
       try {
-        const list = await fetchData({
-          listId: props.listId,
-          navigate: navigate,
-        });
+        const list = await fetchData({ listId: props.listId, navigate: navigate });
         /* istanbul ignore else */
         if (list) {
           const isSameSet = (newSet: IListUser[] | IUsersList[], oldSet: IListUser[] | IUsersList[]): boolean =>
             JSON.stringify(newSet) === JSON.stringify(oldSet);
-          const invitableUsersSame = isSameSet(list.invitableUsers, invitableUsers);
-          const pendingSame = isSameSet(list.pending, pending);
-          const acceptedSame = isSameSet(list.accepted, accepted);
-          const refusedSame = isSameSet(list.refused, refused);
           /* istanbul ignore else */
-          if (!invitableUsersSame) {
+          if (!isSameSet(list.invitableUsers, invitableUsers)) {
             setInvitableUsers(list.invitableUsers);
           }
           /* istanbul ignore else */
-          if (!pendingSame) {
+          if (!isSameSet(list.pending, pending)) {
             setPending(list.pending);
           }
           /* istanbul ignore else */
-          if (!acceptedSame) {
+          if (!isSameSet(list.accepted, accepted)) {
             setAccepted(list.accepted);
           }
           /* istanbul ignore else */
-          if (!refusedSame) {
+          if (!isSameSet(list.refused, refused)) {
             setRefused(list.refused);
           }
         }
@@ -122,24 +121,15 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const handleSelectUser = async (user: IListUser): Promise<void> => {
     try {
       const { data } = await axios.post(`/lists/${props.listId}/users_lists`, {
-        users_list: {
-          user_id: user.id,
-          list_id: props.listId,
-        },
+        users_list: { user_id: user.id, list_id: props.listId },
       });
       const newUsers = invitableUsers.filter((tmpUser: IListUser) => tmpUser.id !== user.id);
       setInvitableUsers(newUsers);
       const newPending = update(pending, {
         $push: [
           {
-            user: {
-              id: data.user_id,
-              email: user.email,
-            },
-            users_list: {
-              id: data.id,
-              permissions: data.permissions,
-            },
+            user: { id: data.user_id, email: user.email },
+            users_list: { id: data.id, permissions: data.permissions },
           },
         ],
       });
@@ -154,11 +144,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const togglePermission = async (id: string, currentPermission: string, status: string): Promise<void> => {
     const permissions = currentPermission === 'write' ? 'read' : 'write';
     try {
-      await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
-        users_list: {
-          permissions,
-        },
-      });
+      await axios.patch(`/lists/${props.listId}/users_lists/${id}`, { users_list: { permissions } });
       const [users, stateFunc] = status === 'pending' ? [pending, setPending] : [accepted, setAccepted];
       const updatedUsers = users.map((usersList) => {
         const newList = usersList;
@@ -182,19 +168,9 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
       const { user } = usersList;
       try {
         const { data } = await axios.patch(`/lists/${props.listId}/users_lists/${id}`, {
-          users_list: {
-            has_accepted: null,
-            permissions: 'write',
-          },
+          users_list: { has_accepted: null, permissions: 'write' },
         });
-        const updatedPending = update(pending, {
-          $push: [
-            {
-              user,
-              users_list: data,
-            },
-          ],
-        });
+        const updatedPending = update(pending, { $push: [{ user, users_list: data }] });
         setPending(updatedPending);
         const updatedRefused = refused.filter((user) => user.user.id !== userId);
         setRefused(updatedRefused);
@@ -218,35 +194,49 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   };
 
   return (
-    <div>
-      <Link to="/lists" className="float-end">
-        Back to lists
-      </Link>
-      <h1>Share {props.name}</h1>
-      <Form onSubmit={handleSubmit} className="pt-3 pb-3">
-        <EmailField
+    <div className="tw:flex tw:flex-col tw:gap-4">
+      <form onSubmit={handleSubmit} className="tw:flex tw:flex-col tw:gap-2">
+        <Input
+          id="new-email"
           name="new-email"
+          type="email"
           label="Enter an email to invite someone to share this list:"
           value={newEmail}
-          handleChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
+          onChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
         />
-        <FormSubmission submitText="Share List" />
-      </Form>
-      {!!invitableUsers.length && <p className="text-lead">Or select someone you&apos;ve previously shared with:</p>}
-      <ListGroup className="mb-5">
-        {invitableUsers.map((user) => (
-          <div data-test-id={`invite-user-${user.id}`} key={user.id}>
-            <ListGroup.Item
-              action
-              key={user.id}
-              className="btn btn-link"
-              onClick={(): Promise<void> => handleSelectUser(user)}
-            >
-              {user.email}
-            </ListGroup.Item>
-          </div>
-        ))}
-      </ListGroup>
+        <div className="tw:flex tw:justify-end">
+          <Button variant="primary" type="submit" disabled={!newEmail}>
+            Share List
+          </Button>
+        </div>
+      </form>
+
+      {!!invitableUsers.length && (
+        <section>
+          <h3 className={sectionLabel}>Share with</h3>
+          <ul className="tw:flex tw:flex-col">
+            {invitableUsers.map((user) => (
+              <li key={user.id} data-test-id={`invite-user-${user.id}`} className={rowClass}>
+                <button
+                  type="button"
+                  className="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
+                  onClick={(): Promise<void> => handleSelectUser(user)}
+                >
+                  <span className="tw:text-sm tw:flex-1 tw:truncate">{user.email}</span>
+                </button>
+                <IconButton
+                  icon={<CheckIcon size="sm" />}
+                  variant="success"
+                  size="sm"
+                  label="Add user"
+                  onClick={(): Promise<void> => handleSelectUser(user)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <UsersList
         togglePermission={togglePermission}
         removeShare={removeShare}

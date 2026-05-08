@@ -1,0 +1,54 @@
+import React from 'react';
+
+export interface IFilterChipProps {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  testId?: string;
+}
+
+export function FilterChip(props: IFilterChipProps): React.JSX.Element {
+  const { label, active, onClick, testId } = props;
+
+  const baseStyles =
+    'tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium ' +
+    'tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none';
+
+  const activeStyles = active
+    ? 'tw:bg-[var(--color-primary)] tw:text-white'
+    : 'tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] ' +
+      'tw:hover:bg-[var(--color-border)]';
+
+  return (
+    <button
+      type="button"
+      className={`${baseStyles} ${activeStyles}`}
+      onClick={onClick}
+      data-test-id={testId}
+      aria-pressed={active}
+    >
+      {label}
+    </button>
+  );
+}
+
+export interface IFilterChipGroupProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function FilterChipGroup(props: IFilterChipGroupProps): React.JSX.Element {
+  const { children, className = '' } = props;
+
+  return (
+    <div
+      className={
+        'tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden ' +
+        `tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] ${className}`
+      }
+      role="group"
+    >
+      {children}
+    </div>
+  );
+}

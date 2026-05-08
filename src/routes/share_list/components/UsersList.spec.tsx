@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import { render, type RenderResult, within } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import UsersList, { type IUsersListProps } from './UsersList';
@@ -18,36 +18,9 @@ function setup(userIsOwner = true): ISetupReturn {
     userId: 'id1',
     status: 'accepted',
     users: [
-      {
-        user: {
-          id: 'id1',
-          email: 'foo@example.com',
-        },
-        users_list: {
-          id: 'id1',
-          permissions: 'write',
-        },
-      },
-      {
-        user: {
-          id: 'id2',
-          email: 'bar@example.com',
-        },
-        users_list: {
-          id: 'id2',
-          permissions: 'write',
-        },
-      },
-      {
-        user: {
-          id: 'id3',
-          email: 'baz@example.com',
-        },
-        users_list: {
-          id: 'id4',
-          permissions: 'read',
-        },
-      },
+      { user: { id: 'id1', email: 'foo@example.com' }, users_list: { id: 'id1', permissions: 'write' } },
+      { user: { id: 'id2', email: 'bar@example.com' }, users_list: { id: 'id2', permissions: 'write' } },
+      { user: { id: 'id3', email: 'baz@example.com' }, users_list: { id: 'id4', permissions: 'read' } },
     ],
   };
   const component = render(<UsersList {...props} />);
@@ -61,27 +34,19 @@ describe('UsersList', () => {
 
     expect(container).toMatchSnapshot();
     expect(queryByTestId('accepted-user-id1')).toBeNull();
-    expect((await findByTestId('accepted-user-id2')).children[0].children[1].firstChild).toHaveAttribute(
-      'data-test-id',
-      'perm-write',
-    );
-    expect((await findByTestId('accepted-user-id2')).children[0].children[1].firstChild).toHaveClass('badge');
-    expect((await findByTestId('accepted-user-id3')).children[0].children[1].firstChild).toHaveAttribute(
-      'data-test-id',
-      'perm-read',
-    );
-    expect((await findByTestId('accepted-user-id3')).children[0].children[1].firstChild).toHaveClass('badge');
+    expect(within(await findByTestId('accepted-user-id2')).getByTestId('perm-write')).toBeInTheDocument();
+    expect(within(await findByTestId('accepted-user-id3')).getByTestId('perm-read')).toBeInTheDocument();
   });
 
   it('does not render read and write badges when user is not owner', async () => {
-    const { container, findByTestId, queryByText } = setup(false);
+    const { container, findByTestId, queryByText, queryByTestId } = setup(false);
 
     expect(container).toMatchSnapshot();
     expect(queryByText('foo@example.com')).toBeNull();
     expect(await findByTestId('accepted-user-id2')).toHaveTextContent('bar@example.com');
-    expect(await findByTestId('accepted-user-id2')).not.toHaveTextContent('write');
+    expect(queryByTestId('perm-write')).toBeNull();
     expect(await findByTestId('accepted-user-id3')).toHaveTextContent('baz@example.com');
-    expect(await findByTestId('accepted-user-id3')).not.toHaveTextContent('read');
+    expect(queryByTestId('perm-read')).toBeNull();
   });
 
   it('toggles user permissions', async () => {

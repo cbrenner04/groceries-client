@@ -1,11 +1,11 @@
 import React, { type ChangeEvent, type FormEvent, useMemo, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { showToast } from '../../../utils/toast';
 import { useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
-import FormSubmission from 'components/FormSubmission';
+import Input from 'components/ui/Input';
+import { Button } from 'components/ui/Button';
 import type { IListItemConfiguration, IListItemFieldConfiguration, EListItemFieldType } from 'typings';
 
 import FieldConfigurationRows, { type IFieldRow } from '../components/FieldConfigurationRows';
@@ -13,6 +13,8 @@ import FieldConfigurationRows, { type IFieldRow } from '../components/FieldConfi
 export interface IEditTemplateFormProps {
   template: IListItemConfiguration;
   fieldConfigurations: IListItemFieldConfiguration[];
+  onCancel: () => void;
+  onSaved?: () => void;
 }
 
 const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.Element => {
@@ -30,49 +32,40 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
   const [showValidation, setShowValidation] = useState(false);
   const navigate = useNavigate();
 
-  // Track original field IDs to detect deletions
   const originalFieldIds = useMemo(() => props.fieldConfigurations.map((fc) => fc.id), [props.fieldConfigurations]);
 
   const isFormValid = (): boolean => {
     if (name.trim() === '') {
       return false;
     }
-
     if (fieldRows.some((row) => row.label.trim() === '')) {
       return false;
     }
-
     const positions = fieldRows.map((row) => row.position);
-    const uniquePositions = new Set(positions);
-    if (positions.length !== uniquePositions.size) {
+    if (positions.length !== new Set(positions).size) {
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setShowValidation(true);
-
     if (!isFormValid()) {
       return;
     }
 
     try {
-      // 1. Update template name if changed
       if (name !== props.template.name) {
         await axios.put(`/list_item_configurations/${props.template.id}`, {
           list_item_configuration: { name },
         });
       }
 
-      // 2. Process field configurations
       const fieldOperations: Promise<unknown>[] = [];
 
       fieldRows.forEach((row) => {
         if (!row.id) {
-          // New field
           fieldOperations.push(
             axios.post(`/list_item_configurations/${props.template.id}/list_item_field_configurations`, {
               list_item_field_configuration: {
@@ -84,7 +77,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
             }),
           );
         } else {
-          // Check if field was modified
           const originalField = props.fieldConfigurations.find((fc) => fc.id === row.id);
           if (
             originalField &&
@@ -93,7 +85,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
               originalField.position !== row.position ||
               originalField.primary !== row.primary)
           ) {
-            // Modified field
             fieldOperations.push(
               axios.put(`/list_item_configurations/${props.template.id}/list_item_field_configurations/${row.id}`, {
                 list_item_field_configuration: {
@@ -108,7 +99,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
         }
       });
 
-      // 3. Delete removed fields
       const currentFieldIds = fieldRows.map((row) => row.id).filter((id) => id);
       originalFieldIds.forEach((originalId) => {
         if (!currentFieldIds.includes(originalId)) {
@@ -118,11 +108,14 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
         }
       });
 
-      // 4. Execute all field operations in parallel
       await Promise.all(fieldOperations);
 
       showToast.info('Template successfully updated');
-      navigate('/templates');
+      if (props.onSaved) {
+        props.onSaved();
+      } else {
+        navigate('/templates');
+      }
     } catch (err: unknown) {
       const error = err as AxiosError;
       if (error.response) {
@@ -146,33 +139,27 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
   };
 
   return (
-    <React.Fragment>
-      <h1>Edit Template</h1>
-      <br />
-      <Form onSubmit={handleSubmit} autoComplete="off">
-        <Form.Group className="mb-3" controlId="template-name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={name}
-            onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-            data-test-id="template-name"
-            placeholder="My template"
-            isInvalid={showValidation && name.trim() === ''}
-          />
-          {showValidation && name.trim() === '' && (
-            <Form.Control.Feedback type="invalid">Name cannot be blank</Form.Control.Feedback>
-          )}
-        </Form.Group>
-        <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
-        <FormSubmission
-          disabled={!isFormValid()}
-          submitText="Update Template"
-          cancelAction={(): void | Promise<void> => navigate('/templates')}
-          cancelText="Cancel"
-        />
-      </Form>
-    </React.Fragment>
+    <form onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
+      <Input
+        id="template-name"
+        testId="template-name"
+        name="template-name"
+        label="Name"
+        value={name}
+        onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+        placeholder="My template"
+        error={showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined}
+      />
+      <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
+      <div className="tw:flex tw:justify-end tw:gap-2">
+        <Button variant="ghost" type="button" onClick={props.onCancel}>
+          Cancel
+        </Button>
+        <Button variant="primary" type="submit" disabled={!isFormValid()}>
+          Update Template
+        </Button>
+      </div>
+    </form>
   );
 };
 

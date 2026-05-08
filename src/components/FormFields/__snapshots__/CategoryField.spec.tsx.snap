@@ -2,22 +2,27 @@
 
 exports[`CategoryField > renders input with datalist 1`] = `
 <div
-  class="mb-3"
+  class="tw:mb-3"
+  data-test-id="category-field"
 >
-  <label
-    class="form-label"
-    for="category"
+  <div
+    class="tw:w-full"
   >
-    Category
-  </label>
-  <input
-    class="form-control"
-    id="category"
-    list="categories"
-    name="category"
-    type="text"
-    value="testCategory"
-  />
+    <label
+      class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value="testCategory"
+    />
+  </div>
   <datalist
     data-test-id="categories"
     id="categories"
@@ -31,22 +36,27 @@ exports[`CategoryField > renders input with datalist 1`] = `
 
 exports[`CategoryField > renders when no category or categories given 1`] = `
 <div
-  class="mb-3"
+  class="tw:mb-3"
+  data-test-id="category-field"
 >
-  <label
-    class="form-label"
-    for="category"
+  <div
+    class="tw:w-full"
   >
-    Category
-  </label>
-  <input
-    class="form-control"
-    id="category"
-    list="categories"
-    name="category"
-    type="text"
-    value=""
-  />
+    <label
+      class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+      for="category"
+    >
+      Category
+    </label>
+    <input
+      class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+      id="category"
+      list="categories"
+      name="category"
+      type="text"
+      value=""
+    />
+  </div>
   <datalist
     data-test-id="categories"
     id="categories"

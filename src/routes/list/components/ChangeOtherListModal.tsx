@@ -1,8 +1,8 @@
 import React, { useState, type ChangeEventHandler, type Dispatch, type FormEvent, type SetStateAction } from 'react';
-import { Button, ButtonGroup, Form, Modal } from 'react-bootstrap';
 import { type AxiosError } from 'axios';
 
 import { showToast } from '../../../utils/toast';
+import { BottomSheet } from 'components/ui/BottomSheet';
 
 import { SelectField, TextField } from 'components/FormFields';
 import type { IList, IListItem } from 'typings';
@@ -13,13 +13,12 @@ export interface IChangeOtherListModalProps {
   copy: boolean;
   move: boolean;
   show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  setShow: Dispatch<SetStateAction<boolean | null>> | (() => void);
   currentList: IList;
   lists: IList[];
   items: IListItem[];
   setSelectedItems: Dispatch<SetStateAction<IListItem[]>>;
-  setIncompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
-  setCompleteMultiSelect: Dispatch<SetStateAction<boolean>>;
+  setMultiSelectActive: Dispatch<SetStateAction<boolean>>;
   handleMove: () => void;
 }
 
@@ -43,7 +42,6 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
-    // Validate that either an existing list is selected or a new list name is provided
     if (!existingList && !newListName) {
       showToast.error('Please select an existing list or enter a new list name');
       return;
@@ -58,14 +56,12 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
     };
 
     try {
-      // Use V2 API endpoint for bulk updates
       await axios.put(`/lists/${props.currentList.id}/list_items/bulk_update?item_ids=${itemIds}`, {
         list_items: putData,
       });
       props.setShow(false);
       props.setSelectedItems([]);
-      props.setCompleteMultiSelect(false);
-      props.setIncompleteMultiSelect(false);
+      props.setMultiSelectActive(false);
       props.handleMove();
       showToast.info('Items successfully updated');
     } catch (error: unknown) {
@@ -89,25 +85,25 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   };
 
   const switchToExisting = (
-    <Button
-      variant="link"
+    <button
+      type="button"
       onClick={(): void => setShowNewListForm(false)}
-      className="float-end"
-      style={{ padding: '0' }}
+      className="tw:text-sm tw:text-[var(--color-primary)] tw:font-medium tw:underline tw:mb-3"
+      data-test-id="choose-existing-list-link"
     >
       Choose existing list
-    </Button>
+    </button>
   );
 
   const switchToNew = (
-    <Button
-      variant="link"
+    <button
+      type="button"
       onClick={(): void => setShowNewListForm(true)}
-      className="float-end"
-      style={{ padding: '0' }}
+      className="tw:text-sm tw:text-[var(--color-primary)] tw:font-medium tw:underline tw:mb-3"
+      data-test-id="create-new-list-link"
     >
       Create new list
-    </Button>
+    </button>
   );
 
   const existingListSelect = (
@@ -132,31 +128,39 @@ const ChangeOtherList: React.FC<IChangeOtherListModalProps> = (props): React.JSX
   );
 
   const submit = (
-    <ButtonGroup>
-      <FormSubmission
-        submitText="Complete"
-        cancelAction={(): void => props.setShow(false)}
-        cancelText="Cancel"
-        noGrid={true}
-      />
-    </ButtonGroup>
+    <FormSubmission
+      submitText="Complete"
+      cancelAction={(): void => {
+        if (typeof props.setShow === 'function') {
+          props.setShow(false);
+        }
+      }}
+      cancelText="Cancel"
+    />
   );
 
   return (
-    <Modal show={props.show} onHide={(): void => props.setShow(false)} data-test-id="change-other-list-modal">
-      <Modal.Header closeButton>{changeListInstructions}</Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit} autoComplete="off">
-          {showNewListForm && existingListsOptions.length > 0 && switchToExisting}
-          {showNewListForm && newListNameInput}
+    <BottomSheet
+      isOpen={props.show}
+      onClose={(): void => {
+        if (typeof props.setShow === 'function') {
+          props.setShow(null);
+        }
+      }}
+      title={props.copy ? 'Copy to List' : 'Move to List'}
+      testId="change-other-list-modal"
+    >
+      <div className="tw:mb-3 tw:text-sm tw:text-[var(--color-text-secondary)]">{changeListInstructions}</div>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        {showNewListForm && existingListsOptions.length > 0 && switchToExisting}
+        {showNewListForm && newListNameInput}
 
-          {!showNewListForm && switchToNew}
-          {!showNewListForm && existingListsOptions.length > 0 && existingListSelect}
+        {!showNewListForm && switchToNew}
+        {!showNewListForm && existingListsOptions.length > 0 && existingListSelect}
 
-          {submit}
-        </Form>
-      </Modal.Body>
-    </Modal>
+        {submit}
+      </form>
+    </BottomSheet>
   );
 };
 

@@ -403,6 +403,54 @@ describe('BulkEditListItemsForm', () => {
     });
   });
 
+  it('uses empty initial category when items have different categories', () => {
+    const mixedCategoryItems = [
+      { ...mockItems[0], category: 'Produce' },
+      { ...mockItems[1], category: 'Dairy' },
+    ];
+    const { container } = renderComponent({ items: mixedCategoryItems });
+    const categoryInput = container.querySelector('input[id="category"]') as HTMLInputElement;
+    expect(categoryInput.value).toBe('');
+  });
+
+  it('toggles clear category off when checkbox is clicked twice', async () => {
+    const itemsWithCategory = mockItems.map((item) => ({ ...item, category: 'Produce' }));
+    const { user, container } = renderComponent({ items: itemsWithCategory });
+    const clearCategoryCheckbox = container.querySelector('input[id="clear_category"]') as HTMLInputElement;
+
+    await user.click(clearCategoryCheckbox);
+    expect(clearCategoryCheckbox.checked).toBe(true);
+
+    await user.click(clearCategoryCheckbox);
+    expect(clearCategoryCheckbox.checked).toBe(false);
+  });
+
+  it('handles 403/404 error response when status is missing', async () => {
+    const axiosError = { response: {} } as AxiosError;
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
+
+    const { getByText, user } = renderComponent();
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('');
+    });
+  });
+
+  it('handles validation errors with missing response.data', async () => {
+    const axiosError = { response: { status: 422 } } as AxiosError;
+    mockAxios.put = vi.fn().mockRejectedValue(axiosError);
+
+    const { getByText, user } = renderComponent();
+
+    await user.click(getByText('Update Items'));
+
+    await waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('');
+    });
+  });
+
   it('handles unexpected error', async () => {
     const axiosError = {
       message: 'Unexpected error',
@@ -561,6 +609,76 @@ describe('BulkEditListItemsForm', () => {
       // Should still show success and navigate, even though POST failed
       expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
       expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
+    });
+  });
+
+  describe('Bottom Sheet Mode', () => {
+    const defaultProps: IBulkEditListItemsFormProps = {
+      navigate: mockNavigate,
+      items: mockItems,
+      list: mockList,
+      lists: [mockList],
+      categories: ['Produce'],
+      listUsers: [
+        {
+          id: 'user-1',
+          email: 'user@example.com',
+        },
+      ],
+      listItemConfiguration: mockListItemConfiguration,
+      listItemFieldConfigurations: mockListItemFieldConfigurations,
+    };
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockAxios.put = vi.fn().mockResolvedValue({});
+      mockAxios.post = vi.fn().mockResolvedValue({});
+    });
+
+    it('does not render form title when isBottomSheet is true', () => {
+      const { queryByText } = render(<BulkEditListItemsForm {...defaultProps} isBottomSheet={true} />);
+
+      expect(queryByText('Edit Items')).not.toBeInTheDocument();
+    });
+
+    it('calls onCancel callback when cancel button is clicked in bottom sheet mode', async () => {
+      const mockOnCancel = vi.fn();
+      const { getByText } = render(
+        <BulkEditListItemsForm {...defaultProps} isBottomSheet={true} onCancel={mockOnCancel} />,
+      );
+
+      const cancelButton = getByText('Cancel');
+      await user.click(cancelButton);
+
+      expect(mockOnCancel).toHaveBeenCalled();
+    });
+
+    it('navigates to /lists/:id when form is submitted in normal mode', async () => {
+      const { getByText } = render(<BulkEditListItemsForm {...defaultProps} />);
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/list-1');
+      });
+    });
+
+    it('calls navigate callback correctly in bottom sheet mode', async () => {
+      const mockNavigateSheet = vi.fn((url: string) => {
+        if (url === '/lists/list-1') {
+          // Simulate successful navigation
+        }
+      });
+
+      const { getByText } = render(
+        <BulkEditListItemsForm {...defaultProps} navigate={mockNavigateSheet} isBottomSheet={true} />,
+      );
+
+      await user.click(getByText('Update Items'));
+
+      await waitFor(() => {
+        expect(mockNavigateSheet).toHaveBeenCalledWith('/lists/list-1');
+      });
     });
   });
 });

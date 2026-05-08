@@ -87,8 +87,7 @@ function setup(suppliedProps?: Partial<IChangeOtherListModalProps>): ISetupRetur
       },
     ],
     setSelectedItems: vi.fn(),
-    setIncompleteMultiSelect: vi.fn(),
-    setCompleteMultiSelect: vi.fn(),
+    setMultiSelectActive: vi.fn(),
     handleMove: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
@@ -174,8 +173,7 @@ describe('ChangeOtherListModal', () => {
     });
     expect(props.setShow).toHaveBeenCalledWith(false);
     expect(props.setSelectedItems).toHaveBeenCalledWith([]);
-    expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.setMultiSelectActive).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
     expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
@@ -198,8 +196,7 @@ describe('ChangeOtherListModal', () => {
     });
     expect(props.setShow).toHaveBeenCalledWith(false);
     expect(props.setSelectedItems).toHaveBeenCalledWith([]);
-    expect(props.setCompleteMultiSelect).toHaveBeenCalledWith(false);
-    expect(props.setIncompleteMultiSelect).toHaveBeenCalledWith(false);
+    expect(props.setMultiSelectActive).toHaveBeenCalledWith(false);
     expect(props.handleMove).toHaveBeenCalled();
     expect(mockShowToast.info).toHaveBeenCalledWith('Items successfully updated');
   });
@@ -307,11 +304,11 @@ describe('ChangeOtherListModal', () => {
   });
 
   it('close', async () => {
-    const { getByLabelText, props, user } = setup({ copy: true });
+    const { getByRole, props, user } = setup({ copy: true });
 
-    await user.click(getByLabelText('Close'));
+    await user.click(getByRole('dialog'));
 
-    expect(props.setShow).toHaveBeenCalledWith(false);
+    expect(props.setShow).toHaveBeenCalledWith(null);
   });
 
   it('switches between new list and existing list forms', async () => {
@@ -372,5 +369,65 @@ describe('ChangeOtherListModal', () => {
     expect(getByLabelText('New list name')).toBeInTheDocument();
     expect(queryByLabelText('Existing list')).not.toBeInTheDocument();
     expect(queryByText('Choose existing list')).not.toBeInTheDocument();
+  });
+
+  describe('Bottom Sheet Mode', () => {
+    it('renders BottomSheet', () => {
+      const { getByRole } = setup({ copy: true });
+
+      expect(getByRole('dialog')).toBeInTheDocument();
+    });
+
+    it('calls setShow with null when closing BottomSheet', async () => {
+      const setShow = vi.fn();
+      const { user, getByRole } = setup({ copy: true, setShow });
+
+      const overlay = getByRole('dialog');
+      await user.click(overlay);
+
+      expect(setShow).toHaveBeenCalledWith(null);
+    });
+
+    it('displays "Copy to List" title in BottomSheet when copy is true', () => {
+      const { getByText } = setup({ copy: true });
+
+      expect(getByText('Copy to List')).toBeInTheDocument();
+    });
+
+    it('displays "Move to List" title in BottomSheet when move is true', () => {
+      const { getByText } = setup({ move: true });
+
+      expect(getByText('Move to List')).toBeInTheDocument();
+    });
+
+    it('toggles to existing list select within BottomSheet when lists are available', async () => {
+      const { user, findByText } = setup({ copy: true });
+
+      await user.click(await findByText('Create new list'));
+      await user.click(await findByText('Choose existing list'));
+
+      expect(await findByText(instructions('copy'))).toBeVisible();
+    });
+
+    it('does not call setShow when cancelAction is invoked with non-function setShow', async () => {
+      const { user, getByText } = setup({
+        copy: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      await user.click(getByText('Cancel'));
+      expect(getByText('Cancel')).toBeInTheDocument();
+    });
+
+    it('does not throw when BottomSheet is closed and setShow is not a function', async () => {
+      const { user, getByRole } = setup({
+        copy: true,
+        setShow: undefined as unknown as IChangeOtherListModalProps['setShow'],
+      });
+
+      const overlay = getByRole('dialog');
+      await user.click(overlay);
+      expect(overlay).toBeInTheDocument();
+    });
   });
 });

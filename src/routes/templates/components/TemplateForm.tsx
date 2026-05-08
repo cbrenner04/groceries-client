@@ -1,108 +1,78 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Button, Collapse, Form } from 'react-bootstrap';
 import { EListItemFieldType } from 'typings';
 
-import FormSubmission from 'components/FormSubmission';
+import Input from 'components/ui/Input';
+import { Button } from 'components/ui/Button';
 import FieldConfigurationRows, { type IFieldRow } from './FieldConfigurationRows';
 
 export interface ITemplateFormProps {
   onFormSubmit: (name: string, fieldRows: IFieldRow[]) => Promise<void>;
   pending: boolean;
+  onCancel: () => void;
 }
+
+const initialFieldRows = (): IFieldRow[] => [
+  {
+    key: '0',
+    label: '',
+    dataType: EListItemFieldType.FREE_TEXT,
+    position: 1,
+    primary: true,
+  },
+];
 
 const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState('');
-  const [fieldRows, setFieldRows] = useState<IFieldRow[]>([
-    {
-      key: '0',
-      label: '',
-      dataType: EListItemFieldType.FREE_TEXT,
-      position: 1,
-      primary: true,
-    },
-  ]);
-  const [showForm, setShowForm] = useState(false);
+  const [fieldRows, setFieldRows] = useState<IFieldRow[]>(initialFieldRows());
   const [showValidation, setShowValidation] = useState(false);
 
   const isFormValid = (): boolean => {
     if (name.trim() === '') {
       return false;
     }
-
     if (fieldRows.some((row) => row.label.trim() === '')) {
       return false;
     }
-
     const positions = fieldRows.map((row) => row.position);
-    const uniquePositions = new Set(positions);
-    if (positions.length !== uniquePositions.size) {
+    if (positions.length !== new Set(positions).size) {
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setShowValidation(true);
-
     if (!isFormValid()) {
       return;
     }
-
     await props.onFormSubmit(name, fieldRows);
     setName('');
-    setFieldRows([
-      {
-        key: '0',
-        label: '',
-        dataType: EListItemFieldType.FREE_TEXT,
-        position: 1,
-        primary: true,
-      },
-    ]);
-    setShowForm(false);
+    setFieldRows(initialFieldRows());
     setShowValidation(false);
   };
 
   return (
-    <React.Fragment>
-      {!showForm && (
-        <Button
-          variant="link"
-          onClick={(): void => setShowForm(true)}
-          aria-controls="form-collapse"
-          aria-expanded={showForm}
-          data-test-id="add-template-button"
-        >
-          Add Template
+    <form id="template-form" onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
+      <Input
+        id="template-form-name"
+        testId="template-form-name"
+        name="template-form-name"
+        label="Name"
+        value={name}
+        onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
+        error={showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined}
+      />
+      <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
+      <div className="tw:flex tw:justify-end tw:gap-2">
+        <Button variant="ghost" type="button" onClick={props.onCancel}>
+          Cancel
         </Button>
-      )}
-      <Collapse in={showForm}>
-        <Form id="form-collapse" onSubmit={handleSubmit} autoComplete="off">
-          <Form.Group className="mb-3" controlId="template-form-name">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={name}
-              onChange={(event: ChangeEvent<HTMLInputElement>): void => setName(event.target.value)}
-              data-test-id="template-form-name"
-              isInvalid={showValidation && name.trim() === ''}
-            />
-            {showValidation && name.trim() === '' && (
-              <Form.Control.Feedback type="invalid">Name cannot be blank</Form.Control.Feedback>
-            )}
-          </Form.Group>
-          <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
-          <FormSubmission
-            disabled={props.pending || !isFormValid()}
-            submitText="Create Template"
-            cancelAction={(): void => setShowForm(false)}
-            cancelText="Collapse Form"
-          />
-        </Form>
-      </Collapse>
-    </React.Fragment>
+        <Button variant="primary" type="submit" disabled={props.pending || !isFormValid()}>
+          Create Template
+        </Button>
+      </div>
+    </form>
   );
 };
 

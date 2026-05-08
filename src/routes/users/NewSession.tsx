@@ -1,6 +1,5 @@
 import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { Form } from 'react-bootstrap';
 import Async, { type PromiseFn } from 'react-async';
 
 import { showToast } from '../../utils/toast';
@@ -52,29 +51,35 @@ const NewSession: React.FC<INewSessionProps> = (props): React.JSX.Element => {
         <Loading />
       </Async.Pending>
       <Async.Fulfilled>
-        <h2>Log in</h2>
-        <Form onSubmit={handleSubmit}>
-          <EmailField
-            value={email}
-            handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
-          />
-          <PasswordField
-            name="password"
-            label="Password"
-            value={password}
-            handleChange={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
-            placeholder="password"
-          />
-          <CheckboxField
-            name="remember-me"
-            classes="mb-3"
-            label="Remember me"
-            value={rememberMe}
-            handleChange={(): void => setRememberMe(!rememberMe)}
-          />
-          <FormSubmission submitText="Log In" />
-        </Form>
-        <Link to="/users/password/new">Forgot your password?</Link>
+        <div className="tw:min-h-screen tw:flex tw:items-center tw:justify-center tw:px-4 tw:py-8">
+          <div className="tw:w-full tw:max-w-sm tw:bg-[var(--color-surface)] tw:rounded-xl tw:shadow-lg tw:p-6">
+            <h1 className="tw:text-xl tw:font-semibold tw:text-center tw:mb-1">Groceries</h1>
+            <form onSubmit={handleSubmit}>
+              <EmailField
+                value={email}
+                handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
+              />
+              <PasswordField
+                name="password"
+                label="Password"
+                value={password}
+                handleChange={(event: ChangeEvent<HTMLInputElement>): void => setPassword(event.target.value)}
+                placeholder="password"
+              />
+              <CheckboxField
+                name="remember-me"
+                classes="tw:mb-3"
+                label="Remember me"
+                value={rememberMe}
+                handleChange={(): void => setRememberMe(!rememberMe)}
+              />
+              <FormSubmission submitText="Log In" />
+            </form>
+            <div className="tw:mt-4 tw:text-center">
+              <Link to="/users/password/new">Forgot your password?</Link>
+            </div>
+          </div>
+        </div>
       </Async.Fulfilled>
     </Async>
   );

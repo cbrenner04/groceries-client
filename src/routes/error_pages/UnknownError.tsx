@@ -1,35 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router';
+
+import { EmptyState } from 'components/domain/EmptyState';
+import { PageLayout } from 'components/layout/PageLayout';
+import { QuestionCircleIcon } from 'components/icons';
+
+const getErrorTitle = (): string => 'Something went wrong!';
+const getErrorDescription = (): string => 'We are currently unable to render this page.';
+const getRefreshLabel = (): string => 'refresh the page';
 
 const UnknownError: React.FC = (): React.JSX.Element => {
-  const [hover, setHover] = useState(false);
-
-  const buttonStyles = {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    display: 'inline',
-    margin: 0,
-    padding: 0,
-    color: hover ? '#003d82' : '#0056b3',
-    textDecoration: hover ? 'underline' : 'none',
-  };
+  const navigate = useNavigate();
 
   return (
-    <React.Fragment>
-      <h1>Something went wrong!</h1>
-      <h2>We are currently unable to render this page.</h2>
-      <p>
-        Please check your connection and try to &nbsp;
-        <button
-          onMouseEnter={(): void => setHover(true)}
-          onMouseLeave={(): void => setHover(false)}
-          onClick={(): void => window.location.reload()}
-          style={buttonStyles}
-        >
-          refresh the page
-        </button>
-      </p>
-    </React.Fragment>
+    <PageLayout>
+      <EmptyState
+        icon={<QuestionCircleIcon size="3x" />}
+        title={getErrorTitle()}
+        description={getErrorDescription()}
+        action={{ label: getRefreshLabel(), onClick: (): void => void navigate(0) }}
+      />
+    </PageLayout>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult, waitFor } from '@testing-library/react';
+import { fireEvent, render, type RenderResult, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import TemplateForm, { type ITemplateFormProps } from './TemplateForm';
@@ -14,6 +14,7 @@ function setup(suppliedProps?: Partial<ITemplateFormProps>): ISetupReturn {
   const defaultProps: ITemplateFormProps = {
     onFormSubmit: vi.fn(),
     pending: false,
+    onCancel: vi.fn(),
   };
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(<TemplateForm {...props} />);
@@ -22,51 +23,19 @@ function setup(suppliedProps?: Partial<ITemplateFormProps>): ISetupReturn {
 }
 
 describe('TemplateForm', () => {
-  it('renders add template button', () => {
-    const { getByText } = setup();
-
-    expect(getByText('Add Template')).toBeVisible();
-  });
-
-  it('opens form when add template button clicked', async () => {
-    const { getByText, findByTestId, user } = setup();
-
-    await user.click(getByText('Add Template'));
-
-    expect(await findByTestId('template-form-name')).toBeVisible();
-  });
-
-  it('hides button when form is open', async () => {
-    const { getByText, queryByText, user } = setup();
-
-    await user.click(getByText('Add Template'));
-
-    await waitFor(() => {
-      expect(queryByText('Add Template')).not.toBeInTheDocument();
-    });
-  });
-
-  it('shows name input field', async () => {
-    const { getByText, findByTestId, user } = setup();
-
-    await user.click(getByText('Add Template'));
-
+  it('renders name input field', async () => {
+    const { findByTestId } = setup();
     expect(await findByTestId('template-form-name')).toBeVisible();
   });
 
   it('shows form submission buttons', async () => {
-    const { getByText, findByText, user } = setup();
-
-    await user.click(getByText('Add Template'));
-
+    const { findByText } = setup();
     expect(await findByText('Create Template')).toBeVisible();
-    expect(await findByText('Collapse Form')).toBeVisible();
+    expect(await findByText('Cancel')).toBeVisible();
   });
 
   it('updates template name when input changes', async () => {
-    const { getByText, findByTestId, user } = setup();
-
-    await user.click(getByText('Add Template'));
+    const { findByTestId, user } = setup();
     const nameInput = await findByTestId('template-form-name');
     await user.type(nameInput, 'My Template');
 
@@ -74,17 +43,13 @@ describe('TemplateForm', () => {
   });
 
   it('calls onFormSubmit with name and fields when submitted', async () => {
-    const { getByText, findByTestId, props, user } = setup();
+    const { findByText, findByTestId, props, user } = setup();
 
-    await user.click(getByText('Add Template'));
-    const nameInput = await findByTestId('template-form-name');
-    await user.type(nameInput, 'My Template');
-    const firstFieldLabel = await findByTestId('field-row-label-0');
-    await user.type(firstFieldLabel, 'Field 1');
+    await user.type(await findByTestId('template-form-name'), 'My Template');
+    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
     await user.click(await findByTestId('add-field-button'));
-    const secondFieldLabel = await findByTestId('field-row-label-1');
-    await user.type(secondFieldLabel, 'Field 2');
-    await user.click(getByText('Create Template'));
+    await user.type(await findByTestId('field-row-label-1'), 'Field 2');
+    await user.click(await findByText('Create Template'));
 
     expect(props.onFormSubmit).toHaveBeenCalled();
     const [name, fields] = (props.onFormSubmit as Mock).mock.calls[0];
@@ -93,79 +58,43 @@ describe('TemplateForm', () => {
   });
 
   it('clears form after submission', async () => {
-    const { getByText, findByTestId, user } = setup({
+    const { findByText, findByTestId, user } = setup({
       onFormSubmit: vi.fn().mockResolvedValue(undefined),
     });
 
-    await user.click(getByText('Add Template'));
     const nameInput = await findByTestId('template-form-name');
     await user.type(nameInput, 'My Template');
-    const firstFieldLabel = await findByTestId('field-row-label-0');
-    await user.type(firstFieldLabel, 'Field 1');
-    await user.click(getByText('Create Template'));
+    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
+    await user.click(await findByText('Create Template'));
 
-    await waitFor(async () => {
+    await waitFor(() => {
       expect(nameInput).toHaveValue('');
     });
   });
 
-  it('closes form after successful submission', async () => {
-    const { getByText, findByText, findByTestId, user } = setup({
-      onFormSubmit: vi.fn().mockResolvedValue(undefined),
-    });
-
-    await user.click(getByText('Add Template'));
-    await user.type(await findByTestId('template-form-name'), 'Test');
-    const firstFieldLabel = await findByTestId('field-row-label-0');
-    await user.type(firstFieldLabel, 'Field 1');
-    await user.click(getByText('Create Template'));
-
-    expect(await findByText('Add Template')).toBeVisible();
-  });
-
-  it('collapses form when collapse button clicked', async () => {
-    const { getByText, findByText, user } = setup();
-
-    await user.click(getByText('Add Template'));
-    await user.click(getByText('Collapse Form'));
-
-    expect(await findByText('Add Template')).toBeVisible();
+  it('calls onCancel when cancel clicked', async () => {
+    const { findByText, props, user } = setup();
+    await user.click(await findByText('Cancel'));
+    expect(props.onCancel).toHaveBeenCalled();
   });
 
   it('disables submit button when pending', async () => {
-    const { getByText, findByText, user } = setup({ pending: true });
-
-    await user.click(getByText('Add Template'));
+    const { findByText } = setup({ pending: true });
     const submitButton = await findByText('Create Template');
-
     expect(submitButton).toBeDisabled();
   });
 
-  it('initializes with one default field', async () => {
-    const { getByText, findByTestId, user } = setup();
+  it('initializes with one default primary field', async () => {
+    const { findByTestId } = setup();
 
-    await user.click(getByText('Add Template'));
-
-    const firstFieldLabel = await findByTestId('field-row-label-0');
-    expect(firstFieldLabel).toBeVisible();
-  });
-
-  it('first field is primary by default', async () => {
-    const { getByText, findByTestId, user } = setup();
-
-    await user.click(getByText('Add Template'));
-    const primaryCheckbox = await findByTestId('field-row-primary-0');
-
-    expect(primaryCheckbox).toBeChecked();
+    expect(await findByTestId('field-row-label-0')).toBeVisible();
+    expect(await findByTestId('field-row-primary-0')).toBeChecked();
   });
 
   it('does not submit when form has empty field label', async () => {
-    const { getByText, findByTestId, props, user } = setup();
-
-    await user.click(getByText('Add Template'));
-    const nameInput = await findByTestId('template-form-name');
-    await user.type(nameInput, 'My Template');
-    await user.click(getByText('Create Template'));
+    const { findByText, findByTestId, props, user } = setup();
+    await user.type(await findByTestId('template-form-name'), 'My Template');
+    await user.click(await findByText('Create Template'));
 
     await waitFor(() => {
       expect(props.onFormSubmit).not.toHaveBeenCalled();
@@ -174,7 +103,24 @@ describe('TemplateForm', () => {
 
   it('renders with snapshot', () => {
     const { container } = setup();
-
     expect(container).toMatchSnapshot();
+  });
+
+  it('does not submit when field rows have duplicate positions', async () => {
+    const { findByText, findByTestId, props, user } = setup();
+
+    await user.type(await findByTestId('template-form-name'), 'My Template');
+    await user.type(await findByTestId('field-row-label-0'), 'Field One');
+    await user.click(await findByText('Add Field'));
+    await user.type(await findByTestId('field-row-label-1'), 'Field Two');
+
+    const positionInput = await findByTestId('field-row-position-1');
+    fireEvent.change(positionInput, { target: { value: '1' } });
+
+    await user.click(await findByText('Create Template'));
+
+    await waitFor(() => {
+      expect(props.onFormSubmit).not.toHaveBeenCalled();
+    });
   });
 });
