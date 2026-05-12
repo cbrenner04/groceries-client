@@ -23,6 +23,7 @@ export interface INotCompletedItemsSectionProps {
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   incompleteMultiSelect: boolean;
   itemAnimationStates?: Record<string, TListItemAnimationState>;
+  sessionMode?: 'building' | 'shopping' | 'neutral';
   setSelectedItems: (items: IListItem[]) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;

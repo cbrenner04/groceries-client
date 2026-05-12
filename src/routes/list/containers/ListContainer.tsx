@@ -48,6 +48,7 @@ import {
 import type { IFulfilledListData } from '../utils';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { listCache } from 'utils/lightweightCache';
+import { useSessionMode } from 'hooks';
 
 export interface IListContainerProps {
   userId: string;
@@ -104,6 +105,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
   const navigate = useNavigate();
+  const {
+    mode: sessionMode,
+    onItemAdded: onSessionItemAdded,
+    onItemCompleted: onSessionItemCompleted,
+  } = useSessionMode();
 
   const markItemAnimation = useCallback((itemIds: string[], animationState: TListItemAnimationState): void => {
     if (import.meta.env.VITEST === 'true') {
@@ -247,6 +253,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       filter,
       navigate,
     });
+    onSessionItemAdded();
   };
 
   const handleItemSelect = useCallback(
@@ -293,6 +300,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         itemsToComplete.map((item) => item.id),
         'completed',
       );
+      onSessionItemCompleted();
 
       // Clear selections
       setSelectedItems([]);
@@ -343,6 +351,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       markItemAnimation,
       props.list.id,
       navigate,
+      onSessionItemCompleted,
     ],
   );
 
@@ -1048,6 +1057,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 initialExpanded={inputBarExpanded}
                 expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
+                mode={sessionMode}
               />
               {!(showDeleteConfirm || copyMoveSheet !== null) ? (
                 // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
@@ -1098,6 +1108,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleItemDelete={handleDelete}
           handleItemRefresh={handleItemRefresh}
           itemAnimationStates={itemAnimationStates}
+          sessionMode={sessionMode}
         />
 
         <CompletedItemsSection
@@ -1117,6 +1128,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           completedExpanded={completedExpanded}
           setCompletedExpanded={setCompletedExpanded}
           itemAnimationStates={itemAnimationStates}
+          sessionMode={sessionMode}
         />
       </PageLayout>
       <ConfirmModal

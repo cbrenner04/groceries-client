@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+
+export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
 
 export interface IBottomInputBarProps {
   onSubmit: (value: string, fields?: Record<string, unknown>) => void;
@@ -10,6 +12,8 @@ export interface IBottomInputBarProps {
   hidden?: boolean;
   /** Lists page: Enter must submit after choosing a template while the bar is expanded (focus also expands). */
   allowEnterSubmitWhenExpanded?: boolean;
+  /** Session mode for mode-driven expansion state. */
+  mode?: BottomInputBarMode;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
@@ -21,11 +25,18 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     onInputFocus,
     hidden = false,
     allowEnterSubmitWhenExpanded = false,
+    mode = 'neutral',
   } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (mode === 'building') {
+      setExpanded(true);
+    }
+  }, [mode]);
 
   const handleSubmit = (): void => {
     const trimmed = value.trim();
@@ -55,7 +66,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const containerClassName =
     'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
-    'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200';
+    'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300';
 
   const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
 

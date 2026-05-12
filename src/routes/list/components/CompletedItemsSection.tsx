@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import type {
@@ -21,6 +21,7 @@ export interface ICompletedItemsSectionProps {
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   completeMultiSelect: boolean;
   itemAnimationStates?: Record<string, TListItemAnimationState>;
+  sessionMode?: 'building' | 'shopping' | 'neutral';
   setSelectedItems: (items: IListItem[]) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
@@ -36,6 +37,12 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
   const expanded = props.setCompletedExpanded !== undefined ? props.completedExpanded : localExpanded;
   const isTestEnvironment = import.meta.env.VITEST === 'true';
   const isAnimationDisabled = isTestEnvironment || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  useEffect(() => {
+    if (props.sessionMode === 'shopping' && props.setCompletedExpanded) {
+      props.setCompletedExpanded(true);
+    }
+  }, [props.sessionMode, props.setCompletedExpanded]);
 
   const handleToggle = (): void => {
     if (props.setCompletedExpanded) {
