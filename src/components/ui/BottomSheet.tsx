@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import type { MotionProps } from 'framer-motion';
 
 export interface IBottomSheetProps {
   isOpen: boolean;
@@ -8,8 +10,72 @@ export interface IBottomSheetProps {
   testId?: string;
 }
 
+export interface IDragInfo {
+  offset?: { y?: number };
+  velocity?: { y?: number };
+}
+
+const prefersReducedMotion = (): boolean => {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+};
+
+export function shouldCloseFromDrag(info: IDragInfo): boolean {
+  const draggedDown = (info.offset?.y ?? 0) > 100;
+  const dragVelocityDown = (info.velocity?.y ?? 0) > 500;
+
+  return draggedDown || dragVelocityDown;
+}
+
+export function overlayMotionProps(shouldAnimate: boolean): MotionProps {
+  if (!shouldAnimate) {
+    return {};
+  }
+
+  return {
+    initial: { opacity: 0.01 },
+    animate: { opacity: 1 },
+    transition: { duration: 0.2 },
+  };
+}
+
+export function sheetMotionProps(shouldAnimate: boolean): MotionProps {
+  if (!shouldAnimate) {
+    return {};
+  }
+
+  return {
+    initial: { y: '100%' },
+    animate: { y: 0 },
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 30,
+      mass: 1,
+    },
+  };
+}
+
+export function sheetDragProps(shouldAnimate: boolean): MotionProps {
+  return {
+    drag: shouldAnimate ? 'y' : false,
+    dragListener: shouldAnimate,
+    dragConstraints: { top: 0 },
+    dragElastic: 0.2,
+  };
+}
+
+export function createDragEndHandler(onClose: () => void): (event: unknown, info: IDragInfo) => void {
+  return (event: unknown, info: IDragInfo): void => {
+    void event;
+    if (shouldCloseFromDrag(info)) {
+      onClose();
+    }
+  };
+}
+
 export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
   const { isOpen, onClose, title, children, testId } = props;
+  const shouldAnimate = !prefersReducedMotion() && import.meta.env.MODE !== 'test';
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
@@ -52,9 +118,23 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
     }
   };
 
+  const handleDragEnd = createDragEndHandler(onClose);
+
   return (
-    <div className={overlayClassName} onClick={handleOverlayClick} data-test-id={testId} role="dialog" aria-modal>
-      <div className={sheetClassName}>
+    <motion.div
+      className={overlayClassName}
+      onClick={handleOverlayClick}
+      data-test-id={testId}
+      role="dialog"
+      aria-modal
+      {...overlayMotionProps(shouldAnimate)}
+    >
+      <motion.div
+        className={sheetClassName}
+        onDragEnd={handleDragEnd}
+        {...sheetDragProps(shouldAnimate)}
+        {...sheetMotionProps(shouldAnimate)}
+      >
         <div className="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden">
           <div className="tw:w-10 tw:h-1 tw:rounded-full tw:bg-[var(--color-border)]" />
         </div>
@@ -64,7 +144,7 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
           </div>
         )}
         <div className="tw:p-4">{children}</div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
