@@ -53,6 +53,8 @@ export function ThemeProvider(props: IThemeProviderProps): React.JSX.Element {
   }, []);
 
   const setTheme = (newTheme: 'light' | 'dark' | 'system'): void => {
+    document.documentElement.classList.add('theme-transitioning');
+
     setThemeState(newTheme);
     localStorage.setItem('theme', newTheme);
 
@@ -64,6 +66,10 @@ export function ThemeProvider(props: IThemeProviderProps): React.JSX.Element {
       setResolvedTheme(newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
     }
+
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-transitioning');
+    }, 150);
   };
 
   return <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>{children}</ThemeContext.Provider>;

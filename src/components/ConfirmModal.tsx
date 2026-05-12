@@ -44,7 +44,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
         >
           <div
             className="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
-            style={{ borderBottom: '1px solid #e5e7eb' }}
+            style={{ borderBottom: '1px solid var(--color-border)' }}
           >
             <h5 className="tw:text-lg tw:font-medium tw:m-0">Confirm {props.action}</h5>
             <button
@@ -62,7 +62,10 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
           <div className="tw:px-4 tw:py-3" data-test-id="confirm-modal-body">
             {props.body}
           </div>
-          <div className="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3" style={{ borderTop: '1px solid #e5e7eb' }}>
+          <div
+            className="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
+            style={{ borderTop: '1px solid var(--color-border)' }}
+          >
             <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
               Close
             </Button>

@@ -144,3 +144,25 @@ body {
   position: absolute;
   top: 50%;
 }
+
+/* Dark mode theme overrides */
+[data-theme='dark'] {
+  --color-primary: #6366f1; /* Indigo 500 - lighter for dark mode */
+  --color-primary-hover: #818cf8; /* Indigo 400 */
+  --color-primary-light: #312e81; /* Indigo 900 */
+  --color-surface: #1f2937; /* Gray 800 */
+  --color-surface-raised: #111827; /* Gray 900 */
+  --color-surface-overlay: #374151; /* Gray 700 */
+  --color-border: #4b5563; /* Gray 600 */
+  --color-border-strong: #6b7280; /* Gray 500 */
+  --color-text-primary: #f3f4f6; /* Gray 100 */
+  --color-text-secondary: #9ca3af; /* Gray 400 */
+  --color-text-tertiary: #6b7280; /* Gray 500 */
+}
+
+/* Theme transition fade effect */
+html.theme-transitioning {
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
