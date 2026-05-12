@@ -18,9 +18,10 @@ describe('Templates', () => {
 
   it('renders loading component when data is being fetched', async () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
-    const { container, findByText } = renderTemplates();
+    const { container } = renderTemplates();
 
-    expect(await findByText('Loading...')).toBeVisible();
+    const skeletonLoader = container.querySelector('.tw\\:space-y-3');
+    expect(skeletonLoader).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 

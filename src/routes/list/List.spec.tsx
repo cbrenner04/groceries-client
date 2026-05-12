@@ -78,9 +78,9 @@ describe('List', () => {
           /* never resolves for loading state */
         }),
     );
-    renderList();
-    expect(screen.getByRole('status')).toBeInTheDocument();
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    const { container } = renderList();
+    const skeletonLoader = container.querySelector('.tw\\:p-4.tw\\:space-y-2');
+    expect(skeletonLoader).toBeInTheDocument();
   });
 
   it('renders list data when fetch succeeds', async () => {

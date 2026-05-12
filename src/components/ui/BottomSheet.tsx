@@ -76,24 +76,63 @@ export function createDragEndHandler(onClose: () => void): (event: unknown, info
 export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
   const { isOpen, onClose, title, children, testId } = props;
   const shouldAnimate = !prefersReducedMotion() && import.meta.env.MODE !== 'test';
+  const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
+  const sheetRef = React.useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onClose();
       }
+
+      if (e.key === 'Tab') {
+        const sheet = sheetRef.current;
+        if (!sheet) {
+          return;
+        }
+
+        const focusableElements = sheet.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusableElements.length === 0) {
+          return;
+        }
+
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
     },
     [onClose],
   );
 
   useEffect((): (() => void) | undefined => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
+    if (!isOpen) {
+      return undefined;
     }
-    return undefined;
+
+    previousActiveElementRef.current = document.activeElement as HTMLElement;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    setTimeout(() => {
+      const firstFocusable = sheetRef.current?.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      ) as HTMLElement | undefined;
+      firstFocusable?.focus();
+    }, 0);
+
+    return (): void => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+      previousActiveElementRef.current?.focus();
+    };
   }, [isOpen, handleKeyDown]);
 
   if (!isOpen) {
@@ -130,6 +169,7 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
       {...overlayMotionProps(shouldAnimate)}
     >
       <motion.div
+        ref={sheetRef}
         className={sheetClassName}
         onDragEnd={handleDragEnd}
         {...sheetDragProps(shouldAnimate)}

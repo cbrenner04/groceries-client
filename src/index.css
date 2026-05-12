@@ -123,6 +123,16 @@ body {
   padding-bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body {
+    -webkit-user-select: auto;
+  }
 }
 
 /* Toast overrides to match design system */
@@ -143,6 +153,18 @@ body {
   height: 100px;
   position: absolute;
   top: 50%;
+}
+
+/* Global reduced-motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Dark mode theme overrides */

@@ -2,7 +2,7 @@ import React, { type ReactNode } from 'react';
 import Async, { type PromiseFn } from 'react-async';
 import { useNavigate } from 'react-router';
 
-import Loading from 'components/Loading';
+import { Skeleton } from 'components/ui/Skeleton';
 import type { IListItemConfiguration } from 'typings';
 
 import { fetchTemplates } from './utils';
@@ -23,7 +23,9 @@ const Templates: React.FC<ITemplatesProps> = (props): React.JSX.Element => {
   return (
     <Async promiseFn={fetchTemplates as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
-        <Loading />
+        <div className="tw:p-4 tw:space-y-3">
+          <Skeleton variant="card" count={4} />
+        </div>
       </Async.Pending>
       <Async.Fulfilled>
         {(data: IFulfilledTemplates | undefined): ReactNode => {

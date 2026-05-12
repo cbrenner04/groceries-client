@@ -155,9 +155,15 @@ export function BottomNavBar(props: IBottomNavBarProps): React.JSX.Element {
   };
 
   return (
-    <nav className={navClassName} data-test-id="bottom-nav">
+    <nav className={navClassName} data-test-id="bottom-nav" aria-label="Main navigation" role="navigation">
       {navItems.map((item) => (
-        <Link key={item.route} to={item.route} className={getItemClassName(item.route)} data-test-id={item.testId}>
+        <Link
+          key={item.route}
+          to={item.route}
+          className={getItemClassName(item.route)}
+          data-test-id={item.testId}
+          aria-current={isActive(currentPath, item.route) ? 'page' : undefined}
+        >
           {item.icon}
           <span className="tw:text-xs tw:font-medium">{item.label}</span>
         </Link>

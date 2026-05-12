@@ -6,7 +6,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -89,7 +89,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       >
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="clear-filter"
           type="button"
         >
@@ -97,7 +97,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         </button>
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -105,7 +105,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -113,7 +113,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -580,7 +580,8 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -611,7 +612,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -694,7 +695,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -702,7 +703,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -710,7 +711,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -718,7 +719,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -1502,7 +1503,8 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -1533,7 +1535,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -1616,7 +1618,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -1624,7 +1626,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -1632,7 +1634,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -1640,7 +1642,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -2489,7 +2491,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -2572,7 +2574,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -2580,7 +2582,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -2588,7 +2590,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -2596,7 +2598,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -3214,7 +3216,8 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3245,7 +3248,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -3328,7 +3331,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -3503,7 +3506,8 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3534,7 +3538,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -3575,7 +3579,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -3583,7 +3587,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -3591,7 +3595,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -3599,7 +3603,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -3986,7 +3990,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <a
         aria-label="Go back"
@@ -4069,7 +4073,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       >
         <button
           aria-pressed="true"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
           data-test-id="clear-filter"
           type="button"
         >
@@ -4077,7 +4081,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-foo"
           type="button"
         >
@@ -4085,7 +4089,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-bar"
           type="button"
         >
@@ -4093,7 +4097,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         </button>
         <button
           aria-pressed="false"
-          class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+          class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
           data-test-id="filter-by-uncategorized"
           type="button"
         >
@@ -4877,7 +4881,8 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </main>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"

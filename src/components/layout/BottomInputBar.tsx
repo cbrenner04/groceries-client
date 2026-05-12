@@ -30,6 +30,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
 
   const [expanded, setExpanded] = useState(initialExpanded);
   const [value, setValue] = useState('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -37,6 +38,26 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
       setExpanded(true);
     }
   }, [mode]);
+
+  useEffect(() => {
+    const handleResize = (): void => {
+      if (window.visualViewport) {
+        const viewport = window.visualViewport;
+        const windowHeight = window.innerHeight;
+        const viewportHeight = viewport.height;
+        const newKeyboardHeight = Math.max(0, windowHeight - viewportHeight);
+        setKeyboardHeight(newKeyboardHeight);
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+      return (): void => {
+        window.visualViewport?.removeEventListener('resize', handleResize);
+      };
+    }
+    return undefined;
+  }, []);
 
   const handleSubmit = (): void => {
     const trimmed = value.trim();
@@ -64,11 +85,15 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const containerClassName =
-    'tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 ' +
+    'tw:fixed tw:left-0 tw:right-0 tw:z-40 ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
     'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300';
 
   const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
+
+  const containerStyle: React.CSSProperties = {
+    bottom: `calc(var(--spacing-nav-height) + ${keyboardHeight}px)`,
+  };
 
   const inputClassName =
     'tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] ' +
@@ -85,14 +110,16 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
 
   const expandedClassName =
     'tw:overflow-y-auto tw:transition-all tw:duration-200 ' +
-    (expanded ? 'tw:max-h-[60vh] tw:px-4 tw:pb-4' : 'tw:max-h-0 tw:overflow-hidden');
+    (expanded
+      ? 'tw:max-h-[60vh] tw:px-4 tw:pb-[calc(1rem+env(safe-area-inset-bottom))]'
+      : 'tw:max-h-0 tw:overflow-hidden');
 
   if (hidden) {
     return <></>;
   }
 
   return (
-    <div className={containerClassName}>
+    <div className={containerClassName} style={containerStyle}>
       <div className={inputRowClassName}>
         <input
           ref={inputRef}
