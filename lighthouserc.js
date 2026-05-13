@@ -3,7 +3,7 @@ module.exports = {
     collect: {
       startServerCommand:
         'npm run build:lighthouse && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort',
-      startServerReadyPattern: 'Accepting connections',
+      startServerReadyPattern: 'Local:',
       startServerReadyTimeout: 30000,
       url: ['http://127.0.0.1:4173'],
       numberOfRuns: 3,

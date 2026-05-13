@@ -169,7 +169,7 @@ body {
 
 /* Dark mode theme overrides */
 [data-theme='dark'] {
-  --color-primary: #6366f1; /* Indigo 500 - lighter for dark mode */
+  --color-primary: #4f46e5; /* Indigo 600 - matches light to keep AA contrast with white text */
   --color-primary-hover: #818cf8; /* Indigo 400 */
   --color-primary-light: #312e81; /* Indigo 900 */
   --color-surface: #1f2937; /* Gray 800 */
