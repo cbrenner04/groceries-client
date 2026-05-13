@@ -1,10 +1,11 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: 'npm run build:production && npx serve -l 3000 build',
+      startServerCommand:
+        'npm run build:production && npm run preview -- --host 127.0.0.1 --port 4174 --strictPort',
       startServerReadyPattern: 'Accepting connections',
       startServerReadyTimeout: 30000,
-      url: ['http://localhost:3000'],
+      url: ['http://127.0.0.1:4174'],
       numberOfRuns: 3,
       settings: {
         preset: 'mobile',
@@ -38,4 +39,3 @@ module.exports = {
     },
   },
 };
-
