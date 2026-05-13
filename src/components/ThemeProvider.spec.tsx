@@ -219,4 +219,63 @@ describe('ThemeProvider', () => {
       expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
   });
+
+  it('adds and removes theme-transitioning class during theme changes', async () => {
+    const user = userEvent.setup();
+    const { findByTestId } = render(
+      <ThemeProvider>
+        <TestComponentInside />
+      </ThemeProvider>,
+    );
+
+    const setDarkButton = await findByTestId('set-dark');
+
+    await user.click(setDarkButton);
+
+    await waitFor(
+      () => {
+        expect(document.documentElement.classList.contains('theme-transitioning')).toBe(true);
+      },
+      { timeout: 100 },
+    );
+
+    await waitFor(
+      () => {
+        expect(document.documentElement.classList.contains('theme-transitioning')).toBe(false);
+      },
+      { timeout: 500 },
+    );
+  });
+
+  it('sets light theme when setTheme("system") is called with light system preference', async () => {
+    const mockMediaQuery = {
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    };
+    vi.spyOn(window, 'matchMedia').mockReturnValue(mockMediaQuery as unknown as MediaQueryList);
+
+    const user = userEvent.setup();
+    const { findByTestId } = render(
+      <ThemeProvider>
+        <TestComponentInside />
+      </ThemeProvider>,
+    );
+
+    // First set to dark to move away from system
+    await user.click(await findByTestId('set-dark'));
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    });
+
+    // Now set back to system — matchMedia.matches = false → light
+    await user.click(await findByTestId('set-system'));
+    await waitFor(() => {
+      expect(localStorage.getItem('theme')).toBe('system');
+      expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    });
+  });
 });

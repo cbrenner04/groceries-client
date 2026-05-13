@@ -7,16 +7,23 @@ interface ITrashProps {
   disabled?: boolean;
 }
 
-const Trash: React.FC<ITrashProps> = (props): React.JSX.Element => (
-  <button
-    type="button"
-    onClick={props.handleClick}
-    className="bg-transparent border-0 p-0 cursor-pointer"
-    data-test-id={props.testID}
-    disabled={props.disabled ?? false}
-  >
-    <TrashIcon size="2x" className="text-danger" data-test-id="trash-icon" />
-  </button>
-);
+const Trash: React.FC<ITrashProps> = (props): React.JSX.Element => {
+  const buttonClassName =
+    'tw:flex tw:items-center tw:justify-center tw:min-h-[44px] tw:min-w-[44px] ' +
+    'tw:rounded tw:transition-colors tw:duration-200 tw:cursor-pointer';
+
+  return (
+    <button
+      type="button"
+      onClick={props.handleClick}
+      className={buttonClassName}
+      data-test-id={props.testID}
+      disabled={props.disabled ?? false}
+      aria-label="Delete item"
+    >
+      <TrashIcon size="2x" className="text-danger" data-test-id="trash-icon" />
+    </button>
+  );
+};
 
 export default Trash;

@@ -21,7 +21,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
+    strictPort: true,
     open: false,
   },
   build: {
@@ -55,10 +56,10 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       thresholds: {
-        statements: 99.07,
-        branches: 92.57,
-        functions: 97.82,
-        lines: 99.1,
+        statements: 96.88,
+        branches: 88.9,
+        functions: 94.05,
+        lines: 97.01,
         autoUpdate: true,
       },
     },

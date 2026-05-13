@@ -3,7 +3,8 @@
 exports[`Share > renders a link 1`] = `
 <a
   aria-disabled="false"
-  class="p-0 me-3 "
+  aria-label="Share list"
+  class="tw:flex tw:items-center tw:justify-center tw:min-h-[44px] tw:min-w-[44px] tw:rounded tw:transition-colors tw:duration-200 me-3 "
   data-discover="true"
   data-test-id="foo"
   href="/fake/route"

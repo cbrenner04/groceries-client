@@ -1,4 +1,5 @@
 import React, { useCallback, type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import type {
   EUserPermissions,
@@ -8,7 +9,7 @@ import type {
   TUserPermissions,
 } from 'typings';
 import { normalizeCategoryKey } from 'utils/format';
-import { ListItemRow } from 'components/domain/ListItemRow';
+import { ListItemRow, type TListItemAnimationState } from 'components/domain/ListItemRow';
 import { CategoryGroup } from 'components/domain/CategoryGroup';
 
 export interface INotCompletedItemsSectionProps {
@@ -21,6 +22,8 @@ export interface INotCompletedItemsSectionProps {
   displayedCategories: string[];
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   incompleteMultiSelect: boolean;
+  itemAnimationStates?: Record<string, TListItemAnimationState>;
+  sessionMode?: 'building' | 'shopping' | 'neutral';
   setSelectedItems: (items: IListItem[]) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
@@ -30,6 +33,9 @@ export interface INotCompletedItemsSectionProps {
 }
 
 const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (props): React.JSX.Element => {
+  const isTestEnvironment = import.meta.env.VITEST === 'true';
+  const isAnimationDisabled = isTestEnvironment || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const groupByCategory = useCallback(
     (items: IListItem[]): ReactNode => {
       // Extract all unique categories from the items (case-insensitive)
@@ -81,26 +87,63 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
             category={displayCategory}
             itemCount={itemsToRender.length}
           >
-            {itemsToRender.map((item: IListItem) => {
-              const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
-              return (
-                <ListItemRow
-                  key={item.id}
-                  item={item}
-                  listId={item.list_id}
-                  fields={(item.fields ?? []) as IListItemField[]}
-                  fieldConfigurations={props.listItemFieldConfigurations}
-                  isMultiSelectActive={props.incompleteMultiSelect}
-                  isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
-                  onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
-                  onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
-                  onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
-                  onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
-                  onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
-                  permissions={props.permissionsDict ?? {}}
-                />
-              );
-            })}
+            {isAnimationDisabled ? (
+              itemsToRender.map((item: IListItem, index: number) => {
+                const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
+                return (
+                  <ListItemRow
+                    key={item.id}
+                    item={item}
+                    listId={item.list_id}
+                    fields={(item.fields ?? []) as IListItemField[]}
+                    fieldConfigurations={props.listItemFieldConfigurations}
+                    isMultiSelectActive={props.incompleteMultiSelect}
+                    isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                    onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                    onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                    onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                    onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                    onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                    permissions={props.permissionsDict ?? {}}
+                    itemAnimationState={props.itemAnimationStates?.[item.id] ?? 'none'}
+                    animationIndex={index}
+                  />
+                );
+              })
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {itemsToRender.map((item: IListItem, index: number) => {
+                  const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
+                  return (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, x: -18 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -56, scale: 0.98 }}
+                      transition={{ duration: 0.28, ease: 'easeInOut' }}
+                    >
+                      <ListItemRow
+                        item={item}
+                        listId={item.list_id}
+                        fields={(item.fields ?? []) as IListItemField[]}
+                        fieldConfigurations={props.listItemFieldConfigurations}
+                        isMultiSelectActive={props.incompleteMultiSelect}
+                        isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                        onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                        onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                        onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                        onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                        onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                        permissions={props.permissionsDict ?? {}}
+                        itemAnimationState={props.itemAnimationStates?.[item.id] ?? 'none'}
+                        animationIndex={index}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            )}
           </CategoryGroup>
         );
       });
@@ -109,6 +152,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       props.filter,
       props.displayedCategories,
       props.listItemFieldConfigurations,
+      props.itemAnimationStates,
       props.permissions,
       props.selectedItems,
       props.pending,

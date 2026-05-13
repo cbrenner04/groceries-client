@@ -1,10 +1,11 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: 'npm run build:lighthouse && npx serve -l 3000 build',
-      startServerReadyPattern: 'Accepting connections',
+      startServerCommand:
+        'npm run build:lighthouse && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort',
+      startServerReadyPattern: 'Local:',
       startServerReadyTimeout: 30000,
-      url: ['http://localhost:3000'],
+      url: ['http://127.0.0.1:4173'],
       numberOfRuns: 3,
       settings: {
         preset: 'desktop',
@@ -56,4 +57,3 @@ module.exports = {
     },
   },
 };
-

@@ -2,7 +2,7 @@ import React from 'react';
 import Async, { type PromiseFn } from 'react-async';
 import { useNavigate, useParams } from 'react-router';
 
-import Loading from 'components/Loading';
+import { Skeleton } from 'components/ui/Skeleton';
 
 import { fetchList, type IFulfilledListData } from './utils';
 import ListContainer from './containers/ListContainer';
@@ -15,7 +15,12 @@ const List = (): React.JSX.Element => {
   return (
     <Async promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
       <Async.Pending>
-        <Loading />
+        <div className="tw:p-4 tw:space-y-2">
+          <Skeleton variant="text" width="50%" height="1.5rem" />
+          <div className="tw:space-y-3 tw:mt-4">
+            <Skeleton variant="list" count={8} />
+          </div>
+        </div>
       </Async.Pending>
       <Async.Fulfilled>
         {(data: IFulfilledListData | undefined): React.JSX.Element => {

@@ -2,7 +2,8 @@
 
 exports[`EditButton > renders 1`] = `
 <button
-  class="bg-transparent border-0 p-0 me-3 cursor-pointer"
+  aria-label="Edit item"
+  class="tw:flex tw:items-center tw:justify-center tw:min-h-[44px] tw:min-w-[44px] tw:rounded tw:transition-colors tw:duration-200 tw:cursor-pointer me-3"
   data-test-id="test-id"
   type="button"
 >

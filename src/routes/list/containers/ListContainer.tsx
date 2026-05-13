@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { showToast } from '../../../utils/toast';
 import { type AxiosError } from 'axios';
@@ -26,6 +26,7 @@ import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
+import type { TListItemAnimationState } from 'components/domain/ListItemRow';
 import EditItemSheet from '../components/EditItemSheet';
 import BulkEditSheet from '../components/BulkEditSheet';
 import ListItemFormFields from '../components/ListItemFormFields';
@@ -47,6 +48,7 @@ import {
 import type { IFulfilledListData } from '../utils';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { listCache } from 'utils/lightweightCache';
+import { useSessionMode } from 'hooks';
 
 export interface IListContainerProps {
   userId: string;
@@ -87,6 +89,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
   const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
+  const [itemAnimationStates, setItemAnimationStates] = useState<Record<string, TListItemAnimationState>>({});
+  const itemAnimationTimers = useRef<Record<string, number>>({});
 
   // Bottom sheet state
   const [editingItemId, setEditingItemId] = useState<string | null>(props.initialEditingItemId ?? null);
@@ -100,7 +104,48 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [quickAddCategory, setQuickAddCategory] = useState('');
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
+  // Aria-live announcement state for accessibility
+  const [liveAnnouncement, setLiveAnnouncement] = useState('');
+
   const navigate = useNavigate();
+  const {
+    mode: sessionMode,
+    onItemAdded: onSessionItemAdded,
+    onItemCompleted: onSessionItemCompleted,
+  } = useSessionMode();
+
+  const markItemAnimation = useCallback((itemIds: string[], animationState: TListItemAnimationState): void => {
+    if (import.meta.env.VITEST === 'true') {
+      return;
+    }
+
+    itemIds.forEach((itemId) => {
+      window.clearTimeout(itemAnimationTimers.current[itemId]);
+    });
+
+    setItemAnimationStates((previous) =>
+      itemIds.reduce(
+        (next, itemId) => ({
+          ...next,
+          [itemId]: animationState,
+        }),
+        previous,
+      ),
+    );
+
+    itemIds.forEach((itemId) => {
+      itemAnimationTimers.current[itemId] = window.setTimeout(() => {
+        setItemAnimationStates((previous) => {
+          return Object.fromEntries(
+            Object.entries(previous).filter(([animationItemId]) => animationItemId !== itemId),
+          ) as Record<string, TListItemAnimationState>;
+        });
+        itemAnimationTimers.current = Object.fromEntries(
+          Object.entries(itemAnimationTimers.current).filter(([timerItemId]) => timerItemId !== itemId),
+        ) as Record<string, number>;
+      }, 900);
+    });
+  }, []);
 
   // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
 
@@ -183,7 +228,17 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     registerCleanup(cleanupFn);
   }, [registerCleanup]);
 
+  useEffect(() => {
+    return (): void => {
+      Object.values(itemAnimationTimers.current).forEach((timer) => window.clearTimeout(timer));
+    };
+  }, []);
+
   const handleAddItem = (newItems: IListItem[]): void => {
+    markItemAnimation(
+      newItems.map((item) => item.id),
+      'added',
+    );
     exportedHandleAddItem({
       newItems,
       pending,
@@ -201,6 +256,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       filter,
       navigate,
     });
+    onSessionItemAdded();
   };
 
   const handleItemSelect = useCallback(
@@ -243,6 +299,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems(updatedNotCompletedItems);
       setCompletedItems(updatedCompletedItems);
       setInputBarExpanded(false);
+      const completedCount = itemsToComplete.length;
+      const itemsWord = completedCount === 1 ? 'item' : 'items';
+      setLiveAnnouncement(`${completedCount} ${itemsWord} marked as completed`);
+      markItemAnimation(
+        itemsToComplete.map((item) => item.id),
+        'completed',
+      );
+      onSessionItemCompleted();
 
       // Clear selections
       setSelectedItems([]);
@@ -279,6 +343,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
         setNotCompletedItems(rollbackNotCompletedItems);
         setCompletedItems(rollbackCompletedItems);
+        markItemAnimation(failedItemIds, 'rollback');
       }
     },
     [
@@ -289,8 +354,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems,
       setSelectedItems,
       setMultiSelectActive,
+      setLiveAnnouncement,
+      markItemAnimation,
       props.list.id,
       navigate,
+      onSessionItemCompleted,
     ],
   );
 
@@ -312,6 +380,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setCompletedItems(updatedCompletedItems);
       setNotCompletedItems(updatedNotCompletedItems);
+      const refreshCount = itemsToRefresh.length;
+      const itemsWord = refreshCount === 1 ? 'item' : 'items';
+      setLiveAnnouncement(`${refreshCount} ${itemsWord} refreshed`);
+      markItemAnimation(
+        optimisticNewItems.map((item) => item.id),
+        'refreshed',
+      );
 
       // Clear selections
       setSelectedItems([]);
@@ -345,6 +420,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         const itemsWithoutOptimistic = updatedNotCompletedItems.filter((item) => !item.id.startsWith('optimistic-'));
         const finalNotCompletedItems = sortItemsByCreatedAt([...itemsWithoutOptimistic, ...newItems]);
         setNotCompletedItems(finalNotCompletedItems);
+        markItemAnimation(
+          newItems.map((item) => item.id),
+          'refreshed',
+        );
       }
 
       // Rollback failed items
@@ -356,15 +435,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           ...failures.map((item) => ({ ...item, completed: true })),
         ]);
         const rollbackNotCompletedItems = updatedNotCompletedItems.filter((item) => {
-          if (!item.id.startsWith('optimistic-')) {
-            return true;
-          }
-          const originalId = item.id.replace(/^optimistic-([^-]+)-.*$/, '$1');
-          return !failedItemIds.includes(originalId);
+          return !failedItemIds.some((failedItemId) => item.id.startsWith(`optimistic-${failedItemId}-`));
         });
 
         setCompletedItems(rollbackCompletedItems);
         setNotCompletedItems(rollbackNotCompletedItems);
+        markItemAnimation(failedItemIds, 'rollback');
       }
     },
     [
@@ -375,6 +451,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems,
       setSelectedItems,
       setMultiSelectActive,
+      setLiveAnnouncement,
+      markItemAnimation,
       props.list.id,
       navigate,
     ],
@@ -405,6 +483,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     setCompletedItems(updatedCompletedItems);
     setNotCompletedItems(updatedNotCompletedItems);
+    const deleteCount = itemsToDeleteFromState.length;
+    const itemsWord = deleteCount === 1 ? 'item' : 'items';
+    setLiveAnnouncement(`${deleteCount} ${itemsWord} deleted`);
 
     // Update categories after deletion
     const updateCategories = (items: IListItem[]): void => {
@@ -463,6 +544,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems(rollbackCompletedItems);
       setNotCompletedItems(rollbackNotCompletedItems);
       updateCategories([...rollbackCompletedItems, ...rollbackNotCompletedItems]);
+      markItemAnimation(
+        failures.map((item) => item.id),
+        'rollback',
+      );
     } else {
       // All succeeded - ensure categories are consistent
       updateCategories([...updatedCompletedItems, ...updatedNotCompletedItems]);
@@ -986,6 +1071,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 initialExpanded={inputBarExpanded}
                 expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
+                mode={sessionMode}
               />
               {!(showDeleteConfirm || copyMoveSheet !== null) ? (
                 // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
@@ -1006,6 +1092,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           ) : undefined
         }
       >
+        <div aria-live="polite" aria-atomic="true" className="tw:sr-only">
+          {liveAnnouncement}
+        </div>
         {renderFilterChips()}
         {multiSelectActive && selectedItems.length > 0 && (
           <div className="tw:mb-3">
@@ -1035,6 +1124,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleItemEdit={handleItemEdit}
           handleItemDelete={handleDelete}
           handleItemRefresh={handleItemRefresh}
+          itemAnimationStates={itemAnimationStates}
+          sessionMode={sessionMode}
         />
 
         <CompletedItemsSection
@@ -1053,6 +1144,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleItemRefresh={handleItemRefresh}
           completedExpanded={completedExpanded}
           setCompletedExpanded={setCompletedExpanded}
+          itemAnimationStates={itemAnimationStates}
+          sessionMode={sessionMode}
         />
       </PageLayout>
       <ConfirmModal

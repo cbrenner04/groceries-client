@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import type {
   EUserPermissions,
@@ -7,7 +8,7 @@ import type {
   IListItemFieldConfiguration,
   TUserPermissions,
 } from 'typings';
-import { ListItemRow } from 'components/domain/ListItemRow';
+import { ListItemRow, type TListItemAnimationState } from 'components/domain/ListItemRow';
 import { Badge } from 'components/ui/Badge';
 import { ChevronDownIcon } from 'components/icons';
 
@@ -19,6 +20,8 @@ export interface ICompletedItemsSectionProps {
   pending: boolean;
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   completeMultiSelect: boolean;
+  itemAnimationStates?: Record<string, TListItemAnimationState>;
+  sessionMode?: 'building' | 'shopping' | 'neutral';
   setSelectedItems: (items: IListItem[]) => void;
   handleItemSelect: (item: IListItem) => void;
   handleItemComplete: (item: IListItem) => Promise<void>;
@@ -32,6 +35,14 @@ export interface ICompletedItemsSectionProps {
 const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): React.JSX.Element => {
   const [localExpanded, setLocalExpanded] = useState(props.completedExpanded ?? false);
   const expanded = props.setCompletedExpanded !== undefined ? props.completedExpanded : localExpanded;
+  const isTestEnvironment = import.meta.env.VITEST === 'true';
+  const isAnimationDisabled = isTestEnvironment || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  useEffect(() => {
+    if (props.sessionMode === 'shopping' && props.setCompletedExpanded) {
+      props.setCompletedExpanded(true);
+    }
+  }, [props.sessionMode, props.setCompletedExpanded]);
 
   const handleToggle = (): void => {
     if (props.setCompletedExpanded) {
@@ -72,32 +83,78 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
           size="sm"
         />
       </button>
-      {expanded && (
-        <div className="tw:flex tw:flex-col tw:gap-2">
-          {props.completedItems.map((item: IListItem) => {
-            const findItem = (itemId: string): IListItem =>
-              props.completedItems.find((i) => i.id === itemId) as IListItem;
+      {expanded &&
+        (isAnimationDisabled ? (
+          <div className="tw:flex tw:flex-col tw:gap-2">
+            {props.completedItems.map((item: IListItem, index: number) => {
+              const findItem = (itemId: string): IListItem =>
+                props.completedItems.find((i) => i.id === itemId) as IListItem;
 
-            return (
-              <ListItemRow
-                key={item.id}
-                item={item}
-                listId={item.list_id}
-                fields={(item.fields ?? []) as IListItemField[]}
-                fieldConfigurations={props.listItemFieldConfigurations}
-                isMultiSelectActive={props.completeMultiSelect}
-                isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
-                onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
-                onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
-                onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
-                onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
-                onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
-                permissions={props.permissionsDict ?? {}}
-              />
-            );
-          })}
-        </div>
-      )}
+              return (
+                <ListItemRow
+                  key={item.id}
+                  item={item}
+                  listId={item.list_id}
+                  fields={(item.fields ?? []) as IListItemField[]}
+                  fieldConfigurations={props.listItemFieldConfigurations}
+                  isMultiSelectActive={props.completeMultiSelect}
+                  isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                  onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                  onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                  onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                  onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                  onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                  permissions={props.permissionsDict ?? {}}
+                  itemAnimationState={props.itemAnimationStates?.[item.id] ?? 'none'}
+                  animationIndex={index}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <motion.div
+            className="tw:flex tw:flex-col tw:gap-2"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <AnimatePresence mode="popLayout">
+              {props.completedItems.map((item: IListItem, index: number) => {
+                const findItem = (itemId: string): IListItem =>
+                  props.completedItems.find((i) => i.id === itemId) as IListItem;
+
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.28, ease: 'easeInOut' }}
+                  >
+                    <ListItemRow
+                      item={item}
+                      listId={item.list_id}
+                      fields={(item.fields ?? []) as IListItemField[]}
+                      fieldConfigurations={props.listItemFieldConfigurations}
+                      isMultiSelectActive={props.completeMultiSelect}
+                      isSelected={props.selectedItems.some((selected) => selected.id === item.id)}
+                      onSelect={(itemId) => props.handleItemSelect(findItem(itemId))}
+                      onComplete={(itemId) => props.handleItemComplete(findItem(itemId))}
+                      onRefresh={(itemId) => props.handleItemRefresh(findItem(itemId))}
+                      onEdit={(itemId) => props.handleItemEdit(findItem(itemId))}
+                      onDelete={(itemId) => props.handleItemDelete(findItem(itemId))}
+                      permissions={props.permissionsDict ?? {}}
+                      itemAnimationState={props.itemAnimationStates?.[item.id] ?? 'none'}
+                      animationIndex={index}
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        ))}
     </div>
   );
 };

@@ -6,7 +6,7 @@ exports[`TemplatesContainer > renders 1`] = `
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <h1
         class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
@@ -188,7 +188,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)]"
+      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
     >
       <h1
         class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"

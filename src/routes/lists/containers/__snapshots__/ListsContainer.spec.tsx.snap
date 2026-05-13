@@ -39,7 +39,7 @@ exports[`ListsContainer > renders 1`] = `
     >
       <button
         aria-pressed="true"
-        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-primary)] tw:text-white"
+        class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-primary)] tw:text-white"
         data-test-id="filter-all"
         type="button"
       >
@@ -47,7 +47,7 @@ exports[`ListsContainer > renders 1`] = `
       </button>
       <button
         aria-pressed="false"
-        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
         data-test-id="filter-pending"
         type="button"
       >
@@ -55,7 +55,7 @@ exports[`ListsContainer > renders 1`] = `
       </button>
       <button
         aria-pressed="false"
-        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
         data-test-id="filter-active"
         type="button"
       >
@@ -63,7 +63,7 @@ exports[`ListsContainer > renders 1`] = `
       </button>
       <button
         aria-pressed="false"
-        class="tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+        class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
         data-test-id="filter-completed"
         type="button"
       >
@@ -572,7 +572,8 @@ exports[`ListsContainer > renders 1`] = `
       </button>
     </div>
     <div
-      class="tw:fixed tw:bottom-[var(--spacing-nav-height)] tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-200"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"

@@ -1,5 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
+import { AnimatePresence } from 'framer-motion';
+import { PageTransition, type TPageTransitionDirection } from './components/layout/PageTransition';
 
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
@@ -24,6 +26,25 @@ import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
 const ShareList = createLazyComponent(() => import('./routes/share_list/ShareList'));
 const BulkEditListItems = createLazyComponent(() => import('./routes/list/BulkEditListItems'));
 
+function routeDepth(pathname: string): number {
+  return pathname.split('/').filter(Boolean).length;
+}
+
+function transitionDirection(previousPathname: string, nextPathname: string): TPageTransitionDirection {
+  const previousDepth = routeDepth(previousPathname);
+  const nextDepth = routeDepth(nextPathname);
+
+  if (nextDepth > previousDepth) {
+    return 'forward';
+  }
+
+  if (nextDepth < previousDepth) {
+    return 'back';
+  }
+
+  return 'fade';
+}
+
 interface IUser {
   accessToken: string;
   client: string;
@@ -43,6 +64,8 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   const location = useLocation();
   const navigate = useNavigate();
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+  const previousPathname = useRef(location.pathname);
+  const pageTransitionDirection = transitionDirection(previousPathname.current, location.pathname);
 
   const isAuthPage =
     location.pathname === '/users/sign_in' ||
@@ -59,6 +82,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
 
   useEffect(() => {
     setSettingsMenuOpen(false);
+    previousPathname.current = location.pathname;
   }, [location.pathname]);
 
   const handleLogout = async (): Promise<void> => {
@@ -100,28 +124,32 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
 
   return (
     <>
-      <Routes>
-        {/* routes/lists */}
-        <Route path="/" element={<Navigate to="/lists" />} />
-        <Route path="/lists" element={<Lists />} />
-        <Route path="/completed_lists" element={<CompletedLists />} />
-        {/* routes/list */}
-        <Route path="/lists/:id" element={<List />} />
-        <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
-        <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
-        {/* routes/share_list */}
-        <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
-        {/* routes/templates */}
-        <Route path="/templates" element={<Templates />} />
-        {/* routes/users */}
-        <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
-        <Route path="/users/password/new" element={<NewPassword />} />
-        <Route path="/users/password/edit" element={<EditPassword />} />
-        <Route path="/users/invitation/new" element={<InviteForm />} />
-        <Route path="/users/invitation/accept" element={<EditInvite />} />
-        {/* routes/error_pages */}
-        <Route errorElement={<PageNotFound />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <PageTransition key={location.pathname} direction={pageTransitionDirection}>
+          <Routes>
+            {/* routes/lists */}
+            <Route path="/" element={<Navigate to="/lists" />} />
+            <Route path="/lists" element={<Lists />} />
+            <Route path="/completed_lists" element={<CompletedLists />} />
+            {/* routes/list */}
+            <Route path="/lists/:id" element={<List />} />
+            <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+            <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+            {/* routes/share_list */}
+            <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
+            {/* routes/templates */}
+            <Route path="/templates" element={<Templates />} />
+            {/* routes/users */}
+            <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
+            <Route path="/users/password/new" element={<NewPassword />} />
+            <Route path="/users/password/edit" element={<EditPassword />} />
+            <Route path="/users/invitation/new" element={<InviteForm />} />
+            <Route path="/users/invitation/accept" element={<EditInvite />} />
+            {/* routes/error_pages */}
+            <Route errorElement={<PageNotFound />} />
+          </Routes>
+        </PageTransition>
+      </AnimatePresence>
       {showBottomNav ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />

@@ -123,6 +123,16 @@ body {
   padding-bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body {
+    -webkit-user-select: auto;
+  }
 }
 
 /* Toast overrides to match design system */
@@ -143,4 +153,38 @@ body {
   height: 100px;
   position: absolute;
   top: 50%;
+}
+
+/* Global reduced-motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode theme overrides */
+[data-theme='dark'] {
+  --color-primary: #4f46e5; /* Indigo 600 - matches light to keep AA contrast with white text */
+  --color-primary-hover: #818cf8; /* Indigo 400 */
+  --color-primary-light: #312e81; /* Indigo 900 */
+  --color-surface: #1f2937; /* Gray 800 */
+  --color-surface-raised: #111827; /* Gray 900 */
+  --color-surface-overlay: #374151; /* Gray 700 */
+  --color-border: #4b5563; /* Gray 600 */
+  --color-border-strong: #6b7280; /* Gray 500 */
+  --color-text-primary: #f3f4f6; /* Gray 100 */
+  --color-text-secondary: #9ca3af; /* Gray 400 */
+  --color-text-tertiary: #6b7280; /* Gray 500 */
+}
+
+/* Theme transition fade effect */
+html.theme-transitioning {
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }

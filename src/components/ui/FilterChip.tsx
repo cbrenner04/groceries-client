@@ -11,8 +11,10 @@ export function FilterChip(props: IFilterChipProps): React.JSX.Element {
   const { label, active, onClick, testId } = props;
 
   const baseStyles =
-    'tw:inline-flex tw:items-center tw:px-3 tw:h-8 tw:rounded-full tw:text-sm tw:font-medium ' +
-    'tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none';
+    'tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] ' +
+    'tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer ' +
+    'tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none ' +
+    'tw:min-w-[44px]';
 
   const activeStyles = active
     ? 'tw:bg-[var(--color-primary)] tw:text-white'
