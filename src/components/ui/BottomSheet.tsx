@@ -120,7 +120,6 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
 
     previousActiveElementRef.current = document.activeElement as HTMLElement;
     document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', handleKeyDown);
     setTimeout(() => {
       const firstFocusable = sheetRef.current?.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
@@ -129,9 +128,19 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
     }, 0);
 
     return (): void => {
-      document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
       previousActiveElementRef.current?.focus();
+    };
+  }, [isOpen]);
+
+  useEffect((): (() => void) | undefined => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return (): void => {
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, handleKeyDown]);
 
