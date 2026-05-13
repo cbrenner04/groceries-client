@@ -84,6 +84,11 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
+      <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
       >
@@ -689,6 +694,11 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     <main
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
@@ -1612,6 +1622,11 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     <main
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
@@ -2569,6 +2584,11 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
+      <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
       >
@@ -3326,6 +3346,11 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
       <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
+      <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
       >
@@ -3573,6 +3598,11 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
     <main
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
     >
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"
@@ -4067,6 +4097,11 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     <main
       class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
     >
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="tw:sr-only"
+      />
       <div
         class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
         role="group"

@@ -104,6 +104,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [quickAddCategory, setQuickAddCategory] = useState('');
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
+  // Aria-live announcement state for accessibility
+  const [liveAnnouncement, setLiveAnnouncement] = useState('');
+
   const navigate = useNavigate();
   const {
     mode: sessionMode,
@@ -296,6 +299,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems(updatedNotCompletedItems);
       setCompletedItems(updatedCompletedItems);
       setInputBarExpanded(false);
+      const completedCount = itemsToComplete.length;
+      const itemsWord = completedCount === 1 ? 'item' : 'items';
+      setLiveAnnouncement(`${completedCount} ${itemsWord} marked as completed`);
       markItemAnimation(
         itemsToComplete.map((item) => item.id),
         'completed',
@@ -348,6 +354,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setCompletedItems,
       setSelectedItems,
       setMultiSelectActive,
+      setLiveAnnouncement,
       markItemAnimation,
       props.list.id,
       navigate,
@@ -373,6 +380,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setCompletedItems(updatedCompletedItems);
       setNotCompletedItems(updatedNotCompletedItems);
+      const refreshCount = itemsToRefresh.length;
+      const itemsWord = refreshCount === 1 ? 'item' : 'items';
+      setLiveAnnouncement(`${refreshCount} ${itemsWord} refreshed`);
       markItemAnimation(
         optimisticNewItems.map((item) => item.id),
         'refreshed',
@@ -441,6 +451,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       setNotCompletedItems,
       setSelectedItems,
       setMultiSelectActive,
+      setLiveAnnouncement,
       markItemAnimation,
       props.list.id,
       navigate,
@@ -472,6 +483,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     setCompletedItems(updatedCompletedItems);
     setNotCompletedItems(updatedNotCompletedItems);
+    const deleteCount = itemsToDeleteFromState.length;
+    const itemsWord = deleteCount === 1 ? 'item' : 'items';
+    setLiveAnnouncement(`${deleteCount} ${itemsWord} deleted`);
 
     // Update categories after deletion
     const updateCategories = (items: IListItem[]): void => {
@@ -1078,6 +1092,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           ) : undefined
         }
       >
+        <div aria-live="polite" aria-atomic="true" className="tw:sr-only">
+          {liveAnnouncement}
+        </div>
         {renderFilterChips()}
         {multiSelectActive && selectedItems.length > 0 && (
           <div className="tw:mb-3">
