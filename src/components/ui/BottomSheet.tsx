@@ -75,7 +75,7 @@ export function createDragEndHandler(onClose: () => void): (event: unknown, info
 
 export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
   const { isOpen, onClose, title, children, testId } = props;
-  const shouldAnimate = !prefersReducedMotion() && import.meta.env.MODE !== 'test';
+  const shouldAnimate = import.meta.env.PROD && !prefersReducedMotion();
   const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
   const sheetRef = React.useRef<HTMLDivElement>(null);
 

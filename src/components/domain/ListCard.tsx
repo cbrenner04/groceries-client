@@ -58,7 +58,11 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   const isOwner = userId === list.owner_id;
   const testClass = getTestClass(list);
 
-  const handleClick = (): void => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    if ((event.target as HTMLElement).closest('button')) {
+      return;
+    }
+
     if (isMultiSelectActive) {
       onSelect(listId);
     } else {
@@ -69,7 +73,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      handleClick();
+      handleClick(e as unknown as React.MouseEvent<HTMLDivElement>);
     }
   };
 

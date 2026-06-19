@@ -46,6 +46,10 @@ describe('BottomSheet', () => {
     window.matchMedia = matchMediaMock;
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('renders children when open', async () => {
     const { findByText } = setup();
     expect(await findByText('Sheet content')).toBeVisible();
@@ -107,6 +111,8 @@ describe('BottomSheet', () => {
   });
 
   it('respects prefers-reduced-motion', async () => {
+    vi.stubEnv('PROD', true);
+
     matchMediaMock = vi.fn(() => ({
       matches: true,
       media: '(prefers-reduced-motion: reduce)',

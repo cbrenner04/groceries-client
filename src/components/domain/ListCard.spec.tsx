@@ -116,6 +116,13 @@ describe('ListCard', () => {
       await user.click(btn);
       expect(props.onDelete).toHaveBeenCalledWith('list1');
     });
+
+    it('does not call onClick when Delete is clicked', async () => {
+      const { container, props, user } = setup();
+      const btn = container.querySelector('[data-test-id="incomplete-list-trash"]') as HTMLElement;
+      await user.click(btn);
+      expect(props.onClick).not.toHaveBeenCalled();
+    });
   });
 
   describe('incomplete list (shared, write)', () => {
