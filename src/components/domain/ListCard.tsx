@@ -59,7 +59,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   const testClass = getTestClass(list);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
-    if ((event.target as HTMLElement).closest("button")) {
+    if ((event.target as HTMLElement).closest('button')) {
       return;
     }
 
@@ -71,7 +71,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick(e as unknown as React.MouseEvent<HTMLDivElement>);
     }
