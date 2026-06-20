@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
@@ -417,7 +417,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
@@ -466,13 +465,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           >
             {multiSelectActive ? 'Hide Select' : 'Select'}
           </button>
-          <Link
-            to="/templates"
-            data-test-id="manage-templates-link"
-            className="tw:text-sm tw:text-[var(--color-primary)]"
-          >
-            Manage Templates
-          </Link>
         </div>
       </div>
 
@@ -547,19 +539,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         {filtered.active.map(renderListCard)}
         {filtered.completed.map(renderListCard)}
       </div>
-
-      {showCompletedLink && (
-        <div className="tw:mt-4 tw:text-center">
-          <button
-            type="button"
-            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-            onClick={(): void => setStatusFilter('completed')}
-            data-test-id="show-all-completed"
-          >
-            Show all completed lists &rarr;
-          </button>
-        </div>
-      )}
 
       <ConfirmDialog
         isOpen={showDeleteConfirm}

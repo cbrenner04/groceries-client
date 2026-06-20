@@ -108,14 +108,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
               >
                 Select
               </button>
-              <a
-                class="tw:text-sm tw:text-[var(--color-primary)]"
-                data-discover="true"
-                data-test-id="manage-templates-link"
-                href="/templates"
-              >
-                Manage Templates
-              </a>
             </div>
           </div>
           <div
@@ -458,17 +450,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="tw:mt-4 tw:text-center"
-          >
-            <button
-              class="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-              data-test-id="show-all-completed"
-              type="button"
-            >
-              Show all completed lists →
-            </button>
           </div>
           <div
             class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
