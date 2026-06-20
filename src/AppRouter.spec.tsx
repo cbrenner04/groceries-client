@@ -88,6 +88,29 @@ describe('AppRouter', () => {
     expect(await findByTestId('bottom-nav')).toBeVisible();
   });
 
+  it('shows brand header on signed-in pages', async () => {
+    sessionStorage.setItem(
+      'user',
+      JSON.stringify({
+        'access-token': 'stored-token',
+        client: 'stored-client',
+        uid: 'stored-uid',
+      }),
+    );
+
+    const { findByTestId } = renderAppRouter('/lists');
+
+    expect(await findByTestId('brand-header')).toBeVisible();
+    expect(document.documentElement.classList.contains('with-brand-header')).toBe(true);
+  });
+
+  it('hides brand header on auth pages', async () => {
+    const { queryByTestId } = renderAppRouter('/users/sign_in');
+
+    expect(queryByTestId('brand-header')).not.toBeInTheDocument();
+    expect(document.documentElement.classList.contains('with-brand-header')).toBe(false);
+  });
+
   it('hides bottom nav on auth pages and shows it after sign in navigates to an app page', async () => {
     const user = userEvent.setup();
     const { findByLabelText, findByRole, findByTestId, queryByTestId } = renderAppRouter('/users/sign_in');

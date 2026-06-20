@@ -129,6 +129,11 @@ body {
   -webkit-user-select: none;
 }
 
+/* Reserve top spacing for brand header on signed-in screens */
+html.with-brand-header {
+  padding-top: 3rem;
+}
+
 @media (hover: none) and (pointer: coarse) {
   body {
     -webkit-user-select: auto;
