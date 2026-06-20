@@ -172,12 +172,12 @@ describe('AppRouter', () => {
     );
 
     const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+    const { findByTestId, queryByTestId, container } = renderAppRouter('/lists');
 
     await user.click(await findByTestId('nav-settings'));
-    const settingsMenu = await findByTestId('settings-menu');
-    const overlay = settingsMenu.parentElement?.parentElement as HTMLElement;
+    await findByTestId('settings-menu');
 
+    const overlay = container.querySelector('[data-test-id="settings-menu"]') as HTMLElement;
     await user.click(overlay);
     await waitFor(() => {
       expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
