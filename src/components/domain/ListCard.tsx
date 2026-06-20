@@ -82,9 +82,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       return (
         <div className="tw:flex tw:items-center tw:gap-1">
           <IconButton
-            icon={<CheckIcon size="sm" />}
+            icon={<CheckIcon size="lg" />}
             variant="success"
-            size="sm"
+            size="md"
             label="Accept"
             data-test-id="pending-list-accept"
             onClick={(e): void => {
@@ -93,9 +93,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             }}
           />
           <IconButton
-            icon={<TrashIcon size="sm" />}
+            icon={<TrashIcon size="lg" />}
             variant="danger"
-            size="sm"
+            size="md"
             label="Reject"
             data-test-id="pending-list-trash"
             onClick={(e): void => {
@@ -111,9 +111,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       return (
         <div className="tw:flex tw:items-center tw:gap-1">
           <IconButton
-            icon={<RedoIcon size="sm" />}
+            icon={<RedoIcon size="lg" />}
             variant="primary"
-            size="sm"
+            size="md"
             label="Refresh"
             data-test-id="complete-list-refresh"
             disabled={!isOwner}
@@ -123,9 +123,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             }}
           />
           <IconButton
-            icon={<TrashIcon size="sm" />}
+            icon={<TrashIcon size="lg" />}
             variant="danger"
-            size="sm"
+            size="md"
             label="Delete"
             data-test-id="complete-list-trash"
             onClick={(e): void => {
@@ -141,9 +141,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       <div className="tw:flex tw:items-center tw:gap-1">
         {isOwner && (
           <IconButton
-            icon={<CheckIcon size="sm" />}
+            icon={<CheckIcon size="lg" />}
             variant="success"
-            size="sm"
+            size="md"
             label="Complete"
             data-test-id="incomplete-list-complete"
             onClick={(e): void => {
@@ -154,9 +154,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
         )}
         {permission === 'write' && (
           <IconButton
-            icon={<UsersIcon size="sm" />}
+            icon={<UsersIcon size="lg" />}
             variant="primary"
-            size="sm"
+            size="md"
             label="Share"
             data-test-id="incomplete-list-share"
             onClick={(e): void => {
@@ -167,9 +167,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
         )}
         {isOwner && (
           <IconButton
-            icon={<EditIcon size="sm" />}
+            icon={<EditIcon size="lg" />}
             variant="default"
-            size="sm"
+            size="md"
             label="Edit"
             data-test-id="incomplete-list-edit"
             onClick={(e): void => {
@@ -179,9 +179,9 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
           />
         )}
         <IconButton
-          icon={<TrashIcon size="sm" />}
+          icon={<TrashIcon size="lg" />}
           variant="danger"
-          size="sm"
+          size="md"
           label="Delete"
           data-test-id="incomplete-list-trash"
           onClick={(e): void => {

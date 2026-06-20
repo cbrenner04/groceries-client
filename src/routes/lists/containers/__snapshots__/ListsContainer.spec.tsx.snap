@@ -104,7 +104,7 @@ exports[`ListsContainer > renders 1`] = `
           >
             <button
               aria-label="Accept"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="pending-list-accept"
               type="button"
             >
@@ -112,11 +112,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -127,7 +127,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Reject"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="pending-list-trash"
               type="button"
             >
@@ -135,11 +135,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -182,7 +182,7 @@ exports[`ListsContainer > renders 1`] = `
           >
             <button
               aria-label="Complete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-complete"
               type="button"
             >
@@ -190,11 +190,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -205,7 +205,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Share"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-share"
               type="button"
             >
@@ -213,11 +213,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -232,7 +232,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Edit"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-edit"
               type="button"
             >
@@ -240,11 +240,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -260,7 +260,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Delete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-trash"
               type="button"
             >
@@ -268,11 +268,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -315,7 +315,7 @@ exports[`ListsContainer > renders 1`] = `
           >
             <button
               aria-label="Complete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-complete"
               type="button"
             >
@@ -323,11 +323,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -338,7 +338,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Edit"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-edit"
               type="button"
             >
@@ -346,11 +346,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -366,7 +366,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Delete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-trash"
               type="button"
             >
@@ -374,11 +374,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -421,7 +421,7 @@ exports[`ListsContainer > renders 1`] = `
           >
             <button
               aria-label="Refresh"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="complete-list-refresh"
               type="button"
             >
@@ -429,11 +429,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -445,7 +445,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Delete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="complete-list-trash"
               type="button"
             >
@@ -453,11 +453,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -500,7 +500,7 @@ exports[`ListsContainer > renders 1`] = `
           >
             <button
               aria-label="Refresh"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-10 tw:w-10 tw:text-base tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
               data-test-id="complete-list-refresh"
               disabled=""
               type="button"
@@ -509,11 +509,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -525,7 +525,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Delete"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="complete-list-trash"
               type="button"
             >
@@ -533,11 +533,11 @@ exports[`ListsContainer > renders 1`] = `
                 aria-hidden="true"
                 fill="currentColor"
                 focusable="false"
-                height="14"
+                height="20"
                 role="img"
                 style="display: inline-block; vertical-align: middle;"
                 viewBox="0 0 512 512"
-                width="14"
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path

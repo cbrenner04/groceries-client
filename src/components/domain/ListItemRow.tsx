@@ -193,9 +193,9 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
         {item.completed ? (
           item.refreshed ? null : (
             <IconButton
-              icon={<RedoIcon size="sm" />}
+              icon={<RedoIcon size="lg" />}
               variant="primary"
-              size="sm"
+              size="md"
               label="Refresh"
               data-test-id={`completed-item-refresh-${item.id}`}
               onClick={(e): void => {
@@ -206,9 +206,9 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
           )
         ) : (
           <IconButton
-            icon={<CheckIcon size="sm" />}
+            icon={<CheckIcon size="lg" />}
             variant="success"
-            size="sm"
+            size="md"
             label="Complete"
             data-test-id={`not-completed-item-complete-${item.id}`}
             onClick={(e): void => {
@@ -218,9 +218,9 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
           />
         )}
         <IconButton
-          icon={<EditIcon size="sm" />}
+          icon={<EditIcon size="lg" />}
           variant="default"
-          size="sm"
+          size="md"
           label="Edit"
           data-test-id={`${testClassPrefix}-item-edit-${item.id}`}
           onClick={(e): void => {
@@ -229,9 +229,9 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
           }}
         />
         <IconButton
-          icon={<TrashIcon size="sm" />}
+          icon={<TrashIcon size="lg" />}
           variant="danger"
-          size="sm"
+          size="md"
           label="Delete"
           data-test-id={`${testClassPrefix}-item-delete-${item.id}`}
           onClick={(e): void => {
