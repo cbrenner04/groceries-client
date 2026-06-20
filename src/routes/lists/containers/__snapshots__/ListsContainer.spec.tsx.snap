@@ -401,7 +401,7 @@ exports[`ListsContainer > renders 1`] = `
         </div>
       </div>
       <div
-        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_*]:line-through tw:flex tw:items-center tw:gap-3"
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_p]:line-through tw:[&_span]:line-through tw:[&_li]:line-through tw:flex tw:items-center tw:gap-3"
         data-test-class="completed-list"
         data-test-id="list-id2"
         role="button"
@@ -480,7 +480,7 @@ exports[`ListsContainer > renders 1`] = `
         </div>
       </div>
       <div
-        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_*]:line-through tw:flex tw:items-center tw:gap-3"
+        class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_p]:line-through tw:[&_span]:line-through tw:[&_li]:line-through tw:flex tw:items-center tw:gap-3"
         data-test-class="completed-list"
         data-test-id="list-id4"
         role="button"

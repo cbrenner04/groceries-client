@@ -23,7 +23,9 @@ export function Card(props: ICardProps): React.JSX.Element {
 
   const selectedStyles = selected ? 'tw:border-[var(--color-primary)] tw:bg-[var(--color-primary-light)]' : '';
 
-  const completedStyles = completed ? 'tw:opacity-60 tw:[&_*]:line-through' : '';
+  const completedStyles = completed
+    ? 'tw:opacity-60 tw:[&_p]:line-through tw:[&_span]:line-through tw:[&_li]:line-through'
+    : '';
 
   const classNameString = [baseStyles, interactiveStyles, selectedStyles, completedStyles, className]
     .filter(Boolean)

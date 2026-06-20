@@ -53,6 +53,7 @@
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
   --spacing-nav-height: 4rem;
   --spacing-input-bar-height: 3.5rem;
+  --spacing-bottom-bar-gap: 1rem;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -101,6 +102,7 @@
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
   --spacing-nav-height: 4rem;
   --spacing-input-bar-height: 3.5rem;
+  --spacing-bottom-bar-gap: 1rem;
   --transition-fast: 150ms ease;
   --transition-normal: 200ms ease;
   --transition-slow: 300ms ease;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'ghost-danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   fullWidth?: boolean;
@@ -16,6 +16,9 @@ const variantStyles: Record<string, string> = {
     'tw:hover:bg-[var(--color-surface-overlay)]',
   ghost:
     'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+    'tw:active:bg-[var(--color-surface-raised)]',
+  'ghost-danger':
+    'tw:text-[var(--color-danger)] tw:hover:bg-[var(--color-surface-overlay)] ' +
     'tw:active:bg-[var(--color-surface-raised)]',
   danger: 'tw:bg-[var(--color-danger)] tw:text-white tw:hover:bg-[var(--color-danger-hover)] tw:active:opacity-90',
   success: 'tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80',

@@ -70,7 +70,7 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
   const contentClassName = bottomBar
     ? [
         'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4',
-        'tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]',
+        'tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]',
       ].join(' ')
     : 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4';
 
