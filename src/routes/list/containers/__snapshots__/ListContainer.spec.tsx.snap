@@ -5,8 +5,18 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -616,8 +626,18 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -1544,8 +1564,18 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -2503,8 +2533,18 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -3265,8 +3305,18 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -3560,8 +3610,18 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"
@@ -4017,8 +4077,18 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
   <div
     class="tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]"
   >
+    <div
+      class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      data-test-id="app-brand"
+    >
+      <span
+        class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+      >
+        Groceries
+      </span>
+    </div>
     <header
-      class="tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.75rem,env(safe-area-inset-top))] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
     >
       <a
         aria-label="Go back"

@@ -18,11 +18,18 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   const containerClassName = 'tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]';
 
-  const headerClassName =
-    'tw:sticky tw:top-0 tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 ' +
+  const brandBarClassName =
+    'tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 ' +
     'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
-    'tw:pt-[max(0.75rem,env(safe-area-inset-top))] ' +
+    'tw:pt-[max(0.5rem,env(safe-area-inset-top))] ' +
+    'tw:pb-2 ' +
     'tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]';
+
+  const headerClassName =
+    'tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 ' +
+    'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
+    'tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] ' +
+    'tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]';
 
   const backButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
@@ -76,6 +83,9 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   return (
     <div className={containerClassName}>
+      <div className={brandBarClassName} data-test-id="app-brand">
+        <span className="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]">Groceries</span>
+      </div>
       {hasHeader && (
         <header className={headerClassName}>
           {renderBackButton()}
