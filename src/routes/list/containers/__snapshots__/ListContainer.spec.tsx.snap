@@ -585,7 +585,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -1513,7 +1513,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -2442,11 +2442,11 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
     </main>
   </div>
   <div
-    class="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50"
+    class="tw:fixed tw:inset-0 tw:z-[var(--z-overlay)] tw:bg-black/50"
   />
   <div
     aria-modal="true"
-    class="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
+    class="tw:fixed tw:inset-0 tw:z-[var(--z-modal)] tw:flex tw:items-center tw:justify-center tw:p-4"
     role="dialog"
   >
     <div
@@ -3236,7 +3236,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -3531,7 +3531,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -4916,7 +4916,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div

@@ -31,9 +31,9 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
 
   return (
     <>
-      <div className="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50" onClick={props.handleClear} />
+      <div className="tw:fixed tw:inset-0 tw:z-[var(--z-overlay)] tw:bg-black/50" onClick={props.handleClear} />
       <div
-        className="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
+        className="tw:fixed tw:inset-0 tw:z-[var(--z-modal)] tw:flex tw:items-center tw:justify-center tw:p-4"
         role="dialog"
         aria-modal="true"
         onClick={props.handleClear}
