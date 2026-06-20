@@ -87,7 +87,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const containerClassName =
     'tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
-    'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300';
+    'tw:shadow-sm tw:transition-all tw:duration-300';
 
   const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
 

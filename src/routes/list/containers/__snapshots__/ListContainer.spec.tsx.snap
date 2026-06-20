@@ -585,7 +585,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -1513,7 +1513,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -2453,8 +2453,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
       class="tw:bg-[var(--color-surface)] tw:rounded-lg tw:shadow-xl tw:w-full tw:max-w-lg tw:border-0"
     >
       <div
-        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
-        style="border-bottom: 1px solid var(--color-border);"
+        class="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3 tw:border-b tw:border-[var(--color-border)]"
       >
         <h5
           class="tw:text-lg tw:font-medium tw:m-0"
@@ -2477,8 +2476,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         Are you sure you want to delete the following items? no category not completed product
       </div>
       <div
-        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
-        style="border-top: 1px solid var(--color-border);"
+        class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 tw:border-t tw:border-[var(--color-border)]"
       >
         <button
           class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
@@ -3236,7 +3234,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -3531,7 +3529,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div
@@ -4916,7 +4914,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
       </div>
     </main>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
       style="bottom: calc(var(--spacing-nav-height) + 0px);"
     >
       <div

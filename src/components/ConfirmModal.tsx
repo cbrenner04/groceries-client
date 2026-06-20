@@ -43,8 +43,10 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
-            style={{ borderBottom: '1px solid var(--color-border)' }}
+            className={
+              'tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3 ' +
+              'tw:border-b tw:border-[var(--color-border)]'
+            }
           >
             <h5 className="tw:text-lg tw:font-medium tw:m-0">Confirm {props.action}</h5>
             <button
@@ -63,8 +65,9 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
             {props.body}
           </div>
           <div
-            className="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
-            style={{ borderTop: '1px solid var(--color-border)' }}
+            className={
+              'tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 ' + 'tw:border-t tw:border-[var(--color-border)]'
+            }
           >
             <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
               Close

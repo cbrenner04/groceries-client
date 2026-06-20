@@ -30,7 +30,7 @@ export function ConfirmDialog(props: IConfirmDialogProps): React.JSX.Element {
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={title} testId={testId}>
-      <div data-test-id="confirm-modal-body" className="tw:mb-4 tw:text-[var(--color-text-secondary)]">
+      <div data-test-id="confirm-modal-body" className="tw:mb-4 tw:text-[var(--color-text-primary)]">
         {body}
       </div>
       <div className="tw:flex tw:justify-end tw:gap-2">
