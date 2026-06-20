@@ -18,6 +18,8 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   const containerClassName = 'tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]';
 
+  const contentWrapperClassName = 'tw:w-full tw:max-w-2xl tw:mx-auto tw:flex tw:flex-col';
+
   const brandBarClassName =
     'tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 ' +
     'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
@@ -83,24 +85,26 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   return (
     <div className={containerClassName}>
-      <div className={brandBarClassName} data-test-id="app-brand">
-        <span className="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]">Groceries</span>
+      <div className={contentWrapperClassName}>
+        <div className={brandBarClassName} data-test-id="app-brand">
+          <span className="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]">Groceries</span>
+        </div>
+        {hasHeader && (
+          <header className={headerClassName}>
+            {renderBackButton()}
+            {title && (
+              <h1
+                className="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+                data-test-id="page-title"
+              >
+                {title}
+              </h1>
+            )}
+            {headerRight && <div className="tw:ml-auto">{headerRight}</div>}
+          </header>
+        )}
+        <main className={contentClassName}>{children}</main>
       </div>
-      {hasHeader && (
-        <header className={headerClassName}>
-          {renderBackButton()}
-          {title && (
-            <h1
-              className="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
-              data-test-id="page-title"
-            >
-              {title}
-            </h1>
-          )}
-          {headerRight && <div className="tw:ml-auto">{headerRight}</div>}
-        </header>
-      )}
-      <main className={contentClassName}>{children}</main>
       {bottomBar}
     </div>
   );
