@@ -35,7 +35,7 @@ export function Toggle(props: IToggleProps): React.JSX.Element {
     'tw:focus-visible:outline tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 ' +
     `tw:focus-visible:outline-[var(--color-primary)] ${trackColor} ${disabledClass}`;
   const spanClassName =
-    'tw:inline-block tw:h-5 tw:w-5 tw:transform tw:rounded-full tw:bg-[#ffffff] tw:shadow-md ' +
+    'tw:inline-block tw:h-5 tw:w-5 tw:transform tw:rounded-full tw:bg-[var(--color-surface)] tw:shadow-md ' +
     `tw:transition-transform tw:duration-200 tw:ease-in-out ${thumbTranslate}`;
 
   return (

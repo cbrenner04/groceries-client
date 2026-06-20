@@ -9,27 +9,27 @@
 /* Design tokens — custom theme values */
 @theme {
   /* Colors - Light mode defaults */
-  --color-primary: #4f46e5; /* Indigo 600 */
-  --color-primary-hover: #4338ca; /* Indigo 700 */
-  --color-primary-light: #e0e7ff; /* Indigo 100 */
-  --color-accent: #f97316; /* Orange 500 */
-  --color-accent-hover: #ea580c; /* Orange 600 */
+  --color-primary: #16a34a; /* Green 600 */
+  --color-primary-hover: #15803d; /* Green 700 */
+  --color-primary-light: #dcfce7; /* Green 100 */
+  --color-accent: #f59e0b; /* Amber 500 */
+  --color-accent-hover: #d97706; /* Amber 600 */
   --color-success: #10b981; /* Emerald 500 */
-  --color-warning: #f59e0b; /* Amber 500 */
+  --color-warning: #eab308; /* Yellow 400 */
   --color-danger: #ef4444; /* Red 500 */
   --color-danger-hover: #dc2626; /* Red 600 */
 
   /* Surfaces */
   --color-surface: #ffffff;
-  --color-surface-raised: #f9fafb; /* Gray 50 */
-  --color-surface-overlay: #f3f4f6; /* Gray 100 */
-  --color-border: #e5e7eb; /* Gray 200 */
-  --color-border-strong: #d1d5db; /* Gray 300 */
+  --color-surface-raised: #f7f8f5; /* Off-white */
+  --color-surface-overlay: #eef1ea; /* Light green-gray */
+  --color-border: #e3e7df; /* Light gray-green */
+  --color-border-strong: #cdd5c8; /* Medium gray-green */
 
   /* Text */
-  --color-text-primary: #111827; /* Gray 900 */
-  --color-text-secondary: #6b7280; /* Gray 500 */
-  --color-text-tertiary: #9ca3af; /* Gray 400 */
+  --color-text-primary: #14211a; /* Dark green-gray */
+  --color-text-secondary: #5b6b60; /* Medium green-gray */
+  --color-text-tertiary: #92a098; /* Light green-gray */
   --color-text-inverse: #ffffff;
 
   /* Typography */
@@ -69,23 +69,23 @@
 }
 
 :root {
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-primary-light: #e0e7ff;
-  --color-accent: #f97316;
-  --color-accent-hover: #ea580c;
+  --color-primary: #16a34a;
+  --color-primary-hover: #15803d;
+  --color-primary-light: #dcfce7;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #d97706;
   --color-success: #10b981;
-  --color-warning: #f59e0b;
+  --color-warning: #eab308;
   --color-danger: #ef4444;
   --color-danger-hover: #dc2626;
   --color-surface: #ffffff;
-  --color-surface-raised: #f9fafb;
-  --color-surface-overlay: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
+  --color-surface-raised: #f7f8f5;
+  --color-surface-overlay: #eef1ea;
+  --color-border: #e3e7df;
+  --color-border-strong: #cdd5c8;
+  --color-text-primary: #14211a;
+  --color-text-secondary: #5b6b60;
+  --color-text-tertiary: #92a098;
   --color-text-inverse: #ffffff;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
@@ -169,17 +169,24 @@ body {
 
 /* Dark mode theme overrides */
 [data-theme='dark'] {
-  --color-primary: #4f46e5; /* Indigo 600 - matches light to keep AA contrast with white text */
-  --color-primary-hover: #818cf8; /* Indigo 400 */
-  --color-primary-light: #312e81; /* Indigo 900 */
-  --color-surface: #1f2937; /* Gray 800 */
-  --color-surface-raised: #111827; /* Gray 900 */
-  --color-surface-overlay: #374151; /* Gray 700 */
-  --color-border: #4b5563; /* Gray 600 */
-  --color-border-strong: #6b7280; /* Gray 500 */
-  --color-text-primary: #f3f4f6; /* Gray 100 */
-  --color-text-secondary: #9ca3af; /* Gray 400 */
-  --color-text-tertiary: #6b7280; /* Gray 500 */
+  --color-primary: #22c55e; /* Green 500 */
+  --color-primary-hover: #4ade80; /* Green 400 */
+  --color-primary-light: #14532d; /* Green 900 */
+  --color-accent: #fbbf24; /* Amber 400 */
+  --color-accent-hover: #f59e0b; /* Amber 500 */
+  --color-success: #34d399; /* Emerald 400 */
+  --color-warning: #facc15; /* Yellow 300 */
+  --color-danger: #f87171; /* Red 400 */
+  --color-danger-hover: #ef4444; /* Red 500 */
+  --color-surface: #14201a; /* Dark green-gray */
+  --color-surface-raised: #0d1611; /* Darker green-gray */
+  --color-surface-overlay: #1f3327; /* Medium green-gray */
+  --color-border: #2c463a; /* Medium green-gray border */
+  --color-border-strong: #3c5a4b; /* Darker green-gray border */
+  --color-text-primary: #eef3ef; /* Very light green-gray */
+  --color-text-secondary: #9fb3a6; /* Light green-gray */
+  --color-text-tertiary: #6f8479; /* Medium green-gray */
+  --color-text-inverse: #06140c; /* Very dark green */
 }
 
 /* Theme transition fade effect */

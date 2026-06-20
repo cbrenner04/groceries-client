@@ -22,7 +22,7 @@ const variantStyles: Record<string, string> = {
     'tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] ' + 'tw:active:bg-[rgb(16_185_129_/_0.2)]',
   danger: 'tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] ' + 'tw:active:bg-[rgb(239_68_68_/_0.2)]',
   primary:
-    'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(79_70_229_/_0.2)]',
+    'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(22_163_74_/_0.2)]',
 };
 
 export function IconButton(props: IIconButtonProps): React.JSX.Element {
