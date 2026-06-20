@@ -5,13 +5,20 @@ import { showToast } from '../../../utils/toast';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import * as hooks from 'hooks';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const mockUsePolling = vi.mocked(hooks.usePolling);
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
   useNavigate: (): Mock => mockNavigate,
+}));
+
+vi.mock('hooks', async () => ({
+  ...(await vi.importActual('hooks')),
+  usePolling: vi.fn(),
 }));
 
 interface ISetupReturn extends RenderResult {
@@ -80,6 +87,14 @@ function setup(suppliedProps?: Partial<IShareListFormProps>): ISetupReturn {
 }
 
 describe('ShareListForm', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
@@ -87,7 +102,6 @@ describe('ShareListForm', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi
       .fn()
       .mockResolvedValueOnce({
@@ -128,28 +142,26 @@ describe('ShareListForm', () => {
         },
       });
     const { findByTestId, queryByTestId } = setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      await pollingCallback?.();
     });
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      await pollingCallback?.();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('refused-user-id2')).toHaveTextContent('bar@example.com');
     expect(queryByTestId('pending-user-id2')).toBeNull();
-    vi.useRealTimers();
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
         accepted: [
@@ -168,32 +180,32 @@ describe('ShareListForm', () => {
       },
     });
     const { findByTestId } = setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      await pollingCallback?.();
     });
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      await pollingCallback?.();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
-    vi.useRealTimers();
   });
 
   it('fires generic toast when unknown error occurs in usePolling', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      await pollingCallback?.();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -201,7 +213,6 @@ describe('ShareListForm', () => {
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
     );
-    vi.useRealTimers();
   });
 
   it('creates new user on form submit', async () => {

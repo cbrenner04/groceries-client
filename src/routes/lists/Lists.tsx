@@ -29,7 +29,12 @@ const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
   return (
     <Async promiseFn={fetchLists as unknown as PromiseFn<void>} navigate={navigate}>
       <Async.Pending>
-        <div className="tw:p-4 tw:space-y-3">
+        <div
+          className={
+            'tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] ' +
+            'tw:px-[var(--spacing-gutter)] tw:py-4 tw:space-y-3'
+          }
+        >
           <Skeleton variant="card" count={4} />
         </div>
       </Async.Pending>

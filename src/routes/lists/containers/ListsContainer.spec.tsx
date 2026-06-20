@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import * as hooks from 'hooks';
 import type { TUserPermissions } from 'typings';
 import { showToast } from '../../../utils/toast';
 
@@ -14,10 +15,16 @@ vi.mock('utils/listPrefetch', () => ({
   getPrefetchedList: vi.fn(() => null),
 }));
 
+vi.mock('hooks', async () => ({
+  ...(await vi.importActual('hooks')),
+  usePolling: vi.fn(),
+}));
+
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const mockUsePolling = vi.mocked(hooks.usePolling);
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
@@ -131,6 +138,14 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
 }
 
 describe('ListsContainer', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
@@ -225,7 +240,6 @@ describe('ListsContainer', () => {
   });
 
   it('updates via polling when different data is returned', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi
       .fn()
       .mockResolvedValueOnce({
@@ -334,27 +348,25 @@ describe('ListsContainer', () => {
       });
 
     const { findByTestId } = setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      await pollingCallback?.();
     });
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      await pollingCallback?.();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'completed-list');
-    vi.useRealTimers();
   });
 
   it('does not update via polling when different data is not returned', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockResolvedValue({
       data: {
         current_user_id: 'id1',
@@ -408,32 +420,32 @@ describe('ListsContainer', () => {
     });
 
     const { findByTestId } = setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      await pollingCallback?.();
     });
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      await pollingCallback?.();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
-    vi.useRealTimers();
   });
 
   it('fires generic toast when unknown error on usePolling', async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     setup();
+    const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
+    expect(pollingCallback).toBeDefined();
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      await pollingCallback?.();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -441,7 +453,6 @@ describe('ListsContainer', () => {
       'You may not be connected to the internet. Please check your connection. ' +
         'Data may be incomplete and user actions may not persist.',
     );
-    vi.useRealTimers();
   });
 
   it('creates list via quick-add input', async () => {

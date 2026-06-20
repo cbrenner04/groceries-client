@@ -69,10 +69,10 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   const contentClassName = bottomBar
     ? [
-        'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4',
+        'tw:flex-1 tw:overflow-y-auto tw:py-4',
         'tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]',
       ].join(' ')
-    : 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4';
+    : 'tw:flex-1 tw:overflow-y-auto tw:py-4';
 
   return (
     <div className={containerClassName}>
@@ -90,7 +90,11 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
           {headerRight && <div className="tw:ml-auto">{headerRight}</div>}
         </header>
       )}
-      <main className={contentClassName}>{children}</main>
+      <main className={contentClassName}>
+        <div className="tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]">
+          {children}
+        </div>
+      </main>
       {bottomBar}
     </div>
   );

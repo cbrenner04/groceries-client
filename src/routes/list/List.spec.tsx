@@ -79,7 +79,10 @@ describe('List', () => {
         }),
     );
     const { container } = renderList();
-    const skeletonLoader = container.querySelector('.tw\\:p-4.tw\\:space-y-2');
+    const skeletonLoader = container.querySelector(
+      '.tw\\:w-full.tw\\:mx-auto.tw\\:max-w-\\[var\\(--width-content\\)\\]' +
+        '.tw\\:px-\\[var\\(--spacing-gutter\\)\\].tw\\:py-4.tw\\:space-y-2',
+    );
     expect(skeletonLoader).toBeInTheDocument();
   });
 
