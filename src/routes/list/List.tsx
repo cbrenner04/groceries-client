@@ -15,7 +15,12 @@ const List = (): React.JSX.Element => {
   return (
     <Async promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
       <Async.Pending>
-        <div className="tw:p-4 tw:space-y-2">
+        <div
+          className={
+            'tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] ' +
+            'tw:px-[var(--spacing-gutter)] tw:py-4 tw:space-y-2'
+          }
+        >
           <Skeleton variant="text" width="50%" height="1.5rem" />
           <div className="tw:space-y-3 tw:mt-4">
             <Skeleton variant="list" count={8} />

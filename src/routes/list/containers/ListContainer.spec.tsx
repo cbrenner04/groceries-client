@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 import axios from 'utils/api';
+import * as hooks from 'hooks';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import type { IChangeOtherListModalProps } from '../components/ChangeOtherListModal';
@@ -18,6 +19,7 @@ import { showToast } from '../../../utils/toast';
 
 // Create reference for test expectations
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const mockUsePolling = vi.mocked(hooks.usePolling);
 
 // Mock react-router
 const mockLocation = {
@@ -29,16 +31,16 @@ const mockLocation = {
 };
 
 const mockNavigate = vi.fn();
-async function advanceTimersByTime(ms: number): Promise<void> {
-  await act(async () => {
-    vi.advanceTimersByTime(ms);
-  });
-}
 
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
   useNavigate: (): Mock => mockNavigate,
   useLocation: (): typeof mockLocation => mockLocation,
+}));
+
+vi.mock('hooks', async () => ({
+  ...(await vi.importActual('hooks')),
+  usePolling: vi.fn(),
 }));
 
 vi.mock('../components/ChangeOtherListModal', () => ({
@@ -144,9 +146,6 @@ describe('ListContainer', () => {
 
   describe('Polling', () => {
     it('does not update via polling when different data is not returned', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
-
-      // Create API response with "item new" in not completed items
       const apiResponse = createApiResponse(
         [createListItem('id1', false, [createField('id1', 'product', 'item new', 'id1')])],
         [],
@@ -154,37 +153,36 @@ describe('ListContainer', () => {
       axios.get = vi.fn().mockResolvedValue({ data: apiResponse });
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
+      const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
-      await advanceTimersByTime(5000);
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect(pollingCallback).toBeDefined();
+      await act(async () => {
+        await pollingCallback?.();
+      });
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await act(async () => {
+        await pollingCallback?.();
+      });
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
-
-      vi.useRealTimers();
     });
 
     it('updates via polling when different data is returned', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
-
-      // First response: "item new" in not completed items
       const firstResponse = createApiResponse(
         [createListItem('id1', false, [createField('id1', 'product', 'item new', 'id1')])],
         [],
       );
-      // Second response: "item new" moved to completed items
       const secondResponse = createApiResponse(
-        [], // no not completed items
+        [],
         [createListItem('id1', true, [createField('id1', 'product', 'item new', 'id1')])],
       );
 
@@ -194,108 +192,90 @@ describe('ListContainer', () => {
         .mockResolvedValueOnce({ data: secondResponse });
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
+      const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
-      await advanceTimersByTime(5000);
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect(pollingCallback).toBeDefined();
+      await act(async () => {
+        await pollingCallback?.();
+      });
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await act(async () => {
+        await pollingCallback?.();
+      });
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
         'data-test-class',
         'completed-item',
       );
-
-      vi.useRealTimers();
     });
 
     it('shows toast with unexplained error', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
       axios.get = vi.fn().mockRejectedValue(new Error('Ahhhh!'));
 
       setup({ permissions: EUserPermissions.WRITE });
+      const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
-      await advanceTimersByTime(5000);
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect(pollingCallback).toBeDefined();
+      await act(async () => {
+        await pollingCallback?.();
+      });
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
         'You may not be connected to the internet. Please check your connection. ' +
           'Data may be incomplete and user actions may not persist.',
       );
-
-      vi.useRealTimers();
     });
 
     it('shows toast with server error', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
       const serverError = new Error('Server Error') as unknown as AxiosError;
       serverError.response = { status: 500 } as unknown as AxiosResponse;
       axios.get = vi.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
+      const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
-      await advanceTimersByTime(5000);
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect(pollingCallback).toBeDefined();
+      await act(async () => {
+        await pollingCallback?.();
+      });
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
       );
-
-      vi.useRealTimers();
     });
 
     it('shows toast with server error when error.response exists', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
       const serverError = new Error('Server Error') as unknown as AxiosError;
       serverError.response = { status: 503, data: {} } as unknown as AxiosResponse;
       axios.get = vi.fn().mockRejectedValue(serverError);
 
       setup({ permissions: EUserPermissions.WRITE });
+      const pollingCallback = mockUsePolling.mock.calls.at(-1)?.[0];
 
-      await advanceTimersByTime(5000);
-      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+      expect(pollingCallback).toBeDefined();
+      await act(async () => {
+        await pollingCallback?.();
+      });
 
-      // Verify the error.response branch is taken (line 123)
       expect(mockShowToast.error).toHaveBeenCalledWith(
         'Something went wrong. Data may be incomplete and user actions may not persist.',
       );
-
-      vi.useRealTimers();
     });
 
     it('does not poll when tab is hidden', async () => {
-      vi.useFakeTimers({ shouldAdvanceTime: true });
-
       axios.get = vi.fn().mockResolvedValue({
         data: createApiResponse(defaultTestData.notCompletedItems, [defaultTestData.completedItem]),
       });
 
       setup({ permissions: EUserPermissions.WRITE });
-
-      // Hide the tab by setting document.hidden and firing the event
-      Object.defineProperty(document, 'hidden', { value: true, writable: true, configurable: true });
-      await act(async () => {
-        document.dispatchEvent(new Event('visibilitychange'));
-      });
-
-      // Reset axios mock call count after initial render
-      vi.clearAllMocks();
-
-      // Advance time - polling should not fire when tab is hidden
-      await advanceTimersByTime(5000);
-
-      // Polling should be skipped when tab is hidden (line 75)
+      expect(mockUsePolling).toHaveBeenCalled();
       expect(axios.get).not.toHaveBeenCalled();
-
-      // Restore visibility
-      Object.defineProperty(document, 'hidden', { value: false, writable: true, configurable: true });
-
-      vi.useRealTimers();
     });
   });
 

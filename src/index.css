@@ -53,6 +53,8 @@
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
   --spacing-nav-height: 4rem;
   --spacing-input-bar-height: 3.5rem;
+  --spacing-gutter: clamp(1rem, 4vw, 1.5rem); /* Shared signed-in page gutter and centered content measure */
+  --width-content: 64rem;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -101,6 +103,8 @@
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
   --spacing-nav-height: 4rem;
   --spacing-input-bar-height: 3.5rem;
+  --spacing-gutter: 1rem;
+  --width-content: 64rem;
   --transition-fast: 150ms ease;
   --transition-normal: 200ms ease;
   --transition-slow: 300ms ease;
