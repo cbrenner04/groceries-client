@@ -9,7 +9,7 @@ exports[`ListsContainer > renders 1`] = `
       class="tw:flex tw:justify-between tw:items-center tw:mb-4"
     >
       <h1
-        class="tw:text-2xl tw:font-bold tw:m-0"
+        class="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
         data-test-id="page-title"
       >
         Lists
@@ -18,7 +18,7 @@ exports[`ListsContainer > renders 1`] = `
         class="tw:flex tw:items-center tw:gap-2"
       >
         <button
-          class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
           type="button"
         >
           Select

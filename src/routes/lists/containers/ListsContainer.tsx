@@ -13,6 +13,7 @@ import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
 import { BottomSheet } from 'components/ui/BottomSheet';
 import Select from 'components/ui/Select';
+import { Button } from 'components/ui/Button';
 import {
   fetchLists,
   fetchListToEdit,
@@ -446,16 +447,16 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
       <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
-        <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
+        <h1
+          className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
+          data-test-id="page-title"
+        >
           Lists
         </h1>
         <div className="tw:flex tw:items-center tw:gap-2">
-          <button
-            type="button"
-            className={
-              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
-              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
-            }
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={(): void => {
               if (multiSelectActive && selectedListIds.size > 0) {
                 setSelectedListIds(new Set());
@@ -464,7 +465,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             }}
           >
             {multiSelectActive ? 'Hide Select' : 'Select'}
-          </button>
+          </Button>
         </div>
       </div>
 
