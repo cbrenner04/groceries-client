@@ -6,4 +6,6 @@ the primary-destination navigation; login direction is preserved.
 
 - [ ] [00 - Groceries brand header on signed-in screens](./00-brand-header.md)
 - [ ] [01 - Responsive page gutters and desktop content width](./01-layout-gutters-and-width.md)
+      — builds on 00 (its content top-offset depends on 00's header height; both
+      touch the same shell region).
 - [ ] [02 - Accessible light/dark palette and semantic states](./02-color-system.md)

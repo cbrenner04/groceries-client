@@ -21,6 +21,18 @@ theme-switching mechanism.
 - Target WCAG AA: body/control text ≥ 4.5:1 against its surface; borders, focus
   rings, and large/UI affordances ≥ 3:1. Rules out a palette that only looks
   cohesive but fails contrast.
+- Verify contrast with a concrete contrast-ratio check (a WCAG contrast calculator
+  or scripted ratio computation) on the resolved hex values, in both themes, for at
+  least these token/surface pairings:
+  - `--color-text-primary`, `--color-text-secondary`, and link/control text on
+    `--color-surface` and on `--color-surface-raised` — each ≥ 4.5:1.
+  - `--color-text-inverse` on `--color-primary` (primary button label) — ≥ 4.5:1.
+  - `--color-border-strong`, the focus-ring color, and the selected affordance vs
+    their adjacent surface — each ≥ 3:1.
+  - `--color-success` and `--color-danger` text/affordances vs their surface — text
+    ≥ 4.5:1, non-text affordances ≥ 3:1.
+  Rules out asserting AA without a measured check (the current code mislabels
+  indigo-600-on-white as AA at ≈ 4.2:1).
 - Selected, disabled, and focus states must be visually distinct from each other and
   from the default/hover states in both themes. Rules out conveying state by color
   alone where contrast is insufficient.
@@ -43,10 +55,13 @@ theme-switching mechanism.
 
 ## Acceptance criteria
 
-- [ ] Body text and control labels meet WCAG AA (≥ 4.5:1) against their surfaces in
-      both light and dark themes.
-- [ ] Borders, focus rings, and selected affordances meet ≥ 3:1 against adjacent
-      surfaces in both themes.
+- [ ] A measured contrast check (contrast calculator or scripted ratio on resolved
+      hex) confirms, in both themes: `--color-text-primary` /
+      `--color-text-secondary` / link / control text on `--color-surface` and
+      `--color-surface-raised` ≥ 4.5:1, and `--color-text-inverse` on
+      `--color-primary` ≥ 4.5:1.
+- [ ] The same check confirms `--color-border-strong`, the focus-ring color, and the
+      selected affordance each ≥ 3:1 against their adjacent surface in both themes.
 - [ ] Default, hover, focus, selected, and disabled states are each visually
       distinguishable from one another in both themes.
 - [ ] Success and destructive states remain semantically distinct (green-family vs
@@ -57,7 +72,7 @@ theme-switching mechanism.
       `/lists`, a single list, and the login page.
 - [ ] Token variable names are unchanged (no consumer in `src/components` /
       `src/routes` references a removed variable).
-- [ ] `npx tsc --noEmit` and `npm run lint` pass.
+- [ ] `npx tsc --noEmit`, `npm run lint`, and the full `npm test` suite pass.
 
 ## Required documentation updates
 
