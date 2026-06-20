@@ -158,6 +158,7 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
     'tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] ' +
     'tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 ' +
     'tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] ' +
+    'md:tw:pb-4 ' +
     'md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]';
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>): void => {

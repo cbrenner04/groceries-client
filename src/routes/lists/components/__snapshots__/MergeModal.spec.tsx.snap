@@ -12,7 +12,7 @@ exports[`MergeModal > renders 1`] = `
       role="dialog"
     >
       <div
-        class="tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:z-[var(--z-modal)] tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
+        class="tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:z-[var(--z-modal)] tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:pb-4 md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
       >
         <div
           class="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden"
