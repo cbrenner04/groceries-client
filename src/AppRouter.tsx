@@ -17,6 +17,7 @@ import EditListItem from './routes/list/EditListItem';
 import { ThemeProvider } from './components/ThemeProvider';
 import { SettingsMenu } from './components/domain/SettingsMenu';
 import { BottomNavBar } from './components/layout/BottomNavBar';
+import { BrandHeader } from './components/layout/BrandHeader';
 import { showToast } from './utils/toast';
 import axios from './utils/api';
 
@@ -81,6 +82,14 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   }, [showBottomNav]);
 
   useEffect(() => {
+    if (showBottomNav) {
+      document.documentElement.classList.add('with-brand-header');
+    } else {
+      document.documentElement.classList.remove('with-brand-header');
+    }
+  }, [showBottomNav]);
+
+  useEffect(() => {
     setSettingsMenuOpen(false);
     previousPathname.current = location.pathname;
   }, [location.pathname]);
@@ -124,6 +133,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
 
   return (
     <>
+      {showBottomNav ? <BrandHeader /> : null}
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname} direction={pageTransitionDirection}>
           <Routes>
