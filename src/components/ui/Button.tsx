@@ -41,7 +41,8 @@ export function Button(props: IButtonProps): React.JSX.Element {
 
   const baseStyles =
     'tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out ' +
-    'tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2';
+    'tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
   const widthStyles = fullWidth ? 'tw:w-full' : '';
   const disabledStyles =
     disabled || loading ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : 'tw:cursor-pointer';

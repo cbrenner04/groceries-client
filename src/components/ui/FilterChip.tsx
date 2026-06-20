@@ -14,7 +14,8 @@ export function FilterChip(props: IFilterChipProps): React.JSX.Element {
     'tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] ' +
     'tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer ' +
     'tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none ' +
-    'tw:min-w-[44px]';
+    'tw:min-w-[44px] ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
   const activeStyles = active
     ? 'tw:bg-[var(--color-primary)] tw:text-white'

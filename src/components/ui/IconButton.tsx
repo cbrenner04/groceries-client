@@ -30,7 +30,8 @@ export function IconButton(props: IIconButtonProps): React.JSX.Element {
 
   const baseStyles =
     'tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center ' +
-    'tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer';
+    'tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
   const disabledStyles = disabled ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : '';
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];

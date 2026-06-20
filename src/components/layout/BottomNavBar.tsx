@@ -150,6 +150,7 @@ export function BottomNavBar(props: IBottomNavBarProps): React.JSX.Element {
       'tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-1 ' +
       'tw:min-w-[44px] tw:min-h-[44px] tw:px-3 tw:py-1 ' +
       'tw:no-underline tw:transition-colors tw:duration-200 ' +
+      'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] ' +
       color
     );
   };
