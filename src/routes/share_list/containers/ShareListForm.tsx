@@ -32,6 +32,102 @@ const sectionLabel = 'tw:text-xs tw:uppercase tw:tracking-wide tw:text-[var(--co
 const rowClass =
   'tw:flex tw:items-center tw:justify-between tw:gap-3 tw:py-2 tw:border-b tw:border-[var(--color-border)]';
 
+export interface IShareListFormBodyProps {
+  invitableUsers: IListUser[];
+  pending: IUsersList[];
+  accepted: IUsersList[];
+  refused: IUsersList[];
+  userIsOwner: boolean;
+  userId: string;
+  onSelectUser: (user: IListUser) => Promise<void>;
+  onTogglePermission: (id: string, currentPermission: string, status: string) => Promise<void>;
+  onRefreshShare: (id: string, userId: string) => Promise<void>;
+  onRemoveShare: (id: string) => Promise<void>;
+}
+
+const ShareListFormBody: React.FC<IShareListFormBodyProps> = ({
+  invitableUsers,
+  pending,
+  accepted,
+  refused,
+  userIsOwner,
+  userId,
+  onSelectUser,
+  onTogglePermission,
+  onRefreshShare,
+  onRemoveShare,
+}) => (
+  <div className="tw:flex tw:flex-col tw:gap-4">
+    {!!invitableUsers.length && (
+      <section>
+        <h3 className={sectionLabel}>Share with</h3>
+        <ul className="tw:flex tw:flex-col">
+          {invitableUsers.map((user) => (
+            <li key={user.id} data-test-id={`invite-user-${user.id}`} className={rowClass}>
+              <button
+                type="button"
+                className="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
+                onClick={(): Promise<void> => onSelectUser(user)}
+              >
+                <span className="tw:text-sm tw:flex-1 tw:truncate">{user.email}</span>
+              </button>
+              <IconButton
+                icon={<CheckIcon size="sm" />}
+                variant="success"
+                size="sm"
+                label="Add user"
+                onClick={(): Promise<void> => onSelectUser(user)}
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <UsersList
+      togglePermission={onTogglePermission}
+      removeShare={onRemoveShare}
+      userIsOwner={userIsOwner}
+      userId={userId}
+      status="pending"
+      users={pending}
+    />
+    <UsersList
+      togglePermission={onTogglePermission}
+      removeShare={onRemoveShare}
+      userIsOwner={userIsOwner}
+      userId={userId}
+      status="accepted"
+      users={accepted}
+    />
+    <RefusedUsersList refreshShare={onRefreshShare} userIsOwner={userIsOwner} userId={userId} users={refused} />
+  </div>
+);
+
+export interface IShareListFormFooterProps {
+  newEmail: string;
+  onEmailChange: (email: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+}
+
+const ShareListFormFooter: React.FC<IShareListFormFooterProps> = ({ newEmail, onEmailChange, onSubmit }) => (
+  <form onSubmit={onSubmit} className="tw:flex tw:flex-col tw:gap-2">
+    <Input
+      id="new-email"
+      name="new-email"
+      type="email"
+      label="Enter an email to invite someone to share this list:"
+      value={newEmail}
+      onChange={(event: ChangeEvent<HTMLInputElement>): void => onEmailChange(event.target.value)}
+    />
+    <div className="tw:flex tw:justify-end">
+      <Button variant="primary" type="submit" disabled={!newEmail}>
+        Share List
+      </Button>
+    </div>
+  </form>
+);
+
 const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);
   const [newEmail, setNewEmail] = useState('');
@@ -195,72 +291,23 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
 
   return (
     <div className="tw:flex tw:flex-col tw:gap-4">
-      <form onSubmit={handleSubmit} className="tw:flex tw:flex-col tw:gap-2">
-        <Input
-          id="new-email"
-          name="new-email"
-          type="email"
-          label="Enter an email to invite someone to share this list:"
-          value={newEmail}
-          onChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
-        />
-        <div className="tw:flex tw:justify-end">
-          <Button variant="primary" type="submit" disabled={!newEmail}>
-            Share List
-          </Button>
-        </div>
-      </form>
+      <ShareListFormFooter newEmail={newEmail} onEmailChange={setNewEmail} onSubmit={handleSubmit} />
 
-      {!!invitableUsers.length && (
-        <section>
-          <h3 className={sectionLabel}>Share with</h3>
-          <ul className="tw:flex tw:flex-col">
-            {invitableUsers.map((user) => (
-              <li key={user.id} data-test-id={`invite-user-${user.id}`} className={rowClass}>
-                <button
-                  type="button"
-                  className="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
-                  onClick={(): Promise<void> => handleSelectUser(user)}
-                >
-                  <span className="tw:text-sm tw:flex-1 tw:truncate">{user.email}</span>
-                </button>
-                <IconButton
-                  icon={<CheckIcon size="sm" />}
-                  variant="success"
-                  size="sm"
-                  label="Add user"
-                  onClick={(): Promise<void> => handleSelectUser(user)}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <UsersList
-        togglePermission={togglePermission}
-        removeShare={removeShare}
+      <ShareListFormBody
+        invitableUsers={invitableUsers}
+        pending={pending}
+        accepted={accepted}
+        refused={refused}
         userIsOwner={props.userIsOwner}
         userId={props.userId}
-        status="pending"
-        users={pending}
-      />
-      <UsersList
-        togglePermission={togglePermission}
-        removeShare={removeShare}
-        userIsOwner={props.userIsOwner}
-        userId={props.userId}
-        status="accepted"
-        users={accepted}
-      />
-      <RefusedUsersList
-        refreshShare={refreshShare}
-        userIsOwner={props.userIsOwner}
-        userId={props.userId}
-        users={refused}
+        onSelectUser={handleSelectUser}
+        onTogglePermission={togglePermission}
+        onRefreshShare={refreshShare}
+        onRemoveShare={removeShare}
       />
     </div>
   );
 };
 
 export default ShareListForm;
+export { ShareListFormBody, ShareListFormFooter };
