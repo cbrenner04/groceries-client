@@ -105,7 +105,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -589,7 +589,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -1556,7 +1556,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -2532,7 +2532,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -3333,7 +3333,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -3646,7 +3646,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button
@@ -4162,7 +4162,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
           role="group"
         >
           <button

@@ -26,7 +26,7 @@ exports[`ListsContainer > renders 1`] = `
       </div>
     </div>
     <div
-      class="tw:flex tw:flex-wrap tw:gap-2 tw:mb-4"
+      class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:mb-4"
       role="group"
     >
       <button

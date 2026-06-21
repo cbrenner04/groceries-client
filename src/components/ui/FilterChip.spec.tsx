@@ -63,7 +63,7 @@ describe('FilterChip', () => {
 });
 
 describe('FilterChipGroup', () => {
-  it('renders children in a wrapping row', () => {
+  it('renders children in a horizontally scrollable row', () => {
     const { getByRole } = render(
       <FilterChipGroup>
         <FilterChip label="All" active onClick={vi.fn()} testId="clear-filter" />
@@ -72,8 +72,8 @@ describe('FilterChipGroup', () => {
       </FilterChipGroup>,
     );
     const group = getByRole('group');
-    expect(group).toHaveClass('tw:flex-wrap');
-    expect(group).toHaveClass('tw:flex');
+    expect(group).toHaveClass('tw:overflow-x-auto');
+    expect(group).toHaveClass('tw:flex-nowrap');
     expect(group).toHaveClass('tw:gap-2');
   });
 

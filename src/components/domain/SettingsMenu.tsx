@@ -27,6 +27,11 @@ export function SettingsMenu(props: ISettingsMenuProps): React.JSX.Element {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Settings" testId="settings-menu">
       <div className="tw:space-y-4">
+        <div className="tw:flex tw:justify-end">
+          <Button variant="ghost-danger" size="sm" data-test-id="log-out-link">
+            Log out
+          </Button>
+        </div>
         <div>
           <p
             className={
@@ -64,10 +69,6 @@ export function SettingsMenu(props: ISettingsMenuProps): React.JSX.Element {
             })}
           </div>
         </div>
-        <div className="tw:border-t tw:border-[var(--color-border)]" />
-        <Button variant="ghost-danger" fullWidth data-test-id="log-out-link" className="tw:justify-start">
-          Log out
-        </Button>
       </div>
     </BottomSheet>
   );
