@@ -615,6 +615,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       <BottomInputBar
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
+        submitLabel="Create"
         hidden={hideBottomInputBar}
         expandedContent={
           <Select

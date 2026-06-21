@@ -14,6 +14,10 @@ export interface IBottomInputBarProps {
   allowEnterSubmitWhenExpanded?: boolean;
   /** Session mode for mode-driven expansion state. */
   mode?: BottomInputBarMode;
+  /** When set, the footer Submit button submits this form (type=submit, form=<id>) instead of calling onSubmit. */
+  submitFormId?: string;
+  /** Label for the footer Submit button (default "Add"). */
+  submitLabel?: string;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
@@ -26,6 +30,8 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     hidden = false,
     allowEnterSubmitWhenExpanded = false,
     mode = 'neutral',
+    submitFormId,
+    submitLabel = 'Add',
   } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
@@ -107,16 +113,16 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     'tw:text-sm tw:outline-none ' +
     'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
 
-  const submitButtonClassName =
-    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
-    'tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] ' +
+  const footerSubmitClassName =
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:text-sm tw:font-medium ' +
     'tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors ' +
     'tw:disabled:opacity-50 tw:disabled:cursor-not-allowed ' +
     'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
-  const cancelButtonClassName =
-    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
-    'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
+  const footerCancelClassName =
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:text-[var(--color-text-secondary)] tw:text-sm tw:font-medium ' +
     'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors ' +
     'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
@@ -153,31 +159,6 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           className={inputClassName}
           data-test-id="quick-add-input"
         />
-        {expanded && (
-          <button
-            type="button"
-            onClick={handleCancel}
-            className={cancelButtonClassName}
-            data-test-id="quick-add-cancel"
-            aria-label="Cancel"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 6L14 14M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={!value.trim()}
-          className={submitButtonClassName}
-          data-test-id="quick-add-submit"
-          aria-label="Add"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 4V16M4 10H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        </button>
         {expandedContent && (
           <button
             type="button"
@@ -198,7 +179,45 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           </button>
         )}
       </div>
-      {expandedContent && <div className={expandedClassName}>{expandedContent}</div>}
+      {expandedContent && (
+        <div className={expandedClassName}>
+          {expandedContent}
+          {expanded && (
+            <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className={footerCancelClassName}
+                data-test-id="quick-add-cancel"
+              >
+                Cancel
+              </button>
+              {submitFormId ? (
+                <button
+                  type="button"
+                  onClick={(): void => {
+                    (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
+                  }}
+                  className={footerSubmitClassName}
+                  data-test-id="quick-add-submit"
+                >
+                  {submitLabel}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!value.trim()}
+                  className={footerSubmitClassName}
+                  data-test-id="quick-add-submit"
+                >
+                  {submitLabel}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

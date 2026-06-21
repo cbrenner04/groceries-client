@@ -151,11 +151,11 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
         error={showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined}
       />
       <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
-      <div className="tw:flex tw:flex-col sm:tw:flex-row sm:tw:justify-end tw:gap-2">
-        <Button variant="ghost" type="button" onClick={props.onCancel} fullWidth className="sm:tw:w-auto">
+      <div className="tw:flex tw:justify-end tw:gap-2">
+        <Button variant="ghost" type="button" onClick={props.onCancel}>
           Cancel
         </Button>
-        <Button variant="primary" type="submit" disabled={!isFormValid()} fullWidth className="sm:tw:w-auto">
+        <Button variant="primary" type="submit" disabled={!isFormValid()}>
           Update Template
         </Button>
       </div>

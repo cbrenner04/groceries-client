@@ -87,11 +87,11 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
         checked={refreshed}
         onChange={(): void => setRefreshed(!refreshed)}
       />
-      <div className="tw:flex tw:flex-col sm:tw:flex-row sm:tw:justify-end tw:gap-2 tw:mt-2">
-        <Button variant="ghost" onClick={props.onClose} type="button" fullWidth className="sm:tw:w-auto">
+      <div className="tw:flex tw:justify-end tw:gap-2 tw:mt-2">
+        <Button variant="ghost" onClick={props.onClose} type="button">
           Cancel
         </Button>
-        <Button variant="primary" type="submit" disabled={pending} loading={pending} fullWidth className="sm:tw:w-auto">
+        <Button variant="primary" type="submit" disabled={pending} loading={pending}>
           Update List
         </Button>
       </div>

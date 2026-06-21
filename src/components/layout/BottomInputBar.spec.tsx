@@ -139,4 +139,63 @@ describe('BottomInputBar', () => {
     await user.type(input, 'Milk{Enter}');
     expect(onSubmit).toHaveBeenCalledWith('Milk');
   });
+
+  it('footer Submit calls onSubmit with the input value', async () => {
+    const onSubmit = vi.fn();
+    const { findByTestId, user } = setup({
+      onSubmit,
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+    });
+    await user.type(await findByTestId('quick-add-input'), 'Milk');
+    await user.click(await findByTestId('quick-add-submit'));
+    expect(onSubmit).toHaveBeenCalledWith('Milk');
+  });
+
+  it('footer renders a custom submit label', async () => {
+    const { findByTestId } = setup({
+      expandedContent: <div>Extra</div>,
+      initialExpanded: true,
+      submitLabel: 'Create',
+    });
+    expect(await findByTestId('quick-add-submit')).toHaveTextContent('Create');
+  });
+
+  it('footer Cancel clears the input and collapses', async () => {
+    const { findByTestId, queryByTestId, user } = setup({
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+    });
+    const input = (await findByTestId('quick-add-input')) as HTMLInputElement;
+    await user.type(input, 'Milk');
+    await user.click(await findByTestId('quick-add-cancel'));
+    expect(input.value).toBe('');
+    expect(queryByTestId('quick-add-cancel')).not.toBeInTheDocument();
+  });
+
+  it('footer Submit requests submission of the associated form when submitFormId is set', async () => {
+    const onFormSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const { findByTestId, user } = setup({
+      submitFormId: 'assoc-form',
+      initialExpanded: true,
+      expandedContent: (
+        <form id="assoc-form" onSubmit={onFormSubmit}>
+          <input aria-label="field" />
+        </form>
+      ),
+    });
+    await user.click(await findByTestId('quick-add-submit'));
+    expect(onFormSubmit).toHaveBeenCalled();
+  });
+
+  it('footer Submit is a no-op when the associated form is absent', async () => {
+    const { findByTestId, user } = setup({
+      submitFormId: 'missing-form',
+      initialExpanded: true,
+      expandedContent: <div>no form here</div>,
+    });
+    await user.click(await findByTestId('quick-add-submit'));
+    // no throw — the optional-chained requestSubmit short-circuits when the form is absent
+    expect(await findByTestId('quick-add-input')).toBeInTheDocument();
+  });
 });

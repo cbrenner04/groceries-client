@@ -472,28 +472,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                 value=""
               />
               <button
-                aria-label="Add"
-                class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-                data-test-id="quick-add-submit"
-                disabled=""
-                type="button"
-              >
-                <svg
-                  fill="none"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 4V16M4 10H16"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                  />
-                </svg>
-              </button>
-              <button
                 aria-label="Expand"
                 class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-all tw:duration-200 "
                 data-test-id="quick-add-expand"

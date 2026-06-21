@@ -200,16 +200,16 @@ exports[`EditTemplateForm > renders 1`] = `
       </div>
     </div>
     <div
-      class="tw:flex tw:flex-col sm:tw:flex-row sm:tw:justify-end tw:gap-2"
+      class="tw:flex tw:justify-end tw:gap-2"
     >
       <button
-        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer sm:tw:w-auto"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
         type="button"
       >
         Cancel
       </button>
       <button
-        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg tw:w-full tw:cursor-pointer sm:tw:w-auto"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
         type="submit"
       >
         Update Template

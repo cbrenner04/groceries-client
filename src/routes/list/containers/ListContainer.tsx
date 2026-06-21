@@ -731,7 +731,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
 
     return (
-      <form data-test-id="list-item-form" noValidate onSubmit={handleQuickAddFormSubmit} className="tw:pb-2">
+      <form
+        id="list-item-form"
+        data-test-id="list-item-form"
+        noValidate
+        onSubmit={handleQuickAddFormSubmit}
+        className="tw:pb-2"
+      >
         <ListItemFormFields
           fieldConfigurations={configs}
           fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
@@ -765,15 +771,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             setQuickAddCompleted(e.target.checked);
           }}
         />
-        <button
-          type="submit"
-          className={
-            'tw:w-full tw:mt-2 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
-            'tw:text-white tw:text-sm tw:font-medium'
-          }
-        >
-          Submit
-        </button>
       </form>
     );
   };
@@ -1070,6 +1067,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
                 expandedContent={getQuickAddExpandedContent()}
                 onInputFocus={handleQuickAddFormOpen}
                 mode={sessionMode}
+                submitFormId="list-item-form"
+                submitLabel="Add item"
               />
               {!(showDeleteConfirm || copyMoveSheet !== null) ? (
                 // Keep the explicit Add button to preserve existing quick-add test and interaction flows.

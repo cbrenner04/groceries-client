@@ -449,28 +449,6 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           type="text"
           value=""
         />
-        <button
-          aria-label="Add"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-submit"
-          disabled=""
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 4V16M4 10H16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
     <button
@@ -1416,28 +1394,6 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           type="text"
           value=""
         />
-        <button
-          aria-label="Add"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-submit"
-          disabled=""
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 4V16M4 10H16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
     <button
@@ -3193,28 +3149,6 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           type="text"
           value=""
         />
-        <button
-          aria-label="Add"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-submit"
-          disabled=""
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 4V16M4 10H16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
     <button
@@ -3527,49 +3461,6 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           type="text"
           value=""
         />
-        <button
-          aria-label="Cancel"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-cancel"
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M6 6L14 14M14 6L6 14"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
-        <button
-          aria-label="Add"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-submit"
-          disabled=""
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 4V16M4 10H16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
     <button
@@ -4989,28 +4880,6 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           type="text"
           value=""
         />
-        <button
-          aria-label="Add"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
-          data-test-id="quick-add-submit"
-          disabled=""
-          type="button"
-        >
-          <svg
-            fill="none"
-            height="20"
-            viewBox="0 0 20 20"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 4V16M4 10H16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
     <button

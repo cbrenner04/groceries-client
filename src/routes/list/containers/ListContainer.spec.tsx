@@ -2283,7 +2283,7 @@ describe('ListContainer', () => {
       const completedCheckbox = getByLabelText('Completed') as HTMLInputElement;
       await user.click(completedCheckbox);
 
-      await user.click(getByText('Submit'));
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith(
@@ -2312,7 +2312,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       // Click Submit before typing into Notes; resolvedFieldData returns '' so no field POST,
       // but should still create item. Test the configs.length === 0 path via fields cleared.
-      await user.click(getByText('Submit'));
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalled();
@@ -2336,7 +2336,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       const notesInput = getByLabelText('Notes') as HTMLInputElement;
       await user.type(notesInput, 'x');
-      await user.click(getByText('Submit'));
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('Failed to add item');
@@ -2370,7 +2370,7 @@ describe('ListContainer', () => {
       await user.type(notesInput, 'note');
       const categoryInput = getByLabelText('Category') as HTMLInputElement;
       await user.type(categoryInput, 'existing');
-      await user.click(getByText('Submit'));
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith('/lists/id1/categories', { category: { name: 'Existing' } });
