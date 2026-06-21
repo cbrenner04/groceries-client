@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
@@ -28,6 +28,7 @@ import { listsCache } from 'utils/lightweightCache';
 import { prefetchListsIdle } from 'utils/listPrefetch';
 import MergeModal from '../components/MergeModal';
 import EditListForm from './EditListForm';
+import NewListForm from './NewListForm';
 
 type TStatusFilter = 'all' | 'pending' | 'active' | 'completed';
 
@@ -65,6 +66,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
   const [editListPending, setEditListPending] = useState(false);
+  const [newListSheetOpen, setNewListSheetOpen] = useState(false);
+  const [newListPending, setNewListPending] = useState(false);
   const navigate = useNavigate();
 
   const openEditSheet = useCallback(
@@ -210,6 +213,31 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       })
       .catch((error) => {
         failure(error, navigate, setPending);
+      });
+  };
+
+  const closeNewListSheet = (): void => {
+    setNewListSheetOpen(false);
+  };
+
+  const handleNewListFormSubmit = (name: string, templateId: string): void => {
+    setNewListPending(true);
+    const list = { name, list_item_configuration_id: templateId };
+    axios
+      .post('/lists', { list })
+      .then((response) => {
+        const updatedCurrentUserPermissions = update(currentUserPermissions, {
+          [response.data.id]: { $set: 'write' },
+        });
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+        const updatedIncompleteLists = update(incompleteLists, { $push: [response.data] });
+        setIncompleteLists(sortLists(updatedIncompleteLists));
+        setNewListPending(false);
+        closeNewListSheet();
+        showToast.info('List successfully added.');
+      })
+      .catch((error) => {
+        failure(error, navigate, setNewListPending);
       });
   };
 
@@ -419,7 +447,9 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
+  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
+  const hideBottomInputBar =
+    showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen || newListSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -447,29 +477,48 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
-      <div className="tw:mx-auto tw:w-full tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]">
-      <div className="tw:flex tw:justify-between tw:items-center tw:mb-6">
+      <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
         <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
           Lists
         </h1>
-        <button
-          type="button"
-          className={
-            'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
-            'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
-          }
-          onClick={(): void => {
-            if (multiSelectActive && selectedListIds.size > 0) {
-              setSelectedListIds(new Set());
+        <div className="tw:flex tw:items-center tw:gap-2">
+          <button
+            type="button"
+            className={
+              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
             }
-            setMultiSelectActive(!multiSelectActive);
-          }}
-        >
-          {multiSelectActive ? 'Hide Select' : 'Select'}
-        </button>
+            onClick={(): void => setNewListSheetOpen(true)}
+            data-test-id="new-list-action"
+          >
+            New List
+          </button>
+          <button
+            type="button"
+            className={
+              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
+            }
+            onClick={(): void => {
+              if (multiSelectActive && selectedListIds.size > 0) {
+                setSelectedListIds(new Set());
+              }
+              setMultiSelectActive(!multiSelectActive);
+            }}
+          >
+            {multiSelectActive ? 'Hide Select' : 'Select'}
+          </button>
+          <Link
+            to="/templates"
+            data-test-id="manage-templates-link"
+            className="tw:text-sm tw:text-[var(--color-primary)]"
+          >
+            Manage Templates
+          </Link>
+        </div>
       </div>
 
-      <FilterChipGroup className="tw:mb-6">
+      <FilterChipGroup className="tw:mb-4">
         <FilterChip
           label="All"
           active={statusFilter === 'all'}
@@ -499,7 +548,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       {multiSelectActive && selectedListIds.size > 1 && (
         <div
           className={
-            'tw:flex tw:items-center tw:gap-2 tw:mb-6 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
+            'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
           }
         >
           <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
@@ -525,7 +574,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       {filtered.pending.length > 0 && (
         <div
           className={
-            'tw:mb-6 tw:p-3 tw:rounded-lg tw:border ' +
+            'tw:mb-4 tw:p-3 tw:rounded-lg tw:border ' +
             'tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10'
           }
           data-test-id="pending-alert"
@@ -535,11 +584,24 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         </div>
       )}
 
-      <div className="tw:flex tw:flex-col tw:gap-3">
+      <div className="tw:flex tw:flex-col tw:gap-2">
         {filtered.pending.map(renderListCard)}
         {filtered.active.map(renderListCard)}
         {filtered.completed.map(renderListCard)}
       </div>
+
+      {showCompletedLink && (
+        <div className="tw:mt-4 tw:text-center">
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
+            onClick={(): void => setStatusFilter('completed')}
+            data-test-id="show-all-completed"
+          >
+            Show all completed lists &rarr;
+          </button>
+        </div>
+      )}
 
       <ConfirmDialog
         isOpen={showDeleteConfirm}
@@ -631,6 +693,35 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         )}
       </BottomSheet>
 
+      <BottomSheet
+        isOpen={newListSheetOpen}
+        onClose={closeNewListSheet}
+        title="Create List"
+        testId="new-list-sheet"
+        footer={
+          <div className="tw:flex tw:justify-end tw:gap-2">
+            <Button variant="ghost" onClick={closeNewListSheet} type="button" disabled={newListPending}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              form="new-list-form"
+              disabled={newListPending}
+              loading={newListPending}
+            >
+              Create
+            </Button>
+          </div>
+        }
+      >
+        <NewListForm
+          listItemConfigurations={listItemConfigurations}
+          onSubmit={handleNewListFormSubmit}
+          pending={newListPending}
+        />
+      </BottomSheet>
+
       <BottomInputBar
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
@@ -648,7 +739,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         initialExpanded={false}
         allowEnterSubmitWhenExpanded
       />
-      </div>
     </div>
   );
 };
