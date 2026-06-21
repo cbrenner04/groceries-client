@@ -29,11 +29,3 @@ Replace the detached Settings popup with a dedicated Settings page for theme sel
 
 None
 
-
-## Blocker
-
-Out-of-bounds write detected. The following paths were modified outside `spec/codex-redesign-settings-page-and-theme-controls/` and have been reverted:
-
-  - `spec/`
-
-Spec-file write boundary is enforced: only files under `spec/codex-redesign-settings-page-and-theme-controls/` may be modified.
