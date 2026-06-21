@@ -45,11 +45,11 @@ describe('TemplatesContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders with create sheet open', async () => {
-    const { container, getByTestId, findByTestId, user } = setup();
-    await user.click(getByTestId('add-template-button'));
-    expect(await findByTestId('template-form-name')).toBeVisible();
-    expect(container).toMatchSnapshot();
+  it('renders the create-template input at the bottom', () => {
+    const { getByTestId } = setup();
+    const input = getByTestId('quick-add-input');
+    expect(input).toBeVisible();
+    expect(input).toHaveAttribute('placeholder', 'Create a new template...');
   });
 
   it('displays templates', () => {
@@ -68,24 +68,14 @@ describe('TemplatesContainer', () => {
     expect(getByText('No templates found')).toBeVisible();
   });
 
-  it('opens add template sheet on + Add', async () => {
-    const { getByTestId, findByTestId, user } = setup();
-
-    await user.click(getByTestId('add-template-button'));
-
-    expect(await findByTestId('template-form-name')).toBeVisible();
-  });
-
-  it('creates template on form submit', async () => {
+  it('creates a template from the bottom bar (name + default field)', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
     });
-    const { getByTestId, getByText, findByTestId, user } = setup();
+    const { getByTestId, findByTestId, user } = setup();
 
-    await user.click(getByTestId('add-template-button'));
-    await user.type(await findByTestId('template-form-name'), 'new template');
-    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
-    await user.click(getByText('Create Template'));
+    await user.type(getByTestId('quick-add-input'), 'new template');
+    await user.click(getByTestId('quick-add-submit'));
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
@@ -95,16 +85,14 @@ describe('TemplatesContainer', () => {
     expect(await findByTestId('template-id3')).toBeVisible();
   });
 
-  it('creates fields when creating template', async () => {
+  it('creates a default field when creating a template', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
     });
-    const { getByTestId, getByText, findByTestId, user } = setup();
+    const { getByTestId, user } = setup();
 
-    await user.click(getByTestId('add-template-button'));
-    await user.type(await findByTestId('template-form-name'), 'new template');
-    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
-    await user.click(getByText('Create Template'));
+    await user.type(getByTestId('quick-add-input'), 'new template');
+    await user.click(getByTestId('quick-add-submit'));
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
@@ -117,12 +105,10 @@ describe('TemplatesContainer', () => {
 
   it('redirects to signin when 401 on create', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByTestId, getByText, findByTestId, user } = setup();
+    const { getByTestId, user } = setup();
 
-    await user.click(getByTestId('add-template-button'));
-    await user.type(await findByTestId('template-form-name'), 'new template');
-    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
-    await user.click(getByText('Create Template'));
+    await user.type(getByTestId('quick-add-input'), 'new template');
+    await user.click(getByTestId('quick-add-submit'));
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -136,12 +122,10 @@ describe('TemplatesContainer', () => {
     axios.post = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'cannot be blank' } },
     });
-    const { getByTestId, getByText, findByTestId, user } = setup();
+    const { getByTestId, user } = setup();
 
-    await user.click(getByTestId('add-template-button'));
-    await user.type(await findByTestId('template-form-name'), 'new template');
-    await user.type(await findByTestId('field-row-label-0'), 'Field 1');
-    await user.click(getByText('Create Template'));
+    await user.type(getByTestId('quick-add-input'), 'new template');
+    await user.click(getByTestId('quick-add-submit'));
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -178,16 +162,6 @@ describe('TemplatesContainer', () => {
     });
 
     expect(mockShowToast.error).toHaveBeenCalled();
-  });
-
-  it('opens then cancels the create sheet', async () => {
-    const { getByTestId, getByText, queryByTestId, user } = setup();
-
-    await user.click(getByTestId('add-template-button'));
-    expect(getByTestId('template-form-name')).toBeVisible();
-    await user.click(getByText('Cancel'));
-
-    await waitFor(() => expect(queryByTestId('template-form-name')).not.toBeInTheDocument());
   });
 
   it('opens edit sheet when an edit button is clicked', async () => {
