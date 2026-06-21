@@ -53,7 +53,7 @@ exports[`TemplatesContainer > renders 1`] = `
               >
                 <button
                   aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-edit"
                   type="button"
                 >
@@ -81,7 +81,7 @@ exports[`TemplatesContainer > renders 1`] = `
                 </button>
                 <button
                   aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-trash"
                   type="button"
                 >
@@ -125,7 +125,7 @@ exports[`TemplatesContainer > renders 1`] = `
               >
                 <button
                   aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-edit"
                   type="button"
                 >
@@ -153,7 +153,7 @@ exports[`TemplatesContainer > renders 1`] = `
                 </button>
                 <button
                   aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-trash"
                   type="button"
                 >
@@ -239,7 +239,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
               >
                 <button
                   aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-edit"
                   type="button"
                 >
@@ -267,7 +267,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
                 </button>
                 <button
                   aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-trash"
                   type="button"
                 >
@@ -311,7 +311,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
               >
                 <button
                   aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-edit"
                   type="button"
                 >
@@ -339,7 +339,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
                 </button>
                 <button
                   aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                   data-test-id="template-trash"
                   type="button"
                 >
@@ -551,7 +551,7 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
                       </div>
                       <button
                         aria-label="Remove field"
-                        class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+                        class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
                         data-test-id="field-row-remove-0"
                         disabled=""
                         type="button"

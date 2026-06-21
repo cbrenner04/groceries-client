@@ -209,7 +209,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id3"
                           type="button"
                         >
@@ -260,7 +260,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id3"
                           type="button"
                         >
@@ -338,7 +338,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id4"
                           type="button"
                         >
@@ -389,7 +389,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id4"
                           type="button"
                         >
@@ -503,7 +503,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                       >
                         <button
                           aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-refresh-id1"
                           type="button"
                         >
@@ -555,7 +555,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-delete-id1"
                           type="button"
                         >
@@ -815,7 +815,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id2"
                           type="button"
                         >
@@ -866,7 +866,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id2"
                           type="button"
                         >
@@ -978,7 +978,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id3"
                           type="button"
                         >
@@ -1029,7 +1029,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id3"
                           type="button"
                         >
@@ -1107,7 +1107,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id4"
                           type="button"
                         >
@@ -1158,7 +1158,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id4"
                           type="button"
                         >
@@ -1270,7 +1270,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id5"
                           type="button"
                         >
@@ -1321,7 +1321,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id5"
                           type="button"
                         >
@@ -1435,7 +1435,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                       >
                         <button
                           aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-refresh-id1"
                           type="button"
                         >
@@ -1487,7 +1487,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-delete-id1"
                           type="button"
                         >
@@ -1747,7 +1747,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id2"
                           type="button"
                         >
@@ -1798,7 +1798,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id2"
                           type="button"
                         >
@@ -1910,7 +1910,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id3"
                           type="button"
                         >
@@ -1961,7 +1961,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id3"
                           type="button"
                         >
@@ -2039,7 +2039,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id4"
                           type="button"
                         >
@@ -2090,7 +2090,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id4"
                           type="button"
                         >
@@ -2202,7 +2202,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id5"
                           type="button"
                         >
@@ -2253,7 +2253,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id5"
                           type="button"
                         >
@@ -2367,7 +2367,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                       >
                         <button
                           aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-refresh-id1"
                           type="button"
                         >
@@ -2419,7 +2419,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-delete-id1"
                           type="button"
                         >
@@ -2712,7 +2712,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id2"
                           type="button"
                         >
@@ -2763,7 +2763,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id2"
                           type="button"
                         >
@@ -2875,7 +2875,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id3"
                           type="button"
                         >
@@ -2926,7 +2926,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id3"
                           type="button"
                         >
@@ -3004,7 +3004,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id4"
                           type="button"
                         >
@@ -3055,7 +3055,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id4"
                           type="button"
                         >
@@ -3167,7 +3167,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id5"
                           type="button"
                         >
@@ -3218,7 +3218,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id5"
                           type="button"
                         >
@@ -3465,7 +3465,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                       >
                         <button
                           aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-refresh-id1"
                           type="button"
                         >
@@ -3517,7 +3517,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-delete-id1"
                           type="button"
                         >
@@ -4238,7 +4238,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id2"
                           type="button"
                         >
@@ -4289,7 +4289,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id2"
                           type="button"
                         >
@@ -4401,7 +4401,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id3"
                           type="button"
                         >
@@ -4452,7 +4452,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id3"
                           type="button"
                         >
@@ -4530,7 +4530,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id4"
                           type="button"
                         >
@@ -4581,7 +4581,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id4"
                           type="button"
                         >
@@ -4693,7 +4693,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       >
                         <button
                           aria-label="Complete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] tw:active:bg-[rgb(16_185_129_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-success)] tw:hover:bg-[rgb(22_163_74_/_0.1)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-complete-id5"
                           type="button"
                         >
@@ -4744,7 +4744,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="not-completed-item-delete-id5"
                           type="button"
                         >
@@ -4858,7 +4858,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                       >
                         <button
                           aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-refresh-id1"
                           type="button"
                         >
@@ -4910,7 +4910,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
                           data-test-id="completed-item-delete-id1"
                           type="button"
                         >
