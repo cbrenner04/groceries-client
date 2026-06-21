@@ -7,6 +7,7 @@ export interface IBottomSheetProps {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
   testId?: string;
 }
 
@@ -74,7 +75,7 @@ export function createDragEndHandler(onClose: () => void): (event: unknown, info
 }
 
 export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
-  const { isOpen, onClose, title, children, testId } = props;
+  const { isOpen, onClose, title, children, footer, testId } = props;
   const shouldAnimate = import.meta.env.PROD && !prefersReducedMotion();
   const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
   const sheetRef = React.useRef<HTMLDivElement>(null);
@@ -154,7 +155,8 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
     'md:tw:items-center';
 
   const sheetClassName =
-    'tw:w-full tw:max-h-[90vh] tw:overflow-y-auto ' +
+    'tw:w-full tw:max-h-[90vh] ' +
+    (footer ? 'tw:flex tw:flex-col ' : 'tw:overflow-y-auto ') +
     'tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] ' +
     'tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 ' +
     'tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] ' +
@@ -192,7 +194,14 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
             <h2 className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]">{title}</h2>
           </div>
         )}
-        <div className="tw:p-4">{children}</div>
+        {footer ? (
+          <>
+            <div className="tw:overflow-y-auto tw:flex-1 tw:p-4">{children}</div>
+            <div className="tw:border-t tw:border-[var(--color-border)] tw:p-4">{footer}</div>
+          </>
+        ) : (
+          <div className="tw:p-4">{children}</div>
+        )}
       </motion.div>
     </motion.div>
   );
