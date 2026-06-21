@@ -445,6 +445,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
+      <div className="tw:mx-auto tw:w-full tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]">
       <div className="tw:flex tw:justify-between tw:items-center tw:mb-6">
         <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
           Lists
@@ -626,6 +627,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         initialExpanded={false}
         allowEnterSubmitWhenExpanded
       />
+      </div>
     </div>
   );
 };
