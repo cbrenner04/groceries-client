@@ -14,6 +14,7 @@ import NewSession from './routes/users/NewSession';
 import PageNotFound from './routes/error_pages/PageNotFound';
 import List from './routes/list/List';
 import EditListItem from './routes/list/EditListItem';
+import Settings from './routes/settings/Settings';
 import { ThemeProvider } from './components/ThemeProvider';
 import { SettingsMenu } from './components/domain/SettingsMenu';
 import { BottomNavBar } from './components/layout/BottomNavBar';
@@ -149,6 +150,8 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
             <Route path="/lists/:list_id/users_lists" element={<ShareList />} />
             {/* routes/templates */}
             <Route path="/templates" element={<Templates />} />
+            {/* routes/settings */}
+            <Route path="/settings" element={<Settings />} />
             {/* routes/users */}
             <Route path="/users/sign_in" element={<NewSession signInUser={signInUser} />} />
             <Route path="/users/password/new" element={<NewPassword />} />
