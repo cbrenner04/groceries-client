@@ -70,6 +70,18 @@ describe('BottomNavBar', () => {
     expect(templatesItem).toHaveClass('tw:text-[var(--color-primary)]');
   });
 
+  it('highlights active route for Settings', async () => {
+    const { findByTestId } = setup({ currentPath: '/settings' });
+    const settingsItem = await findByTestId('nav-settings');
+    expect(settingsItem).toHaveClass('tw:text-[var(--color-primary)]');
+  });
+
+  it('marks Settings nav item with aria-current="page" when on /settings', async () => {
+    const { findByTestId } = setup({ currentPath: '/settings' });
+    const settingsItem = await findByTestId('nav-settings');
+    expect(settingsItem).toHaveAttribute('aria-current', 'page');
+  });
+
   it('does not highlight inactive items', async () => {
     const { findByTestId } = setup({ currentPath: '/lists' });
     const templatesItem = await findByTestId('nav-templates');

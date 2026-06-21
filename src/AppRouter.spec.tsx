@@ -162,12 +162,13 @@ describe('AppRouter', () => {
     vi.mocked(api.delete).mockRejectedValueOnce(new Error('request failed'));
 
     const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/settings');
+    const { findByTestId, queryByTestId, findByLabelText } = renderAppRouter('/settings');
 
     await user.click(await findByTestId('log-out-link'));
 
     expect(sessionStorage.getItem('user')).toBeNull();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
     expect(api.delete).toHaveBeenCalledWith('/auth/sign_out');
+    expect(await findByLabelText('Email')).toBeVisible();
   });
 });
