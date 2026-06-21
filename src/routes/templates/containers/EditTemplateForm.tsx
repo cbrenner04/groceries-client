@@ -5,7 +5,6 @@ import { type AxiosError } from 'axios';
 
 import axios from 'utils/api';
 import Input from 'components/ui/Input';
-import { Button } from 'components/ui/Button';
 import type { IListItemConfiguration, IListItemFieldConfiguration, EListItemFieldType } from 'typings';
 
 import FieldConfigurationRows, { type IFieldRow } from '../components/FieldConfigurationRows';
@@ -15,6 +14,7 @@ export interface IEditTemplateFormProps {
   fieldConfigurations: IListItemFieldConfiguration[];
   onCancel: () => void;
   onSaved?: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }
 
 const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.Element => {
@@ -55,6 +55,7 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
       return;
     }
 
+    props.onPendingChange?.(true);
     try {
       if (name !== props.template.name) {
         await axios.put(`/list_item_configurations/${props.template.id}`, {
@@ -135,11 +136,13 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
       } else {
         showToast.error(error.message);
       }
+    } finally {
+      props.onPendingChange?.(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
+    <form id="edit-template-form" onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
       <Input
         id="template-name"
         testId="template-name"
@@ -151,14 +154,6 @@ const EditTemplateForm: React.FC<IEditTemplateFormProps> = (props): React.JSX.El
         error={showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined}
       />
       <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
-      <div className="tw:flex tw:justify-end tw:gap-2">
-        <Button variant="ghost" type="button" onClick={props.onCancel}>
-          Cancel
-        </Button>
-        <Button variant="primary" type="submit" disabled={!isFormValid()}>
-          Update Template
-        </Button>
-      </div>
     </form>
   );
 };

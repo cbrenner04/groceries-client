@@ -2,13 +2,11 @@ import React, { type ChangeEvent, type FormEvent, useState } from 'react';
 import { EListItemFieldType } from 'typings';
 
 import Input from 'components/ui/Input';
-import { Button } from 'components/ui/Button';
 import FieldConfigurationRows, { type IFieldRow } from './FieldConfigurationRows';
 
 export interface ITemplateFormProps {
   onFormSubmit: (name: string, fieldRows: IFieldRow[]) => Promise<void>;
-  pending: boolean;
-  onCancel: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }
 
 const initialFieldRows = (): IFieldRow[] => [
@@ -46,10 +44,15 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
     if (!isFormValid()) {
       return;
     }
-    await props.onFormSubmit(name, fieldRows);
-    setName('');
-    setFieldRows(initialFieldRows());
-    setShowValidation(false);
+    props.onPendingChange?.(true);
+    try {
+      await props.onFormSubmit(name, fieldRows);
+      setName('');
+      setFieldRows(initialFieldRows());
+      setShowValidation(false);
+    } finally {
+      props.onPendingChange?.(false);
+    }
   };
 
   return (
@@ -64,14 +67,6 @@ const TemplateForm: React.FC<ITemplateFormProps> = (props): React.JSX.Element =>
         error={showValidation && name.trim() === '' ? 'Name cannot be blank' : undefined}
       />
       <FieldConfigurationRows fieldRows={fieldRows} setFieldRows={setFieldRows} showValidation={showValidation} />
-      <div className="tw:flex tw:justify-end tw:gap-2">
-        <Button variant="ghost" type="button" onClick={props.onCancel}>
-          Cancel
-        </Button>
-        <Button variant="primary" type="submit" disabled={props.pending || !isFormValid()}>
-          Create Template
-        </Button>
-      </div>
     </form>
   );
 };

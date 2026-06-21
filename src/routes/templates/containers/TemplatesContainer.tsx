@@ -31,6 +31,7 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
   const [createSheetOpen, setCreateSheetOpen] = useState(false);
   const [editing, setEditing] = useState<IEditingTemplate | null>(null);
   const [editSheetOpen, setEditSheetOpen] = useState(false);
+  const [editPending, setEditPending] = useState(false);
   const navigate = useNavigate();
 
   const openEditSheet = useCallback(
@@ -145,12 +146,18 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
         onClose={(): void => setCreateSheetOpen(false)}
         title="New Template"
         testId="add-template-sheet"
+        footer={
+          <div className="tw:flex tw:justify-end tw:gap-2">
+            <Button variant="ghost" onClick={(): void => setCreateSheetOpen(false)} type="button" disabled={pending}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit" form="template-form" disabled={pending} loading={pending}>
+              Create Template
+            </Button>
+          </div>
+        }
       >
-        <TemplateForm
-          onFormSubmit={handleCreateSubmit}
-          pending={pending}
-          onCancel={(): void => setCreateSheetOpen(false)}
-        />
+        <TemplateForm onFormSubmit={handleCreateSubmit} onPendingChange={setPending} />
       </BottomSheet>
 
       <BottomSheet
@@ -158,6 +165,24 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
         onClose={closeEditSheet}
         title="Edit Template"
         testId="edit-template-sheet"
+        footer={
+          editing && (
+            <div className="tw:flex tw:justify-end tw:gap-2">
+              <Button variant="ghost" onClick={closeEditSheet} type="button" disabled={editPending}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                form="edit-template-form"
+                disabled={editPending}
+                loading={editPending}
+              >
+                Update Template
+              </Button>
+            </div>
+          )
+        }
       >
         {editing && (
           <EditTemplateForm
@@ -165,6 +190,7 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
             fieldConfigurations={editing.fieldConfigurations}
             onCancel={closeEditSheet}
             onSaved={handleEditSaved}
+            onPendingChange={setEditPending}
           />
         )}
       </BottomSheet>
