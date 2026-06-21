@@ -27,156 +27,152 @@ exports[`TemplatesContainer > renders 1`] = `
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:py-4"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
     >
       <div
-        class="tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]"
+        class="tw:flex tw:flex-col tw:gap-3"
       >
         <div
-          class="tw:flex tw:flex-col tw:gap-3"
+          class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
+          data-test-class="template"
+          data-test-id="template-id1"
         >
           <div
-            class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
-            data-test-class="template"
-            data-test-id="template-id1"
+            class="tw:flex tw:items-center tw:justify-between tw:gap-2"
           >
-            <div
-              class="tw:flex tw:items-center tw:justify-between tw:gap-2"
+            <h3
+              class="tw:text-base tw:font-semibold tw:m-0"
             >
-              <h3
-                class="tw:text-base tw:font-semibold tw:m-0"
+              grocery list
+            </h3>
+            <div
+              class="tw:flex tw:items-center tw:gap-1"
+            >
+              <button
+                aria-label="Edit template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-edit"
+                type="button"
               >
-                grocery list
-              </h3>
-              <div
-                class="tw:flex tw:items-center tw:gap-1"
-              >
-                <button
-                  aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-edit"
-                  type="button"
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                  <path
+                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-trash"
-                  type="button"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-label="Delete template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-trash"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                  <path
+                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  />
+                </svg>
+              </button>
             </div>
           </div>
+        </div>
+        <div
+          class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
+          data-test-class="template"
+          data-test-id="template-id2"
+        >
           <div
-            class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
-            data-test-class="template"
-            data-test-id="template-id2"
+            class="tw:flex tw:items-center tw:justify-between tw:gap-2"
           >
-            <div
-              class="tw:flex tw:items-center tw:justify-between tw:gap-2"
+            <h3
+              class="tw:text-base tw:font-semibold tw:m-0"
             >
-              <h3
-                class="tw:text-base tw:font-semibold tw:m-0"
+              book list
+            </h3>
+            <div
+              class="tw:flex tw:items-center tw:gap-1"
+            >
+              <button
+                aria-label="Edit template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-edit"
+                type="button"
               >
-                book list
-              </h3>
-              <div
-                class="tw:flex tw:items-center tw:gap-1"
-              >
-                <button
-                  aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-edit"
-                  type="button"
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                  <path
+                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-trash"
-                  type="button"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-label="Delete template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-trash"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                  <path
+                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -213,276 +209,276 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
       </div>
     </header>
     <main
-      class="tw:flex-1 tw:overflow-y-auto tw:py-4"
+      class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
     >
       <div
-        class="tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]"
+        class="tw:flex tw:flex-col tw:gap-3"
       >
         <div
-          class="tw:flex tw:flex-col tw:gap-3"
+          class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
+          data-test-class="template"
+          data-test-id="template-id1"
         >
           <div
-            class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
-            data-test-class="template"
-            data-test-id="template-id1"
+            class="tw:flex tw:items-center tw:justify-between tw:gap-2"
           >
-            <div
-              class="tw:flex tw:items-center tw:justify-between tw:gap-2"
+            <h3
+              class="tw:text-base tw:font-semibold tw:m-0"
             >
-              <h3
-                class="tw:text-base tw:font-semibold tw:m-0"
+              grocery list
+            </h3>
+            <div
+              class="tw:flex tw:items-center tw:gap-1"
+            >
+              <button
+                aria-label="Edit template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-edit"
+                type="button"
               >
-                grocery list
-              </h3>
-              <div
-                class="tw:flex tw:items-center tw:gap-1"
-              >
-                <button
-                  aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-edit"
-                  type="button"
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                  <path
+                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-trash"
-                  type="button"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-label="Delete template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-trash"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                  <path
+                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
-            data-test-class="template"
-            data-test-id="template-id2"
-          >
-            <div
-              class="tw:flex tw:items-center tw:justify-between tw:gap-2"
-            >
-              <h3
-                class="tw:text-base tw:font-semibold tw:m-0"
-              >
-                book list
-              </h3>
-              <div
-                class="tw:flex tw:items-center tw:gap-1"
-              >
-                <button
-                  aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(14_165_233_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-edit"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
-      21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
-      88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
-      21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
-      43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
-      17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
-      32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
-                  data-test-id="template-trash"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="14"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
         <div
-          aria-modal="true"
-          class="tw:fixed tw:inset-0 tw:z-60 tw:flex tw:items-end tw:justify-center tw:bg-black/50 tw:transition-opacity tw:duration-200 md:tw:items-center"
-          data-test-id="add-template-sheet"
-          role="dialog"
+          class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
+          data-test-class="template"
+          data-test-id="template-id2"
         >
           <div
-            class="tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
+            class="tw:flex tw:items-center tw:justify-between tw:gap-2"
+          >
+            <h3
+              class="tw:text-base tw:font-semibold tw:m-0"
+            >
+              book list
+            </h3>
+            <div
+              class="tw:flex tw:items-center tw:gap-1"
+            >
+              <button
+                aria-label="Edit template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-edit"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+      21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
+      88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
+      21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
+      43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
+      17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
+      32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-label="Delete template"
+                class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+                data-test-id="template-trash"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="currentColor"
+                  focusable="false"
+                  height="14"
+                  role="img"
+                  style="display: inline-block; vertical-align: middle;"
+                  viewBox="0 0 512 512"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
+      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
+      46.3-19.7 47.9-45L416 128z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        aria-modal="true"
+        class="tw:fixed tw:inset-0 tw:z-60 tw:flex tw:items-end tw:justify-center tw:bg-black/50 tw:transition-opacity tw:duration-200 md:tw:items-center"
+        data-test-id="add-template-sheet"
+        role="dialog"
+      >
+        <div
+          class="tw:w-full tw:max-h-[90vh] tw:flex tw:flex-col tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
+        >
+          <div
+            class="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden"
           >
             <div
-              class="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden"
+              class="tw:w-10 tw:h-1 tw:rounded-full tw:bg-[var(--color-border)]"
+            />
+          </div>
+          <div
+            class="tw:px-4 tw:py-3 tw:border-b tw:border-[var(--color-border)]"
+          >
+            <h2
+              class="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+            >
+              New Template
+            </h2>
+          </div>
+          <div
+            class="tw:overflow-y-auto tw:flex-1 tw:p-4"
+          >
+            <form
+              autocomplete="off"
+              class="tw:flex tw:flex-col tw:gap-4"
+              id="template-form"
             >
               <div
-                class="tw:w-10 tw:h-1 tw:rounded-full tw:bg-[var(--color-border)]"
-              />
-            </div>
-            <div
-              class="tw:px-4 tw:py-3 tw:border-b tw:border-[var(--color-border)]"
-            >
-              <h2
-                class="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+                class="tw:w-full"
               >
-                New Template
-              </h2>
-            </div>
-            <div
-              class="tw:p-4"
-            >
-              <form
-                autocomplete="off"
-                class="tw:flex tw:flex-col tw:gap-4"
-                id="template-form"
+                <label
+                  class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+                  for="template-form-name"
+                >
+                  Name
+                </label>
+                <input
+                  class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+                  data-test-id="template-form-name"
+                  id="template-form-name"
+                  name="template-form-name"
+                  value=""
+                />
+              </div>
+              <div
+                class="tw:flex tw:flex-col tw:gap-3"
               >
-                <div
-                  class="tw:w-full"
+                <h4
+                  class="tw:text-sm tw:font-semibold tw:m-0 tw:text-[var(--color-text-primary)]"
                 >
-                  <label
-                    class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-                    for="template-form-name"
-                  >
-                    Name
-                  </label>
-                  <input
-                    class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-                    data-test-id="template-form-name"
-                    id="template-form-name"
-                    name="template-form-name"
-                    value=""
-                  />
-                </div>
+                  Fields
+                </h4>
                 <div
-                  class="tw:flex tw:flex-col tw:gap-3"
+                  class="tw:flex tw:flex-col tw:gap-3 tw:p-3 tw:rounded-lg tw:border tw:border-[var(--color-border)] tw:bg-[var(--color-surface-raised)]"
+                  data-test-class="field-configuration-row"
                 >
-                  <h4
-                    class="tw:text-sm tw:font-semibold tw:m-0 tw:text-[var(--color-text-primary)]"
-                  >
-                    Fields
-                  </h4>
                   <div
-                    class="tw:flex tw:flex-col tw:gap-3 tw:p-3 tw:rounded-lg tw:border tw:border-[var(--color-border)] tw:bg-[var(--color-surface-raised)]"
-                    data-test-class="field-configuration-row"
+                    class="tw:w-full"
+                  >
+                    <label
+                      class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+                      for="field-row-label-0"
+                    >
+                      Label
+                    </label>
+                    <input
+                      class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
+                      data-test-id="field-row-label-0"
+                      id="field-row-label-0"
+                      placeholder="e.g., product"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="tw:w-full"
+                  >
+                    <label
+                      class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
+                      for="field-row-data-type-0"
+                    >
+                      Type
+                    </label>
+                    <select
+                      class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)] tw:appearance-none tw:bg-[image:url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%236b7280%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] tw:bg-no-repeat tw:bg-right tw:pr-10"
+                      data-test-id="field-row-data-type-0"
+                      id="field-row-data-type-0"
+                    >
+                      <option
+                        value="boolean"
+                      >
+                        True/False
+                      </option>
+                      <option
+                        value="date_time"
+                      >
+                        Date
+                      </option>
+                      <option
+                        value="free_text"
+                      >
+                        Free Text
+                      </option>
+                      <option
+                        value="number"
+                      >
+                        Number
+                      </option>
+                    </select>
+                  </div>
+                  <div
+                    class="tw:flex tw:gap-3"
                   >
                     <div
-                      class="tw:w-full"
-                    >
-                      <label
-                        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-                        for="field-row-label-0"
-                      >
-                        Label
-                      </label>
-                      <input
-                        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-                        data-test-id="field-row-label-0"
-                        id="field-row-label-0"
-                        placeholder="e.g., product"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="tw:w-full"
-                    >
-                      <label
-                        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-                        for="field-row-data-type-0"
-                      >
-                        Type
-                      </label>
-                      <select
-                        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)] tw:appearance-none tw:bg-[image:url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%236b7280%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><polyline%20points=%226%209%2012%2015%2018%209%22></polyline></svg>')] tw:bg-no-repeat tw:bg-right tw:pr-10"
-                        data-test-id="field-row-data-type-0"
-                        id="field-row-data-type-0"
-                      >
-                        <option
-                          value="boolean"
-                        >
-                          True/False
-                        </option>
-                        <option
-                          value="date_time"
-                        >
-                          Date
-                        </option>
-                        <option
-                          value="free_text"
-                        >
-                          Free Text
-                        </option>
-                        <option
-                          value="number"
-                        >
-                          Number
-                        </option>
-                      </select>
-                    </div>
-                    <div
-                      class="tw:flex tw:items-end tw:gap-3 tw:justify-between"
+                      class="tw:flex-1 tw:flex tw:gap-3"
                     >
                       <div
                         class="tw:w-24"
@@ -508,50 +504,58 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
                         </div>
                       </div>
                       <div
-                        class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+                        class="tw:flex-1"
                       >
                         <div
-                          class="tw:relative tw:w-5 tw:h-5"
+                          class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
                         >
-                          <input
-                            checked=""
-                            class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
-                            data-test-id="field-row-primary-0"
-                            id="field-row-primary-0"
-                            name="field-row-primary-0"
-                            type="checkbox"
-                          />
-                          <svg
-                            class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:text-white tw:pointer-events-none"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
+                          <div
+                            class="tw:relative tw:w-5 tw:h-5"
                           >
-                            <rect
-                              fill="var(--color-primary)"
-                              height="20"
-                              rx="2"
-                              width="20"
+                            <input
+                              checked=""
+                              class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+                              data-test-id="field-row-primary-0"
+                              id="field-row-primary-0"
+                              name="field-row-primary-0"
+                              type="checkbox"
                             />
-                            <path
-                              d="M6.5 10.5L8.5 12.5L13.5 7.5"
-                              fill="none"
-                              stroke="white"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                            />
-                          </svg>
+                            <svg
+                              class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:text-white tw:pointer-events-none"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <rect
+                                fill="var(--color-primary)"
+                                height="20"
+                                rx="2"
+                                width="20"
+                              />
+                              <path
+                                d="M6.5 10.5L8.5 12.5L13.5 7.5"
+                                fill="none"
+                                stroke="white"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                              />
+                            </svg>
+                          </div>
+                          <label
+                            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+                            for="field-row-primary-0"
+                          >
+                            Primary
+                          </label>
                         </div>
-                        <label
-                          class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
-                          for="field-row-primary-0"
-                        >
-                          Primary
-                        </label>
                       </div>
+                    </div>
+                    <div
+                      class="tw:flex tw:items-end"
+                    >
                       <button
                         aria-label="Remove field"
-                        class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(220_38_38_/_0.1)] tw:active:bg-[rgb(220_38_38_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+                        class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
                         data-test-id="field-row-remove-0"
                         disabled=""
                         type="button"
@@ -577,34 +581,38 @@ exports[`TemplatesContainer > renders with create sheet open 1`] = `
                       </button>
                     </div>
                   </div>
-                  <div>
-                    <button
-                      class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
-                      data-test-id="add-field-button"
-                      type="button"
-                    >
-                      Add Field
-                    </button>
-                  </div>
                 </div>
-                <div
-                  class="tw:flex tw:justify-end tw:gap-2"
-                >
+                <div>
                   <button
-                    class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+                    class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
+                    data-test-id="add-field-button"
                     type="button"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
-                    disabled=""
-                    type="submit"
-                  >
-                    Create Template
+                    Add Field
                   </button>
                 </div>
-              </form>
+              </div>
+            </form>
+          </div>
+          <div
+            class="tw:border-t tw:border-[var(--color-border)] tw:p-4"
+          >
+            <div
+              class="tw:flex tw:justify-end tw:gap-2"
+            >
+              <button
+                class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+                form="template-form"
+                type="submit"
+              >
+                Create Template
+              </button>
             </div>
           </div>
         </div>

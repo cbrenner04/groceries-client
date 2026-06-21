@@ -87,11 +87,13 @@ describe('EditTemplateForm', () => {
 
   it('updates template name on submit', async () => {
     axios.put = vi.fn().mockResolvedValue({});
-    const { findByLabelText, getByText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'new name');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(axios.put).toHaveBeenCalledWith('/list_item_configurations/id1', {
@@ -103,9 +105,10 @@ describe('EditTemplateForm', () => {
   it('shows success toast on successful update', async () => {
     axios.put = vi.fn().mockResolvedValue({});
     axios.post = vi.fn().mockResolvedValue({});
-    const { getByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(getByText('Update Template'));
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.info).toHaveBeenCalledWith('Template successfully updated');
@@ -115,9 +118,10 @@ describe('EditTemplateForm', () => {
   it('navigates to templates on successful update', async () => {
     axios.put = vi.fn().mockResolvedValue({});
     axios.post = vi.fn().mockResolvedValue({});
-    const { getByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(getByText('Update Template'));
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/templates');
@@ -127,11 +131,13 @@ describe('EditTemplateForm', () => {
   it('creates new fields', async () => {
     axios.post = vi.fn().mockResolvedValue({});
     axios.put = vi.fn().mockResolvedValue({});
-    const { getByTestId, getByText, user } = setup();
+    const { container, getByTestId, user } = setup();
 
     await user.click(getByTestId('add-field-button'));
     await user.type(getByTestId('field-row-label-1'), 'new field');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalled();
@@ -140,12 +146,14 @@ describe('EditTemplateForm', () => {
 
   it('updates modified fields', async () => {
     axios.put = vi.fn().mockResolvedValue({});
-    const { getByTestId, getByText, user } = setup();
+    const { container, getByTestId, user } = setup();
 
     const labelInput = getByTestId('field-row-label-0');
     await user.clear(labelInput);
     await user.type(labelInput, 'updated product');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       const calls = (axios.put as Mock).mock.calls;
@@ -160,7 +168,7 @@ describe('EditTemplateForm', () => {
     axios.delete = vi.fn().mockResolvedValue({});
     axios.put = vi.fn().mockResolvedValue({});
     axios.post = vi.fn().mockResolvedValue({});
-    const { getByTestId, getByText, user } = setup({
+    const { container, getByTestId, user } = setup({
       fieldConfigurations: [
         {
           id: 'field1',
@@ -188,7 +196,9 @@ describe('EditTemplateForm', () => {
     });
 
     await user.click(getByTestId('field-row-remove-1'));
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith('/list_item_configurations/id1/list_item_field_configurations/field2');
@@ -197,11 +207,13 @@ describe('EditTemplateForm', () => {
 
   it('redirects to signin when 401', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
@@ -211,11 +223,13 @@ describe('EditTemplateForm', () => {
 
   it('shows error when template not found (403)', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Template not found');
@@ -225,11 +239,13 @@ describe('EditTemplateForm', () => {
 
   it('shows error when template not found (404)', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Template not found');
@@ -241,11 +257,13 @@ describe('EditTemplateForm', () => {
     axios.put = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'is invalid' } },
     });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('name is invalid');
@@ -254,11 +272,13 @@ describe('EditTemplateForm', () => {
 
   it('shows generic error when no response', async () => {
     axios.put = vi.fn().mockRejectedValue({ request: 'error' });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
@@ -267,11 +287,13 @@ describe('EditTemplateForm', () => {
 
   it('shows error message for unknown errors', async () => {
     axios.put = vi.fn().mockRejectedValue({ message: 'custom error' });
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'n');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(mockShowToast.error).toHaveBeenCalledWith('custom error');
@@ -281,21 +303,26 @@ describe('EditTemplateForm', () => {
   it('only updates name if changed', async () => {
     axios.put = vi.fn().mockResolvedValue({});
     axios.post = vi.fn().mockResolvedValue({});
-    const { findAllByRole, user } = setup();
+    const { container } = setup();
 
-    await user.click((await findAllByRole('button'))[0]);
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
-    expect(axios.put).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(axios.put).not.toHaveBeenCalled();
+    });
   });
 
   it('calls onSaved when provided after successful update', async () => {
     axios.put = vi.fn().mockResolvedValue({});
     const onSaved = vi.fn();
-    const { findByLabelText, getByText, user } = setup({ onSaved });
+    const { container, findByLabelText, user } = setup({ onSaved });
 
     await user.clear(await findByLabelText('Name'));
     await user.type(await findByLabelText('Name'), 'renamed');
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(onSaved).toHaveBeenCalled();
@@ -303,21 +330,14 @@ describe('EditTemplateForm', () => {
     });
   });
 
-  it('calls onCancel when cancel button clicked', async () => {
-    const { getByText, props, user } = setup();
-
-    await user.click(getByText('Cancel'));
-
-    expect(props.onCancel).toHaveBeenCalled();
-    expect(mockNavigate).not.toHaveBeenCalled();
-  });
-
   it('does not submit when template name is empty', async () => {
     axios.put = vi.fn().mockResolvedValue({});
-    const { getByText, findByLabelText, user } = setup();
+    const { container, findByLabelText, user } = setup();
 
     await user.clear(await findByLabelText('Name'));
-    await user.click(getByText('Update Template'));
+
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(axios.put).not.toHaveBeenCalled();
@@ -326,10 +346,10 @@ describe('EditTemplateForm', () => {
 
   it('does not submit when field rows have duplicate positions', async () => {
     axios.put = vi.fn().mockResolvedValue({});
-    const { getByText, findByTestId, user } = setup();
+    const { container, findByTestId, user } = setup();
 
     // Add a second field
-    await user.click(getByText('Add Field'));
+    await user.click(container.querySelector('[data-test-id="add-field-button"]')!);
 
     // Fill in label for the new field
     await user.type(await findByTestId('field-row-label-1'), 'quantity');
@@ -338,7 +358,8 @@ describe('EditTemplateForm', () => {
     const positionInput = await findByTestId('field-row-position-1');
     fireEvent.change(positionInput, { target: { value: '1' } });
 
-    await user.click(getByText('Update Template'));
+    const form = container.querySelector('#edit-template-form') as HTMLFormElement;
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(axios.put).not.toHaveBeenCalled();
