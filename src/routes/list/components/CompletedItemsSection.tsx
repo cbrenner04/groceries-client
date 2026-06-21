@@ -129,7 +129,7 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
         ) : (
           <motion.div
             className="tw:flex tw:flex-col tw:gap-2"
-            initial={{ opacity: 0, height: 0 }}
+            initial={false}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
@@ -142,7 +142,7 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
                   <motion.div
                     key={item.id}
                     layout
-                    initial={{ opacity: 0, x: 50 }}
+                    initial={false}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.28, ease: 'easeInOut' }}
