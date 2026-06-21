@@ -44,13 +44,7 @@ export function FilterChipGroup(props: IFilterChipGroupProps): React.JSX.Element
   const { children, className = '' } = props;
 
   return (
-    <div
-      className={
-        'tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden ' +
-        `tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] ${className}`
-      }
-      role="group"
-    >
+    <div className={`tw:flex tw:flex-wrap tw:gap-2 ${className}`} role="group">
       {children}
     </div>
   );

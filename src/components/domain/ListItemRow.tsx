@@ -219,7 +219,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
         )}
         <IconButton
           icon={<EditIcon size="lg" />}
-          variant="default"
+          variant="accent"
           size="md"
           label="Edit"
           data-test-id={`${testClassPrefix}-item-edit-${item.id}`}

@@ -1211,8 +1211,8 @@ describe('ListContainer', () => {
       expect(await findByText('foo not completed product 2')).toBeVisible();
       expect(await findByText('bar not completed product')).toBeVisible();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
@@ -1243,8 +1243,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, queryByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
@@ -1278,8 +1278,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
@@ -1385,8 +1385,8 @@ describe('ListContainer', () => {
       const initialItem = await findByTestId('not-completed-item-complete-id2');
       expect(initialItem.closest('[data-test-class="non-completed-item"]')).toBeInTheDocument();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1410,8 +1410,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1438,8 +1438,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1669,25 +1669,25 @@ describe('ListContainer', () => {
   describe('Multi-Select Operations', () => {
     it('cannot multi select if user does not have write access', () => {
       const { queryByText } = setup({ permissions: EUserPermissions.READ });
-      expect(queryByText('Select')).toBeNull();
+      expect(queryByText('Select Items')).toBeNull();
     });
 
     it('changes select to hide select when multi select is on', async () => {
       const { findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
+      expect((await findAllByText('Select Items'))[0]).toHaveTextContent('Select');
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
-      expect(await findByText('Hide Select')).toBeVisible();
+      expect(await findByText('Cancel')).toBeVisible();
     });
 
     it('handles item select for multi select when item has not been selected', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       await user.click((await findAllByRole('checkbox'))[0]);
 
@@ -1697,8 +1697,8 @@ describe('ListContainer', () => {
     it('handles item select for multi select when item has been selected', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       await user.click((await findAllByRole('checkbox'))[0]);
       await user.click((await findAllByRole('checkbox'))[0]);
@@ -1709,16 +1709,16 @@ describe('ListContainer', () => {
     it('preserves selected items when multi select is toggled off and on for not completed items', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const multiSelectCheckboxes = await findAllByRole('checkbox');
       await user.click(multiSelectCheckboxes[0]);
       expect(multiSelectCheckboxes[0]).toBeChecked();
 
-      await user.click(await findByText('Hide Select'));
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click(await findByText('Cancel'));
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const updatedMultiSelectCheckboxes = await findAllByRole('checkbox');
       expect(updatedMultiSelectCheckboxes[0]).toBeChecked();
@@ -1754,10 +1754,10 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
+      expect((await findAllByText('Select Items'))[0]).toHaveTextContent('Select');
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(multiSelectCheckboxes[0]);
@@ -1776,8 +1776,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1795,8 +1795,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Select a not-completed item
       const checkboxes = await findAllByRole('checkbox');
@@ -1830,8 +1830,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1848,8 +1848,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1867,8 +1867,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1887,8 +1887,8 @@ describe('ListContainer', () => {
 
       expect(await findByText('foo not completed product')).toBeVisible();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1910,8 +1910,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1932,7 +1932,7 @@ describe('ListContainer', () => {
 
       // Enter multi-select mode
       await user.click(await findByTestId('select-button'));
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Select the completed item (id1 from defaultTestData.completedItem)
       const checkbox = await findByTestId('completed-item-select-id1');

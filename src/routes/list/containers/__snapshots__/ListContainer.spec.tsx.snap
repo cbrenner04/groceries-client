@@ -12,18 +12,21 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -84,11 +87,11 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -102,7 +105,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -242,7 +245,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id3"
                           type="button"
                         >
@@ -371,7 +374,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id4"
                           type="button"
                         >
@@ -430,172 +433,6 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
             </div>
           </div>
         </div>
-        <div
-          class="tw:mt-4 tw:mb-4"
-        >
-          <button
-            aria-expanded="true"
-            class="tw:flex tw:items-center tw:gap-2 tw:w-full tw:mb-2 tw:group tw:cursor-pointer"
-            data-test-class="completed-header"
-            type="button"
-          >
-            <span
-              class="tw:text-sm tw:font-semibold tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] tw:whitespace-nowrap"
-            >
-              Completed
-            </span>
-            <span
-              class="tw:inline-flex tw:items-center tw:text-xs tw:font-medium tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-primary)]"
-            >
-              1
-            </span>
-            <div
-              class="tw:flex-1 tw:h-px tw:bg-[var(--color-border)]"
-            />
-            <svg
-              aria-hidden="true"
-              class="tw:text-[var(--color-text-tertiary)] tw:transition-transform tw:duration-200"
-              fill="currentColor"
-              focusable="false"
-              height="14"
-              role="img"
-              style="display: inline-block; vertical-align: middle;"
-              viewBox="0 0 512 512"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M256 294.1L79.5 117.5c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l199.1 199.1c12.5 12.5 32.8 12.5
-      45.3 0l199.1-199.1c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 294.1z"
-              />
-            </svg>
-          </button>
-          <div
-            class="tw:flex tw:flex-col tw:gap-2"
-          >
-            <div
-              style="border-radius: 8px; opacity: 1; background-color: rgba(34, 197, 94, 0); box-shadow: 0 0 0 1px rgba(34, 197, 94, 0); transform: none;"
-            >
-              <div
-                class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:opacity-60 tw:[&_p]:line-through tw:[&_span]:line-through tw:[&_li]:line-through tw:flex tw:items-center tw:gap-3"
-                data-test-class="completed-item"
-                data-test-id="list-item-id1"
-              >
-                <div
-                  class="tw:flex-1 tw:min-w-0"
-                >
-                  <div
-                    class="tw:flex tw:items-center tw:justify-between tw:gap-2"
-                  >
-                    <div
-                      class="tw:flex-1 tw:min-w-0"
-                    >
-                      <div
-                        class="tw:text-base tw:font-medium tw:truncate"
-                      >
-                        foo completed product
-                      </div>
-                      <div
-                        class="tw:text-sm tw:text-[var(--color-text-secondary)] tw:truncate tw:mt-0.5"
-                      >
-                        <span>
-                          <span>
-                            completed quantity
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      class="tw:flex-shrink-0"
-                    >
-                      <div
-                        class="tw:flex tw:items-center tw:gap-1"
-                      >
-                        <button
-                          aria-label="Refresh"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
-                          data-test-id="completed-item-refresh-id1"
-                          type="button"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            fill="currentColor"
-                            focusable="false"
-                            height="20"
-                            role="img"
-                            style="display: inline-block; vertical-align: middle;"
-                            viewBox="0 0 512 512"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H464c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32
-      32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8
-      0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
-                          data-test-id="completed-item-edit-id1"
-                          type="button"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            fill="currentColor"
-                            focusable="false"
-                            height="20"
-                            role="img"
-                            style="display: inline-block; vertical-align: middle;"
-                            viewBox="0 0 512 512"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
-      21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
-      88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
-      21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
-      43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
-      17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
-      32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          aria-label="Delete"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
-                          data-test-id="completed-item-delete-id1"
-                          type="button"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            fill="currentColor"
-                            focusable="false"
-                            height="20"
-                            role="img"
-                            style="display: inline-block; vertical-align: middle;"
-                            viewBox="0 0 512 512"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
-      32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
-      6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
-      46.3-19.7 47.9-45L416 128z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
     <div
@@ -612,6 +449,28 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           type="text"
           value=""
         />
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <button
@@ -637,18 +496,21 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -709,11 +571,11 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -727,7 +589,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -858,7 +720,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id2"
                           type="button"
                         >
@@ -1021,7 +883,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id3"
                           type="button"
                         >
@@ -1150,7 +1012,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id4"
                           type="button"
                         >
@@ -1313,7 +1175,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id5"
                           type="button"
                         >
@@ -1479,7 +1341,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="completed-item-edit-id1"
                           type="button"
                         >
@@ -1554,6 +1416,28 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           type="text"
           value=""
         />
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <button
@@ -1579,18 +1463,21 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -1651,11 +1538,11 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -1669,7 +1556,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -1800,7 +1687,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id2"
                           type="button"
                         >
@@ -1963,7 +1850,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id3"
                           type="button"
                         >
@@ -2092,7 +1979,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id4"
                           type="button"
                         >
@@ -2255,7 +2142,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id5"
                           type="button"
                         >
@@ -2421,7 +2308,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="completed-item-edit-id1"
                           type="button"
                         >
@@ -2552,18 +2439,21 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -2624,11 +2514,11 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -2642,7 +2532,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -2773,7 +2663,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id2"
                           type="button"
                         >
@@ -2936,7 +2826,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id3"
                           type="button"
                         >
@@ -3065,7 +2955,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id4"
                           type="button"
                         >
@@ -3228,7 +3118,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id5"
                           type="button"
                         >
@@ -3303,6 +3193,28 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           type="text"
           value=""
         />
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <button
@@ -3328,18 +3240,21 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -3400,11 +3315,11 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -3418,7 +3333,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -3537,7 +3452,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="completed-item-edit-id1"
                           type="button"
                         >
@@ -3612,6 +3527,49 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           type="text"
           value=""
         />
+        <button
+          aria-label="Cancel"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-cancel"
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 6L14 14M14 6L6 14"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <button
@@ -3637,18 +3595,21 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -3685,7 +3646,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -4108,18 +4069,21 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <header
         class="tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]"
       >
         <a
           aria-label="Go back"
-          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors"
           data-discover="true"
           data-test-id="back-button"
           href="/lists"
@@ -4180,11 +4144,11 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
               </svg>
             </button>
             <button
-              class="tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
-              Select
+              Select Items
             </button>
           </div>
         </div>
@@ -4198,7 +4162,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:py-2"
+          class="tw:flex tw:flex-wrap tw:gap-2 tw:py-2"
           role="group"
         >
           <button
@@ -4329,7 +4293,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id2"
                           type="button"
                         >
@@ -4492,7 +4456,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id3"
                           type="button"
                         >
@@ -4621,7 +4585,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id4"
                           type="button"
                         >
@@ -4784,7 +4748,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="not-completed-item-edit-id5"
                           type="button"
                         >
@@ -4950,7 +4914,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
                         </button>
                         <button
                           aria-label="Edit"
-                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+                          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
                           data-test-id="completed-item-edit-id1"
                           type="button"
                         >
@@ -5025,6 +4989,28 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           type="text"
           value=""
         />
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
     </div>
     <button

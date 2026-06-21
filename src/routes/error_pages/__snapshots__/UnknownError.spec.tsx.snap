@@ -12,11 +12,14 @@ exports[`UnknownError > renders empty state with refresh action 1`] = `
         class="tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] tw:pt-[max(0.5rem,env(safe-area-inset-top))] tw:pb-2 tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
         data-test-id="app-brand"
       >
-        <span
-          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]"
+        <a
+          aria-label="Groceries home"
+          class="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+          data-discover="true"
+          href="/"
         >
           Groceries
-        </span>
+        </a>
       </div>
       <main
         class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"

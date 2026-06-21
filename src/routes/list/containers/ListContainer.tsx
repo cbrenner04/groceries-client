@@ -26,6 +26,7 @@ import ShareListSheet from '../../share_list/containers/ShareListSheet';
 import ChangeOtherListModal from '../components/ChangeOtherListModal';
 import NotCompletedItemsSection from '../components/NotCompletedItemsSection';
 import CompletedItemsSection from '../components/CompletedItemsSection';
+import { Button } from 'components/ui/Button';
 import type { TListItemAnimationState } from 'components/domain/ListItemRow';
 import EditItemSheet from '../components/EditItemSheet';
 import BulkEditSheet from '../components/BulkEditSheet';
@@ -1047,17 +1048,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               >
                 <UsersIcon size="sm" />
               </button>
-              <button
-                type="button"
-                className={
-                  'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] ' +
-                  'tw:text-white tw:text-sm tw:font-medium'
-                }
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setMultiSelectActive(!multiSelectActive)}
                 data-test-id="select-button"
               >
-                {multiSelectActive ? 'Hide Select' : 'Select'}
-              </button>
+                {multiSelectActive ? 'Cancel' : 'Select Items'}
+              </Button>
             </div>
           ) : null
         }
@@ -1134,6 +1132,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           permissionsDict={permissionsDict}
           selectedItems={selectedItems}
           pending={pending}
+          filter={filter}
+          displayedCategories={displayedCategories}
           listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
           completeMultiSelect={multiSelectActive}
           setSelectedItems={setSelectedItems}

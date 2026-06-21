@@ -36,7 +36,8 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
   const backButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
     'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
-    'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors';
+    'tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] ' +
+    'tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors';
 
   const backArrow = (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +88,13 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
     <div className={containerClassName}>
       <div className={contentWrapperClassName}>
         <div className={brandBarClassName} data-test-id="app-brand">
-          <span className="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)]">Groceries</span>
+          <Link
+            to="/"
+            className="tw:text-base tw:font-semibold tw:text-[var(--color-text-primary)] tw:no-underline"
+            aria-label="Groceries home"
+          >
+            Groceries
+          </Link>
         </div>
         {hasHeader && (
           <header className={headerClassName}>

@@ -21,12 +21,12 @@ exports[`ListsContainer > renders 1`] = `
           class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
           type="button"
         >
-          Select
+          Select Lists
         </button>
       </div>
     </div>
     <div
-      class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:mb-4"
+      class="tw:flex tw:flex-wrap tw:gap-2 tw:mb-4"
       role="group"
     >
       <button
@@ -205,7 +205,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Share"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-share"
               type="button"
             >
@@ -232,7 +232,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Edit"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-edit"
               type="button"
             >
@@ -338,7 +338,7 @@ exports[`ListsContainer > renders 1`] = `
             </button>
             <button
               aria-label="Edit"
-              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-border)] tw:h-10 tw:w-10 tw:text-base"
+              class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
               data-test-id="incomplete-list-edit"
               type="button"
             >
@@ -566,6 +566,28 @@ exports[`ListsContainer > renders 1`] = `
           type="text"
           value=""
         />
+        <button
+          aria-label="Add"
+          class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors tw:disabled:opacity-50 tw:disabled:cursor-not-allowed tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]"
+          data-test-id="quick-add-submit"
+          disabled=""
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4V16M4 10H16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
         <button
           aria-label="Expand"
           class="tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] tw:rounded-lg tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-all tw:duration-200 "

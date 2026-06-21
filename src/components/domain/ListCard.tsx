@@ -155,7 +155,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
         {permission === 'write' && (
           <IconButton
             icon={<UsersIcon size="lg" />}
-            variant="primary"
+            variant="default"
             size="md"
             label="Share"
             data-test-id="incomplete-list-share"
@@ -168,7 +168,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
         {isOwner && (
           <IconButton
             icon={<EditIcon size="lg" />}
-            variant="default"
+            variant="accent"
             size="md"
             label="Edit"
             data-test-id="incomplete-list-edit"

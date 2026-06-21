@@ -68,6 +68,11 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     }
   };
 
+  const handleCancel = (): void => {
+    setValue('');
+    setExpanded(false);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key !== 'Enter') {
       return;
@@ -102,6 +107,19 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     'tw:text-sm tw:outline-none ' +
     'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
 
+  const submitButtonClassName =
+    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
+    'tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] ' +
+    'tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors ' +
+    'tw:disabled:opacity-50 tw:disabled:cursor-not-allowed ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
+
+  const cancelButtonClassName =
+    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
+    'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
+    'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
+
   const expandButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
     'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
@@ -135,6 +153,31 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           className={inputClassName}
           data-test-id="quick-add-input"
         />
+        {expanded && (
+          <button
+            type="button"
+            onClick={handleCancel}
+            className={cancelButtonClassName}
+            data-test-id="quick-add-cancel"
+            aria-label="Cancel"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6L14 14M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={!value.trim()}
+          className={submitButtonClassName}
+          data-test-id="quick-add-submit"
+          aria-label="Add"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 4V16M4 10H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
         {expandedContent && (
           <button
             type="button"

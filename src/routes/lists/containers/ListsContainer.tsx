@@ -464,7 +464,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
               setMultiSelectActive(!multiSelectActive);
             }}
           >
-            {multiSelectActive ? 'Hide Select' : 'Select'}
+            {multiSelectActive ? 'Cancel' : 'Select Lists'}
           </Button>
         </div>
       </div>
