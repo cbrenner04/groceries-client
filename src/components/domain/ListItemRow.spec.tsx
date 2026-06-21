@@ -43,6 +43,13 @@ describe('ListItemRow', () => {
       expect(await findByText('Apples')).toBeVisible();
     });
 
+    it('still renders the item after it transitions to completed', async () => {
+      const { rerender, props, findByText } = setup();
+      // false -> true completion transition exercises the just-completed effect branch
+      rerender(<ListItemRow {...props} item={{ ...props.item, completed: true }} />);
+      expect(await findByText('Apples')).toBeVisible();
+    });
+
     it('renders secondary fields', async () => {
       const { findByText } = setup();
       expect(await findByText('3')).toBeVisible();
