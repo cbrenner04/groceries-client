@@ -117,20 +117,20 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
             All
           </button>
           <button
-            aria-pressed="true"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="true"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"
@@ -581,18 +581,18 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
-            aria-pressed="false"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="false"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"
@@ -1526,18 +1526,18 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
           <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
-            aria-pressed="false"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="false"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"
@@ -2502,18 +2502,18 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
-            aria-pressed="false"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="false"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"
@@ -3551,18 +3551,18 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
           <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
-            aria-pressed="false"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="false"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"
@@ -4067,18 +4067,18 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           <button
             aria-pressed="false"
             class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
-            data-test-id="filter-by-foo"
-            type="button"
-          >
-            foo
-          </button>
-          <button
-            aria-pressed="false"
-            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
             data-test-id="filter-by-bar"
             type="button"
           >
             bar
+          </button>
+          <button
+            aria-pressed="false"
+            class="tw:inline-flex tw:items-center tw:justify-center tw:px-3 tw:min-h-[44px] tw:rounded-full tw:text-sm tw:font-medium tw:cursor-pointer tw:transition-colors tw:duration-200 tw:whitespace-nowrap tw:select-none tw:min-w-[44px] tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-surface-overlay)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-border)]"
+            data-test-id="filter-by-foo"
+            type="button"
+          >
+            foo
           </button>
           <button
             aria-pressed="false"

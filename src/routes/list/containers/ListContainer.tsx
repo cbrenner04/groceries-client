@@ -33,7 +33,7 @@ import BulkEditSheet from '../components/BulkEditSheet';
 import ListItemFormFields from '../components/ListItemFormFields';
 import CategoryField from 'components/FormFields/CategoryField';
 import CheckboxField from 'components/FormFields/CheckboxField';
-import { capitalize } from 'utils/format';
+import { capitalize, normalizeCategoryKey } from 'utils/format';
 import { fetchList, itemName } from '../utils';
 import {
   handleAddItem as exportedHandleAddItem,
@@ -805,9 +805,21 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const renderFilterChips = (): React.JSX.Element => {
-    const allCategories = includedCategories.filter(
-      (c) => c !== 'uncategorized' && c !== '' && notCompletedItems.some((item) => item.category === c),
-    );
+    // Build chips from the categories actually present on the not-completed items, deduped
+    // case-insensitively (mirrors how items are grouped). Previously this filtered
+    // includedCategories with an exact === match, so a category on an item but missing from — or
+    // cased differently than — includedCategories produced no chip.
+    const categoryByKey = new Map<string, string>();
+    notCompletedItems.forEach((item) => {
+      const raw = item.category ? String(item.category).trim() : '';
+      if (raw) {
+        const key = normalizeCategoryKey(raw);
+        if (!categoryByKey.has(key)) {
+          categoryByKey.set(key, raw);
+        }
+      }
+    });
+    const allCategories = Array.from(categoryByKey.values()).sort((a, b) => a.localeCompare(b));
 
     const hasUncategorized = notCompletedItems.some((item) => !item.category);
 
