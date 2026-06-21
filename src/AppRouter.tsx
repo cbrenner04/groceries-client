@@ -17,6 +17,7 @@ import EditListItem from './routes/list/EditListItem';
 import Settings from './routes/settings/Settings';
 import { ThemeProvider } from './components/ThemeProvider';
 import { BottomNavBar } from './components/layout/BottomNavBar';
+import { BrandHeader } from './components/layout/BrandHeader';
 
 // Lazy load heavy administrative/infrequent components for better Mobile Safari performance
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
@@ -75,11 +76,20 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   const showBottomNav = Boolean(user) && !isAuthPage;
 
   useEffect(() => {
+    document.documentElement.classList.toggle('with-brand-header', showBottomNav);
+
+    return (): void => {
+      document.documentElement.classList.remove('with-brand-header');
+    };
+  }, [showBottomNav]);
+
+  useEffect(() => {
     previousPathname.current = location.pathname;
   }, [location.pathname]);
 
   return (
     <>
+      {showBottomNav ? <BrandHeader /> : null}
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname} direction={pageTransitionDirection}>
           <Routes>
