@@ -12,6 +12,7 @@ import { BottomInputBar } from 'components/layout/BottomInputBar';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
 import { BottomSheet } from 'components/ui/BottomSheet';
+import { Button } from 'components/ui/Button';
 import Select from 'components/ui/Select';
 import {
   fetchLists,
@@ -63,6 +64,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [selectedTemplateId, setSelectedTemplateId] = useState(props.listItemConfigurations[0]?.id ?? '');
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
+  const [editListPending, setEditListPending] = useState(false);
   const navigate = useNavigate();
 
   const openEditSheet = useCallback(
@@ -617,6 +619,24 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         onClose={closeEditSheet}
         title="Edit List"
         testId="edit-list-sheet"
+        footer={
+          editingList && (
+            <div className="tw:flex tw:justify-end tw:gap-2">
+              <Button variant="ghost" onClick={closeEditSheet} type="button" disabled={editListPending}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                form="edit-list-form"
+                disabled={editListPending}
+                loading={editListPending}
+              >
+                Update List
+              </Button>
+            </div>
+          )
+        }
       >
         {editingList && (
           <EditListForm
@@ -628,6 +648,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             listItemConfigurationId={editingList.list_item_configuration_id}
             onClose={closeEditSheet}
             onSaved={handleEditSaved}
+            onPendingChange={setEditListPending}
           />
         )}
       </BottomSheet>
