@@ -2,10 +2,12 @@ import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
+import * as router from 'react-router';
 
 import axios from 'utils/api';
 import { ThemeProvider } from 'components/ThemeProvider';
 import { UserContext } from 'AppRouter';
+import * as toastModule from 'utils/toast';
 
 import Settings from './Settings';
 
@@ -13,9 +15,11 @@ describe('Settings', () => {
   const mockSignOutUser = vi.fn(() => {
     sessionStorage.removeItem('user');
   });
+  const mockNavigate = vi.fn();
 
-  const renderSettings = (): RenderResult =>
-    render(
+  const renderSettings = (): RenderResult => {
+    vi.spyOn(router, 'useNavigate').mockReturnValue(mockNavigate);
+    return render(
       <UserContext.Provider
         value={{
           user: { accessToken: 'token', client: 'client', uid: 'uid' },
@@ -29,6 +33,7 @@ describe('Settings', () => {
         </MemoryRouter>
       </UserContext.Provider>,
     );
+  };
 
   beforeEach(() => {
     localStorage.clear();
@@ -93,6 +98,7 @@ describe('Settings', () => {
     const user = userEvent.setup();
     sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: 'uid' }));
     axios.delete = vi.fn().mockResolvedValue({});
+    vi.spyOn(toastModule.showToast, 'info');
 
     const { findByTestId } = renderSettings();
     const logoutButton = await findByTestId('log-out-link');
@@ -102,6 +108,8 @@ describe('Settings', () => {
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith('/auth/sign_out');
       expect(sessionStorage.getItem('user')).toBeNull();
+      expect(toastModule.showToast.info).toHaveBeenCalledWith('Log out successful');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
     });
   });
 });
