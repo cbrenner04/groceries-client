@@ -118,7 +118,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
                     <motion.div
                       key={item.id}
                       layout
-                      initial={false}
+                      initial={{ opacity: 0, x: -18 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -56, scale: 0.98 }}
                       transition={{ duration: 0.28, ease: 'easeInOut' }}
