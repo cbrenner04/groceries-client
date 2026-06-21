@@ -18,6 +18,10 @@ export interface IBottomInputBarProps {
   submitFormId?: string;
   /** Label for the footer Submit button (default "Add"). */
   submitLabel?: string;
+  /** Optional controlled value. When provided, the input is controlled by the parent. */
+  value?: string;
+  /** Called when the input value changes (required for controlled usage). */
+  onValueChange?: (value: string) => void;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
@@ -32,10 +36,19 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     mode = 'neutral',
     submitFormId,
     submitLabel = 'Add',
+    value: controlledValue,
+    onValueChange,
   } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
-  const [value, setValue] = useState('');
+  const [internalValue, setInternalValue] = useState('');
+  const value = controlledValue !== undefined ? controlledValue : internalValue;
+  const setValue = (next: string): void => {
+    if (controlledValue === undefined) {
+      setInternalValue(next);
+    }
+    onValueChange?.(next);
+  };
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -2132,15 +2132,14 @@ describe('ListContainer', () => {
         },
       });
 
-      const { findByText, findByTestId, user } = setup();
+      const { findByTestId, user } = setup();
 
       // Test that quick-add input exists and can be interacted with
       const quickAddInput = await findByTestId('quick-add-input');
       expect(quickAddInput).toBeInTheDocument();
 
       // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
@@ -2161,25 +2160,24 @@ describe('ListContainer', () => {
         },
       });
 
-      const { findByText, findByTestId, user } = setup();
+      const { findByTestId, user } = setup();
 
       // Test that quick-add input exists and can be interacted with
       const quickAddInput = await findByTestId('quick-add-input');
       expect(quickAddInput).toBeInTheDocument();
 
       // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
     });
 
     it('shows error toast when no listItemConfiguration is set', async () => {
-      const { findByTestId, findByText, user } = setup({ listItemConfiguration: undefined });
+      const { findByTestId, user } = setup({ listItemConfiguration: undefined });
 
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      // With no field config the expanded form never renders, so Enter on the collapsed bar runs quick-add.
+      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
 
       await waitFor(() =>
         expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -2188,22 +2186,16 @@ describe('ListContainer', () => {
       );
     });
 
-    it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
-      const newItem = createListItem('new-item-id', false, []);
+    it('quick-adds by name via Enter when the expanded form is not rendered', async () => {
+      const newItem = createListItem('qa-id', false, []);
+      axios.post = vi.fn().mockResolvedValue({ data: newItem });
+      // handleQuickAdd fetches its own field configs to find the primary field.
+      axios.get = vi.fn().mockResolvedValue({ data: [{ id: 'fc1', label: 'product', primary: true }] });
 
-      // First post: create the item
-      // Second post: create the field value
-      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      // Empty preloaded configs => the expanded form never renders, so Enter on the bar runs quick-add.
+      const { findByTestId, user } = setup({ listItemFieldConfigurations: [] });
 
-      // GET: returns field configurations (array with a primary field)
-      axios.get = vi.fn().mockResolvedValue({
-        data: [{ id: 'fc1', label: 'product', primary: true }],
-      });
-
-      const { findByTestId, findByText, user } = setup();
-
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
@@ -2214,21 +2206,61 @@ describe('ListContainer', () => {
       });
     });
 
+    it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
+      const newItem = createListItem('new-item-id', false, []);
+
+      // First post: create the item. Second post: create the primary field value (from the bar input).
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+
+      // GET: field configurations when the form opens on focus; the created item when reloading after add.
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+              ],
+            })
+          : Promise.resolve({ data: newItem }),
+      );
+
+      const { findByTestId, findByText, user } = setup();
+
+      // The always-visible bar input is the primary/name field; submit via the expanded form footer.
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add item'));
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
+        list_item: { completed: false },
+      });
+      expect(axios.post).toHaveBeenNthCalledWith(
+        2,
+        `/lists/${defaultTestData.list.id}/list_items/${newItem.id}/list_item_fields`,
+        { list_item_field: { list_item_field_configuration_id: 'fc1', data: 'new product' } },
+      );
+    });
+
     it('adds item without field post when no primary field config exists', async () => {
       const newItem = createListItem('new-item-id', false, []);
 
       axios.post = vi.fn().mockResolvedValueOnce({ data: newItem });
-      // GET returns configs but none are primary
-      axios.get = vi.fn().mockResolvedValue({
-        data: [{ id: 'fc1', label: 'product', primary: false }],
-      });
+      // GET returns configs (none primary) on form open; the created item when reloading after add.
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
+              ],
+            })
+          : Promise.resolve({ data: newItem }),
+      );
 
       const { findByTestId, findByText, user } = setup();
 
       await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      await user.click(await findByText('Add item'));
 
-      // Only the item creation post — no field post since no primary config
+      // Only the item creation post — no field posts (no primary config; non-primary field left empty).
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
 
@@ -2283,6 +2315,7 @@ describe('ListContainer', () => {
       const completedCheckbox = getByLabelText('Completed') as HTMLInputElement;
       await user.click(completedCheckbox);
 
+      await user.type(await findByTestId('quick-add-input'), 'My item');
       await user.click(getByText('Add item'));
 
       await waitFor(() => {
@@ -2312,6 +2345,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       // Click Submit before typing into Notes; resolvedFieldData returns '' so no field POST,
       // but should still create item. Test the configs.length === 0 path via fields cleared.
+      await user.type(await findByTestId('quick-add-input'), 'My item');
       await user.click(getByText('Add item'));
 
       await waitFor(() => {
@@ -2336,6 +2370,7 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       const notesInput = getByLabelText('Notes') as HTMLInputElement;
       await user.type(notesInput, 'x');
+      await user.type(await findByTestId('quick-add-input'), 'My item');
       await user.click(getByText('Add item'));
 
       await waitFor(() => {
@@ -2370,6 +2405,7 @@ describe('ListContainer', () => {
       await user.type(notesInput, 'note');
       const categoryInput = getByLabelText('Category') as HTMLInputElement;
       await user.type(categoryInput, 'existing');
+      await user.type(await findByTestId('quick-add-input'), 'My item');
       await user.click(getByText('Add item'));
 
       await waitFor(() => {
@@ -2387,7 +2423,7 @@ describe('ListContainer', () => {
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
 
-      const { findByText, findByTestId, queryByText, user } = setup();
+      const { findByTestId, queryByText, user } = setup();
 
       // Apply filter to foo
       await user.click(await findByTestId('filter-by-foo'));
@@ -2398,8 +2434,7 @@ describe('ListContainer', () => {
 
       // Try to add item
       const quickAddInput = await findByTestId('quick-add-input');
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the POST was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());

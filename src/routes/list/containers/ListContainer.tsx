@@ -102,6 +102,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
   const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
+  // The always-visible bottom input bar IS the primary/name field for new items.
+  const [quickAddPrimary, setQuickAddPrimary] = useState('');
   const [quickAddCategory, setQuickAddCategory] = useState('');
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
@@ -604,6 +606,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       return;
     }
 
+    // The primary/name field is the always-visible bottom input bar (not part of the form DOM).
+    const primaryName = quickAddPrimary.trim();
+    if (primaryName === '') {
+      return;
+    }
+
     const formEl = event.currentTarget;
 
     try {
@@ -646,7 +654,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       await Promise.all(
         configs.flatMap((config) => {
-          const data = resolvedFieldData(config);
+          const data = config.primary ? primaryName : resolvedFieldData(config);
           if (data === '') {
             return [];
           }
@@ -672,6 +680,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
       handleAddItem([completeItem]);
       setQuickAddFormData({});
+      setQuickAddPrimary('');
       setQuickAddCategory('');
       setQuickAddCompleted(false);
       setInputBarExpanded(true);
@@ -712,6 +721,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const itemWithFields = { ...newItem, list_item_fields: [{ label: primaryFieldConfig?.label, data: value }] };
 
       handleAddItem([itemWithFields]);
+      setQuickAddPrimary('');
       setInputBarExpanded(true);
       setPending(false);
     } catch {
@@ -739,7 +749,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         className="tw:pb-2"
       >
         <ListItemFormFields
-          fieldConfigurations={configs}
+          fieldConfigurations={configs.filter((config) => !config.primary)}
           fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
             id: `form-${label}`,
             label,
@@ -789,18 +799,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         .catch(() => {
           // Silently fail - form just won't show fields
         });
-    }
-  };
-
-  const handleQuickAddClick = (): void => {
-    const inputElement = document.querySelector('[data-test-id="quick-add-input"]') as HTMLInputElement;
-    if (inputElement) {
-      const value = inputElement.value.trim();
-      if (value) {
-        void handleQuickAdd(value);
-        inputElement.value = '';
-        setQuickAddFormData({});
-      }
     }
   };
 
@@ -1070,34 +1068,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         }
         bottomBar={
           props.permissions === EUserPermissions.WRITE ? (
-            <>
-              <BottomInputBar
-                placeholder="Add an item..."
-                onSubmit={handleQuickAdd}
-                hidden={showDeleteConfirm || copyMoveSheet !== null}
-                initialExpanded={inputBarExpanded}
-                expandedContent={getQuickAddExpandedContent()}
-                onInputFocus={handleQuickAddFormOpen}
-                mode={sessionMode}
-                submitFormId="list-item-form"
-                submitLabel="Add item"
-              />
-              {!(showDeleteConfirm || copyMoveSheet !== null) ? (
-                // Keep the explicit Add button to preserve existing quick-add test and interaction flows.
-                <button
-                  type="button"
-                  className={[
-                    'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30',
-                    'tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)]',
-                    'tw:text-white tw:text-sm tw:font-medium',
-                  ].join(' ')}
-                  onClick={handleQuickAddClick}
-                  data-test-id="add-item-button"
-                >
-                  Add
-                </button>
-              ) : null}
-            </>
+            <BottomInputBar
+              placeholder="Add an item..."
+              onSubmit={handleQuickAdd}
+              hidden={showDeleteConfirm || copyMoveSheet !== null}
+              initialExpanded={inputBarExpanded}
+              expandedContent={getQuickAddExpandedContent()}
+              onInputFocus={handleQuickAddFormOpen}
+              mode={sessionMode}
+              submitFormId="list-item-form"
+              submitLabel="Add item"
+              value={quickAddPrimary}
+              onValueChange={setQuickAddPrimary}
+            />
           ) : undefined
         }
       >

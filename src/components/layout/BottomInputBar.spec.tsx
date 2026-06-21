@@ -198,4 +198,27 @@ describe('BottomInputBar', () => {
     // no throw — the optional-chained requestSubmit short-circuits when the form is absent
     expect(await findByTestId('quick-add-input')).toBeInTheDocument();
   });
+
+  describe('controlled value', () => {
+    it('renders the controlled value and reports changes via onValueChange', async () => {
+      const onValueChange = vi.fn();
+      const { findByTestId, user } = setup({ value: 'milk', onValueChange });
+      const input = (await findByTestId('quick-add-input')) as HTMLInputElement;
+      expect(input.value).toBe('milk');
+
+      await user.type(input, 'x');
+      // Controlled: the parent owns the value, so each keystroke is reported, not stored internally.
+      expect(onValueChange).toHaveBeenCalledWith('milkx');
+    });
+
+    it('clears the controlled value via onValueChange on submit', async () => {
+      const onSubmit = vi.fn();
+      const onValueChange = vi.fn();
+      const { findByTestId, user } = setup({ value: 'eggs', onSubmit, onValueChange });
+      const input = await findByTestId('quick-add-input');
+      await user.type(input, '{Enter}');
+      expect(onSubmit).toHaveBeenCalledWith('eggs');
+      expect(onValueChange).toHaveBeenCalledWith('');
+    });
+  });
 });

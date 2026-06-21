@@ -451,13 +451,6 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         />
       </div>
     </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
 </div>
 `;
@@ -1396,13 +1389,6 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         />
       </div>
     </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
 </div>
 `;
@@ -3151,13 +3137,6 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         />
       </div>
     </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
 </div>
 `;
@@ -3463,13 +3442,6 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
         />
       </div>
     </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
 </div>
 `;
@@ -4882,13 +4854,6 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         />
       </div>
     </div>
-    <button
-      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+8px)] tw:left-4 tw:z-30 tw:px-4 tw:py-2 tw:rounded-lg tw:bg-[var(--color-primary)] tw:text-white tw:text-sm tw:font-medium"
-      data-test-id="add-item-button"
-      type="button"
-    >
-      Add
-    </button>
   </div>
 </div>
 `;
