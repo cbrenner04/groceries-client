@@ -19,6 +19,13 @@ exports[`ListsContainer > renders 1`] = `
       >
         <button
           class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
+          data-test-id="new-list-action"
+          type="button"
+        >
+          New List
+        </button>
+        <button
+          class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
           type="button"
         >
           Select

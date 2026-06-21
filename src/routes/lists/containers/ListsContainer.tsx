@@ -28,6 +28,7 @@ import { listsCache } from 'utils/lightweightCache';
 import { prefetchListsIdle } from 'utils/listPrefetch';
 import MergeModal from '../components/MergeModal';
 import EditListForm from './EditListForm';
+import NewListForm from './NewListForm';
 
 type TStatusFilter = 'all' | 'pending' | 'active' | 'completed';
 
@@ -65,6 +66,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
   const [editListPending, setEditListPending] = useState(false);
+  const [newListSheetOpen, setNewListSheetOpen] = useState(false);
+  const [newListPending, setNewListPending] = useState(false);
   const navigate = useNavigate();
 
   const openEditSheet = useCallback(
@@ -210,6 +213,31 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       })
       .catch((error) => {
         failure(error, navigate, setPending);
+      });
+  };
+
+  const closeNewListSheet = (): void => {
+    setNewListSheetOpen(false);
+  };
+
+  const handleNewListFormSubmit = (name: string, templateId: string): void => {
+    setNewListPending(true);
+    const list = { name, list_item_configuration_id: templateId };
+    axios
+      .post('/lists', { list })
+      .then((response) => {
+        const updatedCurrentUserPermissions = update(currentUserPermissions, {
+          [response.data.id]: { $set: 'write' },
+        });
+        setCurrentUserPermissions(updatedCurrentUserPermissions);
+        const updatedIncompleteLists = update(incompleteLists, { $push: [response.data] });
+        setIncompleteLists(sortLists(updatedIncompleteLists));
+        setNewListPending(false);
+        closeNewListSheet();
+        showToast.info('List successfully added.');
+      })
+      .catch((error) => {
+        failure(error, navigate, setNewListPending);
       });
   };
 
@@ -420,7 +448,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   const filtered = getFilteredLists();
   const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
-  const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
+  const hideBottomInputBar =
+    showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen || newListSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -453,6 +482,17 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           Lists
         </h1>
         <div className="tw:flex tw:items-center tw:gap-2">
+          <button
+            type="button"
+            className={
+              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
+            }
+            onClick={(): void => setNewListSheetOpen(true)}
+            data-test-id="new-list-action"
+          >
+            New List
+          </button>
           <button
             type="button"
             className={
@@ -651,6 +691,35 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             onPendingChange={setEditListPending}
           />
         )}
+      </BottomSheet>
+
+      <BottomSheet
+        isOpen={newListSheetOpen}
+        onClose={closeNewListSheet}
+        title="Create List"
+        testId="new-list-sheet"
+        footer={
+          <div className="tw:flex tw:justify-end tw:gap-2">
+            <Button variant="ghost" onClick={closeNewListSheet} type="button" disabled={newListPending}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              form="new-list-form"
+              disabled={newListPending}
+              loading={newListPending}
+            >
+              Create
+            </Button>
+          </div>
+        }
+      >
+        <NewListForm
+          listItemConfigurations={listItemConfigurations}
+          onSubmit={handleNewListFormSubmit}
+          pending={newListPending}
+        />
       </BottomSheet>
 
       <BottomInputBar

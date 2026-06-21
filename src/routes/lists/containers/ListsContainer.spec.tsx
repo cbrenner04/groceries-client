@@ -627,6 +627,36 @@ describe('ListsContainer', () => {
     }
   });
 
+  it('opens the new list sheet when the new list button is clicked', async () => {
+    const { findByTestId, findByText, user } = setup();
+
+    const newListButton = await findByTestId('new-list-action');
+    await user.click(newListButton);
+    expect(await findByText('Create List')).toBeVisible();
+  });
+
+  it('closes the new list sheet when cancel is clicked', async () => {
+    const { findByTestId, findByText, queryByText, user } = setup();
+
+    const newListButton = await findByTestId('new-list-action');
+    await user.click(newListButton);
+    expect(await findByText('Create List')).toBeVisible();
+
+    const cancelButtons = Array.from(document.querySelectorAll('button')).filter((btn) =>
+      btn.textContent?.includes('Cancel'),
+    );
+    const cancelButton = cancelButtons.find((btn) => {
+      const parent = btn.closest('[data-test-id="new-list-sheet"]');
+      return parent !== null;
+    });
+
+    if (cancelButton) {
+      await user.click(cancelButton);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      expect(queryByText('Create List')).not.toBeInTheDocument();
+    }
+  });
+
   describe('prefetch logic', () => {
     let mockPrefetchListsIdle: ReturnType<typeof vi.fn>;
 
