@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router';
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition, type TPageTransitionDirection } from './components/layout/PageTransition';
 
@@ -16,11 +16,7 @@ import List from './routes/list/List';
 import EditListItem from './routes/list/EditListItem';
 import Settings from './routes/settings/Settings';
 import { ThemeProvider } from './components/ThemeProvider';
-import { SettingsMenu } from './components/domain/SettingsMenu';
 import { BottomNavBar } from './components/layout/BottomNavBar';
-import { BrandHeader } from './components/layout/BrandHeader';
-import { showToast } from './utils/toast';
-import axios from './utils/api';
 
 // Lazy load heavy administrative/infrequent components for better Mobile Safari performance
 import { createLazyComponent, preloadComponent } from './utils/lazyComponents';
@@ -53,19 +49,21 @@ interface IUser {
   uid: string;
 }
 
-export const UserContext = createContext<IUser | null>(null);
+interface IUserContextValue {
+  user: IUser | null;
+  signOutUser: () => void;
+}
+
+export const UserContext = createContext<IUserContextValue | null>(null);
 
 interface IAppRouterContentProps {
   signInUser: (accessToken: string, client: string, uid: string) => void;
-  signOutUser: () => void;
   user: IUser | null;
 }
 
 function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
-  const { signInUser, signOutUser, user } = props;
+  const { signInUser, user } = props;
   const location = useLocation();
-  const navigate = useNavigate();
-  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const previousPathname = useRef(location.pathname);
   const pageTransitionDirection = transitionDirection(previousPathname.current, location.pathname);
 
@@ -77,64 +75,11 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   const showBottomNav = Boolean(user) && !isAuthPage;
 
   useEffect(() => {
-    if (!showBottomNav) {
-      setSettingsMenuOpen(false);
-    }
-  }, [showBottomNav]);
-
-  useEffect(() => {
-    if (showBottomNav) {
-      document.documentElement.classList.add('with-brand-header');
-    } else {
-      document.documentElement.classList.remove('with-brand-header');
-    }
-  }, [showBottomNav]);
-
-  useEffect(() => {
-    setSettingsMenuOpen(false);
     previousPathname.current = location.pathname;
   }, [location.pathname]);
 
-  const handleLogout = async (): Promise<void> => {
-    try {
-      await axios.delete('/auth/sign_out');
-    } catch {
-      // noop
-    }
-    setSettingsMenuOpen(false);
-    signOutUser();
-    showToast.info('Log out successful');
-    navigate('/users/sign_in');
-  };
-
-  const handleBottomNavClickCapture = (event: React.MouseEvent<HTMLDivElement>): void => {
-    const target = event.target as HTMLElement;
-    const settingsTrigger = target.closest('[data-test-id="nav-settings"]');
-    const clickedWithinNav = settingsTrigger instanceof HTMLElement && event.currentTarget.contains(settingsTrigger);
-
-    if (clickedWithinNav) {
-      event.preventDefault();
-      setSettingsMenuOpen((current) => !current);
-      return;
-    }
-
-    if (settingsMenuOpen) {
-      setSettingsMenuOpen(false);
-    }
-  };
-
-  const handleSettingsMenuClickCapture = (event: React.MouseEvent<HTMLDivElement>): void => {
-    const target = event.target as HTMLElement;
-
-    if (target.closest('[data-test-id="log-out-link"]')) {
-      event.preventDefault();
-      void handleLogout();
-    }
-  };
-
   return (
     <>
-      {showBottomNav ? <BrandHeader /> : null}
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname} direction={pageTransitionDirection}>
           <Routes>
@@ -163,16 +108,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
           </Routes>
         </PageTransition>
       </AnimatePresence>
-      {showBottomNav ? (
-        <div onClickCapture={handleBottomNavClickCapture}>
-          <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />
-        </div>
-      ) : null}
-      {showBottomNav ? (
-        <div onClickCapture={handleSettingsMenuClickCapture}>
-          <SettingsMenu isOpen={settingsMenuOpen} onClose={() => setSettingsMenuOpen(false)} />
-        </div>
-      ) : null}
+      {showBottomNav ? <BottomNavBar currentPath={location.pathname} /> : null}
     </>
   );
 }
@@ -215,8 +151,8 @@ export default function AppRouter(): React.JSX.Element {
   return (
     <ThemeProvider>
       <Router>
-        <UserContext.Provider value={user}>
-          <AppRouterContent signInUser={signInUser} signOutUser={signOutUser} user={user} />
+        <UserContext.Provider value={{ user, signOutUser }}>
+          <AppRouterContent signInUser={signInUser} user={user} />
         </UserContext.Provider>
       </Router>
     </ThemeProvider>

@@ -12,20 +12,20 @@ Keep the app-level logout flow (`handleLogout`: DELETE `/auth/sign_out`, `signOu
 
 ## Tasks
 
-- [ ] Remove the popup click interception in `AppRouter` (`settingsMenuOpen` state, `handleBottomNavClickCapture`, `handleSettingsMenuClickCapture`, and the `SettingsMenu` render) and stop passing a synthesized `currentPath` to `BottomNavBar` (use the real path).
-- [ ] Wire the Settings page sign-out control to the preserved logout flow.
-- [ ] Delete `src/components/domain/SettingsMenu.tsx` and `SettingsMenu.spec.tsx`.
-- [ ] Update `AppRouter.spec.tsx`: replace popup open/close assertions with navigation to `/settings`; keep the logout-flow assertions.
-- [ ] Confirm `BottomNavBar` marks `nav-settings` active when on `/settings` via the real location.
+- [x] Remove the popup click interception in `AppRouter` (`settingsMenuOpen` state, `handleBottomNavClickCapture`, `handleSettingsMenuClickCapture`, and the `SettingsMenu` render) and stop passing a synthesized `currentPath` to `BottomNavBar` (use the real path).
+- [x] Wire the Settings page sign-out control to the preserved logout flow.
+- [x] Delete `src/components/domain/SettingsMenu.tsx` and `SettingsMenu.spec.tsx`.
+- [x] Update `AppRouter.spec.tsx`: replace popup open/close assertions with navigation to `/settings`; keep the logout-flow assertions.
+- [x] Confirm `BottomNavBar` marks `nav-settings` active when on `/settings` via the real location.
 
 ## Acceptance criteria
 
-- [ ] Activating the `nav-settings` entry navigates to `/settings` and renders the Settings page (no popup/overlay appears).
-- [ ] While on `/settings`, the bottom nav indicates Settings as the active item (`aria-current="page"` on `nav-settings`).
-- [ ] Triggering sign-out from the Settings page calls `DELETE /auth/sign_out`, clears the session, shows the "Log out successful" toast, and redirects to `/users/sign_in`.
-- [ ] Session-storage key `user` and the `signInUser`/`signOutUser` behavior are unchanged.
-- [ ] `SettingsMenu.tsx` and `SettingsMenu.spec.tsx` no longer exist and nothing imports `SettingsMenu`.
-- [ ] `BottomNavBar.spec.tsx` stays green (nav items, routes, and active/inactive styling unchanged).
+- [x] Activating the `nav-settings` entry navigates to `/settings` and renders the Settings page (no popup/overlay appears).
+- [x] While on `/settings`, the bottom nav indicates Settings as the active item (`aria-current="page"` on `nav-settings`).
+- [x] Triggering sign-out from the Settings page calls `DELETE /auth/sign_out`, clears the session, shows the "Log out successful" toast, and redirects to `/users/sign_in`.
+- [x] Session-storage key `user` and the `signInUser`/`signOutUser` behavior are unchanged.
+- [x] `SettingsMenu.tsx` and `SettingsMenu.spec.tsx` no longer exist and nothing imports `SettingsMenu`.
+- [x] `BottomNavBar.spec.tsx` stays green (nav items, routes, and active/inactive styling unchanged).
 
 ## Documentation updates
 

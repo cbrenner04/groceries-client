@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router';
 
 import { PageLayout } from 'components/layout/PageLayout';
 import { useTheme } from 'components/ThemeProvider';
 import { Button } from 'components/ui/Button';
+import { UserContext } from 'AppRouter';
 import axios from 'utils/api';
 import { showToast } from 'utils/toast';
 
@@ -18,6 +19,7 @@ const themeOptions: Array<{ value: TThemeOption; label: string; testId: string }
 const Settings: React.FC = (): React.JSX.Element => {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
+  const context = useContext(UserContext);
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -25,7 +27,7 @@ const Settings: React.FC = (): React.JSX.Element => {
     } catch {
       // noop
     }
-    sessionStorage.removeItem('user');
+    context?.signOutUser();
     showToast.info('Log out successful');
     navigate('/users/sign_in');
   };
