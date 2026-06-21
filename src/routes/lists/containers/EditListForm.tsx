@@ -6,7 +6,6 @@ import axios from 'utils/api';
 import { showToast } from 'utils/toast';
 import Input from 'components/ui/Input';
 import Checkbox from 'components/ui/Checkbox';
-import { Button } from 'components/ui/Button';
 
 export interface IEditListFormProps {
   listId: string;
@@ -17,18 +16,18 @@ export interface IEditListFormProps {
   listItemConfigurationId: string | null;
   onClose: () => void;
   onSaved?: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }
 
 const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element => {
   const [name, setName] = useState(props.name);
   const [completed, setCompleted] = useState(props.completed);
   const [refreshed, setRefreshed] = useState(props.refreshed);
-  const [pending, setPending] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    setPending(true);
+    props.onPendingChange?.(true);
     const list = { name, completed, refreshed };
     try {
       await axios.put(`/lists/${props.listId}`, { list });
@@ -59,12 +58,12 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
         showToast.error(error.message);
       }
     } finally {
-      setPending(false);
+      props.onPendingChange?.(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
+    <form id="edit-list-form" onSubmit={handleSubmit} autoComplete="off" className="tw:flex tw:flex-col tw:gap-4">
       <Input
         id="name"
         name="name"
@@ -87,14 +86,6 @@ const EditListForm: React.FC<IEditListFormProps> = (props): React.JSX.Element =>
         checked={refreshed}
         onChange={(): void => setRefreshed(!refreshed)}
       />
-      <div className="tw:flex tw:justify-end tw:gap-2 tw:mt-2">
-        <Button variant="ghost" onClick={props.onClose} type="button">
-          Cancel
-        </Button>
-        <Button variant="primary" type="submit" disabled={pending} loading={pending}>
-          Update List
-        </Button>
-      </div>
     </form>
   );
 };

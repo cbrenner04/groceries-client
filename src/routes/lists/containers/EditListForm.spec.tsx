@@ -43,10 +43,12 @@ describe('EditListForm', () => {
     mockNavigate.mockReset();
   });
 
-  it('renders', () => {
-    const { container } = setup();
+  it('renders fields', () => {
+    const { getByLabelText } = setup();
 
-    expect(container).toMatchSnapshot();
+    expect(getByLabelText('Name')).toBeVisible();
+    expect(getByLabelText('Completed')).toBeVisible();
+    expect(getByLabelText('Refreshed')).toBeVisible();
   });
 
   it('updates name when changed', async () => {
@@ -76,11 +78,18 @@ describe('EditListForm', () => {
 
   it('makes put, displays toast, calls onClose and onSaved on successful submission', async () => {
     axios.put = vi.fn().mockResolvedValue({ data: { foo: 'bar' } });
-    const { findByText, props, user } = setup();
+    const { container, props } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(axios.put).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => {
+      expect(axios.put).toHaveBeenCalledTimes(1);
+      expect(axios.put).toHaveBeenCalledWith('/lists/id1', {
+        list: { name: 'foo', completed: false, refreshed: false },
+      });
+    });
+
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully updated');
     expect(props.onClose).toHaveBeenCalled();
     expect(props.onSaved).toHaveBeenCalled();
@@ -89,41 +98,53 @@ describe('EditListForm', () => {
 
   it('navigates to /lists when no onSaved is provided', async () => {
     axios.put = vi.fn().mockResolvedValue({ data: {} });
-    const { findByText, user } = setup({ onSaved: undefined });
+    const { container } = setup({ onSaved: undefined });
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    await vi.waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    });
   });
 
   it('redirects to user login when 401', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
-    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+      expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+    });
   });
 
   it('redirects to lists page when 403', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 403 } });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    });
   });
 
   it('redirects to lists page when 404', async () => {
     axios.put = vi.fn().mockRejectedValue({ response: { status: 404 } });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
-    expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('List not found');
+      expect(mockNavigate).toHaveBeenCalledWith('/lists');
+    });
   });
 
   it('displays appropriate error message', async () => {
@@ -133,37 +154,51 @@ describe('EditListForm', () => {
         data: { foo: 'bar', baz: 'foobar' },
       },
     });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and baz foobar');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and baz foobar');
+    });
   });
 
   it('displays toast when error in sending request', async () => {
     axios.put = vi.fn().mockRejectedValue({ request: 'request failed' });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
+    });
   });
 
   it('displays toast when unknown error', async () => {
     axios.put = vi.fn().mockRejectedValue({ message: 'request failed' });
-    const { findByText, user } = setup();
+    const { container } = setup();
 
-    await user.click(await findByText('Update List'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(mockShowToast.error).toHaveBeenCalledWith('request failed');
+    await vi.waitFor(() => {
+      expect(mockShowToast.error).toHaveBeenCalledWith('request failed');
+    });
   });
 
-  it('calls onClose on Cancel without navigating', async () => {
-    const { findByText, props, user } = setup();
+  it('calls onPendingChange callbacks during submission', async () => {
+    axios.put = vi.fn().mockResolvedValue({ data: {} });
+    const onPendingChange = vi.fn();
+    const { container } = setup({ onPendingChange });
 
-    await user.click(await findByText('Cancel'));
+    const form = container.querySelector('form#edit-list-form') as HTMLFormElement;
+    form.requestSubmit();
 
-    expect(props.onClose).toHaveBeenCalled();
-    expect(mockNavigate).not.toHaveBeenCalled();
+    await vi.waitFor(() => {
+      expect(onPendingChange).toHaveBeenCalledWith(true);
+      expect(onPendingChange).toHaveBeenCalledWith(false);
+    });
   });
 });
