@@ -3,6 +3,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest';
+import React from 'react';
 import { cleanup, configure } from '@testing-library/react';
 import { TextEncoder } from 'util';
 import type { AxiosResponse } from 'axios';
@@ -166,8 +167,10 @@ vi.mock('./utils/toast', () => ({
 }));
 
 // Provide a stable mock for react-idle-timer used by usePolling
+// Must return the same object instance to avoid triggering dependency array changes
+const idleTimerMock = { isIdle: (): boolean => false };
 vi.mock('react-idle-timer', () => ({
-  useIdleTimer: (): { isIdle: () => boolean } => ({ isIdle: () => false }),
+  useIdleTimer: (): { isIdle: () => boolean } => idleTimerMock,
 }));
 
 const mockNow = DateTime.fromISO('2020-05-24T10:00:00.000Z');
@@ -178,6 +181,8 @@ DateTime.now = vi.fn(() => mockNow) as DateTimeNowFn;
 // Global test setup for React 19
 beforeEach(() => {
   localStorage.clear();
+  // Make startTransition synchronous for tests with fake timers (usePolling)
+  vi.spyOn(React, 'startTransition').mockImplementation(((fn: () => void) => fn()) as typeof React.startTransition);
   // Suppress console warnings about act during tests
   vi.spyOn(console, 'error').mockImplementation((message: string) => {
     if (
