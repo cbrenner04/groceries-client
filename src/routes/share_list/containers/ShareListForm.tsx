@@ -45,64 +45,68 @@ export interface IShareListFormBodyProps {
   onRemoveShare: (id: string) => Promise<void>;
 }
 
-const ShareListFormBody: React.FC<IShareListFormBodyProps> = ({
-  invitableUsers,
-  pending,
-  accepted,
-  refused,
-  userIsOwner,
-  userId,
-  onSelectUser,
-  onTogglePermission,
-  onRefreshShare,
-  onRemoveShare,
-}) => (
-  <div className="tw:flex tw:flex-col tw:gap-4">
-    {!!invitableUsers.length && (
-      <section>
-        <h3 className={sectionLabel}>Share with</h3>
-        <ul className="tw:flex tw:flex-col">
-          {invitableUsers.map((user) => (
-            <li key={user.id} data-test-id={`invite-user-${user.id}`} className={rowClass}>
-              <button
-                type="button"
-                className="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
-                onClick={(): Promise<void> => onSelectUser(user)}
-              >
-                <span className="tw:text-sm tw:flex-1 tw:truncate">{user.email}</span>
-              </button>
-              <IconButton
-                icon={<CheckIcon size="sm" />}
-                variant="success"
-                size="sm"
-                label="Add user"
-                onClick={(): Promise<void> => onSelectUser(user)}
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+const ShareListFormBody: React.FC<IShareListFormBodyProps> = (props) => {
+  const {
+    invitableUsers,
+    pending,
+    accepted,
+    refused,
+    userIsOwner,
+    userId,
+    onSelectUser,
+    onTogglePermission,
+    onRefreshShare,
+    onRemoveShare,
+  } = props;
 
-    <UsersList
-      togglePermission={onTogglePermission}
-      removeShare={onRemoveShare}
-      userIsOwner={userIsOwner}
-      userId={userId}
-      status="pending"
-      users={pending}
-    />
-    <UsersList
-      togglePermission={onTogglePermission}
-      removeShare={onRemoveShare}
-      userIsOwner={userIsOwner}
-      userId={userId}
-      status="accepted"
-      users={accepted}
-    />
-    <RefusedUsersList refreshShare={onRefreshShare} userIsOwner={userIsOwner} userId={userId} users={refused} />
-  </div>
-);
+  return (
+    <div className="tw:flex tw:flex-col tw:gap-4">
+      {!!invitableUsers.length && (
+        <section>
+          <h3 className={sectionLabel}>Share with</h3>
+          <ul className="tw:flex tw:flex-col">
+            {invitableUsers.map((user) => (
+              <li key={user.id} data-test-id={`invite-user-${user.id}`} className={rowClass}>
+                <button
+                  type="button"
+                  className="tw:flex tw:items-center tw:gap-2 tw:flex-1 tw:text-left tw:cursor-pointer"
+                  onClick={(): Promise<void> => onSelectUser(user)}
+                >
+                  <span className="tw:text-sm tw:flex-1 tw:truncate">{user.email}</span>
+                </button>
+                <IconButton
+                  icon={<CheckIcon size="sm" />}
+                  variant="success"
+                  size="sm"
+                  label="Add user"
+                  onClick={(): Promise<void> => onSelectUser(user)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <UsersList
+        togglePermission={onTogglePermission}
+        removeShare={onRemoveShare}
+        userIsOwner={userIsOwner}
+        userId={userId}
+        status="pending"
+        users={pending}
+      />
+      <UsersList
+        togglePermission={onTogglePermission}
+        removeShare={onRemoveShare}
+        userIsOwner={userIsOwner}
+        userId={userId}
+        status="accepted"
+        users={accepted}
+      />
+      <RefusedUsersList refreshShare={onRefreshShare} userIsOwner={userIsOwner} userId={userId} users={refused} />
+    </div>
+  );
+};
 
 export interface IShareListFormFooterProps {
   newEmail: string;
@@ -110,23 +114,27 @@ export interface IShareListFormFooterProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-const ShareListFormFooter: React.FC<IShareListFormFooterProps> = ({ newEmail, onEmailChange, onSubmit }) => (
-  <form onSubmit={onSubmit} className="tw:flex tw:flex-col tw:gap-2">
-    <Input
-      id="new-email"
-      name="new-email"
-      type="email"
-      label="Enter an email to invite someone to share this list:"
-      value={newEmail}
-      onChange={(event: ChangeEvent<HTMLInputElement>): void => onEmailChange(event.target.value)}
-    />
-    <div className="tw:flex tw:justify-end">
-      <Button variant="primary" type="submit" disabled={!newEmail}>
-        Share List
-      </Button>
-    </div>
-  </form>
-);
+const ShareListFormFooter: React.FC<IShareListFormFooterProps> = (props) => {
+  const { newEmail, onEmailChange, onSubmit } = props;
+
+  return (
+    <form onSubmit={onSubmit} className="tw:flex tw:flex-col tw:gap-2">
+      <Input
+        id="new-email"
+        name="new-email"
+        type="email"
+        label="Enter an email to invite someone to share this list:"
+        value={newEmail}
+        onChange={(event: ChangeEvent<HTMLInputElement>): void => onEmailChange(event.target.value)}
+      />
+      <div className="tw:flex tw:justify-end">
+        <Button variant="primary" type="submit" disabled={!newEmail}>
+          Share List
+        </Button>
+      </div>
+    </form>
+  );
+};
 
 const ShareListForm: React.FC<IShareListFormProps> = (props) => {
   const [invitableUsers, setInvitableUsers] = useState(props.invitableUsers);

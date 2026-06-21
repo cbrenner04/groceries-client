@@ -17,8 +17,22 @@ function setup(suppliedProps?: {
   const user = userEvent.setup();
   const defaultProps = {
     listItemConfigurations: [
-      { id: 'config-1', name: 'Basic' },
-      { id: 'config-2', name: 'Detailed' },
+      {
+        id: 'config-1',
+        name: 'Basic',
+        created_at: '',
+        updated_at: '',
+        user_id: '',
+        archived_at: null,
+      },
+      {
+        id: 'config-2',
+        name: 'Detailed',
+        created_at: '',
+        updated_at: '',
+        user_id: '',
+        archived_at: null,
+      },
     ],
     onSubmit: vi.fn(),
     pending: false,

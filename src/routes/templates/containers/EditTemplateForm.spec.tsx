@@ -349,7 +349,9 @@ describe('EditTemplateForm', () => {
     const { container, findByTestId, user } = setup();
 
     // Add a second field
-    await user.click(container.querySelector('[data-test-id="add-field-button"]')!);
+    const addFieldButton = container.querySelector('[data-test-id="add-field-button"]');
+    expect(addFieldButton).not.toBeNull();
+    await user.click(addFieldButton as HTMLElement);
 
     // Fill in label for the new field
     await user.type(await findByTestId('field-row-label-1'), 'quantity');
