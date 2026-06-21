@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ThemeProvider, useTheme } from './ThemeProvider';
@@ -221,7 +221,6 @@ describe('ThemeProvider', () => {
   });
 
   it('adds and removes theme-transitioning class during theme changes', async () => {
-    const user = userEvent.setup();
     const { findByTestId } = render(
       <ThemeProvider>
         <TestComponentInside />
@@ -230,21 +229,16 @@ describe('ThemeProvider', () => {
 
     const setDarkButton = await findByTestId('set-dark');
 
-    await user.click(setDarkButton);
+    // setTheme adds the class synchronously, then removes it after a 150ms timeout.
+    // Use a synchronous fireEvent click so the transient class is observed immediately:
+    // userEvent's async machinery could let the 150ms removal fire first on a slow/loaded
+    // CI runner, which caused the prior intermittent failure here.
+    fireEvent.click(setDarkButton);
+    expect(document.documentElement.classList.contains('theme-transitioning')).toBe(true);
 
-    await waitFor(
-      () => {
-        expect(document.documentElement.classList.contains('theme-transitioning')).toBe(true);
-      },
-      { timeout: 100 },
-    );
-
-    await waitFor(
-      () => {
-        expect(document.documentElement.classList.contains('theme-transitioning')).toBe(false);
-      },
-      { timeout: 500 },
-    );
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains('theme-transitioning')).toBe(false);
+    });
   });
 
   it('sets light theme when setTheme("system") is called with light system preference', async () => {

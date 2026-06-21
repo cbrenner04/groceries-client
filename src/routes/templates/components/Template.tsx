@@ -59,9 +59,9 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
           <div className="tw:flex tw:items-center tw:gap-1">
             {props.onEdit ? (
               <IconButton
-                icon={<EditIcon size="sm" />}
-                variant="primary"
-                size="sm"
+                icon={<EditIcon size="lg" />}
+                variant="accent"
+                size="md"
                 label="Edit template"
                 data-test-id="template-edit"
                 onClick={handleEditClick}
@@ -71,18 +71,18 @@ const Template: React.FC<ITemplateProps> = (props): React.JSX.Element => {
                 href={`/templates/${props.template.id}/edit`}
                 data-test-id="template-edit"
                 className={
-                  'tw:flex tw:items-center tw:justify-center tw:w-9 tw:h-9 tw:rounded-full ' +
-                  'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)]'
+                  'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:rounded-full ' +
+                  'tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)]'
                 }
                 aria-label="Edit template"
               >
-                <EditIcon size="sm" />
+                <EditIcon size="lg" />
               </a>
             )}
             <IconButton
-              icon={<TrashIcon size="sm" />}
+              icon={<TrashIcon size="lg" />}
               variant="danger"
-              size="sm"
+              size="md"
               label="Delete template"
               data-test-id="template-trash"
               onClick={(): void => setShowModal(true)}

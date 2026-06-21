@@ -31,9 +31,9 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
 
   return (
     <>
-      <div className="tw:fixed tw:inset-0 tw:z-[1050] tw:bg-black/50" onClick={props.handleClear} />
+      <div className="tw:fixed tw:inset-0 tw:z-[var(--z-overlay)] tw:bg-black/50" onClick={props.handleClear} />
       <div
-        className="tw:fixed tw:inset-0 tw:z-[1055] tw:flex tw:items-center tw:justify-center tw:p-4"
+        className="tw:fixed tw:inset-0 tw:z-[var(--z-modal)] tw:flex tw:items-center tw:justify-center tw:p-4"
         role="dialog"
         aria-modal="true"
         onClick={props.handleClear}
@@ -43,8 +43,10 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className="tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3"
-            style={{ borderBottom: '1px solid var(--color-border)' }}
+            className={
+              'tw:flex tw:items-center tw:justify-between tw:px-4 tw:py-3 ' +
+              'tw:border-b tw:border-[var(--color-border)]'
+            }
           >
             <h5 className="tw:text-lg tw:font-medium tw:m-0">Confirm {props.action}</h5>
             <button
@@ -63,8 +65,9 @@ const ConfirmModal: React.FC<IConfirmModalProps> = (props): React.JSX.Element | 
             {props.body}
           </div>
           <div
-            className="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3"
-            style={{ borderTop: '1px solid var(--color-border)' }}
+            className={
+              'tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 ' + 'tw:border-t tw:border-[var(--color-border)]'
+            }
           >
             <Button variant="secondary" onClick={props.handleClear} data-test-id={`clear-${props.action}`}>
               Close

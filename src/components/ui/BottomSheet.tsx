@@ -149,15 +149,16 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
   }
 
   const overlayClassName =
-    'tw:fixed tw:inset-0 tw:z-60 tw:flex tw:items-end tw:justify-center ' +
+    'tw:fixed tw:inset-0 tw:z-[var(--z-overlay)] tw:flex tw:items-end tw:justify-center ' +
     'tw:bg-black/50 tw:transition-opacity tw:duration-200 ' +
     'md:tw:items-center';
 
   const sheetClassName =
-    'tw:w-full tw:max-h-[90vh] tw:overflow-y-auto ' +
+    'tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:z-[var(--z-modal)] ' +
     'tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] ' +
     'tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 ' +
     'tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] ' +
+    'md:tw:pb-4 ' +
     'md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]';
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>): void => {

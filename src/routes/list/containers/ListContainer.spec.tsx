@@ -1211,8 +1211,8 @@ describe('ListContainer', () => {
       expect(await findByText('foo not completed product 2')).toBeVisible();
       expect(await findByText('bar not completed product')).toBeVisible();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
@@ -1243,8 +1243,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, queryByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Checkboxes: [0]=id2 (uncategorized), [1]=id3 (foo), [2]=id4 (foo), [3]=id5 (bar)
       const checkboxes = await findAllByRole('checkbox');
@@ -1278,8 +1278,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
@@ -1385,8 +1385,8 @@ describe('ListContainer', () => {
       const initialItem = await findByTestId('not-completed-item-complete-id2');
       expect(initialItem.closest('[data-test-class="non-completed-item"]')).toBeInTheDocument();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1410,8 +1410,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1438,8 +1438,8 @@ describe('ListContainer', () => {
 
       const { findAllByRole, findByText, findByTestId, findAllByText, user } = setup();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1669,25 +1669,25 @@ describe('ListContainer', () => {
   describe('Multi-Select Operations', () => {
     it('cannot multi select if user does not have write access', () => {
       const { queryByText } = setup({ permissions: EUserPermissions.READ });
-      expect(queryByText('Select')).toBeNull();
+      expect(queryByText('Select Items')).toBeNull();
     });
 
     it('changes select to hide select when multi select is on', async () => {
       const { findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
+      expect((await findAllByText('Select Items'))[0]).toHaveTextContent('Select');
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
-      expect(await findByText('Hide Select')).toBeVisible();
+      expect(await findByText('Cancel')).toBeVisible();
     });
 
     it('handles item select for multi select when item has not been selected', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       await user.click((await findAllByRole('checkbox'))[0]);
 
@@ -1697,8 +1697,8 @@ describe('ListContainer', () => {
     it('handles item select for multi select when item has been selected', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       await user.click((await findAllByRole('checkbox'))[0]);
       await user.click((await findAllByRole('checkbox'))[0]);
@@ -1709,16 +1709,16 @@ describe('ListContainer', () => {
     it('preserves selected items when multi select is toggled off and on for not completed items', async () => {
       const { findAllByRole, findAllByText, findByText, user } = setup({ permissions: EUserPermissions.WRITE });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const multiSelectCheckboxes = await findAllByRole('checkbox');
       await user.click(multiSelectCheckboxes[0]);
       expect(multiSelectCheckboxes[0]).toBeChecked();
 
-      await user.click(await findByText('Hide Select'));
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click(await findByText('Cancel'));
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const updatedMultiSelectCheckboxes = await findAllByRole('checkbox');
       expect(updatedMultiSelectCheckboxes[0]).toBeChecked();
@@ -1754,10 +1754,10 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      expect((await findAllByText('Select'))[0]).toHaveTextContent('Select');
+      expect((await findAllByText('Select Items'))[0]).toHaveTextContent('Select');
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(multiSelectCheckboxes[0]);
@@ -1776,8 +1776,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1795,8 +1795,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Select a not-completed item
       const checkboxes = await findAllByRole('checkbox');
@@ -1830,8 +1830,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1848,8 +1848,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1867,8 +1867,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1887,8 +1887,8 @@ describe('ListContainer', () => {
 
       expect(await findByText('foo not completed product')).toBeVisible();
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1910,8 +1910,8 @@ describe('ListContainer', () => {
         permissions: EUserPermissions.WRITE,
       });
 
-      await user.click((await findAllByText('Select'))[0]);
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await user.click((await findAllByText('Select Items'))[0]);
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
@@ -1932,7 +1932,7 @@ describe('ListContainer', () => {
 
       // Enter multi-select mode
       await user.click(await findByTestId('select-button'));
-      await waitFor(async () => expect(await findByText('Hide Select')).toBeVisible());
+      await waitFor(async () => expect(await findByText('Cancel')).toBeVisible());
 
       // Select the completed item (id1 from defaultTestData.completedItem)
       const checkbox = await findByTestId('completed-item-select-id1');
@@ -2132,15 +2132,14 @@ describe('ListContainer', () => {
         },
       });
 
-      const { findByText, findByTestId, user } = setup();
+      const { findByTestId, user } = setup();
 
       // Test that quick-add input exists and can be interacted with
       const quickAddInput = await findByTestId('quick-add-input');
       expect(quickAddInput).toBeInTheDocument();
 
       // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
@@ -2161,25 +2160,24 @@ describe('ListContainer', () => {
         },
       });
 
-      const { findByText, findByTestId, user } = setup();
+      const { findByTestId, user } = setup();
 
       // Test that quick-add input exists and can be interacted with
       const quickAddInput = await findByTestId('quick-add-input');
       expect(quickAddInput).toBeInTheDocument();
 
       // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
     });
 
     it('shows error toast when no listItemConfiguration is set', async () => {
-      const { findByTestId, findByText, user } = setup({ listItemConfiguration: undefined });
+      const { findByTestId, user } = setup({ listItemConfiguration: undefined });
 
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      // With no field config the expanded form never renders, so Enter on the collapsed bar runs quick-add.
+      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
 
       await waitFor(() =>
         expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -2188,22 +2186,16 @@ describe('ListContainer', () => {
       );
     });
 
-    it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
-      const newItem = createListItem('new-item-id', false, []);
+    it('quick-adds by name via Enter when the expanded form is not rendered', async () => {
+      const newItem = createListItem('qa-id', false, []);
+      axios.post = vi.fn().mockResolvedValue({ data: newItem });
+      // handleQuickAdd fetches its own field configs to find the primary field.
+      axios.get = vi.fn().mockResolvedValue({ data: [{ id: 'fc1', label: 'product', primary: true }] });
 
-      // First post: create the item
-      // Second post: create the field value
-      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      // Empty preloaded configs => the expanded form never renders, so Enter on the bar runs quick-add.
+      const { findByTestId, user } = setup({ listItemFieldConfigurations: [] });
 
-      // GET: returns field configurations (array with a primary field)
-      axios.get = vi.fn().mockResolvedValue({
-        data: [{ id: 'fc1', label: 'product', primary: true }],
-      });
-
-      const { findByTestId, findByText, user } = setup();
-
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
@@ -2214,21 +2206,61 @@ describe('ListContainer', () => {
       });
     });
 
+    it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
+      const newItem = createListItem('new-item-id', false, []);
+
+      // First post: create the item. Second post: create the primary field value (from the bar input).
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+
+      // GET: field configurations when the form opens on focus; the created item when reloading after add.
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+              ],
+            })
+          : Promise.resolve({ data: newItem }),
+      );
+
+      const { findByTestId, findByText, user } = setup();
+
+      // The always-visible bar input is the primary/name field; submit via the expanded form footer.
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add item'));
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
+        list_item: { completed: false },
+      });
+      expect(axios.post).toHaveBeenNthCalledWith(
+        2,
+        `/lists/${defaultTestData.list.id}/list_items/${newItem.id}/list_item_fields`,
+        { list_item_field: { list_item_field_configuration_id: 'fc1', data: 'new product' } },
+      );
+    });
+
     it('adds item without field post when no primary field config exists', async () => {
       const newItem = createListItem('new-item-id', false, []);
 
       axios.post = vi.fn().mockResolvedValueOnce({ data: newItem });
-      // GET returns configs but none are primary
-      axios.get = vi.fn().mockResolvedValue({
-        data: [{ id: 'fc1', label: 'product', primary: false }],
-      });
+      // GET returns configs (none primary) on form open; the created item when reloading after add.
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
+              ],
+            })
+          : Promise.resolve({ data: newItem }),
+      );
 
       const { findByTestId, findByText, user } = setup();
 
       await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add'));
+      await user.click(await findByText('Add item'));
 
-      // Only the item creation post — no field post since no primary config
+      // Only the item creation post — no field posts (no primary config; non-primary field left empty).
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
 
@@ -2283,7 +2315,8 @@ describe('ListContainer', () => {
       const completedCheckbox = getByLabelText('Completed') as HTMLInputElement;
       await user.click(completedCheckbox);
 
-      await user.click(getByText('Submit'));
+      await user.type(await findByTestId('quick-add-input'), 'My item');
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith(
@@ -2312,7 +2345,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       // Click Submit before typing into Notes; resolvedFieldData returns '' so no field POST,
       // but should still create item. Test the configs.length === 0 path via fields cleared.
-      await user.click(getByText('Submit'));
+      await user.type(await findByTestId('quick-add-input'), 'My item');
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalled();
@@ -2336,7 +2370,8 @@ describe('ListContainer', () => {
       await user.click(await findByTestId('quick-add-expand'));
       const notesInput = getByLabelText('Notes') as HTMLInputElement;
       await user.type(notesInput, 'x');
-      await user.click(getByText('Submit'));
+      await user.type(await findByTestId('quick-add-input'), 'My item');
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('Failed to add item');
@@ -2370,7 +2405,8 @@ describe('ListContainer', () => {
       await user.type(notesInput, 'note');
       const categoryInput = getByLabelText('Category') as HTMLInputElement;
       await user.type(categoryInput, 'existing');
-      await user.click(getByText('Submit'));
+      await user.type(await findByTestId('quick-add-input'), 'My item');
+      await user.click(getByText('Add item'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith('/lists/id1/categories', { category: { name: 'Existing' } });
@@ -2387,7 +2423,7 @@ describe('ListContainer', () => {
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
 
-      const { findByText, findByTestId, queryByText, user } = setup();
+      const { findByTestId, queryByText, user } = setup();
 
       // Apply filter to foo
       await user.click(await findByTestId('filter-by-foo'));
@@ -2398,8 +2434,7 @@ describe('ListContainer', () => {
 
       // Try to add item
       const quickAddInput = await findByTestId('quick-add-input');
-      await user.type(quickAddInput, 'new product');
-      await user.click(await findByText('Add'));
+      await user.type(quickAddInput, 'new product{Enter}');
 
       // Verify the POST was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());

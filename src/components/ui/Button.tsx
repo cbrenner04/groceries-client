@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'ghost-danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   fullWidth?: boolean;
@@ -16,6 +16,9 @@ const variantStyles: Record<string, string> = {
     'tw:hover:bg-[var(--color-surface-overlay)]',
   ghost:
     'tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] ' +
+    'tw:active:bg-[var(--color-surface-raised)]',
+  'ghost-danger':
+    'tw:text-[var(--color-danger)] tw:hover:bg-[var(--color-surface-overlay)] ' +
     'tw:active:bg-[var(--color-surface-raised)]',
   danger: 'tw:bg-[var(--color-danger)] tw:text-white tw:hover:bg-[var(--color-danger-hover)] tw:active:opacity-90',
   success: 'tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80',
@@ -41,7 +44,8 @@ export function Button(props: IButtonProps): React.JSX.Element {
 
   const baseStyles =
     'tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out ' +
-    'tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2';
+    'tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
   const widthStyles = fullWidth ? 'tw:w-full' : '';
   const disabledStyles =
     disabled || loading ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : 'tw:cursor-pointer';

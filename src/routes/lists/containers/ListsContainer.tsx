@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
@@ -13,6 +13,7 @@ import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
 import { BottomSheet } from 'components/ui/BottomSheet';
 import Select from 'components/ui/Select';
+import { Button } from 'components/ui/Button';
 import {
   fetchLists,
   fetchListToEdit,
@@ -417,7 +418,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
@@ -447,16 +447,16 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
       <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
-        <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
+        <h1
+          className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
+          data-test-id="page-title"
+        >
           Lists
         </h1>
         <div className="tw:flex tw:items-center tw:gap-2">
-          <button
-            type="button"
-            className={
-              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
-              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
-            }
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={(): void => {
               if (multiSelectActive && selectedListIds.size > 0) {
                 setSelectedListIds(new Set());
@@ -464,15 +464,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
               setMultiSelectActive(!multiSelectActive);
             }}
           >
-            {multiSelectActive ? 'Hide Select' : 'Select'}
-          </button>
-          <Link
-            to="/templates"
-            data-test-id="manage-templates-link"
-            className="tw:text-sm tw:text-[var(--color-primary)]"
-          >
-            Manage Templates
-          </Link>
+            {multiSelectActive ? 'Cancel' : 'Select Lists'}
+          </Button>
         </div>
       </div>
 
@@ -548,19 +541,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         {filtered.completed.map(renderListCard)}
       </div>
 
-      {showCompletedLink && (
-        <div className="tw:mt-4 tw:text-center">
-          <button
-            type="button"
-            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-            onClick={(): void => setStatusFilter('completed')}
-            data-test-id="show-all-completed"
-          >
-            Show all completed lists &rarr;
-          </button>
-        </div>
-      )}
-
       <ConfirmDialog
         isOpen={showDeleteConfirm}
         onClose={(): void => setShowDeleteConfirm(false)}
@@ -635,6 +615,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       <BottomInputBar
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
+        submitLabel="Create"
         hidden={hideBottomInputBar}
         expandedContent={
           <Select

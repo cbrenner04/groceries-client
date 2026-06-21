@@ -8,6 +8,7 @@ import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 import { fetchLists } from './utils';
 import ListsContainer from './containers/ListsContainer';
 import UnknownError from '../error_pages/UnknownError';
+import { PageLayout } from 'components/layout/PageLayout';
 
 interface IFulfilledLists {
   userId: string;
@@ -41,16 +42,18 @@ const Lists: React.FC<IListsProps> = (props): React.JSX.Element => {
           }
 
           return (
-            <ListsContainer
-              userId={data.userId}
-              pendingLists={data.pendingLists}
-              completedLists={data.completedLists}
-              incompleteLists={data.incompleteLists}
-              currentUserPermissions={data.currentUserPermissions}
-              listItemConfigurations={data.listItemConfigurations}
-              initialFilter={props.initialFilter}
-              initialEditListId={props.initialEditListId ?? null}
-            />
+            <PageLayout>
+              <ListsContainer
+                userId={data.userId}
+                pendingLists={data.pendingLists}
+                completedLists={data.completedLists}
+                incompleteLists={data.incompleteLists}
+                currentUserPermissions={data.currentUserPermissions}
+                listItemConfigurations={data.listItemConfigurations}
+                initialFilter={props.initialFilter}
+                initialEditListId={props.initialEditListId ?? null}
+              />
+            </PageLayout>
           );
         }}
       </Async.Fulfilled>

@@ -7,12 +7,12 @@ exports[`MergeModal > renders 1`] = `
   <div>
     <div
       aria-modal="true"
-      class="tw:fixed tw:inset-0 tw:z-60 tw:flex tw:items-end tw:justify-center tw:bg-black/50 tw:transition-opacity tw:duration-200 md:tw:items-center"
+      class="tw:fixed tw:inset-0 tw:z-[var(--z-overlay)] tw:flex tw:items-end tw:justify-center tw:bg-black/50 tw:transition-opacity tw:duration-200 md:tw:items-center"
       data-test-id="bottom-sheet"
       role="dialog"
     >
       <div
-        class="tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
+        class="tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:z-[var(--z-modal)] tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] md:tw:pb-4 md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]"
       >
         <div
           class="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden"
@@ -58,14 +58,14 @@ exports[`MergeModal > renders 1`] = `
             class="tw:flex tw:justify-end tw:gap-2"
           >
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
               data-test-id="clear-merge"
               type="button"
             >
               Close
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
               data-test-id="confirm-merge"
               disabled=""
               type="button"

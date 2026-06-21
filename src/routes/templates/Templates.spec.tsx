@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, type RenderResult, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import userEvent from '@testing-library/user-event';
 
 import axios from 'utils/api';
 
@@ -63,15 +62,13 @@ describe('Templates', () => {
       ],
     });
 
-    const user = userEvent.setup();
-    const { container, findByText, findByTestId } = renderTemplates();
+    const { container, findByText } = renderTemplates();
 
     await act(async () => {
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
     });
 
     expect(await findByText('Templates')).toBeVisible();
-    await user.click(await findByTestId('add-template-button'));
     expect(container).toMatchSnapshot();
   });
 });

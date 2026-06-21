@@ -42,7 +42,14 @@ const getVariants = (direction: TPageTransitionDirection): Variants => {
 export const PageTransition: React.FC<IPageTransitionProps> = (props): React.JSX.Element => {
   const { children, direction = 'fade' } = props;
   const variants = getVariants(direction);
-  const shouldAnimate = !prefersReducedMotion();
+  // Only animate in production. In dev, React StrictMode double-mounts can interrupt the enter
+  // animation and leave the whole page stuck at its initial { opacity: 0, x: 50 } state — a blank
+  // page until reload. Matches BottomSheet's PROD-only animation gate.
+  // Only animate in production: in dev, React StrictMode double-mounts can interrupt the enter
+  // animation and leave the whole page stuck at its initial { opacity: 0, x: 50 } (blank until
+  // reload). Mirrors BottomSheet's PROD-only animation gate. (The PROD=true branch is untestable
+  // under Vitest where import.meta.env.PROD is always false.)
+  const shouldAnimate = !prefersReducedMotion() && import.meta.env.PROD;
 
   return (
     <motion.div

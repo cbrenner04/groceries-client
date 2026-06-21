@@ -61,9 +61,9 @@ describe('SettingsMenu', () => {
     expect(logoutBtn).toHaveTextContent('Log out');
   });
 
-  it('has menu role', async () => {
+  it('has dialog role', async () => {
     const { findByRole } = setup();
-    expect(await findByRole('menu')).toBeVisible();
+    expect(await findByRole('dialog')).toBeVisible();
   });
 
   it('has radiogroup for theme options', async () => {
@@ -96,8 +96,8 @@ describe('SettingsMenu', () => {
   it('does not call onClose when menu is clicked', async () => {
     const onClose = vi.fn();
     const { findByTestId, user } = setup({ onClose });
-    const menu = await findByTestId('settings-menu');
-    await user.click(menu);
+    const themeLabel = await findByTestId('theme-light');
+    await user.click(themeLabel);
     expect(onClose).not.toHaveBeenCalled();
   });
 

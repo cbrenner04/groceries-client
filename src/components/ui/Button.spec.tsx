@@ -27,10 +27,11 @@ describe('Button', () => {
   });
 
   it('renders all variants', async () => {
-    const variants: Array<'primary' | 'secondary' | 'ghost' | 'danger' | 'success'> = [
+    const variants: Array<'primary' | 'secondary' | 'ghost' | 'ghost-danger' | 'danger' | 'success'> = [
       'primary',
       'secondary',
       'ghost',
+      'ghost-danger',
       'danger',
       'success',
     ];

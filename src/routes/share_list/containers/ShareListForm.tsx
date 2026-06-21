@@ -205,7 +205,7 @@ const ShareListForm: React.FC<IShareListFormProps> = (props) => {
           onChange={(event: ChangeEvent<HTMLInputElement>): void => setNewEmail(event.target.value)}
         />
         <div className="tw:flex tw:justify-end">
-          <Button variant="primary" type="submit" disabled={!newEmail}>
+          <Button variant="primary" type="submit" disabled={!newEmail} fullWidth className="sm:tw:w-auto">
             Share List
           </Button>
         </div>

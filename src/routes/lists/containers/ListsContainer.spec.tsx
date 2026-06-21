@@ -143,14 +143,6 @@ describe('ListsContainer', () => {
     expect(getByTestId('page-title')).toHaveTextContent('Lists');
   });
 
-  it('renders Manage Templates link pointing to /templates', () => {
-    const { getByTestId } = setup();
-
-    const link = getByTestId('manage-templates-link');
-    expect(link).toHaveAttribute('href', '/templates');
-    expect(link).toHaveTextContent('Manage Templates');
-  });
-
   it('renders filter chips', () => {
     const { getByTestId } = setup();
 
@@ -565,9 +557,9 @@ describe('ListsContainer', () => {
   it('toggles multi-select mode', async () => {
     const { getByText, queryByText, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
 
-    expect(queryByText('Hide Select')).toBeInTheDocument();
+    expect(queryByText('Cancel')).toBeInTheDocument();
   });
 
   it('shows error when list deletion fails', async () => {
@@ -791,7 +783,7 @@ describe('ListsContainer', () => {
   it('selects a list when clicked in multi-select mode', async () => {
     const { getByText, getAllByRole, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
 
     // Click the list card — in multi-select mode clicking the card calls onSelect
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
@@ -804,7 +796,7 @@ describe('ListsContainer', () => {
   it('deselects a list when clicked again in multi-select mode', async () => {
     const { getByText, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
 
     const card = document.querySelector('[data-test-id="list-id5"]') as HTMLElement;
     await user.click(card);
@@ -814,14 +806,14 @@ describe('ListsContainer', () => {
     expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
   });
 
-  it('clears selection when Hide Select is clicked with items selected', async () => {
+  it('clears selection when Cancel is clicked with items selected', async () => {
     const { getByText, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
 
-    // "Select" button has changed to "Hide Select"
-    await user.click(getByText('Hide Select'));
+    // "Select" button has changed to "Cancel"
+    await user.click(getByText('Cancel'));
 
     const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
     expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
@@ -830,7 +822,7 @@ describe('ListsContainer', () => {
   it('shows multi-select toolbar when 2+ lists are selected', async () => {
     const { getByText, getByTestId, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
     await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
 
@@ -914,7 +906,7 @@ describe('ListsContainer', () => {
     axios.delete = vi.fn().mockResolvedValue({});
     const { getByText, getByTestId, queryByTestId, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
     await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
 
@@ -1070,7 +1062,7 @@ describe('ListsContainer', () => {
   it('opens merge modal when Merge is clicked with 2+ lists selected', async () => {
     const { getByText, getByTestId, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
     await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
 
@@ -1094,7 +1086,7 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockResolvedValue({ data: mergedList });
     const { getByText, getByTestId, findByTestId, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
     await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
     await user.click(getByTestId('multi-select-merge'));
@@ -1116,7 +1108,7 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const { getByText, getByTestId, user } = setup();
 
-    await user.click(getByText('Select'));
+    await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
     await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
     await user.click(getByTestId('multi-select-merge'));
@@ -1126,24 +1118,6 @@ describe('ListsContainer', () => {
     await user.click(getByTestId('confirm-merge'));
 
     await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
-  });
-
-  // ─── Show all completed ───────────────────────────────────────────────────────
-
-  it('shows "Show all completed" button when filter is all and completed lists exist', () => {
-    const { getByTestId } = setup();
-
-    expect(getByTestId('show-all-completed')).toBeInTheDocument();
-  });
-
-  it('changes filter to completed when "Show all completed" is clicked', async () => {
-    const { getByTestId, queryByTestId, user } = setup();
-
-    await user.click(getByTestId('show-all-completed'));
-
-    // Active lists should be hidden, completed lists visible
-    expect(queryByTestId('list-id5')).toBeNull();
-    expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
   // ─── Edit list BottomSheet ────────────────────────────────────────────────────

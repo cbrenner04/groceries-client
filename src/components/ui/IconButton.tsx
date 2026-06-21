@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface IIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
-  variant?: 'default' | 'success' | 'danger' | 'primary';
+  variant?: 'default' | 'success' | 'danger' | 'primary' | 'accent';
   size?: 'sm' | 'md' | 'lg';
   label: string;
   'data-test-id'?: string;
@@ -22,7 +22,9 @@ const variantStyles: Record<string, string> = {
     'tw:text-[var(--color-success)] tw:hover:bg-[rgb(16_185_129_/_0.1)] ' + 'tw:active:bg-[rgb(16_185_129_/_0.2)]',
   danger: 'tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] ' + 'tw:active:bg-[rgb(239_68_68_/_0.2)]',
   primary:
-    'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(79_70_229_/_0.2)]',
+    'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(22_163_74_/_0.2)]',
+  accent:
+    'tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] ' + 'tw:active:bg-[rgb(245_158_11_/_0.2)]',
 };
 
 export function IconButton(props: IIconButtonProps): React.JSX.Element {
@@ -30,7 +32,8 @@ export function IconButton(props: IIconButtonProps): React.JSX.Element {
 
   const baseStyles =
     'tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center ' +
-    'tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer';
+    'tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
   const disabledStyles = disabled ? 'tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none' : '';
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];

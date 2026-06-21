@@ -8,6 +8,7 @@ import type {
   IListItemFieldConfiguration,
   TUserPermissions,
 } from 'typings';
+import { normalizeCategoryKey } from 'utils/format';
 import { ListItemRow, type TListItemAnimationState } from 'components/domain/ListItemRow';
 import { Badge } from 'components/ui/Badge';
 import { ChevronDownIcon } from 'components/icons';
@@ -18,6 +19,8 @@ export interface ICompletedItemsSectionProps {
   permissionsDict?: TUserPermissions;
   selectedItems: IListItem[];
   pending: boolean;
+  filter?: string;
+  displayedCategories?: string[];
   listItemFieldConfigurations: IListItemFieldConfiguration[];
   completeMultiSelect: boolean;
   itemAnimationStates?: Record<string, TListItemAnimationState>;
@@ -38,6 +41,19 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
   const isTestEnvironment = import.meta.env.VITEST === 'true';
   const isAnimationDisabled = isTestEnvironment || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Apply the active category filter to completed items too (mirrors NotCompletedItemsSection).
+  const visibleItems = props.filter
+    ? props.completedItems.filter((item) => {
+        const itemCategory = item.category ? String(item.category).trim() : '';
+        return (props.displayedCategories ?? []).some((cat) => {
+          if (cat === 'uncategorized') {
+            return !itemCategory;
+          }
+          return itemCategory && normalizeCategoryKey(itemCategory) === normalizeCategoryKey(cat);
+        });
+      })
+    : props.completedItems;
+
   useEffect(() => {
     if (props.sessionMode === 'shopping' && props.setCompletedExpanded) {
       props.setCompletedExpanded(true);
@@ -52,7 +68,7 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
     }
   };
 
-  if (props.completedItems.length === 0) {
+  if (visibleItems.length === 0) {
     return <React.Fragment />;
   }
 
@@ -73,7 +89,7 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
         >
           Completed
         </span>
-        <Badge>{props.completedItems.length}</Badge>
+        <Badge>{visibleItems.length}</Badge>
         <div className="tw:flex-1 tw:h-px tw:bg-[var(--color-border)]" />
         <ChevronDownIcon
           className={
@@ -86,9 +102,8 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
       {expanded &&
         (isAnimationDisabled ? (
           <div className="tw:flex tw:flex-col tw:gap-2">
-            {props.completedItems.map((item: IListItem, index: number) => {
-              const findItem = (itemId: string): IListItem =>
-                props.completedItems.find((i) => i.id === itemId) as IListItem;
+            {visibleItems.map((item: IListItem, index: number) => {
+              const findItem = (itemId: string): IListItem => visibleItems.find((i) => i.id === itemId) as IListItem;
 
               return (
                 <ListItemRow
@@ -120,9 +135,8 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
             transition={{ duration: 0.3 }}
           >
             <AnimatePresence mode="popLayout">
-              {props.completedItems.map((item: IListItem, index: number) => {
-                const findItem = (itemId: string): IListItem =>
-                  props.completedItems.find((i) => i.id === itemId) as IListItem;
+              {visibleItems.map((item: IListItem, index: number) => {
+                const findItem = (itemId: string): IListItem => visibleItems.find((i) => i.id === itemId) as IListItem;
 
                 return (
                   <motion.div

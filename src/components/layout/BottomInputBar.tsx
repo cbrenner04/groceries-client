@@ -14,6 +14,14 @@ export interface IBottomInputBarProps {
   allowEnterSubmitWhenExpanded?: boolean;
   /** Session mode for mode-driven expansion state. */
   mode?: BottomInputBarMode;
+  /** When set, the footer Submit button submits this form (type=submit, form=<id>) instead of calling onSubmit. */
+  submitFormId?: string;
+  /** Label for the footer Submit button (default "Add"). */
+  submitLabel?: string;
+  /** Optional controlled value. When provided, the input is controlled by the parent. */
+  value?: string;
+  /** Called when the input value changes (required for controlled usage). */
+  onValueChange?: (value: string) => void;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
@@ -26,10 +34,21 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     hidden = false,
     allowEnterSubmitWhenExpanded = false,
     mode = 'neutral',
+    submitFormId,
+    submitLabel = 'Add',
+    value: controlledValue,
+    onValueChange,
   } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
-  const [value, setValue] = useState('');
+  const [internalValue, setInternalValue] = useState('');
+  const value = controlledValue !== undefined ? controlledValue : internalValue;
+  const setValue = (next: string): void => {
+    if (controlledValue === undefined) {
+      setInternalValue(next);
+    }
+    onValueChange?.(next);
+  };
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +87,11 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     }
   };
 
+  const handleCancel = (): void => {
+    setValue('');
+    setExpanded(false);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key !== 'Enter') {
       return;
@@ -85,9 +109,9 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const containerClassName =
-    'tw:fixed tw:left-0 tw:right-0 tw:z-40 ' +
+    'tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] ' +
     'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
-    'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300';
+    'tw:shadow-sm tw:transition-all tw:duration-300';
 
   const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
 
@@ -101,6 +125,19 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     'tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] ' +
     'tw:text-sm tw:outline-none ' +
     'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
+
+  const footerSubmitClassName =
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:text-sm tw:font-medium ' +
+    'tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors ' +
+    'tw:disabled:opacity-50 tw:disabled:cursor-not-allowed ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
+
+  const footerCancelClassName =
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:text-[var(--color-text-secondary)] tw:text-sm tw:font-medium ' +
+    'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors ' +
+    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
   const expandButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
@@ -155,7 +192,45 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
           </button>
         )}
       </div>
-      {expandedContent && <div className={expandedClassName}>{expandedContent}</div>}
+      {expandedContent && (
+        <div className={expandedClassName}>
+          {expandedContent}
+          {expanded && (
+            <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className={footerCancelClassName}
+                data-test-id="quick-add-cancel"
+              >
+                Cancel
+              </button>
+              {submitFormId ? (
+                <button
+                  type="button"
+                  onClick={(): void => {
+                    (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
+                  }}
+                  className={footerSubmitClassName}
+                  data-test-id="quick-add-submit"
+                >
+                  {submitLabel}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!value.trim()}
+                  className={footerSubmitClassName}
+                  data-test-id="quick-add-submit"
+                >
+                  {submitLabel}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

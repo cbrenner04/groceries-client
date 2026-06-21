@@ -52,7 +52,7 @@ exports[`RefusedUsersList > renders refresh share button 1`] = `
         </span>
         <button
           aria-label="Re-share"
-          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(79_70_229_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
+          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] tw:active:bg-[rgb(22_163_74_/_0.2)] tw:h-8 tw:w-8 tw:text-sm"
           data-test-id="refresh-share"
           type="button"
         >

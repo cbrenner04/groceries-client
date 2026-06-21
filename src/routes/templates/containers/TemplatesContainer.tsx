@@ -4,16 +4,16 @@ import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
 
 import axios from 'utils/api';
+import { EListItemFieldType } from 'typings';
 import type { IListItemConfiguration, IListItemFieldConfiguration } from 'typings';
 
 import { PageLayout } from 'components/layout/PageLayout';
-import { Button } from 'components/ui/Button';
 import { BottomSheet } from 'components/ui/BottomSheet';
-import TemplateForm from '../components/TemplateForm';
+import { BottomInputBar } from 'components/layout/BottomInputBar';
 import TemplatesList from '../components/TemplatesList';
 import EditTemplateForm from './EditTemplateForm';
 import { failure, fetchTemplateToEdit } from '../utils';
-import type { IFieldRow } from '../components/FieldConfigurationRows';
+import FieldConfigurationRows, { type IFieldRow } from '../components/FieldConfigurationRows';
 
 export interface ITemplatesContainerProps {
   templates: IListItemConfiguration[];
@@ -25,10 +25,14 @@ interface IEditingTemplate {
   fieldConfigurations: IListItemFieldConfiguration[];
 }
 
+const initialFieldRows = (): IFieldRow[] => [
+  { key: '0', label: '', dataType: EListItemFieldType.FREE_TEXT, position: 1, primary: true },
+];
+
 const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JSX.Element => {
   const [templates, setTemplates] = useState(props.templates);
-  const [pending, setPending] = useState(false);
-  const [createSheetOpen, setCreateSheetOpen] = useState(false);
+  const [, setPending] = useState(false);
+  const [createFieldRows, setCreateFieldRows] = useState<IFieldRow[]>(initialFieldRows());
   const [editing, setEditing] = useState<IEditingTemplate | null>(null);
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const navigate = useNavigate();
@@ -72,8 +76,8 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
 
       const updatedTemplates = update(templates, { $push: [templateData] });
       setTemplates(updatedTemplates);
+      setCreateFieldRows(initialFieldRows());
       setPending(false);
-      setCreateSheetOpen(false);
       showToast.info('Template successfully created.');
     } catch (error) {
       failure(error, navigate, setPending);
@@ -119,15 +123,16 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
   return (
     <PageLayout
       title="Templates"
-      headerRight={
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={(): void => setCreateSheetOpen(true)}
-          data-test-id="add-template-button"
-        >
-          + Add
-        </Button>
+      bottomBar={
+        <BottomInputBar
+          placeholder="Create a new template..."
+          hidden={editSheetOpen}
+          submitLabel="Create"
+          onSubmit={(name: string): void => {
+            void handleCreateSubmit(name, createFieldRows);
+          }}
+          expandedContent={<FieldConfigurationRows fieldRows={createFieldRows} setFieldRows={setCreateFieldRows} />}
+        />
       }
     >
       <TemplatesList
@@ -139,19 +144,6 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
           void openEditSheet(templateId);
         }}
       />
-
-      <BottomSheet
-        isOpen={createSheetOpen}
-        onClose={(): void => setCreateSheetOpen(false)}
-        title="New Template"
-        testId="add-template-sheet"
-      >
-        <TemplateForm
-          onFormSubmit={handleCreateSubmit}
-          pending={pending}
-          onCancel={(): void => setCreateSheetOpen(false)}
-        />
-      </BottomSheet>
 
       <BottomSheet
         isOpen={editSheetOpen && editing !== null}

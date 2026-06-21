@@ -73,8 +73,8 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
         onChange={handleDataTypeChange}
         options={dataTypeOptions}
       />
-      <div className="tw:flex tw:items-end tw:gap-3 tw:justify-between">
-        <div className="tw:w-24">
+      <div className="tw:flex tw:flex-col tw:gap-3 sm:tw:flex-row sm:tw:items-end sm:tw:justify-between">
+        <div className="sm:tw:w-24 tw:flex-1">
           <Input
             id={`field-row-position-${props.index}`}
             testId={`field-row-position-${props.index}`}
@@ -87,23 +87,25 @@ const FieldConfigurationRow: React.FC<IFieldConfigurationRowProps> = (props): Re
             error={hasPositionError ? 'Duplicate position' : undefined}
           />
         </div>
-        <Checkbox
-          id={`field-row-primary-${props.index}`}
-          testId={`field-row-primary-${props.index}`}
-          name={`field-row-primary-${props.index}`}
-          label="Primary"
-          checked={props.row.primary}
-          onChange={handlePrimaryChange}
-        />
-        <IconButton
-          icon={<TrashIcon size="sm" />}
-          variant="danger"
-          size="sm"
-          label="Remove field"
-          data-test-id={`field-row-remove-${props.index}`}
-          onClick={props.onRemove}
-          disabled={!props.canRemove}
-        />
+        <div className="tw:flex tw:gap-3 tw:items-end">
+          <Checkbox
+            id={`field-row-primary-${props.index}`}
+            testId={`field-row-primary-${props.index}`}
+            name={`field-row-primary-${props.index}`}
+            label="Primary"
+            checked={props.row.primary}
+            onChange={handlePrimaryChange}
+          />
+          <IconButton
+            icon={<TrashIcon size="sm" />}
+            variant="danger"
+            size="sm"
+            label="Remove field"
+            data-test-id={`field-row-remove-${props.index}`}
+            onClick={props.onRemove}
+            disabled={!props.canRemove}
+          />
+        </div>
       </div>
     </div>
   );

@@ -68,10 +68,10 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
         </select>
       </div>
       <div
-        class="tw:flex tw:items-end tw:gap-3 tw:justify-between"
+        class="tw:flex tw:flex-col tw:gap-3 sm:tw:flex-row sm:tw:items-end sm:tw:justify-between"
       >
         <div
-          class="tw:w-24"
+          class="sm:tw:w-24 tw:flex-1"
         >
           <div
             class="tw:w-full"
@@ -94,78 +94,82 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
           </div>
         </div>
         <div
-          class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
+          class="tw:flex tw:gap-3 tw:items-end"
         >
           <div
-            class="tw:relative tw:w-5 tw:h-5"
+            class="tw:flex tw:items-center tw:min-h-[44px] tw:cursor-pointer tw:gap-3"
           >
-            <input
-              checked=""
-              class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
-              data-test-id="field-row-primary-0"
-              id="field-row-primary-0"
-              name="field-row-primary-0"
-              type="checkbox"
-            />
-            <svg
-              class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:text-white tw:pointer-events-none"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+            <div
+              class="tw:relative tw:w-5 tw:h-5"
             >
-              <rect
-                fill="var(--color-primary)"
-                height="20"
-                rx="2"
-                width="20"
+              <input
+                checked=""
+                class="tw:appearance-none tw:absolute tw:w-5 tw:h-5 tw:rounded tw:border-2 tw:border-[var(--color-border)] tw:bg-[var(--color-surface)] tw:cursor-pointer tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+                data-test-id="field-row-primary-0"
+                id="field-row-primary-0"
+                name="field-row-primary-0"
+                type="checkbox"
               />
-              <path
-                d="M6.5 10.5L8.5 12.5L13.5 7.5"
-                fill="none"
-                stroke="white"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-              />
-            </svg>
+              <svg
+                class="tw:absolute tw:inset-0 tw:w-5 tw:h-5 tw:text-white tw:pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <rect
+                  fill="var(--color-primary)"
+                  height="20"
+                  rx="2"
+                  width="20"
+                />
+                <path
+                  d="M6.5 10.5L8.5 12.5L13.5 7.5"
+                  fill="none"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <label
+              class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
+              for="field-row-primary-0"
+            >
+              Primary
+            </label>
           </div>
-          <label
-            class="tw:text-sm tw:select-none tw:text-[var(--color-text-primary)] tw:cursor-pointer tw:mb-0"
-            for="field-row-primary-0"
+          <button
+            aria-label="Remove field"
+            class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
+            data-test-id="field-row-remove-0"
+            disabled=""
+            type="button"
           >
-            Primary
-          </label>
-        </div>
-        <button
-          aria-label="Remove field"
-          class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-8 tw:w-8 tw:text-sm tw:opacity-50 tw:cursor-not-allowed tw:pointer-events-none"
-          data-test-id="field-row-remove-0"
-          disabled=""
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            fill="currentColor"
-            focusable="false"
-            height="14"
-            role="img"
-            style="display: inline-block; vertical-align: middle;"
-            viewBox="0 0 512 512"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="14"
+              role="img"
+              style="display: inline-block; vertical-align: middle;"
+              viewBox="0 0 512 512"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-            />
-          </svg>
-        </button>
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     <div>
       <button
-        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
         data-test-id="add-field-button"
         type="button"
       >

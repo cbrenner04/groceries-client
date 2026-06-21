@@ -13,7 +13,7 @@ const List = (): React.JSX.Element => {
   const { id } = useParams();
 
   return (
-    <Async promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
+    <Async key={id} promiseFn={fetchList as unknown as PromiseFn<void>} id={id} navigate={navigate}>
       <Async.Pending>
         <div className="tw:p-4 tw:space-y-2">
           <Skeleton variant="text" width="50%" height="1.5rem" />

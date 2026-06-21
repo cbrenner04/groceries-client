@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import { render, fireEvent, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import { FilterChip, FilterChipGroup, type IFilterChipProps } from './FilterChip';
@@ -63,7 +63,7 @@ describe('FilterChip', () => {
 });
 
 describe('FilterChipGroup', () => {
-  it('renders children in a scrollable row', () => {
+  it('renders children in a horizontally scrollable row', () => {
     const { getByRole } = render(
       <FilterChipGroup>
         <FilterChip label="All" active onClick={vi.fn()} testId="clear-filter" />
@@ -73,7 +73,7 @@ describe('FilterChipGroup', () => {
     );
     const group = getByRole('group');
     expect(group).toHaveClass('tw:overflow-x-auto');
-    expect(group).toHaveClass('tw:flex');
+    expect(group).toHaveClass('tw:flex-nowrap');
     expect(group).toHaveClass('tw:gap-2');
   });
 
@@ -84,5 +84,33 @@ describe('FilterChipGroup', () => {
       </FilterChipGroup>,
     );
     expect(getByRole('group')).toHaveClass('mt-4');
+  });
+
+  it('translates a vertical wheel into horizontal scroll when chips overflow', () => {
+    const { getByRole } = render(
+      <FilterChipGroup>
+        <FilterChip label="All" active onClick={vi.fn()} />
+      </FilterChipGroup>,
+    );
+    const group = getByRole('group');
+    Object.defineProperty(group, 'scrollWidth', { value: 500, configurable: true });
+    Object.defineProperty(group, 'clientWidth', { value: 200, configurable: true });
+    group.scrollLeft = 0;
+    fireEvent.wheel(group, { deltaY: 120 });
+    expect(group.scrollLeft).toBe(120);
+  });
+
+  it('does not scroll on wheel when chips fit (no overflow)', () => {
+    const { getByRole } = render(
+      <FilterChipGroup>
+        <FilterChip label="All" active onClick={vi.fn()} />
+      </FilterChipGroup>,
+    );
+    const group = getByRole('group');
+    Object.defineProperty(group, 'scrollWidth', { value: 200, configurable: true });
+    Object.defineProperty(group, 'clientWidth', { value: 200, configurable: true });
+    group.scrollLeft = 0;
+    fireEvent.wheel(group, { deltaY: 120 });
+    expect(group.scrollLeft).toBe(0);
   });
 });
