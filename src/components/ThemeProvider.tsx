@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 interface IThemeContextValue {
   theme: 'light' | 'dark' | 'system';
@@ -16,6 +16,17 @@ export function ThemeProvider(props: IThemeProviderProps): React.JSX.Element {
   const { children } = props;
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // Clear the pending theme-transition timer on unmount so it can't fire after the
+  // component (and, in tests, the jsdom document) is gone.
+  useEffect((): (() => void) => {
+    return (): void => {
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect((): (() => void) | undefined => {
     const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
@@ -67,7 +78,10 @@ export function ThemeProvider(props: IThemeProviderProps): React.JSX.Element {
       document.documentElement.setAttribute('data-theme', newTheme);
     }
 
-    setTimeout(() => {
+    if (transitionTimerRef.current) {
+      clearTimeout(transitionTimerRef.current);
+    }
+    transitionTimerRef.current = setTimeout(() => {
       document.documentElement.classList.remove('theme-transitioning');
     }, 150);
   };

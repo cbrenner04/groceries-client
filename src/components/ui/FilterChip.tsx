@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 export interface IFilterChipProps {
   label: string;
@@ -42,9 +42,23 @@ export interface IFilterChipGroupProps {
 
 export function FilterChipGroup(props: IFilterChipGroupProps): React.JSX.Element {
   const { children, className = '' } = props;
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Translate vertical wheel into horizontal scroll so the chip row is scrollable with a mouse
+  // (not just trackpad/scrollbar) when the chips overflow.
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>): void => {
+    const el = scrollRef.current;
+    if (!el || el.scrollWidth <= el.clientWidth || e.deltaY === 0) {
+      return;
+    }
+    el.scrollLeft += e.deltaY;
+    e.preventDefault();
+  };
 
   return (
     <div
+      ref={scrollRef}
+      onWheel={handleWheel}
       className={`tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] ${className}`}
       role="group"
     >
