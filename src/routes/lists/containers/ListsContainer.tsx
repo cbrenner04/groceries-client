@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
@@ -417,7 +417,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
@@ -446,211 +445,187 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
-      <div className="tw:w-full tw:mx-auto tw:max-w-[var(--width-content)] tw:px-[var(--spacing-gutter)]">
-        <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
-          <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
-            Lists
-          </h1>
-          <div className="tw:flex tw:items-center tw:gap-2">
-            <button
-              type="button"
-              className={
-                'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
-                'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
-              }
-              onClick={(): void => {
-                if (multiSelectActive && selectedListIds.size > 0) {
-                  setSelectedListIds(new Set());
-                }
-                setMultiSelectActive(!multiSelectActive);
-              }}
-            >
-              {multiSelectActive ? 'Hide Select' : 'Select'}
-            </button>
-            <Link
-              to="/templates"
-              data-test-id="manage-templates-link"
-              className="tw:text-sm tw:text-[var(--color-primary)]"
-            >
-              Manage Templates
-            </Link>
-          </div>
-        </div>
-
-        <FilterChipGroup className="tw:mb-4">
-          <FilterChip
-            label="All"
-            active={statusFilter === 'all'}
-            onClick={(): void => setStatusFilter('all')}
-            testId="filter-all"
-          />
-          <FilterChip
-            label="Pending"
-            active={statusFilter === 'pending'}
-            onClick={(): void => setStatusFilter('pending')}
-            testId="filter-pending"
-          />
-          <FilterChip
-            label="Active"
-            active={statusFilter === 'active'}
-            onClick={(): void => setStatusFilter('active')}
-            testId="filter-active"
-          />
-          <FilterChip
-            label="Completed"
-            active={statusFilter === 'completed'}
-            onClick={(): void => setStatusFilter('completed')}
-            testId="filter-completed"
-          />
-        </FilterChipGroup>
-
-        {multiSelectActive && selectedListIds.size > 1 && (
-          <div
-            className={
-              'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
+      <div className="tw:flex tw:justify-between tw:items-center tw:mb-6">
+        <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
+          Lists
+        </h1>
+        <button
+          type="button"
+          className={
+            'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+            'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
+          }
+          onClick={(): void => {
+            if (multiSelectActive && selectedListIds.size > 0) {
+              setSelectedListIds(new Set());
             }
-          >
-            <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
-            <button
-              type="button"
-              className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
-              onClick={handleMerge}
-              data-test-id="multi-select-merge"
-            >
-              Merge
-            </button>
-            <button
-              type="button"
-              className="tw:text-sm tw:text-[var(--color-danger)] tw:cursor-pointer"
-              onClick={(): void => handleDelete('')}
-              data-test-id="multi-select-delete"
-            >
-              Delete
-            </button>
-          </div>
-        )}
-
-        {filtered.pending.length > 0 && (
-          <div
-            className={
-              'tw:mb-4 tw:p-3 tw:rounded-lg tw:border ' +
-              'tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10'
-            }
-            data-test-id="pending-alert"
-          >
-            You have {filtered.pending.length} {filtered.pending.length === 1 ? 'list' : 'lists'} waiting for your
-            response.
-          </div>
-        )}
-
-        <div className="tw:flex tw:flex-col tw:gap-2">
-          {filtered.pending.map(renderListCard)}
-          {filtered.active.map(renderListCard)}
-          {filtered.completed.map(renderListCard)}
-        </div>
-
-        {showCompletedLink && (
-          <div className="tw:mt-4 tw:text-center">
-            <button
-              type="button"
-              className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-              onClick={(): void => setStatusFilter('completed')}
-              data-test-id="show-all-completed"
-            >
-              Show all completed lists &rarr;
-            </button>
-          </div>
-        )}
-
-        <ConfirmDialog
-          isOpen={showDeleteConfirm}
-          onClose={(): void => setShowDeleteConfirm(false)}
-          onConfirm={(): void => {
-            void handleDeleteConfirm();
+            setMultiSelectActive(!multiSelectActive);
           }}
-          title="delete"
-          body={
-            <React.Fragment>
-              <p>
-                Are you sure you want to remove the following lists? Lists you own will be deleted completely. Lists you
-                do not own will continue to exist for the owner, you will just be removed from the list of users.
-              </p>
-              <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
-            </React.Fragment>
-          }
-          confirmText="Yes, I'm sure."
-          testId="delete-confirm-dialog"
-        />
-        <ConfirmDialog
-          isOpen={showRejectConfirm}
-          onClose={(): void => setShowRejectConfirm(false)}
-          onConfirm={(): void => {
-            setShowRejectConfirm(false);
-            void handleDeleteConfirm(listsToReject);
-          }}
-          title="reject"
-          body={
-            <React.Fragment>
-              <p>Are you sure you want to reject the following lists?</p>
-              <p>{listsToReject.map((list) => list.name).join(', ')}</p>
-            </React.Fragment>
-          }
-          confirmText="Yes, I'm sure."
-          testId="reject-confirm-dialog"
-        />
-        <MergeModal
-          showModal={showMergeModal}
-          clearModal={(): void => setShowMergeModal(false)}
-          listNames={listsToMerge.map((l) => l.name).join('", "')}
-          mergeName={mergeName}
-          handleMergeNameChange={
-            ((event: ChangeEvent<HTMLInputElement>) =>
-              setMergeName(event.target.value)) as React.ChangeEventHandler<HTMLInputElement>
-          }
-          handleMergeConfirm={(): void => {
-            void handleMergeConfirm();
-          }}
-          selectedLists={getSelectedLists()}
-        />
-
-        <BottomSheet
-          isOpen={editSheetOpen && editingList !== null}
-          onClose={closeEditSheet}
-          title="Edit List"
-          testId="edit-list-sheet"
         >
-          {editingList && (
-            <EditListForm
-              listId={editingList.listId}
-              name={editingList.name}
-              completed={editingList.completed}
-              refreshed={editingList.refreshed}
-              archivedAt={editingList.archivedAt}
-              listItemConfigurationId={editingList.list_item_configuration_id}
-              onClose={closeEditSheet}
-              onSaved={handleEditSaved}
-            />
-          )}
-        </BottomSheet>
-
-        <BottomInputBar
-          placeholder="Create a new list..."
-          onSubmit={handleCreateList}
-          hidden={hideBottomInputBar}
-          expandedContent={
-            <Select
-              label="Template"
-              options={templateOptions}
-              value={selectedTemplateId}
-              onChange={(e: ChangeEvent<HTMLSelectElement>): void => setSelectedTemplateId(e.target.value)}
-              id="list_item_configuration_id"
-              testId="list_item_configuration_id"
-            />
-          }
-          initialExpanded={false}
-          allowEnterSubmitWhenExpanded
-        />
+          {multiSelectActive ? 'Hide Select' : 'Select'}
+        </button>
       </div>
+
+      <FilterChipGroup className="tw:mb-6">
+        <FilterChip
+          label="All"
+          active={statusFilter === 'all'}
+          onClick={(): void => setStatusFilter('all')}
+          testId="filter-all"
+        />
+        <FilterChip
+          label="Pending"
+          active={statusFilter === 'pending'}
+          onClick={(): void => setStatusFilter('pending')}
+          testId="filter-pending"
+        />
+        <FilterChip
+          label="Active"
+          active={statusFilter === 'active'}
+          onClick={(): void => setStatusFilter('active')}
+          testId="filter-active"
+        />
+        <FilterChip
+          label="Completed"
+          active={statusFilter === 'completed'}
+          onClick={(): void => setStatusFilter('completed')}
+          testId="filter-completed"
+        />
+      </FilterChipGroup>
+
+      {multiSelectActive && selectedListIds.size > 1 && (
+        <div
+          className={
+            'tw:flex tw:items-center tw:gap-2 tw:mb-6 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
+          }
+        >
+          <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
+            onClick={handleMerge}
+            data-test-id="multi-select-merge"
+          >
+            Merge
+          </button>
+          <button
+            type="button"
+            className="tw:text-sm tw:text-[var(--color-danger)] tw:cursor-pointer"
+            onClick={(): void => handleDelete('')}
+            data-test-id="multi-select-delete"
+          >
+            Delete
+          </button>
+        </div>
+      )}
+
+      {filtered.pending.length > 0 && (
+        <div
+          className={
+            'tw:mb-6 tw:p-3 tw:rounded-lg tw:border ' +
+            'tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10'
+          }
+          data-test-id="pending-alert"
+        >
+          You have {filtered.pending.length} {filtered.pending.length === 1 ? 'list' : 'lists'} waiting for your
+          response.
+        </div>
+      )}
+
+      <div className="tw:flex tw:flex-col tw:gap-3">
+        {filtered.pending.map(renderListCard)}
+        {filtered.active.map(renderListCard)}
+        {filtered.completed.map(renderListCard)}
+      </div>
+
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={(): void => setShowDeleteConfirm(false)}
+        onConfirm={(): void => {
+          void handleDeleteConfirm();
+        }}
+        title="delete"
+        body={
+          <React.Fragment>
+            <p>
+              Are you sure you want to remove the following lists? Lists you own will be deleted completely. Lists you
+              do not own will continue to exist for the owner, you will just be removed from the list of users.
+            </p>
+            <p>{listsToDelete.map((list) => list.name).join(', ')}</p>
+          </React.Fragment>
+        }
+        confirmText="Yes, I'm sure."
+        testId="delete-confirm-dialog"
+      />
+      <ConfirmDialog
+        isOpen={showRejectConfirm}
+        onClose={(): void => setShowRejectConfirm(false)}
+        onConfirm={(): void => {
+          setShowRejectConfirm(false);
+          void handleDeleteConfirm(listsToReject);
+        }}
+        title="reject"
+        body={
+          <React.Fragment>
+            <p>Are you sure you want to reject the following lists?</p>
+            <p>{listsToReject.map((list) => list.name).join(', ')}</p>
+          </React.Fragment>
+        }
+        confirmText="Yes, I'm sure."
+        testId="reject-confirm-dialog"
+      />
+      <MergeModal
+        showModal={showMergeModal}
+        clearModal={(): void => setShowMergeModal(false)}
+        listNames={listsToMerge.map((l) => l.name).join('", "')}
+        mergeName={mergeName}
+        handleMergeNameChange={
+          ((event: ChangeEvent<HTMLInputElement>) =>
+            setMergeName(event.target.value)) as React.ChangeEventHandler<HTMLInputElement>
+        }
+        handleMergeConfirm={(): void => {
+          void handleMergeConfirm();
+        }}
+        selectedLists={getSelectedLists()}
+      />
+
+      <BottomSheet
+        isOpen={editSheetOpen && editingList !== null}
+        onClose={closeEditSheet}
+        title="Edit List"
+        testId="edit-list-sheet"
+      >
+        {editingList && (
+          <EditListForm
+            listId={editingList.listId}
+            name={editingList.name}
+            completed={editingList.completed}
+            refreshed={editingList.refreshed}
+            archivedAt={editingList.archivedAt}
+            listItemConfigurationId={editingList.list_item_configuration_id}
+            onClose={closeEditSheet}
+            onSaved={handleEditSaved}
+          />
+        )}
+      </BottomSheet>
+
+      <BottomInputBar
+        placeholder="Create a new list..."
+        onSubmit={handleCreateList}
+        hidden={hideBottomInputBar}
+        expandedContent={
+          <Select
+            label="Template"
+            options={templateOptions}
+            value={selectedTemplateId}
+            onChange={(e: ChangeEvent<HTMLSelectElement>): void => setSelectedTemplateId(e.target.value)}
+            id="list_item_configuration_id"
+            testId="list_item_configuration_id"
+          />
+        }
+        initialExpanded={false}
+        allowEnterSubmitWhenExpanded
+      />
     </div>
   );
 };
