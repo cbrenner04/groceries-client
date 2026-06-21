@@ -6,7 +6,7 @@ exports[`ListsContainer > renders 1`] = `
     class="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
   >
     <div
-      class="tw:flex tw:justify-between tw:items-center tw:mb-4"
+      class="tw:flex tw:justify-between tw:items-center tw:mb-6"
     >
       <h1
         class="tw:text-2xl tw:font-bold tw:m-0"
@@ -14,27 +14,15 @@ exports[`ListsContainer > renders 1`] = `
       >
         Lists
       </h1>
-      <div
-        class="tw:flex tw:items-center tw:gap-2"
+      <button
+        class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
+        type="button"
       >
-        <button
-          class="tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors"
-          type="button"
-        >
-          Select
-        </button>
-        <a
-          class="tw:text-sm tw:text-[var(--color-primary)]"
-          data-discover="true"
-          data-test-id="manage-templates-link"
-          href="/templates"
-        >
-          Manage Templates
-        </a>
-      </div>
+        Select
+      </button>
     </div>
     <div
-      class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:mb-4"
+      class="tw:flex tw:gap-2 tw:overflow-x-auto tw:[&::-webkit-scrollbar]:hidden tw:[-ms-overflow-style:none] tw:[scrollbar-width:none] tw:mb-6"
       role="group"
     >
       <button
@@ -71,7 +59,7 @@ exports[`ListsContainer > renders 1`] = `
       </button>
     </div>
     <div
-      class="tw:mb-4 tw:p-3 tw:rounded-lg tw:border tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10"
+      class="tw:mb-6 tw:p-3 tw:rounded-lg tw:border tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10"
       data-test-id="pending-alert"
     >
       You have 
@@ -81,7 +69,7 @@ exports[`ListsContainer > renders 1`] = `
        waiting for your response.
     </div>
     <div
-      class="tw:flex tw:flex-col tw:gap-2"
+      class="tw:flex tw:flex-col tw:gap-3"
     >
       <div
         class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:cursor-pointer tw:hover:shadow-[var(--shadow-md)] tw:hover:scale-[1.01] tw:active:shadow-[var(--shadow-sm)] tw:active:scale-[0.99] tw:flex tw:items-center tw:gap-3 tw:border-l-4 tw:border-l-[var(--color-warning)]"
@@ -559,17 +547,6 @@ exports[`ListsContainer > renders 1`] = `
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="tw:mt-4 tw:text-center"
-    >
-      <button
-        class="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-        data-test-id="show-all-completed"
-        type="button"
-      >
-        Show all completed lists →
-      </button>
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-40 tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] tw:transition-all tw:duration-300"

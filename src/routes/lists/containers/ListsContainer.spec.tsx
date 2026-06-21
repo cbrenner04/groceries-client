@@ -143,14 +143,6 @@ describe('ListsContainer', () => {
     expect(getByTestId('page-title')).toHaveTextContent('Lists');
   });
 
-  it('renders Manage Templates link pointing to /templates', () => {
-    const { getByTestId } = setup();
-
-    const link = getByTestId('manage-templates-link');
-    expect(link).toHaveAttribute('href', '/templates');
-    expect(link).toHaveTextContent('Manage Templates');
-  });
-
   it('renders filter chips', () => {
     const { getByTestId } = setup();
 
@@ -1126,24 +1118,6 @@ describe('ListsContainer', () => {
     await user.click(getByTestId('confirm-merge'));
 
     await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
-  });
-
-  // ─── Show all completed ───────────────────────────────────────────────────────
-
-  it('shows "Show all completed" button when filter is all and completed lists exist', () => {
-    const { getByTestId } = setup();
-
-    expect(getByTestId('show-all-completed')).toBeInTheDocument();
-  });
-
-  it('changes filter to completed when "Show all completed" is clicked', async () => {
-    const { getByTestId, queryByTestId, user } = setup();
-
-    await user.click(getByTestId('show-all-completed'));
-
-    // Active lists should be hidden, completed lists visible
-    expect(queryByTestId('list-id5')).toBeNull();
-    expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
   // ─── Edit list BottomSheet ────────────────────────────────────────────────────

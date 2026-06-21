@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { showToast } from '../../../utils/toast';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import axios from 'utils/api';
 import { usePolling } from 'hooks';
@@ -417,7 +417,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const showCompletedLink = statusFilter === 'all' && completedLists.length > 0;
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
@@ -446,37 +445,28 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
 
   return (
     <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
-      <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
+      <div className="tw:flex tw:justify-between tw:items-center tw:mb-6">
         <h1 className="tw:text-2xl tw:font-bold tw:m-0" data-test-id="page-title">
           Lists
         </h1>
-        <div className="tw:flex tw:items-center tw:gap-2">
-          <button
-            type="button"
-            className={
-              'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
-              'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
+        <button
+          type="button"
+          className={
+            'tw:text-sm tw:font-medium tw:px-3 tw:py-1 tw:rounded-md tw:cursor-pointer ' +
+            'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:transition-colors'
+          }
+          onClick={(): void => {
+            if (multiSelectActive && selectedListIds.size > 0) {
+              setSelectedListIds(new Set());
             }
-            onClick={(): void => {
-              if (multiSelectActive && selectedListIds.size > 0) {
-                setSelectedListIds(new Set());
-              }
-              setMultiSelectActive(!multiSelectActive);
-            }}
-          >
-            {multiSelectActive ? 'Hide Select' : 'Select'}
-          </button>
-          <Link
-            to="/templates"
-            data-test-id="manage-templates-link"
-            className="tw:text-sm tw:text-[var(--color-primary)]"
-          >
-            Manage Templates
-          </Link>
-        </div>
+            setMultiSelectActive(!multiSelectActive);
+          }}
+        >
+          {multiSelectActive ? 'Hide Select' : 'Select'}
+        </button>
       </div>
 
-      <FilterChipGroup className="tw:mb-4">
+      <FilterChipGroup className="tw:mb-6">
         <FilterChip
           label="All"
           active={statusFilter === 'all'}
@@ -506,7 +496,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       {multiSelectActive && selectedListIds.size > 1 && (
         <div
           className={
-            'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
+            'tw:flex tw:items-center tw:gap-2 tw:mb-6 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
           }
         >
           <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
@@ -532,7 +522,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       {filtered.pending.length > 0 && (
         <div
           className={
-            'tw:mb-4 tw:p-3 tw:rounded-lg tw:border ' +
+            'tw:mb-6 tw:p-3 tw:rounded-lg tw:border ' +
             'tw:border-[var(--color-warning)] tw:bg-[var(--color-warning)]/10'
           }
           data-test-id="pending-alert"
@@ -542,24 +532,11 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         </div>
       )}
 
-      <div className="tw:flex tw:flex-col tw:gap-2">
+      <div className="tw:flex tw:flex-col tw:gap-3">
         {filtered.pending.map(renderListCard)}
         {filtered.active.map(renderListCard)}
         {filtered.completed.map(renderListCard)}
       </div>
-
-      {showCompletedLink && (
-        <div className="tw:mt-4 tw:text-center">
-          <button
-            type="button"
-            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:hover:underline"
-            onClick={(): void => setStatusFilter('completed')}
-            data-test-id="show-all-completed"
-          >
-            Show all completed lists &rarr;
-          </button>
-        </div>
-      )}
 
       <ConfirmDialog
         isOpen={showDeleteConfirm}
