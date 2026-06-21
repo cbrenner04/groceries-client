@@ -37,6 +37,7 @@
     "test:watch": "vitest",
     "test:ci": "tsc --noEmit && npm run lint && vitest run --coverage",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,css,md}'",
+    "ready": "npm run format && tsc --noEmit && npm run lint",
     "analyze": "npm run build:production && source-map-explorer 'build/assets/*.js'",
     "build:lighthouse": "rm -rf build && VITE_API_BASE=http://localhost:3300 VITE_VERSION=$(git rev-parse --short HEAD) vite build",
     "lighthouse": "lhci autorun",
