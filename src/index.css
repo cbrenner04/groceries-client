@@ -8,28 +8,28 @@
 
 /* Design tokens — custom theme values */
 @theme {
-  /* Colors - Light mode defaults */
-  --color-primary: #4f46e5; /* Indigo 600 */
-  --color-primary-hover: #4338ca; /* Indigo 700 */
-  --color-primary-light: #e0e7ff; /* Indigo 100 */
-  --color-accent: #f97316; /* Orange 500 */
-  --color-accent-hover: #ea580c; /* Orange 600 */
-  --color-success: #10b981; /* Emerald 500 */
-  --color-warning: #f59e0b; /* Amber 500 */
-  --color-danger: #ef4444; /* Red 500 */
-  --color-danger-hover: #dc2626; /* Red 600 */
+  /* Colors - Light mode defaults: calm, cohesive palette */
+  --color-primary: #0ea5e9; /* Sky 500 */
+  --color-primary-hover: #0284c7; /* Sky 600 */
+  --color-primary-light: #f0f9ff; /* Sky 50 */
+  --color-accent: #0ea5e9; /* Sky 500, same as primary */
+  --color-accent-hover: #0284c7; /* Sky 600, same as primary */
+  --color-success: #16a34a; /* Green 600 */
+  --color-warning: #ca8a04; /* Yellow 600 */
+  --color-danger: #dc2626; /* Red 600 */
+  --color-danger-hover: #b91c1c; /* Red 700 */
 
-  /* Surfaces */
+  /* Surfaces: neutral, readable background and borders */
   --color-surface: #ffffff;
-  --color-surface-raised: #f9fafb; /* Gray 50 */
-  --color-surface-overlay: #f3f4f6; /* Gray 100 */
-  --color-border: #e5e7eb; /* Gray 200 */
-  --color-border-strong: #d1d5db; /* Gray 300 */
+  --color-surface-raised: #f8fafc; /* Slate 50 */
+  --color-surface-overlay: #f1f5f9; /* Slate 100 */
+  --color-border: #cbd5e1; /* Slate 300 */
+  --color-border-strong: #94a3b8; /* Slate 400 */
 
-  /* Text */
-  --color-text-primary: #111827; /* Gray 900 */
-  --color-text-secondary: #6b7280; /* Gray 500 */
-  --color-text-tertiary: #9ca3af; /* Gray 400 */
+  /* Text: primary and secondary hierarchy */
+  --color-text-primary: #0f172a; /* Slate 900 */
+  --color-text-secondary: #64748b; /* Slate 500 */
+  --color-text-tertiary: #94a3b8; /* Slate 400 */
   --color-text-inverse: #ffffff;
 
   /* Typography */
@@ -71,23 +71,23 @@
 }
 
 :root {
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-primary-light: #e0e7ff;
-  --color-accent: #f97316;
-  --color-accent-hover: #ea580c;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
+  --color-primary: #0ea5e9;
+  --color-primary-hover: #0284c7;
+  --color-primary-light: #f0f9ff;
+  --color-accent: #0ea5e9;
+  --color-accent-hover: #0284c7;
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
   --color-surface: #ffffff;
-  --color-surface-raised: #f9fafb;
-  --color-surface-overlay: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
+  --color-surface-raised: #f8fafc;
+  --color-surface-overlay: #f1f5f9;
+  --color-border: #cbd5e1;
+  --color-border-strong: #94a3b8;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-tertiary: #94a3b8;
   --color-text-inverse: #ffffff;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
@@ -176,19 +176,23 @@ html.with-brand-header {
   }
 }
 
-/* Dark mode theme overrides */
+/* Dark mode theme overrides: maintain readability and semantic states */
 [data-theme='dark'] {
-  --color-primary: #4f46e5; /* Indigo 600 - matches light to keep AA contrast with white text */
-  --color-primary-hover: #818cf8; /* Indigo 400 */
-  --color-primary-light: #312e81; /* Indigo 900 */
-  --color-surface: #1f2937; /* Gray 800 */
-  --color-surface-raised: #111827; /* Gray 900 */
-  --color-surface-overlay: #374151; /* Gray 700 */
-  --color-border: #4b5563; /* Gray 600 */
-  --color-border-strong: #6b7280; /* Gray 500 */
-  --color-text-primary: #f3f4f6; /* Gray 100 */
-  --color-text-secondary: #9ca3af; /* Gray 400 */
-  --color-text-tertiary: #6b7280; /* Gray 500 */
+  --color-primary: #38bdf8; /* Sky 400 - lighter for dark theme contrast */
+  --color-primary-hover: #06b6d4; /* Cyan 500 */
+  --color-primary-light: #082f49; /* Sky 950 - very dark accent background */
+  --color-success: #22c55e; /* Green 500 - lighter for dark theme */
+  --color-warning: #eab308; /* Yellow 400 - lighter for dark theme */
+  --color-danger: #ef4444; /* Red 500 */
+  --color-danger-hover: #f87171; /* Red 400 - lighter for hover */
+  --color-surface: #1e293b; /* Slate 800 */
+  --color-surface-raised: #0f172a; /* Slate 900 */
+  --color-surface-overlay: #334155; /* Slate 700 */
+  --color-border: #475569; /* Slate 600 */
+  --color-border-strong: #64748b; /* Slate 500 */
+  --color-text-primary: #f1f5f9; /* Slate 100 */
+  --color-text-secondary: #cbd5e1; /* Slate 300 */
+  --color-text-tertiary: #94a3b8; /* Slate 400 */
 }
 
 /* Theme transition fade effect */
