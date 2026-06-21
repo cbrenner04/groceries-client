@@ -26,6 +26,8 @@ const mockUser = {
   uid: 'test-uid',
 };
 
+const mockSignOutUser = vi.fn();
+
 const mockListData = {
   current_user_id: 'test-user-id',
   list: {
@@ -55,7 +57,7 @@ const mockListData = {
 // Helper function to render the List component with consistent setup
 const renderList = (): ReturnType<typeof render> => {
   return render(
-    <UserContext.Provider value={mockUser}>
+    <UserContext.Provider value={{ user: mockUser, signOutUser: mockSignOutUser }}>
       <MemoryRouter initialEntries={['/lists/123']}>
         <Routes>
           <Route path="/lists/:id" element={<List />} />

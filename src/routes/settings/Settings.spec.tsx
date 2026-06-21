@@ -5,17 +5,29 @@ import userEvent from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { ThemeProvider } from 'components/ThemeProvider';
+import { UserContext } from 'AppRouter';
 
 import Settings from './Settings';
 
 describe('Settings', () => {
+  const mockSignOutUser = vi.fn(() => {
+    sessionStorage.removeItem('user');
+  });
+
   const renderSettings = (): RenderResult =>
     render(
-      <MemoryRouter>
-        <ThemeProvider>
-          <Settings />
-        </ThemeProvider>
-      </MemoryRouter>,
+      <UserContext.Provider
+        value={{
+          user: { accessToken: 'token', client: 'client', uid: 'uid' },
+          signOutUser: mockSignOutUser,
+        }}
+      >
+        <MemoryRouter>
+          <ThemeProvider>
+            <Settings />
+          </ThemeProvider>
+        </MemoryRouter>
+      </UserContext.Provider>,
     );
 
   beforeEach(() => {

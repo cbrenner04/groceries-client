@@ -116,7 +116,7 @@ describe('AppRouter', () => {
     ).toBeVisible();
   });
 
-  it('opens and closes the settings menu from the bottom nav', async () => {
+  it('navigates to settings when clicking nav-settings', async () => {
     sessionStorage.setItem(
       'user',
       JSON.stringify({
@@ -127,18 +127,13 @@ describe('AppRouter', () => {
     );
 
     const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+    const { findByTestId, findByRole } = renderAppRouter('/lists');
 
     await user.click(await findByTestId('nav-settings'));
-    expect(await findByTestId('settings-menu')).toBeVisible();
-
-    await user.click(await findByTestId('nav-settings'));
-    await waitFor(() => {
-      expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
-    });
+    expect(await findByRole('heading', { name: 'Settings' })).toBeVisible();
   });
 
-  it('closes the settings menu when another bottom-nav item is clicked', async () => {
+  it('navigates away from settings when another bottom-nav item is clicked', async () => {
     sessionStorage.setItem(
       'user',
       JSON.stringify({
@@ -149,42 +144,13 @@ describe('AppRouter', () => {
     );
 
     const user = userEvent.setup();
-    const { findByRole, findByTestId, queryByTestId } = renderAppRouter('/lists');
-
-    await user.click(await findByTestId('nav-settings'));
-    expect(await findByTestId('settings-menu')).toBeVisible();
+    const { findByRole, findByTestId } = renderAppRouter('/settings');
 
     await user.click(await findByTestId('nav-templates'));
     expect(await findByRole('heading', { name: 'Templates' })).toBeVisible();
-    await waitFor(() => {
-      expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
-    });
   });
 
-  it('closes the settings menu when the real overlay callback fires', async () => {
-    sessionStorage.setItem(
-      'user',
-      JSON.stringify({
-        'access-token': 'stored-token',
-        client: 'stored-client',
-        uid: 'stored-uid',
-      }),
-    );
-
-    const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/lists');
-
-    await user.click(await findByTestId('nav-settings'));
-    const settingsMenu = await findByTestId('settings-menu');
-    const overlay = settingsMenu.parentElement?.parentElement as HTMLElement;
-
-    await user.click(overlay);
-    await waitFor(() => {
-      expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
-    });
-  });
-
-  it('logs out through the settings menu and navigates to sign in even if sign out request fails', async () => {
+  it('logs out through the settings page and navigates to sign in even if sign out request fails', async () => {
     sessionStorage.setItem(
       'user',
       JSON.stringify({
@@ -196,9 +162,8 @@ describe('AppRouter', () => {
     vi.mocked(api.delete).mockRejectedValueOnce(new Error('request failed'));
 
     const user = userEvent.setup();
-    const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+    const { findByTestId, queryByTestId } = renderAppRouter('/settings');
 
-    await user.click(await findByTestId('nav-settings'));
     await user.click(await findByTestId('log-out-link'));
 
     expect(sessionStorage.getItem('user')).toBeNull();
