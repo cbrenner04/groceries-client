@@ -101,7 +101,7 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
             {renderBackButton()}
             {title && (
               <h1
-                className="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+                className="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
                 data-test-id="page-title"
               >
                 {title}

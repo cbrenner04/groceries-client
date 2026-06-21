@@ -812,7 +812,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     const hasUncategorized = notCompletedItems.some((item) => !item.category);
 
     return (
-      <FilterChipGroup className="tw:py-2">
+      <FilterChipGroup className="tw:pt-2 tw:mb-4">
         <FilterChip
           label="All"
           active={filter === ''}

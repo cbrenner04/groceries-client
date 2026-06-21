@@ -48,7 +48,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -105,7 +105,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -510,7 +510,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -567,7 +567,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -1455,7 +1455,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -1512,7 +1512,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -2431,7 +2431,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -2488,7 +2488,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -3210,7 +3210,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -3267,7 +3267,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -3522,7 +3522,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -3537,7 +3537,7 @@ exports[`ListContainer > Permissions > does not render ListForm when user has re
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
@@ -3996,7 +3996,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           </svg>
         </a>
         <h1
-          class="tw:flex-1 tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
+          class="tw:flex-1 tw:text-center tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)]"
           data-test-id="page-title"
         >
           foo
@@ -4053,7 +4053,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
           class="tw:sr-only"
         />
         <div
-          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:py-2"
+          class="tw:flex tw:flex-nowrap tw:gap-2 tw:overflow-x-auto tw:pb-1 tw:[scrollbar-width:thin] tw:pt-2 tw:mb-4"
           role="group"
         >
           <button
