@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
+import './fonts.css';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import AppRouter from './AppRouter';
