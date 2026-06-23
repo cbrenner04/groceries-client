@@ -10,13 +10,17 @@ export interface IEmptyStateProps {
     label: string;
     onClick: () => void;
   };
+  testId?: string;
 }
 
 export function EmptyState(props: IEmptyStateProps): React.JSX.Element {
-  const { icon, title, description, action } = props;
+  const { icon, title, description, action, testId } = props;
 
   return (
-    <div className="tw:flex tw:flex-col tw:items-center tw:justify-center tw:py-16 tw:px-4 tw:text-center">
+    <div
+      className="tw:flex tw:flex-col tw:items-center tw:justify-center tw:py-16 tw:px-4 tw:text-center"
+      data-test-id={testId}
+    >
       {icon && (
         <div className="tw:text-[var(--color-text-tertiary)] tw:mb-4 tw:[&>svg]:tw:w-16 tw:[&>svg]:tw:h-16">{icon}</div>
       )}
