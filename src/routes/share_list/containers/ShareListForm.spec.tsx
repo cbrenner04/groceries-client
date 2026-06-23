@@ -5,9 +5,11 @@ import { showToast } from '../../../utils/toast';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { shareListDeduplicator } from 'utils/requestDeduplication';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '5000', 10);
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
@@ -81,7 +83,16 @@ function setup(suppliedProps?: Partial<IShareListFormProps>): ISetupReturn {
 
 describe('ShareListForm', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mocks except axios which needs its implementation preserved
+    (axios.get as Mock).mockClear();
+    (axios.post as Mock).mockClear();
+    (axios.put as Mock).mockClear();
+    (axios.delete as Mock).mockClear();
+    mockShowToast.error.mockClear();
+    mockShowToast.info.mockClear();
+    mockShowToast.success.mockClear();
+    mockShowToast.warning.mockClear();
+    shareListDeduplicator.clear();
   });
 
   afterEach(() => {
@@ -138,7 +149,7 @@ describe('ShareListForm', () => {
     const { findByTestId, queryByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -146,7 +157,7 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -178,7 +189,7 @@ describe('ShareListForm', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -186,7 +197,7 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -201,7 +212,7 @@ describe('ShareListForm', () => {
     setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);

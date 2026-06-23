@@ -5,6 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
+import { listsDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
 
 // Mock listPrefetch at module level
@@ -18,6 +19,7 @@ import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10);
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
@@ -144,7 +146,16 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
 
 describe('ListsContainer', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mocks except axios which needs its implementation preserved
+    (axios.get as Mock).mockClear();
+    (axios.post as Mock).mockClear();
+    (axios.put as Mock).mockClear();
+    (axios.delete as Mock).mockClear();
+    mockShowToast.error.mockClear();
+    mockShowToast.info.mockClear();
+    mockShowToast.success.mockClear();
+    mockShowToast.warning.mockClear();
+    listsDeduplicator.clear();
   });
 
   afterEach(() => {
@@ -436,7 +447,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -444,7 +455,7 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -510,7 +521,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -518,7 +529,7 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -533,7 +544,7 @@ describe('ListsContainer', () => {
     setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
