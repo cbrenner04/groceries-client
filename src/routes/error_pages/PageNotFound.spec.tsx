@@ -22,7 +22,24 @@ const setup = (): RenderResult =>
   );
 
 describe('PageNotFound', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    sessionStorage.clear();
+  });
+
+  it('does not call axios when no session exists', async () => {
+    axios.get = vi.fn();
+    setup();
+    await waitFor(() => expect(axios.get).not.toHaveBeenCalled());
+
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+
+    (axios.get as Mock).mockClear();
+  });
+
   it('renders the Loading component when fetch request is pending', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockImplementation(() => new Promise(() => {}));
     const { container, findByText } = setup();
     const status = await findByText('Loading...');
@@ -33,7 +50,8 @@ describe('PageNotFound', () => {
     (axios.get as Mock).mockClear();
   });
 
-  it('redirects to /users/sign_in when the user is not authenticated', async () => {
+  it('redirects to /users/sign_in when token validation is rejected with 401', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
     setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -47,6 +65,7 @@ describe('PageNotFound', () => {
   });
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const { container, findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -59,6 +78,7 @@ describe('PageNotFound', () => {
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockResolvedValue({});
     const { container, findByText } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -71,6 +91,7 @@ describe('PageNotFound', () => {
   });
 
   it('navigates to lists from the empty state action', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockResolvedValue({});
     const { findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));

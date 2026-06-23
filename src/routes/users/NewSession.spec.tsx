@@ -36,9 +36,21 @@ function setup(): ISetupReturn {
 describe('NewSession', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    sessionStorage.clear();
+  });
+
+  it('does not call axios when no session exists', async () => {
+    axios.get = vi.fn();
+
+    const { findByLabelText } = setup();
+    await waitFor(() => expect(axios.get).not.toHaveBeenCalled());
+
+    expect(await findByLabelText('Email')).toBeVisible();
+    expect(await findByLabelText('Password')).toBeVisible();
   });
 
   it('renders loading when fetch has not completed', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
     const { container, findByText } = setup();
 
@@ -47,6 +59,7 @@ describe('NewSession', () => {
   });
 
   it('renders session form when fetch errors', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
 
     const { container, findByLabelText } = setup();
@@ -59,6 +72,7 @@ describe('NewSession', () => {
   });
 
   it('redirects to /lists when fetch is successful', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockResolvedValue({});
 
     setup();
@@ -69,6 +83,7 @@ describe('NewSession', () => {
   });
 
   it('creates a new session on successful submission', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockRejectedValue({
       response: { status: 401 },
     });
@@ -91,6 +106,7 @@ describe('NewSession', () => {
   });
 
   it('displays error on failed submission', async () => {
+    sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
     axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
     axios.post = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const spy = vi.spyOn(window.sessionStorage.__proto__, 'setItem');
