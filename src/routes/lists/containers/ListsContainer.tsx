@@ -8,6 +8,7 @@ import { usePolling } from 'hooks';
 import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 import { ListCard } from 'components/domain/ListCard';
+import { EmptyState } from 'components/domain/EmptyState';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
@@ -417,6 +418,45 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     }
   };
 
+  const getEmptyStateContent = (): { title: string; description: string } | null => {
+    const allListsEmpty = pendingLists.length === 0 && incompleteLists.length === 0 && completedLists.length === 0;
+
+    switch (statusFilter) {
+      case 'pending':
+        if (pendingLists.length === 0) {
+          return {
+            title: 'No pending lists',
+            description: 'When another user has shared a list with you you will accept it here.',
+          };
+        }
+        return null;
+      case 'active':
+        if (incompleteLists.length === 0) {
+          return {
+            title: 'No active lists',
+            description: 'Create a list or accept a shared list to get started.',
+          };
+        }
+        return null;
+      case 'completed':
+        if (completedLists.length === 0) {
+          return {
+            title: 'No completed lists',
+            description: 'Complete a list to see it here.',
+          };
+        }
+        return null;
+      default:
+        if (allListsEmpty) {
+          return {
+            title: 'No lists yet',
+            description: 'Create a list to get started or wait for someone to share one with you.',
+          };
+        }
+        return null;
+    }
+  };
+
   const filtered = getFilteredLists();
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
@@ -535,11 +575,22 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         </div>
       )}
 
-      <div className="tw:flex tw:flex-col tw:gap-2">
-        {filtered.pending.map(renderListCard)}
-        {filtered.active.map(renderListCard)}
-        {filtered.completed.map(renderListCard)}
-      </div>
+      {((): React.JSX.Element => {
+        const emptyStateContent = getEmptyStateContent();
+        return emptyStateContent ? (
+          <EmptyState
+            title={emptyStateContent.title}
+            description={emptyStateContent.description}
+            testId="empty-state"
+          />
+        ) : (
+          <div className="tw:flex tw:flex-col tw:gap-2">
+            {filtered.pending.map(renderListCard)}
+            {filtered.active.map(renderListCard)}
+            {filtered.completed.map(renderListCard)}
+          </div>
+        );
+      })()}
 
       <ConfirmDialog
         isOpen={showDeleteConfirm}

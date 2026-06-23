@@ -11,6 +11,7 @@ import type {
 import { normalizeCategoryKey } from 'utils/format';
 import { ListItemRow, type TListItemAnimationState } from 'components/domain/ListItemRow';
 import { CategoryGroup } from 'components/domain/CategoryGroup';
+import { EmptyState } from 'components/domain/EmptyState';
 
 export interface INotCompletedItemsSectionProps {
   notCompletedItems: IListItem[];
@@ -164,6 +165,18 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
       props.incompleteMultiSelect,
     ],
   );
+
+  if (props.notCompletedItems.length === 0) {
+    return (
+      <div className="tw:mt-4 tw:mb-4">
+        <EmptyState
+          title="No items yet"
+          description="Items appear here after you add them"
+          testId="not-completed-empty-state"
+        />
+      </div>
+    );
+  }
 
   return <React.Fragment>{groupByCategory(props.notCompletedItems)}</React.Fragment>;
 };

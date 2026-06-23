@@ -210,6 +210,94 @@ describe('ListsContainer', () => {
     expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
+  // ─── Empty States ──────────────────────────────────────────────────────────────
+
+  it('shows empty state when pending filter has no lists', async () => {
+    const { getByTestId, queryByTestId, user } = setup({ pendingLists: [] });
+
+    await user.click(getByTestId('filter-pending'));
+
+    expect(getByTestId('empty-state')).toBeInTheDocument();
+    expect(queryByTestId('list-id5')).toBeNull();
+  });
+
+  it('shows empty state when active filter has no lists', async () => {
+    const { getByTestId, queryByTestId, user } = setup({ incompleteLists: [] });
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(getByTestId('empty-state')).toBeInTheDocument();
+    expect(queryByTestId('list-id-pending')).toBeNull();
+  });
+
+  it('shows empty state when completed filter has no lists', async () => {
+    const { getByTestId, queryByTestId, user } = setup({ completedLists: [] });
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(getByTestId('empty-state')).toBeInTheDocument();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('shows empty state when all filter has no lists', () => {
+    const { getByTestId, queryByTestId } = setup({
+      pendingLists: [],
+      incompleteLists: [],
+      completedLists: [],
+    });
+
+    expect(getByTestId('empty-state')).toBeInTheDocument();
+    expect(queryByTestId('list-id-pending')).toBeNull();
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(queryByTestId('list-id2')).toBeNull();
+  });
+
+  it('does not show empty state when filter has lists', () => {
+    const { queryByTestId } = setup();
+
+    expect(queryByTestId('empty-state')).toBeNull();
+    expect(queryByTestId('list-id-pending')).toBeInTheDocument();
+    expect(queryByTestId('list-id5')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar with empty state', async () => {
+    const { getByTestId, user } = setup({ pendingLists: [] });
+
+    await user.click(getByTestId('filter-pending'));
+
+    expect(getByTestId('filter-pending')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar when active filter has no lists', async () => {
+    const { getByTestId, user } = setup({ incompleteLists: [] });
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(getByTestId('filter-active')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar when completed filter has no lists', async () => {
+    const { getByTestId, user } = setup({ completedLists: [] });
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(getByTestId('filter-completed')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar when all filter has no lists', () => {
+    const { getByTestId } = setup({
+      pendingLists: [],
+      incompleteLists: [],
+      completedLists: [],
+    });
+
+    expect(getByTestId('filter-all')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
   it('renders quick-add input', () => {
     const { getByTestId } = setup();
 

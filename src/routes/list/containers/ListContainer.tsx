@@ -1140,6 +1140,19 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           setCompletedExpanded={setCompletedExpanded}
           itemAnimationStates={itemAnimationStates}
           sessionMode={sessionMode}
+          hasNotCompletedItems={
+            filter
+              ? notCompletedItems.some((item) => {
+                  const itemCategory = item.category ? String(item.category).trim() : '';
+                  return (displayedCategories ?? []).some((cat) => {
+                    if (cat === 'uncategorized') {
+                      return !itemCategory;
+                    }
+                    return itemCategory && normalizeCategoryKey(itemCategory) === normalizeCategoryKey(cat);
+                  });
+                })
+              : notCompletedItems.length > 0
+          }
         />
       </PageLayout>
       <ConfirmModal
