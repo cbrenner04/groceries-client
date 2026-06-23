@@ -21,19 +21,37 @@ const setup = (): RenderResult =>
     </MemoryRouter>,
   );
 
+function setAuthenticatedSession(): void {
+  sessionStorage.setItem('user', JSON.stringify({ 'access-token': 'token', client: 'client', uid: '1' }));
+}
+
 describe('PageNotFound', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    sessionStorage.clear();
+  });
+
+  it('does not call axios when no session exists', async () => {
+    axios.get = vi.fn();
+    setup();
+    await waitFor(() => expect(axios.get).not.toHaveBeenCalled());
+
+    expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
+    expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
+  });
+
   it('renders the Loading component when fetch request is pending', async () => {
+    setAuthenticatedSession();
     axios.get = vi.fn().mockImplementation(() => new Promise(() => {}));
     const { container, findByText } = setup();
     const status = await findByText('Loading...');
 
     expect(container).toMatchSnapshot();
     expect(status).toBeVisible();
-
-    (axios.get as Mock).mockClear();
   });
 
-  it('redirects to /users/sign_in when the user is not authenticated', async () => {
+  it('redirects to /users/sign_in when token validation is rejected with 401', async () => {
+    setAuthenticatedSession();
     axios.get = vi.fn().mockRejectedValue({ response: { status: 401 } });
     setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -42,11 +60,10 @@ describe('PageNotFound', () => {
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
-
-    (axios.get as Mock).mockClear();
   });
 
   it('displays UnknownError when an error occurs validating authentication', async () => {
+    setAuthenticatedSession();
     axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
     const { container, findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -54,11 +71,10 @@ describe('PageNotFound', () => {
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(await findByRole('button')).toHaveTextContent('refresh the page');
     expect(container).toMatchSnapshot();
-
-    (axios.get as Mock).mockClear();
   });
 
   it('displays PageNotFound when the user is authenticated', async () => {
+    setAuthenticatedSession();
     axios.get = vi.fn().mockResolvedValue({});
     const { container, findByText } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -66,11 +82,10 @@ describe('PageNotFound', () => {
     expect(axios.get).toHaveBeenCalledWith('/auth/validate_token');
     expect(await findByText('Page not found!')).toBeTruthy();
     expect(container).toMatchSnapshot();
-
-    (axios.get as Mock).mockClear();
   });
 
   it('navigates to lists from the empty state action', async () => {
+    setAuthenticatedSession();
     axios.get = vi.fn().mockResolvedValue({});
     const { findByRole } = setup();
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
