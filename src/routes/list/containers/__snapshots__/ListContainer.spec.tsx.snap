@@ -443,6 +443,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
+          aria-label="Add an item..."
           class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
@@ -1381,6 +1382,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
+          aria-label="Add an item..."
           class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
@@ -3129,6 +3131,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
+          aria-label="Add an item..."
           class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
@@ -3434,6 +3437,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
+          aria-label="Add an item..."
           class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
@@ -4846,6 +4850,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
+          aria-label="Add an item..."
           class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
