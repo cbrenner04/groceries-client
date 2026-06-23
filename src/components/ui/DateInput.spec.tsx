@@ -65,8 +65,9 @@ describe('DateInput', () => {
   });
 
   it('applies error styles when error is present', async () => {
-    const { input } = await setup({ error: 'Error message' });
-    expect(input.className).toContain('tw:border-[var(--color-danger)]');
+    const { container } = await setup({ error: 'Error message' });
+    const wrapper = container.querySelector('[class*="tw:border"]');
+    expect(wrapper?.className).toContain('tw:border-[var(--color-danger)]');
   });
 
   it('handles value prop correctly', async () => {

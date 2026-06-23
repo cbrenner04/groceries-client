@@ -38,45 +38,53 @@ exports[`NewSession > renders session form when fetch errors 1`] = `
           class="tw:mb-3"
         >
           <div
-            class="tw:w-full"
+            class="tw:w-full tw:my-2"
           >
-            <label
-              class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-              for="email"
+            <div
+              class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
             >
-              Email
-            </label>
-            <input
-              class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-              id="email"
-              name="email"
-              placeholder="jane.smith@example.com"
-              type="email"
-              value=""
-            />
+              <label
+                class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
+                for="email"
+              >
+                Email
+              </label>
+              <input
+                class="tw:w-full tw:h-11 tw:px-4 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+                id="email"
+                name="email"
+                placeholder="jane.smith@example.com"
+                type="email"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
           class="tw:mb-3"
         >
           <div
-            class="tw:w-full"
+            class="tw:w-full tw:my-2"
           >
-            <label
-              class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-              for="password"
+            <div
+              class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
             >
-              Password
-            </label>
-            <input
-              autocomplete="off"
-              class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-              id="password"
-              name="password"
-              placeholder="password"
-              type="password"
-              value=""
-            />
+              <label
+                class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
+                for="password"
+              >
+                Password
+              </label>
+              <input
+                autocomplete="off"
+                class="tw:w-full tw:h-11 tw:px-4 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+                id="password"
+                name="password"
+                placeholder="password"
+                type="password"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div

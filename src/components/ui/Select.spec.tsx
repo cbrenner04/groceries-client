@@ -78,8 +78,9 @@ describe('Select', () => {
   });
 
   it('applies error styles to select when error is present', async () => {
-    const { select } = await setup({ error: 'Error message' });
-    expect(select.className).toContain('tw:border-[var(--color-danger)]');
+    const { container } = await setup({ error: 'Error message' });
+    const wrapper = container.querySelector('[class*="tw:border"]');
+    expect(wrapper?.className).toContain('tw:border-[var(--color-danger)]');
   });
 
   it('matches snapshot', async () => {
