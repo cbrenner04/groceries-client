@@ -184,7 +184,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
   };
 
   const renderActionButtons = (): React.JSX.Element | null => {
-    if (!canWrite) {
+    if (!canWrite || isMultiSelectActive) {
       return null;
     }
 
