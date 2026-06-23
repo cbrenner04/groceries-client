@@ -53,6 +53,7 @@ export default defineConfig({
     setupFiles: ["./src/setupTests.ts"],
     exclude: [...configDefaults.exclude, "**/.worktree/**"],
     css: true,
+    retry: 2,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],

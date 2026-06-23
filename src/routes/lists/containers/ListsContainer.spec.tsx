@@ -131,6 +131,14 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
 }
 
 describe('ListsContainer', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
