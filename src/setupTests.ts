@@ -166,8 +166,9 @@ vi.mock('./utils/toast', () => ({
 }));
 
 // Provide a stable mock for react-idle-timer used by usePolling
+const mockIdleTimerInstance = { isIdle: (): boolean => false };
 vi.mock('react-idle-timer', () => ({
-  useIdleTimer: (): { isIdle: () => boolean } => ({ isIdle: () => false }),
+  useIdleTimer: (): { isIdle: () => boolean } => mockIdleTimerInstance,
 }));
 
 const mockNow = DateTime.fromISO('2020-05-24T10:00:00.000Z');
