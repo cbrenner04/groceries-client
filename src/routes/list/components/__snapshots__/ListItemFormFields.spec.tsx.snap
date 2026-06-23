@@ -6,7 +6,7 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     class="tw:mb-3"
   >
     <div
-      class="tw:w-full"
+      class="tw:w-full tw:my-2"
     >
       <div
         class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
@@ -77,7 +77,7 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     class="tw:mb-3"
   >
     <div
-      class="tw:w-full"
+      class="tw:w-full tw:my-2"
     >
       <div
         class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
@@ -103,7 +103,7 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     class="tw:mb-3"
   >
     <div
-      class="tw:w-full"
+      class="tw:w-full tw:my-2"
     >
       <div
         class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"

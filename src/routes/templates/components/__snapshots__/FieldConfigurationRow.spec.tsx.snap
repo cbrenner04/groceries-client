@@ -7,7 +7,7 @@ exports[`FieldConfigurationRow > renders input fields 1`] = `
     data-test-class="field-configuration-row"
   >
     <div
-      class="tw:w-full"
+      class="tw:w-full tw:my-2"
     >
       <div
         class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
@@ -28,7 +28,7 @@ exports[`FieldConfigurationRow > renders input fields 1`] = `
       </div>
     </div>
     <div
-      class="tw:w-full"
+      class="tw:w-full tw:my-2"
     >
       <div
         class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
@@ -74,7 +74,7 @@ exports[`FieldConfigurationRow > renders input fields 1`] = `
         class="sm:tw:w-24 tw:flex-1"
       >
         <div
-          class="tw:w-full"
+          class="tw:w-full tw:my-2"
         >
           <div
             class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"

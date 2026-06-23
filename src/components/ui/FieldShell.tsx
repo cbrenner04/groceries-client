@@ -34,7 +34,7 @@ const FieldShell: React.FC<IFieldShellProps> = (props): React.JSX.Element => {
   const wrapperErrorStyles = error ? 'tw:border-[var(--color-danger)]' : '';
 
   return (
-    <div className="tw:w-full">
+    <div className="tw:w-full tw:my-2">
       <div className={`${wrapperStyles} ${wrapperErrorStyles}`.trim()}>
         {label && (
           <label htmlFor={htmlFor} className={labelStyles}>
