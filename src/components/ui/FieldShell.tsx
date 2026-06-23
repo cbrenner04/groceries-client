@@ -18,7 +18,7 @@ export const fieldControlStyles =
   'tw:focus:ring-[var(--color-primary)]/30';
 
 const wrapperStyles =
-  'tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg ' +
+  'tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] ' +
   'tw:bg-[var(--color-surface)] tw:transition-colors';
 
 const labelStyles =

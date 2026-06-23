@@ -18,7 +18,7 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
         class="tw:w-full tw:my-2"
       >
         <div
-          class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
+          class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
         >
           <label
             class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
@@ -39,7 +39,7 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
         class="tw:w-full tw:my-2"
       >
         <div
-          class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
+          class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
         >
           <label
             class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
@@ -85,7 +85,7 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
             class="tw:w-full tw:my-2"
           >
             <div
-              class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
+              class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
             >
               <label
                 class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
@@ -181,7 +181,7 @@ exports[`FieldConfigurationRows > renders with container 1`] = `
     </div>
     <div>
       <button
-        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
+        class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
         data-test-id="add-field-button"
         type="button"
       >
