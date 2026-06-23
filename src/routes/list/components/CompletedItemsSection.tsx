@@ -12,6 +12,7 @@ import { normalizeCategoryKey } from 'utils/format';
 import { ListItemRow, type TListItemAnimationState } from 'components/domain/ListItemRow';
 import { Badge } from 'components/ui/Badge';
 import { ChevronDownIcon } from 'components/icons';
+import { EmptyState } from 'components/domain/EmptyState';
 
 export interface ICompletedItemsSectionProps {
   completedItems: IListItem[];
@@ -33,6 +34,7 @@ export interface ICompletedItemsSectionProps {
   handleItemRefresh: (item: IListItem) => Promise<void>;
   completedExpanded?: boolean;
   setCompletedExpanded?: (value: boolean) => void;
+  hasNotCompletedItems?: boolean;
 }
 
 const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): React.JSX.Element => {
@@ -67,6 +69,21 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
       setLocalExpanded(!localExpanded);
     }
   };
+
+  if (props.completedItems.length === 0) {
+    if (props.hasNotCompletedItems) {
+      return (
+        <div className="tw:mt-4 tw:mb-4">
+          <EmptyState
+            title="Nothing completed yet"
+            description="Items appear here once you complete them"
+            testId="completed-empty-state"
+          />
+        </div>
+      );
+    }
+    return <React.Fragment />;
+  }
 
   if (visibleItems.length === 0) {
     return <React.Fragment />;

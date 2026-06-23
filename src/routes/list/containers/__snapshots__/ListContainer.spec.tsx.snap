@@ -3119,6 +3119,25 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
             </div>
           </div>
         </div>
+        <div
+          class="tw:mt-4 tw:mb-4"
+        >
+          <div
+            class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:py-16 tw:px-4 tw:text-center"
+            data-test-id="completed-empty-state"
+          >
+            <h2
+              class="tw:text-lg tw:font-medium tw:text-[var(--color-text-primary)] tw:mb-1"
+            >
+              Nothing completed yet
+            </h2>
+            <p
+              class="tw:text-sm tw:text-[var(--color-text-secondary)] tw:mb-4 tw:max-w-xs"
+            >
+              Items appear here once you complete them
+            </p>
+          </div>
+        </div>
       </main>
     </div>
     <div
@@ -3257,6 +3276,21 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
           >
             All
           </button>
+        </div>
+        <div
+          class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:py-16 tw:px-4 tw:text-center"
+          data-test-id="not-completed-empty-state"
+        >
+          <h2
+            class="tw:text-lg tw:font-medium tw:text-[var(--color-text-primary)] tw:mb-1"
+          >
+            No items yet
+          </h2>
+          <p
+            class="tw:text-sm tw:text-[var(--color-text-secondary)] tw:mb-4 tw:max-w-xs"
+          >
+            Items appear here after you add them
+          </p>
         </div>
         <div
           class="tw:mt-4 tw:mb-4"

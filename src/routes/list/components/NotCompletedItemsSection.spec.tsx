@@ -44,8 +44,23 @@ const baseProps = {
 };
 
 describe('NotCompletedItemsSection', () => {
-  it('renders nothing when there are no items', () => {
+  it('renders empty state when there are no items', () => {
     render(<NotCompletedItemsSection {...baseProps} notCompletedItems={[]} />);
+    expect(screen.getByTestId('not-completed-empty-state')).toBeInTheDocument();
+    expect(screen.getByText('No items yet')).toBeInTheDocument();
+  });
+
+  it('renders nothing when items exist but filter hides all', () => {
+    const items = [createListItem('1', false, [], { category: 'Produce' })];
+    const { container } = render(
+      <NotCompletedItemsSection
+        {...baseProps}
+        notCompletedItems={items}
+        filter="Dairy"
+        displayedCategories={['Dairy']}
+      />,
+    );
+    expect(container.querySelector('[data-test-id="not-completed-empty-state"]')).not.toBeInTheDocument();
     expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
   });
 
@@ -130,21 +145,6 @@ describe('NotCompletedItemsSection', () => {
 
     await user.click(screen.getByTestId('item-refresh'));
     expect(baseProps.handleItemRefresh).toHaveBeenCalledWith(item);
-  });
-
-  it('does not render category group when no items match', () => {
-    const items = [createListItem('1', false, [], { category: 'Produce' })];
-
-    render(
-      <NotCompletedItemsSection
-        {...baseProps}
-        notCompletedItems={items}
-        filter="Dairy"
-        displayedCategories={['Dairy']}
-      />,
-    );
-
-    expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
   });
 
   it('renders items with no fields property', () => {

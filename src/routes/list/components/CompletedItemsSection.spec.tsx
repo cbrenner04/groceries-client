@@ -49,9 +49,30 @@ const baseProps = {
 };
 
 describe('CompletedItemsSection', () => {
-  it('renders nothing when completedItems is empty', () => {
-    const { container } = render(<CompletedItemsSection {...baseProps} />);
+  it('renders empty state when completedItems is empty and notCompletedItems exist', () => {
+    render(<CompletedItemsSection {...baseProps} hasNotCompletedItems={true} />);
+    expect(screen.getByTestId('completed-empty-state')).toBeInTheDocument();
+    expect(screen.getByText('Nothing completed yet')).toBeInTheDocument();
+  });
+
+  it('renders nothing when list is fully empty (no completed and no not-completed items)', () => {
+    const { container } = render(<CompletedItemsSection {...baseProps} hasNotCompletedItems={false} />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it('renders nothing when items exist but filter hides all completed items', () => {
+    const items = [createListItem('1', true, [createField('f1', 'product', 'Milk', '1', { primary: true })])];
+    const { container } = render(
+      <CompletedItemsSection
+        {...baseProps}
+        completedItems={items}
+        filter="NonExistentCategory"
+        displayedCategories={['NonExistentCategory']}
+        hasNotCompletedItems={true}
+      />,
+    );
+    expect(container.querySelector('[data-test-id="completed-empty-state"]')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
   });
 
   it('renders the completed header when items exist', () => {

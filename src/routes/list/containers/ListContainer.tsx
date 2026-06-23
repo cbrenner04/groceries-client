@@ -1140,6 +1140,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           setCompletedExpanded={setCompletedExpanded}
           itemAnimationStates={itemAnimationStates}
           sessionMode={sessionMode}
+          hasNotCompletedItems={notCompletedItems.length > 0}
         />
       </PageLayout>
       <ConfirmModal
