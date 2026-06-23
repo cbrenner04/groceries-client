@@ -547,14 +547,14 @@ describe('ListsContainer', () => {
   it('creates list via quick-add input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();
@@ -569,20 +569,20 @@ describe('ListsContainer', () => {
       list: { name: 'new list', list_item_configuration_id: 'config-1' },
     });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
-    expect(await findByTestId('list-id7')).toHaveTextContent('new list');
+    expect(await findByTestId('list-id8')).toHaveTextContent('new list');
   });
 
   it('creates list with selected template via expanded input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-2',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();

@@ -1218,7 +1218,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1250,7 +1251,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1284,7 +1286,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1391,7 +1394,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1416,7 +1420,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1444,7 +1449,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1750,7 +1756,7 @@ describe('ListContainer', () => {
     });
 
     it('opens bulk edit sheet when clicking edit with multi select', async () => {
-      const { findAllByRole, findByTestId, findAllByText, findByText, props, user } = setup({
+      const { findAllByRole, findByTestId, findAllByText, findByText, user } = setup({
         permissions: EUserPermissions.WRITE,
       });
 
@@ -1762,7 +1768,8 @@ describe('ListContainer', () => {
       const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(multiSelectCheckboxes[0]);
       await user.click(multiSelectCheckboxes[1]);
-      await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar bulk-edit button instead
+      await user.click(await findByTestId('bulk-edit'));
 
       // Should open bulk edit sheet (BottomSheet) instead of navigating
       // The sheet should be rendered with the selected items
