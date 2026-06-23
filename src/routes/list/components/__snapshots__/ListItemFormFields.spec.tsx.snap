@@ -8,20 +8,24 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     <div
       class="tw:w-full"
     >
-      <label
-        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-        for="title"
+      <div
+        class="tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
       >
-        Title
-      </label>
-      <input
-        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-        id="title"
-        name="title"
-        placeholder=""
-        type="text"
-        value="Test Item"
-      />
+        <label
+          class="tw:block tw:px-4 tw:pt-2 tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)]"
+          for="title"
+        >
+          Title
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:pb-2 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="title"
+          name="title"
+          placeholder=""
+          type="text"
+          value="Test Item"
+        />
+      </div>
     </div>
   </div>
   <div
@@ -75,20 +79,24 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     <div
       class="tw:w-full"
     >
-      <label
-        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-        for="due_date"
+      <div
+        class="tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
       >
-        Due_date
-      </label>
-      <input
-        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-        id="due_date"
-        name="due_date"
-        placeholder=""
-        type="date"
-        value="2024-01-15"
-      />
+        <label
+          class="tw:block tw:px-4 tw:pt-2 tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)]"
+          for="due_date"
+        >
+          Due_date
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:pb-2 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="due_date"
+          name="due_date"
+          placeholder=""
+          type="date"
+          value="2024-01-15"
+        />
+      </div>
     </div>
   </div>
   <div
@@ -97,19 +105,23 @@ exports[`ListItemFormFields > matches snapshot 1`] = `
     <div
       class="tw:w-full"
     >
-      <label
-        class="tw:block tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)] tw:mb-2"
-        for="quantity"
+      <div
+        class="tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
       >
-        Quantity
-      </label>
-      <input
-        class="tw:w-full tw:h-11 tw:px-4 tw:py-2 tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30 tw:focus:border-[var(--color-border-strong)]"
-        id="quantity"
-        name="quantity"
-        type="number"
-        value="5"
-      />
+        <label
+          class="tw:block tw:px-4 tw:pt-2 tw:text-sm tw:font-medium tw:text-[var(--color-text-secondary)]"
+          for="quantity"
+        >
+          Quantity
+        </label>
+        <input
+          class="tw:w-full tw:h-11 tw:px-4 tw:pb-2 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          id="quantity"
+          name="quantity"
+          type="number"
+          value="5"
+        />
+      </div>
     </div>
   </div>
 </div>
