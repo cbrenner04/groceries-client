@@ -425,6 +425,7 @@ describe('ListsContainer', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -433,6 +434,7 @@ describe('ListsContainer', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -499,6 +501,7 @@ describe('ListsContainer', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -507,6 +510,7 @@ describe('ListsContainer', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -522,6 +526,7 @@ describe('ListsContainer', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);

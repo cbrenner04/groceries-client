@@ -166,8 +166,10 @@ vi.mock('./utils/toast', () => ({
 }));
 
 // Provide a stable mock for react-idle-timer used by usePolling
+// Must return the same object instance to prevent usePolling's useEffect from being called every render
+const stableIdleTimerMock = { isIdle: (): boolean => false };
 vi.mock('react-idle-timer', () => ({
-  useIdleTimer: (): { isIdle: () => boolean } => ({ isIdle: () => false }),
+  useIdleTimer: (): typeof stableIdleTimerMock => stableIdleTimerMock,
 }));
 
 const mockNow = DateTime.fromISO('2020-05-24T10:00:00.000Z');
