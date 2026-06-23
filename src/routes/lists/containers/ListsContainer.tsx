@@ -426,7 +426,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         if (pendingLists.length === 0) {
           return {
             title: 'No pending lists',
-            description: 'Accept a list shared with you to see it here.',
+            description: 'When another user has shared a list with you you will accept it here.',
           };
         }
         return null;
