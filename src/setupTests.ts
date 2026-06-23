@@ -175,6 +175,12 @@ type DateTimeNowFn = typeof DateTime.now;
 
 DateTime.now = vi.fn(() => mockNow) as DateTimeNowFn;
 
+// Ensure test environment variables are loaded
+import.meta.env.VITE_POLLING_INTERVAL = '5000';
+import.meta.env.VITE_USE_IDLE_TIMER = 'false';
+import.meta.env.VITE_PREFETCH_ON_MOUNT = 'false';
+import.meta.env.VITE_PREFETCH_IDLE = 'false';
+
 // Global test setup for React 19
 beforeEach(() => {
   localStorage.clear();
