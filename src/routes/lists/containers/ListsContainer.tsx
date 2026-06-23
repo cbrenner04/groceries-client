@@ -588,6 +588,18 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             {filtered.pending.map(renderListCard)}
             {filtered.active.map(renderListCard)}
             {filtered.completed.map(renderListCard)}
+            {statusFilter === 'completed' && filtered.completed.length > 0 && (
+              <button
+                type="button"
+                className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:mt-2"
+                onClick={(): void => {
+                  navigate('/completed_lists');
+                }}
+                data-test-id="view-all-completed-lists"
+              >
+                View all completed lists
+              </button>
+            )}
           </div>
         );
       })()}
