@@ -37,6 +37,16 @@ describe('BottomInputBar', () => {
     expect(input).toHaveAttribute('placeholder', 'What do you need?');
   });
 
+  it('exposes default accessible name matching default placeholder', async () => {
+    const { getByLabelText } = setup();
+    expect(getByLabelText('Add an item...')).toBeInTheDocument();
+  });
+
+  it('exposes custom accessible name matching custom placeholder', async () => {
+    const { getByLabelText } = setup({ placeholder: 'What do you need?' });
+    expect(getByLabelText('What do you need?')).toBeInTheDocument();
+  });
+
   it('calls onSubmit on Enter key with trimmed value', async () => {
     const onSubmit = vi.fn();
     const { findByTestId, user } = setup({ onSubmit });
