@@ -457,15 +457,6 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     }
   };
 
-  const isEmpty =
-    (statusFilter === 'pending' && pendingLists.length === 0) ||
-    (statusFilter === 'active' && incompleteLists.length === 0) ||
-    (statusFilter === 'completed' && completedLists.length === 0) ||
-    (statusFilter === 'all' &&
-      pendingLists.length === 0 &&
-      incompleteLists.length === 0 &&
-      completedLists.length === 0);
-
   const filtered = getFilteredLists();
   const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
@@ -585,7 +576,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       )}
 
       {((): React.JSX.Element => {
-        const emptyStateContent = isEmpty ? getEmptyStateContent() : null;
+        const emptyStateContent = getEmptyStateContent();
         return emptyStateContent ? (
           <EmptyState
             title={emptyStateContent.title}
