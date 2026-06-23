@@ -75,6 +75,20 @@ describe('CompletedItemsSection', () => {
     expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
   });
 
+  it('renders nothing when no completed items and category filter hides all not-completed items', () => {
+    const { container } = render(
+      <CompletedItemsSection
+        {...baseProps}
+        completedItems={[]}
+        filter="NonExistentCategory"
+        displayedCategories={['NonExistentCategory']}
+        hasNotCompletedItems={false}
+      />,
+    );
+    expect(container.querySelector('[data-test-id="completed-empty-state"]')).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('renders the completed header when items exist', () => {
     const items = [createListItem('1', true, [createField('f1', 'product', 'Milk', '1', { primary: true })])];
     render(<CompletedItemsSection {...baseProps} completedItems={items} />);

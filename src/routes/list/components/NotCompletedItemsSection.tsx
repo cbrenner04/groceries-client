@@ -168,11 +168,13 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
 
   if (props.notCompletedItems.length === 0) {
     return (
-      <EmptyState
-        title="No items yet"
-        description="Items appear here after you add them"
-        testId="not-completed-empty-state"
-      />
+      <div className="tw:mt-4 tw:mb-4">
+        <EmptyState
+          title="No items yet"
+          description="Items appear here after you add them"
+          testId="not-completed-empty-state"
+        />
+      </div>
     );
   }
 

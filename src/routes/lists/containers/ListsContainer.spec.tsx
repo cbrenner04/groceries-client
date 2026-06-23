@@ -269,6 +269,35 @@ describe('ListsContainer', () => {
     expect(getByTestId('quick-add-input')).toBeInTheDocument();
   });
 
+  it('renders filter chips and input bar when active filter has no lists', async () => {
+    const { getByTestId, user } = setup({ incompleteLists: [] });
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(getByTestId('filter-active')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar when completed filter has no lists', async () => {
+    const { getByTestId, user } = setup({ completedLists: [] });
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(getByTestId('filter-completed')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
+  it('renders filter chips and input bar when all filter has no lists', () => {
+    const { getByTestId } = setup({
+      pendingLists: [],
+      incompleteLists: [],
+      completedLists: [],
+    });
+
+    expect(getByTestId('filter-all')).toBeInTheDocument();
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
   it('renders quick-add input', () => {
     const { getByTestId } = setup();
 
