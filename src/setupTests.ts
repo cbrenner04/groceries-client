@@ -196,6 +196,8 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  // Clear call history on mocks while preserving implementations
+  vi.clearAllMocks();
   // Restore console.error
   vi.restoreAllMocks();
 });

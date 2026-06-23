@@ -80,6 +80,14 @@ function setup(suppliedProps?: Partial<IShareListFormProps>): ISetupReturn {
 }
 
 describe('ShareListForm', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders', () => {
     const { container } = setup();
 
