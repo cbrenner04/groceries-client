@@ -169,6 +169,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
             onInputFocus?.();
           }}
           placeholder={placeholder}
+          aria-label={placeholder}
           className={inputClassName}
           data-test-id="quick-add-input"
         />

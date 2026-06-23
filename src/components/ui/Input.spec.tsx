@@ -67,8 +67,9 @@ describe('Input', () => {
   });
 
   it('applies error styles to input when error is present', async () => {
-    const { input } = await setup({ error: 'Error message' });
-    expect(input.className).toContain('tw:border-[var(--color-danger)]');
+    const { container } = await setup({ error: 'Error message' });
+    const wrapper = container.querySelector('[class*="tw:border"]');
+    expect(wrapper?.className).toContain('tw:border-[var(--color-danger)]');
   });
 
   it('renders with custom className', async () => {
