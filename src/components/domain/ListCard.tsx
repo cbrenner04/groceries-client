@@ -23,12 +23,7 @@ export interface IListCardProps {
 }
 
 function isPending(list: IList): boolean {
-  // A list is pending if has_accepted is null/undefined (not yet accepted or rejected)
   return list.has_accepted === null || list.has_accepted === undefined;
-}
-
-function isIncomplete(list: IList): boolean {
-  return !isPending(list) && !(list.completed ?? false);
 }
 
 function getTestClass(list: IList): string {
@@ -198,9 +193,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   };
 
   const pendingBorderStyle = pending ? ' tw:border-l-4 tw:border-l-[var(--color-warning)]' : '';
-  const incompleteList = isIncomplete(list);
-  const shouldShowCheckbox = isMultiSelectActive && incompleteList;
-  const shouldHideActionButtons = isMultiSelectActive && incompleteList;
+  const showMultiSelectControls = isMultiSelectActive && !pending && !(list.completed ?? false);
 
   return (
     <Card
@@ -215,7 +208,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       role="button"
       tabIndex={0}
     >
-      {shouldShowCheckbox && (
+      {showMultiSelectControls && (
         <input
           type="checkbox"
           className="tw:w-5 tw:h-5 tw:cursor-pointer tw:flex-shrink-0"
@@ -233,7 +226,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
           </span>
         </div>
       </div>
-      {!shouldHideActionButtons && <div className="tw:flex-shrink-0">{renderActionButtons()}</div>}
+      {!showMultiSelectControls && <div className="tw:flex-shrink-0">{renderActionButtons()}</div>}
     </Card>
   );
 }

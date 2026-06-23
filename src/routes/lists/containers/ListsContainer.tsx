@@ -463,6 +463,11 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     value: config.id,
     label: config.name,
   }));
+  const selectedLists = getSelectedLists();
+  const selectedCount = selectedListIds.size;
+  const selectedList = selectedCount === 1 ? selectedLists[0] : null;
+  const selectedListId = selectedList?.id ?? null;
+  const canEditSelectedList = Boolean(selectedList?.owner_id && props.userId === selectedList.owner_id);
 
   const renderListCard = (list: IList): React.JSX.Element => (
     <ListCard
@@ -498,7 +503,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             variant="ghost"
             size="sm"
             onClick={(): void => {
-              if (multiSelectActive && selectedListIds.size > 0) {
+              if (multiSelectActive && selectedCount > 0) {
                 setSelectedListIds(new Set());
               }
               setMultiSelectActive(!multiSelectActive);
@@ -536,34 +541,24 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         />
       </FilterChipGroup>
 
-      {multiSelectActive && selectedListIds.size >= 1 && (
+      {multiSelectActive && selectedCount > 0 && (
         <div
           className={
             'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
           }
         >
-          <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
-          {selectedListIds.size === 1 &&
-            ((): React.JSX.Element | null => {
-              const selectedList = getSelectedLists()[0];
-              if (!selectedList?.owner_id || props.userId !== selectedList.owner_id) {
-                return null;
-              }
-              return (
-                <button
-                  type="button"
-                  className="tw:text-sm tw:text-[var(--color-accent)] tw:cursor-pointer"
-                  onClick={(): void => {
-                    const listId = Array.from(selectedListIds)[0];
-                    handleEdit(listId);
-                  }}
-                  data-test-id="multi-select-edit"
-                >
-                  Edit
-                </button>
-              );
-            })()}
-          {selectedListIds.size >= 2 && (
+          <span className="tw:text-sm tw:font-medium">{selectedCount} selected</span>
+          {selectedCount === 1 && canEditSelectedList && selectedListId && (
+            <button
+              type="button"
+              className="tw:text-sm tw:text-[var(--color-accent)] tw:cursor-pointer"
+              onClick={(): void => handleEdit(selectedListId)}
+              data-test-id="multi-select-edit"
+            >
+              Edit
+            </button>
+          )}
+          {selectedCount >= 2 && (
             <button
               type="button"
               className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
@@ -662,7 +657,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         handleMergeConfirm={(): void => {
           void handleMergeConfirm();
         }}
-        selectedLists={getSelectedLists()}
+        selectedLists={selectedLists}
       />
 
       <BottomSheet
