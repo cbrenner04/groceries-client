@@ -14,6 +14,11 @@ import { QuestionCircleIcon } from 'components/icons';
 import UnknownError from './UnknownError';
 
 const fetchData = async (fetchParams: { navigate: NavigateFunction }): Promise<void> => {
+  if (!sessionStorage.getItem('user')) {
+    showToast.error('You must sign in');
+    fetchParams.navigate('/users/sign_in');
+    return;
+  }
   try {
     await axios.get('/auth/validate_token');
   } catch (err: unknown) {
