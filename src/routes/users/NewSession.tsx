@@ -10,6 +10,9 @@ import Loading from 'components/Loading';
 import FormSubmission from 'components/FormSubmission';
 
 async function fetchData(fetchParams: { navigate: (url: string) => void }): Promise<void> {
+  if (!sessionStorage.getItem('user')) {
+    return;
+  }
   try {
     await axios.get('/auth/validate_token');
     fetchParams.navigate('/lists');
