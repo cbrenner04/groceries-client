@@ -314,11 +314,32 @@ describe('ListCard', () => {
       expect(props.onSelect).toHaveBeenCalled();
     });
 
-    it('shows regular action buttons in multi-select mode', () => {
+    it('hides action buttons for incomplete lists in multi-select mode', () => {
       const { container } = setup({ isMultiSelectActive: true });
-      expect(container.querySelector('[data-test-id="incomplete-list-complete"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-test-id="incomplete-list-share"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-test-id="incomplete-list-edit"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-complete"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-share"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-edit"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="incomplete-list-trash"]')).not.toBeInTheDocument();
+    });
+
+    it('shows action buttons for pending lists in multi-select mode', () => {
+      const { container } = setup({
+        isMultiSelectActive: true,
+        list: createList('list1', 'Test List', 'config1', { has_accepted: null }),
+      });
+      expect(container.querySelector('[data-test-id="pending-list-accept"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="pending-list-trash"]')).toBeInTheDocument();
+      expect(container.querySelector('input[type="checkbox"]')).not.toBeInTheDocument();
+    });
+
+    it('shows action buttons for completed lists in multi-select mode', () => {
+      const { container } = setup({
+        isMultiSelectActive: true,
+        list: createList('list1', 'Test List', 'config1', { completed: true }),
+      });
+      expect(container.querySelector('[data-test-id="complete-list-refresh"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="complete-list-trash"]')).toBeInTheDocument();
+      expect(container.querySelector('input[type="checkbox"]')).not.toBeInTheDocument();
     });
 
     it('applies selected visual state when isSelected is true', () => {

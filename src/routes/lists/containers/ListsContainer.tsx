@@ -536,21 +536,43 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         />
       </FilterChipGroup>
 
-      {multiSelectActive && selectedListIds.size > 1 && (
+      {multiSelectActive && selectedListIds.size >= 1 && (
         <div
           className={
             'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
           }
         >
           <span className="tw:text-sm tw:font-medium">{selectedListIds.size} selected</span>
-          <button
-            type="button"
-            className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
-            onClick={handleMerge}
-            data-test-id="multi-select-merge"
-          >
-            Merge
-          </button>
+          {selectedListIds.size === 1 &&
+            ((): React.JSX.Element | null => {
+              const selectedList = getSelectedLists()[0];
+              if (!selectedList?.owner_id || props.userId !== selectedList.owner_id) {
+                return null;
+              }
+              return (
+                <button
+                  type="button"
+                  className="tw:text-sm tw:text-[var(--color-accent)] tw:cursor-pointer"
+                  onClick={(): void => {
+                    const listId = Array.from(selectedListIds)[0];
+                    handleEdit(listId);
+                  }}
+                  data-test-id="multi-select-edit"
+                >
+                  Edit
+                </button>
+              );
+            })()}
+          {selectedListIds.size >= 2 && (
+            <button
+              type="button"
+              className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
+              onClick={handleMerge}
+              data-test-id="multi-select-merge"
+            >
+              Merge
+            </button>
+          )}
           <button
             type="button"
             className="tw:text-sm tw:text-[var(--color-danger)] tw:cursor-pointer"

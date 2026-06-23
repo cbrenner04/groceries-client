@@ -93,6 +93,17 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         refreshed: false,
         has_accepted: true,
       },
+      {
+        id: 'id7',
+        name: 'not-owned',
+        list_item_configuration_id: 'config-1',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id7',
+        owner_id: 'id2',
+        refreshed: false,
+        has_accepted: true,
+      },
     ],
     currentUserPermissions: {
       id1: 'write',
@@ -100,6 +111,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       id5: 'write',
       id4: 'read',
       id6: 'read',
+      id7: 'write',
     } as TUserPermissions,
     listItemConfigurations: [
       {
@@ -915,8 +927,18 @@ describe('ListsContainer', () => {
     expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
   });
 
-  it('shows multi-select toolbar when 2+ lists are selected', async () => {
+  it('shows multi-select toolbar when 1+ lists are selected', async () => {
     const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(getByTestId('multi-select-edit')).toBeInTheDocument();
+  });
+
+  it('shows merge and delete when 2+ lists are selected', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
 
     await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
@@ -924,6 +946,26 @@ describe('ListsContainer', () => {
 
     expect(getByTestId('multi-select-merge')).toBeInTheDocument();
     expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('hides edit button when non-owned list is selected', async () => {
+    const { getByText, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id7"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('opens edit sheet when multi-select edit button is clicked', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-edit'));
+
+    expect(getByTestId('edit-list-sheet')).toBeInTheDocument();
   });
 
   // ─── Delete ───────────────────────────────────────────────────────────────────
