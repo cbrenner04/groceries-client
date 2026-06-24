@@ -120,28 +120,28 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
 
   const inputClassName =
-    'tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] ' +
+    'tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] ' +
     'tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] ' +
     'tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] ' +
     'tw:text-sm tw:outline-none ' +
     'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
 
   const footerSubmitClassName =
-    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-[var(--radius-lg)] ' +
     'tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:text-sm tw:font-medium ' +
     'tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors ' +
     'tw:disabled:opacity-50 tw:disabled:cursor-not-allowed ' +
     'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
   const footerCancelClassName =
-    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-lg ' +
+    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-[var(--radius-lg)] ' +
     'tw:text-[var(--color-text-secondary)] tw:text-sm tw:font-medium ' +
     'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors ' +
     'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
 
   const expandButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
-    'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
+    'tw:rounded-[var(--radius-lg)] tw:text-[var(--color-text-secondary)] ' +
     'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-all tw:duration-200 ' +
     (expanded ? 'tw:rotate-180' : '');
 

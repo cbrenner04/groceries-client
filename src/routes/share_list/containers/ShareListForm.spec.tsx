@@ -139,6 +139,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -147,6 +148,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -179,6 +181,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -187,6 +190,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -202,6 +206,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
