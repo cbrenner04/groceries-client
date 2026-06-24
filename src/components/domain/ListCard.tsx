@@ -20,6 +20,7 @@ export interface IListCardProps {
   onAccept: (listId: string) => void;
   onReject: (listId: string) => void;
   onClick: (listId: string) => void;
+  templateName?: string;
 }
 
 function isPending(list: IList): boolean {
@@ -49,6 +50,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
     onAccept,
     onReject,
     onClick,
+    templateName,
   } = props;
 
   const listId = list.id ?? '';
@@ -224,6 +226,14 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             {list.name}
             {list.refreshed && '*'}
           </span>
+          {templateName && (
+            <span
+              data-test-id="list-template-type"
+              className="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
+            >
+              {templateName}
+            </span>
+          )}
         </div>
       </div>
       {!showMultiSelectControls && <div className="tw:flex-shrink-0">{renderActionButtons()}</div>}

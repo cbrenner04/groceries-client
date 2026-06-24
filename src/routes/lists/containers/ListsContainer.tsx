@@ -486,6 +486,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       onAccept={handleAccept}
       onReject={handleReject}
       onClick={handleClick}
+      templateName={props.listItemConfigurations.find((c) => c.id === list.list_item_configuration_id)?.name}
     />
   );
 

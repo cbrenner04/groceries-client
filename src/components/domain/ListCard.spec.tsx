@@ -61,6 +61,18 @@ describe('ListCard', () => {
       const listName = container.querySelector('[data-test-id="list-name"]');
       expect(listName?.textContent).not.toContain('*');
     });
+
+    it('renders template type when templateName is provided', () => {
+      const { container } = setup({ templateName: 'Grocery' });
+      const templateType = container.querySelector('[data-test-id="list-template-type"]');
+      expect(templateType).toBeInTheDocument();
+      expect(templateType?.textContent).toBe('Grocery');
+    });
+
+    it('does not render template type when templateName is not provided', () => {
+      const { container } = setup();
+      expect(container.querySelector('[data-test-id="list-template-type"]')).not.toBeInTheDocument();
+    });
   });
 
   describe('incomplete list (owned)', () => {
