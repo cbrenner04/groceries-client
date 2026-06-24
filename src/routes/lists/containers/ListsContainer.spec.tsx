@@ -1415,6 +1415,61 @@ describe('ListsContainer', () => {
     await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
   });
 
+  it('hides merge action when 2+ lists of different types are selected', async () => {
+    const { getByText, queryByTestId, user } = setup({
+      incompleteLists: [
+        {
+          id: 'id5',
+          name: 'baz',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id5',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+        {
+          id: 'id6',
+          name: 'diff-type',
+          list_item_configuration_id: 'config-2',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id6',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+    });
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-merge')).not.toBeInTheDocument();
+  });
+
+  it('shows merge action when 2+ lists of the same type are selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-merge')).toBeInTheDocument();
+  });
+
+  it('edit action button has warning variant', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    const editBtn = getByTestId('multi-select-edit');
+    expect(editBtn.className).toMatch(/color-warning/);
+  });
+
   // ─── Edit list BottomSheet ────────────────────────────────────────────────────
 
   it('opens the edit sheet when initialEditListId is provided', async () => {

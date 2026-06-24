@@ -501,10 +501,14 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         icon: <EditIcon />,
         label: 'Edit',
         onClick: (): void => handleEdit(selectedListId),
+        variant: 'warning',
         testId: 'multi-select-edit',
       });
     }
-    if (selectedCount >= 2) {
+    const allSameType =
+      selectedCount >= 2 &&
+      selectedLists.every((l) => l.list_item_configuration_id === selectedLists[0].list_item_configuration_id);
+    if (allSameType) {
       actions.push({
         icon: <CompressIcon />,
         label: 'Merge',
