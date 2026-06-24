@@ -5,7 +5,7 @@ exports[`Input > matches snapshot 1`] = `
   class="tw:w-full tw:my-2"
 >
   <div
-    class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-lg tw:bg-[var(--color-surface)] tw:transition-colors"
+    class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
   >
     <label
       class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"

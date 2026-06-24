@@ -19,7 +19,6 @@ import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
 const mockShowToast = showToast as Mocked<typeof showToast>;
-const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10);
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
@@ -335,6 +334,56 @@ describe('ListsContainer', () => {
     expect(getByTestId('quick-add-input')).toBeInTheDocument();
   });
 
+  // ─── View all completed lists link ────────────────────────────────────────
+
+  it('renders view all completed lists link when completed filter is active with completed lists', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(getByTestId('view-all-completed-lists')).toBeInTheDocument();
+    expect(getByTestId('view-all-completed-lists')).toHaveTextContent('View all completed lists');
+  });
+
+  it('does not render view all completed lists link when all filter is active', () => {
+    const { queryByTestId } = setup();
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
+  it('does not render view all completed lists link when pending filter is active', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-pending'));
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
+  it('does not render view all completed lists link when active filter is active', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-active'));
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
+  it('does not render view all completed lists link on empty completed state', async () => {
+    const { getByTestId, queryByTestId, user } = setup({ completedLists: [] });
+
+    await user.click(getByTestId('filter-completed'));
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
+  it('navigates to /completed_lists when view all completed lists link is clicked', async () => {
+    const { getByTestId, user } = setup();
+
+    await user.click(getByTestId('filter-completed'));
+    await user.click(getByTestId('view-all-completed-lists'));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/completed_lists');
+  });
+
   it('updates via polling when different data is returned', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     axios.get = vi
@@ -447,7 +496,8 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -455,7 +505,8 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -521,7 +572,8 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -529,7 +581,8 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -544,7 +597,8 @@ describe('ListsContainer', () => {
     setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(10000);
+      vi.runOnlyPendingTimers();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);

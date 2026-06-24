@@ -9,7 +9,6 @@ import { shareListDeduplicator } from 'utils/requestDeduplication';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as Mocked<typeof showToast>;
-const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '5000', 10);
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
   ...(await vi.importActual('react-router')),
@@ -149,7 +148,8 @@ describe('ShareListForm', () => {
     const { findByTestId, queryByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -157,7 +157,8 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -189,7 +190,8 @@ describe('ShareListForm', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -197,7 +199,8 @@ describe('ShareListForm', () => {
     expect(await findByTestId('pending-user-id2')).toHaveTextContent('bar@example.com');
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -212,7 +215,8 @@ describe('ShareListForm', () => {
     setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(POLLING_INTERVAL);
+      vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
