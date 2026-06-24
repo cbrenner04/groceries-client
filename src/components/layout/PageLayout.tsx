@@ -77,12 +77,24 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
     );
   };
 
+  // When a bottom bar is present, reserve space below the list so that the last
+  // items are not hidden behind the fixed bar.
+  //
+  // --bottom-bar-height is written at runtime by BottomInputBar.  It reflects
+  // the bar's actual rendered height (collapsed input row OR expanded form), so
+  // the padding grows when the form opens and shrinks when it collapses.
   const contentClassName = bottomBar
-    ? [
-        'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4',
-        'tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]',
-      ].join(' ')
+    ? 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4'
     : 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4';
+
+  // Inline style for dynamic bottom padding so it reacts to CSS variable changes
+  // without Tailwind needing to know the value at build time.
+  // --bottom-bar-height is written by BottomInputBar; the calc() is the fallback.
+  const bottomBarFallback =
+    'calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap))';
+  const contentStyle: React.CSSProperties | undefined = bottomBar
+    ? { paddingBottom: `var(--bottom-bar-height, ${bottomBarFallback})` }
+    : undefined;
 
   return (
     <div className={containerClassName}>
@@ -110,7 +122,9 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
             {headerRight && <div className="tw:ml-auto">{headerRight}</div>}
           </header>
         )}
-        <main className={contentClassName}>{children}</main>
+        <main className={contentClassName} style={contentStyle}>
+          {children}
+        </main>
       </div>
       {bottomBar}
     </div>

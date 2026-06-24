@@ -87,7 +87,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -97,7 +97,8 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -437,14 +438,14 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Add an item..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
           type="text"
@@ -543,7 +544,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -553,7 +554,8 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -1376,14 +1378,14 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Add an item..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
           type="text"
@@ -1482,7 +1484,7 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -1492,7 +1494,8 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -2352,14 +2355,14 @@ exports[`ListContainer > Delete Operations > renders confirmation modal when del
         class="tw:flex tw:justify-end tw:gap-2 tw:px-4 tw:py-3 tw:border-t tw:border-[var(--color-border)]"
       >
         <button
-          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:border tw:border-[var(--color-border-strong)] tw:text-[var(--color-text-primary)] tw:hover:bg-[var(--color-surface-overlay)] tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
           data-test-id="clear-delete"
           type="button"
         >
           Close
         </button>
         <button
-          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+          class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:bg-[var(--color-primary)] tw:text-white tw:hover:bg-[var(--color-primary-hover)] tw:active:opacity-90 tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg  tw:cursor-pointer"
           data-test-id="confirm-delete"
           type="button"
         >
@@ -2458,7 +2461,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -2468,7 +2471,8 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -3144,14 +3148,14 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Add an item..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
           type="text"
@@ -3250,7 +3254,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -3260,7 +3264,8 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -3469,14 +3474,14 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Add an item..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
           type="text"
@@ -4049,7 +4054,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
               </svg>
             </button>
             <button
-              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-[var(--radius-lg)]  tw:cursor-pointer"
+              class="tw:font-medium tw:transition-colors tw:duration-200 tw:ease-in-out tw:min-h-[44px] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-text-secondary)] tw:hover:bg-[var(--color-surface-overlay)] tw:active:bg-[var(--color-surface-raised)] tw:h-8 tw:px-3 tw:text-sm tw:rounded-md  tw:cursor-pointer"
               data-test-id="select-button"
               type="button"
             >
@@ -4059,7 +4064,8 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
         </div>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           aria-atomic="true"
@@ -4882,14 +4888,14 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Add an item..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-md)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Add an item..."
           type="text"
