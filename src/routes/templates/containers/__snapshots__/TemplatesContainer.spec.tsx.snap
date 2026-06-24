@@ -32,7 +32,8 @@ exports[`TemplatesContainer > renders 1`] = `
         </h1>
       </header>
       <main
-        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4 tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+var(--spacing-bottom-bar-gap))]"
+        class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
+        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
           class="tw:flex tw:flex-col tw:gap-3"
@@ -186,14 +187,14 @@ exports[`TemplatesContainer > renders 1`] = `
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: calc(var(--spacing-nav-height) + 0px);"
+      style="bottom: var(--spacing-nav-height);"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
       >
         <input
           aria-label="Create a new template..."
-          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-sm tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+          class="tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] tw:text-base tw:outline-none tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
           data-test-id="quick-add-input"
           placeholder="Create a new template..."
           type="text"

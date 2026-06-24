@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
 
@@ -51,6 +51,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   };
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (mode === 'building') {
@@ -58,25 +59,56 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     }
   }, [mode]);
 
+  // Track keyboard height via visualViewport.
+  // On iOS Safari, when the software keyboard opens, window.innerHeight stays
+  // constant but visualViewport.height shrinks and visualViewport.offsetTop
+  // shifts. We must account for BOTH to correctly pin the bar above the keyboard.
   useEffect(() => {
-    const handleResize = (): void => {
+    const handleViewportChange = (): void => {
       if (window.visualViewport) {
         const viewport = window.visualViewport;
-        const windowHeight = window.innerHeight;
-        const viewportHeight = viewport.height;
-        const newKeyboardHeight = Math.max(0, windowHeight - viewportHeight);
+        // offsetTop > 0 when the visual viewport has scrolled down within the
+        // layout viewport (e.g., iOS address-bar auto-hide). Combined with
+        // the height shrink this gives the true gap at the bottom.
+        const newKeyboardHeight = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
         setKeyboardHeight(newKeyboardHeight);
       }
     };
 
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
       return (): void => {
-        window.visualViewport?.removeEventListener('resize', handleResize);
+        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+        window.visualViewport?.removeEventListener('scroll', handleViewportChange);
       };
     }
     return undefined;
   }, []);
+
+  // Publish the bar's rendered height to a CSS custom property so that the
+  // scrollable list container (PageLayout's <main>) can add matching bottom
+  // padding and prevent the last items from being hidden behind the fixed bar.
+  const updateBottomBarHeightVar = useCallback((): void => {
+    if (barRef.current) {
+      const height = barRef.current.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--bottom-bar-height', `${height}px`);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Re-measure whenever expanded state or keyboard height changes.
+    updateBottomBarHeightVar();
+  }, [expanded, keyboardHeight, updateBottomBarHeightVar]);
+
+  useEffect(() => {
+    // Also measure after initial paint so the value is set before first scroll.
+    updateBottomBarHeightVar();
+    // Clean up on unmount — reset so PageLayout doesn't keep stale padding.
+    return (): void => {
+      document.documentElement.style.removeProperty('--bottom-bar-height');
+    };
+  }, [updateBottomBarHeightVar]);
 
   const handleSubmit = (): void => {
     const trimmed = value.trim();
@@ -116,14 +148,20 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
 
   const containerStyle: React.CSSProperties = {
-    bottom: `calc(var(--spacing-nav-height) + ${keyboardHeight}px)`,
+    // Pin the bar directly above the on-screen keyboard.
+    // When keyboardHeight > 0 (iOS keyboard open) we skip the nav-height offset
+    // because the nav bar is itself pushed off-screen by the keyboard; the bar
+    // should sit flush on top of the keyboard instead.
+    bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : 'var(--spacing-nav-height)',
   };
 
   const inputClassName =
     'tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] ' +
     'tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] ' +
     'tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] ' +
-    'tw:text-sm tw:outline-none ' +
+    // text-base (16px) — MUST be ≥16px to prevent iOS Safari from auto-zooming
+    // when the input receives focus. Do NOT reduce below 16px here.
+    'tw:text-base tw:outline-none ' +
     'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
 
   const footerSubmitClassName =
@@ -156,7 +194,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   }
 
   return (
-    <div className={containerClassName} style={containerStyle}>
+    <div ref={barRef} className={containerClassName} style={containerStyle}>
       <div className={inputRowClassName}>
         <input
           ref={inputRef}
