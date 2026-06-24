@@ -185,12 +185,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                   >
                     foo
                   </span>
-                  <span
-                    class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-                    data-test-id="list-template-type"
-                  >
-                    grocery list template
-                  </span>
                 </div>
               </div>
               <div
@@ -268,12 +262,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                     data-test-id="list-name"
                   >
                     bar
-                  </span>
-                  <span
-                    class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-                    data-test-id="list-template-type"
-                  >
-                    book list template
                   </span>
                 </div>
               </div>
@@ -407,12 +395,6 @@ exports[`Lists > renders Lists when data retrieval is complete 1`] = `
                     data-test-id="list-name"
                   >
                     foo
-                  </span>
-                  <span
-                    class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-                    data-test-id="list-template-type"
-                  >
-                    grocery list template
                   </span>
                 </div>
               </div>

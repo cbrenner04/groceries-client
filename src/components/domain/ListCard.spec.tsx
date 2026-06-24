@@ -62,15 +62,26 @@ describe('ListCard', () => {
       expect(listName?.textContent).not.toContain('*');
     });
 
-    it('renders template type when templateName is provided', () => {
-      const { container } = setup({ templateName: 'Grocery' });
+    it('renders template type in its own centered container during multiselect', () => {
+      const { container } = setup({ templateName: 'Grocery', isMultiSelectActive: true });
       const templateType = container.querySelector('[data-test-id="list-template-type"]');
       expect(templateType).toBeInTheDocument();
       expect(templateType?.textContent).toBe('Grocery');
+      const ownContainer = templateType?.parentElement;
+      expect(ownContainer?.className).toContain('tw:justify-center');
+      expect(ownContainer?.className).toContain('tw:text-center');
+      // not a sibling inside the list-name row
+      const nameRow = container.querySelector('[data-test-id="list-name"]')?.parentElement;
+      expect(nameRow?.querySelector('[data-test-id="list-template-type"]')).toBeNull();
+    });
+
+    it('does not render template type when multiselect is off', () => {
+      const { container } = setup({ templateName: 'Grocery', isMultiSelectActive: false });
+      expect(container.querySelector('[data-test-id="list-template-type"]')).not.toBeInTheDocument();
     });
 
     it('does not render template type when templateName is not provided', () => {
-      const { container } = setup();
+      const { container } = setup({ isMultiSelectActive: true });
       expect(container.querySelector('[data-test-id="list-template-type"]')).not.toBeInTheDocument();
     });
   });

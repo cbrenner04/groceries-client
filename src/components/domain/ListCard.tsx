@@ -226,16 +226,18 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
             {list.name}
             {list.refreshed && '*'}
           </span>
-          {templateName && (
-            <span
-              data-test-id="list-template-type"
-              className="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-            >
-              {templateName}
-            </span>
-          )}
         </div>
       </div>
+      {isMultiSelectActive && templateName && (
+        <div className="tw:flex tw:justify-center tw:text-center tw:min-w-0">
+          <span
+            data-test-id="list-template-type"
+            className="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
+          >
+            {templateName}
+          </span>
+        </div>
+      )}
       {!showMultiSelectControls && <div className="tw:flex-shrink-0">{renderActionButtons()}</div>}
     </Card>
   );

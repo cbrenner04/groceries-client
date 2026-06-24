@@ -94,12 +94,6 @@ exports[`ListsContainer > renders 1`] = `
             >
               foo
             </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
-            </span>
           </div>
         </div>
         <div
@@ -177,12 +171,6 @@ exports[`ListsContainer > renders 1`] = `
               data-test-id="list-name"
             >
               baz
-            </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
             </span>
           </div>
         </div>
@@ -317,12 +305,6 @@ exports[`ListsContainer > renders 1`] = `
             >
               foobar
             </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
-            </span>
           </div>
         </div>
         <div
@@ -429,12 +411,6 @@ exports[`ListsContainer > renders 1`] = `
             >
               not-owned
             </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
-            </span>
           </div>
         </div>
         <div
@@ -517,12 +493,6 @@ exports[`ListsContainer > renders 1`] = `
             >
               bar
             </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
-            </span>
           </div>
         </div>
         <div
@@ -601,12 +571,6 @@ exports[`ListsContainer > renders 1`] = `
               data-test-id="list-name"
             >
               bar
-            </span>
-            <span
-              class="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
-              data-test-id="list-template-type"
-            >
-              grocery list template
             </span>
           </div>
         </div>
