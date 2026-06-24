@@ -355,13 +355,27 @@ describe('ListCard', () => {
       expect(container.querySelector('input[type="checkbox"]')).not.toBeInTheDocument();
     });
 
-    it('shows action buttons for completed lists in multi-select mode', () => {
+    it('shows checkbox for completed lists in multi-select mode', () => {
       const { container } = setup({
         isMultiSelectActive: true,
         list: createList('list1', 'Test List', 'config1', { completed: true }),
       });
-      expect(container.querySelector('[data-test-id="complete-list-refresh"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-test-id="complete-list-trash"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="complete-list-refresh"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="complete-list-trash"]')).not.toBeInTheDocument();
+      expect(container.querySelector('input[type="checkbox"]')).toBeInTheDocument();
+    });
+
+    it('has data-test-id list-select-{id} on checkbox', () => {
+      const { container } = setup({ isMultiSelectActive: true });
+      const checkbox = container.querySelector('[data-test-id="list-select-list1"]');
+      expect(checkbox).toBeInTheDocument();
+    });
+
+    it('pending lists do not show checkbox in multi-select mode', () => {
+      const { container } = setup({
+        isMultiSelectActive: true,
+        list: createList('list1', 'Pending List', 'config1', { has_accepted: null }),
+      });
       expect(container.querySelector('input[type="checkbox"]')).not.toBeInTheDocument();
     });
 

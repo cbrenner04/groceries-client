@@ -1033,6 +1033,98 @@ describe('ListsContainer', () => {
     expect(getByTestId('edit-list-sheet')).toBeInTheDocument();
   });
 
+  it('shows multi-select-complete when all selected lists are incomplete', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Select an incomplete list (id5, owner_id: id1 = userId)
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-complete')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-refresh')).not.toBeInTheDocument();
+  });
+
+  it('shows multi-select-refresh when all selected lists are completed', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Need to switch to completed filter and select completed list id2
+    await user.click(getByTestId('filter-completed'));
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-refresh')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-complete')).not.toBeInTheDocument();
+  });
+
+  it('hides both complete and refresh when mixed incomplete and completed selected', async () => {
+    const { getByText, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Select an incomplete list
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    // Select a completed list (visible in 'all' filter)
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-complete')).not.toBeInTheDocument();
+    expect(queryByTestId('multi-select-refresh')).not.toBeInTheDocument();
+  });
+
+  it('bulk completes selected incomplete lists', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-complete'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledWith('/lists/id5', { list: { completed: true } }));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully completed.');
+  });
+
+  it('bulk refreshes selected completed lists', async () => {
+    const refreshedList = {
+      id: 'id2-refreshed',
+      name: 'bar',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: true,
+      users_list_id: 'id2',
+      created_at: new Date('05/31/2020').toISOString(),
+      has_accepted: true,
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: refreshedList });
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(getByTestId('filter-completed'));
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-refresh'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledWith('/lists/id2/refresh_list', {}));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully refreshed.');
+  });
+
+  it('completed lists show checkbox in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+
+    // id2 is a completed list
+    const checkbox = document.querySelector('[data-test-id="list-select-id2"]');
+    expect(checkbox).toBeInTheDocument();
+  });
+
+  it('pending lists do not show checkbox in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+
+    // id-pending is a pending list
+    const checkbox = document.querySelector('[data-test-id="list-select-id-pending"]');
+    expect(checkbox).not.toBeInTheDocument();
+  });
+
   // ─── Delete ───────────────────────────────────────────────────────────────────
 
   it('opens delete confirm dialog when trash is clicked on an incomplete list', async () => {

@@ -8,6 +8,8 @@ import { usePolling } from 'hooks';
 import type { IList, IListItemConfiguration, TUserPermissions } from 'typings';
 
 import { ListCard } from 'components/domain/ListCard';
+import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
+import { CheckIcon, EditIcon, CompressIcon, RedoIcon, TrashIcon } from 'components/icons';
 import { EmptyState } from 'components/domain/EmptyState';
 import { BottomInputBar } from 'components/layout/BottomInputBar';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
@@ -469,6 +471,57 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const selectedListId = selectedList?.id ?? null;
   const canEditSelectedList = Boolean(selectedList?.owner_id && props.userId === selectedList.owner_id);
 
+  const allSelectedIncomplete =
+    selectedCount > 0 &&
+    selectedLists.every((l) => !l.completed && l.has_accepted !== null && l.has_accepted !== undefined);
+  const allSelectedCompleted = selectedCount > 0 && selectedLists.every((l) => !!l.completed);
+
+  const getListMultiSelectActions = (): IMultiSelectAction[] => {
+    const actions: IMultiSelectAction[] = [];
+    if (allSelectedIncomplete) {
+      actions.push({
+        icon: <CheckIcon />,
+        label: 'Complete',
+        onClick: (): void => handleCompletion(''),
+        variant: 'success',
+        testId: 'multi-select-complete',
+      });
+    }
+    if (allSelectedCompleted) {
+      actions.push({
+        icon: <RedoIcon />,
+        label: 'Refresh',
+        onClick: (): void => handleRefresh(''),
+        variant: 'primary',
+        testId: 'multi-select-refresh',
+      });
+    }
+    if (selectedCount === 1 && canEditSelectedList && selectedListId) {
+      actions.push({
+        icon: <EditIcon />,
+        label: 'Edit',
+        onClick: (): void => handleEdit(selectedListId),
+        testId: 'multi-select-edit',
+      });
+    }
+    if (selectedCount >= 2) {
+      actions.push({
+        icon: <CompressIcon />,
+        label: 'Merge',
+        onClick: handleMerge,
+        testId: 'multi-select-merge',
+      });
+    }
+    actions.push({
+      icon: <TrashIcon />,
+      label: 'Delete',
+      onClick: (): void => handleDelete(''),
+      variant: 'danger',
+      testId: 'multi-select-delete',
+    });
+    return actions;
+  };
+
   const renderListCard = (list: IList): React.JSX.Element => (
     <ListCard
       key={list.id}
@@ -543,40 +596,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
       </FilterChipGroup>
 
       {multiSelectActive && selectedCount > 0 && (
-        <div
-          className={
-            'tw:flex tw:items-center tw:gap-2 tw:mb-4 tw:p-2 ' + 'tw:bg-[var(--color-surface-raised)] tw:rounded-lg'
-          }
-        >
-          <span className="tw:text-sm tw:font-medium">{selectedCount} selected</span>
-          {selectedCount === 1 && canEditSelectedList && selectedListId && (
-            <button
-              type="button"
-              className="tw:text-sm tw:text-[var(--color-accent)] tw:cursor-pointer"
-              onClick={(): void => handleEdit(selectedListId)}
-              data-test-id="multi-select-edit"
-            >
-              Edit
-            </button>
-          )}
-          {selectedCount >= 2 && (
-            <button
-              type="button"
-              className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer"
-              onClick={handleMerge}
-              data-test-id="multi-select-merge"
-            >
-              Merge
-            </button>
-          )}
-          <button
-            type="button"
-            className="tw:text-sm tw:text-[var(--color-danger)] tw:cursor-pointer"
-            onClick={(): void => handleDelete('')}
-            data-test-id="multi-select-delete"
-          >
-            Delete
-          </button>
+        <div className="tw:mb-4">
+          <MultiSelectBar
+            selectedCount={selectedCount}
+            onClose={resetMultiSelect}
+            actions={getListMultiSelectActions()}
+          />
         </div>
       )}
 

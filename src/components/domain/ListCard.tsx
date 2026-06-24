@@ -195,7 +195,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   };
 
   const pendingBorderStyle = pending ? ' tw:border-l-4 tw:border-l-[var(--color-warning)]' : '';
-  const showMultiSelectControls = isMultiSelectActive && !pending && !(list.completed ?? false);
+  const showMultiSelectControls = isMultiSelectActive && !pending;
 
   return (
     <Card
@@ -213,6 +213,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       {showMultiSelectControls && (
         <input
           type="checkbox"
+          data-test-id={`list-select-${listId}`}
           className="tw:w-5 tw:h-5 tw:cursor-pointer tw:flex-shrink-0"
           checked={isSelected}
           onChange={(): void => onSelect(listId)}
