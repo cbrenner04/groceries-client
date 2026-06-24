@@ -505,10 +505,13 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         testId: 'multi-select-edit',
       });
     }
-    const allSameType =
-      selectedCount >= 2 &&
-      selectedLists.every((l) => l.list_item_configuration_id === selectedLists[0].list_item_configuration_id);
-    if (allSameType) {
+    const configIdCounts = selectedLists.reduce<Record<string, number>>((acc, l) => {
+      const id = l.list_item_configuration_id ?? '';
+      acc[id] = (acc[id] ?? 0) + 1;
+      return acc;
+    }, {});
+    const hasMergeablePair = Object.values(configIdCounts).some((count) => count >= 2);
+    if (hasMergeablePair) {
       actions.push({
         icon: <CompressIcon />,
         label: 'Merge',
