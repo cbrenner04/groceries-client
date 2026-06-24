@@ -5,6 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
+import { listsDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
 
 // Mock listPrefetch at module level
@@ -18,6 +19,7 @@ import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '10000', 10);
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
@@ -93,6 +95,17 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         refreshed: false,
         has_accepted: true,
       },
+      {
+        id: 'id7',
+        name: 'not-owned',
+        list_item_configuration_id: 'config-1',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id7',
+        owner_id: 'id2',
+        refreshed: false,
+        has_accepted: true,
+      },
     ],
     currentUserPermissions: {
       id1: 'write',
@@ -100,6 +113,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       id5: 'write',
       id4: 'read',
       id6: 'read',
+      id7: 'write',
     } as TUserPermissions,
     listItemConfigurations: [
       {
@@ -132,7 +146,16 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
 
 describe('ListsContainer', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mocks except axios which needs its implementation preserved
+    (axios.get as Mock).mockClear();
+    (axios.post as Mock).mockClear();
+    (axios.put as Mock).mockClear();
+    (axios.delete as Mock).mockClear();
+    mockShowToast.error.mockClear();
+    mockShowToast.info.mockClear();
+    mockShowToast.success.mockClear();
+    mockShowToast.warning.mockClear();
+    listsDeduplicator.clear();
   });
 
   afterEach(() => {
@@ -474,8 +497,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
-      vi.runOnlyPendingTimers();
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -483,8 +505,7 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
-      vi.runOnlyPendingTimers();
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -550,8 +571,7 @@ describe('ListsContainer', () => {
     const { findByTestId } = setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
-      vi.runOnlyPendingTimers();
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -559,8 +579,7 @@ describe('ListsContainer', () => {
     expect(await findByTestId('list-id3')).toHaveAttribute('data-test-class', 'pending-list');
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
-      vi.runOnlyPendingTimers();
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -575,8 +594,7 @@ describe('ListsContainer', () => {
     setup();
 
     await act(async () => {
-      vi.advanceTimersByTime(10000);
-      vi.runOnlyPendingTimers();
+      vi.advanceTimersByTime(POLLING_INTERVAL);
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);
@@ -590,14 +608,14 @@ describe('ListsContainer', () => {
   it('creates list via quick-add input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();
@@ -612,20 +630,20 @@ describe('ListsContainer', () => {
       list: { name: 'new list', list_item_configuration_id: 'config-1' },
     });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
-    expect(await findByTestId('list-id7')).toHaveTextContent('new list');
+    expect(await findByTestId('list-id8')).toHaveTextContent('new list');
   });
 
   it('creates list with selected template via expanded input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-2',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();
@@ -970,8 +988,18 @@ describe('ListsContainer', () => {
     expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
   });
 
-  it('shows multi-select toolbar when 2+ lists are selected', async () => {
+  it('shows multi-select toolbar when 1+ lists are selected', async () => {
     const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(getByTestId('multi-select-edit')).toBeInTheDocument();
+  });
+
+  it('shows merge and delete when 2+ lists are selected', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
 
     await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
@@ -979,6 +1007,26 @@ describe('ListsContainer', () => {
 
     expect(getByTestId('multi-select-merge')).toBeInTheDocument();
     expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('hides edit button when non-owned list is selected', async () => {
+    const { getByText, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id7"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('opens edit sheet when multi-select edit button is clicked', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-edit'));
+
+    expect(getByTestId('edit-list-sheet')).toBeInTheDocument();
   });
 
   // ─── Delete ───────────────────────────────────────────────────────────────────
