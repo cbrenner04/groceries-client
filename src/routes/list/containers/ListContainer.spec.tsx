@@ -32,6 +32,8 @@ const mockNavigate = vi.fn();
 async function advanceTimersByTime(ms: number): Promise<void> {
   await act(async () => {
     vi.advanceTimersByTime(ms);
+    // Run only the timers that are now pending (not all timers)
+    vi.runOnlyPendingTimers();
   });
 }
 
