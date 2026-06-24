@@ -24,10 +24,11 @@ const variantStyles: Record<string, string> = {
   success: 'tw:bg-[var(--color-success)] tw:text-white tw:hover:opacity-90 tw:active:opacity-80',
 };
 
+const radiusStyle = 'tw:rounded-[var(--radius-lg)]';
 const sizeStyles: Record<string, string> = {
-  sm: 'tw:h-8 tw:px-3 tw:text-sm tw:rounded-md',
-  md: 'tw:h-10 tw:px-4 tw:text-sm tw:rounded-lg',
-  lg: 'tw:h-12 tw:px-6 tw:text-base tw:rounded-lg',
+  sm: `tw:h-8 tw:px-3 tw:text-sm ${radiusStyle}`,
+  md: `tw:h-10 tw:px-4 tw:text-sm ${radiusStyle}`,
+  lg: `tw:h-12 tw:px-6 tw:text-base ${radiusStyle}`,
 };
 
 export function Button(props: IButtonProps): React.JSX.Element {
