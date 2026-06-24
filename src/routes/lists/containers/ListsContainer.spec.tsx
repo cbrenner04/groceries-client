@@ -218,6 +218,70 @@ describe('ListsContainer', () => {
     expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
+  it('re-syncs filter when initialFilter prop changes (simulates client-side nav to /completed_lists)', () => {
+    const defaultProps = {
+      userId: 'id1',
+      pendingLists: [],
+      completedLists: [
+        {
+          id: 'id2',
+          name: 'bar',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: true,
+          users_list_id: 'id2',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+      incompleteLists: [
+        {
+          id: 'id5',
+          name: 'baz',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id5',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+      currentUserPermissions: { id1: 'write', id2: 'write', id5: 'write' } as TUserPermissions,
+      listItemConfigurations: [
+        {
+          id: 'config-1',
+          name: 'grocery list template',
+          user_id: 'id1',
+          created_at: '',
+          updated_at: '',
+          archived_at: null,
+        },
+      ],
+    };
+
+    const { getByTestId, queryByTestId, rerender } = render(
+      <MemoryRouter>
+        <ListsContainer {...defaultProps} initialFilter={undefined} />
+      </MemoryRouter>,
+    );
+
+    // Initially shows all lists
+    expect(getByTestId('list-id5')).toBeInTheDocument();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+
+    // Simulate navigating to /completed_lists — prop changes to 'completed'
+    rerender(
+      <MemoryRouter>
+        <ListsContainer {...defaultProps} initialFilter="completed" />
+      </MemoryRouter>,
+    );
+
+    expect(queryByTestId('list-id5')).toBeNull();
+    expect(getByTestId('list-id2')).toBeInTheDocument();
+  });
+
   // ─── Empty States ──────────────────────────────────────────────────────────────
 
   it('shows empty state when pending filter has no lists', async () => {

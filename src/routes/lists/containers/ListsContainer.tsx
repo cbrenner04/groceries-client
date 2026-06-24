@@ -54,6 +54,10 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [, setPending] = useState(false);
   const [statusFilter, setStatusFilter] = useState<TStatusFilter>(props.initialFilter ?? 'all');
   const [multiSelectActive, setMultiSelectActive] = useState(false);
+
+  useEffect(() => {
+    setStatusFilter(props.initialFilter ?? 'all');
+  }, [props.initialFilter]);
   const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
   const [listsToDelete, setListsToDelete] = useState<IList[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
