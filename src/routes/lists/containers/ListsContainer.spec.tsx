@@ -5,6 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
+import { listsDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
 
 // Mock listPrefetch at module level
@@ -93,6 +94,17 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
         refreshed: false,
         has_accepted: true,
       },
+      {
+        id: 'id7',
+        name: 'not-owned',
+        list_item_configuration_id: 'config-1',
+        created_at: new Date('05/31/2020').toISOString(),
+        completed: false,
+        users_list_id: 'id7',
+        owner_id: 'id2',
+        refreshed: false,
+        has_accepted: true,
+      },
     ],
     currentUserPermissions: {
       id1: 'write',
@@ -100,6 +112,7 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
       id5: 'write',
       id4: 'read',
       id6: 'read',
+      id7: 'write',
     } as TUserPermissions,
     listItemConfigurations: [
       {
@@ -132,7 +145,16 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
 
 describe('ListsContainer', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mocks except axios which needs its implementation preserved
+    (axios.get as Mock).mockClear();
+    (axios.post as Mock).mockClear();
+    (axios.put as Mock).mockClear();
+    (axios.delete as Mock).mockClear();
+    mockShowToast.error.mockClear();
+    mockShowToast.info.mockClear();
+    mockShowToast.success.mockClear();
+    mockShowToast.warning.mockClear();
+    listsDeduplicator.clear();
   });
 
   afterEach(() => {
@@ -590,14 +612,14 @@ describe('ListsContainer', () => {
   it('creates list via quick-add input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-1',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();
@@ -612,20 +634,20 @@ describe('ListsContainer', () => {
       list: { name: 'new list', list_item_configuration_id: 'config-1' },
     });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
-    expect(await findByTestId('list-id7')).toHaveTextContent('new list');
+    expect(await findByTestId('list-id8')).toHaveTextContent('new list');
   });
 
   it('creates list with selected template via expanded input', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
-        id: 'id7',
+        id: 'id8',
         name: 'new list',
         list_item_configuration_id: 'config-2',
         created_at: new Date('05/31/2020').toISOString(),
         owner_id: 'id1',
         completed: false,
         refreshed: false,
-        users_list_id: 'id9',
+        users_list_id: 'id8',
       },
     });
     const { findByTestId, user } = setup();
@@ -970,8 +992,18 @@ describe('ListsContainer', () => {
     expect(checkboxes.every((cb) => !cb.checked)).toBe(true);
   });
 
-  it('shows multi-select toolbar when 2+ lists are selected', async () => {
+  it('shows multi-select toolbar when 1+ lists are selected', async () => {
     const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(getByTestId('multi-select-edit')).toBeInTheDocument();
+  });
+
+  it('shows merge and delete when 2+ lists are selected', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
 
     await user.click(getByText('Select Lists'));
     await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
@@ -979,6 +1011,118 @@ describe('ListsContainer', () => {
 
     expect(getByTestId('multi-select-merge')).toBeInTheDocument();
     expect(getByTestId('multi-select-delete')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('hides edit button when non-owned list is selected', async () => {
+    const { getByText, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id7"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-edit')).not.toBeInTheDocument();
+  });
+
+  it('opens edit sheet when multi-select edit button is clicked', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-edit'));
+
+    expect(getByTestId('edit-list-sheet')).toBeInTheDocument();
+  });
+
+  it('shows multi-select-complete when all selected lists are incomplete', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Select an incomplete list (id5, owner_id: id1 = userId)
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-complete')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-refresh')).not.toBeInTheDocument();
+  });
+
+  it('shows multi-select-refresh when all selected lists are completed', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Need to switch to completed filter and select completed list id2
+    await user.click(getByTestId('filter-completed'));
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-refresh')).toBeInTheDocument();
+    expect(queryByTestId('multi-select-complete')).not.toBeInTheDocument();
+  });
+
+  it('hides both complete and refresh when mixed incomplete and completed selected', async () => {
+    const { getByText, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    // Select an incomplete list
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    // Select a completed list (visible in 'all' filter)
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-complete')).not.toBeInTheDocument();
+    expect(queryByTestId('multi-select-refresh')).not.toBeInTheDocument();
+  });
+
+  it('bulk completes selected incomplete lists', async () => {
+    axios.put = vi.fn().mockResolvedValue({});
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-complete'));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledWith('/lists/id5', { list: { completed: true } }));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully completed.');
+  });
+
+  it('bulk refreshes selected completed lists', async () => {
+    const refreshedList = {
+      id: 'id2-refreshed',
+      name: 'bar',
+      list_item_configuration_id: 'config-1',
+      completed: false,
+      owner_id: 'id1',
+      refreshed: true,
+      users_list_id: 'id2',
+      created_at: new Date('05/31/2020').toISOString(),
+      has_accepted: true,
+    };
+    axios.post = vi.fn().mockResolvedValue({ data: refreshedList });
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(getByTestId('filter-completed'));
+    await user.click(document.querySelector('[data-test-id="list-id2"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-refresh'));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalledWith('/lists/id2/refresh_list', {}));
+    expect(mockShowToast.info).toHaveBeenLastCalledWith('List successfully refreshed.');
+  });
+
+  it('completed lists show checkbox in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+
+    // id2 is a completed list
+    const checkbox = document.querySelector('[data-test-id="list-select-id2"]');
+    expect(checkbox).toBeInTheDocument();
+  });
+
+  it('pending lists do not show checkbox in multi-select mode', async () => {
+    const { getByText, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+
+    // id-pending is a pending list
+    const checkbox = document.querySelector('[data-test-id="list-select-id-pending"]');
+    expect(checkbox).not.toBeInTheDocument();
   });
 
   // ─── Delete ───────────────────────────────────────────────────────────────────
@@ -1269,6 +1413,143 @@ describe('ListsContainer', () => {
     await user.click(getByTestId('confirm-merge'));
 
     await waitFor(() => expect(mockShowToast.error).toHaveBeenCalled());
+  });
+
+  it('hides merge action when 2+ lists of different types are selected', async () => {
+    const { getByText, queryByTestId, user } = setup({
+      incompleteLists: [
+        {
+          id: 'id5',
+          name: 'baz',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id5',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+        {
+          id: 'id6',
+          name: 'diff-type',
+          list_item_configuration_id: 'config-2',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id6',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+    });
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-merge')).not.toBeInTheDocument();
+  });
+
+  it('shows merge action when 2+ lists of the same type are selected', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-merge')).toBeInTheDocument();
+  });
+
+  it('shows merge action when a same-template pair exists amid different-template lists (hybrid)', async () => {
+    const { getByText, getByTestId, user } = setup({
+      incompleteLists: [
+        {
+          id: 'id5',
+          name: 'baz',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id5',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+        {
+          id: 'id6',
+          name: 'foobar',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id6',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+        {
+          id: 'id8',
+          name: 'diff-type',
+          list_item_configuration_id: 'config-2',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id8',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+    });
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id8"]') as HTMLElement);
+
+    expect(getByTestId('multi-select-merge')).toBeInTheDocument();
+  });
+
+  it('hides merge action when all selected lists have distinct templates (no mergeable pair)', async () => {
+    const { getByText, queryByTestId, user } = setup({
+      incompleteLists: [
+        {
+          id: 'id5',
+          name: 'baz',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id5',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+        {
+          id: 'id6',
+          name: 'diff-type',
+          list_item_configuration_id: 'config-2',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          users_list_id: 'id6',
+          owner_id: 'id1',
+          refreshed: false,
+          has_accepted: true,
+        },
+      ],
+    });
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+
+    expect(queryByTestId('multi-select-merge')).not.toBeInTheDocument();
+  });
+
+  it('edit action button has warning variant', async () => {
+    const { getByText, getByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+
+    const editBtn = getByTestId('multi-select-edit');
+    expect(editBtn.className).toMatch(/color-warning/);
   });
 
   // ─── Edit list BottomSheet ────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface IIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
-  variant?: 'default' | 'success' | 'danger' | 'primary' | 'accent';
+  variant?: 'default' | 'success' | 'danger' | 'primary' | 'accent' | 'warning';
   size?: 'sm' | 'md' | 'lg';
   label: string;
   'data-test-id'?: string;
@@ -23,6 +23,7 @@ const variantStyles: Record<string, string> = {
   danger: 'tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] ' + 'tw:active:bg-[rgb(239_68_68_/_0.2)]',
   primary:
     'tw:text-[var(--color-primary)] tw:hover:bg-[var(--color-primary-light)] ' + 'tw:active:bg-[rgb(22_163_74_/_0.2)]',
+  warning: 'tw:text-[var(--color-warning)] tw:hover:bg-[rgb(234_179_8_/_0.1)] ' + 'tw:active:bg-[rgb(234_179_8_/_0.2)]',
   accent:
     'tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] ' + 'tw:active:bg-[rgb(245_158_11_/_0.2)]',
 };
