@@ -5,6 +5,7 @@ import { showToast } from '../../../utils/toast';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
+import { shareListDeduplicator } from 'utils/requestDeduplication';
 import ShareListForm, { type IShareListFormProps } from './ShareListForm';
 
 const mockShowToast = showToast as Mocked<typeof showToast>;
@@ -81,7 +82,16 @@ function setup(suppliedProps?: Partial<IShareListFormProps>): ISetupReturn {
 
 describe('ShareListForm', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mocks except axios which needs its implementation preserved
+    (axios.get as Mock).mockClear();
+    (axios.post as Mock).mockClear();
+    (axios.put as Mock).mockClear();
+    (axios.delete as Mock).mockClear();
+    mockShowToast.error.mockClear();
+    mockShowToast.info.mockClear();
+    mockShowToast.success.mockClear();
+    mockShowToast.warning.mockClear();
+    shareListDeduplicator.clear();
   });
 
   afterEach(() => {
@@ -139,6 +149,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -147,6 +158,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -179,6 +191,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
@@ -187,6 +200,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
@@ -202,6 +216,7 @@ describe('ShareListForm', () => {
 
     await act(async () => {
       vi.advanceTimersByTime(5000);
+      vi.runOnlyPendingTimers();
     });
 
     expect(axios.get).toHaveBeenCalledTimes(1);

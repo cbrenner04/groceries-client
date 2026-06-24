@@ -14,10 +14,12 @@ import { defaultTestData, createApiResponse, createListItem, createField } from 
 import { listCache } from 'utils/lightweightCache';
 import { clearFieldConfigCache } from 'utils/fieldConfigCache';
 import { unifiedCache } from 'utils/lightweightCache';
+import { listDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
 
 // Create reference for test expectations
 const mockShowToast = showToast as Mocked<typeof showToast>;
+const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL ?? '5000', 10);
 
 // Mock react-router
 const mockLocation = {
@@ -32,6 +34,8 @@ const mockNavigate = vi.fn();
 async function advanceTimersByTime(ms: number): Promise<void> {
   await act(async () => {
     vi.advanceTimersByTime(ms);
+    // Run only the timers that are now pending (not all timers)
+    vi.runOnlyPendingTimers();
   });
 }
 
@@ -129,12 +133,25 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
 
 describe('ListContainer', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-
     // Clear cache to ensure test isolation
     listCache.clear();
     unifiedCache.clear(); // Clear unified cache
     clearFieldConfigCache();
+    listDeduplicator.clear();
+
+    // Restore default mock implementations from setupTests
+    (axios.get as Mock).mockImplementation(async (url: string) => {
+      if (url.startsWith('/lists/')) {
+        return Promise.resolve({ data: createApiResponse() });
+      }
+      if (url.includes('list_item_field_configurations')) {
+        return Promise.resolve({ data: [] });
+      }
+      return Promise.resolve({ data: {} });
+    });
+    (axios.post as Mock).mockResolvedValue({ data: {} });
+    (axios.put as Mock).mockResolvedValue({ data: {} });
+    (axios.delete as Mock).mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -155,7 +172,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -163,7 +180,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -195,7 +212,7 @@ describe('ListContainer', () => {
 
       const { findByText } = setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -203,7 +220,7 @@ describe('ListContainer', () => {
         'non-completed-item',
       );
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
 
       expect((await findByText('item new')).closest('[data-test-class]')).toHaveAttribute(
@@ -220,7 +237,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -239,7 +256,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -257,7 +274,7 @@ describe('ListContainer', () => {
 
       setup({ permissions: EUserPermissions.WRITE });
 
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       // Verify the error.response branch is taken (line 123)
@@ -287,7 +304,7 @@ describe('ListContainer', () => {
       vi.clearAllMocks();
 
       // Advance time - polling should not fire when tab is hidden
-      await advanceTimersByTime(5000);
+      await advanceTimersByTime(POLLING_INTERVAL);
 
       // Polling should be skipped when tab is hidden (line 75)
       expect(axios.get).not.toHaveBeenCalled();
@@ -1218,7 +1235,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1250,7 +1268,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1284,7 +1303,8 @@ describe('ListContainer', () => {
       const checkboxes = await findAllByRole('checkbox');
       await user.click(checkboxes[1]);
       await user.click(checkboxes[2]);
-      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar delete instead
+      await user.click(await findByTestId('delete-selected'));
 
       expect(await findByTestId('confirm-delete')).toBeVisible();
       await user.click(await findByTestId('confirm-delete'));
@@ -1391,7 +1411,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1416,7 +1437,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1444,7 +1466,8 @@ describe('ListContainer', () => {
       const checkboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(checkboxes[0]);
       await user.click(checkboxes[1]);
-      await user.click(await findByTestId('not-completed-item-complete-id2'));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar complete button instead
+      await user.click(await findByTestId('complete-selected'));
 
       await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(2));
 
@@ -1750,7 +1773,7 @@ describe('ListContainer', () => {
     });
 
     it('opens bulk edit sheet when clicking edit with multi select', async () => {
-      const { findAllByRole, findByTestId, findAllByText, findByText, props, user } = setup({
+      const { findAllByRole, findByTestId, findAllByText, findByText, user } = setup({
         permissions: EUserPermissions.WRITE,
       });
 
@@ -1762,7 +1785,8 @@ describe('ListContainer', () => {
       const multiSelectCheckboxes = (await findAllByRole('checkbox')).filter((cb) => cb.id !== 'completed');
       await user.click(multiSelectCheckboxes[0]);
       await user.click(multiSelectCheckboxes[1]);
-      await user.click(await findByTestId(`not-completed-item-edit-${props.notCompletedItems[0].id}`));
+      // During multiselect, inline buttons are hidden; click MultiSelectBar bulk-edit button instead
+      await user.click(await findByTestId('bulk-edit'));
 
       // Should open bulk edit sheet (BottomSheet) instead of navigating
       // The sheet should be rendered with the selected items

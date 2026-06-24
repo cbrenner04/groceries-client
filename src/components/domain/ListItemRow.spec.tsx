@@ -227,6 +227,36 @@ describe('ListItemRow', () => {
       const { container } = setup({ item, fields: item.fields, isMultiSelectActive: true });
       expect(container.querySelector('[data-test-id="completed-item-select-item1"]')).toBeInTheDocument();
     });
+
+    it('hides inline action buttons when multi-select is active', () => {
+      const { container } = setup({ isMultiSelectActive: true });
+      expect(container.querySelector('[data-test-id="not-completed-item-complete-item1"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="not-completed-item-edit-item1"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="not-completed-item-delete-item1"]')).not.toBeInTheDocument();
+    });
+
+    it('shows inline action buttons when multi-select is inactive', () => {
+      const { container } = setup({ isMultiSelectActive: false });
+      expect(container.querySelector('[data-test-id="not-completed-item-complete-item1"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="not-completed-item-edit-item1"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="not-completed-item-delete-item1"]')).toBeInTheDocument();
+    });
+
+    it('hides inline action buttons for completed items when multi-select is active', () => {
+      const item = createListItem('item1', true, [createField('f1', 'product', 'Done', 'item1', { primary: true })]);
+      const { container } = setup({ item, fields: item.fields, isMultiSelectActive: true });
+      expect(container.querySelector('[data-test-id="completed-item-refresh-item1"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="completed-item-edit-item1"]')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="completed-item-delete-item1"]')).not.toBeInTheDocument();
+    });
+
+    it('shows inline action buttons for completed items when multi-select is inactive', () => {
+      const item = createListItem('item1', true, [createField('f1', 'product', 'Done', 'item1', { primary: true })]);
+      const { container } = setup({ item, fields: item.fields, isMultiSelectActive: false });
+      expect(container.querySelector('[data-test-id="completed-item-refresh-item1"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="completed-item-edit-item1"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-test-id="completed-item-delete-item1"]')).toBeInTheDocument();
+    });
   });
 
   describe('fallback primary field edge cases', () => {

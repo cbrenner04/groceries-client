@@ -6,7 +6,7 @@ export interface IMultiSelectAction {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
-  variant?: 'default' | 'success' | 'danger' | 'primary';
+  variant?: 'default' | 'success' | 'danger' | 'primary' | 'warning';
   testId: string;
 }
 

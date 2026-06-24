@@ -20,10 +20,10 @@ export interface IListCardProps {
   onAccept: (listId: string) => void;
   onReject: (listId: string) => void;
   onClick: (listId: string) => void;
+  templateName?: string;
 }
 
 function isPending(list: IList): boolean {
-  // A list is pending if has_accepted is null/undefined (not yet accepted or rejected)
   return list.has_accepted === null || list.has_accepted === undefined;
 }
 
@@ -50,6 +50,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
     onAccept,
     onReject,
     onClick,
+    templateName,
   } = props;
 
   const listId = list.id ?? '';
@@ -194,6 +195,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
   };
 
   const pendingBorderStyle = pending ? ' tw:border-l-4 tw:border-l-[var(--color-warning)]' : '';
+  const showMultiSelectControls = isMultiSelectActive && !pending;
 
   return (
     <Card
@@ -208,9 +210,10 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       role="button"
       tabIndex={0}
     >
-      {isMultiSelectActive && (
+      {showMultiSelectControls && (
         <input
           type="checkbox"
+          data-test-id={`list-select-${listId}`}
           className="tw:w-5 tw:h-5 tw:cursor-pointer tw:flex-shrink-0"
           checked={isSelected}
           onChange={(): void => onSelect(listId)}
@@ -226,7 +229,17 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
           </span>
         </div>
       </div>
-      <div className="tw:flex-shrink-0">{renderActionButtons()}</div>
+      {isMultiSelectActive && templateName && (
+        <div className="tw:flex tw:justify-center tw:text-center tw:min-w-0">
+          <span
+            data-test-id="list-template-type"
+            className="tw:text-sm tw:italic tw:text-[var(--color-text-tertiary)] tw:truncate"
+          >
+            {templateName}
+          </span>
+        </div>
+      )}
+      {!showMultiSelectControls && <div className="tw:flex-shrink-0">{renderActionButtons()}</div>}
     </Card>
   );
 }
