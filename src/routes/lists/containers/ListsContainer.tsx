@@ -81,6 +81,10 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   );
 
   useEffect(() => {
+    setStatusFilter(props.initialFilter ?? 'all');
+  }, [props.initialFilter]);
+
+  useEffect(() => {
     if (props.initialEditListId) {
       void openEditSheet(props.initialEditListId);
     }
