@@ -31,7 +31,7 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
     'tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 ' +
     'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
     'tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] ' +
-    'tw:top-[calc(2.5rem+max(0.5rem,env(safe-area-inset-top)))]';
+    'tw:top-[calc(2rem+max(0.5rem,env(safe-area-inset-top)))]';
 
   const backButtonClassName =
     'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
