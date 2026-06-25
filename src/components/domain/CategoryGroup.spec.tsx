@@ -98,4 +98,58 @@ describe('CategoryGroup', () => {
     expect(await findByText('Item A')).toBeVisible();
     expect(await findByText('Item B')).toBeVisible();
   });
+
+  describe('class assertions', () => {
+    it('label has italic class when uncategorized', async () => {
+      const { findByText } = setup({ category: '' });
+      const label = await findByText('Other');
+      expect(label).toHaveClass('tw:italic');
+    });
+
+    it('label does not have italic class when categorized', async () => {
+      const { findByText } = setup({ category: 'Produce' });
+      const label = await findByText('Produce');
+      expect(label).not.toHaveClass('tw:italic');
+    });
+
+    it('chevron does not have rotate class when expanded', async () => {
+      const { container } = setup({ defaultExpanded: true });
+      const chevron = container.querySelector('[aria-hidden="true"]');
+      expect(chevron).not.toHaveClass('tw:-rotate-90');
+    });
+
+    it('chevron has rotate class when collapsed', async () => {
+      const { container, findByText, user } = setup({ defaultExpanded: true });
+      await user.click(await findByText('Produce'));
+      const chevron = container.querySelector('[aria-hidden="true"]');
+      expect(chevron).toHaveClass('tw:-rotate-90');
+    });
+
+    it('header button has expected classes', async () => {
+      const { container } = setup();
+      const headerButton = container.querySelector('[data-test-class="category-header"]');
+      expect(headerButton).toHaveClass(
+        'tw:flex',
+        'tw:items-center',
+        'tw:gap-2',
+        'tw:w-full',
+        'tw:mb-2',
+        'tw:group',
+        'tw:cursor-pointer',
+      );
+    });
+
+    it('divider has expected classes', async () => {
+      const { container } = setup();
+      const divider = container.querySelector('.tw\\:flex-1');
+      expect(divider).toHaveClass('tw:flex-1', 'tw:h-px', 'tw:bg-[var(--color-border)]');
+    });
+
+    it('children container has expected classes when expanded', async () => {
+      const { container } = setup();
+      const headerButton = container.querySelector('[data-test-class="category-header"]');
+      const childrenContainer = headerButton?.parentElement?.querySelector('.tw\\:flex.tw\\:flex-col');
+      expect(childrenContainer).toHaveClass('tw:flex', 'tw:flex-col', 'tw:gap-2');
+    });
+  });
 });
