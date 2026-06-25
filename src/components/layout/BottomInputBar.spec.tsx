@@ -210,12 +210,11 @@ describe('BottomInputBar', () => {
   });
 
   it('focus is moved to input after expanded form submit button click', async () => {
-    const onFormSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
     const { findByTestId, user } = setup({
       submitFormId: 'assoc-form',
       initialExpanded: true,
       expandedContent: (
-        <form id="assoc-form" onSubmit={onFormSubmit}>
+        <form id="assoc-form" onSubmit={(e) => e.preventDefault()}>
           <input aria-label="field" />
         </form>
       ),
@@ -223,10 +222,8 @@ describe('BottomInputBar', () => {
     const input = (await findByTestId('quick-add-input')) as HTMLInputElement;
     const submitButton = await findByTestId('quick-add-submit');
 
-    // Click the submit button
     await user.click(submitButton);
 
-    // Verify that focus moved to the input, not staying on the submit button
     expect(document.activeElement).toBe(input);
   });
 
