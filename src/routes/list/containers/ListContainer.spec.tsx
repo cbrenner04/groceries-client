@@ -2212,12 +2212,21 @@ describe('ListContainer', () => {
 
     it('quick-adds by name via Enter when the expanded form is not rendered', async () => {
       const newItem = createListItem('qa-id', false, []);
+      const completeItem = createListItem('qa-id', false, [
+        createField('f1', 'product', 'new product', 'qa-id', { primary: true }),
+      ]);
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      // handleQuickAdd fetches its own field configs to find the primary field.
-      axios.get = vi.fn().mockResolvedValue({ data: [{ id: 'fc1', label: 'product', primary: true }] });
+      // handleQuickAdd fetches field configs to find the primary field, then re-fetches the complete item.
+      axios.get = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          url.includes('list_item_field_configurations')
+            ? Promise.resolve({ data: [{ id: 'fc1', label: 'product', primary: true }] })
+            : Promise.resolve({ data: completeItem }),
+        );
 
       // Empty preloaded configs => the expanded form never renders, so Enter on the bar runs quick-add.
-      const { findByTestId, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: [] });
 
       await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
 
@@ -2228,6 +2237,10 @@ describe('ListContainer', () => {
       expect(axios.post).toHaveBeenNthCalledWith(2, `/list_items/${newItem.id}/list_item_fields`, {
         list_item_field: { data: 'new product' },
       });
+
+      // After the re-fetch the item should render its real name — not "Untitled Item".
+      await expect(findByText('new product')).resolves.toBeInTheDocument();
+      expect(axios.get).toHaveBeenCalledWith(`/lists/${defaultTestData.list.id}/list_items/${newItem.id}`);
     });
 
     it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
