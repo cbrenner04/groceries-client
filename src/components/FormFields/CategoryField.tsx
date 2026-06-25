@@ -121,7 +121,8 @@ const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element 
         {isOpen && !props.disabled && filteredCategories.length > 0 && (
           <ul
             id={`categories-${instanceId.current}`}
-            className={`tw:absolute tw:left-0 tw:right-0 tw:top-full tw:mt-1 tw:bg-white
+            className={`tw:absolute tw:left-0 tw:right-0 tw:top-full tw:mt-1
+              tw:bg-[var(--color-surface-raised)] tw:text-[var(--color-text-primary)]
               tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)]
               tw:shadow-lg tw:max-h-60 tw:overflow-y-auto tw:z-10`}
             role="listbox"
@@ -133,7 +134,9 @@ const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element 
                 role="option"
                 aria-selected={index === highlightedIndex}
                 className={`tw:px-4 tw:py-2 tw:cursor-pointer tw:transition-colors ${
-                  index === highlightedIndex ? 'tw:bg-[var(--color-primary)]/10' : 'hover:tw:bg-gray-100'
+                  index === highlightedIndex
+                    ? 'tw:bg-[var(--color-primary)]/10'
+                    : 'hover:tw:bg-[var(--color-primary)]/10'
                 }`}
                 onClick={() => selectSuggestion(category)}
                 onMouseEnter={() => setHighlightedIndex(index)}
