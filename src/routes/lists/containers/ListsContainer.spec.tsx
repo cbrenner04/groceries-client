@@ -240,6 +240,27 @@ describe('ListsContainer', () => {
     expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
+  it('hides filter chips when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('filter-all')).toBeNull();
+    expect(queryByTestId('filter-pending')).toBeNull();
+    expect(queryByTestId('filter-active')).toBeNull();
+    expect(queryByTestId('filter-completed')).toBeNull();
+  });
+
+  it('hides new-list input bar when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('quick-add-input')).toBeNull();
+  });
+
+  it('hides view all completed lists button when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
   // ─── Empty States ──────────────────────────────────────────────────────────────
 
   it('shows empty state when pending filter has no lists', async () => {
