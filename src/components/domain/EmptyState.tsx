@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Button } from '../ui/Button';
+import { twContainer, twIconWrapper, twTitle, twDescription } from './EmptyState.variants';
 
 export interface IEmptyStateProps {
   icon?: React.ReactNode;
@@ -17,17 +18,10 @@ export function EmptyState(props: IEmptyStateProps): React.JSX.Element {
   const { icon, title, description, action, testId } = props;
 
   return (
-    <div
-      className="tw:flex tw:flex-col tw:items-center tw:justify-center tw:py-16 tw:px-4 tw:text-center"
-      data-test-id={testId}
-    >
-      {icon && (
-        <div className="tw:text-[var(--color-text-tertiary)] tw:mb-4 tw:[&>svg]:tw:w-16 tw:[&>svg]:tw:h-16">{icon}</div>
-      )}
-      <h2 className="tw:text-lg tw:font-medium tw:text-[var(--color-text-primary)] tw:mb-1">{title}</h2>
-      {description && (
-        <p className="tw:text-sm tw:text-[var(--color-text-secondary)] tw:mb-4 tw:max-w-xs">{description}</p>
-      )}
+    <div className={twContainer} data-test-id={testId}>
+      {icon && <div className={twIconWrapper}>{icon}</div>}
+      <h2 className={twTitle}>{title}</h2>
+      {description && <p className={twDescription}>{description}</p>}
       {action && (
         <Button variant="primary" size="md" onClick={action.onClick}>
           {action.label}
