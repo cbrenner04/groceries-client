@@ -209,6 +209,24 @@ describe('BottomInputBar', () => {
     expect(await findByTestId('quick-add-input')).toBeInTheDocument();
   });
 
+  it('focus is moved to input after expanded form submit button click', async () => {
+    const { findByTestId, user } = setup({
+      submitFormId: 'assoc-form',
+      initialExpanded: true,
+      expandedContent: (
+        <form id="assoc-form" onSubmit={(e) => e.preventDefault()}>
+          <input aria-label="field" />
+        </form>
+      ),
+    });
+    const input = (await findByTestId('quick-add-input')) as HTMLInputElement;
+    const submitButton = await findByTestId('quick-add-submit');
+
+    await user.click(submitButton);
+
+    expect(document.activeElement).toBe(input);
+  });
+
   describe('controlled value', () => {
     it('renders the controlled value and reports changes via onValueChange', async () => {
       const onValueChange = vi.fn();
