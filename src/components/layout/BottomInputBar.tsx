@@ -249,6 +249,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
                   type="button"
                   onClick={(): void => {
                     (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
+                    inputRef.current?.focus();
                   }}
                   className={footerSubmitClassName}
                   data-test-id="quick-add-submit"
