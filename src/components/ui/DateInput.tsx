@@ -1,5 +1,6 @@
 import React from 'react';
-import FieldShell, { fieldControlStyles } from './FieldShell';
+import FieldShell from './FieldShell';
+import { dateInputControlStyles } from './DateInput.variants';
 
 interface IDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -16,7 +17,7 @@ const DateInput: React.FC<IDateInputProps> = (props): React.JSX.Element => {
       <input
         id={inputId}
         type="date"
-        className={`${fieldControlStyles} ${className || ''}`.trim()}
+        className={`${dateInputControlStyles} ${className || ''}`.trim()}
         data-test-id={testId}
         {...inputProps}
       />
