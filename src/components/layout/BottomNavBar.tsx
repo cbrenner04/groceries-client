@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { navClassName, itemVariants } from './BottomNavBar.variants';
+
 export interface IBottomNavBarProps {
   currentPath: string;
 }
@@ -135,33 +137,13 @@ export function BottomNavBar(props: IBottomNavBarProps): React.JSX.Element {
     { icon: <SettingsIcon />, label: 'Settings', route: '/settings', testId: 'nav-settings' },
   ];
 
-  const navClassName =
-    'tw:fixed tw:bottom-0 tw:left-0 tw:right-0 tw:z-[var(--z-nav)] ' +
-    'tw:h-[var(--spacing-nav-height)] tw:bg-[var(--color-surface-raised)] ' +
-    'tw:border-t tw:border-[var(--color-border)] ' +
-    'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] ' +
-    'tw:pb-[env(safe-area-inset-bottom)] ' +
-    'tw:flex tw:items-center tw:justify-around';
-
-  const getItemClassName = (route: string): string => {
-    const active = isActive(currentPath, route);
-    const color = active ? 'tw:text-[var(--color-primary)]' : 'tw:text-[var(--color-text-secondary)]';
-    return (
-      'tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-1 ' +
-      'tw:min-w-[44px] tw:min-h-[44px] tw:px-3 tw:py-1 ' +
-      'tw:no-underline tw:transition-colors tw:duration-200 ' +
-      'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] ' +
-      color
-    );
-  };
-
   return (
     <nav className={navClassName} data-test-id="bottom-nav" aria-label="Main navigation" role="navigation">
       {navItems.map((item) => (
         <Link
           key={item.route}
           to={item.route}
-          className={getItemClassName(item.route)}
+          className={itemVariants({ active: isActive(currentPath, item.route) })}
           data-test-id={item.testId}
           aria-current={isActive(currentPath, item.route) ? 'page' : undefined}
         >
