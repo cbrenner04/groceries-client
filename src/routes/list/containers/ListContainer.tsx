@@ -718,9 +718,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         await axios.post(`/list_items/${newItem.id}/list_item_fields`, fieldPayload);
       }
 
-      const itemWithFields = { ...newItem, list_item_fields: [{ label: primaryFieldConfig?.label, data: value }] };
+      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
 
-      handleAddItem([itemWithFields]);
+      handleAddItem([completeItem]);
       setQuickAddPrimary('');
       setInputBarExpanded(true);
       setPending(false);
