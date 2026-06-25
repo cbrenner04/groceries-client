@@ -2470,6 +2470,30 @@ describe('ListContainer', () => {
       await expect(findByText('test product')).resolves.toBeVisible();
     });
 
+    it('anti-regression: without canonical fields from GET, quick-add row does not display typed value', async () => {
+      const newItem = createListItem('new-id', false, []);
+
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          url.includes('list_item_field_configurations')
+            ? Promise.resolve({ data: [{ id: 'fc1', label: 'product', primary: true }] })
+            : Promise.reject(new Error('Failed to fetch item')),
+        );
+
+      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: [] });
+
+      await user.type(await findByTestId('quick-add-input'), 'test product{Enter}');
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      // Without canonical fields from the GET, the row should not display 'test product'
+      // proving the title comes from the refetch, not from an optimistically-constructed shape
+      await waitFor(() => {
+        expect(queryByText('test product')).not.toBeInTheDocument();
+      });
+    });
+
     it('form-submitted row shows primary value and secondary fields on first render', async () => {
       const itemWithFields = createListItem('new-id', false, [
         createField('f1', 'product', 'test product', 'new-id', { primary: true }),
