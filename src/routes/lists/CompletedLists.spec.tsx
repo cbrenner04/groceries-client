@@ -16,6 +16,44 @@ vi.mock('utils/listPrefetch', () => ({
 import CompletedLists from './CompletedLists';
 import Lists from './Lists';
 
+const createMockListsData = () => ({
+  data: {
+    current_user_id: 'id1',
+    accepted_lists: {
+      completed_lists: [
+        {
+          id: 'id1',
+          users_list_id: 'id1',
+          name: 'foo',
+          user_id: 'id1',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: true,
+          refreshed: false,
+          owner_id: 'id1',
+          has_accepted: true,
+        },
+      ],
+      not_completed_lists: [
+        {
+          id: 'id2',
+          users_list_id: 'id2',
+          name: 'bar',
+          user_id: 'id1',
+          list_item_configuration_id: 'config-1',
+          created_at: new Date('05/31/2020').toISOString(),
+          completed: false,
+          refreshed: false,
+          owner_id: 'id1',
+        },
+      ],
+    },
+    pending_lists: [],
+    current_list_permissions: { id1: 'write', id2: 'write' },
+    list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
+  },
+});
+
 const setup = (): RenderResult =>
   render(
     <MemoryRouter>
@@ -46,43 +84,7 @@ describe('CompletedLists', () => {
   });
 
   it('renders completed lists in the reduced view', async () => {
-    axios.get = vi.fn().mockResolvedValue({
-      data: {
-        current_user_id: 'id1',
-        accepted_lists: {
-          completed_lists: [
-            {
-              id: 'id1',
-              users_list_id: 'id1',
-              name: 'foo',
-              user_id: 'id1',
-              list_item_configuration_id: 'config-1',
-              created_at: new Date('05/31/2020').toISOString(),
-              completed: true,
-              refreshed: false,
-              owner_id: 'id1',
-              has_accepted: true,
-            },
-          ],
-          not_completed_lists: [
-            {
-              id: 'id2',
-              users_list_id: 'id2',
-              name: 'bar',
-              user_id: 'id1',
-              list_item_configuration_id: 'config-1',
-              created_at: new Date('05/31/2020').toISOString(),
-              completed: false,
-              refreshed: false,
-              owner_id: 'id1',
-            },
-          ],
-        },
-        pending_lists: [],
-        current_list_permissions: { id1: 'write', id2: 'write' },
-        list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
-      },
-    });
+    axios.get = vi.fn().mockResolvedValue(createMockListsData());
     const { findByTestId, queryByTestId } = setup();
 
     await act(async () => {
@@ -103,43 +105,7 @@ describe('CompletedLists', () => {
   });
 
   it('renders completed view with keyed PageTransition on /completed_lists route', async () => {
-    axios.get = vi.fn().mockResolvedValue({
-      data: {
-        current_user_id: 'id1',
-        accepted_lists: {
-          completed_lists: [
-            {
-              id: 'id1',
-              users_list_id: 'id1',
-              name: 'foo',
-              user_id: 'id1',
-              list_item_configuration_id: 'config-1',
-              created_at: new Date('05/31/2020').toISOString(),
-              completed: true,
-              refreshed: false,
-              owner_id: 'id1',
-              has_accepted: true,
-            },
-          ],
-          not_completed_lists: [
-            {
-              id: 'id2',
-              users_list_id: 'id2',
-              name: 'bar',
-              user_id: 'id1',
-              list_item_configuration_id: 'config-1',
-              created_at: new Date('05/31/2020').toISOString(),
-              completed: false,
-              refreshed: false,
-              owner_id: 'id1',
-            },
-          ],
-        },
-        pending_lists: [],
-        current_list_permissions: { id1: 'write', id2: 'write' },
-        list_item_configurations: [{ id: 'config-1', name: 'grocery list template' }],
-      },
-    });
+    axios.get = vi.fn().mockResolvedValue(createMockListsData());
 
     const { queryByTestId, findByTestId } = render(
       <MemoryRouter initialEntries={['/completed_lists']}>
