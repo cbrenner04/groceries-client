@@ -15,6 +15,7 @@ import {
   type IListItemFieldConfiguration,
   type IListUser,
   type IListItem,
+  type IListItemField,
 } from 'typings';
 import { usePolling } from 'hooks';
 import { useMobileSafariOptimizations } from 'hooks/useMobileSafariOptimizations';
@@ -71,6 +72,32 @@ export interface IListContainerProps {
   initialEditingItemId?: string | null;
   initialBulkEditOpen?: boolean;
   initialShareSheetOpen?: boolean;
+}
+
+interface IFieldEntry {
+  config: { id: string; label: string; primary?: boolean; data_type: EListItemFieldType; position?: number };
+  data: string;
+}
+
+// The server's immediate single-item GET right after creating fields can return an item whose
+// `fields` are not yet populated, which makes the row render as "Untitled Item" until a full list
+// reload. When that happens we fall back to the data the user just submitted so the new row shows
+// real data on first render (same defensive pattern as handleItemRefresh).
+function buildOptimisticFields(entries: IFieldEntry[], item: IListItem): IListItemField[] {
+  return entries.map((entry, index) => ({
+    id: `optimistic-${item.id}-${entry.config.id}`,
+    list_item_field_configuration_id: entry.config.id,
+    data: entry.data,
+    archived_at: null,
+    user_id: item.user_id,
+    list_item_id: item.id,
+    created_at: item.created_at,
+    updated_at: null,
+    label: entry.config.label,
+    position: index,
+    data_type: entry.config.data_type,
+    primary: entry.config.primary === true,
+  }));
 }
 
 const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element => {
@@ -678,7 +705,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       }
 
       const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
-      handleAddItem([completeItem]);
+      const submittedEntries: IFieldEntry[] = configs
+        .map((config) => ({ config, data: config.primary ? primaryName : resolvedFieldData(config) }))
+        .filter((entry) => entry.data !== '');
+      const finalItem: IListItem =
+        Array.isArray(completeItem.fields) && completeItem.fields.length > 0
+          ? completeItem
+          : { ...completeItem, fields: buildOptimisticFields(submittedEntries, newItem) };
+      handleAddItem([finalItem]);
       setQuickAddFormData({});
       setQuickAddPrimary('');
       setQuickAddCategory('');
@@ -714,13 +748,27 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       const primaryFieldConfig = fieldConfigurations.find((config: { primary: boolean }) => config.primary === true);
 
       if (primaryFieldConfig) {
-        const fieldPayload = { list_item_field: { data: value } };
-        await axios.post(`/list_items/${newItem.id}/list_item_fields`, fieldPayload);
+        await axios.post(`/lists/${props.list.id}/list_items/${newItem.id}/list_item_fields`, {
+          list_item_field: {
+            list_item_field_configuration_id: primaryFieldConfig.id,
+            data: value,
+          },
+        });
       }
 
-      const itemWithFields = { ...newItem, list_item_fields: [{ label: primaryFieldConfig?.label, data: value }] };
+      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
 
-      handleAddItem([itemWithFields]);
+      const finalItem: IListItem =
+        Array.isArray(completeItem.fields) && completeItem.fields.length > 0
+          ? completeItem
+          : {
+              ...completeItem,
+              fields: primaryFieldConfig
+                ? buildOptimisticFields([{ config: primaryFieldConfig, data: value }], newItem)
+                : [],
+            };
+
+      handleAddItem([finalItem]);
       setQuickAddPrimary('');
       setInputBarExpanded(true);
       setPending(false);

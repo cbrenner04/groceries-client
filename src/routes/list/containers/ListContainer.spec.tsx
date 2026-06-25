@@ -2212,9 +2212,18 @@ describe('ListContainer', () => {
 
     it('quick-adds by name via Enter when the expanded form is not rendered', async () => {
       const newItem = createListItem('qa-id', false, []);
-      axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      // handleQuickAdd fetches its own field configs to find the primary field.
-      axios.get = vi.fn().mockResolvedValue({ data: [{ id: 'fc1', label: 'product', primary: true }] });
+      const itemWithField = createListItem('qa-id', false, [
+        createField('f1', 'product', 'new product', 'qa-id', { primary: true }),
+      ]);
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      // handleQuickAdd fetches field configs to find the primary field, then fetches the item after posting
+      axios.get = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          url.includes('list_item_field_configurations')
+            ? Promise.resolve({ data: [{ id: 'fc1', label: 'product', primary: true }] })
+            : Promise.resolve({ data: itemWithField }),
+        );
 
       // Empty preloaded configs => the expanded form never renders, so Enter on the bar runs quick-add.
       const { findByTestId, user } = setup({ listItemFieldConfigurations: [] });
@@ -2225,9 +2234,11 @@ describe('ListContainer', () => {
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
         list_item: { user_id: defaultTestData.userId, completed: false },
       });
-      expect(axios.post).toHaveBeenNthCalledWith(2, `/list_items/${newItem.id}/list_item_fields`, {
-        list_item_field: { data: 'new product' },
-      });
+      expect(axios.post).toHaveBeenNthCalledWith(
+        2,
+        `/lists/${defaultTestData.list.id}/list_items/qa-id/list_item_fields`,
+        { list_item_field: { list_item_field_configuration_id: 'fc1', data: 'new product' } },
+      );
     });
 
     it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
@@ -2262,6 +2273,57 @@ describe('ListContainer', () => {
         `/lists/${defaultTestData.list.id}/list_items/${newItem.id}/list_item_fields`,
         { list_item_field: { list_item_field_configuration_id: 'fc1', data: 'new product' } },
       );
+    });
+
+    it('renders the submitted data on first render even when the server item GET returns empty fields', async () => {
+      // Regression: the server's immediate single-item GET can return an item whose fields are not
+      // yet populated, which previously rendered the new row as "Untitled Item" until a full reload.
+      const newItem = createListItem('new-item-id', false, []);
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+              ],
+            })
+          : // Item GET comes back with no usable fields (the race this fix defends against).
+            Promise.resolve({ data: { ...newItem, fields: [] } }),
+      );
+
+      const { findByTestId, findByText, queryByText, user } = setup();
+
+      await user.type(await findByTestId('quick-add-input'), 'new product');
+      await user.click(await findByText('Add item'));
+
+      // The new row shows the entered data immediately, not "Untitled Item".
+      expect(await findByText('new product')).toBeVisible();
+      expect(queryByText('Untitled Item')).toBeNull();
+    });
+
+    it('uses the server item fields when the post-add GET returns them populated', async () => {
+      const newItem = createListItem('srv-id', false, []);
+      const serverItem = createListItem('srv-id', false, [
+        createField('sf1', 'product', 'server name', 'srv-id', { primary: true }),
+      ]);
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi.fn().mockImplementation((url: string) =>
+        url.includes('list_item_field_configurations')
+          ? Promise.resolve({
+              data: [
+                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+              ],
+            })
+          : // Server returns the fully-populated item; the fallback should NOT override it.
+            Promise.resolve({ data: serverItem }),
+      );
+
+      const { findByTestId, findByText, user } = setup();
+
+      await user.type(await findByTestId('quick-add-input'), 'typed name');
+      await user.click(await findByText('Add item'));
+
+      expect(await findByText('server name')).toBeVisible();
     });
 
     it('adds item without field post when no primary field config exists', async () => {
@@ -2436,6 +2498,80 @@ describe('ListContainer', () => {
         expect(axios.post).toHaveBeenCalledWith('/lists/id1/categories', { category: { name: 'Existing' } });
       });
       expect(mockShowToast.error).not.toHaveBeenCalled();
+    });
+
+    it('quick-add row renders entered value as title immediately after add', async () => {
+      const newItem = createListItem('new-id', false, []);
+      const itemWithField = createListItem('new-id', false, [
+        createField('f1', 'product', 'test product', 'new-id', { primary: true }),
+      ]);
+
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          url.includes('list_item_field_configurations')
+            ? Promise.resolve({ data: [{ id: 'fc1', label: 'product', primary: true }] })
+            : Promise.resolve({ data: itemWithField }),
+        );
+
+      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: [] });
+
+      await user.type(await findByTestId('quick-add-input'), 'test product{Enter}');
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      await expect(findByText('test product')).resolves.toBeVisible();
+    });
+
+    it('anti-regression: without canonical fields from GET, quick-add row does not display typed value', async () => {
+      const newItem = createListItem('new-id', false, []);
+
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          url.includes('list_item_field_configurations')
+            ? Promise.resolve({ data: [{ id: 'fc1', label: 'product', primary: true }] })
+            : Promise.reject(new Error('Failed to fetch item')),
+        );
+
+      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: [] });
+
+      await user.type(await findByTestId('quick-add-input'), 'test product{Enter}');
+
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
+      // Without canonical fields from the GET, the row should not display 'test product'
+      // proving the title comes from the refetch, not from an optimistically-constructed shape
+      await waitFor(() => {
+        expect(queryByText('test product')).not.toBeInTheDocument();
+      });
+    });
+
+    it('form-submitted row shows primary value and secondary fields on first render', async () => {
+      const itemWithFields = createListItem('new-id', false, [
+        createField('f1', 'product', 'test product', 'new-id', { primary: true }),
+        createField('f2', 'quantity', '5 items', 'new-id'),
+      ]);
+
+      const newItem = createListItem('new-id', false, []);
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
+      axios.get = vi.fn().mockResolvedValue({ data: itemWithFields });
+
+      const { findByTestId, findByText, getByLabelText, user } = setup({
+        listItemFieldConfigurations: [
+          { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+          { id: 'fc2', label: 'quantity', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
+        ],
+      });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const quantityInput = getByLabelText('Quantity') as HTMLInputElement;
+      await user.type(quantityInput, '5 items');
+      await user.type(await findByTestId('quick-add-input'), 'test product');
+      await user.click(await findByText('Add item'));
+
+      await expect(findByText('test product')).resolves.toBeVisible();
+      await expect(findByText('5 items')).resolves.toBeVisible();
     });
 
     it('adds item while filter, stays filtered', async () => {
