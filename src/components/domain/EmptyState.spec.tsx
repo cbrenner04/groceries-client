@@ -86,7 +86,7 @@ describe('EmptyState', () => {
       'tw:justify-center',
       'tw:py-16',
       'tw:px-4',
-      'tw:text-center'
+      'tw:text-center',
     );
   });
 
@@ -98,7 +98,7 @@ describe('EmptyState', () => {
       'tw:text-[var(--color-text-tertiary)]',
       'tw:mb-4',
       'tw:[&>svg]:tw:w-16',
-      'tw:[&>svg]:tw:h-16'
+      'tw:[&>svg]:tw:h-16',
     );
   });
 
@@ -111,11 +111,6 @@ describe('EmptyState', () => {
   it('applies description classes', async () => {
     const { findByText } = setup({ description: 'Add items to get started' });
     const descElement = await findByText('Add items to get started');
-    expect(descElement).toHaveClass(
-      'tw:text-sm',
-      'tw:text-[var(--color-text-secondary)]',
-      'tw:mb-4',
-      'tw:max-w-xs'
-    );
+    expect(descElement).toHaveClass('tw:text-sm', 'tw:text-[var(--color-text-secondary)]', 'tw:mb-4', 'tw:max-w-xs');
   });
 });
