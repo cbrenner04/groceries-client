@@ -3,7 +3,8 @@ import { type VariantProps } from 'class-variance-authority';
 import { buttonVariants, buttonSpinnerStyles } from './Button.variants';
 
 export interface IButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
+  extends
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
     Pick<VariantProps<typeof buttonVariants>, 'variant' | 'size' | 'fullWidth'> {
   loading?: boolean;
   fullWidth?: boolean;
