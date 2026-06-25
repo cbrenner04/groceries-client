@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, type RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import type * as ReactRouter from 'react-router';
 import { showToast } from '../../../utils/toast';
@@ -225,6 +226,44 @@ describe('EditListItemForm', () => {
             list_item_field_configuration_id: 'field-config2',
           },
         });
+      });
+    });
+
+    it('selects category suggestion and submits with selected category', async () => {
+      const user = userEvent.setup();
+      const categories = ['Produce', 'Dairy', 'Meat'];
+      const itemWithoutCategory = createListItem('456', false, [
+        createField('field1', 'quantity', '2', '456', { list_item_field_configuration_id: 'field-config1' }),
+        createField('field2', 'product', 'Apples', '456', { list_item_field_configuration_id: 'field-config2' }),
+      ]);
+
+      renderForm(<EditListItemForm {...defaultProps} item={itemWithoutCategory} categories={categories} />);
+
+      const categoryInput = screen.getByLabelText('Category') as HTMLInputElement;
+      await user.click(categoryInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      const dairyOption = screen.getByText('Dairy');
+      await user.click(dairyOption);
+
+      await waitFor(() => {
+        expect(categoryInput.value).toBe('Dairy');
+      });
+
+      const form = getForm();
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockAxios.put).toHaveBeenCalledWith('/lists/123/list_items/456', {
+          list_item: {
+            category: 'Dairy',
+          },
+        });
+        expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully updated');
+        expect(mockNavigate).toHaveBeenCalledWith('/lists/123');
       });
     });
 
