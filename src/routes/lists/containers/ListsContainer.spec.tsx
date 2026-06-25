@@ -240,6 +240,42 @@ describe('ListsContainer', () => {
     expect(getByTestId('list-id2')).toBeInTheDocument();
   });
 
+  it('hides filter chips when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('filter-all')).toBeNull();
+    expect(queryByTestId('filter-pending')).toBeNull();
+    expect(queryByTestId('filter-active')).toBeNull();
+    expect(queryByTestId('filter-completed')).toBeNull();
+  });
+
+  it('hides new-list input bar when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('quick-add-input')).toBeNull();
+  });
+
+  it('hides view all completed lists button when initialFilter is completed', () => {
+    const { queryByTestId } = setup({ initialFilter: 'completed' });
+
+    expect(queryByTestId('view-all-completed-lists')).toBeNull();
+  });
+
+  it('shows filter chips when initialFilter is not completed', () => {
+    const { getByTestId } = setup({ initialFilter: 'all' });
+
+    expect(getByTestId('filter-all')).toBeInTheDocument();
+    expect(getByTestId('filter-pending')).toBeInTheDocument();
+    expect(getByTestId('filter-active')).toBeInTheDocument();
+    expect(getByTestId('filter-completed')).toBeInTheDocument();
+  });
+
+  it('shows new-list input bar when initialFilter is not completed', () => {
+    const { getByTestId } = setup({ initialFilter: 'all' });
+
+    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+  });
+
   // ─── Empty States ──────────────────────────────────────────────────────────────
 
   it('shows empty state when pending filter has no lists', async () => {
