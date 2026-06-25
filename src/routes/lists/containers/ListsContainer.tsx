@@ -557,7 +557,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
           data-test-id="page-title"
         >
-          Lists
+          {props.initialFilter === 'completed' ? 'Completed' : 'Lists'}
         </h1>
         <div className="tw:flex tw:items-center tw:gap-2">
           <Button
@@ -575,32 +575,34 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         </div>
       </div>
 
-      <FilterChipGroup className="tw:mb-4">
-        <FilterChip
-          label="All"
-          active={statusFilter === 'all'}
-          onClick={(): void => setStatusFilter('all')}
-          testId="filter-all"
-        />
-        <FilterChip
-          label="Pending"
-          active={statusFilter === 'pending'}
-          onClick={(): void => setStatusFilter('pending')}
-          testId="filter-pending"
-        />
-        <FilterChip
-          label="Active"
-          active={statusFilter === 'active'}
-          onClick={(): void => setStatusFilter('active')}
-          testId="filter-active"
-        />
-        <FilterChip
-          label="Completed"
-          active={statusFilter === 'completed'}
-          onClick={(): void => setStatusFilter('completed')}
-          testId="filter-completed"
-        />
-      </FilterChipGroup>
+      {props.initialFilter !== 'completed' && (
+        <FilterChipGroup className="tw:mb-4">
+          <FilterChip
+            label="All"
+            active={statusFilter === 'all'}
+            onClick={(): void => setStatusFilter('all')}
+            testId="filter-all"
+          />
+          <FilterChip
+            label="Pending"
+            active={statusFilter === 'pending'}
+            onClick={(): void => setStatusFilter('pending')}
+            testId="filter-pending"
+          />
+          <FilterChip
+            label="Active"
+            active={statusFilter === 'active'}
+            onClick={(): void => setStatusFilter('active')}
+            testId="filter-active"
+          />
+          <FilterChip
+            label="Completed"
+            active={statusFilter === 'completed'}
+            onClick={(): void => setStatusFilter('completed')}
+            testId="filter-completed"
+          />
+        </FilterChipGroup>
+      )}
 
       {multiSelectActive && selectedCount > 0 && (
         <div className="tw:mb-4">
@@ -638,7 +640,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             {filtered.pending.map(renderListCard)}
             {filtered.active.map(renderListCard)}
             {filtered.completed.map(renderListCard)}
-            {statusFilter === 'completed' && filtered.completed.length > 0 && (
+            {statusFilter === 'completed' && filtered.completed.length > 0 && props.initialFilter !== 'completed' && (
               <button
                 type="button"
                 className="tw:text-sm tw:text-[var(--color-primary)] tw:cursor-pointer tw:mt-2"
@@ -729,7 +731,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         placeholder="Create a new list..."
         onSubmit={handleCreateList}
         submitLabel="Create"
-        hidden={hideBottomInputBar}
+        hidden={hideBottomInputBar || props.initialFilter === 'completed'}
         expandedContent={
           <Select
             label="Template"
