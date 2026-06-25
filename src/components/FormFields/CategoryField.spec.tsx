@@ -147,6 +147,92 @@ describe('CategoryField', () => {
       });
     });
 
+    it('navigates up with ArrowUp key', async () => {
+      const { formInput, user } = await setup();
+
+      await user.click(formInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options[2]).toHaveAttribute('aria-selected', 'true');
+      });
+
+      await user.keyboard('{ArrowUp}');
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options[1]).toHaveAttribute('aria-selected', 'true');
+      });
+    });
+
+    it('does not respond to arrow keys when dropdown is closed', async () => {
+      const { formInput, user } = await setup();
+
+      await user.click(formInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('category-suggestions')).not.toBeInTheDocument();
+      });
+
+      await user.keyboard('{ArrowDown}');
+
+      const suggestions = screen.queryByTestId('category-suggestions');
+      expect(suggestions).not.toBeInTheDocument();
+    });
+
+    it('stops at boundary when navigating down to last item', async () => {
+      const { formInput, user } = await setup();
+
+      await user.click(formInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options[2]).toHaveAttribute('aria-selected', 'true');
+      });
+
+      await user.keyboard('{ArrowDown}');
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options[2]).toHaveAttribute('aria-selected', 'true');
+      });
+    });
+
+    it('wraps around at start when navigating up from -1', async () => {
+      const { formInput, user } = await setup();
+
+      await user.click(formInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      await user.keyboard('{ArrowUp}');
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options[0]).toHaveAttribute('aria-selected', 'false');
+      });
+    });
+
     it('selects suggestion with Enter', async () => {
       const { formInput, props, user } = await setup();
 
@@ -163,6 +249,23 @@ describe('CategoryField', () => {
         expect(props.handleInput).toHaveBeenCalled();
         expect(screen.queryByTestId('category-suggestions')).not.toBeInTheDocument();
       });
+    });
+
+    it('does not select without highlighting when Enter is pressed', async () => {
+      const handleInput = vi.fn();
+      const { formInput, user } = await setup({ handleInput });
+
+      await user.click(formInput);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
+      });
+
+      const callCountBefore = handleInput.mock.calls.length;
+      await user.keyboard('{Enter}');
+
+      expect(handleInput.mock.calls.length).toBe(callCountBefore);
+      expect(screen.getByTestId('category-suggestions')).toBeInTheDocument();
     });
 
     it('closes suggestions with Escape', async () => {
