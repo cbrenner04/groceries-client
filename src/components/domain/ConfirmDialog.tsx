@@ -2,6 +2,7 @@ import React from 'react';
 
 import { BottomSheet } from '../ui/BottomSheet';
 import { Button } from '../ui/Button';
+import { confirmDialogBodyStyles, confirmDialogFooterStyles } from './ConfirmDialog.variants';
 
 export interface IConfirmDialogProps {
   isOpen: boolean;
@@ -30,10 +31,10 @@ export function ConfirmDialog(props: IConfirmDialogProps): React.JSX.Element {
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={title} testId={testId}>
-      <div data-test-id="confirm-modal-body" className="tw:mb-4 tw:text-[var(--color-text-primary)]">
+      <div data-test-id="confirm-modal-body" className={confirmDialogBodyStyles}>
         {body}
       </div>
-      <div className="tw:flex tw:justify-end tw:gap-2">
+      <div className={confirmDialogFooterStyles}>
         <Button variant="ghost" onClick={onClose} data-test-id={`clear-${title}`}>
           {cancelText}
         </Button>
