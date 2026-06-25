@@ -2448,11 +2448,12 @@ describe('ListContainer', () => {
     });
 
     it('quick-add row renders entered value as title immediately after add', async () => {
+      const newItem = createListItem('new-id', false, []);
       const itemWithField = createListItem('new-id', false, [
         createField('f1', 'product', 'test product', 'new-id', { primary: true }),
       ]);
 
-      axios.post = vi.fn().mockResolvedValue({ data: {} });
+      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
       axios.get = vi
         .fn()
         .mockImplementation((url: string) =>
