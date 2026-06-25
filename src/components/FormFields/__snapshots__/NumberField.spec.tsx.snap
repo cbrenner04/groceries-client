@@ -2,7 +2,7 @@
 
 exports[`NumberField > when no value provided > renders input with value of empty string 1`] = `
 <div
-  class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
+  class="tw:relative tw:border tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors tw:border-[var(--color-border)]"
 >
   <label
     class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
@@ -22,7 +22,7 @@ exports[`NumberField > when no value provided > renders input with value of empt
 
 exports[`NumberField > when value provided > renders input with value 1`] = `
 <div
-  class="tw:relative tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors"
+  class="tw:relative tw:border tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors tw:border-[var(--color-border)]"
 >
   <label
     class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
