@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 
 import { Badge } from '../ui/Badge';
+import {
+  headerButtonVariants,
+  labelVariants,
+  dividerVariants,
+  chevronVariants,
+  childrenContainerVariants,
+} from './CategoryGroup.variants';
 
 export interface ICategoryGroupProps {
   category: string;
@@ -24,33 +31,19 @@ export function CategoryGroup(props: ICategoryGroupProps): React.JSX.Element {
     <div className="tw:mb-4">
       <button
         type="button"
-        className="tw:flex tw:items-center tw:gap-2 tw:w-full tw:mb-2 tw:group tw:cursor-pointer"
+        className={headerButtonVariants()}
         data-test-class="category-header"
         onClick={handleToggle}
         aria-expanded={expanded}
       >
-        <span
-          className={
-            'tw:text-sm tw:font-semibold tw:uppercase tw:tracking-wide tw:text-[var(--color-text-secondary)] ' +
-            'tw:whitespace-nowrap' +
-            (isUncategorized ? ' tw:italic' : '')
-          }
-        >
-          {displayName}
-        </span>
+        <span className={labelVariants({ uncategorized: isUncategorized })}>{displayName}</span>
         <Badge>{itemCount}</Badge>
-        <div className="tw:flex-1 tw:h-px tw:bg-[var(--color-border)]" />
-        <span
-          className={
-            'tw:text-[var(--color-text-tertiary)] tw:text-xs tw:transition-transform tw:duration-200' +
-            (expanded ? '' : ' tw:-rotate-90')
-          }
-          aria-hidden
-        >
+        <div className={dividerVariants()} />
+        <span className={chevronVariants({ expanded })} aria-hidden>
           ▼
         </span>
       </button>
-      {expanded && <div className="tw:flex tw:flex-col tw:gap-2">{children}</div>}
+      {expanded && <div className={childrenContainerVariants()}>{children}</div>}
     </div>
   );
 }

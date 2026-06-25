@@ -29,6 +29,13 @@ describe('ConfirmDialog', () => {
     const body = await findByTestId('confirm-modal-body');
     expect(body).toBeVisible();
     expect(body).toHaveTextContent('Are you sure you want to delete this?');
+    expect(body).toHaveClass('tw:mb-4', 'tw:text-[var(--color-text-primary)]');
+  });
+
+  it('renders footer with correct layout classes', async () => {
+    const { container } = setup();
+    const footer = container.querySelector('.tw\\:flex.tw\\:justify-end.tw\\:gap-2');
+    expect(footer).toHaveClass('tw:flex', 'tw:justify-end', 'tw:gap-2');
   });
 
   it('renders confirm button with confirm-{action} test id', async () => {
