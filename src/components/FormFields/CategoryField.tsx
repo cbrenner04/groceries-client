@@ -22,7 +22,6 @@ const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element 
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(props.category ?? '');
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const listRef = useRef<HTMLUListElement>(null);
   const instanceId = useRef<string>(getNextInstanceId());
 
   useEffect(() => {
@@ -121,7 +120,6 @@ const CategoryField: React.FC<ICategoryFieldProps> = (props): React.JSX.Element 
         />
         {isOpen && !props.disabled && filteredCategories.length > 0 && (
           <ul
-            ref={listRef}
             id={`categories-${instanceId.current}`}
             className={`tw:absolute tw:left-0 tw:right-0 tw:top-full tw:mt-1 tw:bg-white
               tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)]
