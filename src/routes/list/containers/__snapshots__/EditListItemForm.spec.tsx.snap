@@ -66,31 +66,33 @@ exports[`EditListItemForm > Rendering > renders the form with correct title 1`] 
       data-test-id="category-field"
     >
       <div
-        class="tw:w-full tw:my-2"
+        class="tw:relative"
       >
         <div
-          class="tw:relative tw:border tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors tw:border-[var(--color-border)]"
+          class="tw:w-full tw:my-2"
         >
-          <label
-            class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
-            for="category"
+          <div
+            class="tw:relative tw:border tw:rounded-[var(--radius-lg)] tw:bg-[var(--color-surface)] tw:transition-colors tw:border-[var(--color-border)]"
           >
-            Category
-          </label>
-          <input
-            class="tw:w-full tw:h-11 tw:px-4 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
-            id="category"
-            list="categories"
-            name="category"
-            type="text"
-            value="Produce"
-          />
+            <label
+              class="tw:absolute tw:-top-2 tw:left-3 tw:px-1 tw:bg-[var(--color-surface)] tw:text-xs tw:font-medium tw:text-[var(--color-text-secondary)]"
+              for="category"
+            >
+              Category
+            </label>
+            <input
+              aria-controls="categories-1"
+              aria-expanded="false"
+              class="tw:w-full tw:h-11 tw:px-4 tw:bg-transparent tw:border-0 tw:outline-none tw:text-base tw:transition-colors tw:focus:outline-none tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30"
+              id="category"
+              name="category"
+              role="combobox"
+              type="text"
+              value="Produce"
+            />
+          </div>
         </div>
       </div>
-      <datalist
-        data-test-id="categories"
-        id="categories"
-      />
     </div>
     <div
       class="tw:grid tw:gap-2 tw:mt-3"
