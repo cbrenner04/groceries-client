@@ -557,7 +557,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
           data-test-id="page-title"
         >
-          Lists
+          {props.initialFilter === 'completed' ? 'Completed' : 'Lists'}
         </h1>
         <div className="tw:flex tw:items-center tw:gap-2">
           <Button
