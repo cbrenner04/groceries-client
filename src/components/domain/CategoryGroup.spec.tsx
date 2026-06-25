@@ -101,13 +101,13 @@ describe('CategoryGroup', () => {
 
   describe('class assertions', () => {
     it('label has italic class when uncategorized', async () => {
-      const { container, findByText } = setup({ category: '' });
+      const { findByText } = setup({ category: '' });
       const label = await findByText('Other');
       expect(label).toHaveClass('tw:italic');
     });
 
     it('label does not have italic class when categorized', async () => {
-      const { container, findByText } = setup({ category: 'Produce' });
+      const { findByText } = setup({ category: 'Produce' });
       const label = await findByText('Produce');
       expect(label).not.toHaveClass('tw:italic');
     });
@@ -135,7 +135,7 @@ describe('CategoryGroup', () => {
         'tw:w-full',
         'tw:mb-2',
         'tw:group',
-        'tw:cursor-pointer'
+        'tw:cursor-pointer',
       );
     });
 
@@ -146,7 +146,7 @@ describe('CategoryGroup', () => {
     });
 
     it('children container has expected classes when expanded', async () => {
-      const { container, findByText } = setup();
+      const { container } = setup();
       const headerButton = container.querySelector('[data-test-class="category-header"]');
       const childrenContainer = headerButton?.parentElement?.querySelector('.tw\\:flex.tw\\:flex-col');
       expect(childrenContainer).toHaveClass('tw:flex', 'tw:flex-col', 'tw:gap-2');
