@@ -16,7 +16,7 @@ vi.mock('utils/listPrefetch', () => ({
 import CompletedLists from './CompletedLists';
 import Lists from './Lists';
 
-const createMockListsData = () => ({
+const createMockListsData = (): { data: Record<string, unknown> } => ({
   data: {
     current_user_id: 'id1',
     accepted_lists: {
