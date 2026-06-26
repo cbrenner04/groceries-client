@@ -5,6 +5,18 @@ import { Card } from '../ui/Card';
 import { IconButton } from '../ui/IconButton';
 import { Badge } from '../ui/Badge';
 import { CheckIcon, EditIcon, RedoIcon, TrashIcon } from '../icons';
+import {
+  actionButtonsContainer,
+  actionsColumn,
+  cardClassName,
+  categoryWrapper,
+  contentColumn,
+  contentRow,
+  primaryText,
+  secondarySeparator,
+  secondaryText,
+  selectCheckbox,
+} from './ListItemRow.variants';
 import type { IListItem, IListItemField, IListItemFieldConfiguration, TUserPermissions } from 'typings';
 import { EListItemFieldType, EUserPermissions } from 'typings';
 import { prettyDueBy } from 'utils/format';
@@ -150,7 +162,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
     const checkbox = (
       <input
         type="checkbox"
-        className="tw:w-5 tw:h-5 tw:cursor-pointer tw:flex-shrink-0"
+        className={selectCheckbox}
         checked={isSelected}
         onChange={(): void => onSelect(item.id)}
         data-test-id={`${testClassPrefix}-item-select-${item.id}`}
@@ -168,7 +180,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
           <motion.input
             key="select-checkbox"
             type="checkbox"
-            className="tw:w-5 tw:h-5 tw:cursor-pointer tw:flex-shrink-0"
+            className={selectCheckbox}
             checked={isSelected}
             onChange={(): void => onSelect(item.id)}
             data-test-id={`${testClassPrefix}-item-select-${item.id}`}
@@ -189,7 +201,7 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
     }
 
     return (
-      <div className="tw:flex tw:items-center tw:gap-1">
+      <div className={actionButtonsContainer}>
         {item.completed ? (
           item.refreshed ? null : (
             <IconButton
@@ -256,36 +268,36 @@ export function ListItemRow(props: IListItemRowProps): React.JSX.Element {
         completed={item.completed}
         data-test-class={testClass}
         data-test-id={`list-item-${item.id}`}
-        className="tw:flex tw:items-center tw:gap-3"
+        className={cardClassName}
       >
         {renderSelectCheckbox()}
-        <div className="tw:flex-1 tw:min-w-0">
-          <div className="tw:flex tw:items-center tw:justify-between tw:gap-2">
-            <div className="tw:flex-1 tw:min-w-0">
+        <div className={contentColumn}>
+          <div className={contentRow}>
+            <div className={contentColumn}>
               <motion.div
-                className="tw:text-base tw:font-medium tw:truncate"
+                className={primaryText}
                 animate={canAnimate ? { textDecorationLine: item.completed ? 'line-through' : 'none' } : undefined}
                 transition={{ duration: 0.24 }}
               >
                 {primaryValue || 'Untitled Item'}
               </motion.div>
               {secondaryFields.length > 0 && (
-                <div className="tw:text-sm tw:text-[var(--color-text-secondary)] tw:truncate tw:mt-0.5">
+                <div className={secondaryText}>
                   {secondaryFields.map((field, index) => (
                     <span key={field.label}>
-                      {index > 0 && <span className="tw:mx-1">&middot;</span>}
+                      {index > 0 && <span className={secondarySeparator}>&middot;</span>}
                       <span>{field.value}</span>
                     </span>
                   ))}
                 </div>
               )}
               {item.category && (
-                <div className="tw:mt-1">
+                <div className={categoryWrapper}>
                   <Badge>{item.category}</Badge>
                 </div>
               )}
             </div>
-            <div className="tw:flex-shrink-0">{renderActionButtons()}</div>
+            <div className={actionsColumn}>{renderActionButtons()}</div>
           </div>
         </div>
       </Card>

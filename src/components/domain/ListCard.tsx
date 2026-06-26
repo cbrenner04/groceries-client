@@ -1,9 +1,13 @@
 import React from 'react';
+import type { VariantProps } from 'class-variance-authority';
 
 import { Card } from '../ui/Card';
 import { IconButton } from '../ui/IconButton';
 import { CheckIcon, EditIcon, RedoIcon, TrashIcon, UsersIcon } from '../icons';
+import { listCardVariants } from './ListCard.variants';
 import type { IList, TUserPermissions } from 'typings';
+
+export type IListCardVariants = VariantProps<typeof listCardVariants>;
 
 export interface IListCardProps {
   list: IList;
@@ -194,7 +198,6 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
     );
   };
 
-  const pendingBorderStyle = pending ? ' tw:border-l-4 tw:border-l-[var(--color-warning)]' : '';
   const showMultiSelectControls = isMultiSelectActive && !pending;
 
   return (
@@ -204,7 +207,7 @@ export function ListCard(props: IListCardProps): React.JSX.Element {
       completed={list.completed ?? false}
       data-test-id={`list-${listId}`}
       data-test-class={testClass}
-      className={`tw:flex tw:items-center tw:gap-3${pendingBorderStyle}`}
+      className={listCardVariants({ pending })}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"

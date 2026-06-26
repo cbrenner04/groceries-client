@@ -298,6 +298,20 @@ describe('ListCard', () => {
       await user.click(btn);
       expect(props.onReject).toHaveBeenCalledWith('list1');
     });
+
+    it('renders container with pending border classes', () => {
+      const { container } = pendingSetup();
+      const card = container.querySelector('[data-test-id="list-list1"]');
+      expect(card?.className).toContain('tw:border-l-4');
+      expect(card?.className).toContain('tw:border-l-[var(--color-warning)]');
+    });
+
+    it('non-pending card does not have pending border classes', () => {
+      const { container } = setup();
+      const card = container.querySelector('[data-test-id="list-list1"]');
+      expect(card?.className).not.toContain('tw:border-l-4');
+      expect(card?.className).not.toContain('tw:border-l-[var(--color-warning)]');
+    });
   });
 
   describe('multi-select', () => {
