@@ -3,6 +3,7 @@ import { render, type RenderResult, waitFor, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 
 // Mock listPrefetch at module level
 vi.mock('utils/listPrefetch', () => ({
@@ -15,12 +16,18 @@ import Lists from './Lists';
 import * as utils from './utils';
 
 describe('Lists', () => {
-  const renderLists = (initialFilter?: 'all' | 'pending' | 'active' | 'completed'): RenderResult =>
-    render(
+  const renderLists = (initialFilter?: 'all' | 'pending' | 'active' | 'completed'): RenderResult => {
+    // Create the portal target before rendering
+    const portalTarget = document.createElement('div');
+    portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+    document.body.appendChild(portalTarget);
+
+    return render(
       <MemoryRouter>
         <Lists initialFilter={initialFilter} />
       </MemoryRouter>,
     );
+  };
 
   it('renders loading component when data is being fetched', async () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));

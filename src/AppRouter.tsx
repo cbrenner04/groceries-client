@@ -3,6 +3,10 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavig
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition, type TPageTransitionDirection } from './components/layout/PageTransition';
 
+// Portal target for BottomInputBar, positioned outside PageTransition
+// so the bar's position: fixed resolves against the viewport, not the transform ancestor.
+export const BOTTOM_INPUT_BAR_PORTAL_TARGET_ID = 'bottom-input-bar-portal-target';
+
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
 import EditPassword from './routes/users/EditPassword';
@@ -125,7 +129,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   return (
     <>
       <AnimatePresence mode="wait">
-        <PageTransition key={location.pathname} direction={pageTransitionDirection}>
+        <PageTransition key={location.pathname} direction={pageTransitionDirection} data-test-id="page-transition">
           <Routes>
             {/* routes/lists */}
             <Route path="/" element={<Navigate to="/lists" />} />
@@ -150,6 +154,8 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
           </Routes>
         </PageTransition>
       </AnimatePresence>
+      {/* Portal target for BottomInputBar: positioned outside PageTransition */}
+      <div id={BOTTOM_INPUT_BAR_PORTAL_TARGET_ID} />
       {showBottomNav ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />

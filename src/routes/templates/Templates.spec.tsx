@@ -3,17 +3,24 @@ import { render, type RenderResult, waitFor, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 
 import Templates from './Templates';
 import * as utils from './utils';
 
 describe('Templates', () => {
-  const renderTemplates = (): RenderResult =>
-    render(
+  const renderTemplates = (): RenderResult => {
+    // Create the portal target before rendering
+    const portalTarget = document.createElement('div');
+    portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+    document.body.appendChild(portalTarget);
+
+    return render(
       <MemoryRouter>
         <Templates />
       </MemoryRouter>,
     );
+  };
 
   it('renders loading component when data is being fetched', async () => {
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));

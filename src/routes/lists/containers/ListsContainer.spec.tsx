@@ -7,6 +7,7 @@ import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
 import { listsDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 
 // Mock listPrefetch at module level
 vi.mock('utils/listPrefetch', () => ({
@@ -31,6 +32,11 @@ interface ISetupReturn extends RenderResult {
 }
 
 function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
+  // Create the portal target before rendering
+  const portalTarget = document.createElement('div');
+  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+  document.body.appendChild(portalTarget);
+
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',

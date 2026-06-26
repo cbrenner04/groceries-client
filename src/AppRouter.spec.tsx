@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import AppRouter from './AppRouter';
+import AppRouter, { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from './AppRouter';
 import api from './utils/api';
 
 function renderAppRouter(pathname: string): ReturnType<typeof render> {
@@ -203,5 +203,24 @@ describe('AppRouter', () => {
     expect(sessionStorage.getItem('user')).toBeNull();
     expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
     expect(api.delete).toHaveBeenCalledWith('/auth/sign_out');
+  });
+
+  it('renders BottomInputBar portal target outside PageTransition', async () => {
+    renderAppRouter('/lists');
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const pageTransition = document.querySelector('[data-test-id="page-transition"]');
+
+    // Portal target should exist and be in the DOM
+    expect(portalTarget).toBeInTheDocument();
+
+    // PageTransition should also exist
+    expect(pageTransition).toBeInTheDocument();
+
+    // Portal target should not be a descendant of PageTransition
+    // (they should be siblings at the AppRouterContent level)
+    expect(pageTransition).not.toContainElement(portalTarget);
+
+    // Both should have the same parent (the AppRouterContent's wrapper)
+    expect(portalTarget?.parentElement).toBe(pageTransition?.parentElement);
   });
 });

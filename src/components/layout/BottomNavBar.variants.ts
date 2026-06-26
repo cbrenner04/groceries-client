@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 
 export const navClassName =
   'tw:fixed tw:bottom-0 tw:left-0 tw:right-0 tw:z-[var(--z-nav)] ' +
-  'tw:h-[var(--spacing-nav-height)] tw:bg-[var(--color-surface-raised)] ' +
+  'tw:h-[calc(var(--spacing-nav-height)+env(safe-area-inset-bottom))] tw:bg-[var(--color-surface-raised)] ' +
   'tw:border-t tw:border-[var(--color-border)] ' +
   'tw:shadow-[0_-1px_3px_rgb(0_0_0/0.1)] ' +
   'tw:pb-[env(safe-area-inset-bottom)] ' +

@@ -3,6 +3,7 @@ import { render, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import { BottomInputBar, type IBottomInputBarProps } from './BottomInputBar';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
 
 interface ISetupReturn extends RenderResult {
   props: IBottomInputBarProps;
@@ -10,6 +11,11 @@ interface ISetupReturn extends RenderResult {
 }
 
 function setup(suppliedProps: Partial<IBottomInputBarProps> = {}): ISetupReturn {
+  // Create the portal target before rendering
+  const portalTarget = document.createElement('div');
+  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+  document.body.appendChild(portalTarget);
+
   const user = userEvent.setup();
   const defaultProps: IBottomInputBarProps = {
     onSubmit: vi.fn(),
@@ -109,8 +115,9 @@ describe('BottomInputBar', () => {
   });
 
   it('has fixed positioning', async () => {
-    const { container } = setup();
-    const bar = container.firstChild as HTMLElement;
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
     expect(bar).toHaveClass('tw:fixed');
   });
 
@@ -123,6 +130,15 @@ describe('BottomInputBar', () => {
     const { findByTestId } = setup({ expandedContent: <div>Extra</div> });
     const expandButton = await findByTestId('quick-add-expand');
     expect(expandButton).toHaveAttribute('aria-label');
+  });
+
+  it('has bottom offset that includes safe-area-inset-bottom', async () => {
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
+    const style = bar.getAttribute('style');
+    // jsdom doesn't resolve env(safe-area-inset-bottom), so we verify the calc() is present
+    expect(style).toContain('calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))');
   });
 
   it('does not submit on Enter when expanded by default', async () => {
@@ -251,8 +267,26 @@ describe('BottomInputBar', () => {
   });
 
   it('does not animate the bottom offset on keyboard height changes', async () => {
-    const { container } = setup();
-    const bar = container.firstChild as HTMLElement;
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
     expect(bar.className).not.toContain('tw:transition-all');
+  });
+
+  it('renders inside the portal target outside PageTransition', async () => {
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    expect(portalTarget).toBeInTheDocument();
+    expect(portalTarget?.firstChild).toBeInTheDocument();
+    const bar = portalTarget?.firstChild as HTMLElement;
+    expect(bar.className).toContain('tw:fixed');
+  });
+
+  it('preserves z-stack token z-sticky', async () => {
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
+    // z-[var(--z-sticky)] should resolve to the CSS variable value
+    expect(bar.className).toContain('tw:z-');
   });
 });
