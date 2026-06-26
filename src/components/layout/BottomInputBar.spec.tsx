@@ -266,6 +266,13 @@ describe('BottomInputBar', () => {
     });
   });
 
+  it('does not animate the bottom offset on keyboard height changes', async () => {
+    setup();
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
+    expect(bar.className).not.toContain('tw:transition-all');
+  });
+
   it('renders inside the portal target outside PageTransition', async () => {
     setup();
     const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);

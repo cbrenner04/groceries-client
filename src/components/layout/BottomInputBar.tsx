@@ -119,12 +119,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   }, []);
 
   useEffect(() => {
-    // Re-measure whenever expanded state or keyboard height changes.
-    updateBottomBarHeightVar();
-  }, [expanded, keyboardHeight, updateBottomBarHeightVar]);
-
-  useEffect(() => {
-    // Also measure after initial paint so the value is set before first scroll.
+    // Measure once on mount so the value is set before first scroll.
+    // Do not re-measure on expanded or keyboardHeight changes; those changes should not
+    // shift the list scroll position via padding changes. The expanded content scrolls
+    // internally within its max-h-[60vh] bound.
     updateBottomBarHeightVar();
     // Clean up on unmount — reset so PageLayout doesn't keep stale padding.
     return (): void => {

@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 export const containerClassName =
   'tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] ' +
   'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
-  'tw:shadow-sm tw:transition-all tw:duration-300';
+  'tw:shadow-sm';
 
 export const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
 
