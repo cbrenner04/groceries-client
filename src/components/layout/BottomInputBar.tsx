@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   containerClassName,
   inputRowClassName,
@@ -8,6 +9,7 @@ import {
   expandButtonVariants,
   expandedContentVariants,
 } from './BottomInputBar.variants';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
 
@@ -61,6 +63,17 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+
+  // Resolve the portal target after mount. The target div is rendered by
+  // AppRouter as a sibling *after* this component in the same render pass, so it
+  // is not yet in the DOM during the first render — querying it inline would
+  // return null and the bar would never paint on a fresh page load. Reading it
+  // in an effect (which runs post-commit, once the target exists) and storing it
+  // in state forces the re-render that mounts the portal.
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    setPortalTarget(document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID));
+  }, []);
 
   useEffect(() => {
     if (mode === 'building') {
@@ -164,7 +177,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     return <></>;
   }
 
-  return (
+  const barContent = (
     <div ref={barRef} className={containerClassName} style={containerStyle}>
       <div className={inputRowClassName}>
         <input
@@ -244,4 +257,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
       )}
     </div>
   );
+
+  if (!portalTarget) {
+    return <></>;
+  }
+
+  return createPortal(barContent, portalTarget);
 }

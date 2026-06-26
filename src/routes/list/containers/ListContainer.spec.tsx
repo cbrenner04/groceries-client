@@ -6,6 +6,7 @@ import type { AxiosError, AxiosResponse } from 'axios';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import type { IChangeOtherListModalProps } from '../components/ChangeOtherListModal';
 import type { IEditItemSheetProps } from '../components/EditItemSheet';
@@ -108,6 +109,11 @@ interface ISetupReturn extends TestRenderResult {
 }
 
 function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
+  // Create the portal target before rendering
+  const portalTarget = document.createElement('div');
+  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+  document.body.appendChild(portalTarget);
+
   const user = userEvent.setup();
   const props: IListContainerProps = {
     userId: defaultTestData.userId,
@@ -750,7 +756,9 @@ describe('ListContainer', () => {
       expect(container).toBeInTheDocument();
 
       // In test environment, prefetch may be disabled, so we just verify component works
-      expect(container.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
+      // BottomInputBar is now portaled, so check the portal target
+      const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+      expect(portalTarget?.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
     });
 
     it('does not idle-prefetch when disabled via environment variable', async () => {
