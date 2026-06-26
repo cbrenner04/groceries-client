@@ -5,6 +5,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { showToast } from 'utils/toast';
+import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
 
@@ -22,6 +23,11 @@ interface ISetupReturn extends RenderResult {
 }
 
 function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn {
+  // Create the portal target before rendering
+  const portalTarget = document.createElement('div');
+  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+  document.body.appendChild(portalTarget);
+
   const user = userEvent.setup();
   const defaultProps: ITemplatesContainerProps = {
     templates: [

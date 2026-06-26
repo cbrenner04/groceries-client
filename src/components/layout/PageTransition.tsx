@@ -5,6 +5,7 @@ import type React from 'react';
 interface IPageTransitionProps {
   children: React.ReactNode;
   direction?: TPageTransitionDirection;
+  'data-test-id'?: string;
 }
 
 export type TPageTransitionDirection = 'forward' | 'back' | 'fade';
@@ -40,7 +41,7 @@ const getVariants = (direction: TPageTransitionDirection): Variants => {
 };
 
 export const PageTransition: React.FC<IPageTransitionProps> = (props): React.JSX.Element => {
-  const { children, direction = 'fade' } = props;
+  const { children, direction = 'fade', 'data-test-id': dataTestId } = props;
   const variants = getVariants(direction);
   // Only animate in production. In dev, React StrictMode double-mounts can interrupt the enter
   // animation and leave the whole page stuck at its initial { opacity: 0, x: 50 } state — a blank
@@ -53,6 +54,7 @@ export const PageTransition: React.FC<IPageTransitionProps> = (props): React.JSX
 
   return (
     <motion.div
+      data-test-id={dataTestId}
       initial={shouldAnimate ? 'initial' : undefined}
       animate={shouldAnimate ? 'animate' : undefined}
       exit={shouldAnimate ? 'exit' : undefined}
