@@ -1,5 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router';
+import {
+  containerClassName,
+  contentWrapperClassName,
+  brandBarClassName,
+  headerClassName,
+  backButtonClassName,
+  contentClassName,
+} from './PageLayout.variants';
 
 export interface IPageLayoutProps {
   title?: string;
@@ -15,29 +23,6 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
   const { title, showBackButton = false, backTo, onBack, children, bottomBar, headerRight } = props;
 
   const hasHeader = title || showBackButton || headerRight;
-
-  const containerClassName = 'tw:flex tw:flex-col tw:min-h-[calc(100vh-var(--spacing-nav-height))]';
-
-  const contentWrapperClassName = 'tw:w-full tw:max-w-2xl tw:mx-auto tw:flex tw:flex-col';
-
-  const brandBarClassName =
-    'tw:sticky tw:top-0 tw:z-20 tw:flex tw:items-center tw:px-4 tw:py-2 ' +
-    'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
-    'tw:pt-[max(0.5rem,env(safe-area-inset-top))] ' +
-    'tw:pb-2 ' +
-    'tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]';
-
-  const headerClassName =
-    'tw:sticky tw:z-10 tw:flex tw:items-center tw:gap-2 tw:px-4 tw:py-3 ' +
-    'tw:bg-[var(--color-surface)] tw:border-b tw:border-[var(--color-border)] ' +
-    'tw:px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] ' +
-    'tw:top-[calc(2rem+max(0.5rem,env(safe-area-inset-top)))]';
-
-  const backButtonClassName =
-    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
-    'tw:rounded-lg tw:text-[var(--color-text-secondary)] ' +
-    'tw:bg-[var(--color-surface-overlay)] tw:border tw:border-[var(--color-border)] ' +
-    'tw:hover:bg-[var(--color-border)] tw:cursor-pointer tw:transition-colors';
 
   const backArrow = (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,13 +64,10 @@ export function PageLayout(props: IPageLayoutProps): React.JSX.Element {
 
   // When a bottom bar is present, reserve space below the list so that the last
   // items are not hidden behind the fixed bar.
-  //
-  // --bottom-bar-height is written at runtime by BottomInputBar.  It reflects
+  // --bottom-bar-height is written at runtime by BottomInputBar. It reflects
   // the bar's actual rendered height (collapsed input row OR expanded form), so
   // the padding grows when the form opens and shrinks when it collapses.
-  const contentClassName = bottomBar
-    ? 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4'
-    : 'tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4';
+  // contentClassName is static because both ternary branches were identical.
 
   // Inline style for dynamic bottom padding so it reacts to CSS variable changes
   // without Tailwind needing to know the value at build time.
