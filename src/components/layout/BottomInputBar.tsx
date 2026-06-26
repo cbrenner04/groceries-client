@@ -8,6 +8,8 @@ import {
   footerCancelClassName,
   expandButtonVariants,
   expandedContentVariants,
+  expandedContentClipClassName,
+  expandedContentInnerClassName,
 } from './BottomInputBar.variants';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
 
@@ -231,42 +233,46 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
       </div>
       {expandedContent && (
         <div className={expandedClassName}>
-          {expandedContent}
-          {expanded && (
-            <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className={footerCancelClassName}
-                data-test-id="quick-add-cancel"
-              >
-                Cancel
-              </button>
-              {submitFormId ? (
-                <button
-                  type="button"
-                  onClick={(): void => {
-                    (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
-                    inputRef.current?.focus();
-                  }}
-                  className={footerSubmitClassName}
-                  data-test-id="quick-add-submit"
-                >
-                  {submitLabel}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={!value.trim()}
-                  className={footerSubmitClassName}
-                  data-test-id="quick-add-submit"
-                >
-                  {submitLabel}
-                </button>
+          <div className={expandedContentClipClassName}>
+            <div className={expandedContentInnerClassName}>
+              {expandedContent}
+              {expanded && (
+                <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className={footerCancelClassName}
+                    data-test-id="quick-add-cancel"
+                  >
+                    Cancel
+                  </button>
+                  {submitFormId ? (
+                    <button
+                      type="button"
+                      onClick={(): void => {
+                        (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
+                        inputRef.current?.focus();
+                      }}
+                      className={footerSubmitClassName}
+                      data-test-id="quick-add-submit"
+                    >
+                      {submitLabel}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={!value.trim()}
+                      className={footerSubmitClassName}
+                      data-test-id="quick-add-submit"
+                    >
+                      {submitLabel}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>

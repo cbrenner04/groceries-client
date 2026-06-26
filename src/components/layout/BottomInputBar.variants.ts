@@ -44,14 +44,32 @@ export const expandButtonVariants = cva(
   },
 );
 
-export const expandedContentVariants = cva('tw:overflow-y-auto tw:transition-all tw:duration-200', {
-  variants: {
-    expanded: {
-      true: 'tw:max-h-[60vh] tw:px-4 tw:pb-[calc(1rem+env(safe-area-inset-bottom))]',
-      false: 'tw:max-h-0 tw:overflow-hidden',
+// Animate the expand/collapse by transitioning the grid track from 0fr to 1fr.
+// Unlike animating `max-height` between 0 and a fixed 60vh — which interpolates
+// across a range far larger than the real content, producing a visible dead
+// zone (most noticeable as lag before a collapse actually starts) and forcing a
+// reflow every frame via `transition-all` — grid-template-rows animates to the
+// content's *natural* (capped) height, so open and close feel immediate.
+export const expandedContentVariants = cva(
+  'tw:grid tw:transition-[grid-template-rows] tw:duration-200 tw:ease-out tw:motion-reduce:transition-none',
+  {
+    variants: {
+      expanded: {
+        true: 'tw:grid-rows-[1fr]',
+        false: 'tw:grid-rows-[0fr]',
+      },
+    },
+    defaultVariants: {
+      expanded: false,
     },
   },
-  defaultVariants: {
-    expanded: false,
-  },
-});
+);
+
+// The single grid child: must clip (overflow-hidden) and be allowed to shrink
+// below its content size (min-h-0) for the 0fr track to collapse it to nothing.
+export const expandedContentClipClassName = 'tw:min-h-0 tw:overflow-hidden';
+
+// The actual scrollable content. max-h caps tall forms (scroll within the bar);
+// padding lives here so it is clipped away when collapsed.
+export const expandedContentInnerClassName =
+  'tw:max-h-[60vh] tw:overflow-y-auto tw:px-4 tw:pb-[calc(1rem+env(safe-area-inset-bottom))]';
