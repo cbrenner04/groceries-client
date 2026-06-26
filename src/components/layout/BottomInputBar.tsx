@@ -8,10 +8,28 @@ import {
   footerCancelClassName,
   expandButtonVariants,
   expandedContentVariants,
+  expandedContentClipClassName,
+  expandedContentInnerClassName,
 } from './BottomInputBar.variants';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
+
+// A single shared, viewport-level node that the bar portals into so its
+// `position: fixed` resolves against the viewport rather than the transformed
+// PageTransition ancestor. Created once on document.body and reused for the
+// app's lifetime; resolving it here (not from another component's render) means
+// the bar can mount into it on its very first render.
+function ensureBottomInputBarPortalTarget(): HTMLElement {
+  const existing = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+  if (existing) {
+    return existing;
+  }
+  const target = document.createElement('div');
+  target.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
+  document.body.appendChild(target);
+  return target;
+}
 
 export interface IBottomInputBarProps {
   onSubmit: (value: string, fields?: Record<string, unknown>) => void;
@@ -64,16 +82,15 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
-  // Resolve the portal target after mount. The target div is rendered by
-  // AppRouter as a sibling *after* this component in the same render pass, so it
-  // is not yet in the DOM during the first render — querying it inline would
-  // return null and the bar would never paint on a fresh page load. Reading it
-  // in an effect (which runs post-commit, once the target exists) and storing it
-  // in state forces the re-render that mounts the portal.
-  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-  useEffect(() => {
-    setPortalTarget(document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID));
-  }, []);
+  // Resolve the portal target synchronously on the first render via a lazy
+  // initializer (runs once, during render), so the bar paints into the portal on
+  // its very first render. An effect-based resolution returned an empty render
+  // first and depended on a *subsequent* re-render to mount the portal — which
+  // never reliably arrives on the direct-render route (Lists), so the bar stayed
+  // invisible until an unrelated re-render (navigation, a viewport/resize event)
+  // forced it. Owning the target here (created on document.body if missing)
+  // removes any dependency on another component's render order.
+  const [portalTarget] = useState(ensureBottomInputBarPortalTarget);
 
   useEffect(() => {
     if (mode === 'building') {
@@ -216,50 +233,50 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
       </div>
       {expandedContent && (
         <div className={expandedClassName}>
-          {expandedContent}
-          {expanded && (
-            <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className={footerCancelClassName}
-                data-test-id="quick-add-cancel"
-              >
-                Cancel
-              </button>
-              {submitFormId ? (
-                <button
-                  type="button"
-                  onClick={(): void => {
-                    (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
-                    inputRef.current?.focus();
-                  }}
-                  className={footerSubmitClassName}
-                  data-test-id="quick-add-submit"
-                >
-                  {submitLabel}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={!value.trim()}
-                  className={footerSubmitClassName}
-                  data-test-id="quick-add-submit"
-                >
-                  {submitLabel}
-                </button>
+          <div className={expandedContentClipClassName}>
+            <div className={expandedContentInnerClassName}>
+              {expandedContent}
+              {expanded && (
+                <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className={footerCancelClassName}
+                    data-test-id="quick-add-cancel"
+                  >
+                    Cancel
+                  </button>
+                  {submitFormId ? (
+                    <button
+                      type="button"
+                      onClick={(): void => {
+                        (document.getElementById(submitFormId) as HTMLFormElement | null)?.requestSubmit();
+                        inputRef.current?.focus();
+                      }}
+                      className={footerSubmitClassName}
+                      data-test-id="quick-add-submit"
+                    >
+                      {submitLabel}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={!value.trim()}
+                      className={footerSubmitClassName}
+                      data-test-id="quick-add-submit"
+                    >
+                      {submitLabel}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
   );
-
-  if (!portalTarget) {
-    return <></>;
-  }
 
   return createPortal(barContent, portalTarget);
 }

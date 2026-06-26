@@ -154,8 +154,8 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
           </Routes>
         </PageTransition>
       </AnimatePresence>
-      {/* Portal target for BottomInputBar: positioned outside PageTransition */}
-      <div id={BOTTOM_INPUT_BAR_PORTAL_TARGET_ID} />
+      {/* BottomInputBar owns its own viewport-level portal target (created on
+          document.body), so it is intentionally not rendered here. */}
       {showBottomNav ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />

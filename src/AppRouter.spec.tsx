@@ -205,22 +205,20 @@ describe('AppRouter', () => {
     expect(api.delete).toHaveBeenCalledWith('/auth/sign_out');
   });
 
-  it('renders BottomInputBar portal target outside PageTransition', async () => {
+  it('mounts the BottomInputBar portal target outside PageTransition', async () => {
     renderAppRouter('/lists');
     const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
     const pageTransition = document.querySelector('[data-test-id="page-transition"]');
 
-    // Portal target should exist and be in the DOM
+    // BottomInputBar creates its own viewport-level portal target on document.body.
     expect(portalTarget).toBeInTheDocument();
-
-    // PageTransition should also exist
     expect(pageTransition).toBeInTheDocument();
 
-    // Portal target should not be a descendant of PageTransition
-    // (they should be siblings at the AppRouterContent level)
+    // It must live outside the PageTransition transform ancestor so the bar's
+    // position: fixed resolves against the viewport.
     expect(pageTransition).not.toContainElement(portalTarget);
 
-    // Both should have the same parent (the AppRouterContent's wrapper)
-    expect(portalTarget?.parentElement).toBe(pageTransition?.parentElement);
+    // It is a direct child of document.body (owned by BottomInputBar, not the router tree).
+    expect(portalTarget?.parentElement).toBe(document.body);
   });
 });
