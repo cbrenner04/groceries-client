@@ -167,7 +167,8 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     // When keyboardHeight > 0 (iOS keyboard open) we skip the nav-height offset
     // because the nav bar is itself pushed off-screen by the keyboard; the bar
     // should sit flush on top of the keyboard instead.
-    bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : 'var(--spacing-nav-height)',
+    bottom:
+      keyboardHeight > 0 ? `${keyboardHeight}px` : 'calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))',
   };
 
   const expandButtonClassName = expandButtonVariants({ expanded });
