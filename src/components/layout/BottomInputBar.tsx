@@ -1,4 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import {
+  containerClassName,
+  inputRowClassName,
+  inputClassName,
+  footerSubmitClassName,
+  footerCancelClassName,
+  expandButtonVariants,
+  expandedContentVariants,
+} from './BottomInputBar.variants';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
 
@@ -140,13 +149,6 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     setExpanded((prev) => !prev);
   };
 
-  const containerClassName =
-    'tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] ' +
-    'tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] ' +
-    'tw:shadow-sm tw:transition-all tw:duration-300';
-
-  const inputRowClassName = 'tw:flex tw:items-center tw:gap-2 tw:px-4 ' + 'tw:h-[var(--spacing-input-bar-height)]';
-
   const containerStyle: React.CSSProperties = {
     // Pin the bar directly above the on-screen keyboard.
     // When keyboardHeight > 0 (iOS keyboard open) we skip the nav-height offset
@@ -155,39 +157,8 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : 'var(--spacing-nav-height)',
   };
 
-  const inputClassName =
-    'tw:flex-1 tw:h-10 tw:px-3 tw:rounded-[var(--radius-lg)] ' +
-    'tw:bg-[var(--color-surface)] tw:border tw:border-[var(--color-border)] ' +
-    'tw:text-[var(--color-text-primary)] tw:placeholder-[var(--color-text-tertiary)] ' +
-    // text-base (16px) — MUST be ≥16px to prevent iOS Safari from auto-zooming
-    // when the input receives focus. Do NOT reduce below 16px here.
-    'tw:text-base tw:outline-none ' +
-    'tw:focus:border-[var(--color-border-strong)] tw:focus:ring-2 tw:focus:ring-[var(--color-primary)]/30';
-
-  const footerSubmitClassName =
-    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-[var(--radius-lg)] ' +
-    'tw:bg-[var(--color-primary)] tw:text-[var(--color-text-inverse)] tw:text-sm tw:font-medium ' +
-    'tw:hover:bg-[var(--color-primary-hover)] tw:cursor-pointer tw:transition-colors ' +
-    'tw:disabled:opacity-50 tw:disabled:cursor-not-allowed ' +
-    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
-
-  const footerCancelClassName =
-    'tw:inline-flex tw:items-center tw:justify-center tw:min-h-[44px] tw:px-4 tw:rounded-[var(--radius-lg)] ' +
-    'tw:text-[var(--color-text-secondary)] tw:text-sm tw:font-medium ' +
-    'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-colors ' +
-    'tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)]';
-
-  const expandButtonClassName =
-    'tw:flex tw:items-center tw:justify-center tw:w-10 tw:h-10 tw:min-h-[44px] tw:min-w-[44px] ' +
-    'tw:rounded-[var(--radius-lg)] tw:text-[var(--color-text-secondary)] ' +
-    'tw:hover:bg-[var(--color-surface-overlay)] tw:cursor-pointer tw:transition-all tw:duration-200 ' +
-    (expanded ? 'tw:rotate-180' : '');
-
-  const expandedClassName =
-    'tw:overflow-y-auto tw:transition-all tw:duration-200 ' +
-    (expanded
-      ? 'tw:max-h-[60vh] tw:px-4 tw:pb-[calc(1rem+env(safe-area-inset-bottom))]'
-      : 'tw:max-h-0 tw:overflow-hidden');
+  const expandButtonClassName = expandButtonVariants({ expanded });
+  const expandedClassName = expandedContentVariants({ expanded });
 
   if (hidden) {
     return <></>;

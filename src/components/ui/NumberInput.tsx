@@ -1,5 +1,6 @@
 import React from 'react';
-import FieldShell, { fieldControlStyles } from './FieldShell';
+import FieldShell from './FieldShell';
+import { numberInputControlStyles } from './NumberInput.variants';
 
 interface INumberInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -16,7 +17,7 @@ const NumberInput: React.FC<INumberInputProps> = (props): React.JSX.Element => {
       <input
         id={inputId}
         type="number"
-        className={`${fieldControlStyles} ${className || ''}`.trim()}
+        className={`${numberInputControlStyles} ${className || ''}`.trim()}
         data-test-id={testId}
         {...inputProps}
       />
