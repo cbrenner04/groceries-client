@@ -125,6 +125,14 @@ describe('BottomInputBar', () => {
     expect(expandButton).toHaveAttribute('aria-label');
   });
 
+  it('has bottom offset that includes safe-area-inset-bottom', async () => {
+    const { container } = setup();
+    const bar = container.firstChild as HTMLElement;
+    const style = bar.getAttribute('style');
+    // jsdom doesn't resolve env(safe-area-inset-bottom), so we verify the calc() is present
+    expect(style).toContain('calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))');
+  });
+
   it('does not submit on Enter when expanded by default', async () => {
     const onSubmit = vi.fn();
     const { findByTestId, user } = setup({
