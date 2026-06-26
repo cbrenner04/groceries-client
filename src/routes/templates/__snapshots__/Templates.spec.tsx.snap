@@ -183,7 +183,7 @@ exports[`Templates > renders TemplatesContainer when data retrieval is complete 
       </main>
     </div>
     <div
-      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
+      class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm"
       style="bottom: var(--spacing-nav-height);"
     >
       <div

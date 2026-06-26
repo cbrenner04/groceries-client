@@ -249,4 +249,10 @@ describe('BottomInputBar', () => {
       expect(onValueChange).toHaveBeenCalledWith('');
     });
   });
+
+  it('does not animate the bottom offset on keyboard height changes', async () => {
+    const { container } = setup();
+    const bar = container.firstChild as HTMLElement;
+    expect(bar.className).not.toContain('tw:transition-all');
+  });
 });
