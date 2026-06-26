@@ -438,7 +438,7 @@ exports[`ListContainer > Category Filtering > renders filtered items without cat
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: var(--spacing-nav-height);"
+      style="bottom: calc(var(--spacing-nav-height) + env(safe-area-inset-bottom));"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -1378,7 +1378,7 @@ exports[`ListContainer > Category Filtering > renders items with category bucket
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: var(--spacing-nav-height);"
+      style="bottom: calc(var(--spacing-nav-height) + env(safe-area-inset-bottom));"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3148,7 +3148,7 @@ exports[`ListContainer > Item Rendering > does not render complete items when no
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: var(--spacing-nav-height);"
+      style="bottom: calc(var(--spacing-nav-height) + env(safe-area-inset-bottom));"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -3474,7 +3474,7 @@ exports[`ListContainer > Item Rendering > does not render incomplete items when 
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: var(--spacing-nav-height);"
+      style="bottom: calc(var(--spacing-nav-height) + env(safe-area-inset-bottom));"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
@@ -4888,7 +4888,7 @@ exports[`ListContainer > Permissions > renders Add Item button (form collapsed) 
     </div>
     <div
       class="tw:fixed tw:left-0 tw:right-0 tw:z-[var(--z-sticky)] tw:bg-[var(--color-surface-raised)] tw:border-t tw:border-[var(--color-border)] tw:shadow-sm tw:transition-all tw:duration-300"
-      style="bottom: var(--spacing-nav-height);"
+      style="bottom: calc(var(--spacing-nav-height) + env(safe-area-inset-bottom));"
     >
       <div
         class="tw:flex tw:items-center tw:gap-2 tw:px-4 tw:h-[var(--spacing-input-bar-height)]"
