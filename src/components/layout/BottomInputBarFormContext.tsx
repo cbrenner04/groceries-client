@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface IBottomInputBarFormContextValue {
   expandedFormOpen: boolean;
@@ -7,19 +7,15 @@ interface IBottomInputBarFormContextValue {
 
 const BottomInputBarFormContext = createContext<IBottomInputBarFormContextValue | undefined>(undefined);
 
-interface IBottomInputBarFormProviderProps {
-  children: ReactNode;
-}
-
-export function BottomInputBarFormProvider(props: IBottomInputBarFormProviderProps): React.JSX.Element {
+export function BottomInputBarFormProvider(props: { children: ReactNode }): React.JSX.Element {
   const { children } = props;
   const [expandedFormOpen, setExpandedFormOpen] = useState(false);
-  const value = useMemo(
-    (): IBottomInputBarFormContextValue => ({ expandedFormOpen, setExpandedFormOpen }),
-    [expandedFormOpen],
-  );
 
-  return <BottomInputBarFormContext.Provider value={value}>{children}</BottomInputBarFormContext.Provider>;
+  return (
+    <BottomInputBarFormContext.Provider value={{ expandedFormOpen, setExpandedFormOpen }}>
+      {children}
+    </BottomInputBarFormContext.Provider>
+  );
 }
 
 export function useBottomInputBarFormContext(): IBottomInputBarFormContextValue {
@@ -30,4 +26,6 @@ export function useBottomInputBarFormContext(): IBottomInputBarFormContextValue 
   return context;
 }
 
-export { BottomInputBarFormContext };
+export function useSetExpandedFormOpen(): ((open: boolean) => void) | undefined {
+  return useContext(BottomInputBarFormContext)?.setExpandedFormOpen;
+}

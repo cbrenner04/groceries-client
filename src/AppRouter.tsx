@@ -84,7 +84,6 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
   const showBottomNav = Boolean(user) && !isAuthPage;
   const { expandedFormOpen } = useBottomInputBarFormContext();
   const isMobile = useIsMobileViewport();
-  const hideBottomNavForForm = isMobile && expandedFormOpen;
 
   useEffect(() => {
     if (!showBottomNav) {
@@ -164,7 +163,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
       </AnimatePresence>
       {/* BottomInputBar owns its own viewport-level portal target (created on
           document.body), so it is intentionally not rendered here. */}
-      {showBottomNav && !hideBottomNavForForm ? (
+      {showBottomNav && !(isMobile && expandedFormOpen) ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />
         </div>

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback, useContext } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import {
   containerClassName,
@@ -12,7 +12,7 @@ import {
   expandedContentInnerClassName,
 } from './BottomInputBar.variants';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
-import { BottomInputBarFormContext } from './BottomInputBarFormContext';
+import { useSetExpandedFormOpen } from './BottomInputBarFormContext';
 import { useIsMobileViewport } from './useIsMobileViewport';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
@@ -84,7 +84,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobileViewport();
-  const setExpandedFormOpen = useContext(BottomInputBarFormContext)?.setExpandedFormOpen;
+  const setExpandedFormOpen = useSetExpandedFormOpen();
   const expandedFormOpen = Boolean(expandedContent && expanded && !hidden);
 
   // Resolve the portal target synchronously on the first render via a lazy
@@ -104,12 +104,9 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   }, [mode]);
 
   useEffect(() => {
-    if (!setExpandedFormOpen) {
-      return undefined;
-    }
-    setExpandedFormOpen(expandedFormOpen);
+    setExpandedFormOpen?.(expandedFormOpen);
     return (): void => {
-      setExpandedFormOpen(false);
+      setExpandedFormOpen?.(false);
     };
   }, [expandedFormOpen, setExpandedFormOpen]);
 
@@ -192,10 +189,10 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     setExpanded((prev) => !prev);
   };
 
-  const navHiddenForForm = isMobile && expandedFormOpen;
-  const restingBottom = navHiddenForForm
-    ? 'env(safe-area-inset-bottom)'
-    : 'calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))';
+  const restingBottom =
+    isMobile && expandedFormOpen
+      ? 'env(safe-area-inset-bottom)'
+      : 'calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))';
   const containerStyle: React.CSSProperties = {
     // Pin the bar directly above the on-screen keyboard.
     // When keyboardHeight > 0 (iOS keyboard open) we skip the nav-height offset

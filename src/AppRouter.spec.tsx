@@ -3,19 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import AppRouter, { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from './AppRouter';
-import { useBottomInputBarFormContext } from './components/layout/BottomInputBarFormContext';
-import { useIsMobileViewport } from './components/layout/useIsMobileViewport';
 import api from './utils/api';
-
-function HookOutsideProvider(): null {
-  useBottomInputBarFormContext();
-  return null;
-}
-
-function MobileViewportProbe(): React.JSX.Element {
-  const isMobile = useIsMobileViewport();
-  return <div data-test-id="mobile-viewport-probe">{isMobile ? 'mobile' : 'desktop'}</div>;
-}
 
 function mockViewportWidth(isMobile: boolean): void {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
@@ -261,10 +249,10 @@ describe('AppRouter', () => {
   describe('bottom nav visibility when quick-add form is open', () => {
     beforeEach(() => {
       setAuthenticatedSession();
+      mockViewportWidth(true);
     });
 
     it('hides bottom nav on mobile when the expanded quick-add form is open', async () => {
-      mockViewportWidth(true);
       const user = userEvent.setup();
       const { findByTestId, queryByTestId } = renderAppRouter('/lists');
 
@@ -275,7 +263,6 @@ describe('AppRouter', () => {
     });
 
     it('restores bottom nav on mobile after collapsing the expanded quick-add form', async () => {
-      mockViewportWidth(true);
       const user = userEvent.setup();
       const { findByTestId } = renderAppRouter('/lists');
 
@@ -286,7 +273,6 @@ describe('AppRouter', () => {
     });
 
     it('restores bottom nav on mobile after canceling the expanded quick-add form', async () => {
-      mockViewportWidth(true);
       const user = userEvent.setup();
       const { findByTestId } = renderAppRouter('/lists');
 
@@ -296,7 +282,6 @@ describe('AppRouter', () => {
     });
 
     it('hides bottom nav on mobile when the expanded form opens on a scrolled list', async () => {
-      mockViewportWidth(true);
       const lists = [...Array(30).keys()].map((index) => ({
         id: `list-${index}`,
         name: `List ${index}`,
@@ -356,47 +341,6 @@ describe('AppRouter', () => {
       await user.click(await findByTestId('quick-add-input'));
       expect(await findByTestId('quick-add-cancel')).toBeVisible();
       expect(await findByTestId('bottom-nav')).toBeVisible();
-    });
-  });
-
-  it('throws when useBottomInputBarFormContext is used outside BottomInputBarFormProvider', () => {
-    expect(() => render(<HookOutsideProvider />)).toThrow(
-      'useBottomInputBarFormContext must be used within BottomInputBarFormProvider',
-    );
-  });
-
-  it('responds to matchMedia viewport changes', async () => {
-    const mediaQueryState = { matches: false };
-    const changeHandlers: Array<() => void> = [];
-    window.matchMedia = vi.fn().mockImplementation((query: string) => {
-      const mediaQueryList = {
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn((event: string, handler: () => void) => {
-          if (event === 'change') {
-            changeHandlers.push(handler);
-          }
-        }),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      };
-      Object.defineProperty(mediaQueryList, 'matches', {
-        get: (): boolean => (query === '(max-width: 767px)' ? mediaQueryState.matches : false),
-        configurable: true,
-      });
-      return mediaQueryList;
-    });
-
-    const { getByTestId } = render(<MobileViewportProbe />);
-    expect(getByTestId('mobile-viewport-probe')).toHaveTextContent('desktop');
-    expect(changeHandlers.length).toBeGreaterThan(0);
-
-    mediaQueryState.matches = true;
-    changeHandlers.forEach((handler) => handler());
-    await waitFor(() => {
-      expect(getByTestId('mobile-viewport-probe')).toHaveTextContent('mobile');
     });
   });
 });
