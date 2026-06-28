@@ -794,7 +794,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         data-test-id="list-item-form"
         noValidate
         onSubmit={handleQuickAddFormSubmit}
-        className="tw:pb-2"
+        className="tw:pb-0"
       >
         <ListItemFormFields
           fieldConfigurations={configs.filter((config) => !config.primary)}
@@ -828,6 +828,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
             setQuickAddCompleted(e.target.checked);
           }}
+          classes="tw:!mb-0"
         />
       </form>
     );
@@ -1128,6 +1129,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               submitLabel="Add item"
               value={quickAddPrimary}
               onValueChange={setQuickAddPrimary}
+              footerTopSpacingClassName="tw:pt-0"
             />
           ) : undefined
         }
