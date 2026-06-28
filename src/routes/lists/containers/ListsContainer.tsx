@@ -46,6 +46,14 @@ export interface IListsContainerProps {
 }
 
 const MAX_PREFETCH_LISTS = 5;
+const DEFAULT_GROCERY_TEMPLATE_NAME = 'grocery list template';
+
+const getDefaultTemplateId = (configurations: IListItemConfiguration[]): string => {
+  const groceryConfig = configurations.find(
+    (config) => config.name.trim().toLowerCase() === DEFAULT_GROCERY_TEMPLATE_NAME,
+  );
+  return groceryConfig?.id ?? configurations[0]?.id ?? '';
+};
 
 const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Element => {
   const [pendingLists, setPendingLists] = useState(props.pendingLists);
@@ -64,7 +72,9 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [listsToMerge, setListsToMerge] = useState<IList[]>([]);
   const [mergeName, setMergeName] = useState('');
-  const [selectedTemplateId, setSelectedTemplateId] = useState(props.listItemConfigurations[0]?.id ?? '');
+  const [selectedTemplateId, setSelectedTemplateId] = useState(() =>
+    getDefaultTemplateId(props.listItemConfigurations),
+  );
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
   const navigate = useNavigate();
