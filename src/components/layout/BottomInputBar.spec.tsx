@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import { render, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import { BottomInputBar, type IBottomInputBarProps } from './BottomInputBar';
@@ -293,6 +293,56 @@ describe('BottomInputBar', () => {
     const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
     const bar = portalTarget?.firstChild as HTMLElement;
     expect(bar.className).not.toContain('tw:transition-all');
+  });
+
+  describe('visual viewport keyboard tracking', () => {
+    const viewportListeners: Partial<Record<string, () => void>> = {};
+    const mockRemoveEventListener = vi.fn();
+    const mockVisualViewport = {
+      height: 800,
+      offsetTop: 0,
+      addEventListener: vi.fn((event: string, handler: () => void) => {
+        viewportListeners[event] = handler;
+      }),
+      removeEventListener: mockRemoveEventListener,
+    };
+
+    beforeEach(() => {
+      Object.defineProperty(window, 'innerHeight', { value: 800, configurable: true, writable: true });
+      Object.defineProperty(window, 'visualViewport', {
+        value: mockVisualViewport,
+        configurable: true,
+      });
+      delete viewportListeners.resize;
+      delete viewportListeners.scroll;
+      mockRemoveEventListener.mockClear();
+      mockVisualViewport.addEventListener.mockClear();
+    });
+
+    it('pins the bar above the keyboard when the visual viewport shrinks', async () => {
+      const { findByTestId } = setup();
+      await findByTestId('quick-add-input');
+      expect(mockVisualViewport.addEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
+      expect(mockVisualViewport.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function));
+
+      mockVisualViewport.height = 500;
+      mockVisualViewport.offsetTop = 50;
+      viewportListeners.resize?.();
+
+      const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+      const bar = portalTarget?.firstChild as HTMLElement;
+      await waitFor(() => {
+        expect(bar.getAttribute('style')).toContain('bottom: 250px');
+      });
+    });
+
+    it('removes visual viewport listeners on unmount', async () => {
+      const { findByTestId, unmount } = setup();
+      await findByTestId('quick-add-input');
+      unmount();
+      expect(mockRemoveEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
+      expect(mockRemoveEventListener).toHaveBeenCalledWith('scroll', expect.any(Function));
+    });
   });
 
   it('renders inside the portal target outside PageTransition', async () => {
