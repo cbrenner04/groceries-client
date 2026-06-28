@@ -828,6 +828,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
           handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
             setQuickAddCompleted(e.target.checked);
           }}
+          classes="tw:!mb-0"
         />
       </form>
     );
@@ -1128,7 +1129,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               submitLabel="Add item"
               value={quickAddPrimary}
               onValueChange={setQuickAddPrimary}
-              footerTopSpacingClassName="tw:pt-1"
+              footerTopSpacingClassName="tw:pt-0"
             />
           ) : undefined
         }
