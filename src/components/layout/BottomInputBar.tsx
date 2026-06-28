@@ -51,6 +51,8 @@ export interface IBottomInputBarProps {
   value?: string;
   /** Called when the input value changes (required for controlled usage). */
   onValueChange?: (value: string) => void;
+  /** Tailwind top-padding class for the expanded footer row (default tw:pt-3). */
+  footerTopSpacingClassName?: string;
 }
 
 export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
@@ -67,6 +69,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     submitLabel = 'Add',
     value: controlledValue,
     onValueChange,
+    footerTopSpacingClassName = 'tw:pt-3',
   } = props;
 
   const [expanded, setExpanded] = useState(initialExpanded);
@@ -237,7 +240,7 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
             <div className={expandedContentInnerClassName}>
               {expandedContent}
               {expanded && (
-                <div className="tw:flex tw:justify-end tw:gap-2 tw:pt-3">
+                <div className={`tw:flex tw:justify-end tw:gap-2 ${footerTopSpacingClassName}`}>
                   <button
                     type="button"
                     onClick={handleCancel}
