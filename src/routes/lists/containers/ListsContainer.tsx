@@ -64,7 +64,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [listsToMerge, setListsToMerge] = useState<IList[]>([]);
   const [mergeName, setMergeName] = useState('');
-  const [selectedTemplateId, setSelectedTemplateId] = useState(props.listItemConfigurations[0]?.id ?? '');
+  const [selectedTemplateId, setSelectedTemplateId] = useState(() => {
+    const groceryConfig = props.listItemConfigurations.find(
+      (config) => config.name.trim().toLowerCase() === 'grocery list template',
+    );
+    return groceryConfig?.id ?? props.listItemConfigurations[0]?.id ?? '';
+  });
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
   const navigate = useNavigate();
