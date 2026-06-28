@@ -289,4 +289,24 @@ describe('BottomInputBar', () => {
     // z-[var(--z-sticky)] should resolve to the CSS variable value
     expect(bar.className).toContain('tw:z-');
   });
+
+  it('uses default footer top spacing when expanded', async () => {
+    const { findByTestId } = setup({
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+    });
+    const cancel = await findByTestId('quick-add-cancel');
+    expect(cancel.parentElement).toHaveClass('tw:pt-3');
+  });
+
+  it('uses custom footer top spacing when footerTopSpacingClassName is set', async () => {
+    const { findByTestId } = setup({
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+      footerTopSpacingClassName: 'tw:pt-1',
+    });
+    const cancel = await findByTestId('quick-add-cancel');
+    expect(cancel.parentElement).toHaveClass('tw:pt-1');
+    expect(cancel.parentElement).not.toHaveClass('tw:pt-3');
+  });
 });
