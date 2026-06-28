@@ -16,6 +16,7 @@ vi.mock('utils/listPrefetch', () => ({
   getPrefetchedList: vi.fn(() => null),
 }));
 
+import { createListItemConfiguration } from 'test-utils/factories';
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
@@ -692,6 +693,117 @@ describe('ListsContainer', () => {
 
     expect(axios.post).toHaveBeenCalledWith('/lists', {
       list: { name: 'new list', list_item_configuration_id: 'config-2' },
+    });
+  });
+
+  describe('new-list template default', () => {
+    const bookConfig = createListItemConfiguration('config-book', 'book list template');
+    const groceryConfig = createListItemConfiguration('config-grocery', 'grocery list template');
+    const todoConfig = createListItemConfiguration('config-todo', 'todo list template');
+    const bookFirstConfigurations = [bookConfig, groceryConfig];
+    const noGroceryConfigurations = [bookConfig, todoConfig];
+
+    const mockCreateListPost = (configId: string): void => {
+      axios.post = vi.fn().mockResolvedValue({
+        data: {
+          id: 'id8',
+          name: 'new list',
+          list_item_configuration_id: configId,
+          created_at: new Date('05/31/2020').toISOString(),
+          owner_id: 'id1',
+          completed: false,
+          refreshed: false,
+          users_list_id: 'id8',
+        },
+      });
+    };
+
+    const submitNewList = async (findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> => {
+      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
+      await act(async () => {
+        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      });
+    };
+
+    const expectPostedTemplate = (configId: string): void => {
+      expect(axios.post).toHaveBeenCalledWith('/lists', {
+        list: { name: 'new list', list_item_configuration_id: configId },
+      });
+    };
+
+    it('defaults to grocery list template via quick-add when grocery is not first in API order', async () => {
+      mockCreateListPost('config-grocery');
+      const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
+
+      await submitNewList(findByTestId, user);
+
+      expectPostedTemplate('config-grocery');
+    });
+
+    it('shows grocery selected and creates when expanded without changing selector', async () => {
+      mockCreateListPost('config-grocery');
+      const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
+      expect(templateSelect.value).toBe('config-grocery');
+      await submitNewList(findByTestId, user);
+
+      expectPostedTemplate('config-grocery');
+    });
+
+    it('posts chosen template id when user overrides grocery default before submit', async () => {
+      mockCreateListPost('config-book');
+      const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
+      await user.selectOptions(templateSelect, 'config-book');
+      await submitNewList(findByTestId, user);
+
+      expectPostedTemplate('config-book');
+    });
+
+    it('falls back to first configuration when no grocery list template match exists', async () => {
+      mockCreateListPost('config-book');
+      const { findByTestId, user } = setup({ listItemConfigurations: noGroceryConfigurations });
+
+      await submitNewList(findByTestId, user);
+
+      expectPostedTemplate('config-book');
+    });
+
+    it('preserves user template choice after listItemConfigurations refresh', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      mockCreateListPost('config-book');
+      const pollingResponse = {
+        data: {
+          current_user_id: 'id1',
+          accepted_lists: { completed_lists: [], not_completed_lists: [] },
+          pending_lists: [],
+          current_list_permissions: {},
+          list_item_configurations: [bookConfig, groceryConfig, todoConfig],
+        },
+      };
+      axios.get = vi.fn().mockResolvedValueOnce(pollingResponse);
+
+      const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
+
+      await user.click(await findByTestId('quick-add-expand'));
+      const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
+      await user.selectOptions(templateSelect, 'config-book');
+
+      await act(async () => {
+        vi.advanceTimersByTime(10000);
+        vi.runOnlyPendingTimers();
+      });
+      await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+      expect(templateSelect.value).toBe('config-book');
+      await submitNewList(findByTestId, user);
+
+      expectPostedTemplate('config-book');
+      vi.useRealTimers();
     });
   });
 
