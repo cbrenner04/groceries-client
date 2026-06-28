@@ -21,6 +21,11 @@ import EditListItem from './routes/list/EditListItem';
 import { ThemeProvider } from './components/ThemeProvider';
 import { SettingsMenu } from './components/domain/SettingsMenu';
 import { BottomNavBar } from './components/layout/BottomNavBar';
+import {
+  BottomInputBarFormProvider,
+  useBottomInputBarFormContext,
+} from './components/layout/BottomInputBarFormContext';
+import { useIsMobileViewport } from './components/layout/useIsMobileViewport';
 import { showToast } from './utils/toast';
 import axios from './utils/api';
 
@@ -77,6 +82,8 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
     location.pathname === '/users/password/edit' ||
     location.pathname === '/users/invitation/accept';
   const showBottomNav = Boolean(user) && !isAuthPage;
+  const { expandedFormOpen } = useBottomInputBarFormContext();
+  const isMobile = useIsMobileViewport();
 
   useEffect(() => {
     if (!showBottomNav) {
@@ -156,7 +163,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
       </AnimatePresence>
       {/* BottomInputBar owns its own viewport-level portal target (created on
           document.body), so it is intentionally not rendered here. */}
-      {showBottomNav ? (
+      {showBottomNav && !(isMobile && expandedFormOpen) ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />
         </div>
@@ -209,7 +216,9 @@ export default function AppRouter(): React.JSX.Element {
     <ThemeProvider>
       <Router>
         <UserContext.Provider value={user}>
-          <AppRouterContent signInUser={signInUser} signOutUser={signOutUser} user={user} />
+          <BottomInputBarFormProvider>
+            <AppRouterContent signInUser={signInUser} signOutUser={signOutUser} user={user} />
+          </BottomInputBarFormProvider>
         </UserContext.Provider>
       </Router>
     </ThemeProvider>

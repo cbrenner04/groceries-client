@@ -12,6 +12,8 @@ import {
   expandedContentInnerClassName,
 } from './BottomInputBar.variants';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from '../../AppRouter';
+import { useSetExpandedFormOpen } from './BottomInputBarFormContext';
+import { useIsMobileViewport } from './useIsMobileViewport';
 
 export type BottomInputBarMode = 'building' | 'shopping' | 'neutral';
 
@@ -84,6 +86,9 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobileViewport();
+  const setExpandedFormOpen = useSetExpandedFormOpen();
+  const expandedFormOpen = Boolean(expandedContent && expanded && !hidden);
 
   // Resolve the portal target synchronously on the first render via a lazy
   // initializer (runs once, during render), so the bar paints into the portal on
@@ -100,6 +105,13 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
       setExpanded(true);
     }
   }, [mode]);
+
+  useEffect(() => {
+    setExpandedFormOpen?.(expandedFormOpen);
+    return (): void => {
+      setExpandedFormOpen?.(false);
+    };
+  }, [expandedFormOpen, setExpandedFormOpen]);
 
   // Track keyboard height via visualViewport.
   // On iOS Safari, when the software keyboard opens, window.innerHeight stays
@@ -180,13 +192,16 @@ export function BottomInputBar(props: IBottomInputBarProps): React.JSX.Element {
     setExpanded((prev) => !prev);
   };
 
+  const restingBottom =
+    isMobile && expandedFormOpen
+      ? 'env(safe-area-inset-bottom)'
+      : 'calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))';
   const containerStyle: React.CSSProperties = {
     // Pin the bar directly above the on-screen keyboard.
     // When keyboardHeight > 0 (iOS keyboard open) we skip the nav-height offset
     // because the nav bar is itself pushed off-screen by the keyboard; the bar
     // should sit flush on top of the keyboard instead.
-    bottom:
-      keyboardHeight > 0 ? `${keyboardHeight}px` : 'calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))',
+    bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : restingBottom,
   };
 
   const expandButtonClassName = expandButtonVariants({ expanded });

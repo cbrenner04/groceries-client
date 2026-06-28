@@ -5,6 +5,30 @@ import userEvent from '@testing-library/user-event';
 import AppRouter, { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from './AppRouter';
 import api from './utils/api';
 
+function mockViewportWidth(isMobile: boolean): void {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: query === '(max-width: 767px)' ? isMobile : false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+}
+
+function setAuthenticatedSession(): void {
+  sessionStorage.setItem(
+    'user',
+    JSON.stringify({
+      'access-token': 'stored-token',
+      client: 'stored-client',
+      uid: 'stored-uid',
+    }),
+  );
+}
+
 function renderAppRouter(pathname: string): ReturnType<typeof render> {
   window.history.pushState({}, '', pathname);
   return render(<AppRouter />);
@@ -220,5 +244,103 @@ describe('AppRouter', () => {
 
     // It is a direct child of document.body (owned by BottomInputBar, not the router tree).
     expect(portalTarget?.parentElement).toBe(document.body);
+  });
+
+  describe('bottom nav visibility when quick-add form is open', () => {
+    beforeEach(() => {
+      setAuthenticatedSession();
+      mockViewportWidth(true);
+    });
+
+    it('hides bottom nav on mobile when the expanded quick-add form is open', async () => {
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+      await user.click(await findByTestId('quick-add-input'));
+      expect(await findByTestId('quick-add-cancel')).toBeVisible();
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+    });
+
+    it('restores bottom nav on mobile after collapsing the expanded quick-add form', async () => {
+      const user = userEvent.setup();
+      const { findByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('quick-add-input'));
+      expect(await findByTestId('quick-add-cancel')).toBeVisible();
+      await user.click(await findByTestId('quick-add-expand'));
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+    });
+
+    it('restores bottom nav on mobile after canceling the expanded quick-add form', async () => {
+      const user = userEvent.setup();
+      const { findByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('quick-add-input'));
+      await user.click(await findByTestId('quick-add-cancel'));
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+    });
+
+    it('hides bottom nav on mobile when the expanded form opens on a scrolled list', async () => {
+      const lists = [...Array(30).keys()].map((index) => ({
+        id: `list-${index}`,
+        name: `List ${index}`,
+        created_at: '2024-01-01T00:00:00.000Z',
+        completed: false,
+        refreshed: false,
+        list_item_configuration_id: 'config-1',
+      }));
+      vi.mocked(api.get).mockImplementation(async (url: string) => {
+        if (url === '/lists/') {
+          return {
+            data: {
+              current_user_id: 'user-1',
+              pending_lists: [],
+              accepted_lists: {
+                completed_lists: [],
+                not_completed_lists: lists,
+              },
+              current_list_permissions: {},
+              list_item_configurations: [
+                {
+                  id: 'config-1',
+                  name: 'Default Template',
+                  archived_at: null,
+                },
+              ],
+            },
+          };
+        }
+
+        if (url === '/list_item_configurations') {
+          return { data: [] };
+        }
+
+        return { data: {} };
+      });
+
+      const user = userEvent.setup();
+      const { findByText, findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      await findByText('List 0');
+      const scrollContainer = document.querySelector('main');
+      expect(scrollContainer).toBeTruthy();
+      Object.defineProperty(scrollContainer, 'scrollTop', { value: 400, writable: true });
+      scrollContainer?.dispatchEvent(new Event('scroll'));
+
+      await user.click(await findByTestId('quick-add-input'));
+      expect(await findByTestId('quick-add-cancel')).toBeVisible();
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+    });
+
+    it('keeps bottom nav visible on desktop when the expanded quick-add form is open', async () => {
+      mockViewportWidth(false);
+      const user = userEvent.setup();
+      const { findByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('quick-add-input'));
+      expect(await findByTestId('quick-add-cancel')).toBeVisible();
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+    });
   });
 });

@@ -141,6 +141,28 @@ describe('BottomInputBar', () => {
     expect(style).toContain('calc(var(--spacing-nav-height) + env(safe-area-inset-bottom))');
   });
 
+  it('omits nav height from resting bottom on mobile when the expanded form is open', async () => {
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 767px)',
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    const { findByTestId } = setup({
+      expandedContent: <div>Extra fields</div>,
+      initialExpanded: true,
+    });
+    await findByTestId('quick-add-input');
+    const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
+    const bar = portalTarget?.firstChild as HTMLElement;
+    const style = bar.getAttribute('style');
+    expect(style ?? '').not.toContain('--spacing-nav-height');
+  });
+
   it('does not submit on Enter when expanded by default', async () => {
     const onSubmit = vi.fn();
     const { findByTestId, user } = setup({
