@@ -16,6 +16,7 @@ vi.mock('utils/listPrefetch', () => ({
   getPrefetchedList: vi.fn(() => null),
 }));
 
+import { createListItemConfiguration } from 'test-utils/factories';
 import ListsContainer, { type IListsContainerProps } from './ListsContainer';
 
 // Mock the new toast utilities
@@ -696,199 +697,95 @@ describe('ListsContainer', () => {
   });
 
   describe('new-list template default', () => {
-    const bookFirstConfigurations = [
-      {
-        id: 'config-book',
-        name: 'book list template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
-      {
-        id: 'config-grocery',
-        name: 'grocery list template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
-    ];
+    const bookConfig = createListItemConfiguration('config-book', 'book list template');
+    const groceryConfig = createListItemConfiguration('config-grocery', 'grocery list template');
+    const todoConfig = createListItemConfiguration('config-todo', 'todo list template');
+    const bookFirstConfigurations = [bookConfig, groceryConfig];
+    const noGroceryConfigurations = [bookConfig, todoConfig];
 
-    const noGroceryConfigurations = [
-      {
-        id: 'config-book',
-        name: 'book list template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
-      {
-        id: 'config-todo',
-        name: 'todo list template',
-        user_id: 'id1',
-        created_at: '',
-        updated_at: '',
-        archived_at: null,
-      },
-    ];
+    const mockCreateListPost = (configId: string): void => {
+      axios.post = vi.fn().mockResolvedValue({
+        data: {
+          id: 'id8',
+          name: 'new list',
+          list_item_configuration_id: configId,
+          created_at: new Date('05/31/2020').toISOString(),
+          owner_id: 'id1',
+          completed: false,
+          refreshed: false,
+          users_list_id: 'id8',
+        },
+      });
+    };
+
+    const submitNewList = async (findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> => {
+      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
+      await act(async () => {
+        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      });
+    };
+
+    const expectPostedTemplate = (configId: string): void => {
+      expect(axios.post).toHaveBeenCalledWith('/lists', {
+        list: { name: 'new list', list_item_configuration_id: configId },
+      });
+    };
 
     it('defaults to grocery list template via quick-add when grocery is not first in API order', async () => {
-      axios.post = vi.fn().mockResolvedValue({
-        data: {
-          id: 'id8',
-          name: 'new list',
-          list_item_configuration_id: 'config-grocery',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 'id1',
-          completed: false,
-          refreshed: false,
-          users_list_id: 'id8',
-        },
-      });
+      mockCreateListPost('config-grocery');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
+      await submitNewList(findByTestId, user);
 
-      expect(axios.post).toHaveBeenCalledWith('/lists', {
-        list: { name: 'new list', list_item_configuration_id: 'config-grocery' },
-      });
+      expectPostedTemplate('config-grocery');
     });
 
-    it('shows grocery list template selected when expanded and grocery is not first in API order', async () => {
+    it('shows grocery selected and creates when expanded without changing selector', async () => {
+      mockCreateListPost('config-grocery');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
       await user.click(await findByTestId('quick-add-expand'));
-
       const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
       expect(templateSelect.value).toBe('config-grocery');
-    });
+      await submitNewList(findByTestId, user);
 
-    it('creates with grocery list template when expanded without changing selector', async () => {
-      axios.post = vi.fn().mockResolvedValue({
-        data: {
-          id: 'id8',
-          name: 'new list',
-          list_item_configuration_id: 'config-grocery',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 'id1',
-          completed: false,
-          refreshed: false,
-          users_list_id: 'id8',
-        },
-      });
-      const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
-
-      await user.click(await findByTestId('quick-add-expand'));
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
-
-      expect(axios.post).toHaveBeenCalledWith('/lists', {
-        list: { name: 'new list', list_item_configuration_id: 'config-grocery' },
-      });
+      expectPostedTemplate('config-grocery');
     });
 
     it('posts chosen template id when user overrides grocery default before submit', async () => {
-      axios.post = vi.fn().mockResolvedValue({
-        data: {
-          id: 'id8',
-          name: 'new list',
-          list_item_configuration_id: 'config-book',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 'id1',
-          completed: false,
-          refreshed: false,
-          users_list_id: 'id8',
-        },
-      });
+      mockCreateListPost('config-book');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
       await user.click(await findByTestId('quick-add-expand'));
       const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
       await user.selectOptions(templateSelect, 'config-book');
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
+      await submitNewList(findByTestId, user);
 
-      expect(axios.post).toHaveBeenCalledWith('/lists', {
-        list: { name: 'new list', list_item_configuration_id: 'config-book' },
-      });
+      expectPostedTemplate('config-book');
     });
 
     it('falls back to first configuration when no grocery list template match exists', async () => {
-      axios.post = vi.fn().mockResolvedValue({
-        data: {
-          id: 'id8',
-          name: 'new list',
-          list_item_configuration_id: 'config-book',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 'id1',
-          completed: false,
-          refreshed: false,
-          users_list_id: 'id8',
-        },
-      });
+      mockCreateListPost('config-book');
       const { findByTestId, user } = setup({ listItemConfigurations: noGroceryConfigurations });
 
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
+      await submitNewList(findByTestId, user);
 
-      expect(axios.post).toHaveBeenCalledWith('/lists', {
-        list: { name: 'new list', list_item_configuration_id: 'config-book' },
-      });
+      expectPostedTemplate('config-book');
     });
 
     it('preserves user template choice after listItemConfigurations refresh', async () => {
       vi.useFakeTimers({ shouldAdvanceTime: true });
-      axios.post = vi.fn().mockResolvedValue({
+      mockCreateListPost('config-book');
+      const pollingResponse = {
         data: {
-          id: 'id8',
-          name: 'new list',
-          list_item_configuration_id: 'config-book',
-          created_at: new Date('05/31/2020').toISOString(),
-          owner_id: 'id1',
-          completed: false,
-          refreshed: false,
-          users_list_id: 'id8',
+          current_user_id: 'id1',
+          accepted_lists: { completed_lists: [], not_completed_lists: [] },
+          pending_lists: [],
+          current_list_permissions: {},
+          list_item_configurations: [bookConfig, groceryConfig, todoConfig],
         },
-      });
-      axios.get = vi
-        .fn()
-        .mockResolvedValueOnce({
-          data: {
-            current_user_id: 'id1',
-            accepted_lists: { completed_lists: [], not_completed_lists: [] },
-            pending_lists: [],
-            current_list_permissions: {},
-            list_item_configurations: [
-              { id: 'config-book', name: 'book list template' },
-              { id: 'config-grocery', name: 'grocery list template' },
-              { id: 'config-todo', name: 'todo list template' },
-            ],
-          },
-        })
-        .mockResolvedValueOnce({
-          data: {
-            current_user_id: 'id1',
-            accepted_lists: { completed_lists: [], not_completed_lists: [] },
-            pending_lists: [],
-            current_list_permissions: {},
-            list_item_configurations: [
-              { id: 'config-book', name: 'book list template' },
-              { id: 'config-grocery', name: 'grocery list template' },
-              { id: 'config-todo', name: 'todo list template' },
-            ],
-          },
-        });
+      };
+      axios.get = vi.fn().mockResolvedValueOnce(pollingResponse);
 
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
@@ -903,15 +800,9 @@ describe('ListsContainer', () => {
       await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
       expect(templateSelect.value).toBe('config-book');
+      await submitNewList(findByTestId, user);
 
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
-
-      expect(axios.post).toHaveBeenCalledWith('/lists', {
-        list: { name: 'new list', list_item_configuration_id: 'config-book' },
-      });
+      expectPostedTemplate('config-book');
       vi.useRealTimers();
     });
   });
