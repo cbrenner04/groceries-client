@@ -79,6 +79,70 @@ function mockTemplatesApi(
   });
 }
 
+const defaultListDetailData = {
+  current_user_id: 'user-1',
+  list: {
+    id: 'list-1',
+    name: 'Groceries',
+    type: 'GroceryList',
+    user_id: 'user-1',
+    created_at: '',
+    updated_at: '',
+  },
+  not_completed_items: [],
+  completed_items: [],
+  list_users: [],
+  permissions: 'write',
+  lists_to_update: [],
+  list_item_configuration: {
+    id: 'config-1',
+    name: 'Default Configuration',
+    user_id: 'user-1',
+    created_at: '',
+    updated_at: '',
+    archived_at: null,
+  },
+  list_item_field_configurations: [],
+  categories: [],
+};
+
+function mockListDetailApi(): void {
+  vi.mocked(api.get).mockImplementation(async (url: string) => {
+    if (url === '/auth/validate_token') {
+      throw new Error('not signed in');
+    }
+
+    if (url === '/lists/') {
+      return {
+        data: {
+          current_user_id: 'user-1',
+          pending_lists: [],
+          accepted_lists: {
+            completed_lists: [],
+            not_completed_lists: [],
+          },
+          current_list_permissions: {},
+          list_item_configurations: [defaultTemplateConfiguration],
+        },
+      };
+    }
+
+    if (url === '/lists/list-1') {
+      return { data: defaultListDetailData };
+    }
+
+    if (url.includes('list_item_field_configurations')) {
+      return { data: [] };
+    }
+
+    if (url === '/list_item_configurations') {
+      return { data: [] };
+    }
+
+    return { data: {} };
+  });
+}
+
 function mockViewportWidth(isMobile: boolean): void {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
     matches: query === '(max-width: 767px)' ? isMobile : false,
@@ -449,6 +513,28 @@ describe('AppRouter', () => {
       await user.click(await findByTestId('quick-add-input'));
       expect(await findByTestId('quick-add-cancel')).toBeVisible();
       expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+    });
+
+    it('hides bottom nav when the list add-item modal is open', async () => {
+      mockListDetailApi();
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists/list-1');
+
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+      await user.click(await findByTestId('list-add-fab'));
+      expect(await findByTestId('add-list-item-modal')).toBeVisible();
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+    });
+
+    it('restores bottom nav after closing the list add-item modal', async () => {
+      mockListDetailApi();
+      const user = userEvent.setup();
+      const { findByTestId } = renderAppRouter('/lists/list-1');
+
+      await user.click(await findByTestId('list-add-fab'));
+      expect(await findByTestId('add-list-item-modal')).toBeVisible();
+      await user.click(await findByTestId('add-list-item-cancel'));
+      expect(await findByTestId('bottom-nav')).toBeVisible();
     });
   });
 });
