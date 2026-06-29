@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 import Templates from './Templates';
 import * as utils from './utils';
@@ -17,7 +18,9 @@ describe('Templates', () => {
 
     return render(
       <MemoryRouter>
-        <Templates />
+        <BottomInputBarFormProvider>
+          <Templates />
+        </BottomInputBarFormProvider>
       </MemoryRouter>,
     );
   };
