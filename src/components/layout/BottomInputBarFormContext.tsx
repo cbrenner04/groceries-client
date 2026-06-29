@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useLocation } from 'react-router';
 
 interface IBottomInputBarFormContextValue {
   expandedFormOpen: boolean;
   setExpandedFormOpen: (open: boolean) => void;
+  addFormModalOpen: boolean;
+  setAddFormModalOpen: (open: boolean) => void;
 }
 
 const BottomInputBarFormContext = createContext<IBottomInputBarFormContextValue | undefined>(undefined);
@@ -10,9 +13,23 @@ const BottomInputBarFormContext = createContext<IBottomInputBarFormContextValue 
 export function BottomInputBarFormProvider(props: { children: ReactNode }): React.JSX.Element {
   const { children } = props;
   const [expandedFormOpen, setExpandedFormOpen] = useState(false);
+  const [addFormModalOpen, setAddFormModalOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setAddFormModalOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    return (): void => {
+      setAddFormModalOpen(false);
+    };
+  }, []);
 
   return (
-    <BottomInputBarFormContext.Provider value={{ expandedFormOpen, setExpandedFormOpen }}>
+    <BottomInputBarFormContext.Provider
+      value={{ expandedFormOpen, setExpandedFormOpen, addFormModalOpen, setAddFormModalOpen }}
+    >
       {children}
     </BottomInputBarFormContext.Provider>
   );

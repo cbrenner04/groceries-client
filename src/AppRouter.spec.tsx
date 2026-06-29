@@ -1,9 +1,57 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Link } from 'react-router';
 
 import AppRouter, { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from './AppRouter';
+import { AddFormModal } from './components/ui/AddFormModal';
+import { useBottomInputBarFormContext } from './components/layout/BottomInputBarFormContext';
 import api from './utils/api';
+
+function AddFormModalHarness(): React.JSX.Element {
+  const { addFormModalOpen, setAddFormModalOpen } = useBottomInputBarFormContext();
+
+  return (
+    <>
+      <button type="button" data-test-id="open-add-form-modal" onClick={() => setAddFormModalOpen(true)}>
+        Open add form modal
+      </button>
+      <AddFormModal
+        isOpen={addFormModalOpen}
+        onClose={() => setAddFormModalOpen(false)}
+        title="Add list"
+        footer={
+          <>
+            <Link to="/templates" data-test-id="add-form-modal-route-change">
+              Templates
+            </Link>
+            <button type="button" data-test-id="add-form-modal-cancel" onClick={() => setAddFormModalOpen(false)}>
+              Cancel
+            </button>
+          </>
+        }
+      >
+        <p>Add form body</p>
+      </AddFormModal>
+    </>
+  );
+}
+
+vi.mock('./routes/lists/Lists', async () => {
+  const actual = await vi.importActual('./routes/lists/Lists');
+  const ActualLists = (actual as { default: React.ComponentType }).default;
+
+  return {
+    default: function ListsWithAddFormModalHarness(): React.JSX.Element {
+      return (
+        <>
+          <ActualLists />
+          <AddFormModalHarness />
+        </>
+      );
+    },
+  };
+});
 
 function mockViewportWidth(isMobile: boolean): void {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
@@ -341,6 +389,65 @@ describe('AppRouter', () => {
       await user.click(await findByTestId('quick-add-input'));
       expect(await findByTestId('quick-add-cancel')).toBeVisible();
       expect(await findByTestId('bottom-nav')).toBeVisible();
+    });
+  });
+
+  describe('bottom nav visibility when add-form modal is open', () => {
+    beforeEach(() => {
+      setAuthenticatedSession();
+    });
+
+    it('hides bottom nav while the add-form modal is open', async () => {
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+      await user.click(await findByTestId('open-add-form-modal'));
+      expect(await findByTestId('add-form-modal')).toBeVisible();
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+    });
+
+    it('restores bottom nav after closing the add-form modal', async () => {
+      const user = userEvent.setup();
+      const { findByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('open-add-form-modal'));
+      await user.click(await findByTestId('add-form-modal-cancel'));
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+    });
+
+    it('closes the settings menu when the add-form modal opens', async () => {
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('nav-settings'));
+      expect(await findByTestId('settings-menu')).toBeVisible();
+
+      await user.click(await findByTestId('open-add-form-modal'));
+      expect(await findByTestId('add-form-modal')).toBeVisible();
+      expect(queryByTestId('settings-menu')).not.toBeInTheDocument();
+    });
+
+    it('clears add-form modal state and restores bottom nav after route change', async () => {
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('open-add-form-modal'));
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
+
+      await user.click(await findByTestId('add-form-modal-route-change'));
+      expect(await findByTestId('bottom-nav')).toBeVisible();
+      expect(queryByTestId('add-form-modal')).not.toBeInTheDocument();
+    });
+
+    it('keeps mobile expanded quick-add bottom nav hide unchanged when add-form modal is closed', async () => {
+      mockViewportWidth(true);
+      const user = userEvent.setup();
+      const { findByTestId, queryByTestId } = renderAppRouter('/lists');
+
+      await user.click(await findByTestId('quick-add-input'));
+      expect(await findByTestId('quick-add-cancel')).toBeVisible();
+      expect(queryByTestId('bottom-nav')).not.toBeInTheDocument();
     });
   });
 });
