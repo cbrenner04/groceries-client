@@ -2,8 +2,6 @@ import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
-import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
-
 import ShareList from './ShareList';
 import axios from '../../utils/api';
 
@@ -44,9 +42,7 @@ describe('ShareList', () => {
   const renderShareList = (): RenderResult =>
     render(
       <MemoryRouter>
-        <BottomInputBarFormProvider>
-          <ShareList />
-        </BottomInputBarFormProvider>
+        <ShareList />
       </MemoryRouter>,
     );
 

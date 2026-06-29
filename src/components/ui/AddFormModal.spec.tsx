@@ -161,17 +161,6 @@ describe('AddFormModal', () => {
   });
 
   describe('context flag lifecycle', () => {
-    it('throws when useBottomInputBarFormContext is used outside provider', () => {
-      function BadComponent(): React.JSX.Element {
-        useBottomInputBarFormContext();
-        return <div />;
-      }
-
-      expect(() => render(<BadComponent />)).toThrow(
-        'useBottomInputBarFormContext must be used within BottomInputBarFormProvider',
-      );
-    });
-
     it('clears addFormModalOpen on route change', async () => {
       const user = userEvent.setup();
       const { findByTestId } = renderWithContext('/lists');

@@ -4,8 +4,6 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 import { AxiosError } from 'axios';
 
-import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
-
 import { UserContext } from '../../AppRouter';
 import { handleFailure } from '../../utils/handleFailure';
 
@@ -59,12 +57,10 @@ const renderList = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
       <MemoryRouter initialEntries={['/lists/123']}>
-        <BottomInputBarFormProvider>
-          <Routes>
-            <Route path="/lists/:id" element={<List />} />
-            <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
-          </Routes>
-        </BottomInputBarFormProvider>
+        <Routes>
+          <Route path="/lists/:id" element={<List />} />
+          <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
+        </Routes>
       </MemoryRouter>
     </UserContext.Provider>,
   );

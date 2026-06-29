@@ -178,10 +178,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     });
   }, []);
 
-  // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
-
-  // Note: Idle prefetch is also eliminated since field configurations are preloaded with list data
-
   // Add polling for real-time updates with request deduplication
   usePolling(
     async () => {
