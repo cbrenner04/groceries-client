@@ -3,7 +3,7 @@ import { render, type RenderResult, waitFor, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router';
 
 import axios from 'utils/api';
-import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 // Mock listPrefetch at module level
 vi.mock('utils/listPrefetch', () => ({
@@ -17,14 +17,11 @@ import * as utils from './utils';
 
 describe('Lists', () => {
   const renderLists = (initialFilter?: 'all' | 'pending' | 'active' | 'completed'): RenderResult => {
-    // Create the portal target before rendering
-    const portalTarget = document.createElement('div');
-    portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
-    document.body.appendChild(portalTarget);
-
     return render(
       <MemoryRouter>
-        <Lists initialFilter={initialFilter} />
+        <BottomInputBarFormProvider>
+          <Lists initialFilter={initialFilter} />
+        </BottomInputBarFormProvider>
       </MemoryRouter>,
     );
   };

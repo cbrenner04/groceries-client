@@ -11,11 +11,13 @@ import { ListCard } from 'components/domain/ListCard';
 import { MultiSelectBar, type IMultiSelectAction } from 'components/domain/MultiSelectBar';
 import { CheckIcon, EditIcon, CompressIcon, RedoIcon, TrashIcon } from 'components/icons';
 import { EmptyState } from 'components/domain/EmptyState';
-import { BottomInputBar } from 'components/layout/BottomInputBar';
+import { useBottomInputBarFormContext } from 'components/layout/BottomInputBarFormContext';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { ConfirmDialog } from 'components/domain/ConfirmDialog';
 import { BottomSheet } from 'components/ui/BottomSheet';
+import { AddFormModal } from 'components/ui/AddFormModal';
 import Select from 'components/ui/Select';
+import Input from 'components/ui/Input';
 import { Button } from 'components/ui/Button';
 import {
   fetchLists,
@@ -53,7 +55,9 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   const [incompleteLists, setIncompleteLists] = useState(props.incompleteLists);
   const [currentUserPermissions, setCurrentUserPermissions] = useState(props.currentUserPermissions);
   const [listItemConfigurations, setListItemConfigurations] = useState(props.listItemConfigurations);
-  const [, setPending] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [createListName, setCreateListName] = useState('');
+  const { addFormModalOpen, setAddFormModalOpen } = useBottomInputBarFormContext();
   const [statusFilter, setStatusFilter] = useState<TStatusFilter>(props.initialFilter ?? 'all');
   const [multiSelectActive, setMultiSelectActive] = useState(false);
   const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
@@ -200,9 +204,18 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     });
   };
 
-  const handleCreateList = (name: string): void => {
+  const handleCloseCreateModal = (): void => {
+    setAddFormModalOpen(false);
+    setCreateListName('');
+  };
+
+  const handleCreateList = (): void => {
+    const trimmed = createListName.trim();
+    if (!trimmed || pending) {
+      return;
+    }
     setPending(true);
-    const list = { name, list_item_configuration_id: selectedTemplateId };
+    const list = { name: trimmed, list_item_configuration_id: selectedTemplateId };
     axios
       .post('/lists', { list })
       .then((response) => {
@@ -213,6 +226,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         const updatedIncompleteLists = update(incompleteLists, { $push: [response.data] });
         setIncompleteLists(sortLists(updatedIncompleteLists));
         setPending(false);
+        handleCloseCreateModal();
         showToast.info('List successfully added.');
       })
       .catch((error) => {
@@ -465,7 +479,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const hideBottomInputBar = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
+  const showCreateFab =
+    props.initialFilter !== 'completed' &&
+    !showDeleteConfirm &&
+    !showRejectConfirm &&
+    !showMergeModal &&
+    !editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -556,7 +575,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   );
 
   return (
-    <div className="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]">
+    <div className="tw:pb-[calc(3.5rem+var(--spacing-nav-height)+1rem)]">
       <div className="tw:flex tw:justify-between tw:items-center tw:mb-4">
         <h1
           className="tw:text-lg tw:font-semibold tw:text-[var(--color-text-primary)] tw:m-0"
@@ -732,12 +751,52 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         )}
       </BottomSheet>
 
-      <BottomInputBar
-        placeholder="Create a new list..."
-        onSubmit={handleCreateList}
-        submitLabel="Create"
-        hidden={hideBottomInputBar || props.initialFilter === 'completed'}
-        expandedContent={
+      {showCreateFab ? (
+        <button
+          type="button"
+          data-test-id="lists-create-fab"
+          aria-label="Create list"
+          onClick={(): void => setAddFormModalOpen(true)}
+          className={
+            'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+1rem+env(safe-area-inset-bottom))] tw:right-4 ' +
+            'tw:z-[var(--z-sticky)] tw:flex tw:items-center tw:justify-center tw:w-14 tw:h-14 ' +
+            'tw:rounded-full tw:bg-[var(--color-primary)] tw:text-white tw:text-2xl tw:leading-none ' +
+            'tw:shadow-[var(--shadow-lg)] tw:border-0 tw:cursor-pointer'
+          }
+        >
+          +
+        </button>
+      ) : null}
+
+      <AddFormModal
+        isOpen={addFormModalOpen}
+        onClose={handleCloseCreateModal}
+        title="Create list"
+        testId="create-list-modal"
+        footer={
+          <>
+            <Button variant="ghost" data-test-id="create-list-cancel" onClick={handleCloseCreateModal}>
+              Cancel
+            </Button>
+            <Button
+              data-test-id="create-list-submit"
+              onClick={handleCreateList}
+              disabled={pending || !createListName.trim()}
+              loading={pending}
+            >
+              Create
+            </Button>
+          </>
+        }
+      >
+        <div className="tw:flex tw:flex-col tw:gap-4">
+          <Input
+            label="Name"
+            value={createListName}
+            onChange={(e: ChangeEvent<HTMLInputElement>): void => setCreateListName(e.target.value)}
+            placeholder="Create a new list..."
+            testId="create-list-name-input"
+          />
           <Select
             label="Template"
             options={templateOptions}
@@ -746,10 +805,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
             id="list_item_configuration_id"
             testId="list_item_configuration_id"
           />
-        }
-        initialExpanded={false}
-        allowEnterSubmitWhenExpanded
-      />
+        </div>
+      </AddFormModal>
     </div>
   );
 };

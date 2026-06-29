@@ -3,7 +3,7 @@
 exports[`ListsContainer > renders 1`] = `
 <div>
   <div
-    class="tw:pb-[calc(var(--spacing-input-bar-height)+var(--spacing-nav-height)+1rem)]"
+    class="tw:pb-[calc(3.5rem+var(--spacing-nav-height)+1rem)]"
   >
     <div
       class="tw:flex tw:justify-between tw:items-center tw:mb-4"
@@ -634,6 +634,14 @@ exports[`ListsContainer > renders 1`] = `
         </div>
       </div>
     </div>
+    <button
+      aria-label="Create list"
+      class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+1rem+env(safe-area-inset-bottom))] tw:right-4 tw:z-[var(--z-sticky)] tw:flex tw:items-center tw:justify-center tw:w-14 tw:h-14 tw:rounded-full tw:bg-[var(--color-primary)] tw:text-white tw:text-2xl tw:leading-none tw:shadow-[var(--shadow-lg)] tw:border-0 tw:cursor-pointer"
+      data-test-id="lists-create-fab"
+      type="button"
+    >
+      +
+    </button>
   </div>
 </div>
 `;

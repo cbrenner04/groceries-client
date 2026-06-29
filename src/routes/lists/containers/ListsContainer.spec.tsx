@@ -7,7 +7,7 @@ import axios from 'utils/api';
 import type { TUserPermissions } from 'typings';
 import { listsDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
-import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 // Mock listPrefetch at module level
 vi.mock('utils/listPrefetch', () => ({
@@ -32,12 +32,22 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
-function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
-  // Create the portal target before rendering
-  const portalTarget = document.createElement('div');
-  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
-  document.body.appendChild(portalTarget);
+async function openCreateModal(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  await user.click(await findByTestId('lists-create-fab'));
+  await findByTestId('create-list-modal');
+}
 
+async function submitNewList(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  const nameInput = await findByTestId('create-list-name-input');
+  await user.click(nameInput);
+  await user.paste('new list');
+  await user.click(await findByTestId('create-list-submit'));
+  await act(async () => {
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+  });
+}
+
+function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
     userId: 'id1',
@@ -143,7 +153,9 @@ function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
     <MemoryRouter>
-      <ListsContainer {...props} />
+      <BottomInputBarFormProvider>
+        <ListsContainer {...props} />
+      </BottomInputBarFormProvider>
     </MemoryRouter>,
   );
 
@@ -256,10 +268,10 @@ describe('ListsContainer', () => {
     expect(queryByTestId('filter-completed')).toBeNull();
   });
 
-  it('hides new-list input bar when initialFilter is completed', () => {
+  it('hides create FAB when initialFilter is completed', () => {
     const { queryByTestId } = setup({ initialFilter: 'completed' });
 
-    expect(queryByTestId('quick-add-input')).toBeNull();
+    expect(queryByTestId('lists-create-fab')).toBeNull();
   });
 
   it('hides view all completed lists button when initialFilter is completed', () => {
@@ -318,34 +330,34 @@ describe('ListsContainer', () => {
     expect(queryByTestId('list-id5')).toBeInTheDocument();
   });
 
-  it('renders filter chips and input bar with empty state', async () => {
+  it('renders filter chips and create FAB with empty state', async () => {
     const { getByTestId, user } = setup({ pendingLists: [] });
 
     await user.click(getByTestId('filter-pending'));
 
     expect(getByTestId('filter-pending')).toBeInTheDocument();
-    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
   });
 
-  it('renders filter chips and input bar when active filter has no lists', async () => {
+  it('renders filter chips and create FAB when active filter has no lists', async () => {
     const { getByTestId, user } = setup({ incompleteLists: [] });
 
     await user.click(getByTestId('filter-active'));
 
     expect(getByTestId('filter-active')).toBeInTheDocument();
-    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
   });
 
-  it('renders filter chips and input bar when completed filter has no lists', async () => {
+  it('renders filter chips and create FAB when completed filter has no lists', async () => {
     const { getByTestId, user } = setup({ completedLists: [] });
 
     await user.click(getByTestId('filter-completed'));
 
     expect(getByTestId('filter-completed')).toBeInTheDocument();
-    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
   });
 
-  it('renders filter chips and input bar when all filter has no lists', () => {
+  it('renders filter chips and create FAB when all filter has no lists', () => {
     const { getByTestId } = setup({
       pendingLists: [],
       incompleteLists: [],
@@ -353,13 +365,14 @@ describe('ListsContainer', () => {
     });
 
     expect(getByTestId('filter-all')).toBeInTheDocument();
-    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
   });
 
-  it('renders quick-add input', () => {
-    const { getByTestId } = setup();
+  it('renders create FAB', () => {
+    const { getByTestId, queryByTestId } = setup();
 
-    expect(getByTestId('quick-add-input')).toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
+    expect(queryByTestId('quick-add-input')).toBeNull();
   });
 
   // ─── View all completed lists link ────────────────────────────────────────
@@ -637,7 +650,7 @@ describe('ListsContainer', () => {
     vi.useRealTimers();
   });
 
-  it('creates list via quick-add input', async () => {
+  it('creates list via create modal', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id8',
@@ -650,22 +663,20 @@ describe('ListsContainer', () => {
         users_list_id: 'id8',
       },
     });
-    const { findByTestId, user } = setup();
+    const { findByTestId, queryByTestId, user } = setup();
 
-    const input = await findByTestId('quick-add-input');
-    await user.type(input, 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(axios.post).toHaveBeenCalledWith('/lists', {
       list: { name: 'new list', list_item_configuration_id: 'config-1' },
     });
     expect(mockShowToast.info).toHaveBeenCalledWith('List successfully added.');
     expect(await findByTestId('list-id8')).toHaveTextContent('new list');
+    expect(queryByTestId('create-list-modal')).not.toBeInTheDocument();
   });
 
-  it('creates list with selected template via expanded input', async () => {
+  it('creates list with selected template via create modal', async () => {
     axios.post = vi.fn().mockResolvedValue({
       data: {
         id: 'id8',
@@ -680,16 +691,10 @@ describe('ListsContainer', () => {
     });
     const { findByTestId, user } = setup();
 
-    // Expand to show template selector
-    await user.click(await findByTestId('quick-add-expand'));
-    // Select a different template
+    await openCreateModal(findByTestId, user);
     const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
     await user.selectOptions(templateSelect, 'config-2');
-    // Type name and submit
-    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await submitNewList(findByTestId, user);
 
     expect(axios.post).toHaveBeenCalledWith('/lists', {
       list: { name: 'new list', list_item_configuration_id: 'config-2' },
@@ -718,33 +723,27 @@ describe('ListsContainer', () => {
       });
     };
 
-    const submitNewList = async (findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> => {
-      await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-      });
-    };
-
     const expectPostedTemplate = (configId: string): void => {
       expect(axios.post).toHaveBeenCalledWith('/lists', {
         list: { name: 'new list', list_item_configuration_id: configId },
       });
     };
 
-    it('defaults to grocery list template via quick-add when grocery is not first in API order', async () => {
+    it('defaults to grocery list template when grocery is not first in API order', async () => {
       mockCreateListPost('config-grocery');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
+      await openCreateModal(findByTestId, user);
       await submitNewList(findByTestId, user);
 
       expectPostedTemplate('config-grocery');
     });
 
-    it('shows grocery selected and creates when expanded without changing selector', async () => {
+    it('shows grocery selected and creates without changing selector', async () => {
       mockCreateListPost('config-grocery');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openCreateModal(findByTestId, user);
       const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
       expect(templateSelect.value).toBe('config-grocery');
       await submitNewList(findByTestId, user);
@@ -756,7 +755,7 @@ describe('ListsContainer', () => {
       mockCreateListPost('config-book');
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openCreateModal(findByTestId, user);
       const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
       await user.selectOptions(templateSelect, 'config-book');
       await submitNewList(findByTestId, user);
@@ -768,6 +767,7 @@ describe('ListsContainer', () => {
       mockCreateListPost('config-book');
       const { findByTestId, user } = setup({ listItemConfigurations: noGroceryConfigurations });
 
+      await openCreateModal(findByTestId, user);
       await submitNewList(findByTestId, user);
 
       expectPostedTemplate('config-book');
@@ -789,7 +789,7 @@ describe('ListsContainer', () => {
 
       const { findByTestId, user } = setup({ listItemConfigurations: bookFirstConfigurations });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openCreateModal(findByTestId, user);
       const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
       await user.selectOptions(templateSelect, 'config-book');
 
@@ -807,14 +807,102 @@ describe('ListsContainer', () => {
     });
   });
 
+  async function expectDismissClearsCreateModalName(
+    dismiss: (ctx: { user: UserEvent; findByTestId: RenderResult['findByTestId'] }) => Promise<void>,
+  ): Promise<void> {
+    const { findByTestId, queryByTestId, user } = setup();
+
+    await openCreateModal(findByTestId, user);
+    await user.type(await findByTestId('create-list-name-input'), 'test name');
+    await dismiss({ user, findByTestId });
+
+    expect(queryByTestId('create-list-modal')).not.toBeInTheDocument();
+    expect(axios.post).not.toHaveBeenCalled();
+
+    await openCreateModal(findByTestId, user);
+    expect(((await findByTestId('create-list-name-input')) as HTMLInputElement).value).toBe('');
+  }
+
+  it('closes create modal on cancel and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.click(await ctx.findByTestId('create-list-cancel'));
+    });
+  });
+
+  it('closes create modal on overlay dismiss and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.click(await ctx.findByTestId('create-list-modal-overlay'));
+    });
+  });
+
+  it('closes create modal on Escape and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.keyboard('{Escape}');
+    });
+  });
+
+  it('does not POST on empty or whitespace-only name', async () => {
+    const { findByTestId, user } = setup();
+
+    await user.click(await findByTestId('lists-create-fab'));
+    await user.click(await findByTestId('create-list-submit'));
+    expect(axios.post).not.toHaveBeenCalled();
+
+    await user.type(await findByTestId('create-list-name-input'), '   ');
+    await user.click(await findByTestId('create-list-submit'));
+    expect(axios.post).not.toHaveBeenCalled();
+  });
+
+  it('hides create FAB when edit sheet is open', async () => {
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        id: 'id5',
+        name: 'an active list',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'cfg-1',
+      },
+    });
+    const { findByTestId, queryByTestId } = setup({ initialEditListId: 'id5' });
+
+    await findByTestId('edit-list-sheet');
+    expect(queryByTestId('lists-create-fab')).toBeNull();
+  });
+
+  it('hides create FAB when delete confirm is open', async () => {
+    const { getAllByTestId, queryByTestId, user } = setup();
+
+    await user.click(getAllByTestId('incomplete-list-trash')[0]);
+
+    expect(queryByTestId('lists-create-fab')).toBeNull();
+  });
+
+  it('hides create FAB when reject confirm is open', async () => {
+    const { getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByTestId('pending-list-trash'));
+
+    expect(queryByTestId('lists-create-fab')).toBeNull();
+  });
+
+  it('hides create FAB when merge modal is open', async () => {
+    const { getByText, getByTestId, queryByTestId, user } = setup();
+
+    await user.click(getByText('Select Lists'));
+    await user.click(document.querySelector('[data-test-id="list-id5"]') as HTMLElement);
+    await user.click(document.querySelector('[data-test-id="list-id6"]') as HTMLElement);
+    await user.click(getByTestId('multi-select-merge'));
+
+    expect(queryByTestId('lists-create-fab')).toBeNull();
+  });
+
   it('redirects to login when submit response is 401', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByTestId, user } = setup();
 
-    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -826,10 +914,8 @@ describe('ListsContainer', () => {
     });
     const { findByTestId, user } = setup();
 
-    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
@@ -838,10 +924,8 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByTestId, user } = setup();
 
-    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
@@ -850,10 +934,8 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByTestId, user } = setup();
 
-    await user.type(await findByTestId('quick-add-input'), 'new list{Enter}');
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });
