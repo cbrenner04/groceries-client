@@ -78,41 +78,13 @@ function mockListDetailApi(notCompletedItems: IListItem[] = defaultTestData.notC
     ],
   };
 
+  const baseGet = vi.mocked(api.get).getMockImplementation();
   vi.mocked(api.get).mockImplementation(async (url: string) => {
-    if (url === '/auth/validate_token') {
-      throw new Error('not signed in');
-    }
-
     if (url === `/lists/${defaultListDetailId}`) {
       return { data: listDetailData };
     }
 
-    if (url === '/lists/') {
-      return {
-        data: {
-          current_user_id: 'user-1',
-          pending_lists: [],
-          accepted_lists: {
-            completed_lists: [],
-            not_completed_lists: [],
-          },
-          current_list_permissions: {},
-          list_item_configurations: [
-            {
-              id: 'config-1',
-              name: 'Default Template',
-              archived_at: null,
-            },
-          ],
-        },
-      };
-    }
-
-    if (url === '/list_item_configurations') {
-      return { data: [] };
-    }
-
-    return { data: {} };
+    return baseGet ? baseGet(url) : { data: {} };
   });
 }
 

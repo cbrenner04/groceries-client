@@ -65,8 +65,8 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
     setCreateFieldRows(initialFieldRows());
   };
 
-  const handleCreateSubmit = async (name: string, fieldRows: IFieldRow[]): Promise<void> => {
-    const trimmed = name.trim();
+  const handleCreateTemplate = async (): Promise<void> => {
+    const trimmed = createTemplateName.trim();
     if (!trimmed || pending) {
       return;
     }
@@ -76,7 +76,7 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
         list_item_configuration: { name: trimmed },
       });
 
-      const fieldPromises = fieldRows.map((row) =>
+      const fieldPromises = createFieldRows.map((row) =>
         axios.post(`/list_item_configurations/${templateData.id}/list_item_field_configurations`, {
           list_item_field_configuration: {
             label: row.label,
@@ -97,10 +97,6 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
     } catch (error) {
       failure(error, navigate, setPending);
     }
-  };
-
-  const handleCreateClick = (): void => {
-    void handleCreateSubmit(createTemplateName, createFieldRows);
   };
 
   const handleDelete = async (templateId: string): Promise<void> => {
@@ -139,8 +135,6 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
       });
   };
 
-  const showCreateFab = !editSheetOpen;
-
   return (
     <PageLayout title="Templates">
       <div className="tw:pb-[calc(3.5rem+var(--spacing-nav-height)+1rem)]">
@@ -170,7 +164,7 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
           )}
         </BottomSheet>
 
-        {showCreateFab ? (
+        {!editSheetOpen ? (
           <button
             type="button"
             data-test-id="templates-create-fab"
@@ -199,7 +193,9 @@ const TemplatesContainer: React.FC<ITemplatesContainerProps> = (props): React.JS
               </Button>
               <Button
                 data-test-id="create-template-submit"
-                onClick={handleCreateClick}
+                onClick={(): void => {
+                  void handleCreateTemplate();
+                }}
                 disabled={pending || !createTemplateName.trim()}
                 loading={pending}
               >

@@ -23,6 +23,28 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
+const newTemplateData = {
+  id: 'id3',
+  name: 'new template',
+  user_id: 'id1',
+  created_at: '',
+  updated_at: '',
+  archived_at: null,
+};
+
+function mockCreatePostSuccess(): void {
+  axios.post = vi.fn().mockResolvedValue({ data: newTemplateData });
+}
+
+function mockEditTemplateFetch(): void {
+  axios.get = vi
+    .fn()
+    .mockResolvedValueOnce({
+      data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+    })
+    .mockResolvedValueOnce({ data: [] });
+}
+
 async function openCreateModal(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
   await user.click(await findByTestId('templates-create-fab'));
   await findByTestId('create-template-modal');
@@ -33,9 +55,6 @@ async function submitNewTemplate(findByTestId: RenderResult['findByTestId'], use
   await user.click(nameInput);
   await user.paste('new template');
   await user.click(await findByTestId('create-template-submit'));
-  await act(async () => {
-    await waitFor(() => expect(axios.post).toHaveBeenCalled());
-  });
 }
 
 function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn {
@@ -91,9 +110,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates a template from the create modal (name + default field)', async () => {
-    axios.post = vi.fn().mockResolvedValue({
-      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-    });
+    mockCreatePostSuccess();
     const { findByTestId, queryByTestId, user } = setup();
 
     await openCreateModal(findByTestId, user);
@@ -109,9 +126,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('creates a default field when creating a template', async () => {
-    axios.post = vi.fn().mockResolvedValue({
-      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-    });
+    mockCreatePostSuccess();
     const { findByTestId, user } = setup();
 
     await openCreateModal(findByTestId, user);
@@ -190,12 +205,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('opens edit sheet when an edit button is clicked', async () => {
-    axios.get = vi
-      .fn()
-      .mockResolvedValueOnce({
-        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-      })
-      .mockResolvedValueOnce({ data: [] });
+    mockEditTemplateFetch();
 
     const { getAllByTestId, findByTestId, user } = setup();
 
@@ -204,12 +214,7 @@ describe('TemplatesContainer', () => {
   });
 
   it('hides create FAB while edit sheet is open', async () => {
-    axios.get = vi
-      .fn()
-      .mockResolvedValueOnce({
-        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-      })
-      .mockResolvedValueOnce({ data: [] });
+    mockEditTemplateFetch();
 
     const { getAllByTestId, findByTestId, queryByTestId, user } = setup();
 
@@ -283,13 +288,13 @@ describe('TemplatesContainer', () => {
   });
 
   async function expectDismissClearsCreateModalName(
-    dismiss: (ctx: { user: UserEvent; findByTestId: RenderResult['findByTestId'] }) => Promise<void>,
+    dismiss: (user: UserEvent, findByTestId: RenderResult['findByTestId']) => Promise<void>,
   ): Promise<void> {
     const { findByTestId, queryByTestId, user } = setup();
 
     await openCreateModal(findByTestId, user);
     await user.type(await findByTestId('create-template-name-input'), 'test name');
-    await dismiss({ user, findByTestId });
+    await dismiss(user, findByTestId);
 
     expect(queryByTestId('create-template-modal')).not.toBeInTheDocument();
     expect(axios.post).not.toHaveBeenCalled();
@@ -299,20 +304,20 @@ describe('TemplatesContainer', () => {
   }
 
   it('closes create modal on cancel and clears name without creating', async () => {
-    await expectDismissClearsCreateModalName(async (ctx) => {
-      await ctx.user.click(await ctx.findByTestId('create-template-cancel'));
+    await expectDismissClearsCreateModalName(async (user, findByTestId) => {
+      await user.click(await findByTestId('create-template-cancel'));
     });
   });
 
   it('closes create modal on overlay dismiss and clears name without creating', async () => {
-    await expectDismissClearsCreateModalName(async (ctx) => {
-      await ctx.user.click(await ctx.findByTestId('create-template-modal-overlay'));
+    await expectDismissClearsCreateModalName(async (user, findByTestId) => {
+      await user.click(await findByTestId('create-template-modal-overlay'));
     });
   });
 
   it('closes create modal on Escape and clears name without creating', async () => {
-    await expectDismissClearsCreateModalName(async (ctx) => {
-      await ctx.user.keyboard('{Escape}');
+    await expectDismissClearsCreateModalName(async (user) => {
+      await user.keyboard('{Escape}');
     });
   });
 
