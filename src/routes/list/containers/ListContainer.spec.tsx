@@ -2434,13 +2434,14 @@ describe('ListContainer', () => {
       );
     });
 
-    it('adds by name via submit when the extended form is not rendered', async () => {
+    it('adds an item via the unified form submit when configs load on open', async () => {
       const newItem = createListItem('qa-id', false, []);
       const itemWithField = createListItem('qa-id', false, [
         createField('f1', 'product', 'new product', 'qa-id', { primary: true }),
       ]);
       axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
-      // handleQuickAdd fetches field configs to find the primary field, then fetches the item after posting
+      // The modal loads field configs on open, so the single form-submit path finds the primary
+      // field and posts its value — no separate quick-add code path.
       axios.get = vi
         .fn()
         .mockImplementation((url: string) =>
@@ -2457,7 +2458,7 @@ describe('ListContainer', () => {
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
-        list_item: { user_id: defaultTestData.userId, completed: false },
+        list_item: { completed: false },
       });
       expect(axios.post).toHaveBeenNthCalledWith(
         2,

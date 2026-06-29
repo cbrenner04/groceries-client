@@ -638,12 +638,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const handleAddItemSubmit = (): void => {
-    const configs = quickAddFieldConfigs ?? [];
-    if (configs.length === 0) {
-      void handleQuickAdd(quickAddPrimary.trim());
-      return;
-    }
-
     const formEl = document.getElementById('list-item-form') as HTMLFormElement | null;
     formEl?.requestSubmit();
   };
@@ -659,22 +653,34 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleQuickAddFormSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    if (!props.list?.id || !props.listItemConfiguration?.id) {
-      return;
-    }
-
-    const configs = quickAddFieldConfigs ?? [];
-    if (configs.length === 0) {
-      return;
-    }
-
-    // The name field lives in the add-item modal (not part of the extended form DOM).
-    const primaryName = quickAddPrimary.trim();
-    if (primaryName === '') {
-      return;
-    }
-
+    // Capture the form node synchronously: React nulls event.currentTarget after the
+    // handler's sync phase, and we await a fetch below before reading the form's fields.
     const formEl = event.currentTarget;
+
+    const primaryName = quickAddPrimary.trim();
+    if (primaryName === '' || !props.list?.id) {
+      return;
+    }
+
+    if (!props.listItemConfiguration?.id) {
+      showToast.error('No field configuration available for this list. Please contact support.');
+      return;
+    }
+
+    // The field configs are normally loaded when the modal opens, but a simple list may not
+    // have them in props yet — fetch them here so a single submit path covers every list.
+    let configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      try {
+        const { data } = await axios.get(
+          `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+        );
+        configs = Array.isArray(data) ? data : [];
+      } catch {
+        showToast.error('Failed to add item');
+        return;
+      }
+    }
 
     try {
       setPending(true);
@@ -756,67 +762,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     }
   };
 
-  const handleQuickAdd = async (value: string): Promise<void> => {
-    if (!props.listItemConfiguration?.id) {
-      showToast.error('No field configuration available for this list. Please contact support.');
-      return;
-    }
-
-    try {
-      setPending(true);
-
-      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
-        list_item: {
-          user_id: props.userId,
-          completed: false,
-        },
-      });
-
-      const { data: fieldConfigurations } = await axios.get(
-        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
-      );
-
-      const primaryFieldConfig = fieldConfigurations.find((config: { primary: boolean }) => config.primary === true);
-
-      if (primaryFieldConfig) {
-        await axios.post(`/lists/${props.list.id}/list_items/${newItem.id}/list_item_fields`, {
-          list_item_field: {
-            list_item_field_configuration_id: primaryFieldConfig.id,
-            data: value,
-          },
-        });
-      }
-
-      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
-
-      const finalItem: IListItem =
-        Array.isArray(completeItem.fields) && completeItem.fields.length > 0
-          ? completeItem
-          : {
-              ...completeItem,
-              fields: primaryFieldConfig
-                ? buildOptimisticFields([{ config: primaryFieldConfig, data: value }], newItem)
-                : [],
-            };
-
-      handleAddItem([finalItem]);
-      handleCloseAddModal();
-      setPending(false);
-    } catch {
-      showToast.error('Failed to add item');
-      setPending(false);
-    }
-  };
-
   const permissionsDict: Record<string, 'read' | 'write'> = {
     [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
   };
 
   const getAddModalFormContent = (): React.ReactNode => {
     const configs = quickAddFieldConfigs ?? [];
-    if (configs.length === 0) {
-      return null;
-    }
 
     return (
       <form
@@ -826,6 +777,13 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         onSubmit={handleQuickAddFormSubmit}
         className="tw:pb-0"
       >
+        <Input
+          label="Name"
+          value={quickAddPrimary}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setQuickAddPrimary(e.target.value)}
+          placeholder="Add an item..."
+          testId="add-list-item-name-input"
+        />
         <ListItemFormFields
           fieldConfigurations={configs.filter((config) => !config.primary)}
           fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
@@ -986,7 +944,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const showAddFab = props.permissions === EUserPermissions.WRITE && !showDeleteConfirm && copyMoveSheet === null;
-  const quickAddFieldConfigCount = (quickAddFieldConfigs ?? []).length;
   const addModalSubmitDisabled = pending || quickAddPrimary.trim() === '';
 
   return (
@@ -1251,16 +1208,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               </>
             }
           >
-            <div>
-              <Input
-                label="Name"
-                value={quickAddPrimary}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setQuickAddPrimary(e.target.value)}
-                placeholder="Add an item..."
-                testId="add-list-item-name-input"
-              />
-              {quickAddFieldConfigCount > 0 ? getAddModalFormContent() : null}
-            </div>
+            {getAddModalFormContent()}
           </AddFormModal>
         </>
       ) : null}
