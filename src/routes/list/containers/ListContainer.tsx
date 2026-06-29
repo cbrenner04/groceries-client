@@ -1251,7 +1251,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
               </>
             }
           >
-            <div className="tw:flex tw:flex-col tw:gap-4">
+            <div>
               <Input
                 label="Name"
                 value={quickAddPrimary}
