@@ -77,11 +77,6 @@ describe('PageLayout', () => {
     expect(await findByText('Edit')).toBeVisible();
   });
 
-  it('renders bottomBar content', async () => {
-    const { findByText } = setup({ bottomBar: <div>Bottom bar</div> });
-    expect(await findByText('Bottom bar')).toBeVisible();
-  });
-
   it('has back button with accessible label', async () => {
     const { findByTestId } = setup({ showBackButton: true, title: 'Page' });
     const backButton = await findByTestId('back-button');
@@ -92,18 +87,5 @@ describe('PageLayout', () => {
     const { findByRole } = setup({ title: 'Test' });
     const header = await findByRole('banner');
     expect(header).toHaveClass('tw:sticky');
-  });
-
-  it('applies padding-bottom to main when bottomBar is present', async () => {
-    const { container } = setup({ bottomBar: <div>Bottom bar</div> });
-    const main = container.querySelector('main') as HTMLElement;
-    expect(main).toHaveStyle({ paddingBottom: expect.any(String) });
-  });
-
-  it('does not apply padding-bottom to main when bottomBar is absent', async () => {
-    const { container } = setup();
-    const main = container.querySelector('main') as HTMLElement;
-    const style = main?.getAttribute('style');
-    expect(style).toBeNull();
   });
 });

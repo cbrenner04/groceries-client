@@ -3,10 +3,6 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavig
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition, type TPageTransitionDirection } from './components/layout/PageTransition';
 
-// Portal target for BottomInputBar, positioned outside PageTransition
-// so the bar's position: fixed resolves against the viewport, not the transform ancestor.
-export const BOTTOM_INPUT_BAR_PORTAL_TARGET_ID = 'bottom-input-bar-portal-target';
-
 import CompletedLists from './routes/lists/CompletedLists';
 import EditInvite from './routes/users/EditInvite';
 import EditPassword from './routes/users/EditPassword';
@@ -25,7 +21,6 @@ import {
   BottomInputBarFormProvider,
   useBottomInputBarFormContext,
 } from './components/layout/BottomInputBarFormContext';
-import { useIsMobileViewport } from './components/layout/useIsMobileViewport';
 import { showToast } from './utils/toast';
 import axios from './utils/api';
 
@@ -82,8 +77,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
     location.pathname === '/users/password/edit' ||
     location.pathname === '/users/invitation/accept';
   const showBottomNav = Boolean(user) && !isAuthPage;
-  const { expandedFormOpen, addFormModalOpen } = useBottomInputBarFormContext();
-  const isMobile = useIsMobileViewport();
+  const { addFormModalOpen } = useBottomInputBarFormContext();
 
   useEffect(() => {
     if (!showBottomNav) {
@@ -167,9 +161,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
           </Routes>
         </PageTransition>
       </AnimatePresence>
-      {/* BottomInputBar owns its own viewport-level portal target (created on
-          document.body), so it is intentionally not rendered here. */}
-      {showBottomNav && !addFormModalOpen && !(isMobile && expandedFormOpen) ? (
+      {showBottomNav && !addFormModalOpen ? (
         <div onClickCapture={handleBottomNavClickCapture}>
           <BottomNavBar currentPath={settingsMenuOpen ? '/settings' : location.pathname} />
         </div>
