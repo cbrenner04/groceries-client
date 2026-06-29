@@ -14,6 +14,11 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
   const { isOpen, onClose, title, children, footer, testId = 'add-form-modal' } = props;
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  // Keep the latest onClose without re-running the open/focus effect: an unmemoized
+  // onClose from the consumer changes identity every render, and re-running this effect
+  // per keystroke would refocus the panel and steal focus from form inputs.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect((): (() => void) | undefined => {
     if (!isOpen) {
@@ -25,7 +30,7 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
 
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
       }
     };
 
@@ -39,7 +44,7 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
       previousActiveElementRef.current?.focus();
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;

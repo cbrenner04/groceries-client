@@ -141,6 +141,25 @@ describe('AddFormModal', () => {
     expect(modal.parentElement).toBe(document.body);
   });
 
+  it('keeps focus in a form input across re-renders when onClose is unmemoized', async () => {
+    const user = userEvent.setup();
+    // Mirror a real consumer: onClose is a fresh closure every render. The open/focus
+    // effect must not re-run per keystroke, or it steals focus back to the panel.
+    function Harness(): React.JSX.Element {
+      const [value, setValue] = React.useState('');
+      return (
+        <AddFormModal isOpen onClose={() => undefined}>
+          <input data-test-id="name" value={value} onChange={(e) => setValue(e.target.value)} />
+        </AddFormModal>
+      );
+    }
+    const { findByTestId } = render(<Harness />);
+    const input = (await findByTestId('name')) as HTMLInputElement;
+    await user.type(input, 'groceries');
+    expect(input).toHaveFocus();
+    expect(input.value).toBe('groceries');
+  });
+
   describe('context flag lifecycle', () => {
     it('clears addFormModalOpen on route change', async () => {
       const user = userEvent.setup();
