@@ -2030,6 +2030,31 @@ describe('ListContainer', () => {
     it('shows refresh action in MultiSelectBar when only completed items are selected', async () => {
       // Use no not-completed items so the only selectable items are completed.
       // The completed section auto-expands when item count <= 5.
+      axios.post = vi
+        .fn()
+        .mockResolvedValueOnce({ data: { id: 'id6', completed: false } })
+        .mockResolvedValueOnce({ data: {} })
+        .mockResolvedValueOnce({ data: {} });
+      axios.get = vi.fn().mockResolvedValueOnce({
+        data: {
+          archived_at: null,
+          category: 'foo',
+          created_at: '2020-05-24T11:07:48.751-05:00',
+          grocery_list_id: 'id1',
+          id: 'id6',
+          product: 'foo completed product',
+          completed: false,
+          quantity: 'completed quantity',
+          refreshed: false,
+          updated_at: '2020-05-24T11:07:48.751-05:00',
+          user_id: 'id1',
+          fields: [
+            createField('id1', 'quantity', 'completed quantity', 'id6'),
+            createField('id2', 'product', 'foo completed product', 'id6', { primary: true }),
+          ],
+        },
+      });
+      axios.put = vi.fn().mockResolvedValue(undefined);
       const { findByTestId, findByText, user } = setup({
         permissions: EUserPermissions.WRITE,
         notCompletedItems: [],
@@ -2044,7 +2069,8 @@ describe('ListContainer', () => {
       await user.click(checkbox);
 
       // Refresh action should appear since only completed items are selected
-      expect(await findByTestId('refresh-selected')).toBeInTheDocument();
+      await user.click(await findByTestId('refresh-selected'));
+      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(3));
     });
 
     it('opens EditItemSheet when initialEditingItemId is provided', async () => {

@@ -3,6 +3,7 @@ import { render, type RenderResult, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
 
 import axios from 'utils/api';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 import BulkEditListItems from './BulkEditListItems';
 import { EListItemFieldType, type IListItem } from 'typings';
@@ -12,9 +13,11 @@ describe('BulkEditListItems', () => {
   const renderBulkEditListItems = (): RenderResult =>
     render(
       <MemoryRouter initialEntries={['/lists/123/list_items/bulk-edit']}>
-        <Routes>
-          <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
-        </Routes>
+        <BottomInputBarFormProvider>
+          <Routes>
+            <Route path="/lists/:list_id/list_items/bulk-edit" element={<BulkEditListItems />} />
+          </Routes>
+        </BottomInputBarFormProvider>
       </MemoryRouter>,
     );
 
