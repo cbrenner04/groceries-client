@@ -4,6 +4,7 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import { AnimatePresence } from 'framer-motion';
 
 import axios from 'utils/api';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 import { PageTransition } from 'components/layout/PageTransition';
 
 // Mock listPrefetch at module level
@@ -57,7 +58,9 @@ const createMockListsData = (): { data: Record<string, unknown> } => ({
 const setup = (): RenderResult =>
   render(
     <MemoryRouter>
-      <CompletedLists />
+      <BottomInputBarFormProvider>
+        <CompletedLists />
+      </BottomInputBarFormProvider>
     </MemoryRouter>,
   );
 
@@ -109,14 +112,16 @@ describe('CompletedLists', () => {
 
     const { queryByTestId, findByTestId } = render(
       <MemoryRouter initialEntries={['/completed_lists']}>
-        <AnimatePresence mode="wait">
-          <PageTransition key="/completed_lists" direction="fade">
-            <Routes>
-              <Route path="/lists" element={<Lists />} />
-              <Route path="/completed_lists" element={<CompletedLists />} />
-            </Routes>
-          </PageTransition>
-        </AnimatePresence>
+        <BottomInputBarFormProvider>
+          <AnimatePresence mode="wait">
+            <PageTransition key="/completed_lists" direction="fade">
+              <Routes>
+                <Route path="/lists" element={<Lists />} />
+                <Route path="/completed_lists" element={<CompletedLists />} />
+              </Routes>
+            </PageTransition>
+          </AnimatePresence>
+        </BottomInputBarFormProvider>
       </MemoryRouter>,
     );
 
