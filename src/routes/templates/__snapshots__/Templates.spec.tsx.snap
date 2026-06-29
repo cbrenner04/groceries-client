@@ -102,83 +102,94 @@ exports[`Templates > renders TemplatesContainer when data retrieval is complete 
       </header>
       <main
         class="tw:flex-1 tw:overflow-y-auto tw:px-4 tw:py-4"
-        style="padding-bottom: var(--bottom-bar-height, calc(var(--spacing-input-bar-height) + var(--spacing-nav-height) + var(--spacing-bottom-bar-gap)));"
       >
         <div
-          class="tw:flex tw:flex-col tw:gap-3"
+          class="tw:pb-[calc(3.5rem+var(--spacing-nav-height)+1rem)]"
         >
           <div
-            class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
-            data-test-class="template"
-            data-test-id="template-id1"
+            class="tw:flex tw:flex-col tw:gap-3"
           >
             <div
-              class="tw:flex tw:items-center tw:justify-between tw:gap-2"
+              class="tw:bg-[var(--color-surface-raised)] tw:border tw:border-[var(--color-border)] tw:rounded-[var(--radius-lg)] tw:p-4 tw:shadow-[var(--shadow-sm)] tw:transition-all tw:duration-200 tw:flex tw:flex-col tw:gap-1"
+              data-test-class="template"
+              data-test-id="template-id1"
             >
-              <h3
-                class="tw:text-base tw:font-semibold tw:m-0"
-              >
-                grocery list
-              </h3>
               <div
-                class="tw:flex tw:items-center tw:gap-1"
+                class="tw:flex tw:items-center tw:justify-between tw:gap-2"
               >
-                <button
-                  aria-label="Edit template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
-                  data-test-id="template-edit"
-                  type="button"
+                <h3
+                  class="tw:text-base tw:font-semibold tw:m-0"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="20"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="20"
-                    xmlns="http://www.w3.org/2000/svg"
+                  grocery list
+                </h3>
+                <div
+                  class="tw:flex tw:items-center tw:gap-1"
+                >
+                  <button
+                    aria-label="Edit template"
+                    class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-accent)] tw:hover:bg-[rgb(245_158_11_/_0.12)] tw:active:bg-[rgb(245_158_11_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
+                    data-test-id="template-edit"
+                    type="button"
                   >
-                    <path
-                      d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
+                    <svg
+                      aria-hidden="true"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9
       21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6
       88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
       21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53
       43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0
       17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32
       32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  aria-label="Delete template"
-                  class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
-                  data-test-id="template-trash"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    fill="currentColor"
-                    focusable="false"
-                    height="20"
-                    role="img"
-                    style="display: inline-block; vertical-align: middle;"
-                    viewBox="0 0 512 512"
-                    width="20"
-                    xmlns="http://www.w3.org/2000/svg"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Delete template"
+                    class="tw:rounded-full tw:transition-colors tw:duration-200 tw:ease-in-out tw:flex tw:items-center tw:justify-center tw:flex-shrink-0 tw:min-h-[44px] tw:min-w-[44px] tw:cursor-pointer tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-[var(--color-primary)] tw:text-[var(--color-danger)] tw:hover:bg-[rgb(239_68_68_/_0.1)] tw:active:bg-[rgb(239_68_68_/_0.2)] tw:h-10 tw:w-10 tw:text-base"
+                    data-test-id="template-trash"
+                    type="button"
                   >
-                    <path
-                      d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
+                    <svg
+                      aria-hidden="true"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      role="img"
+                      style="display: inline-block; vertical-align: middle;"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3
       32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2
       6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0
       46.3-19.7 47.9-45L416 128z"
-                    />
-                  </svg>
-                </button>
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+          <button
+            aria-label="Create template"
+            class="tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+1rem+env(safe-area-inset-bottom))] tw:right-4 tw:z-[var(--z-sticky)] tw:flex tw:items-center tw:justify-center tw:w-14 tw:h-14 tw:rounded-full tw:bg-[var(--color-primary)] tw:text-white tw:text-2xl tw:leading-none tw:shadow-[var(--shadow-lg)] tw:border-0 tw:cursor-pointer"
+            data-test-id="templates-create-fab"
+            type="button"
+          >
+            +
+          </button>
         </div>
       </main>
     </div>
