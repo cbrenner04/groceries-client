@@ -6,6 +6,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 import axios from 'utils/api';
 import { showToast } from 'utils/toast';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
 
@@ -22,8 +23,41 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
+const newTemplateData = {
+  id: 'id3',
+  name: 'new template',
+  user_id: 'id1',
+  created_at: '',
+  updated_at: '',
+  archived_at: null,
+};
+
+function mockCreatePostSuccess(): void {
+  axios.post = vi.fn().mockResolvedValue({ data: newTemplateData });
+}
+
+function mockEditTemplateFetch(): void {
+  axios.get = vi
+    .fn()
+    .mockResolvedValueOnce({
+      data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
+    })
+    .mockResolvedValueOnce({ data: [] });
+}
+
+async function openCreateModal(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  await user.click(await findByTestId('templates-create-fab'));
+  await findByTestId('create-template-modal');
+}
+
+async function submitNewTemplate(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  const nameInput = await findByTestId('create-template-name-input');
+  await user.click(nameInput);
+  await user.paste('new template');
+  await user.click(await findByTestId('create-template-submit'));
+}
+
 function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn {
-  // Create the portal target before rendering
   const portalTarget = document.createElement('div');
   portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
   document.body.appendChild(portalTarget);
@@ -38,7 +72,9 @@ function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn 
   const props = { ...defaultProps, ...suppliedProps };
   const component = render(
     <MemoryRouter>
-      <TemplatesContainer {...props} />
+      <BottomInputBarFormProvider>
+        <TemplatesContainer {...props} />
+      </BottomInputBarFormProvider>
     </MemoryRouter>,
   );
 
@@ -51,11 +87,10 @@ describe('TemplatesContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders the create-template input at the bottom', () => {
-    const { getByTestId } = setup();
-    const input = getByTestId('quick-add-input');
-    expect(input).toBeVisible();
-    expect(input).toHaveAttribute('placeholder', 'Create a new template...');
+  it('renders the create-template FAB', () => {
+    const { getByTestId, queryByTestId } = setup();
+    expect(getByTestId('templates-create-fab')).toBeVisible();
+    expect(queryByTestId('quick-add-input')).toBeNull();
   });
 
   it('displays templates', () => {
@@ -74,14 +109,12 @@ describe('TemplatesContainer', () => {
     expect(getByText('No templates found')).toBeVisible();
   });
 
-  it('creates a template from the bottom bar (name + default field)', async () => {
-    axios.post = vi.fn().mockResolvedValue({
-      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-    });
-    const { getByTestId, findByTestId, user } = setup();
+  it('creates a template from the create modal (name + default field)', async () => {
+    mockCreatePostSuccess();
+    const { findByTestId, queryByTestId, user } = setup();
 
-    await user.type(getByTestId('quick-add-input'), 'new template');
-    await user.click(getByTestId('quick-add-submit'));
+    await openCreateModal(findByTestId, user);
+    await submitNewTemplate(findByTestId, user);
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
@@ -89,16 +122,15 @@ describe('TemplatesContainer', () => {
 
     expect(mockShowToast.info).toHaveBeenCalledWith('Template successfully created.');
     expect(await findByTestId('template-id3')).toBeVisible();
+    expect(queryByTestId('create-template-modal')).not.toBeInTheDocument();
   });
 
   it('creates a default field when creating a template', async () => {
-    axios.post = vi.fn().mockResolvedValue({
-      data: { id: 'id3', name: 'new template', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-    });
-    const { getByTestId, user } = setup();
+    mockCreatePostSuccess();
+    const { findByTestId, user } = setup();
 
-    await user.type(getByTestId('quick-add-input'), 'new template');
-    await user.click(getByTestId('quick-add-submit'));
+    await openCreateModal(findByTestId, user);
+    await submitNewTemplate(findByTestId, user);
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
@@ -111,10 +143,10 @@ describe('TemplatesContainer', () => {
 
   it('redirects to signin when 401 on create', async () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
-    const { getByTestId, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(getByTestId('quick-add-input'), 'new template');
-    await user.click(getByTestId('quick-add-submit'));
+    await openCreateModal(findByTestId, user);
+    await submitNewTemplate(findByTestId, user);
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
@@ -124,20 +156,22 @@ describe('TemplatesContainer', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
   });
 
-  it('shows errors when create fails', async () => {
+  it('shows errors when create fails and keeps modal open', async () => {
     axios.post = vi.fn().mockRejectedValue({
       response: { status: 400, data: { name: 'cannot be blank' } },
     });
-    const { getByTestId, user } = setup();
+    const { findByTestId, user } = setup();
 
-    await user.type(getByTestId('quick-add-input'), 'new template');
-    await user.click(getByTestId('quick-add-submit'));
+    await openCreateModal(findByTestId, user);
+    await submitNewTemplate(findByTestId, user);
 
     await act(async () => {
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     });
 
     expect(mockShowToast.error).toHaveBeenCalledWith('name cannot be blank');
+    expect(await findByTestId('create-template-modal')).toBeVisible();
+    expect((await findByTestId('create-template-name-input')) as HTMLInputElement).toHaveValue('new template');
   });
 
   it('deletes template', async () => {
@@ -171,17 +205,22 @@ describe('TemplatesContainer', () => {
   });
 
   it('opens edit sheet when an edit button is clicked', async () => {
-    axios.get = vi
-      .fn()
-      .mockResolvedValueOnce({
-        data: { id: 'id1', name: 'grocery list', user_id: 'id1', created_at: '', updated_at: '', archived_at: null },
-      })
-      .mockResolvedValueOnce({ data: [] });
+    mockEditTemplateFetch();
 
     const { getAllByTestId, findByTestId, user } = setup();
 
     await user.click(getAllByTestId('template-edit')[0]);
     expect(await findByTestId('template-name')).toBeVisible();
+  });
+
+  it('hides create FAB while edit sheet is open', async () => {
+    mockEditTemplateFetch();
+
+    const { getAllByTestId, findByTestId, queryByTestId, user } = setup();
+
+    await user.click(getAllByTestId('template-edit')[0]);
+    expect(await findByTestId('template-name')).toBeVisible();
+    expect(queryByTestId('templates-create-fab')).toBeNull();
   });
 
   it('keeps current state when post-edit refresh fetch fails', async () => {
@@ -246,5 +285,51 @@ describe('TemplatesContainer', () => {
     const { findByTestId } = setup({ initialEditTemplateId: 'id1' });
 
     expect(await findByTestId('template-name')).toBeVisible();
+  });
+
+  async function expectDismissClearsCreateModalName(
+    dismiss: (user: UserEvent, findByTestId: RenderResult['findByTestId']) => Promise<void>,
+  ): Promise<void> {
+    const { findByTestId, queryByTestId, user } = setup();
+
+    await openCreateModal(findByTestId, user);
+    await user.type(await findByTestId('create-template-name-input'), 'test name');
+    await dismiss(user, findByTestId);
+
+    expect(queryByTestId('create-template-modal')).not.toBeInTheDocument();
+    expect(axios.post).not.toHaveBeenCalled();
+
+    await openCreateModal(findByTestId, user);
+    expect(((await findByTestId('create-template-name-input')) as HTMLInputElement).value).toBe('');
+  }
+
+  it('closes create modal on cancel and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (user, findByTestId) => {
+      await user.click(await findByTestId('create-template-cancel'));
+    });
+  });
+
+  it('closes create modal on overlay dismiss and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (user, findByTestId) => {
+      await user.click(await findByTestId('create-template-modal-overlay'));
+    });
+  });
+
+  it('closes create modal on Escape and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (user) => {
+      await user.keyboard('{Escape}');
+    });
+  });
+
+  it('does not POST on empty or whitespace-only name', async () => {
+    const { findByTestId, user } = setup();
+
+    await user.click(await findByTestId('templates-create-fab'));
+    await user.click(await findByTestId('create-template-submit'));
+    expect(axios.post).not.toHaveBeenCalled();
+
+    await user.type(await findByTestId('create-template-name-input'), '   ');
+    await user.click(await findByTestId('create-template-submit'));
+    expect(axios.post).not.toHaveBeenCalled();
   });
 });
