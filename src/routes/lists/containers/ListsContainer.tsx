@@ -226,8 +226,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         const updatedIncompleteLists = update(incompleteLists, { $push: [response.data] });
         setIncompleteLists(sortLists(updatedIncompleteLists));
         setPending(false);
-        setCreateListName('');
-        setAddFormModalOpen(false);
+        handleCloseCreateModal();
         showToast.info('List successfully added.');
       })
       .catch((error) => {
@@ -480,8 +479,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const filtered = getFilteredLists();
-  const hideCreateFab = showDeleteConfirm || showRejectConfirm || showMergeModal || editSheetOpen;
-  const showCreateFab = !hideCreateFab && props.initialFilter !== 'completed';
+  const showCreateFab =
+    props.initialFilter !== 'completed' &&
+    !showDeleteConfirm &&
+    !showRejectConfirm &&
+    !showMergeModal &&
+    !editSheetOpen;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 export interface IAddFormModalProps {
@@ -15,15 +15,6 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   useEffect((): (() => void) | undefined => {
     if (!isOpen) {
       return undefined;
@@ -31,6 +22,14 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
 
     previousActiveElementRef.current = document.activeElement as HTMLElement;
     document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
     setTimeout(() => {
       panelRef.current?.focus();
     }, 0);
@@ -38,19 +37,9 @@ export function AddFormModal(props: IAddFormModalProps): React.JSX.Element | nul
     return (): void => {
       document.body.style.overflow = '';
       previousActiveElementRef.current?.focus();
-    };
-  }, [isOpen]);
-
-  useEffect((): (() => void) | undefined => {
-    if (!isOpen) {
-      return undefined;
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-    return (): void => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;

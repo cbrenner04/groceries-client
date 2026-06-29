@@ -32,6 +32,21 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
+async function openCreateModal(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  await user.click(await findByTestId('lists-create-fab'));
+  await findByTestId('create-list-modal');
+}
+
+async function submitNewList(findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> {
+  const nameInput = await findByTestId('create-list-name-input');
+  await user.click(nameInput);
+  await user.paste('new list');
+  await user.click(await findByTestId('create-list-submit'));
+  await act(async () => {
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+  });
+}
+
 function setup(suppliedProps?: Partial<IListsContainerProps>): ISetupReturn {
   const user = userEvent.setup();
   const defaultProps = {
@@ -650,12 +665,8 @@ describe('ListsContainer', () => {
     });
     const { findByTestId, queryByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(axios.post).toHaveBeenCalledWith('/lists', {
       list: { name: 'new list', list_item_configuration_id: 'config-1' },
@@ -680,14 +691,10 @@ describe('ListsContainer', () => {
     });
     const { findByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
+    await openCreateModal(findByTestId, user);
     const templateSelect = document.getElementById('list_item_configuration_id') as HTMLSelectElement;
     await user.selectOptions(templateSelect, 'config-2');
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await submitNewList(findByTestId, user);
 
     expect(axios.post).toHaveBeenCalledWith('/lists', {
       list: { name: 'new list', list_item_configuration_id: 'config-2' },
@@ -713,19 +720,6 @@ describe('ListsContainer', () => {
           refreshed: false,
           users_list_id: 'id8',
         },
-      });
-    };
-
-    const openCreateModal = async (findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> => {
-      await user.click(await findByTestId('lists-create-fab'));
-      await findByTestId('create-list-modal');
-    };
-
-    const submitNewList = async (findByTestId: RenderResult['findByTestId'], user: UserEvent): Promise<void> => {
-      await user.type(await findByTestId('create-list-name-input'), 'new list');
-      await user.click(await findByTestId('create-list-submit'));
-      await act(async () => {
-        await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
       });
     };
 
@@ -813,46 +807,38 @@ describe('ListsContainer', () => {
     });
   });
 
-  it('closes create modal and clears name on cancel without creating', async () => {
+  async function expectDismissClearsCreateModalName(
+    dismiss: (ctx: { user: UserEvent; findByTestId: RenderResult['findByTestId'] }) => Promise<void>,
+  ): Promise<void> {
     const { findByTestId, queryByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
+    await openCreateModal(findByTestId, user);
     await user.type(await findByTestId('create-list-name-input'), 'test name');
-    await user.click(await findByTestId('create-list-cancel'));
+    await dismiss({ user, findByTestId });
 
     expect(queryByTestId('create-list-modal')).not.toBeInTheDocument();
     expect(axios.post).not.toHaveBeenCalled();
 
-    await user.click(await findByTestId('lists-create-fab'));
+    await openCreateModal(findByTestId, user);
     expect(((await findByTestId('create-list-name-input')) as HTMLInputElement).value).toBe('');
+  }
+
+  it('closes create modal on cancel and clears name without creating', async () => {
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.click(await ctx.findByTestId('create-list-cancel'));
+    });
   });
 
   it('closes create modal on overlay dismiss and clears name without creating', async () => {
-    const { findByTestId, queryByTestId, user } = setup();
-
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'test name');
-    await user.click(await findByTestId('create-list-modal-overlay'));
-
-    expect(queryByTestId('create-list-modal')).not.toBeInTheDocument();
-    expect(axios.post).not.toHaveBeenCalled();
-
-    await user.click(await findByTestId('lists-create-fab'));
-    expect(((await findByTestId('create-list-name-input')) as HTMLInputElement).value).toBe('');
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.click(await ctx.findByTestId('create-list-modal-overlay'));
+    });
   });
 
   it('closes create modal on Escape and clears name without creating', async () => {
-    const { findByTestId, queryByTestId, user } = setup();
-
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'test name');
-    await user.keyboard('{Escape}');
-
-    expect(queryByTestId('create-list-modal')).not.toBeInTheDocument();
-    expect(axios.post).not.toHaveBeenCalled();
-
-    await user.click(await findByTestId('lists-create-fab'));
-    expect(((await findByTestId('create-list-name-input')) as HTMLInputElement).value).toBe('');
+    await expectDismissClearsCreateModalName(async (ctx) => {
+      await ctx.user.keyboard('{Escape}');
+    });
   });
 
   it('does not POST on empty or whitespace-only name', async () => {
@@ -915,12 +901,8 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ response: { status: 401 } });
     const { findByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('You must sign in');
     expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in');
@@ -932,12 +914,8 @@ describe('ListsContainer', () => {
     });
     const { findByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('foo bar and foobar foobaz');
   });
@@ -946,12 +924,8 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ request: 'failed to send request' });
     const { findByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('Something went wrong');
   });
@@ -960,12 +934,8 @@ describe('ListsContainer', () => {
     axios.post = vi.fn().mockRejectedValue({ message: 'failed to send request' });
     const { findByTestId, user } = setup();
 
-    await user.click(await findByTestId('lists-create-fab'));
-    await user.type(await findByTestId('create-list-name-input'), 'new list');
-    await user.click(await findByTestId('create-list-submit'));
-    await act(async () => {
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-    });
+    await openCreateModal(findByTestId, user);
+    await submitNewList(findByTestId, user);
 
     expect(mockShowToast.error).toHaveBeenCalledWith('failed to send request');
   });

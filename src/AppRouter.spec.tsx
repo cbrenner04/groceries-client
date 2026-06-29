@@ -10,6 +10,7 @@ import api from './utils/api';
 
 function AddFormModalHarness(): React.JSX.Element {
   const { addFormModalOpen, setAddFormModalOpen } = useBottomInputBarFormContext();
+  const close = (): void => setAddFormModalOpen(false);
 
   return (
     <>
@@ -18,14 +19,14 @@ function AddFormModalHarness(): React.JSX.Element {
       </button>
       <AddFormModal
         isOpen={addFormModalOpen}
-        onClose={() => setAddFormModalOpen(false)}
+        onClose={close}
         title="Add list"
         footer={
           <>
             <Link to="/templates" data-test-id="add-form-modal-route-change">
               Templates
             </Link>
-            <button type="button" data-test-id="add-form-modal-cancel" onClick={() => setAddFormModalOpen(false)}>
+            <button type="button" data-test-id="add-form-modal-cancel" onClick={close}>
               Cancel
             </button>
           </>
@@ -52,6 +53,31 @@ vi.mock('./routes/lists/Lists', async () => {
     },
   };
 });
+
+const defaultTemplateConfiguration = {
+  id: 'config-1',
+  name: 'Default Template',
+  user_id: 'user-1',
+  created_at: '',
+  updated_at: '',
+  archived_at: null,
+};
+
+function mockTemplatesApi(
+  configurations: (typeof defaultTemplateConfiguration)[] = [defaultTemplateConfiguration],
+): void {
+  vi.mocked(api.get).mockImplementation(async (url: string) => {
+    if (url === '/auth/validate_token') {
+      throw new Error('not signed in');
+    }
+
+    if (url === '/list_item_configurations') {
+      return { data: configurations };
+    }
+
+    return { data: {} };
+  });
+}
 
 function mockViewportWidth(isMobile: boolean): void {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
@@ -298,49 +324,7 @@ describe('AppRouter', () => {
     beforeEach(() => {
       setAuthenticatedSession();
       mockViewportWidth(true);
-      vi.mocked(api.get).mockImplementation(async (url: string) => {
-        if (url === '/auth/validate_token') {
-          throw new Error('not signed in');
-        }
-
-        if (url === '/lists/') {
-          return {
-            data: {
-              current_user_id: 'user-1',
-              pending_lists: [],
-              accepted_lists: {
-                completed_lists: [],
-                not_completed_lists: [],
-              },
-              current_list_permissions: {},
-              list_item_configurations: [
-                {
-                  id: 'config-1',
-                  name: 'Default Template',
-                  archived_at: null,
-                },
-              ],
-            },
-          };
-        }
-
-        if (url === '/list_item_configurations') {
-          return {
-            data: [
-              {
-                id: 'config-1',
-                name: 'Default Template',
-                user_id: 'user-1',
-                created_at: '',
-                updated_at: '',
-                archived_at: null,
-              },
-            ],
-          };
-        }
-
-        return { data: {} };
-      });
+      mockTemplatesApi();
     });
 
     it('hides bottom nav on mobile when the expanded quick-add form is open', async () => {
@@ -381,17 +365,7 @@ describe('AppRouter', () => {
         updated_at: '',
         archived_at: null,
       }));
-      vi.mocked(api.get).mockImplementation(async (url: string) => {
-        if (url === '/auth/validate_token') {
-          throw new Error('not signed in');
-        }
-
-        if (url === '/list_item_configurations') {
-          return { data: templates };
-        }
-
-        return { data: {} };
-      });
+      mockTemplatesApi(templates);
 
       const user = userEvent.setup();
       const { findByText, findByTestId, queryByTestId } = renderAppRouter('/templates');
@@ -468,49 +442,7 @@ describe('AppRouter', () => {
 
     it('keeps mobile expanded quick-add bottom nav hide unchanged when add-form modal is closed', async () => {
       mockViewportWidth(true);
-      vi.mocked(api.get).mockImplementation(async (url: string) => {
-        if (url === '/auth/validate_token') {
-          throw new Error('not signed in');
-        }
-
-        if (url === '/lists/') {
-          return {
-            data: {
-              current_user_id: 'user-1',
-              pending_lists: [],
-              accepted_lists: {
-                completed_lists: [],
-                not_completed_lists: [],
-              },
-              current_list_permissions: {},
-              list_item_configurations: [
-                {
-                  id: 'config-1',
-                  name: 'Default Template',
-                  archived_at: null,
-                },
-              ],
-            },
-          };
-        }
-
-        if (url === '/list_item_configurations') {
-          return {
-            data: [
-              {
-                id: 'config-1',
-                name: 'Default Template',
-                user_id: 'user-1',
-                created_at: '',
-                updated_at: '',
-                archived_at: null,
-              },
-            ],
-          };
-        }
-
-        return { data: {} };
-      });
+      mockTemplatesApi();
       const user = userEvent.setup();
       const { findByTestId, queryByTestId } = renderAppRouter('/templates');
 

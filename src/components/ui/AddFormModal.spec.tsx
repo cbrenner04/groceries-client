@@ -6,22 +6,16 @@ import { MemoryRouter, Route, Routes, Link } from 'react-router';
 import { AddFormModal, type IAddFormModalProps } from './AddFormModal';
 import { BottomInputBarFormProvider, useBottomInputBarFormContext } from '../layout/BottomInputBarFormContext';
 
-interface ISetupReturn extends RenderResult {
-  props: IAddFormModalProps;
-  user: UserEvent;
-}
-
-function setup(suppliedProps: Partial<IAddFormModalProps> = {}): ISetupReturn {
+function setup(suppliedProps: Partial<IAddFormModalProps> = {}): RenderResult & { user: UserEvent } {
   const user = userEvent.setup();
   const onClose = vi.fn();
-  const defaultProps: IAddFormModalProps = {
+  const props: IAddFormModalProps = {
     isOpen: true,
-    onClose,
     children: <p>Modal content</p>,
+    ...suppliedProps,
+    onClose: suppliedProps.onClose ?? onClose,
   };
-  const props = { ...defaultProps, ...suppliedProps, onClose: suppliedProps.onClose ?? onClose };
-  const component = render(<AddFormModal {...props} />);
-  return { ...component, props, user };
+  return { ...render(<AddFormModal {...props} />), user };
 }
 
 function ContextProbe(): React.JSX.Element {
