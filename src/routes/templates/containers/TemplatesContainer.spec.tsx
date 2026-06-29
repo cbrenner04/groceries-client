@@ -5,7 +5,6 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import axios from 'utils/api';
 import { showToast } from 'utils/toast';
-import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 import TemplatesContainer, { type ITemplatesContainerProps } from './TemplatesContainer';
@@ -58,10 +57,6 @@ async function submitNewTemplate(findByTestId: RenderResult['findByTestId'], use
 }
 
 function setup(suppliedProps?: Partial<ITemplatesContainerProps>): ISetupReturn {
-  const portalTarget = document.createElement('div');
-  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
-  document.body.appendChild(portalTarget);
-
   const user = userEvent.setup();
   const defaultProps: ITemplatesContainerProps = {
     templates: [

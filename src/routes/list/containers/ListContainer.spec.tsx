@@ -6,7 +6,6 @@ import type { AxiosError, AxiosResponse } from 'axios';
 
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
-import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
 import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import type { IChangeOtherListModalProps } from '../components/ChangeOtherListModal';
@@ -162,11 +161,6 @@ async function expectAddModalFieldsReset(
 }
 
 function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
-  // Create the portal target before rendering
-  const portalTarget = document.createElement('div');
-  portalTarget.id = BOTTOM_INPUT_BAR_PORTAL_TARGET_ID;
-  document.body.appendChild(portalTarget);
-
   const user = userEvent.setup();
   const props: IListContainerProps = {
     userId: defaultTestData.userId,
