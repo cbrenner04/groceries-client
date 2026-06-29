@@ -8,6 +8,7 @@ import { UserContext } from '../../AppRouter';
 import { handleFailure } from '../../utils/handleFailure';
 
 import List from './List';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 const mockNavigate = vi.fn();
 const mockHandleFailure = vi.mocked(handleFailure);
@@ -57,10 +58,12 @@ const renderList = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
       <MemoryRouter initialEntries={['/lists/123']}>
-        <Routes>
-          <Route path="/lists/:id" element={<List />} />
-          <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
-        </Routes>
+        <BottomInputBarFormProvider>
+          <Routes>
+            <Route path="/lists/:id" element={<List />} />
+            <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
+          </Routes>
+        </BottomInputBarFormProvider>
       </MemoryRouter>
     </UserContext.Provider>,
   );

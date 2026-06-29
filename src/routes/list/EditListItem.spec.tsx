@@ -4,6 +4,7 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import axios from 'utils/api';
 
 import { UserContext } from '../../AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 import {
   createList,
   createListItem,
@@ -74,11 +75,13 @@ const renderEditListItem = (): ReturnType<typeof render> => {
   return render(
     <UserContext.Provider value={mockUser}>
       <MemoryRouter initialEntries={['/lists/123/list_items/456/edit']}>
-        <Routes>
-          <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
-          <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
-          <Route path="/lists/:id" element={<div>List Page</div>} />
-        </Routes>
+        <BottomInputBarFormProvider>
+          <Routes>
+            <Route path="/lists/:list_id/list_items/:id/edit" element={<EditListItem />} />
+            <Route path="/users/sign_in" element={<div>Sign In Page</div>} />
+            <Route path="/lists/:id" element={<div>List Page</div>} />
+          </Routes>
+        </BottomInputBarFormProvider>
       </MemoryRouter>
     </UserContext.Provider>,
   );

@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 
 import ShareList from './ShareList';
 import axios from '../../utils/api';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => ({
@@ -42,7 +43,9 @@ describe('ShareList', () => {
   const renderShareList = (): RenderResult =>
     render(
       <MemoryRouter>
-        <ShareList />
+        <BottomInputBarFormProvider>
+          <ShareList />
+        </BottomInputBarFormProvider>
       </MemoryRouter>,
     );
 
