@@ -178,6 +178,11 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
     listsToUpdate: defaultTestData.listsToUpdate,
     listItemConfiguration: defaultTestData.listItemConfiguration,
     permissions: defaultTestData.permissions,
+    // The primary field now renders inside the add-item form via ListItemFormFields, so the
+    // modal needs a primary field config present. Individual tests still override this.
+    listItemFieldConfigurations: [
+      { id: 'fc-product', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+    ],
     ...suppliedProps,
   };
 
@@ -442,6 +447,13 @@ describe('ListContainer', () => {
       const { findByTestId, getByLabelText, queryByTestId, user } = setup({
         listItemFieldConfigurations: [
           {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
+          {
             id: 'fc1',
             label: 'Notes',
             data_type: EListItemFieldType.FREE_TEXT,
@@ -468,6 +480,13 @@ describe('ListContainer', () => {
     it('closes the modal on Escape and resets quick-add fields', async () => {
       const { findByTestId, getByLabelText, queryByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2375,12 +2394,7 @@ describe('ListContainer', () => {
       ]);
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      axios.get = vi.fn().mockResolvedValue({
-        data: {
-          ...defaultTestData,
-          not_completed_items: [...defaultTestData.notCompletedItems, newItem],
-        },
-      });
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
       const { findByTestId, user } = setup();
 
@@ -2403,12 +2417,7 @@ describe('ListContainer', () => {
       ]);
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      axios.get = vi.fn().mockResolvedValue({
-        data: {
-          ...defaultTestData,
-          not_completed_items: [...defaultTestData.notCompletedItems, newItem],
-        },
-      });
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
       const { findByTestId, user } = setup();
 
@@ -2450,7 +2459,7 @@ describe('ListContainer', () => {
             : Promise.resolve({ data: itemWithField }),
         );
 
-      const { findByTestId, queryByTestId, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, queryByTestId, user } = setup({ listItemFieldConfigurations: undefined });
 
       await openAddItemModal(findByTestId, user);
       await user.type(await findByTestId('add-list-item-name-input'), 'new product');
@@ -2491,7 +2500,7 @@ describe('ListContainer', () => {
           : Promise.resolve({ data: newItem }),
       );
 
-      const { findByTestId, user } = setup();
+      const { findByTestId, user } = setup({ listItemFieldConfigurations: undefined });
 
       await openAddItemModal(findByTestId, user);
       await user.type(await findByTestId('add-list-item-name-input'), 'new product');
@@ -2561,34 +2570,31 @@ describe('ListContainer', () => {
       expect(await findByText('server name')).toBeVisible();
     });
 
-    it('adds item without field post when no primary field config exists', async () => {
-      const newItem = createListItem('new-item-id', false, []);
-
-      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem });
-      // GET returns configs (none primary) on form open; the created item when reloading after add.
-      axios.get = vi.fn().mockImplementation((url: string) =>
-        url.includes('list_item_field_configurations')
-          ? Promise.resolve({
-              data: [
-                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
-              ],
-            })
-          : Promise.resolve({ data: newItem }),
-      );
-
-      const { findByTestId, user } = setup();
+    it('disables add submit when the list has no primary field config', async () => {
+      // The primary field is the name input. With no primary config there is nothing to enter
+      // the item by, so the form exposes no name input and the submit stays disabled.
+      const { findByTestId, queryByTestId, user } = setup({
+        listItemFieldConfigurations: [
+          { id: 'fc1', label: 'Notes', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
+        ],
+      });
 
       await openAddItemModal(findByTestId, user);
-      await user.type(await findByTestId('add-list-item-name-input'), 'new product');
-      await user.click(await findByTestId('add-list-item-submit'));
 
-      // Only the item creation post — no field posts (no primary config; non-primary field left empty).
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      expect(queryByTestId('add-list-item-name-input')).toBeNull();
+      expect(await findByTestId('add-list-item-submit')).toBeDisabled();
     });
 
     it('renders extended add form with field configs when listItemFieldConfigurations are provided', async () => {
       const { findByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2617,6 +2623,13 @@ describe('ListContainer', () => {
 
       const { findByTestId, getByLabelText, queryByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2658,6 +2671,13 @@ describe('ListContainer', () => {
       const { findByTestId, user } = setup({
         listItemFieldConfigurations: [
           {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
+          {
             id: 'fc1',
             label: 'Notes',
             data_type: EListItemFieldType.FREE_TEXT,
@@ -2680,6 +2700,13 @@ describe('ListContainer', () => {
       axios.post = vi.fn().mockRejectedValue(new Error('boom'));
       const { findByTestId, getByLabelText, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2717,6 +2744,13 @@ describe('ListContainer', () => {
 
       const { findByTestId, getByLabelText, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2756,7 +2790,7 @@ describe('ListContainer', () => {
             : Promise.resolve({ data: itemWithField }),
         );
 
-      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: undefined });
 
       await openAddItemModal(findByTestId, user);
       await user.type(await findByTestId('add-list-item-name-input'), 'test product');
@@ -2778,7 +2812,7 @@ describe('ListContainer', () => {
             : Promise.reject(new Error('Failed to fetch item')),
         );
 
-      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: undefined });
 
       await openAddItemModal(findByTestId, user);
       await user.type(await findByTestId('add-list-item-name-input'), 'test product');

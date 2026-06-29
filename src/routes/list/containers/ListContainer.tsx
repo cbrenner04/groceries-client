@@ -8,7 +8,6 @@ import { PageLayout } from 'components/layout/PageLayout';
 import { useBottomInputBarFormContext } from 'components/layout/BottomInputBarFormContext';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
 import { AddFormModal } from 'components/ui/AddFormModal';
-import Input from 'components/ui/Input';
 import {
   EUserPermissions,
   EListItemFieldType,
@@ -130,7 +129,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
   const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
-  const [quickAddPrimary, setQuickAddPrimary] = useState('');
   const [quickAddCategory, setQuickAddCategory] = useState('');
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
@@ -626,7 +624,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleCloseAddModal = (): void => {
     setAddFormModalOpen(false);
-    setQuickAddPrimary('');
     setQuickAddFormData({});
     setQuickAddCategory('');
     setQuickAddCompleted(false);
@@ -657,8 +654,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     // handler's sync phase, and we await a fetch below before reading the form's fields.
     const formEl = event.currentTarget;
 
-    const primaryName = quickAddPrimary.trim();
-    if (primaryName === '' || !props.list?.id) {
+    if (!props.list?.id) {
       return;
     }
 
@@ -680,6 +676,12 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         showToast.error('Failed to add item');
         return;
       }
+    }
+
+    // The primary field is now part of the form; require it before submitting.
+    const primaryConfig = configs.find((config) => config.primary);
+    if (primaryConfig && String(quickAddFormData[primaryConfig.label] ?? '').trim() === '') {
+      return;
     }
 
     try {
@@ -722,7 +724,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       await Promise.all(
         configs.flatMap((config) => {
-          const data = config.primary ? primaryName : resolvedFieldData(config);
+          const data = resolvedFieldData(config);
           if (data === '') {
             return [];
           }
@@ -747,7 +749,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
       const submittedEntries: IFieldEntry[] = configs
-        .map((config) => ({ config, data: config.primary ? primaryName : resolvedFieldData(config) }))
+        .map((config) => ({ config, data: resolvedFieldData(config) }))
         .filter((entry) => entry.data !== '');
       const finalItem: IListItem =
         Array.isArray(completeItem.fields) && completeItem.fields.length > 0
@@ -777,15 +779,10 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         onSubmit={handleQuickAddFormSubmit}
         className="tw:pb-0"
       >
-        <Input
-          label="Name"
-          value={quickAddPrimary}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>): void => setQuickAddPrimary(e.target.value)}
-          placeholder="Add an item..."
-          testId="add-list-item-name-input"
-        />
         <ListItemFormFields
-          fieldConfigurations={configs.filter((config) => !config.primary)}
+          fieldConfigurations={configs.map((config) =>
+            config.primary ? { ...config, testID: 'add-list-item-name-input' } : config,
+          )}
           fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
             id: `form-${label}`,
             label,
@@ -944,7 +941,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   };
 
   const showAddFab = props.permissions === EUserPermissions.WRITE && !showDeleteConfirm && copyMoveSheet === null;
-  const addModalSubmitDisabled = pending || quickAddPrimary.trim() === '';
+  const addModalPrimaryConfig = (quickAddFieldConfigs ?? []).find((config) => config.primary);
+  const addModalSubmitDisabled =
+    pending || !addModalPrimaryConfig || String(quickAddFormData[addModalPrimaryConfig.label] ?? '').trim() === '';
 
   return (
     <React.Fragment>
