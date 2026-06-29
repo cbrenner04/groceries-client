@@ -5,8 +5,9 @@ import { type AxiosError } from 'axios';
 
 import ConfirmModal from 'components/ConfirmModal';
 import { PageLayout } from 'components/layout/PageLayout';
+import { useBottomInputBarFormContext } from 'components/layout/BottomInputBarFormContext';
 import { FilterChip, FilterChipGroup } from 'components/ui/FilterChip';
-import { BottomInputBar } from 'components/layout/BottomInputBar';
+import { AddFormModal } from 'components/ui/AddFormModal';
 import {
   EUserPermissions,
   EListItemFieldType,
@@ -116,7 +117,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [multiSelectActive, setMultiSelectActive] = useState(false);
   const [displayedCategories, setDisplayedCategories] = useState(props.categories);
   const [completedExpanded, setCompletedExpanded] = useState(props.completedItems.length <= 5);
-  const [inputBarExpanded, setInputBarExpanded] = useState(props.notCompletedItems.length === 0);
   const [itemAnimationStates, setItemAnimationStates] = useState<Record<string, TListItemAnimationState>>({});
   const itemAnimationTimers = useRef<Record<string, number>>({});
 
@@ -129,8 +129,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
   const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
-  // The always-visible bottom input bar IS the primary/name field for new items.
-  const [quickAddPrimary, setQuickAddPrimary] = useState('');
   const [quickAddCategory, setQuickAddCategory] = useState('');
   const [quickAddCompleted, setQuickAddCompleted] = useState(false);
 
@@ -138,6 +136,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [liveAnnouncement, setLiveAnnouncement] = useState('');
 
   const navigate = useNavigate();
+  const { addFormModalOpen, setAddFormModalOpen } = useBottomInputBarFormContext();
   const {
     mode: sessionMode,
     onItemAdded: onSessionItemAdded,
@@ -176,10 +175,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       }, 900);
     });
   }, []);
-
-  // Note: Field configurations are now preloaded with list data, eliminating the need for mount prefetch
-
-  // Note: Idle prefetch is also eliminated since field configurations are preloaded with list data
 
   // Add polling for real-time updates with request deduplication
   usePolling(
@@ -328,7 +323,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       setNotCompletedItems(updatedNotCompletedItems);
       setCompletedItems(updatedCompletedItems);
-      setInputBarExpanded(false);
       const completedCount = itemsToComplete.length;
       const itemsWord = completedCount === 1 ? 'item' : 'items';
       setLiveAnnouncement(`${completedCount} ${itemsWord} marked as completed`);
@@ -613,6 +607,38 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     return `Are you sure you want to delete the following items? ${itemNames.join(', ')}`;
   };
 
+  const handleQuickAddFormOpen = (): void => {
+    if (!quickAddFieldConfigs && props.listItemConfiguration?.id) {
+      axios
+        .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
+        .then((response) => {
+          if (Array.isArray(response.data)) {
+            setQuickAddFieldConfigs(response.data);
+          }
+        })
+        .catch(() => {
+          // Silently fail - form just won't show fields
+        });
+    }
+  };
+
+  const handleCloseAddModal = (): void => {
+    setAddFormModalOpen(false);
+    setQuickAddFormData({});
+    setQuickAddCategory('');
+    setQuickAddCompleted(false);
+  };
+
+  const handleOpenAddModal = (): void => {
+    handleQuickAddFormOpen();
+    setAddFormModalOpen(true);
+  };
+
+  const handleAddItemSubmit = (): void => {
+    const formEl = document.getElementById('list-item-form') as HTMLFormElement | null;
+    formEl?.requestSubmit();
+  };
+
   const handleQuickAddFormChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, type, value, checked } = e.target;
     const next = type === 'checkbox' ? (checked ? 'true' : 'false') : value;
@@ -624,22 +650,39 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
   const handleQuickAddFormSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    if (!props.list?.id || !props.listItemConfiguration?.id) {
-      return;
-    }
-
-    const configs = quickAddFieldConfigs ?? [];
-    if (configs.length === 0) {
-      return;
-    }
-
-    // The primary/name field is the always-visible bottom input bar (not part of the form DOM).
-    const primaryName = quickAddPrimary.trim();
-    if (primaryName === '') {
-      return;
-    }
-
+    // Capture the form node synchronously: React nulls event.currentTarget after the
+    // handler's sync phase, and we await a fetch below before reading the form's fields.
     const formEl = event.currentTarget;
+
+    if (!props.list?.id) {
+      return;
+    }
+
+    if (!props.listItemConfiguration?.id) {
+      showToast.error('No field configuration available for this list. Please contact support.');
+      return;
+    }
+
+    // The field configs are normally loaded when the modal opens, but a simple list may not
+    // have them in props yet — fetch them here so a single submit path covers every list.
+    let configs = quickAddFieldConfigs ?? [];
+    if (configs.length === 0) {
+      try {
+        const { data } = await axios.get(
+          `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
+        );
+        configs = Array.isArray(data) ? data : [];
+      } catch {
+        showToast.error('Failed to add item');
+        return;
+      }
+    }
+
+    // The primary field is now part of the form; require it before submitting.
+    const primaryConfig = configs.find((config) => config.primary);
+    if (primaryConfig && String(quickAddFormData[primaryConfig.label] ?? '').trim() === '') {
+      return;
+    }
 
     try {
       setPending(true);
@@ -681,7 +724,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       await Promise.all(
         configs.flatMap((config) => {
-          const data = config.primary ? primaryName : resolvedFieldData(config);
+          const data = resolvedFieldData(config);
           if (data === '') {
             return [];
           }
@@ -706,71 +749,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
       const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
       const submittedEntries: IFieldEntry[] = configs
-        .map((config) => ({ config, data: config.primary ? primaryName : resolvedFieldData(config) }))
+        .map((config) => ({ config, data: resolvedFieldData(config) }))
         .filter((entry) => entry.data !== '');
       const finalItem: IListItem =
         Array.isArray(completeItem.fields) && completeItem.fields.length > 0
           ? completeItem
           : { ...completeItem, fields: buildOptimisticFields(submittedEntries, newItem) };
       handleAddItem([finalItem]);
-      setQuickAddFormData({});
-      setQuickAddPrimary('');
-      setQuickAddCategory('');
-      setQuickAddCompleted(false);
-      setInputBarExpanded(true);
-      setPending(false);
-    } catch {
-      showToast.error('Failed to add item');
-      setPending(false);
-    }
-  };
-
-  const handleQuickAdd = async (value: string): Promise<void> => {
-    if (!props.listItemConfiguration?.id) {
-      showToast.error('No field configuration available for this list. Please contact support.');
-      return;
-    }
-
-    try {
-      setPending(true);
-
-      const { data: newItem } = await axios.post(`/lists/${props.list.id}/list_items`, {
-        list_item: {
-          user_id: props.userId,
-          completed: false,
-        },
-      });
-
-      const { data: fieldConfigurations } = await axios.get(
-        `/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`,
-      );
-
-      const primaryFieldConfig = fieldConfigurations.find((config: { primary: boolean }) => config.primary === true);
-
-      if (primaryFieldConfig) {
-        await axios.post(`/lists/${props.list.id}/list_items/${newItem.id}/list_item_fields`, {
-          list_item_field: {
-            list_item_field_configuration_id: primaryFieldConfig.id,
-            data: value,
-          },
-        });
-      }
-
-      const { data: completeItem } = await axios.get(`/lists/${props.list.id}/list_items/${newItem.id}`);
-
-      const finalItem: IListItem =
-        Array.isArray(completeItem.fields) && completeItem.fields.length > 0
-          ? completeItem
-          : {
-              ...completeItem,
-              fields: primaryFieldConfig
-                ? buildOptimisticFields([{ config: primaryFieldConfig, data: value }], newItem)
-                : [],
-            };
-
-      handleAddItem([finalItem]);
-      setQuickAddPrimary('');
-      setInputBarExpanded(true);
+      handleCloseAddModal();
       setPending(false);
     } catch {
       showToast.error('Failed to add item');
@@ -782,11 +768,8 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
     [props.list.id ?? '']: props.permissions === EUserPermissions.WRITE ? 'write' : 'read',
   };
 
-  const getQuickAddExpandedContent = (): React.ReactNode => {
+  const getAddModalFormContent = (): React.ReactNode => {
     const configs = quickAddFieldConfigs ?? [];
-    if (configs.length === 0) {
-      return null;
-    }
 
     return (
       <form
@@ -797,7 +780,9 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         className="tw:pb-0"
       >
         <ListItemFormFields
-          fieldConfigurations={configs.filter((config) => !config.primary)}
+          fieldConfigurations={configs.map((config) =>
+            config.primary ? { ...config, testID: 'add-list-item-name-input' } : config,
+          )}
           fields={Object.entries(quickAddFormData).map(([label, data], index) => ({
             id: `form-${label}`,
             label,
@@ -832,23 +817,6 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         />
       </form>
     );
-  };
-
-  const handleQuickAddFormOpen = (): void => {
-    // Fetch field configurations when form is opened if not preloaded
-    if (!quickAddFieldConfigs && props.listItemConfiguration?.id) {
-      axios
-        .get(`/list_item_configurations/${props.listItemConfiguration.id}/list_item_field_configurations`)
-        .then((response) => {
-          // Only set if response is an array
-          if (Array.isArray(response.data)) {
-            setQuickAddFieldConfigs(response.data);
-          }
-        })
-        .catch(() => {
-          // Silently fail - form just won't show fields
-        });
-    }
   };
 
   const renderFilterChips = (): React.JSX.Element => {
@@ -971,6 +939,11 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
 
     return actions;
   };
+
+  const showAddFab = props.permissions === EUserPermissions.WRITE && !showDeleteConfirm && copyMoveSheet === null;
+  const addModalPrimaryConfig = (quickAddFieldConfigs ?? []).find((config) => config.primary);
+  const addModalSubmitDisabled =
+    pending || !addModalPrimaryConfig || String(quickAddFormData[addModalPrimaryConfig.label] ?? '').trim() === '';
 
   return (
     <React.Fragment>
@@ -1115,96 +1088,129 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
             </div>
           ) : null
         }
-        bottomBar={
-          props.permissions === EUserPermissions.WRITE ? (
-            <BottomInputBar
-              placeholder="Add an item..."
-              onSubmit={handleQuickAdd}
-              hidden={showDeleteConfirm || copyMoveSheet !== null}
-              initialExpanded={inputBarExpanded}
-              expandedContent={getQuickAddExpandedContent()}
-              onInputFocus={handleQuickAddFormOpen}
-              mode={sessionMode}
-              submitFormId="list-item-form"
-              submitLabel="Add item"
-              value={quickAddPrimary}
-              onValueChange={setQuickAddPrimary}
-              footerTopSpacingClassName="tw:pt-0"
-            />
-          ) : undefined
-        }
       >
-        <div aria-live="polite" aria-atomic="true" className="tw:sr-only">
-          {liveAnnouncement}
-        </div>
-        {renderFilterChips()}
-        {multiSelectActive && selectedItems.length > 0 && (
-          <div className="tw:mb-3">
-            <MultiSelectBar
-              selectedCount={selectedItems.length}
-              onClose={() => {
-                setSelectedItems([]);
-                setMultiSelectActive(false);
-              }}
-              actions={getMultiSelectActions()}
-            />
-          </div>
-        )}
-        <NotCompletedItemsSection
-          notCompletedItems={notCompletedItems}
-          permissions={props.permissions}
-          permissionsDict={permissionsDict}
-          selectedItems={selectedItems}
-          pending={pending}
-          filter={filter}
-          displayedCategories={displayedCategories}
-          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
-          incompleteMultiSelect={multiSelectActive}
-          setSelectedItems={setSelectedItems}
-          handleItemSelect={handleItemSelect}
-          handleItemComplete={handleItemComplete}
-          handleItemEdit={handleItemEdit}
-          handleItemDelete={handleDelete}
-          handleItemRefresh={handleItemRefresh}
-          itemAnimationStates={itemAnimationStates}
-          sessionMode={sessionMode}
-        />
-
-        <CompletedItemsSection
-          completedItems={completedItems}
-          permissions={props.permissions}
-          permissionsDict={permissionsDict}
-          selectedItems={selectedItems}
-          pending={pending}
-          filter={filter}
-          displayedCategories={displayedCategories}
-          listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
-          completeMultiSelect={multiSelectActive}
-          setSelectedItems={setSelectedItems}
-          handleItemSelect={handleItemSelect}
-          handleItemComplete={handleItemComplete}
-          handleItemEdit={handleItemEdit}
-          handleItemDelete={handleDelete}
-          handleItemRefresh={handleItemRefresh}
-          completedExpanded={completedExpanded}
-          setCompletedExpanded={setCompletedExpanded}
-          itemAnimationStates={itemAnimationStates}
-          sessionMode={sessionMode}
-          hasNotCompletedItems={
-            filter
-              ? notCompletedItems.some((item) => {
-                  const itemCategory = item.category ? String(item.category).trim() : '';
-                  return (displayedCategories ?? []).some((cat) => {
-                    if (cat === 'uncategorized') {
-                      return !itemCategory;
-                    }
-                    return itemCategory && normalizeCategoryKey(itemCategory) === normalizeCategoryKey(cat);
-                  });
-                })
-              : notCompletedItems.length > 0
+        <div
+          className={
+            props.permissions === EUserPermissions.WRITE
+              ? 'tw:pb-[calc(3.5rem+var(--spacing-nav-height)+1rem)]'
+              : undefined
           }
-        />
+        >
+          <div aria-live="polite" aria-atomic="true" className="tw:sr-only">
+            {liveAnnouncement}
+          </div>
+          {renderFilterChips()}
+          {multiSelectActive && selectedItems.length > 0 && (
+            <div className="tw:mb-3">
+              <MultiSelectBar
+                selectedCount={selectedItems.length}
+                onClose={() => {
+                  setSelectedItems([]);
+                  setMultiSelectActive(false);
+                }}
+                actions={getMultiSelectActions()}
+              />
+            </div>
+          )}
+          <NotCompletedItemsSection
+            notCompletedItems={notCompletedItems}
+            permissions={props.permissions}
+            permissionsDict={permissionsDict}
+            selectedItems={selectedItems}
+            pending={pending}
+            filter={filter}
+            displayedCategories={displayedCategories}
+            listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+            incompleteMultiSelect={multiSelectActive}
+            setSelectedItems={setSelectedItems}
+            handleItemSelect={handleItemSelect}
+            handleItemComplete={handleItemComplete}
+            handleItemEdit={handleItemEdit}
+            handleItemDelete={handleDelete}
+            handleItemRefresh={handleItemRefresh}
+            itemAnimationStates={itemAnimationStates}
+            sessionMode={sessionMode}
+          />
+
+          <CompletedItemsSection
+            completedItems={completedItems}
+            permissions={props.permissions}
+            permissionsDict={permissionsDict}
+            selectedItems={selectedItems}
+            pending={pending}
+            filter={filter}
+            displayedCategories={displayedCategories}
+            listItemFieldConfigurations={(props.listItemFieldConfigurations ?? []) as IListItemFieldConfiguration[]}
+            completeMultiSelect={multiSelectActive}
+            setSelectedItems={setSelectedItems}
+            handleItemSelect={handleItemSelect}
+            handleItemComplete={handleItemComplete}
+            handleItemEdit={handleItemEdit}
+            handleItemDelete={handleDelete}
+            handleItemRefresh={handleItemRefresh}
+            completedExpanded={completedExpanded}
+            setCompletedExpanded={setCompletedExpanded}
+            itemAnimationStates={itemAnimationStates}
+            sessionMode={sessionMode}
+            hasNotCompletedItems={
+              filter
+                ? notCompletedItems.some((item) => {
+                    const itemCategory = item.category ? String(item.category).trim() : '';
+                    return (displayedCategories ?? []).some((cat) => {
+                      if (cat === 'uncategorized') {
+                        return !itemCategory;
+                      }
+                      return itemCategory && normalizeCategoryKey(itemCategory) === normalizeCategoryKey(cat);
+                    });
+                  })
+                : notCompletedItems.length > 0
+            }
+          />
+        </div>
       </PageLayout>
+      {props.permissions === EUserPermissions.WRITE ? (
+        <>
+          {showAddFab ? (
+            <button
+              type="button"
+              data-test-id="list-add-fab"
+              aria-label="Add item"
+              onClick={handleOpenAddModal}
+              className={
+                'tw:fixed tw:bottom-[calc(var(--spacing-nav-height)+1rem+env(safe-area-inset-bottom))] tw:right-4 ' +
+                'tw:z-[var(--z-sticky)] tw:flex tw:items-center tw:justify-center tw:w-14 tw:h-14 ' +
+                'tw:rounded-full tw:bg-[var(--color-primary)] tw:text-white tw:text-2xl tw:leading-none ' +
+                'tw:shadow-[var(--shadow-lg)] tw:border-0 tw:cursor-pointer'
+              }
+            >
+              +
+            </button>
+          ) : null}
+          <AddFormModal
+            isOpen={addFormModalOpen}
+            onClose={handleCloseAddModal}
+            title="Add item"
+            testId="add-list-item-modal"
+            footer={
+              <>
+                <Button variant="ghost" data-test-id="add-list-item-cancel" onClick={handleCloseAddModal}>
+                  Cancel
+                </Button>
+                <Button
+                  data-test-id="add-list-item-submit"
+                  onClick={handleAddItemSubmit}
+                  disabled={addModalSubmitDisabled}
+                  loading={pending}
+                >
+                  Add item
+                </Button>
+              </>
+            }
+          >
+            {getAddModalFormContent()}
+          </AddFormModal>
+        </>
+      ) : null}
       <ConfirmModal
         action="delete"
         body={deleteConfirmationModalBody()}

@@ -12,6 +12,7 @@ export interface IListItemFormFieldsProps {
     data_type: EListItemFieldType;
     position: number;
     primary?: boolean;
+    testID?: string;
   }[];
   fields: IListItemField[];
   setFormData: ChangeEventHandler<HTMLInputElement>;
@@ -47,7 +48,14 @@ const ListItemFormFields: React.FC<IListItemFormFieldsProps> = (props): React.JS
         return <NumberField key={config.id} {...commonProps} value={field?.data ? Number(field.data) : undefined} />;
       case 'free_text':
       default:
-        return <TextField key={config.id} {...commonProps} value={field?.data ? String(field.data) : ''} />;
+        return (
+          <TextField
+            key={config.id}
+            {...commonProps}
+            testID={config.testID}
+            value={field?.data ? String(field.data) : ''}
+          />
+        );
     }
   };
 

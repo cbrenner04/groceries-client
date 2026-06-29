@@ -7,6 +7,7 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'utils/api';
 import { EListItemFieldType, EUserPermissions, type IListItem } from 'typings';
 import { BOTTOM_INPUT_BAR_PORTAL_TARGET_ID } from 'AppRouter';
+import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';
 import ListContainer, { type IListContainerProps } from './ListContainer';
 import type { IChangeOtherListModalProps } from '../components/ChangeOtherListModal';
 import type { IEditItemSheetProps } from '../components/EditItemSheet';
@@ -17,6 +18,22 @@ import { clearFieldConfigCache } from 'utils/fieldConfigCache';
 import { unifiedCache } from 'utils/lightweightCache';
 import { listDeduplicator } from 'utils/requestDeduplication';
 import { showToast } from '../../../utils/toast';
+
+const mockUseSessionMode = vi.fn(
+  (): { mode: 'building' | 'shopping' | 'neutral'; onItemAdded: Mock; onItemCompleted: Mock } => ({
+    mode: 'neutral',
+    onItemAdded: vi.fn(),
+    onItemCompleted: vi.fn(),
+  }),
+);
+
+vi.mock('hooks', async () => {
+  const actual = await vi.importActual('hooks');
+  return {
+    ...actual,
+    useSessionMode: (): ReturnType<typeof mockUseSessionMode> => mockUseSessionMode(),
+  };
+});
 
 // Create reference for test expectations
 const mockShowToast = showToast as Mocked<typeof showToast>;
@@ -108,6 +125,42 @@ interface ISetupReturn extends TestRenderResult {
   props: IListContainerProps;
 }
 
+async function openAddItemModal(findByTestId: ISetupReturn['findByTestId'], user: TestUserEvent): Promise<void> {
+  await user.click(await findByTestId('list-add-fab'));
+  await findByTestId('add-list-item-modal');
+}
+
+async function fillExtendedAddFormFields(
+  findByTestId: ISetupReturn['findByTestId'],
+  getByLabelText: ISetupReturn['getByLabelText'],
+  user: TestUserEvent,
+  values: { name: string; notes?: string; category?: string; completed?: boolean },
+): Promise<void> {
+  await user.type(await findByTestId('add-list-item-name-input'), values.name);
+  if (values.notes !== undefined) {
+    await user.type(getByLabelText('Notes') as HTMLInputElement, values.notes);
+  }
+  if (values.category !== undefined) {
+    await user.type(getByLabelText('Category') as HTMLInputElement, values.category);
+  }
+  if (values.completed) {
+    await user.click(getByLabelText('Completed'));
+  }
+}
+
+async function expectAddModalFieldsReset(
+  findByTestId: ISetupReturn['findByTestId'],
+  getByLabelText: ISetupReturn['getByLabelText'],
+  hasExtendedForm: boolean,
+): Promise<void> {
+  expect(((await findByTestId('add-list-item-name-input')) as HTMLInputElement).value).toBe('');
+  if (hasExtendedForm) {
+    expect((getByLabelText('Notes') as HTMLInputElement).value).toBe('');
+    expect((getByLabelText('Category') as HTMLInputElement).value).toBe('');
+    expect((getByLabelText('Completed') as HTMLInputElement).checked).toBe(false);
+  }
+}
+
 function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
   // Create the portal target before rendering
   const portalTarget = document.createElement('div');
@@ -125,12 +178,19 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
     listsToUpdate: defaultTestData.listsToUpdate,
     listItemConfiguration: defaultTestData.listItemConfiguration,
     permissions: defaultTestData.permissions,
+    // The primary field now renders inside the add-item form via ListItemFormFields, so the
+    // modal needs a primary field config present. Individual tests still override this.
+    listItemFieldConfigurations: [
+      { id: 'fc-product', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: true },
+    ],
     ...suppliedProps,
   };
 
   const component = render(
     <MemoryRouter>
-      <ListContainer {...props} />
+      <BottomInputBarFormProvider>
+        <ListContainer {...props} />
+      </BottomInputBarFormProvider>
     </MemoryRouter>,
   );
 
@@ -139,6 +199,12 @@ function setup(suppliedProps?: Partial<IListContainerProps>): ISetupReturn {
 
 describe('ListContainer', () => {
   beforeEach(() => {
+    mockUseSessionMode.mockReturnValue({
+      mode: 'neutral',
+      onItemAdded: vi.fn(),
+      onItemCompleted: vi.fn(),
+    });
+
     // Clear cache to ensure test isolation
     listCache.clear();
     unifiedCache.clear(); // Clear unified cache
@@ -323,18 +389,189 @@ describe('ListContainer', () => {
   });
 
   describe('Permissions', () => {
-    it('renders Add Item button (form collapsed) when user has write permissions', async () => {
-      const { container, findByTestId } = setup({ permissions: EUserPermissions.WRITE });
+    it('renders add FAB when user has write permissions', async () => {
+      const { container, findByTestId, queryByTestId } = setup({ permissions: EUserPermissions.WRITE });
 
       expect(container).toMatchSnapshot();
-      expect(await findByTestId('quick-add-input')).toBeVisible();
+      expect(await findByTestId('list-add-fab')).toBeVisible();
+      expect(queryByTestId('quick-add-input')).toBeNull();
     });
 
     it('does not render ListForm when user has read permissions', () => {
       const { container, queryByTestId } = setup({ permissions: EUserPermissions.READ });
 
       expect(container).toMatchSnapshot();
+      expect(queryByTestId('list-add-fab')).toBeNull();
       expect(queryByTestId('list-item-form')).toBeNull();
+    });
+  });
+
+  describe('Add item FAB and modal', () => {
+    it('shows FAB only with modal closed on an empty list', async () => {
+      const { findByTestId, queryByTestId } = setup({ notCompletedItems: [] });
+
+      expect(await findByTestId('list-add-fab')).toBeVisible();
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+    });
+
+    it('shows FAB with modal closed in building session mode until FAB click', async () => {
+      mockUseSessionMode.mockReturnValue({
+        mode: 'building',
+        onItemAdded: vi.fn(),
+        onItemCompleted: vi.fn(),
+      });
+
+      const { findByTestId, queryByTestId, user } = setup();
+
+      expect(await findByTestId('list-add-fab')).toBeVisible();
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      expect(await findByTestId('add-list-item-modal')).toBeVisible();
+    });
+
+    it('closes the modal and clears the name on Cancel', async () => {
+      const { findByTestId, queryByTestId, user } = setup();
+
+      await openAddItemModal(findByTestId, user);
+      const nameInput = (await findByTestId('add-list-item-name-input')) as HTMLInputElement;
+      await user.type(nameInput, 'milk');
+      await user.click(await findByTestId('add-list-item-cancel'));
+
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+      await openAddItemModal(findByTestId, user);
+      expect(((await findByTestId('add-list-item-name-input')) as HTMLInputElement).value).toBe('');
+    });
+
+    it('closes the modal on overlay click and resets quick-add fields', async () => {
+      const { findByTestId, getByLabelText, queryByTestId, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await openAddItemModal(findByTestId, user);
+      await fillExtendedAddFormFields(findByTestId, getByLabelText, user, {
+        name: 'milk',
+        notes: '2%',
+        category: 'dairy',
+        completed: true,
+      });
+      await user.click(await findByTestId('add-list-item-modal-overlay'));
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      await expectAddModalFieldsReset(findByTestId, getByLabelText, true);
+    });
+
+    it('closes the modal on Escape and resets quick-add fields', async () => {
+      const { findByTestId, getByLabelText, queryByTestId, user } = setup({
+        listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
+          {
+            id: 'fc1',
+            label: 'Notes',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 1,
+            primary: false,
+          },
+        ],
+      });
+
+      await openAddItemModal(findByTestId, user);
+      await fillExtendedAddFormFields(findByTestId, getByLabelText, user, {
+        name: 'milk',
+        notes: '2%',
+        category: 'dairy',
+        completed: true,
+      });
+      await user.keyboard('{Escape}');
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      await expectAddModalFieldsReset(findByTestId, getByLabelText, true);
+    });
+
+    it('retains cached field configs after dismiss without a second config fetch', async () => {
+      let configGetCount = 0;
+      axios.get = vi.fn().mockImplementation((url: string) => {
+        if (url.includes('list_item_field_configurations')) {
+          configGetCount += 1;
+          return Promise.resolve({
+            data: [
+              {
+                id: 'fc1',
+                label: 'Notes',
+                data_type: EListItemFieldType.FREE_TEXT,
+                position: 1,
+                primary: false,
+              },
+            ],
+          });
+        }
+        return Promise.resolve({ data: createApiResponse() });
+      });
+
+      const { findByTestId, getByLabelText, queryByTestId, user } = setup({
+        listItemFieldConfigurations: undefined,
+      });
+
+      await openAddItemModal(findByTestId, user);
+      await waitFor(() => {
+        expect(getByLabelText('Notes')).toBeInTheDocument();
+      });
+      expect(configGetCount).toBe(1);
+
+      await user.click(await findByTestId('add-list-item-cancel'));
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      expect(getByLabelText('Notes')).toBeInTheDocument();
+      expect(configGetCount).toBe(1);
+    });
+
+    it('disables submit when the name is empty', async () => {
+      const { findByTestId, user } = setup();
+
+      await openAddItemModal(findByTestId, user);
+      expect(await findByTestId('add-list-item-submit')).toBeDisabled();
+      await user.type(await findByTestId('add-list-item-name-input'), '   ');
+      expect(await findByTestId('add-list-item-submit')).toBeDisabled();
+    });
+
+    it('hides the FAB while delete confirmation is open', async () => {
+      const { findByTestId, queryByTestId, user } = setup();
+
+      await user.click(await findByTestId('not-completed-item-delete-id2'));
+      expect(queryByTestId('list-add-fab')).toBeNull();
+    });
+
+    it('hides the FAB while the copy/move sheet is open', async () => {
+      const { findByTestId, queryByTestId, user } = setup();
+
+      await user.click(await findByTestId('select-button'));
+      await user.click(await findByTestId('not-completed-item-select-id2'));
+      await user.click(await findByTestId('copy-to-list'));
+      expect(queryByTestId('list-add-fab')).toBeNull();
     });
   });
 
@@ -641,8 +878,8 @@ describe('ListContainer', () => {
         ],
       });
 
-      // Open the form; fields should already be available from preloaded configurations
-      await user.click(await findByTestId('quick-add-input'));
+      // Open the modal; fields should already be available from preloaded configurations
+      await openAddItemModal(findByTestId, user);
       await waitFor(async () => expect(await findByLabelText('Quantity')).toBeVisible());
 
       // No field configuration API calls should be made since data is preloaded
@@ -755,10 +992,8 @@ describe('ListContainer', () => {
       // Component should still render normally
       expect(container).toBeInTheDocument();
 
-      // In test environment, prefetch may be disabled, so we just verify component works
-      // BottomInputBar is now portaled, so check the portal target
-      const portalTarget = document.getElementById(BOTTOM_INPUT_BAR_PORTAL_TARGET_ID);
-      expect(portalTarget?.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
+      // FAB is rendered in the component tree (not portaled)
+      expect(document.querySelector('[data-test-id="list-add-fab"]')).toBeInTheDocument();
     });
 
     it('does not idle-prefetch when disabled via environment variable', async () => {
@@ -917,17 +1152,19 @@ describe('ListContainer', () => {
       // Re-render with same props
       rerender(
         <MemoryRouter>
-          <ListContainer
-            userId={defaultTestData.userId}
-            list={defaultTestData.list}
-            completedItems={[defaultTestData.completedItem]}
-            categories={defaultTestData.categories}
-            listUsers={defaultTestData.listUsers}
-            notCompletedItems={defaultTestData.notCompletedItems}
-            listsToUpdate={defaultTestData.listsToUpdate}
-            listItemConfiguration={defaultTestData.listItemConfiguration}
-            permissions={EUserPermissions.WRITE}
-          />
+          <BottomInputBarFormProvider>
+            <ListContainer
+              userId={defaultTestData.userId}
+              list={defaultTestData.list}
+              completedItems={[defaultTestData.completedItem]}
+              categories={defaultTestData.categories}
+              listUsers={defaultTestData.listUsers}
+              notCompletedItems={defaultTestData.notCompletedItems}
+              listsToUpdate={defaultTestData.listsToUpdate}
+              listItemConfiguration={defaultTestData.listItemConfiguration}
+              permissions={EUserPermissions.WRITE}
+            />
+          </BottomInputBarFormProvider>
         </MemoryRouter>,
       );
 
@@ -935,7 +1172,7 @@ describe('ListContainer', () => {
       await waitFor(() => new Promise((resolve) => setTimeout(resolve, 50)));
 
       // Verify component is still functioning
-      expect(document.querySelector('[data-test-id="quick-add-input"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-test-id="list-add-fab"]')).toBeInTheDocument();
     });
 
     it('does not trigger prefetch when VITE_PREFETCH_ON_MOUNT is false', async () => {
@@ -1030,8 +1267,8 @@ describe('ListContainer', () => {
         listItemFieldConfigurations: undefined, // No prefetch data
       });
 
-      // Open the form
-      await user.click(await findByTestId('quick-add-input'));
+      // Open the modal
+      await openAddItemModal(findByTestId, user);
 
       // Fields should load normally when form opens
       await waitFor(async () => {
@@ -2157,21 +2394,16 @@ describe('ListContainer', () => {
       ]);
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      axios.get = vi.fn().mockResolvedValue({
-        data: {
-          ...defaultTestData,
-          not_completed_items: [...defaultTestData.notCompletedItems, newItem],
-        },
-      });
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
       const { findByTestId, user } = setup();
 
-      // Test that quick-add input exists and can be interacted with
-      const quickAddInput = await findByTestId('quick-add-input');
-      expect(quickAddInput).toBeInTheDocument();
+      await openAddItemModal(findByTestId, user);
+      const nameInput = await findByTestId('add-list-item-name-input');
+      expect(nameInput).toBeInTheDocument();
 
-      // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product{Enter}');
+      await user.type(nameInput, 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
@@ -2185,31 +2417,24 @@ describe('ListContainer', () => {
       ]);
 
       axios.post = vi.fn().mockResolvedValue({ data: newItem });
-      axios.get = vi.fn().mockResolvedValue({
-        data: {
-          ...defaultTestData,
-          not_completed_items: [...defaultTestData.notCompletedItems, newItem],
-        },
-      });
+      axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
       const { findByTestId, user } = setup();
 
-      // Test that quick-add input exists and can be interacted with
-      const quickAddInput = await findByTestId('quick-add-input');
-      expect(quickAddInput).toBeInTheDocument();
+      await openAddItemModal(findByTestId, user);
+      const nameInput = await findByTestId('add-list-item-name-input');
+      await user.type(nameInput, 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
-      // Simulate adding item through the input
-      await user.type(quickAddInput, 'new product{Enter}');
-
-      // Verify the item was added by checking API was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
     });
 
     it('shows error toast when no listItemConfiguration is set', async () => {
       const { findByTestId, user } = setup({ listItemConfiguration: undefined });
 
-      // With no field config the expanded form never renders, so Enter on the collapsed bar runs quick-add.
-      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() =>
         expect(mockShowToast.error).toHaveBeenCalledWith(
@@ -2218,13 +2443,14 @@ describe('ListContainer', () => {
       );
     });
 
-    it('quick-adds by name via Enter when the expanded form is not rendered', async () => {
+    it('adds an item via the unified form submit when configs load on open', async () => {
       const newItem = createListItem('qa-id', false, []);
       const itemWithField = createListItem('qa-id', false, [
         createField('f1', 'product', 'new product', 'qa-id', { primary: true }),
       ]);
       axios.post = vi.fn().mockResolvedValueOnce({ data: newItem }).mockResolvedValueOnce({ data: {} });
-      // handleQuickAdd fetches field configs to find the primary field, then fetches the item after posting
+      // The modal loads field configs on open, so the single form-submit path finds the primary
+      // field and posts its value — no separate quick-add code path.
       axios.get = vi
         .fn()
         .mockImplementation((url: string) =>
@@ -2233,20 +2459,28 @@ describe('ListContainer', () => {
             : Promise.resolve({ data: itemWithField }),
         );
 
-      // Empty preloaded configs => the expanded form never renders, so Enter on the bar runs quick-add.
-      const { findByTestId, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, queryByTestId, user } = setup({ listItemFieldConfigurations: undefined });
 
-      await user.type(await findByTestId('quick-add-input'), 'new product{Enter}');
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
-        list_item: { user_id: defaultTestData.userId, completed: false },
+        list_item: { completed: false },
       });
       expect(axios.post).toHaveBeenNthCalledWith(
         2,
         `/lists/${defaultTestData.list.id}/list_items/qa-id/list_item_fields`,
         { list_item_field: { list_item_field_configuration_id: 'fc1', data: 'new product' } },
       );
+      await waitFor(() => {
+        expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully added.');
+      });
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      expect(((await findByTestId('add-list-item-name-input')) as HTMLInputElement).value).toBe('');
     });
 
     it('calls handleAddItem when quick add succeeds with a primary field config', async () => {
@@ -2266,11 +2500,11 @@ describe('ListContainer', () => {
           : Promise.resolve({ data: newItem }),
       );
 
-      const { findByTestId, findByText, user } = setup();
+      const { findByTestId, user } = setup({ listItemFieldConfigurations: undefined });
 
-      // The always-visible bar input is the primary/name field; submit via the expanded form footer.
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       expect(axios.post).toHaveBeenNthCalledWith(1, `/lists/${defaultTestData.list.id}/list_items`, {
@@ -2301,8 +2535,9 @@ describe('ListContainer', () => {
 
       const { findByTestId, findByText, queryByText, user } = setup();
 
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       // The new row shows the entered data immediately, not "Untitled Item".
       expect(await findByText('new product')).toBeVisible();
@@ -2328,39 +2563,38 @@ describe('ListContainer', () => {
 
       const { findByTestId, findByText, user } = setup();
 
-      await user.type(await findByTestId('quick-add-input'), 'typed name');
-      await user.click(await findByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'typed name');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       expect(await findByText('server name')).toBeVisible();
     });
 
-    it('adds item without field post when no primary field config exists', async () => {
-      const newItem = createListItem('new-item-id', false, []);
+    it('disables add submit when the list has no primary field config', async () => {
+      // The primary field is the name input. With no primary config there is nothing to enter
+      // the item by, so the form exposes no name input and the submit stays disabled.
+      const { findByTestId, queryByTestId, user } = setup({
+        listItemFieldConfigurations: [
+          { id: 'fc1', label: 'Notes', data_type: EListItemFieldType.FREE_TEXT, position: 1, primary: false },
+        ],
+      });
 
-      axios.post = vi.fn().mockResolvedValueOnce({ data: newItem });
-      // GET returns configs (none primary) on form open; the created item when reloading after add.
-      axios.get = vi.fn().mockImplementation((url: string) =>
-        url.includes('list_item_field_configurations')
-          ? Promise.resolve({
-              data: [
-                { id: 'fc1', label: 'product', data_type: EListItemFieldType.FREE_TEXT, position: 0, primary: false },
-              ],
-            })
-          : Promise.resolve({ data: newItem }),
-      );
+      await openAddItemModal(findByTestId, user);
 
-      const { findByTestId, findByText, user } = setup();
-
-      await user.type(await findByTestId('quick-add-input'), 'new product');
-      await user.click(await findByText('Add item'));
-
-      // Only the item creation post — no field posts (no primary config; non-primary field left empty).
-      await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+      expect(queryByTestId('add-list-item-name-input')).toBeNull();
+      expect(await findByTestId('add-list-item-submit')).toBeDisabled();
     });
 
-    it('renders expanded quick-add form with field configs when listItemFieldConfigurations are provided', async () => {
+    it('renders extended add form with field configs when listItemFieldConfigurations are provided', async () => {
       const { findByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2371,15 +2605,14 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openAddItemModal(findByTestId, user);
 
-      // The expanded form should render ListItemFormFields
       await waitFor(() => {
-        expect(document.querySelector('[data-test-id="quick-add-expand"]')).toBeInTheDocument();
+        expect(document.querySelector('[data-test-id="list-item-form"]')).toBeInTheDocument();
       });
     });
 
-    it('submits expanded quick-add form with category, completed, and fields', async () => {
+    it('submits extended add form with category, completed, and fields', async () => {
       const newItem = createListItem('id6', false, [createField('id1', 'Notes', 'note text', 'id6')]);
       axios.post = vi
         .fn()
@@ -2388,8 +2621,15 @@ describe('ListContainer', () => {
         .mockResolvedValueOnce({ data: {} }); // create category
       axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
-      const { findByTestId, getByLabelText, getByText, user } = setup({
+      const { findByTestId, getByLabelText, queryByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2400,17 +2640,14 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
-
-      const notesInput = getByLabelText('Notes') as HTMLInputElement;
-      await user.type(notesInput, 'note text');
-      const categoryInput = getByLabelText('Category') as HTMLInputElement;
-      await user.type(categoryInput, 'newcat');
-      const completedCheckbox = getByLabelText('Completed') as HTMLInputElement;
-      await user.click(completedCheckbox);
-
-      await user.type(await findByTestId('quick-add-input'), 'My item');
-      await user.click(getByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await fillExtendedAddFormFields(findByTestId, getByLabelText, user, {
+        name: 'My item',
+        notes: 'note text',
+        category: 'newcat',
+        completed: true,
+      });
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith(
@@ -2420,12 +2657,26 @@ describe('ListContainer', () => {
           }),
         );
       });
+      await waitFor(() => {
+        expect(mockShowToast.info).toHaveBeenCalledWith('Item successfully added.');
+      });
+      expect(queryByTestId('add-list-item-modal')).toBeNull();
+
+      await openAddItemModal(findByTestId, user);
+      await expectAddModalFieldsReset(findByTestId, getByLabelText, true);
     });
 
-    it('returns early from quick-add form submit when there are no field configs', async () => {
+    it('submits extended add form when field configs are present', async () => {
       axios.post = vi.fn();
-      const { findByTestId, getByText, user } = setup({
+      const { findByTestId, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2436,11 +2687,9 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
-      // Click Submit before typing into Notes; resolvedFieldData returns '' so no field POST,
-      // but should still create item. Test the configs.length === 0 path via fields cleared.
-      await user.type(await findByTestId('quick-add-input'), 'My item');
-      await user.click(getByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'My item');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalled();
@@ -2449,8 +2698,15 @@ describe('ListContainer', () => {
 
     it('shows error toast when quick-add form submit fails', async () => {
       axios.post = vi.fn().mockRejectedValue(new Error('boom'));
-      const { findByTestId, getByLabelText, getByText, user } = setup({
+      const { findByTestId, getByLabelText, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2461,15 +2717,19 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
-      const notesInput = getByLabelText('Notes') as HTMLInputElement;
-      await user.type(notesInput, 'x');
-      await user.type(await findByTestId('quick-add-input'), 'My item');
-      await user.click(getByText('Add item'));
+      await openAddItemModal(findByTestId, user);
+      await fillExtendedAddFormFields(findByTestId, getByLabelText, user, {
+        name: 'My item',
+        notes: 'x',
+      });
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => {
         expect(mockShowToast.error).toHaveBeenCalledWith('Failed to add item');
       });
+      expect(await findByTestId('add-list-item-modal')).toBeVisible();
+      expect(((await findByTestId('add-list-item-name-input')) as HTMLInputElement).value).toBe('My item');
+      expect((getByLabelText('Notes') as HTMLInputElement).value).toBe('x');
     });
 
     it('continues when category creation fails during expanded quick-add submit', async () => {
@@ -2482,8 +2742,15 @@ describe('ListContainer', () => {
       });
       axios.get = vi.fn().mockResolvedValue({ data: newItem });
 
-      const { findByTestId, getByLabelText, getByText, user } = setup({
+      const { findByTestId, getByLabelText, user } = setup({
         listItemFieldConfigurations: [
+          {
+            id: 'fc-product',
+            label: 'product',
+            data_type: EListItemFieldType.FREE_TEXT,
+            position: 0,
+            primary: true,
+          },
           {
             id: 'fc1',
             label: 'Notes',
@@ -2494,13 +2761,13 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openAddItemModal(findByTestId, user);
       const notesInput = getByLabelText('Notes') as HTMLInputElement;
       await user.type(notesInput, 'note');
       const categoryInput = getByLabelText('Category') as HTMLInputElement;
       await user.type(categoryInput, 'existing');
-      await user.type(await findByTestId('quick-add-input'), 'My item');
-      await user.click(getByText('Add item'));
+      await user.type(await findByTestId('add-list-item-name-input'), 'My item');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith('/lists/id1/categories', { category: { name: 'Existing' } });
@@ -2523,9 +2790,11 @@ describe('ListContainer', () => {
             : Promise.resolve({ data: itemWithField }),
         );
 
-      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, findByText, user } = setup({ listItemFieldConfigurations: undefined });
 
-      await user.type(await findByTestId('quick-add-input'), 'test product{Enter}');
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'test product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       await expect(findByText('test product')).resolves.toBeVisible();
@@ -2543,9 +2812,11 @@ describe('ListContainer', () => {
             : Promise.reject(new Error('Failed to fetch item')),
         );
 
-      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: [] });
+      const { findByTestId, queryByText, user } = setup({ listItemFieldConfigurations: undefined });
 
-      await user.type(await findByTestId('quick-add-input'), 'test product{Enter}');
+      await openAddItemModal(findByTestId, user);
+      await user.type(await findByTestId('add-list-item-name-input'), 'test product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(2));
       // Without canonical fields from the GET, the row should not display 'test product'
@@ -2572,11 +2843,11 @@ describe('ListContainer', () => {
         ],
       });
 
-      await user.click(await findByTestId('quick-add-expand'));
+      await openAddItemModal(findByTestId, user);
       const quantityInput = getByLabelText('Quantity') as HTMLInputElement;
       await user.type(quantityInput, '5 items');
-      await user.type(await findByTestId('quick-add-input'), 'test product');
-      await user.click(await findByText('Add item'));
+      await user.type(await findByTestId('add-list-item-name-input'), 'test product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       await expect(findByText('test product')).resolves.toBeVisible();
       await expect(findByText('5 items')).resolves.toBeVisible();
@@ -2601,8 +2872,10 @@ describe('ListContainer', () => {
       });
 
       // Try to add item
-      const quickAddInput = await findByTestId('quick-add-input');
-      await user.type(quickAddInput, 'new product{Enter}');
+      await openAddItemModal(findByTestId, user);
+      const nameInput = await findByTestId('add-list-item-name-input');
+      await user.type(nameInput, 'new product');
+      await user.click(await findByTestId('add-list-item-submit'));
 
       // Verify the POST was called
       await waitFor(() => expect(axios.post).toHaveBeenCalled());
