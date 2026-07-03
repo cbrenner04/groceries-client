@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import type {
@@ -42,6 +42,10 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
   const expanded = props.setCompletedExpanded !== undefined ? props.completedExpanded : localExpanded;
   const isTestEnvironment = import.meta.env.VITEST === 'true';
   const isAnimationDisabled = isTestEnvironment || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isFirstMountRef = useRef(true);
+  useEffect(() => {
+    isFirstMountRef.current = false;
+  }, []);
 
   // Apply the active category filter to completed items too (mirrors NotCompletedItemsSection).
   const visibleItems = props.filter
@@ -146,12 +150,12 @@ const CompletedItemsSection: React.FC<ICompletedItemsSectionProps> = (props): Re
         ) : (
           <motion.div
             className="tw:flex tw:flex-col tw:gap-2"
-            initial={{ opacity: 0, height: 0 }}
+            initial={isFirstMountRef.current ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="popLayout" initial={false}>
               {visibleItems.map((item: IListItem, index: number) => {
                 const findItem = (itemId: string): IListItem => visibleItems.find((i) => i.id === itemId) as IListItem;
 
