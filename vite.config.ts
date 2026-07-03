@@ -59,9 +59,9 @@ export default defineConfig({
       reporter: ["text", "lcov"],
       thresholds: {
         statements: 97.23,
-        branches: 88.78,
+        branches: 88.68,
         functions: 95.08,
-        lines: 97.35,
+        lines: 97.36,
         autoUpdate: true,
       },
     },

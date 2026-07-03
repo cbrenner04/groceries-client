@@ -112,7 +112,7 @@ const NotCompletedItemsSection: React.FC<INotCompletedItemsSectionProps> = (prop
                 );
               })
             ) : (
-              <AnimatePresence mode="popLayout">
+              <AnimatePresence mode="popLayout" initial={false}>
                 {itemsToRender.map((item: IListItem, index: number) => {
                   const findItem = (itemId: string): IListItem => items.find((i) => i.id === itemId) as IListItem;
                   return (
