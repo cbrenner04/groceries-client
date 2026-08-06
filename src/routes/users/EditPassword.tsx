@@ -1,10 +1,11 @@
-import React, { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { type ChangeEvent, type FormEvent, useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { type AxiosError } from 'axios';
 
 import { showToast } from '../../utils/toast';
 
 import axios from 'utils/api';
+import { setUserInfo } from 'utils/auth';
 
 import PasswordForm from './components/PasswordForm';
 
@@ -12,6 +13,19 @@ const EditPassword: React.FC = (): React.JSX.Element => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // the reset password redirect from the api delivers the auth credentials as
+  // query params; store them so the axios interceptor can send them as headers
+  useEffect(() => {
+    const accessToken = searchParams.get('access-token');
+    const client = searchParams.get('client');
+    const uid = searchParams.get('uid');
+    if (accessToken && client && uid) {
+      setUserInfo({ 'access-token': accessToken, client, uid });
+      setSearchParams({}, { replace: true });
+    }
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
