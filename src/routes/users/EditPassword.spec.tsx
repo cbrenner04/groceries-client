@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, type RenderResult, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useSearchParams } from 'react-router';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 import { showToast } from '../../utils/toast';
@@ -22,11 +22,17 @@ interface ISetupReturn extends RenderResult {
   user: UserEvent;
 }
 
-function setup(): ISetupReturn {
+const SearchProbe = (): React.JSX.Element => {
+  const [searchParams] = useSearchParams();
+  return <div data-test-id="search">{searchParams.toString()}</div>;
+};
+
+function setup(initialEntry = '/users/password/edit'): ISetupReturn {
   const user = userEvent.setup();
   const component = render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <EditPassword />
+      <SearchProbe />
     </MemoryRouter>,
   );
 
@@ -34,6 +40,9 @@ function setup(): ISetupReturn {
 }
 
 describe('EditPassword', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
   it('sets password', async () => {
     axios.put = vi.fn().mockResolvedValue({});
     const { findByLabelText, findByText, user } = setup();
@@ -81,5 +90,32 @@ describe('EditPassword', () => {
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
     expect(showToast.error).toHaveBeenCalledWith('failed to send request');
+  });
+
+  it('stores auth credentials from query params and strips them from the url', async () => {
+    const { findByTestId } = setup(
+      '/users/password/edit?access-token=foo&client=bar&uid=baz%40example.com&expiry=123&reset_password=true',
+    );
+
+    await waitFor(() =>
+      expect(sessionStorage.getItem('user')).toEqual(
+        JSON.stringify({ 'access-token': 'foo', client: 'bar', uid: 'baz@example.com' }),
+      ),
+    );
+    expect((await findByTestId('search')).textContent).toEqual('');
+  });
+
+  it('does not store credentials when query params are missing', async () => {
+    const { findByLabelText } = setup();
+
+    await findByLabelText('Password');
+    expect(sessionStorage.getItem('user')).toBeNull();
+  });
+
+  it('does not store credentials when query params are incomplete', async () => {
+    const { findByLabelText } = setup('/users/password/edit?access-token=foo&client=bar');
+
+    await findByLabelText('Password');
+    expect(sessionStorage.getItem('user')).toBeNull();
   });
 });

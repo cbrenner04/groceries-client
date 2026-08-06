@@ -58,9 +58,9 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       thresholds: {
-        statements: 97.23,
-        branches: 88.68,
-        functions: 95.08,
+        statements: 97.24,
+        branches: 88.71,
+        functions: 95.09,
         lines: 97.36,
         autoUpdate: true,
       },
