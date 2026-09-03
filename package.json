@@ -18,7 +18,7 @@
     "luxon": "^3.7.2",
     "postcss": "8.5.16",
     "prettier": "3.9.4",
-    "query-string": "9.4.1",
+    "query-string": "9.5.1",
     "react": "19.2.7",
     "react-async": "10.0.1",
     "react-dom": "19.2.7",
