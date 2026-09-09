@@ -33,8 +33,8 @@ describe('ConfirmDialog', () => {
   });
 
   it('renders footer with correct layout classes', async () => {
-    const { container } = setup();
-    const footer = container.querySelector('.tw\\:flex.tw\\:justify-end.tw\\:gap-2');
+    const { findByTestId } = setup();
+    const footer = (await findByTestId('confirm-Delete')).parentElement;
     expect(footer).toHaveClass('tw:flex', 'tw:justify-end', 'tw:gap-2');
   });
 

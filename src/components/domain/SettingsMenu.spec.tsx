@@ -88,8 +88,8 @@ describe('SettingsMenu', () => {
 
   it('calls onClose when overlay is clicked', async () => {
     const onClose = vi.fn();
-    const { container, user } = setup({ onClose });
-    const overlay = container.firstElementChild as HTMLElement;
+    const { findByTestId, user } = setup({ onClose });
+    const overlay = await findByTestId('settings-menu');
     await user.click(overlay);
     expect(onClose).toHaveBeenCalledTimes(1);
   });

@@ -2,7 +2,6 @@ import React, { type ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { BottomSheet } from 'components/ui/BottomSheet';
-import Loading from 'components/Loading';
 import type { IListUser, IUsersList } from 'typings';
 
 import ShareListForm from './ShareListForm';
@@ -56,7 +55,16 @@ const ShareListSheet: React.FC<IShareListSheetProps> = (props): React.JSX.Elemen
 
   const renderBody = (): ReactNode => {
     if (pending) {
-      return <Loading />;
+      return (
+        <div role="status" data-test-id="share-list-loading">
+          <span className="tw:sr-only">Loading sharing details</span>
+          <div aria-hidden="true" className="tw:space-y-4">
+            <div className="tw:h-5 tw:w-2/5 tw:rounded tw:bg-[var(--color-surface-overlay)]" />
+            <div className="tw:h-10 tw:rounded tw:bg-[var(--color-surface-overlay)]" />
+            <div className="tw:h-28 tw:rounded tw:bg-[var(--color-surface-overlay)]" />
+          </div>
+        </div>
+      );
     }
     if (!data) {
       return null;

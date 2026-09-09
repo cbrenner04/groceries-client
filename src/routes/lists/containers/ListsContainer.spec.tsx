@@ -178,6 +178,37 @@ describe('ListsContainer', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it('keeps the edit-list draft above the keyboard-sized viewport', async () => {
+    const viewport = Object.assign(new EventTarget(), { height: 800, offsetTop: 0 });
+    vi.stubGlobal('visualViewport', viewport);
+    (axios.get as Mock).mockResolvedValueOnce({
+      data: {
+        id: 'id5',
+        name: 'baz',
+        completed: false,
+        refreshed: false,
+        archived_at: null,
+        list_item_configuration_id: 'config-1',
+      },
+    });
+    const { findByTestId, findByRole, user } = setup({ initialEditListId: 'id5' });
+    const sheet = await findByTestId('edit-list-sheet');
+    const input = await findByRole('textbox', { name: 'Name' });
+    await user.clear(input);
+    await user.type(input, 'Weekend groceries');
+    act(() => {
+      viewport.height = 420;
+      viewport.offsetTop = 36;
+      viewport.dispatchEvent(new Event('resize'));
+    });
+    expect(sheet).toHaveStyle({ top: '36px', height: '420px', bottom: 'auto' });
+    expect(await findByTestId('edit-list-sheet-panel')).toHaveStyle({ maxHeight: '378px' });
+    expect(input).toHaveValue('Weekend groceries');
+    expect(input).toHaveFocus();
+    expect(await findByRole('button', { name: 'Update List' })).toBeEnabled();
   });
 
   it('renders', () => {
@@ -983,14 +1014,41 @@ describe('ListsContainer', () => {
     }
   });
 
-  it('navigates to share page when share button is clicked', async () => {
-    const { user } = setup();
+  it('opens sharing over Lists without navigating or fetching the list contents', async () => {
+    mockNavigate.mockClear();
+    axios.get = vi.fn().mockResolvedValue({
+      data: {
+        list: { id: 'id5', name: 'baz' },
+        accepted: [{ user: { id: 'id1', email: 'me@example.com' }, users_list: { id: 'ul1', permissions: 'write' } }],
+        pending: [],
+        refused: [],
+        invitable_users: [{ id: 'u1', email: 'friend@example.com' }],
+        current_user_id: 'id1',
+        user_is_owner: true,
+      },
+    });
+    const { getByTestId, getAllByTestId, findByTestId, queryByTestId, user } = setup();
+    await user.click(getByTestId('filter-active'));
+    const listCard = getByTestId('list-id5');
+    await user.click(getAllByTestId('incomplete-list-share')[0]);
+    expect(await findByTestId('share-list-sheet')).toHaveTextContent('Share baz');
+    expect(await findByTestId('invite-user-u1')).toBeInTheDocument();
+    expect(getByTestId('list-id5')).toBe(listCard);
+    expect(queryByTestId('list-id-pending')).not.toBeInTheDocument();
+    expect(queryByTestId('lists-create-fab')).not.toBeInTheDocument();
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(axios.get).toHaveBeenCalledExactlyOnceWith('/lists/id5/users_lists');
 
-    const shareButtons = Array.from(document.querySelectorAll('[data-test-id="incomplete-list-share"]'));
-    if (shareButtons.length > 0) {
-      await user.click(shareButtons[0] as HTMLElement);
-      expect(mockNavigate).toHaveBeenCalled();
-    }
+    await user.keyboard('{Escape}');
+    expect(queryByTestId('share-list-sheet')).not.toBeInTheDocument();
+    expect(getByTestId('list-id5')).toBe(listCard);
+    expect(queryByTestId('list-id-pending')).not.toBeInTheDocument();
+    expect(getByTestId('lists-create-fab')).toBeInTheDocument();
+    expect(mockNavigate).not.toHaveBeenCalled();
+
+    await user.click(getAllByTestId('incomplete-list-share')[0]);
+    expect(await findByTestId('invite-user-u1')).toBeInTheDocument();
+    expect(axios.get).toHaveBeenCalledTimes(2);
   });
 
   it('opens the edit sheet when the edit button is clicked', async () => {

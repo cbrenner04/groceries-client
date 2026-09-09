@@ -126,6 +126,14 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
   const [copyMoveSheet, setCopyMoveSheet] = useState<{ mode: 'copy' | 'move' } | null>(null);
   const [shareSheetOpen, setShareSheetOpen] = useState(props.initialShareSheetOpen ?? false);
 
+  const handleCloseEditItem = useCallback((): void => {
+    setEditingItemId(null);
+  }, []);
+
+  const handleCloseShareSheet = useCallback((): void => {
+    setShareSheetOpen(false);
+  }, []);
+
   // Quick add form state
   const [quickAddFormData, setQuickAddFormData] = useState<Record<string, string>>({});
   const [quickAddFieldConfigs, setQuickAddFieldConfigs] = useState(props.listItemFieldConfigurations);
@@ -951,7 +959,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
         <EditItemSheet
           listId={props.list.id ?? ''}
           itemId={editingItemId}
-          onClose={(): void => setEditingItemId(null)}
+          onClose={handleCloseEditItem}
           onSave={(): void => {
             setEditingItemId(null);
             const listId = props.list.id;
@@ -1053,7 +1061,7 @@ const ListContainer: React.FC<IListContainerProps> = (props): React.JSX.Element 
       )}
       <ShareListSheet
         isOpen={shareSheetOpen}
-        onClose={(): void => setShareSheetOpen(false)}
+        onClose={handleCloseShareSheet}
         listId={props.list.id ?? ''}
         listName={props.list.name}
       />

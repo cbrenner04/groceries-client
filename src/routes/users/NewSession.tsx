@@ -59,10 +59,12 @@ const NewSession: React.FC<INewSessionProps> = (props): React.JSX.Element => {
             <h1 className="tw:text-xl tw:font-semibold tw:text-center tw:mb-1">Groceries</h1>
             <form onSubmit={handleSubmit}>
               <EmailField
+                autoComplete="username"
                 value={email}
                 handleChange={(event: ChangeEvent<HTMLInputElement>): void => setEmail(event.target.value)}
               />
               <PasswordField
+                autoComplete="current-password"
                 name="password"
                 label="Password"
                 value={password}
