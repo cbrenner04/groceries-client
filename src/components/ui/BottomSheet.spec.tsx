@@ -212,7 +212,7 @@ describe('BottomSheet', () => {
     rerender(<BottomSheet {...props} title="Edit item" />);
     expect(getByRole('textbox', { name: 'Item name' })).toBe(input);
     expect(input).toHaveValue('Oat milk');
-    expect(panel.style.transform).toBe('none');
+    await waitFor(() => expect(panel.style.transform).toBe('none'));
     expect(props.onClose).not.toHaveBeenCalled();
     expect(panel.style.touchAction).not.toBe('none');
   });
