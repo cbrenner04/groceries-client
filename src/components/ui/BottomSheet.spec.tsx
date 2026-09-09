@@ -1,6 +1,13 @@
 import React from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import { act, fireEvent, render, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
+import { useDragControls } from 'framer-motion';
+import type * as FramerMotion from 'framer-motion';
+
+vi.mock('framer-motion', async (importOriginal: () => Promise<typeof FramerMotion>) => {
+  const actual = await importOriginal();
+  return { ...actual, useDragControls: vi.fn(actual.useDragControls) };
+});
 
 import {
   BottomSheet,
@@ -48,6 +55,76 @@ describe('BottomSheet', () => {
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('fits the visible viewport as the keyboard opens, pans, and closes without resetting a draft', async () => {
+    vi.stubEnv('PROD', true);
+    const viewport = Object.assign(new EventTarget(), { height: 800, offsetTop: 0 });
+    vi.stubGlobal('visualViewport', viewport);
+    const { getByRole, getByTestId, user } = setup({
+      avoidKeyboard: true,
+      children: <input aria-label="List name" defaultValue="Groceries" />,
+    });
+    const overlay = getByRole('dialog');
+    const panel = getByTestId('bottom-sheet-panel');
+    const input = getByRole('textbox');
+    expect(overlay).toHaveStyle({ top: '0px', height: '800px', bottom: 'auto' });
+    expect(panel).toHaveStyle({ maxHeight: '720px' });
+    await user.clear(input);
+    await user.type(input, 'Weekend groceries');
+    act(() => {
+      viewport.height = 420;
+      viewport.offsetTop = 36;
+      viewport.dispatchEvent(new Event('resize'));
+    });
+    expect(overlay).toHaveStyle({ top: '36px', height: '420px' });
+    await waitFor(() => expect(panel.style.transform).toBe('none'));
+    expect(panel).toHaveStyle({ maxHeight: '378px' });
+    act(() => {
+      viewport.offsetTop = 64;
+      viewport.dispatchEvent(new Event('scroll'));
+    });
+    expect(overlay).toHaveStyle({ top: '64px' });
+    act(() => {
+      viewport.height = 800;
+      viewport.offsetTop = 0;
+      viewport.dispatchEvent(new Event('resize'));
+    });
+    expect(overlay).toHaveStyle({ top: '0px', height: '800px' });
+    expect(panel).toHaveStyle({ maxHeight: '720px' });
+    expect(getByRole('textbox')).toBe(input);
+    expect(input).toHaveValue('Weekend groceries');
+    expect(input).toHaveFocus();
+  });
+
+  it('removes viewport listeners on close and measures again on reopen', () => {
+    const viewport = Object.assign(new EventTarget(), { height: 420, offsetTop: 36 });
+    vi.stubGlobal('visualViewport', viewport);
+    const remove = vi.spyOn(viewport, 'removeEventListener');
+    const { props, rerender, getByRole, unmount } = setup({ avoidKeyboard: true });
+    rerender(<BottomSheet {...props} isOpen={false} />);
+    expect(remove).toHaveBeenCalledWith('resize', expect.any(Function));
+    expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function));
+    viewport.height = 800;
+    viewport.offsetTop = 0;
+    rerender(<BottomSheet {...props} />);
+    expect(getByRole('dialog')).toHaveStyle({ top: '0px', height: '800px' });
+    unmount();
+    expect(remove).toHaveBeenCalledTimes(4);
+  });
+
+  it('leaves other sheets unchanged and supports browsers without the viewport API', () => {
+    const viewport = Object.assign(new EventTarget(), { height: 420, offsetTop: 36 });
+    const subscribe = vi.spyOn(viewport, 'addEventListener');
+    vi.stubGlobal('visualViewport', viewport);
+    const { props, rerender, getByRole } = setup();
+    expect(getByRole('dialog').style.height).toBe('');
+    expect(subscribe).not.toHaveBeenCalled();
+    vi.stubGlobal('visualViewport', undefined);
+    rerender(<BottomSheet {...props} avoidKeyboard />);
+    expect(getByRole('dialog')).toBeVisible();
+    expect(getByRole('dialog').style.height).toBe('');
   });
 
   it('renders children when open', async () => {
@@ -105,9 +182,54 @@ describe('BottomSheet', () => {
   });
 
   it('renders drag handle on mobile view', async () => {
-    const { container } = setup();
-    const dragHandle = container.querySelector('.tw\\:w-10.tw\\:h-1');
+    const { findByTestId } = setup();
+    const dragHandle = await findByTestId('bottom-sheet-drag-handle');
     expect(dragHandle).toBeInTheDocument();
+    expect(dragHandle).toHaveClass('tw:touch-none');
+  });
+
+  it('renders outside the animated page without a competing CSS transform transition', () => {
+    const { container, getByRole, getByTestId } = setup();
+    expect(getByRole('dialog').parentElement).toBe(document.body);
+    expect(container).toBeEmptyDOMElement();
+    expect(getByTestId('bottom-sheet-panel')).not.toHaveClass('tw:transition-transform');
+    expect(getByTestId('bottom-sheet-panel')).not.toHaveClass('tw:duration-200');
+  });
+
+  it('preserves a draft and panel position when form content receives a pointer gesture', async () => {
+    vi.stubEnv('PROD', true);
+    const { getByRole, getByTestId, props, rerender, user } = setup({
+      children: <input aria-label="Item name" defaultValue="Milk" />,
+    });
+    const input = getByRole('textbox', { name: 'Item name' });
+    const panel = getByTestId('bottom-sheet-panel');
+    await waitFor(() => expect(panel.style.transform).toBe('none'));
+    await user.clear(input);
+    await user.type(input, 'Oat milk');
+    fireEvent.pointerDown(input, { pointerId: 1, pointerType: 'touch', clientY: 100, button: 0 });
+    fireEvent.pointerMove(window, { pointerId: 1, pointerType: 'touch', clientY: 260, buttons: 1 });
+    fireEvent.pointerUp(window, { pointerId: 1, pointerType: 'touch', clientY: 260 });
+    rerender(<BottomSheet {...props} title="Edit item" />);
+    expect(getByRole('textbox', { name: 'Item name' })).toBe(input);
+    expect(input).toHaveValue('Oat milk');
+    expect(panel.style.transform).toBe('none');
+    expect(props.onClose).not.toHaveBeenCalled();
+    expect(panel.style.touchAction).not.toBe('none');
+  });
+
+  it.each([true, false])('starts drag only from the grip when motion is enabled: %s', (enabled: boolean) => {
+    vi.stubEnv('PROD', true);
+    matchMediaMock.mockReturnValue({ ...matchMediaMock(), matches: !enabled });
+    const { getByTestId, getByText } = setup();
+    const controlsResult = vi.mocked(useDragControls).mock.results.at(-1);
+    if (controlsResult?.type !== 'return') {
+      throw new Error('Expected the sheet to initialize drag controls');
+    }
+    const start = vi.spyOn(controlsResult.value, 'start');
+    fireEvent.pointerDown(getByText('Sheet content'));
+    expect(start).not.toHaveBeenCalled();
+    fireEvent.pointerDown(getByTestId('bottom-sheet-drag-handle'));
+    expect(start).toHaveBeenCalledTimes(enabled ? 1 : 0);
   });
 
   it('respects prefers-reduced-motion', async () => {
@@ -176,13 +298,17 @@ describe('BottomSheet', () => {
   it('returns sheet drag props based on animation state', () => {
     expect(sheetDragProps(true)).toEqual({
       drag: 'y',
-      dragListener: true,
+      dragListener: false,
+      dragMomentum: false,
+      dragSnapToOrigin: true,
       dragConstraints: { top: 0 },
       dragElastic: 0.2,
     });
     expect(sheetDragProps(false)).toEqual({
       drag: false,
       dragListener: false,
+      dragMomentum: false,
+      dragSnapToOrigin: true,
       dragConstraints: { top: 0 },
       dragElastic: 0.2,
     });

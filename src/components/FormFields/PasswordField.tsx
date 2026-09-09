@@ -7,6 +7,7 @@ export interface IPasswordFieldProps {
   value: string;
   handleChange: ChangeEventHandler;
   placeholder?: string;
+  autoComplete?: React.InputHTMLAttributes<HTMLInputElement>['autoComplete'];
 }
 
 const PasswordField: React.FC<IPasswordFieldProps> = (props): React.JSX.Element => (
@@ -17,7 +18,7 @@ const PasswordField: React.FC<IPasswordFieldProps> = (props): React.JSX.Element 
       value={props.value}
       onChange={props.handleChange}
       placeholder={props.placeholder ?? ''}
-      autoComplete="off"
+      autoComplete={props.autoComplete ?? 'off'}
       name={props.name}
     />
   </div>

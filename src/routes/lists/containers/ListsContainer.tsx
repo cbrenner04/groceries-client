@@ -33,6 +33,7 @@ import { listsCache } from 'utils/lightweightCache';
 import { prefetchListsIdle } from 'utils/listPrefetch';
 import MergeModal from '../components/MergeModal';
 import EditListForm from './EditListForm';
+import ShareListSheet from '../../share_list/containers/ShareListSheet';
 
 type TStatusFilter = 'all' | 'pending' | 'active' | 'completed';
 
@@ -76,7 +77,12 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   });
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [editingList, setEditingList] = useState<IFetchListToEditReturn | null>(null);
+  const [sharingList, setSharingList] = useState<IList | null>(null);
   const navigate = useNavigate();
+
+  const closeShareSheet = useCallback((): void => {
+    setSharingList(null);
+  }, []);
 
   const openEditSheet = useCallback(
     async (listId: string): Promise<void> => {
@@ -413,7 +419,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
   };
 
   const handleShare = (listId: string): void => {
-    navigate(`/lists/${listId}/users_lists`);
+    setSharingList(findListById(listId)[0] ?? null);
   };
 
   const handleEdit = (listId: string): void => {
@@ -484,7 +490,8 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
     !showDeleteConfirm &&
     !showRejectConfirm &&
     !showMergeModal &&
-    !editSheetOpen;
+    !editSheetOpen &&
+    !sharingList;
   const templateOptions = listItemConfigurations.map((config) => ({
     value: config.id,
     label: config.name,
@@ -736,6 +743,7 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
         onClose={closeEditSheet}
         title="Edit List"
         testId="edit-list-sheet"
+        avoidKeyboard
       >
         {editingList && (
           <EditListForm
@@ -750,6 +758,16 @@ const ListsContainer: React.FC<IListsContainerProps> = (props): React.JSX.Elemen
           />
         )}
       </BottomSheet>
+
+      {sharingList && (
+        <ShareListSheet
+          key={sharingList.id}
+          isOpen
+          onClose={closeShareSheet}
+          listId={sharingList.id ?? ''}
+          listName={sharingList.name}
+        />
+      )}
 
       {showCreateFab ? (
         <button

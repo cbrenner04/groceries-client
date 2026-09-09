@@ -27,6 +27,14 @@ function setup(overrides: Partial<IShareListSheetProps> = {}): RenderResult {
 }
 
 describe('ShareListSheet', () => {
+  it('shows an accessible skeleton instead of a spinner while sharing details load', () => {
+    axios.get = vi.fn().mockReturnValue(new Promise(() => {}));
+    const { getByRole, getByTestId, queryByText } = setup();
+    expect(getByRole('status')).toHaveTextContent('Loading sharing details');
+    expect(getByTestId('share-list-loading')).toBeVisible();
+    expect(queryByText('Loading...')).toBeNull();
+  });
+
   it('renders nothing when closed', () => {
     const { queryByText } = setup({ isOpen: false });
     expect(queryByText('Share My List')).toBeNull();
@@ -45,9 +53,10 @@ describe('ShareListSheet', () => {
       },
     });
 
-    const { findByText, findByTestId } = setup();
+    const { findByText, findByTestId, queryByTestId } = setup();
     expect(await findByText('Share My List')).toBeVisible();
     expect(await findByTestId('invite-user-u1')).toBeInTheDocument();
+    expect(queryByTestId('share-list-loading')).not.toBeInTheDocument();
   });
 
   it('closes the sheet and exits loading when fetchData returns undefined', async () => {
@@ -56,9 +65,10 @@ describe('ShareListSheet', () => {
     });
 
     const onClose = vi.fn();
-    const { queryByText } = setup({ onClose });
+    const { queryByText, queryByTestId } = setup({ onClose });
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/users/sign_in'));
     await waitFor(() => expect(onClose).toHaveBeenCalled());
     await waitFor(() => expect(queryByText('Loading...')).toBeNull());
+    await waitFor(() => expect(queryByTestId('share-list-loading')).not.toBeInTheDocument());
   });
 });

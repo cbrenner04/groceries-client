@@ -7,6 +7,7 @@ export interface IEmailFieldProps {
   name?: string;
   label?: string;
   placeholder?: string;
+  autoComplete?: React.InputHTMLAttributes<HTMLInputElement>['autoComplete'];
 }
 
 const EmailField: React.FC<IEmailFieldProps> = (props): React.JSX.Element => (
@@ -18,6 +19,7 @@ const EmailField: React.FC<IEmailFieldProps> = (props): React.JSX.Element => (
       onChange={props.handleChange}
       placeholder={props.placeholder ?? 'jane.smith@example.com'}
       name={props.name ?? 'email'}
+      autoComplete={props.autoComplete}
     />
   </div>
 );

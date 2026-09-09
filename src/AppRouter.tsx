@@ -137,7 +137,7 @@ function AppRouterContent(props: IAppRouterContentProps): React.JSX.Element {
     <>
       <AnimatePresence mode="wait" initial={false}>
         <PageTransition key={location.pathname} direction={pageTransitionDirection} data-test-id="page-transition">
-          <Routes>
+          <Routes location={location}>
             {/* routes/lists */}
             <Route path="/" element={<Navigate to="/lists" />} />
             <Route path="/lists" element={<Lists />} />

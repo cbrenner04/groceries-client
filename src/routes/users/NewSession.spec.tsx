@@ -53,6 +53,13 @@ describe('NewSession', () => {
     expect(await findByLabelText('Password')).toBeVisible();
   });
 
+  it('identifies the login fields for credential autofill', async () => {
+    const { findByLabelText } = setup();
+
+    expect(await findByLabelText('Email')).toHaveAttribute('autocomplete', 'username');
+    expect(await findByLabelText('Password')).toHaveAttribute('autocomplete', 'current-password');
+  });
+
   it('renders loading when fetch has not completed', async () => {
     setAuthenticatedSession();
     axios.get = vi.fn().mockReturnValue(new Promise(() => {}));

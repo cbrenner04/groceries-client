@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
+import { motion, useDragControls } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 
 export interface IBottomSheetProps {
@@ -8,6 +9,7 @@ export interface IBottomSheetProps {
   title?: string;
   children: React.ReactNode;
   testId?: string;
+  avoidKeyboard?: boolean;
 }
 
 export interface IDragInfo {
@@ -58,7 +60,9 @@ export function sheetMotionProps(shouldAnimate: boolean): MotionProps {
 export function sheetDragProps(shouldAnimate: boolean): MotionProps {
   return {
     drag: shouldAnimate ? 'y' : false,
-    dragListener: shouldAnimate,
+    dragListener: false,
+    dragMomentum: false,
+    dragSnapToOrigin: true,
     dragConstraints: { top: 0 },
     dragElastic: 0.2,
   };
@@ -74,10 +78,43 @@ export function createDragEndHandler(onClose: () => void): (event: unknown, info
 }
 
 export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
-  const { isOpen, onClose, title, children, testId } = props;
+  const { isOpen, onClose, title, children, testId, avoidKeyboard = false } = props;
   const shouldAnimate = import.meta.env.PROD && !prefersReducedMotion();
+  const dragControls = useDragControls();
   const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
   const sheetRef = React.useRef<HTMLDivElement>(null);
+  const overlayRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect((): (() => void) | undefined => {
+    const viewport = window.visualViewport;
+    const overlay = overlayRef.current;
+    const sheet = sheetRef.current;
+    if (!isOpen || !avoidKeyboard || !viewport || !overlay || !sheet) {
+      return undefined;
+    }
+
+    const updateViewport = (): void => {
+      if (viewport.height <= 0) {
+        return;
+      }
+      overlay.style.top = `${viewport.offsetTop}px`;
+      overlay.style.height = `${viewport.height}px`;
+      overlay.style.bottom = 'auto';
+      sheet.style.maxHeight = `${viewport.height * 0.9}px`;
+    };
+
+    updateViewport();
+    viewport.addEventListener('resize', updateViewport);
+    viewport.addEventListener('scroll', updateViewport);
+    return (): void => {
+      viewport.removeEventListener('resize', updateViewport);
+      viewport.removeEventListener('scroll', updateViewport);
+      overlay.style.top = '';
+      overlay.style.height = '';
+      overlay.style.bottom = '';
+      sheet.style.maxHeight = '';
+    };
+  }, [isOpen, avoidKeyboard]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
@@ -156,7 +193,7 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
   const sheetClassName =
     'tw:w-full tw:max-h-[90vh] tw:overflow-y-auto tw:z-[var(--z-modal)] ' +
     'tw:bg-[var(--color-surface)] tw:rounded-t-[var(--radius-xl)] ' +
-    'tw:shadow-[var(--shadow-xl)] tw:transition-transform tw:duration-200 ' +
+    'tw:shadow-[var(--shadow-xl)] ' +
     'tw:pb-[calc(env(safe-area-inset-bottom)+var(--spacing-nav-height)+1rem)] ' +
     'md:tw:pb-4 ' +
     'md:tw:max-w-[480px] md:tw:rounded-[var(--radius-xl)]';
@@ -169,8 +206,9 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
 
   const handleDragEnd = createDragEndHandler(onClose);
 
-  return (
+  return createPortal(
     <motion.div
+      ref={overlayRef}
       className={overlayClassName}
       onClick={handleOverlayClick}
       data-test-id={testId}
@@ -181,11 +219,21 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
       <motion.div
         ref={sheetRef}
         className={sheetClassName}
+        data-test-id={`${testId ?? 'bottom-sheet'}-panel`}
+        dragControls={dragControls}
         onDragEnd={handleDragEnd}
         {...sheetDragProps(shouldAnimate)}
         {...sheetMotionProps(shouldAnimate)}
       >
-        <div className="tw:flex tw:justify-center tw:pt-2 tw:pb-1 md:tw:hidden">
+        <div
+          className="tw:flex tw:justify-center tw:pt-2 tw:pb-1 tw:touch-none md:tw:hidden"
+          data-test-id={`${testId ?? 'bottom-sheet'}-drag-handle`}
+          onPointerDown={(event): void => {
+            if (shouldAnimate) {
+              dragControls.start(event);
+            }
+          }}
+        >
           <div className="tw:w-10 tw:h-1 tw:rounded-full tw:bg-[var(--color-border)]" />
         </div>
         {title && (
@@ -195,6 +243,7 @@ export function BottomSheet(props: IBottomSheetProps): React.JSX.Element {
         )}
         <div className="tw:p-4">{children}</div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
