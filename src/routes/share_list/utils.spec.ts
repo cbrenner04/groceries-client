@@ -117,10 +117,10 @@ describe('utils', () => {
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
-    it('handles not 401, 403, 404', () => {
+    it('handles not 401, 403, 404', async () => {
       axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchData({ listId: '1', navigate })).rejects.toThrow();
+      await expect(fetchData({ listId: '1', navigate })).rejects.toThrow();
     });
   });
 });
