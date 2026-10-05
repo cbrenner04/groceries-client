@@ -51,6 +51,7 @@ describe('performanceMonitoring', () => {
       delta: 50,
       id: 'test-id',
       navigationType: 'navigate',
+      navigationId: 1,
       entries: [],
     });
 
