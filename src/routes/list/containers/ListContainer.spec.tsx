@@ -1303,8 +1303,8 @@ describe('ListContainer', () => {
       const { container, findByTestId, user } = setup();
 
       // Wait for any async operations to complete before clicking
-      await waitFor(() => {
-        expect(findByTestId('not-completed-item-delete-id2')).resolves.toBeDefined();
+      await waitFor(async () => {
+        await expect(findByTestId('not-completed-item-delete-id2')).resolves.toBeDefined();
       });
 
       await user.click(await findByTestId('not-completed-item-delete-id2'));
