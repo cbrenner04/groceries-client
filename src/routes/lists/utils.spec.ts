@@ -209,7 +209,7 @@ describe('utils', () => {
     it('throws error when error not 401 is returned', async () => {
       axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
 
-      expect(fetchLists({ navigate })).rejects.toThrow();
+      await expect(fetchLists({ navigate })).rejects.toThrow();
     });
   });
 
@@ -291,7 +291,7 @@ describe('utils', () => {
     it('throws error when error not 401 is returned', async () => {
       axios.get = vi.fn().mockRejectedValue({ response: { status: 400 } });
 
-      expect(fetchCompletedLists({ navigate })).rejects.toThrow();
+      await expect(fetchCompletedLists({ navigate })).rejects.toThrow();
     });
   });
 
@@ -349,22 +349,22 @@ describe('utils', () => {
       expect(navigate).toHaveBeenCalledWith('/lists');
     });
 
-    it('throws when status is not 401, 403, 404', () => {
+    it('throws when status is not 401, 403, 404', async () => {
       axios.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
 
-      expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
     });
 
-    it('throws when request fails', () => {
+    it('throws when request fails', async () => {
       axios.get = vi.fn().mockRejectedValue({ request: 'failed to send request' });
 
-      expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
     });
 
-    it('throws when unknown error occurs', () => {
+    it('throws when unknown error occurs', async () => {
       axios.get = vi.fn().mockRejectedValue({ message: 'failed to send request' });
 
-      expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
+      await expect(fetchListToEdit({ id, navigate })).rejects.toThrow();
     });
   });
 
