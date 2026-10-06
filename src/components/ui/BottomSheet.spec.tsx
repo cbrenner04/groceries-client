@@ -1,10 +1,10 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { useDragControls } from 'framer-motion';
-import type * as FramerMotion from 'framer-motion';
+import { useDragControls } from 'motion/react';
+import type * as FramerMotion from 'motion/react';
 
-vi.mock('framer-motion', async (importOriginal: () => Promise<typeof FramerMotion>) => {
+vi.mock('motion/react', async (importOriginal: () => Promise<typeof FramerMotion>) => {
   const actual = await importOriginal();
   return { ...actual, useDragControls: vi.fn(actual.useDragControls) };
 });
