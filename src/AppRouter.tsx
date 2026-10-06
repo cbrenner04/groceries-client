@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 import { PageTransition, type TPageTransitionDirection } from './components/layout/PageTransition';
 
 import CompletedLists from './routes/lists/CompletedLists';

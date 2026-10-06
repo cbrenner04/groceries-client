@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, type RenderResult, waitFor, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 
 import axios from 'utils/api';
 import { BottomInputBarFormProvider } from 'components/layout/BottomInputBarFormContext';

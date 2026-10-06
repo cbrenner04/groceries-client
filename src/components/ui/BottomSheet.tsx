@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, useDragControls } from 'framer-motion';
-import type { MotionProps } from 'framer-motion';
+import { motion, useDragControls } from 'motion/react';
+import type { MotionProps } from 'motion/react';
 
 export interface IBottomSheetProps {
   isOpen: boolean;
